@@ -112,7 +112,7 @@ internal class SkyrimGroupWrapper<TMajor> : ISkyrimGroupGetter<TMajor>
             translationParams: translationParams);
     }
 
-    public void ToString(FileGeneration fg, string? name = null)
+    public void ToString(StructuredStringBuilder fg, string? name = null)
     {
         SkyrimGroupMixIn.ToString(
             item: this,

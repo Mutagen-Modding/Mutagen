@@ -67,11 +67,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScriptMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -192,23 +193,23 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Script.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Script.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Script.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Script.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Script.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Fields?.Overall ?? true)
                     {
-                        Fields?.ToString(fg);
+                        Fields?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -274,35 +275,35 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Fields?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                Fields?.ToString(sb);
             }
             #endregion
 
@@ -459,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -539,13 +540,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IScriptGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Script.Mask<bool>? printMask = null)
         {
             ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -859,52 +860,52 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Script.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IScriptGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Script.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Script =>");
+                sb.AppendLine($"Script =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Script) =>");
+                sb.AppendLine($"{name} (Script) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IScriptGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Script.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Fields?.Overall ?? true)
             {
-                item.Fields?.ToString(fg, "Fields");
+                item.Fields?.ToString(sb, "Fields");
             }
         }
         
@@ -1421,7 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1530,11 +1531,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScriptMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

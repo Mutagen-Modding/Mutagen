@@ -83,11 +83,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RegionWeatherMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -264,50 +265,50 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(RegionWeather.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, RegionWeather.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, RegionWeather.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RegionWeather.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RegionWeather.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if ((printMask?.Weathers?.Overall ?? true)
                         && Weathers is {} WeathersItem)
                     {
-                        fg.AppendLine("Weathers =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Weathers =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(WeathersItem.Overall);
+                            sb.AppendItem(WeathersItem.Overall);
                             if (WeathersItem.Specific != null)
                             {
                                 foreach (var subItem in WeathersItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.LodDisplayDistanceMultiplier ?? true)
                     {
-                        fg.AppendItem(LodDisplayDistanceMultiplier, "LodDisplayDistanceMultiplier");
+                        sb.AppendItem(LodDisplayDistanceMultiplier, "LodDisplayDistanceMultiplier");
                     }
                     if (printMask?.OcclusionAccuracyDist ?? true)
                     {
-                        fg.AppendItem(OcclusionAccuracyDist, "OcclusionAccuracyDist");
+                        sb.AppendItem(OcclusionAccuracyDist, "OcclusionAccuracyDist");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -393,58 +394,62 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.ToString_FillInternal(sb);
                 if (Weathers is {} WeathersItem)
                 {
-                    fg.AppendLine("Weathers =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Weathers =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(WeathersItem.Overall);
+                        sb.AppendItem(WeathersItem.Overall);
                         if (WeathersItem.Specific != null)
                         {
                             foreach (var subItem in WeathersItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(LodDisplayDistanceMultiplier, "LodDisplayDistanceMultiplier");
-                fg.AppendItem(OcclusionAccuracyDist, "OcclusionAccuracyDist");
+                {
+                    sb.AppendItem(LodDisplayDistanceMultiplier, "LodDisplayDistanceMultiplier");
+                }
+                {
+                    sb.AppendItem(OcclusionAccuracyDist, "OcclusionAccuracyDist");
+                }
             }
             #endregion
 
@@ -556,7 +561,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -632,13 +637,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IRegionWeatherGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RegionWeather.Mask<bool>? printMask = null)
         {
             ((RegionWeatherCommon)((IRegionWeatherGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -934,77 +939,77 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             RegionWeather.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRegionWeatherGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RegionWeather.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RegionWeather =>");
+                sb.AppendLine($"RegionWeather =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RegionWeather) =>");
+                sb.AppendLine($"{name} (RegionWeather) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRegionWeatherGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RegionWeather.Mask<bool>? printMask = null)
         {
             RegionDataCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Weathers?.Overall ?? true)
                 && item.Weathers is {} WeathersItem)
             {
-                fg.AppendLine("Weathers =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Weathers =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in WeathersItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.LodDisplayDistanceMultiplier ?? true)
                 && item.LodDisplayDistanceMultiplier is {} LodDisplayDistanceMultiplierItem)
             {
-                fg.AppendItem(LodDisplayDistanceMultiplierItem, "LodDisplayDistanceMultiplier");
+                sb.AppendItem(LodDisplayDistanceMultiplierItem, "LodDisplayDistanceMultiplier");
             }
             if ((printMask?.OcclusionAccuracyDist ?? true)
                 && item.OcclusionAccuracyDist is {} OcclusionAccuracyDistItem)
             {
-                fg.AppendItem(OcclusionAccuracyDistItem, "OcclusionAccuracyDist");
+                sb.AppendItem(OcclusionAccuracyDistItem, "OcclusionAccuracyDist");
             }
         }
         
@@ -1417,7 +1422,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionWeatherCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1533,11 +1538,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RegionWeatherMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

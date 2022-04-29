@@ -404,11 +404,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1333,442 +1334,454 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Location.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Location.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Location.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
                         && ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("ActorCellPersistentReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellPersistentReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ActorCellPersistentReferencesItem.Overall);
+                            sb.AppendItem(ActorCellPersistentReferencesItem.Overall);
                             if (ActorCellPersistentReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
                         && LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("LocationCellPersistentReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellPersistentReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LocationCellPersistentReferencesItem.Overall);
+                            sb.AppendItem(LocationCellPersistentReferencesItem.Overall);
                             if (LocationCellPersistentReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
                         && ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("ReferenceCellPersistentReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ReferenceCellPersistentReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
+                            sb.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
                             if (ReferenceCellPersistentReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ActorCellUniques?.Overall ?? true)
                         && ActorCellUniques is {} ActorCellUniquesItem)
                     {
-                        fg.AppendLine("ActorCellUniques =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellUniques =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ActorCellUniquesItem.Overall);
+                            sb.AppendItem(ActorCellUniquesItem.Overall);
                             if (ActorCellUniquesItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellUniquesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.LocationCellUniques?.Overall ?? true)
                         && LocationCellUniques is {} LocationCellUniquesItem)
                     {
-                        fg.AppendLine("LocationCellUniques =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellUniques =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LocationCellUniquesItem.Overall);
+                            sb.AppendItem(LocationCellUniquesItem.Overall);
                             if (LocationCellUniquesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellUniquesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellUnique?.Overall ?? true)
                         && ReferenceCellUnique is {} ReferenceCellUniqueItem)
                     {
-                        fg.AppendLine("ReferenceCellUnique =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ReferenceCellUnique =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ReferenceCellUniqueItem.Overall);
+                            sb.AppendItem(ReferenceCellUniqueItem.Overall);
                             if (ReferenceCellUniqueItem.Specific != null)
                             {
                                 foreach (var subItem in ReferenceCellUniqueItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
                         && ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
                     {
-                        fg.AppendLine("ActorCellStaticReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellStaticReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ActorCellStaticReferencesItem.Overall);
+                            sb.AppendItem(ActorCellStaticReferencesItem.Overall);
                             if (ActorCellStaticReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellStaticReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
                         && LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
                     {
-                        fg.AppendLine("LocationCellStaticReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellStaticReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LocationCellStaticReferencesItem.Overall);
+                            sb.AppendItem(LocationCellStaticReferencesItem.Overall);
                             if (LocationCellStaticReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellStaticReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
                         && ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
                     {
-                        fg.AppendLine("ReferenceCellStaticReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ReferenceCellStaticReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ReferenceCellStaticReferencesItem.Overall);
+                            sb.AppendItem(ReferenceCellStaticReferencesItem.Overall);
                             if (ReferenceCellStaticReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ActorCellEncounterCell?.Overall ?? true)
                         && ActorCellEncounterCell is {} ActorCellEncounterCellItem)
                     {
-                        fg.AppendLine("ActorCellEncounterCell =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellEncounterCell =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ActorCellEncounterCellItem.Overall);
+                            sb.AppendItem(ActorCellEncounterCellItem.Overall);
                             if (ActorCellEncounterCellItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellEncounterCellItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.LocationCellEncounterCell?.Overall ?? true)
                         && LocationCellEncounterCell is {} LocationCellEncounterCellItem)
                     {
-                        fg.AppendLine("LocationCellEncounterCell =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellEncounterCell =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LocationCellEncounterCellItem.Overall);
+                            sb.AppendItem(LocationCellEncounterCellItem.Overall);
                             if (LocationCellEncounterCellItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellEncounterCellItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellEncounterCell?.Overall ?? true)
                         && ReferenceCellEncounterCell is {} ReferenceCellEncounterCellItem)
                     {
-                        fg.AppendLine("ReferenceCellEncounterCell =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ReferenceCellEncounterCell =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ReferenceCellEncounterCellItem.Overall);
+                            sb.AppendItem(ReferenceCellEncounterCellItem.Overall);
                             if (ReferenceCellEncounterCellItem.Specific != null)
                             {
                                 foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
                         && ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
                     {
-                        fg.AppendLine("ActorCellMarkerReference =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellMarkerReference =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ActorCellMarkerReferenceItem.Overall);
+                            sb.AppendItem(ActorCellMarkerReferenceItem.Overall);
                             if (ActorCellMarkerReferenceItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
                         && LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
                     {
-                        fg.AppendLine("LocationCellMarkerReference =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellMarkerReference =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LocationCellMarkerReferenceItem.Overall);
+                            sb.AppendItem(LocationCellMarkerReferenceItem.Overall);
                             if (LocationCellMarkerReferenceItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
                         && ActorCellEnablePoint is {} ActorCellEnablePointItem)
                     {
-                        fg.AppendLine("ActorCellEnablePoint =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellEnablePoint =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ActorCellEnablePointItem.Overall);
+                            sb.AppendItem(ActorCellEnablePointItem.Overall);
                             if (ActorCellEnablePointItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellEnablePointItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
                         && LocationCellEnablePoint is {} LocationCellEnablePointItem)
                     {
-                        fg.AppendLine("LocationCellEnablePoint =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellEnablePoint =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LocationCellEnablePointItem.Overall);
+                            sb.AppendItem(LocationCellEnablePointItem.Overall);
                             if (LocationCellEnablePointItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellEnablePointItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.ParentLocation ?? true)
                     {
-                        fg.AppendItem(ParentLocation, "ParentLocation");
+                        sb.AppendItem(ParentLocation, "ParentLocation");
                     }
                     if (printMask?.Music ?? true)
                     {
-                        fg.AppendItem(Music, "Music");
+                        sb.AppendItem(Music, "Music");
                     }
                     if (printMask?.UnreportedCrimeFaction ?? true)
                     {
-                        fg.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
+                        sb.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
                     }
                     if (printMask?.WorldLocationMarkerRef ?? true)
                     {
-                        fg.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
+                        sb.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
                     }
                     if (printMask?.WorldLocationRadius ?? true)
                     {
-                        fg.AppendItem(WorldLocationRadius, "WorldLocationRadius");
+                        sb.AppendItem(WorldLocationRadius, "WorldLocationRadius");
                     }
                     if (printMask?.HorseMarkerRef ?? true)
                     {
-                        fg.AppendItem(HorseMarkerRef, "HorseMarkerRef");
+                        sb.AppendItem(HorseMarkerRef, "HorseMarkerRef");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -2074,416 +2087,444 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.ToString_FillInternal(sb);
                 if (ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
                 {
-                    fg.AppendLine("ActorCellPersistentReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellPersistentReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ActorCellPersistentReferencesItem.Overall);
+                        sb.AppendItem(ActorCellPersistentReferencesItem.Overall);
                         if (ActorCellPersistentReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
                 {
-                    fg.AppendLine("LocationCellPersistentReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellPersistentReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LocationCellPersistentReferencesItem.Overall);
+                        sb.AppendItem(LocationCellPersistentReferencesItem.Overall);
                         if (LocationCellPersistentReferencesItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
                 {
-                    fg.AppendLine("ReferenceCellPersistentReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ReferenceCellPersistentReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
+                        sb.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
                         if (ReferenceCellPersistentReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ActorCellUniques is {} ActorCellUniquesItem)
                 {
-                    fg.AppendLine("ActorCellUniques =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellUniques =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ActorCellUniquesItem.Overall);
+                        sb.AppendItem(ActorCellUniquesItem.Overall);
                         if (ActorCellUniquesItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellUniquesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (LocationCellUniques is {} LocationCellUniquesItem)
                 {
-                    fg.AppendLine("LocationCellUniques =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellUniques =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LocationCellUniquesItem.Overall);
+                        sb.AppendItem(LocationCellUniquesItem.Overall);
                         if (LocationCellUniquesItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellUniquesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ReferenceCellUnique is {} ReferenceCellUniqueItem)
                 {
-                    fg.AppendLine("ReferenceCellUnique =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ReferenceCellUnique =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ReferenceCellUniqueItem.Overall);
+                        sb.AppendItem(ReferenceCellUniqueItem.Overall);
                         if (ReferenceCellUniqueItem.Specific != null)
                         {
                             foreach (var subItem in ReferenceCellUniqueItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
                 {
-                    fg.AppendLine("ActorCellStaticReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellStaticReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ActorCellStaticReferencesItem.Overall);
+                        sb.AppendItem(ActorCellStaticReferencesItem.Overall);
                         if (ActorCellStaticReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellStaticReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
                 {
-                    fg.AppendLine("LocationCellStaticReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellStaticReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LocationCellStaticReferencesItem.Overall);
+                        sb.AppendItem(LocationCellStaticReferencesItem.Overall);
                         if (LocationCellStaticReferencesItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellStaticReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
                 {
-                    fg.AppendLine("ReferenceCellStaticReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ReferenceCellStaticReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ReferenceCellStaticReferencesItem.Overall);
+                        sb.AppendItem(ReferenceCellStaticReferencesItem.Overall);
                         if (ReferenceCellStaticReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ActorCellEncounterCell is {} ActorCellEncounterCellItem)
                 {
-                    fg.AppendLine("ActorCellEncounterCell =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellEncounterCell =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ActorCellEncounterCellItem.Overall);
+                        sb.AppendItem(ActorCellEncounterCellItem.Overall);
                         if (ActorCellEncounterCellItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellEncounterCellItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (LocationCellEncounterCell is {} LocationCellEncounterCellItem)
                 {
-                    fg.AppendLine("LocationCellEncounterCell =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellEncounterCell =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LocationCellEncounterCellItem.Overall);
+                        sb.AppendItem(LocationCellEncounterCellItem.Overall);
                         if (LocationCellEncounterCellItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellEncounterCellItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ReferenceCellEncounterCell is {} ReferenceCellEncounterCellItem)
                 {
-                    fg.AppendLine("ReferenceCellEncounterCell =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ReferenceCellEncounterCell =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ReferenceCellEncounterCellItem.Overall);
+                        sb.AppendItem(ReferenceCellEncounterCellItem.Overall);
                         if (ReferenceCellEncounterCellItem.Specific != null)
                         {
                             foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
                 {
-                    fg.AppendLine("ActorCellMarkerReference =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellMarkerReference =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ActorCellMarkerReferenceItem.Overall);
+                        sb.AppendItem(ActorCellMarkerReferenceItem.Overall);
                         if (ActorCellMarkerReferenceItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
                 {
-                    fg.AppendLine("LocationCellMarkerReference =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellMarkerReference =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LocationCellMarkerReferenceItem.Overall);
+                        sb.AppendItem(LocationCellMarkerReferenceItem.Overall);
                         if (LocationCellMarkerReferenceItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ActorCellEnablePoint is {} ActorCellEnablePointItem)
                 {
-                    fg.AppendLine("ActorCellEnablePoint =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellEnablePoint =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ActorCellEnablePointItem.Overall);
+                        sb.AppendItem(ActorCellEnablePointItem.Overall);
                         if (ActorCellEnablePointItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellEnablePointItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (LocationCellEnablePoint is {} LocationCellEnablePointItem)
                 {
-                    fg.AppendLine("LocationCellEnablePoint =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellEnablePoint =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LocationCellEnablePointItem.Overall);
+                        sb.AppendItem(LocationCellEnablePointItem.Overall);
                         if (LocationCellEnablePointItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellEnablePointItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Name, "Name");
+                {
+                    sb.AppendItem(Name, "Name");
+                }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(ParentLocation, "ParentLocation");
-                fg.AppendItem(Music, "Music");
-                fg.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
-                fg.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
-                fg.AppendItem(WorldLocationRadius, "WorldLocationRadius");
-                fg.AppendItem(HorseMarkerRef, "HorseMarkerRef");
-                fg.AppendItem(Color, "Color");
+                {
+                    sb.AppendItem(ParentLocation, "ParentLocation");
+                }
+                {
+                    sb.AppendItem(Music, "Music");
+                }
+                {
+                    sb.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
+                }
+                {
+                    sb.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
+                }
+                {
+                    sb.AppendItem(WorldLocationRadius, "WorldLocationRadius");
+                }
+                {
+                    sb.AppendItem(HorseMarkerRef, "HorseMarkerRef");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
             }
             #endregion
 
@@ -2743,7 +2784,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -2898,13 +2939,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ILocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
             ((LocationCommon)((ILocationGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -3388,403 +3429,403 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Location =>");
+                sb.AppendLine($"Location =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Location) =>");
+                sb.AppendLine($"{name} (Location) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Location.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
                 && item.ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
             {
-                fg.AppendLine("ActorCellPersistentReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellPersistentReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ActorCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
                 && item.LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
             {
-                fg.AppendLine("LocationCellPersistentReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellPersistentReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in LocationCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
                 && item.ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
             {
-                fg.AppendLine("ReferenceCellPersistentReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ReferenceCellPersistentReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ReferenceCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ActorCellUniques?.Overall ?? true)
                 && item.ActorCellUniques is {} ActorCellUniquesItem)
             {
-                fg.AppendLine("ActorCellUniques =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellUniques =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ActorCellUniquesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.LocationCellUniques?.Overall ?? true)
                 && item.LocationCellUniques is {} LocationCellUniquesItem)
             {
-                fg.AppendLine("LocationCellUniques =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellUniques =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in LocationCellUniquesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ReferenceCellUnique?.Overall ?? true)
                 && item.ReferenceCellUnique is {} ReferenceCellUniqueItem)
             {
-                fg.AppendLine("ReferenceCellUnique =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ReferenceCellUnique =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ReferenceCellUniqueItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
                 && item.ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
             {
-                fg.AppendLine("ActorCellStaticReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellStaticReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ActorCellStaticReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
                 && item.LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
             {
-                fg.AppendLine("LocationCellStaticReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellStaticReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in LocationCellStaticReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
                 && item.ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
             {
-                fg.AppendLine("ReferenceCellStaticReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ReferenceCellStaticReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ReferenceCellStaticReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.ActorCellEncounterCell?.Overall ?? true)
             {
-                fg.AppendLine("ActorCellEncounterCell =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellEncounterCell =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.ActorCellEncounterCell)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.LocationCellEncounterCell?.Overall ?? true)
             {
-                fg.AppendLine("LocationCellEncounterCell =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellEncounterCell =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.LocationCellEncounterCell)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.ReferenceCellEncounterCell?.Overall ?? true)
             {
-                fg.AppendLine("ReferenceCellEncounterCell =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ReferenceCellEncounterCell =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.ReferenceCellEncounterCell)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
                 && item.ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
             {
-                fg.AppendLine("ActorCellMarkerReference =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellMarkerReference =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ActorCellMarkerReferenceItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
                 && item.LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
             {
-                fg.AppendLine("LocationCellMarkerReference =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellMarkerReference =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in LocationCellMarkerReferenceItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
                 && item.ActorCellEnablePoint is {} ActorCellEnablePointItem)
             {
-                fg.AppendLine("ActorCellEnablePoint =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellEnablePoint =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ActorCellEnablePointItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
                 && item.LocationCellEnablePoint is {} LocationCellEnablePointItem)
             {
-                fg.AppendLine("LocationCellEnablePoint =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellEnablePoint =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in LocationCellEnablePointItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.ParentLocation ?? true)
             {
-                fg.AppendItem(item.ParentLocation.FormKeyNullable, "ParentLocation");
+                sb.AppendItem(item.ParentLocation.FormKeyNullable, "ParentLocation");
             }
             if (printMask?.Music ?? true)
             {
-                fg.AppendItem(item.Music.FormKeyNullable, "Music");
+                sb.AppendItem(item.Music.FormKeyNullable, "Music");
             }
             if (printMask?.UnreportedCrimeFaction ?? true)
             {
-                fg.AppendItem(item.UnreportedCrimeFaction.FormKeyNullable, "UnreportedCrimeFaction");
+                sb.AppendItem(item.UnreportedCrimeFaction.FormKeyNullable, "UnreportedCrimeFaction");
             }
             if (printMask?.WorldLocationMarkerRef ?? true)
             {
-                fg.AppendItem(item.WorldLocationMarkerRef.FormKeyNullable, "WorldLocationMarkerRef");
+                sb.AppendItem(item.WorldLocationMarkerRef.FormKeyNullable, "WorldLocationMarkerRef");
             }
             if ((printMask?.WorldLocationRadius ?? true)
                 && item.WorldLocationRadius is {} WorldLocationRadiusItem)
             {
-                fg.AppendItem(WorldLocationRadiusItem, "WorldLocationRadius");
+                sb.AppendItem(WorldLocationRadiusItem, "WorldLocationRadius");
             }
             if (printMask?.HorseMarkerRef ?? true)
             {
-                fg.AppendItem(item.HorseMarkerRef.FormKeyNullable, "HorseMarkerRef");
+                sb.AppendItem(item.HorseMarkerRef.FormKeyNullable, "HorseMarkerRef");
             }
             if ((printMask?.Color ?? true)
                 && item.Color is {} ColorItem)
             {
-                fg.AppendItem(ColorItem, "Color");
+                sb.AppendItem(ColorItem, "Color");
             }
         }
         
@@ -5501,7 +5542,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5896,11 +5937,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

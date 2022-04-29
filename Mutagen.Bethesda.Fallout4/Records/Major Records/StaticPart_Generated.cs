@@ -81,11 +81,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             StaticPartMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -241,46 +242,46 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(StaticPart.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, StaticPart.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, StaticPart.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(StaticPart.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(StaticPart.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Static ?? true)
                     {
-                        fg.AppendItem(Static, "Static");
+                        sb.AppendItem(Static, "Static");
                     }
                     if ((printMask?.Placements?.Overall ?? true)
                         && Placements is {} PlacementsItem)
                     {
-                        fg.AppendLine("Placements =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Placements =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(PlacementsItem.Overall);
+                            sb.AppendItem(PlacementsItem.Overall);
                             if (PlacementsItem.Specific != null)
                             {
                                 foreach (var subItem in PlacementsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -367,55 +368,57 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Static, "Static");
+                {
+                    sb.AppendItem(Static, "Static");
+                }
                 if (Placements is {} PlacementsItem)
                 {
-                    fg.AppendLine("Placements =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Placements =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(PlacementsItem.Overall);
+                        sb.AppendItem(PlacementsItem.Overall);
                         if (PlacementsItem.Specific != null)
                         {
                             foreach (var subItem in PlacementsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -536,7 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -613,13 +616,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IStaticPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             StaticPart.Mask<bool>? printMask = null)
         {
             ((StaticPartCommon)((IStaticPartGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -908,67 +911,67 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             StaticPart.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IStaticPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             StaticPart.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"StaticPart =>");
+                sb.AppendLine($"StaticPart =>");
             }
             else
             {
-                fg.AppendLine($"{name} (StaticPart) =>");
+                sb.AppendLine($"{name} (StaticPart) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IStaticPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             StaticPart.Mask<bool>? printMask = null)
         {
             if (printMask?.Static ?? true)
             {
-                fg.AppendItem(item.Static.FormKeyNullable, "Static");
+                sb.AppendItem(item.Static.FormKeyNullable, "Static");
             }
             if ((printMask?.Placements?.Overall ?? true)
                 && item.Placements is {} PlacementsItem)
             {
-                fg.AppendLine("Placements =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Placements =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in PlacementsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1298,7 +1301,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => StaticPartCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1403,11 +1406,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             StaticPartMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

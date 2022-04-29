@@ -67,11 +67,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DestructableDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -209,35 +210,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(DestructableData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, DestructableData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, DestructableData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DestructableData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DestructableData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if (printMask?.DESTCount ?? true)
                     {
-                        fg.AppendItem(DESTCount, "DESTCount");
+                        sb.AppendItem(DESTCount, "DESTCount");
                     }
                     if (printMask?.VATSTargetable ?? true)
                     {
-                        fg.AppendItem(VATSTargetable, "VATSTargetable");
+                        sb.AppendItem(VATSTargetable, "VATSTargetable");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -344,37 +345,45 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(DESTCount, "DESTCount");
-                fg.AppendItem(VATSTargetable, "VATSTargetable");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(DESTCount, "DESTCount");
+                }
+                {
+                    sb.AppendItem(VATSTargetable, "VATSTargetable");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -498,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -577,13 +586,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IDestructableDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DestructableData.Mask<bool>? printMask = null)
         {
             ((DestructableDataCommon)((IDestructableDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -876,60 +885,60 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             DestructableData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDestructableDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DestructableData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DestructableData =>");
+                sb.AppendLine($"DestructableData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DestructableData) =>");
+                sb.AppendLine($"{name} (DestructableData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDestructableDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DestructableData.Mask<bool>? printMask = null)
         {
             if (printMask?.Health ?? true)
             {
-                fg.AppendItem(item.Health, "Health");
+                sb.AppendItem(item.Health, "Health");
             }
             if (printMask?.DESTCount ?? true)
             {
-                fg.AppendItem(item.DESTCount, "DESTCount");
+                sb.AppendItem(item.DESTCount, "DESTCount");
             }
             if (printMask?.VATSTargetable ?? true)
             {
-                fg.AppendItem(item.VATSTargetable, "VATSTargetable");
+                sb.AppendItem(item.VATSTargetable, "VATSTargetable");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1207,7 +1216,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructableDataBinaryWriteTranslation.Instance;
@@ -1275,11 +1284,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DestructableDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

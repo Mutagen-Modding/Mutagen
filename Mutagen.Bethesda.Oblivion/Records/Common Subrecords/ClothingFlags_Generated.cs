@@ -61,11 +61,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClothingFlagsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -185,27 +186,27 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(ClothingFlags.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ClothingFlags.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ClothingFlags.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ClothingFlags.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ClothingFlags.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.BipedFlags ?? true)
                     {
-                        fg.AppendItem(BipedFlags, "BipedFlags");
+                        sb.AppendItem(BipedFlags, "BipedFlags");
                     }
                     if (printMask?.GeneralFlags ?? true)
                     {
-                        fg.AppendItem(GeneralFlags, "GeneralFlags");
+                        sb.AppendItem(GeneralFlags, "GeneralFlags");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -292,35 +293,39 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(BipedFlags, "BipedFlags");
-                fg.AppendItem(GeneralFlags, "GeneralFlags");
+                {
+                    sb.AppendItem(BipedFlags, "BipedFlags");
+                }
+                {
+                    sb.AppendItem(GeneralFlags, "GeneralFlags");
+                }
             }
             #endregion
 
@@ -436,7 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -511,13 +516,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IClothingFlagsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClothingFlags.Mask<bool>? printMask = null)
         {
             ((ClothingFlagsCommon)((IClothingFlagsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -804,52 +809,52 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             ClothingFlags.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IClothingFlagsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClothingFlags.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ClothingFlags =>");
+                sb.AppendLine($"ClothingFlags =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ClothingFlags) =>");
+                sb.AppendLine($"{name} (ClothingFlags) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IClothingFlagsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ClothingFlags.Mask<bool>? printMask = null)
         {
             if (printMask?.BipedFlags ?? true)
             {
-                fg.AppendItem(item.BipedFlags, "BipedFlags");
+                sb.AppendItem(item.BipedFlags, "BipedFlags");
             }
             if (printMask?.GeneralFlags ?? true)
             {
-                fg.AppendItem(item.GeneralFlags, "GeneralFlags");
+                sb.AppendItem(item.GeneralFlags, "GeneralFlags");
             }
         }
         
@@ -1115,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ClothingFlagsBinaryWriteTranslation.Instance;
@@ -1181,11 +1186,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClothingFlagsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

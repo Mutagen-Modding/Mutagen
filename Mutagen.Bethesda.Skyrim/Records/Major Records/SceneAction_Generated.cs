@@ -180,11 +180,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SceneActionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -480,106 +481,108 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(SceneAction.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, SceneAction.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, SceneAction.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SceneAction.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SceneAction.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.ActorID ?? true)
                     {
-                        fg.AppendItem(ActorID, "ActorID");
+                        sb.AppendItem(ActorID, "ActorID");
                     }
                     if (printMask?.LNAM ?? true)
                     {
-                        fg.AppendItem(LNAM, "LNAM");
+                        sb.AppendItem(LNAM, "LNAM");
                     }
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.StartPhase ?? true)
                     {
-                        fg.AppendItem(StartPhase, "StartPhase");
+                        sb.AppendItem(StartPhase, "StartPhase");
                     }
                     if (printMask?.EndPhase ?? true)
                     {
-                        fg.AppendItem(EndPhase, "EndPhase");
+                        sb.AppendItem(EndPhase, "EndPhase");
                     }
                     if (printMask?.TimerSeconds ?? true)
                     {
-                        fg.AppendItem(TimerSeconds, "TimerSeconds");
+                        sb.AppendItem(TimerSeconds, "TimerSeconds");
                     }
                     if ((printMask?.Packages?.Overall ?? true)
                         && Packages is {} PackagesItem)
                     {
-                        fg.AppendLine("Packages =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Packages =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(PackagesItem.Overall);
+                            sb.AppendItem(PackagesItem.Overall);
                             if (PackagesItem.Specific != null)
                             {
                                 foreach (var subItem in PackagesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Topic ?? true)
                     {
-                        fg.AppendItem(Topic, "Topic");
+                        sb.AppendItem(Topic, "Topic");
                     }
                     if (printMask?.HeadtrackActorID ?? true)
                     {
-                        fg.AppendItem(HeadtrackActorID, "HeadtrackActorID");
+                        sb.AppendItem(HeadtrackActorID, "HeadtrackActorID");
                     }
                     if (printMask?.LoopingMax ?? true)
                     {
-                        fg.AppendItem(LoopingMax, "LoopingMax");
+                        sb.AppendItem(LoopingMax, "LoopingMax");
                     }
                     if (printMask?.LoopingMin ?? true)
                     {
-                        fg.AppendItem(LoopingMin, "LoopingMin");
+                        sb.AppendItem(LoopingMin, "LoopingMin");
                     }
                     if (printMask?.Emotion ?? true)
                     {
-                        fg.AppendItem(Emotion, "Emotion");
+                        sb.AppendItem(Emotion, "Emotion");
                     }
                     if (printMask?.EmotionValue ?? true)
                     {
-                        fg.AppendItem(EmotionValue, "EmotionValue");
+                        sb.AppendItem(EmotionValue, "EmotionValue");
                     }
                     if (printMask?.Unused?.Overall ?? true)
                     {
-                        Unused?.ToString(fg);
+                        Unused?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -816,71 +819,103 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(ActorID, "ActorID");
-                fg.AppendItem(LNAM, "LNAM");
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(StartPhase, "StartPhase");
-                fg.AppendItem(EndPhase, "EndPhase");
-                fg.AppendItem(TimerSeconds, "TimerSeconds");
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(ActorID, "ActorID");
+                }
+                {
+                    sb.AppendItem(LNAM, "LNAM");
+                }
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(StartPhase, "StartPhase");
+                }
+                {
+                    sb.AppendItem(EndPhase, "EndPhase");
+                }
+                {
+                    sb.AppendItem(TimerSeconds, "TimerSeconds");
+                }
                 if (Packages is {} PackagesItem)
                 {
-                    fg.AppendLine("Packages =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Packages =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(PackagesItem.Overall);
+                        sb.AppendItem(PackagesItem.Overall);
                         if (PackagesItem.Specific != null)
                         {
                             foreach (var subItem in PackagesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Topic, "Topic");
-                fg.AppendItem(HeadtrackActorID, "HeadtrackActorID");
-                fg.AppendItem(LoopingMax, "LoopingMax");
-                fg.AppendItem(LoopingMin, "LoopingMin");
-                fg.AppendItem(Emotion, "Emotion");
-                fg.AppendItem(EmotionValue, "EmotionValue");
-                Unused?.ToString(fg);
+                {
+                    sb.AppendItem(Topic, "Topic");
+                }
+                {
+                    sb.AppendItem(HeadtrackActorID, "HeadtrackActorID");
+                }
+                {
+                    sb.AppendItem(LoopingMax, "LoopingMax");
+                }
+                {
+                    sb.AppendItem(LoopingMin, "LoopingMin");
+                }
+                {
+                    sb.AppendItem(Emotion, "Emotion");
+                }
+                {
+                    sb.AppendItem(EmotionValue, "EmotionValue");
+                }
+                Unused?.ToString(sb);
             }
             #endregion
 
@@ -1060,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1179,13 +1214,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ISceneActionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SceneAction.Mask<bool>? printMask = null)
         {
             ((SceneActionCommon)((ISceneActionGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1544,140 +1579,140 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             SceneAction.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ISceneActionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SceneAction.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SceneAction =>");
+                sb.AppendLine($"SceneAction =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SceneAction) =>");
+                sb.AppendLine($"{name} (SceneAction) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISceneActionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SceneAction.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.ActorID ?? true)
                 && item.ActorID is {} ActorIDItem)
             {
-                fg.AppendItem(ActorIDItem, "ActorID");
+                sb.AppendItem(ActorIDItem, "ActorID");
             }
             if ((printMask?.LNAM ?? true)
                 && item.LNAM is {} LNAMItem)
             {
-                fg.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
+                sb.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
             }
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.StartPhase ?? true)
                 && item.StartPhase is {} StartPhaseItem)
             {
-                fg.AppendItem(StartPhaseItem, "StartPhase");
+                sb.AppendItem(StartPhaseItem, "StartPhase");
             }
             if ((printMask?.EndPhase ?? true)
                 && item.EndPhase is {} EndPhaseItem)
             {
-                fg.AppendItem(EndPhaseItem, "EndPhase");
+                sb.AppendItem(EndPhaseItem, "EndPhase");
             }
             if ((printMask?.TimerSeconds ?? true)
                 && item.TimerSeconds is {} TimerSecondsItem)
             {
-                fg.AppendItem(TimerSecondsItem, "TimerSeconds");
+                sb.AppendItem(TimerSecondsItem, "TimerSeconds");
             }
             if (printMask?.Packages?.Overall ?? true)
             {
-                fg.AppendLine("Packages =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Packages =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Packages)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Topic ?? true)
             {
-                fg.AppendItem(item.Topic.FormKeyNullable, "Topic");
+                sb.AppendItem(item.Topic.FormKeyNullable, "Topic");
             }
             if ((printMask?.HeadtrackActorID ?? true)
                 && item.HeadtrackActorID is {} HeadtrackActorIDItem)
             {
-                fg.AppendItem(HeadtrackActorIDItem, "HeadtrackActorID");
+                sb.AppendItem(HeadtrackActorIDItem, "HeadtrackActorID");
             }
             if ((printMask?.LoopingMax ?? true)
                 && item.LoopingMax is {} LoopingMaxItem)
             {
-                fg.AppendItem(LoopingMaxItem, "LoopingMax");
+                sb.AppendItem(LoopingMaxItem, "LoopingMax");
             }
             if ((printMask?.LoopingMin ?? true)
                 && item.LoopingMin is {} LoopingMinItem)
             {
-                fg.AppendItem(LoopingMinItem, "LoopingMin");
+                sb.AppendItem(LoopingMinItem, "LoopingMin");
             }
             if ((printMask?.Emotion ?? true)
                 && item.Emotion is {} EmotionItem)
             {
-                fg.AppendItem(EmotionItem, "Emotion");
+                sb.AppendItem(EmotionItem, "Emotion");
             }
             if ((printMask?.EmotionValue ?? true)
                 && item.EmotionValue is {} EmotionValueItem)
             {
-                fg.AppendItem(EmotionValueItem, "EmotionValue");
+                sb.AppendItem(EmotionValueItem, "EmotionValue");
             }
             if ((printMask?.Unused?.Overall ?? true)
                 && item.Unused is {} UnusedItem)
             {
-                UnusedItem?.ToString(fg, "Unused");
+                UnusedItem?.ToString(sb, "Unused");
             }
         }
         
@@ -2388,7 +2423,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => SceneActionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2650,11 +2685,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SceneActionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

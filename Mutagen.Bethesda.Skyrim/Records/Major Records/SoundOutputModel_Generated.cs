@@ -130,11 +130,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundOutputModelMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -327,47 +328,47 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(SoundOutputModel.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, SoundOutputModel.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, SoundOutputModel.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SoundOutputModel.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundOutputModel.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.ToString(sb);
                     }
                     if (printMask?.FNAM ?? true)
                     {
-                        fg.AppendItem(FNAM, "FNAM");
+                        sb.AppendItem(FNAM, "FNAM");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.CNAM ?? true)
                     {
-                        fg.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(CNAM, "CNAM");
                     }
                     if (printMask?.SNAM ?? true)
                     {
-                        fg.AppendItem(SNAM, "SNAM");
+                        sb.AppendItem(SNAM, "SNAM");
                     }
                     if (printMask?.OutputChannels?.Overall ?? true)
                     {
-                        OutputChannels?.ToString(fg);
+                        OutputChannels?.ToString(sb);
                     }
                     if (printMask?.Attenuation?.Overall ?? true)
                     {
-                        Attenuation?.ToString(fg);
+                        Attenuation?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -493,41 +494,49 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Data?.ToString(fg);
-                fg.AppendItem(FNAM, "FNAM");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(CNAM, "CNAM");
-                fg.AppendItem(SNAM, "SNAM");
-                OutputChannels?.ToString(fg);
-                Attenuation?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                Data?.ToString(sb);
+                {
+                    sb.AppendItem(FNAM, "FNAM");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(CNAM, "CNAM");
+                }
+                {
+                    sb.AppendItem(SNAM, "SNAM");
+                }
+                OutputChannels?.ToString(sb);
+                Attenuation?.ToString(sb);
             }
             #endregion
 
@@ -721,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -810,13 +819,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ISoundOutputModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundOutputModel.Mask<bool>? printMask = null)
         {
             ((SoundOutputModelCommon)((ISoundOutputModelGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1166,83 +1175,83 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             SoundOutputModel.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ISoundOutputModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundOutputModel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundOutputModel =>");
+                sb.AppendLine($"SoundOutputModel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundOutputModel) =>");
+                sb.AppendLine($"{name} (SoundOutputModel) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundOutputModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundOutputModel.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.ToString(sb, "Data");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM is {} FNAMItem)
             {
-                fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.Type ?? true)
                 && item.Type is {} TypeItem)
             {
-                fg.AppendItem(TypeItem, "Type");
+                sb.AppendItem(TypeItem, "Type");
             }
             if ((printMask?.CNAM ?? true)
                 && item.CNAM is {} CNAMItem)
             {
-                fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
+                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if ((printMask?.SNAM ?? true)
                 && item.SNAM is {} SNAMItem)
             {
-                fg.AppendLine($"SNAM => {SpanExt.ToHexString(SNAMItem)}");
+                sb.AppendLine($"SNAM => {SpanExt.ToHexString(SNAMItem)}");
             }
             if ((printMask?.OutputChannels?.Overall ?? true)
                 && item.OutputChannels is {} OutputChannelsItem)
             {
-                OutputChannelsItem?.ToString(fg, "OutputChannels");
+                OutputChannelsItem?.ToString(sb, "OutputChannels");
             }
             if ((printMask?.Attenuation?.Overall ?? true)
                 && item.Attenuation is {} AttenuationItem)
             {
-                AttenuationItem?.ToString(fg, "Attenuation");
+                AttenuationItem?.ToString(sb, "Attenuation");
             }
         }
         
@@ -1974,7 +1983,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundOutputModelBinaryWriteTranslation.Instance;
@@ -2132,11 +2141,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundOutputModelMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

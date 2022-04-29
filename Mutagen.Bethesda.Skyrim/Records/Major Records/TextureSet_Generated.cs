@@ -136,11 +136,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TextureSetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -361,63 +362,63 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(TextureSet.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TextureSet.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TextureSet.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TextureSet.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TextureSet.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Diffuse ?? true)
                     {
-                        fg.AppendItem(Diffuse, "Diffuse");
+                        sb.AppendItem(Diffuse, "Diffuse");
                     }
                     if (printMask?.NormalOrGloss ?? true)
                     {
-                        fg.AppendItem(NormalOrGloss, "NormalOrGloss");
+                        sb.AppendItem(NormalOrGloss, "NormalOrGloss");
                     }
                     if (printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
                     {
-                        fg.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
+                        sb.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
                     }
                     if (printMask?.GlowOrDetailMap ?? true)
                     {
-                        fg.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
+                        sb.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
                     }
                     if (printMask?.Height ?? true)
                     {
-                        fg.AppendItem(Height, "Height");
+                        sb.AppendItem(Height, "Height");
                     }
                     if (printMask?.Environment ?? true)
                     {
-                        fg.AppendItem(Environment, "Environment");
+                        sb.AppendItem(Environment, "Environment");
                     }
                     if (printMask?.Multilayer ?? true)
                     {
-                        fg.AppendItem(Multilayer, "Multilayer");
+                        sb.AppendItem(Multilayer, "Multilayer");
                     }
                     if (printMask?.BacklightMaskOrSpecular ?? true)
                     {
-                        fg.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
+                        sb.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
                     }
                     if (printMask?.Decal?.Overall ?? true)
                     {
-                        Decal?.ToString(fg);
+                        Decal?.ToString(sb);
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -583,45 +584,63 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Diffuse, "Diffuse");
-                fg.AppendItem(NormalOrGloss, "NormalOrGloss");
-                fg.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
-                fg.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
-                fg.AppendItem(Height, "Height");
-                fg.AppendItem(Environment, "Environment");
-                fg.AppendItem(Multilayer, "Multilayer");
-                fg.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
-                Decal?.ToString(fg);
-                fg.AppendItem(Flags, "Flags");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Diffuse, "Diffuse");
+                }
+                {
+                    sb.AppendItem(NormalOrGloss, "NormalOrGloss");
+                }
+                {
+                    sb.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
+                }
+                {
+                    sb.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
+                }
+                {
+                    sb.AppendItem(Height, "Height");
+                }
+                {
+                    sb.AppendItem(Environment, "Environment");
+                }
+                {
+                    sb.AppendItem(Multilayer, "Multilayer");
+                }
+                {
+                    sb.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
+                }
+                Decal?.ToString(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -832,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -941,13 +960,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ITextureSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TextureSet.Mask<bool>? printMask = null)
         {
             ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1305,102 +1324,102 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             TextureSet.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITextureSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TextureSet.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TextureSet =>");
+                sb.AppendLine($"TextureSet =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TextureSet) =>");
+                sb.AppendLine($"{name} (TextureSet) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITextureSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TextureSet.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Diffuse ?? true)
                 && item.Diffuse is {} DiffuseItem)
             {
-                fg.AppendItem(DiffuseItem, "Diffuse");
+                sb.AppendItem(DiffuseItem, "Diffuse");
             }
             if ((printMask?.NormalOrGloss ?? true)
                 && item.NormalOrGloss is {} NormalOrGlossItem)
             {
-                fg.AppendItem(NormalOrGlossItem, "NormalOrGloss");
+                sb.AppendItem(NormalOrGlossItem, "NormalOrGloss");
             }
             if ((printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
                 && item.EnvironmentMaskOrSubsurfaceTint is {} EnvironmentMaskOrSubsurfaceTintItem)
             {
-                fg.AppendItem(EnvironmentMaskOrSubsurfaceTintItem, "EnvironmentMaskOrSubsurfaceTint");
+                sb.AppendItem(EnvironmentMaskOrSubsurfaceTintItem, "EnvironmentMaskOrSubsurfaceTint");
             }
             if ((printMask?.GlowOrDetailMap ?? true)
                 && item.GlowOrDetailMap is {} GlowOrDetailMapItem)
             {
-                fg.AppendItem(GlowOrDetailMapItem, "GlowOrDetailMap");
+                sb.AppendItem(GlowOrDetailMapItem, "GlowOrDetailMap");
             }
             if ((printMask?.Height ?? true)
                 && item.Height is {} HeightItem)
             {
-                fg.AppendItem(HeightItem, "Height");
+                sb.AppendItem(HeightItem, "Height");
             }
             if ((printMask?.Environment ?? true)
                 && item.Environment is {} EnvironmentItem)
             {
-                fg.AppendItem(EnvironmentItem, "Environment");
+                sb.AppendItem(EnvironmentItem, "Environment");
             }
             if ((printMask?.Multilayer ?? true)
                 && item.Multilayer is {} MultilayerItem)
             {
-                fg.AppendItem(MultilayerItem, "Multilayer");
+                sb.AppendItem(MultilayerItem, "Multilayer");
             }
             if ((printMask?.BacklightMaskOrSpecular ?? true)
                 && item.BacklightMaskOrSpecular is {} BacklightMaskOrSpecularItem)
             {
-                fg.AppendItem(BacklightMaskOrSpecularItem, "BacklightMaskOrSpecular");
+                sb.AppendItem(BacklightMaskOrSpecularItem, "BacklightMaskOrSpecular");
             }
             if ((printMask?.Decal?.Overall ?? true)
                 && item.Decal is {} DecalItem)
             {
-                DecalItem?.ToString(fg, "Decal");
+                DecalItem?.ToString(sb, "Decal");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
         }
         
@@ -2186,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
@@ -2381,11 +2400,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TextureSetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

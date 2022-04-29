@@ -39,7 +39,7 @@ internal class GenderedItemBinaryOverlay<T> : PluginBinaryOverlay, IGenderedItem
         yield return Female;
     }
 
-    public void ToString(FileGeneration fg, string? name) => GenderedItem.ToString(this, fg, name);
+    public void ToString(StructuredStringBuilder fg, string? name) => GenderedItem.ToString(this, fg, name);
 
     IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 }

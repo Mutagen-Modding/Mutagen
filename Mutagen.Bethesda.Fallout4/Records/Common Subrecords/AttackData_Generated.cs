@@ -96,11 +96,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AttackDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -301,63 +302,63 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(AttackData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, AttackData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, AttackData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(AttackData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AttackData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.DamageMult ?? true)
                     {
-                        fg.AppendItem(DamageMult, "DamageMult");
+                        sb.AppendItem(DamageMult, "DamageMult");
                     }
                     if (printMask?.Chance ?? true)
                     {
-                        fg.AppendItem(Chance, "Chance");
+                        sb.AppendItem(Chance, "Chance");
                     }
                     if (printMask?.Spell ?? true)
                     {
-                        fg.AppendItem(Spell, "Spell");
+                        sb.AppendItem(Spell, "Spell");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.AttackAngle ?? true)
                     {
-                        fg.AppendItem(AttackAngle, "AttackAngle");
+                        sb.AppendItem(AttackAngle, "AttackAngle");
                     }
                     if (printMask?.StrikeAngle ?? true)
                     {
-                        fg.AppendItem(StrikeAngle, "StrikeAngle");
+                        sb.AppendItem(StrikeAngle, "StrikeAngle");
                     }
                     if (printMask?.Stagger ?? true)
                     {
-                        fg.AppendItem(Stagger, "Stagger");
+                        sb.AppendItem(Stagger, "Stagger");
                     }
                     if (printMask?.Knockdown ?? true)
                     {
-                        fg.AppendItem(Knockdown, "Knockdown");
+                        sb.AppendItem(Knockdown, "Knockdown");
                     }
                     if (printMask?.RecoveryTime ?? true)
                     {
-                        fg.AppendItem(RecoveryTime, "RecoveryTime");
+                        sb.AppendItem(RecoveryTime, "RecoveryTime");
                     }
                     if (printMask?.ActionPointsMult ?? true)
                     {
-                        fg.AppendItem(ActionPointsMult, "ActionPointsMult");
+                        sb.AppendItem(ActionPointsMult, "ActionPointsMult");
                     }
                     if (printMask?.StaggerOffset ?? true)
                     {
-                        fg.AppendItem(StaggerOffset, "StaggerOffset");
+                        sb.AppendItem(StaggerOffset, "StaggerOffset");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -534,44 +535,66 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(DamageMult, "DamageMult");
-                fg.AppendItem(Chance, "Chance");
-                fg.AppendItem(Spell, "Spell");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(AttackAngle, "AttackAngle");
-                fg.AppendItem(StrikeAngle, "StrikeAngle");
-                fg.AppendItem(Stagger, "Stagger");
-                fg.AppendItem(Knockdown, "Knockdown");
-                fg.AppendItem(RecoveryTime, "RecoveryTime");
-                fg.AppendItem(ActionPointsMult, "ActionPointsMult");
-                fg.AppendItem(StaggerOffset, "StaggerOffset");
+                {
+                    sb.AppendItem(DamageMult, "DamageMult");
+                }
+                {
+                    sb.AppendItem(Chance, "Chance");
+                }
+                {
+                    sb.AppendItem(Spell, "Spell");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(AttackAngle, "AttackAngle");
+                }
+                {
+                    sb.AppendItem(StrikeAngle, "StrikeAngle");
+                }
+                {
+                    sb.AppendItem(Stagger, "Stagger");
+                }
+                {
+                    sb.AppendItem(Knockdown, "Knockdown");
+                }
+                {
+                    sb.AppendItem(RecoveryTime, "RecoveryTime");
+                }
+                {
+                    sb.AppendItem(ActionPointsMult, "ActionPointsMult");
+                }
+                {
+                    sb.AppendItem(StaggerOffset, "StaggerOffset");
+                }
             }
             #endregion
 
@@ -728,7 +751,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -823,13 +846,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IAttackDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AttackData.Mask<bool>? printMask = null)
         {
             ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1144,88 +1167,88 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             AttackData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IAttackDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AttackData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AttackData =>");
+                sb.AppendLine($"AttackData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AttackData) =>");
+                sb.AppendLine($"{name} (AttackData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAttackDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AttackData.Mask<bool>? printMask = null)
         {
             if (printMask?.DamageMult ?? true)
             {
-                fg.AppendItem(item.DamageMult, "DamageMult");
+                sb.AppendItem(item.DamageMult, "DamageMult");
             }
             if (printMask?.Chance ?? true)
             {
-                fg.AppendItem(item.Chance, "Chance");
+                sb.AppendItem(item.Chance, "Chance");
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell.FormKey, "Spell");
+                sb.AppendItem(item.Spell.FormKey, "Spell");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.AttackAngle ?? true)
             {
-                fg.AppendItem(item.AttackAngle, "AttackAngle");
+                sb.AppendItem(item.AttackAngle, "AttackAngle");
             }
             if (printMask?.StrikeAngle ?? true)
             {
-                fg.AppendItem(item.StrikeAngle, "StrikeAngle");
+                sb.AppendItem(item.StrikeAngle, "StrikeAngle");
             }
             if (printMask?.Stagger ?? true)
             {
-                fg.AppendItem(item.Stagger, "Stagger");
+                sb.AppendItem(item.Stagger, "Stagger");
             }
             if (printMask?.Knockdown ?? true)
             {
-                fg.AppendItem(item.Knockdown, "Knockdown");
+                sb.AppendItem(item.Knockdown, "Knockdown");
             }
             if (printMask?.RecoveryTime ?? true)
             {
-                fg.AppendItem(item.RecoveryTime, "RecoveryTime");
+                sb.AppendItem(item.RecoveryTime, "RecoveryTime");
             }
             if (printMask?.ActionPointsMult ?? true)
             {
-                fg.AppendItem(item.ActionPointsMult, "ActionPointsMult");
+                sb.AppendItem(item.ActionPointsMult, "ActionPointsMult");
             }
             if (printMask?.StaggerOffset ?? true)
             {
-                fg.AppendItem(item.StaggerOffset, "StaggerOffset");
+                sb.AppendItem(item.StaggerOffset, "StaggerOffset");
             }
         }
         
@@ -1604,7 +1627,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => AttackDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1680,11 +1703,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AttackDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

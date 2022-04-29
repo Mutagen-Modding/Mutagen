@@ -72,11 +72,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WaterReflectionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -205,31 +206,31 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(WaterReflection.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, WaterReflection.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, WaterReflection.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WaterReflection.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WaterReflection.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.Water ?? true)
                     {
-                        fg.AppendItem(Water, "Water");
+                        sb.AppendItem(Water, "Water");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -326,36 +327,42 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Water, "Water");
-                fg.AppendItem(Type, "Type");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Water, "Water");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
             }
             #endregion
 
@@ -485,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -564,13 +571,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IWaterReflectionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WaterReflection.Mask<bool>? printMask = null)
         {
             ((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -861,56 +868,56 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             WaterReflection.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWaterReflectionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WaterReflection.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WaterReflection =>");
+                sb.AppendLine($"WaterReflection =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WaterReflection) =>");
+                sb.AppendLine($"{name} (WaterReflection) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWaterReflectionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WaterReflection.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendItem(item.Water.FormKey, "Water");
+                sb.AppendItem(item.Water.FormKey, "Water");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
         }
         
@@ -1192,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterReflectionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1263,11 +1270,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WaterReflectionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

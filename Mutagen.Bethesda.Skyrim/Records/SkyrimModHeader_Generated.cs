@@ -147,11 +147,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SkyrimModHeaderMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -456,113 +457,115 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(SkyrimModHeader.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, SkyrimModHeader.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, SkyrimModHeader.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SkyrimModHeader.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SkyrimModHeader.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.FormID ?? true)
                     {
-                        fg.AppendItem(FormID, "FormID");
+                        sb.AppendItem(FormID, "FormID");
                     }
                     if (printMask?.Version ?? true)
                     {
-                        fg.AppendItem(Version, "Version");
+                        sb.AppendItem(Version, "Version");
                     }
                     if (printMask?.FormVersion ?? true)
                     {
-                        fg.AppendItem(FormVersion, "FormVersion");
+                        sb.AppendItem(FormVersion, "FormVersion");
                     }
                     if (printMask?.Version2 ?? true)
                     {
-                        fg.AppendItem(Version2, "Version2");
+                        sb.AppendItem(Version2, "Version2");
                     }
                     if (printMask?.Stats?.Overall ?? true)
                     {
-                        Stats?.ToString(fg);
+                        Stats?.ToString(sb);
                     }
                     if (printMask?.TypeOffsets ?? true)
                     {
-                        fg.AppendItem(TypeOffsets, "TypeOffsets");
+                        sb.AppendItem(TypeOffsets, "TypeOffsets");
                     }
                     if (printMask?.Deleted ?? true)
                     {
-                        fg.AppendItem(Deleted, "Deleted");
+                        sb.AppendItem(Deleted, "Deleted");
                     }
                     if (printMask?.Author ?? true)
                     {
-                        fg.AppendItem(Author, "Author");
+                        sb.AppendItem(Author, "Author");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.MasterReferences?.Overall ?? true)
                         && MasterReferences is {} MasterReferencesItem)
                     {
-                        fg.AppendLine("MasterReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MasterReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(MasterReferencesItem.Overall);
+                            sb.AppendItem(MasterReferencesItem.Overall);
                             if (MasterReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in MasterReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.OverriddenForms?.Overall ?? true)
                         && OverriddenForms is {} OverriddenFormsItem)
                     {
-                        fg.AppendLine("OverriddenForms =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("OverriddenForms =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(OverriddenFormsItem.Overall);
+                            sb.AppendItem(OverriddenFormsItem.Overall);
                             if (OverriddenFormsItem.Specific != null)
                             {
                                 foreach (var subItem in OverriddenFormsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.INTV ?? true)
                     {
-                        fg.AppendItem(INTV, "INTV");
+                        sb.AppendItem(INTV, "INTV");
                     }
                     if (printMask?.INCC ?? true)
                     {
-                        fg.AppendItem(INCC, "INCC");
+                        sb.AppendItem(INCC, "INCC");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -769,89 +772,113 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(FormID, "FormID");
-                fg.AppendItem(Version, "Version");
-                fg.AppendItem(FormVersion, "FormVersion");
-                fg.AppendItem(Version2, "Version2");
-                Stats?.ToString(fg);
-                fg.AppendItem(TypeOffsets, "TypeOffsets");
-                fg.AppendItem(Deleted, "Deleted");
-                fg.AppendItem(Author, "Author");
-                fg.AppendItem(Description, "Description");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(FormID, "FormID");
+                }
+                {
+                    sb.AppendItem(Version, "Version");
+                }
+                {
+                    sb.AppendItem(FormVersion, "FormVersion");
+                }
+                {
+                    sb.AppendItem(Version2, "Version2");
+                }
+                Stats?.ToString(sb);
+                {
+                    sb.AppendItem(TypeOffsets, "TypeOffsets");
+                }
+                {
+                    sb.AppendItem(Deleted, "Deleted");
+                }
+                {
+                    sb.AppendItem(Author, "Author");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (MasterReferences is {} MasterReferencesItem)
                 {
-                    fg.AppendLine("MasterReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MasterReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(MasterReferencesItem.Overall);
+                        sb.AppendItem(MasterReferencesItem.Overall);
                         if (MasterReferencesItem.Specific != null)
                         {
                             foreach (var subItem in MasterReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (OverriddenForms is {} OverriddenFormsItem)
                 {
-                    fg.AppendLine("OverriddenForms =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("OverriddenForms =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(OverriddenFormsItem.Overall);
+                        sb.AppendItem(OverriddenFormsItem.Overall);
                         if (OverriddenFormsItem.Specific != null)
                         {
                             foreach (var subItem in OverriddenFormsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(INTV, "INTV");
-                fg.AppendItem(INCC, "INCC");
+                {
+                    sb.AppendItem(INTV, "INTV");
+                }
+                {
+                    sb.AppendItem(INCC, "INCC");
+                }
             }
             #endregion
 
@@ -1019,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1120,13 +1147,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ISkyrimModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SkyrimModHeader.Mask<bool>? printMask = null)
         {
             ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1469,135 +1496,135 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             SkyrimModHeader.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ISkyrimModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SkyrimModHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SkyrimModHeader =>");
+                sb.AppendLine($"SkyrimModHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SkyrimModHeader) =>");
+                sb.AppendLine($"{name} (SkyrimModHeader) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISkyrimModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SkyrimModHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.FormID ?? true)
             {
-                fg.AppendItem(item.FormID, "FormID");
+                sb.AppendItem(item.FormID, "FormID");
             }
             if (printMask?.Version ?? true)
             {
-                fg.AppendItem(item.Version, "Version");
+                sb.AppendItem(item.Version, "Version");
             }
             if (printMask?.FormVersion ?? true)
             {
-                fg.AppendItem(item.FormVersion, "FormVersion");
+                sb.AppendItem(item.FormVersion, "FormVersion");
             }
             if (printMask?.Version2 ?? true)
             {
-                fg.AppendItem(item.Version2, "Version2");
+                sb.AppendItem(item.Version2, "Version2");
             }
             if (printMask?.Stats?.Overall ?? true)
             {
-                item.Stats?.ToString(fg, "Stats");
+                item.Stats?.ToString(sb, "Stats");
             }
             if ((printMask?.TypeOffsets ?? true)
                 && item.TypeOffsets is {} TypeOffsetsItem)
             {
-                fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
+                sb.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
             }
             if ((printMask?.Deleted ?? true)
                 && item.Deleted is {} DeletedItem)
             {
-                fg.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
+                sb.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
             }
             if ((printMask?.Author ?? true)
                 && item.Author is {} AuthorItem)
             {
-                fg.AppendItem(AuthorItem, "Author");
+                sb.AppendItem(AuthorItem, "Author");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.MasterReferences?.Overall ?? true)
             {
-                fg.AppendLine("MasterReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MasterReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.MasterReferences)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.OverriddenForms?.Overall ?? true)
                 && item.OverriddenForms is {} OverriddenFormsItem)
             {
-                fg.AppendLine("OverriddenForms =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("OverriddenForms =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in OverriddenFormsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.INTV ?? true)
                 && item.INTV is {} INTVItem)
             {
-                fg.AppendItem(INTVItem, "INTV");
+                sb.AppendItem(INTVItem, "INTV");
             }
             if ((printMask?.INCC ?? true)
                 && item.INCC is {} INCCItem)
             {
-                fg.AppendItem(INCCItem, "INCC");
+                sb.AppendItem(INCCItem, "INCC");
             }
         }
         
@@ -2232,7 +2259,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimModHeaderCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2416,11 +2443,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SkyrimModHeaderMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

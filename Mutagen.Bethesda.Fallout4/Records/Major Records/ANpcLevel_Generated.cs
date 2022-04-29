@@ -58,11 +58,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ANpcLevelMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -158,19 +159,19 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(ANpcLevel.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ANpcLevel.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ANpcLevel.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ANpcLevel.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ANpcLevel.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -237,32 +238,32 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
             {
             }
             #endregion
@@ -345,7 +346,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -422,13 +423,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IANpcLevelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ANpcLevel.Mask<bool>? printMask = null)
         {
             ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -693,43 +694,43 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             ANpcLevel.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IANpcLevelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ANpcLevel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ANpcLevel =>");
+                sb.AppendLine($"ANpcLevel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ANpcLevel) =>");
+                sb.AppendLine($"{name} (ANpcLevel) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IANpcLevelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ANpcLevel.Mask<bool>? printMask = null)
         {
         }
@@ -942,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANpcLevelBinaryWriteTranslation.Instance;
@@ -978,11 +979,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ANpcLevelMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

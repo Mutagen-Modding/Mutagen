@@ -73,11 +73,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TransientTypeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -230,46 +231,48 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(TransientType.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TransientType.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TransientType.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TransientType.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TransientType.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.FormType ?? true)
                     {
-                        fg.AppendItem(FormType, "FormType");
+                        sb.AppendItem(FormType, "FormType");
                     }
                     if ((printMask?.Links?.Overall ?? true)
                         && Links is {} LinksItem)
                     {
-                        fg.AppendLine("Links =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Links =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LinksItem.Overall);
+                            sb.AppendItem(LinksItem.Overall);
                             if (LinksItem.Specific != null)
                             {
                                 foreach (var subItem in LinksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -356,55 +359,59 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(FormType, "FormType");
+                {
+                    sb.AppendItem(FormType, "FormType");
+                }
                 if (Links is {} LinksItem)
                 {
-                    fg.AppendLine("Links =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Links =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LinksItem.Overall);
+                        sb.AppendItem(LinksItem.Overall);
                         if (LinksItem.Specific != null)
                         {
                             foreach (var subItem in LinksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -526,7 +533,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -603,13 +610,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this ITransientTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TransientType.Mask<bool>? printMask = null)
         {
             ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -900,66 +907,66 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             TransientType.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITransientTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TransientType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TransientType =>");
+                sb.AppendLine($"TransientType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TransientType) =>");
+                sb.AppendLine($"{name} (TransientType) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITransientTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TransientType.Mask<bool>? printMask = null)
         {
             if (printMask?.FormType ?? true)
             {
-                fg.AppendItem(item.FormType, "FormType");
+                sb.AppendItem(item.FormType, "FormType");
             }
             if (printMask?.Links?.Overall ?? true)
             {
-                fg.AppendLine("Links =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Links =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Links)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1245,7 +1252,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => TransientTypeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1315,11 +1322,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TransientTypeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

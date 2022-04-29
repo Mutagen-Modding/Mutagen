@@ -81,11 +81,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PackageFlagsOverrideMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -241,43 +242,43 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(PackageFlagsOverride.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PackageFlagsOverride.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PackageFlagsOverride.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PackageFlagsOverride.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PackageFlagsOverride.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.SetFlags ?? true)
                     {
-                        fg.AppendItem(SetFlags, "SetFlags");
+                        sb.AppendItem(SetFlags, "SetFlags");
                     }
                     if (printMask?.ClearFlags ?? true)
                     {
-                        fg.AppendItem(ClearFlags, "ClearFlags");
+                        sb.AppendItem(ClearFlags, "ClearFlags");
                     }
                     if (printMask?.SetInterruptFlags ?? true)
                     {
-                        fg.AppendItem(SetInterruptFlags, "SetInterruptFlags");
+                        sb.AppendItem(SetInterruptFlags, "SetInterruptFlags");
                     }
                     if (printMask?.ClearInterruptFlags ?? true)
                     {
-                        fg.AppendItem(ClearInterruptFlags, "ClearInterruptFlags");
+                        sb.AppendItem(ClearInterruptFlags, "ClearInterruptFlags");
                     }
                     if (printMask?.PreferredSpeed ?? true)
                     {
-                        fg.AppendItem(PreferredSpeed, "PreferredSpeed");
+                        sb.AppendItem(PreferredSpeed, "PreferredSpeed");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -404,39 +405,51 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(SetFlags, "SetFlags");
-                fg.AppendItem(ClearFlags, "ClearFlags");
-                fg.AppendItem(SetInterruptFlags, "SetInterruptFlags");
-                fg.AppendItem(ClearInterruptFlags, "ClearInterruptFlags");
-                fg.AppendItem(PreferredSpeed, "PreferredSpeed");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(SetFlags, "SetFlags");
+                }
+                {
+                    sb.AppendItem(ClearFlags, "ClearFlags");
+                }
+                {
+                    sb.AppendItem(SetInterruptFlags, "SetInterruptFlags");
+                }
+                {
+                    sb.AppendItem(ClearInterruptFlags, "ClearInterruptFlags");
+                }
+                {
+                    sb.AppendItem(PreferredSpeed, "PreferredSpeed");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -568,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -651,13 +664,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IPackageFlagsOverrideGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageFlagsOverride.Mask<bool>? printMask = null)
         {
             ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -956,68 +969,68 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             PackageFlagsOverride.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPackageFlagsOverrideGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageFlagsOverride.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PackageFlagsOverride =>");
+                sb.AppendLine($"PackageFlagsOverride =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PackageFlagsOverride) =>");
+                sb.AppendLine($"{name} (PackageFlagsOverride) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPackageFlagsOverrideGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PackageFlagsOverride.Mask<bool>? printMask = null)
         {
             if (printMask?.SetFlags ?? true)
             {
-                fg.AppendItem(item.SetFlags, "SetFlags");
+                sb.AppendItem(item.SetFlags, "SetFlags");
             }
             if (printMask?.ClearFlags ?? true)
             {
-                fg.AppendItem(item.ClearFlags, "ClearFlags");
+                sb.AppendItem(item.ClearFlags, "ClearFlags");
             }
             if (printMask?.SetInterruptFlags ?? true)
             {
-                fg.AppendItem(item.SetInterruptFlags, "SetInterruptFlags");
+                sb.AppendItem(item.SetInterruptFlags, "SetInterruptFlags");
             }
             if (printMask?.ClearInterruptFlags ?? true)
             {
-                fg.AppendItem(item.ClearInterruptFlags, "ClearInterruptFlags");
+                sb.AppendItem(item.ClearInterruptFlags, "ClearInterruptFlags");
             }
             if (printMask?.PreferredSpeed ?? true)
             {
-                fg.AppendItem(item.PreferredSpeed, "PreferredSpeed");
+                sb.AppendItem(item.PreferredSpeed, "PreferredSpeed");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
         }
         
@@ -1344,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageFlagsOverrideBinaryWriteTranslation.Instance;
@@ -1414,11 +1427,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PackageFlagsOverrideMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

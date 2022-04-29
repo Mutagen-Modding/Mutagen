@@ -108,11 +108,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CameraPathMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -365,96 +366,100 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CameraPath.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CameraPath.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CameraPath.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CameraPath.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CameraPath.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.RelatedPaths?.Overall ?? true)
                         && RelatedPaths is {} RelatedPathsItem)
                     {
-                        fg.AppendLine("RelatedPaths =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("RelatedPaths =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(RelatedPathsItem.Overall);
+                            sb.AppendItem(RelatedPathsItem.Overall);
                             if (RelatedPathsItem.Specific != null)
                             {
                                 foreach (var subItem in RelatedPathsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Zoom ?? true)
                     {
-                        fg.AppendItem(Zoom, "Zoom");
+                        sb.AppendItem(Zoom, "Zoom");
                     }
                     if (printMask?.ZoomMustHaveCameraShots ?? true)
                     {
-                        fg.AppendItem(ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
+                        sb.AppendItem(ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
                     }
                     if ((printMask?.Shots?.Overall ?? true)
                         && Shots is {} ShotsItem)
                     {
-                        fg.AppendLine("Shots =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Shots =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ShotsItem.Overall);
+                            sb.AppendItem(ShotsItem.Overall);
                             if (ShotsItem.Specific != null)
                             {
                                 foreach (var subItem in ShotsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -560,101 +565,109 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.ToString_FillInternal(sb);
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (RelatedPaths is {} RelatedPathsItem)
                 {
-                    fg.AppendLine("RelatedPaths =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("RelatedPaths =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(RelatedPathsItem.Overall);
+                        sb.AppendItem(RelatedPathsItem.Overall);
                         if (RelatedPathsItem.Specific != null)
                         {
                             foreach (var subItem in RelatedPathsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Zoom, "Zoom");
-                fg.AppendItem(ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
+                {
+                    sb.AppendItem(Zoom, "Zoom");
+                }
+                {
+                    sb.AppendItem(ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
+                }
                 if (Shots is {} ShotsItem)
                 {
-                    fg.AppendLine("Shots =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Shots =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ShotsItem.Overall);
+                        sb.AppendItem(ShotsItem.Overall);
                         if (ShotsItem.Specific != null)
                         {
                             foreach (var subItem in ShotsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -845,7 +858,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -932,13 +945,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICameraPathGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CameraPath.Mask<bool>? printMask = null)
         {
             ((CameraPathCommon)((ICameraPathGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1281,110 +1294,110 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CameraPath.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICameraPathGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CameraPath.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CameraPath =>");
+                sb.AppendLine($"CameraPath =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CameraPath) =>");
+                sb.AppendLine($"{name} (CameraPath) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICameraPathGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CameraPath.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.RelatedPaths?.Overall ?? true)
             {
-                fg.AppendLine("RelatedPaths =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("RelatedPaths =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.RelatedPaths)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Zoom ?? true)
             {
-                fg.AppendItem(item.Zoom, "Zoom");
+                sb.AppendItem(item.Zoom, "Zoom");
             }
             if (printMask?.ZoomMustHaveCameraShots ?? true)
             {
-                fg.AppendItem(item.ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
+                sb.AppendItem(item.ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
             }
             if (printMask?.Shots?.Overall ?? true)
             {
-                fg.AppendLine("Shots =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Shots =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Shots)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -2057,7 +2070,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CameraPathCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2215,11 +2228,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CameraPathMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

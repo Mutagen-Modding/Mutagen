@@ -180,11 +180,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ArmorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -444,67 +445,67 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Armor.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Armor.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Armor.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Armor.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Armor.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendItem(Script, "Script");
+                        sb.AppendItem(Script, "Script");
                     }
                     if (printMask?.Enchantment ?? true)
                     {
-                        fg.AppendItem(Enchantment, "Enchantment");
+                        sb.AppendItem(Enchantment, "Enchantment");
                     }
                     if (printMask?.EnchantmentPoints ?? true)
                     {
-                        fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
+                        sb.AppendItem(EnchantmentPoints, "EnchantmentPoints");
                     }
                     if (printMask?.ClothingFlags?.Overall ?? true)
                     {
-                        ClothingFlags?.ToString(fg);
+                        ClothingFlags?.ToString(sb);
                     }
                     if (printMask?.MaleBipedModel?.Overall ?? true)
                     {
-                        MaleBipedModel?.ToString(fg);
+                        MaleBipedModel?.ToString(sb);
                     }
                     if (printMask?.MaleWorldModel?.Overall ?? true)
                     {
-                        MaleWorldModel?.ToString(fg);
+                        MaleWorldModel?.ToString(sb);
                     }
                     if (printMask?.MaleIcon ?? true)
                     {
-                        fg.AppendItem(MaleIcon, "MaleIcon");
+                        sb.AppendItem(MaleIcon, "MaleIcon");
                     }
                     if (printMask?.FemaleBipedModel?.Overall ?? true)
                     {
-                        FemaleBipedModel?.ToString(fg);
+                        FemaleBipedModel?.ToString(sb);
                     }
                     if (printMask?.FemaleWorldModel?.Overall ?? true)
                     {
-                        FemaleWorldModel?.ToString(fg);
+                        FemaleWorldModel?.ToString(sb);
                     }
                     if (printMask?.FemaleIcon ?? true)
                     {
-                        fg.AppendItem(FemaleIcon, "FemaleIcon");
+                        sb.AppendItem(FemaleIcon, "FemaleIcon");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -680,46 +681,58 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Script, "Script");
-                fg.AppendItem(Enchantment, "Enchantment");
-                fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
-                ClothingFlags?.ToString(fg);
-                MaleBipedModel?.ToString(fg);
-                MaleWorldModel?.ToString(fg);
-                fg.AppendItem(MaleIcon, "MaleIcon");
-                FemaleBipedModel?.ToString(fg);
-                FemaleWorldModel?.ToString(fg);
-                fg.AppendItem(FemaleIcon, "FemaleIcon");
-                Data?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                {
+                    sb.AppendItem(Enchantment, "Enchantment");
+                }
+                {
+                    sb.AppendItem(EnchantmentPoints, "EnchantmentPoints");
+                }
+                ClothingFlags?.ToString(sb);
+                MaleBipedModel?.ToString(sb);
+                MaleWorldModel?.ToString(sb);
+                {
+                    sb.AppendItem(MaleIcon, "MaleIcon");
+                }
+                FemaleBipedModel?.ToString(sb);
+                FemaleWorldModel?.ToString(sb);
+                {
+                    sb.AppendItem(FemaleIcon, "FemaleIcon");
+                }
+                Data?.ToString(sb);
             }
             #endregion
 
@@ -915,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1030,13 +1043,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IArmorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Armor.Mask<bool>? printMask = null)
         {
             ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1455,106 +1468,106 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Armor.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IArmorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Armor.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Armor =>");
+                sb.AppendLine($"Armor =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Armor) =>");
+                sb.AppendLine($"{name} (Armor) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IArmorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Armor.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKeyNullable, "Script");
+                sb.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if (printMask?.Enchantment ?? true)
             {
-                fg.AppendItem(item.Enchantment.FormKeyNullable, "Enchantment");
+                sb.AppendItem(item.Enchantment.FormKeyNullable, "Enchantment");
             }
             if ((printMask?.EnchantmentPoints ?? true)
                 && item.EnchantmentPoints is {} EnchantmentPointsItem)
             {
-                fg.AppendItem(EnchantmentPointsItem, "EnchantmentPoints");
+                sb.AppendItem(EnchantmentPointsItem, "EnchantmentPoints");
             }
             if ((printMask?.ClothingFlags?.Overall ?? true)
                 && item.ClothingFlags is {} ClothingFlagsItem)
             {
-                ClothingFlagsItem?.ToString(fg, "ClothingFlags");
+                ClothingFlagsItem?.ToString(sb, "ClothingFlags");
             }
             if ((printMask?.MaleBipedModel?.Overall ?? true)
                 && item.MaleBipedModel is {} MaleBipedModelItem)
             {
-                MaleBipedModelItem?.ToString(fg, "MaleBipedModel");
+                MaleBipedModelItem?.ToString(sb, "MaleBipedModel");
             }
             if ((printMask?.MaleWorldModel?.Overall ?? true)
                 && item.MaleWorldModel is {} MaleWorldModelItem)
             {
-                MaleWorldModelItem?.ToString(fg, "MaleWorldModel");
+                MaleWorldModelItem?.ToString(sb, "MaleWorldModel");
             }
             if ((printMask?.MaleIcon ?? true)
                 && item.MaleIcon is {} MaleIconItem)
             {
-                fg.AppendItem(MaleIconItem, "MaleIcon");
+                sb.AppendItem(MaleIconItem, "MaleIcon");
             }
             if ((printMask?.FemaleBipedModel?.Overall ?? true)
                 && item.FemaleBipedModel is {} FemaleBipedModelItem)
             {
-                FemaleBipedModelItem?.ToString(fg, "FemaleBipedModel");
+                FemaleBipedModelItem?.ToString(sb, "FemaleBipedModel");
             }
             if ((printMask?.FemaleWorldModel?.Overall ?? true)
                 && item.FemaleWorldModel is {} FemaleWorldModelItem)
             {
-                FemaleWorldModelItem?.ToString(fg, "FemaleWorldModel");
+                FemaleWorldModelItem?.ToString(sb, "FemaleWorldModel");
             }
             if ((printMask?.FemaleIcon ?? true)
                 && item.FemaleIcon is {} FemaleIconItem)
             {
-                fg.AppendItem(FemaleIconItem, "FemaleIcon");
+                sb.AppendItem(FemaleIconItem, "FemaleIcon");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.ToString(sb, "Data");
             }
         }
         
@@ -2473,7 +2486,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2681,11 +2694,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ArmorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

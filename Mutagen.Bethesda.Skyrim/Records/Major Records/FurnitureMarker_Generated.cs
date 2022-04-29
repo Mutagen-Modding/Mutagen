@@ -92,11 +92,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FurnitureMarkerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -250,35 +251,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(FurnitureMarker.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, FurnitureMarker.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, FurnitureMarker.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(FurnitureMarker.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FurnitureMarker.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Enabled ?? true)
                     {
-                        fg.AppendItem(Enabled, "Enabled");
+                        sb.AppendItem(Enabled, "Enabled");
                     }
                     if (printMask?.DisabledEntryPoints?.Overall ?? true)
                     {
-                        DisabledEntryPoints?.ToString(fg);
+                        DisabledEntryPoints?.ToString(sb);
                     }
                     if (printMask?.MarkerKeyword ?? true)
                     {
-                        fg.AppendItem(MarkerKeyword, "MarkerKeyword");
+                        sb.AppendItem(MarkerKeyword, "MarkerKeyword");
                     }
                     if (printMask?.EntryPoints?.Overall ?? true)
                     {
-                        EntryPoints?.ToString(fg);
+                        EntryPoints?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -385,37 +386,41 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Enabled, "Enabled");
-                DisabledEntryPoints?.ToString(fg);
-                fg.AppendItem(MarkerKeyword, "MarkerKeyword");
-                EntryPoints?.ToString(fg);
+                {
+                    sb.AppendItem(Enabled, "Enabled");
+                }
+                DisabledEntryPoints?.ToString(sb);
+                {
+                    sb.AppendItem(MarkerKeyword, "MarkerKeyword");
+                }
+                EntryPoints?.ToString(sb);
             }
             #endregion
 
@@ -542,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -623,13 +628,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IFurnitureMarkerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FurnitureMarker.Mask<bool>? printMask = null)
         {
             ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -920,62 +925,62 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             FurnitureMarker.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IFurnitureMarkerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FurnitureMarker.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FurnitureMarker =>");
+                sb.AppendLine($"FurnitureMarker =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FurnitureMarker) =>");
+                sb.AppendLine($"{name} (FurnitureMarker) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFurnitureMarkerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FurnitureMarker.Mask<bool>? printMask = null)
         {
             if (printMask?.Enabled ?? true)
             {
-                fg.AppendItem(item.Enabled, "Enabled");
+                sb.AppendItem(item.Enabled, "Enabled");
             }
             if ((printMask?.DisabledEntryPoints?.Overall ?? true)
                 && item.DisabledEntryPoints is {} DisabledEntryPointsItem)
             {
-                DisabledEntryPointsItem?.ToString(fg, "DisabledEntryPoints");
+                DisabledEntryPointsItem?.ToString(sb, "DisabledEntryPoints");
             }
             if (printMask?.MarkerKeyword ?? true)
             {
-                fg.AppendItem(item.MarkerKeyword.FormKeyNullable, "MarkerKeyword");
+                sb.AppendItem(item.MarkerKeyword.FormKeyNullable, "MarkerKeyword");
             }
             if ((printMask?.EntryPoints?.Overall ?? true)
                 && item.EntryPoints is {} EntryPointsItem)
             {
-                EntryPointsItem?.ToString(fg, "EntryPoints");
+                EntryPointsItem?.ToString(sb, "EntryPoints");
             }
         }
         
@@ -1323,7 +1328,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => FurnitureMarkerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1391,11 +1396,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FurnitureMarkerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

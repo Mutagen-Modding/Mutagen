@@ -64,7 +64,7 @@ public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
         Accessor frameAccessor,
@@ -75,16 +75,16 @@ public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         BoolType b = typeGen as BoolType;
         if (b.BoolAsMarker == null)
         {
-            await base.GenerateCopyIn(fg, objGen, typeGen, frameAccessor, itemAccessor, errorMaskAccessor, translationMaskAccessor);
+            await base.GenerateCopyIn(sb, objGen, typeGen, frameAccessor, itemAccessor, errorMaskAccessor, translationMaskAccessor);
         }
         else
         {
-            fg.AppendLine($"{itemAccessor} = true;");
+            sb.AppendLine($"{itemAccessor} = true;");
         }
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
         Accessor writerAccessor,
@@ -97,7 +97,7 @@ public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         if (b.BoolAsMarker == null)
         {
             await base.GenerateWrite(
-                fg,
+                sb,
                 objGen,
                 typeGen,
                 writerAccessor,
@@ -109,7 +109,7 @@ public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         else
         {
             var data = typeGen.GetFieldData();
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.WriteAsMarker"))
             {
                 args.Add($"writer: {writerAccessor}");

@@ -11,7 +11,7 @@ public class NothingBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
         Accessor readerAccessor, 
@@ -22,7 +22,7 @@ public class NothingBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration targetGen, 
         TypeGeneration typeGen, 
@@ -38,7 +38,7 @@ public class NothingBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen, 
         Accessor writerAccessor, 

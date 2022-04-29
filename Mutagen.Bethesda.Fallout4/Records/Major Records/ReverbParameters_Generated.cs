@@ -103,11 +103,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ReverbParametersMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -339,75 +340,75 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(ReverbParameters.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ReverbParameters.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ReverbParameters.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ReverbParameters.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ReverbParameters.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.DecayMilliseconds ?? true)
                     {
-                        fg.AppendItem(DecayMilliseconds, "DecayMilliseconds");
+                        sb.AppendItem(DecayMilliseconds, "DecayMilliseconds");
                     }
                     if (printMask?.HfReferenceHertz ?? true)
                     {
-                        fg.AppendItem(HfReferenceHertz, "HfReferenceHertz");
+                        sb.AppendItem(HfReferenceHertz, "HfReferenceHertz");
                     }
                     if (printMask?.RoomFilter ?? true)
                     {
-                        fg.AppendItem(RoomFilter, "RoomFilter");
+                        sb.AppendItem(RoomFilter, "RoomFilter");
                     }
                     if (printMask?.RoomHfFilter ?? true)
                     {
-                        fg.AppendItem(RoomHfFilter, "RoomHfFilter");
+                        sb.AppendItem(RoomHfFilter, "RoomHfFilter");
                     }
                     if (printMask?.Reflections ?? true)
                     {
-                        fg.AppendItem(Reflections, "Reflections");
+                        sb.AppendItem(Reflections, "Reflections");
                     }
                     if (printMask?.ReverbAmp ?? true)
                     {
-                        fg.AppendItem(ReverbAmp, "ReverbAmp");
+                        sb.AppendItem(ReverbAmp, "ReverbAmp");
                     }
                     if (printMask?.DecayHfRatio ?? true)
                     {
-                        fg.AppendItem(DecayHfRatio, "DecayHfRatio");
+                        sb.AppendItem(DecayHfRatio, "DecayHfRatio");
                     }
                     if (printMask?.ReflectDelayMS ?? true)
                     {
-                        fg.AppendItem(ReflectDelayMS, "ReflectDelayMS");
+                        sb.AppendItem(ReflectDelayMS, "ReflectDelayMS");
                     }
                     if (printMask?.ReverbDelayMS ?? true)
                     {
-                        fg.AppendItem(ReverbDelayMS, "ReverbDelayMS");
+                        sb.AppendItem(ReverbDelayMS, "ReverbDelayMS");
                     }
                     if (printMask?.DiffusionPercent ?? true)
                     {
-                        fg.AppendItem(DiffusionPercent, "DiffusionPercent");
+                        sb.AppendItem(DiffusionPercent, "DiffusionPercent");
                     }
                     if (printMask?.DensityPercent ?? true)
                     {
-                        fg.AppendItem(DensityPercent, "DensityPercent");
+                        sb.AppendItem(DensityPercent, "DensityPercent");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.ReverbClass ?? true)
                     {
-                        fg.AppendItem(ReverbClass, "ReverbClass");
+                        sb.AppendItem(ReverbClass, "ReverbClass");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -603,48 +604,76 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(DecayMilliseconds, "DecayMilliseconds");
-                fg.AppendItem(HfReferenceHertz, "HfReferenceHertz");
-                fg.AppendItem(RoomFilter, "RoomFilter");
-                fg.AppendItem(RoomHfFilter, "RoomHfFilter");
-                fg.AppendItem(Reflections, "Reflections");
-                fg.AppendItem(ReverbAmp, "ReverbAmp");
-                fg.AppendItem(DecayHfRatio, "DecayHfRatio");
-                fg.AppendItem(ReflectDelayMS, "ReflectDelayMS");
-                fg.AppendItem(ReverbDelayMS, "ReverbDelayMS");
-                fg.AppendItem(DiffusionPercent, "DiffusionPercent");
-                fg.AppendItem(DensityPercent, "DensityPercent");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(ReverbClass, "ReverbClass");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(DecayMilliseconds, "DecayMilliseconds");
+                }
+                {
+                    sb.AppendItem(HfReferenceHertz, "HfReferenceHertz");
+                }
+                {
+                    sb.AppendItem(RoomFilter, "RoomFilter");
+                }
+                {
+                    sb.AppendItem(RoomHfFilter, "RoomHfFilter");
+                }
+                {
+                    sb.AppendItem(Reflections, "Reflections");
+                }
+                {
+                    sb.AppendItem(ReverbAmp, "ReverbAmp");
+                }
+                {
+                    sb.AppendItem(DecayHfRatio, "DecayHfRatio");
+                }
+                {
+                    sb.AppendItem(ReflectDelayMS, "ReflectDelayMS");
+                }
+                {
+                    sb.AppendItem(ReverbDelayMS, "ReverbDelayMS");
+                }
+                {
+                    sb.AppendItem(DiffusionPercent, "DiffusionPercent");
+                }
+                {
+                    sb.AppendItem(DensityPercent, "DensityPercent");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(ReverbClass, "ReverbClass");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -866,7 +895,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -969,13 +998,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IReverbParametersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ReverbParameters.Mask<bool>? printMask = null)
         {
             ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1329,105 +1358,105 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             ReverbParameters.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IReverbParametersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ReverbParameters.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ReverbParameters =>");
+                sb.AppendLine($"ReverbParameters =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ReverbParameters) =>");
+                sb.AppendLine($"{name} (ReverbParameters) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IReverbParametersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ReverbParameters.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.DecayMilliseconds ?? true)
             {
-                fg.AppendItem(item.DecayMilliseconds, "DecayMilliseconds");
+                sb.AppendItem(item.DecayMilliseconds, "DecayMilliseconds");
             }
             if (printMask?.HfReferenceHertz ?? true)
             {
-                fg.AppendItem(item.HfReferenceHertz, "HfReferenceHertz");
+                sb.AppendItem(item.HfReferenceHertz, "HfReferenceHertz");
             }
             if (printMask?.RoomFilter ?? true)
             {
-                fg.AppendItem(item.RoomFilter, "RoomFilter");
+                sb.AppendItem(item.RoomFilter, "RoomFilter");
             }
             if (printMask?.RoomHfFilter ?? true)
             {
-                fg.AppendItem(item.RoomHfFilter, "RoomHfFilter");
+                sb.AppendItem(item.RoomHfFilter, "RoomHfFilter");
             }
             if (printMask?.Reflections ?? true)
             {
-                fg.AppendItem(item.Reflections, "Reflections");
+                sb.AppendItem(item.Reflections, "Reflections");
             }
             if (printMask?.ReverbAmp ?? true)
             {
-                fg.AppendItem(item.ReverbAmp, "ReverbAmp");
+                sb.AppendItem(item.ReverbAmp, "ReverbAmp");
             }
             if (printMask?.DecayHfRatio ?? true)
             {
-                fg.AppendItem(item.DecayHfRatio, "DecayHfRatio");
+                sb.AppendItem(item.DecayHfRatio, "DecayHfRatio");
             }
             if (printMask?.ReflectDelayMS ?? true)
             {
-                fg.AppendItem(item.ReflectDelayMS, "ReflectDelayMS");
+                sb.AppendItem(item.ReflectDelayMS, "ReflectDelayMS");
             }
             if (printMask?.ReverbDelayMS ?? true)
             {
-                fg.AppendItem(item.ReverbDelayMS, "ReverbDelayMS");
+                sb.AppendItem(item.ReverbDelayMS, "ReverbDelayMS");
             }
             if (printMask?.DiffusionPercent ?? true)
             {
-                fg.AppendItem(item.DiffusionPercent, "DiffusionPercent");
+                sb.AppendItem(item.DiffusionPercent, "DiffusionPercent");
             }
             if (printMask?.DensityPercent ?? true)
             {
-                fg.AppendItem(item.DensityPercent, "DensityPercent");
+                sb.AppendItem(item.DensityPercent, "DensityPercent");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.ReverbClass ?? true)
                 && item.ReverbClass is {} ReverbClassItem)
             {
-                fg.AppendItem(ReverbClassItem, "ReverbClass");
+                sb.AppendItem(ReverbClassItem, "ReverbClass");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2085,7 +2114,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ReverbParametersBinaryWriteTranslation.Instance;
@@ -2256,11 +2285,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ReverbParametersMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

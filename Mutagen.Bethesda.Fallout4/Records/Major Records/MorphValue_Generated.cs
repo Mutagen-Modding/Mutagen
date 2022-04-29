@@ -70,11 +70,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MorphValueMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -203,31 +204,31 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(MorphValue.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MorphValue.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MorphValue.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MorphValue.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MorphValue.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.MinName ?? true)
                     {
-                        fg.AppendItem(MinName, "MinName");
+                        sb.AppendItem(MinName, "MinName");
                     }
                     if (printMask?.MaxName ?? true)
                     {
-                        fg.AppendItem(MaxName, "MaxName");
+                        sb.AppendItem(MaxName, "MaxName");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -324,36 +325,42 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(MinName, "MinName");
-                fg.AppendItem(MaxName, "MaxName");
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(MinName, "MinName");
+                }
+                {
+                    sb.AppendItem(MaxName, "MaxName");
+                }
             }
             #endregion
 
@@ -473,7 +480,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -550,13 +557,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IMorphValueGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MorphValue.Mask<bool>? printMask = null)
         {
             ((MorphValueCommon)((IMorphValueGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -845,59 +852,59 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             MorphValue.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMorphValueGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MorphValue.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MorphValue =>");
+                sb.AppendLine($"MorphValue =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MorphValue) =>");
+                sb.AppendLine($"{name} (MorphValue) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMorphValueGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MorphValue.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.MinName ?? true)
                 && item.MinName is {} MinNameItem)
             {
-                fg.AppendItem(MinNameItem, "MinName");
+                sb.AppendItem(MinNameItem, "MinName");
             }
             if ((printMask?.MaxName ?? true)
                 && item.MaxName is {} MaxNameItem)
             {
-                fg.AppendItem(MaxNameItem, "MaxName");
+                sb.AppendItem(MaxNameItem, "MaxName");
             }
         }
         
@@ -1218,7 +1225,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MorphValueBinaryWriteTranslation.Instance;
@@ -1328,11 +1335,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MorphValueMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

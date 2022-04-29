@@ -36,7 +36,7 @@ public class FormLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneratio
     }
 
     public override void GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor frameAccessor, 
@@ -45,12 +45,12 @@ public class FormLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneratio
         Accessor translationMaskAccessor)
     {
         FormLinkType linkType = typeGen as FormLinkType;
-        MaskGenerationUtility.WrapErrorFieldIndexPush(fg,
+        MaskGenerationUtility.WrapErrorFieldIndexPush(sb,
             () =>
             {
                 if (itemAccessor.IsAssignment)
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"{itemAccessor} = {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType")}XmlTranslation.Instance.Parse"))
                     {
                         args.AddPassArg("node");
@@ -59,7 +59,7 @@ public class FormLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneratio
                 }
                 else
                 {
-                    using (var args = new FunctionWrapper(fg,
+                    using (var args = new FunctionWrapper(sb,
                                itemAccessor.Assign($"new {linkType.DirectTypeName(getter: false)}")))
                     {
                         args.Add(subFg =>

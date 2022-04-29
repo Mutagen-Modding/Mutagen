@@ -78,11 +78,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CreateReferenceToObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -229,39 +230,39 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CreateReferenceToObject.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CreateReferenceToObject.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CreateReferenceToObject.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CreateReferenceToObject.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CreateReferenceToObject.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Object ?? true)
                     {
-                        fg.AppendItem(Object, "Object");
+                        sb.AppendItem(Object, "Object");
                     }
                     if (printMask?.AliasIndex ?? true)
                     {
-                        fg.AppendItem(AliasIndex, "AliasIndex");
+                        sb.AppendItem(AliasIndex, "AliasIndex");
                     }
                     if (printMask?.Create ?? true)
                     {
-                        fg.AppendItem(Create, "Create");
+                        sb.AppendItem(Create, "Create");
                     }
                     if (printMask?.Level ?? true)
                     {
-                        fg.AppendItem(Level, "Level");
+                        sb.AppendItem(Level, "Level");
                     }
                     if (printMask?.ALCADataTypeState ?? true)
                     {
-                        fg.AppendItem(ALCADataTypeState, "ALCADataTypeState");
+                        sb.AppendItem(ALCADataTypeState, "ALCADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -378,38 +379,48 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Object, "Object");
-                fg.AppendItem(AliasIndex, "AliasIndex");
-                fg.AppendItem(Create, "Create");
-                fg.AppendItem(Level, "Level");
-                fg.AppendItem(ALCADataTypeState, "ALCADataTypeState");
+                {
+                    sb.AppendItem(Object, "Object");
+                }
+                {
+                    sb.AppendItem(AliasIndex, "AliasIndex");
+                }
+                {
+                    sb.AppendItem(Create, "Create");
+                }
+                {
+                    sb.AppendItem(Level, "Level");
+                }
+                {
+                    sb.AppendItem(ALCADataTypeState, "ALCADataTypeState");
+                }
             }
             #endregion
 
@@ -546,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -629,13 +640,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICreateReferenceToObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CreateReferenceToObject.Mask<bool>? printMask = null)
         {
             ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -933,64 +944,64 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CreateReferenceToObject.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICreateReferenceToObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CreateReferenceToObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CreateReferenceToObject =>");
+                sb.AppendLine($"CreateReferenceToObject =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CreateReferenceToObject) =>");
+                sb.AppendLine($"{name} (CreateReferenceToObject) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICreateReferenceToObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CreateReferenceToObject.Mask<bool>? printMask = null)
         {
             if (printMask?.Object ?? true)
             {
-                fg.AppendItem(item.Object.FormKey, "Object");
+                sb.AppendItem(item.Object.FormKey, "Object");
             }
             if (printMask?.AliasIndex ?? true)
             {
-                fg.AppendItem(item.AliasIndex, "AliasIndex");
+                sb.AppendItem(item.AliasIndex, "AliasIndex");
             }
             if (printMask?.Create ?? true)
             {
-                fg.AppendItem(item.Create, "Create");
+                sb.AppendItem(item.Create, "Create");
             }
             if (printMask?.Level ?? true)
             {
-                fg.AppendItem(item.Level, "Level");
+                sb.AppendItem(item.Level, "Level");
             }
             if (printMask?.ALCADataTypeState ?? true)
             {
-                fg.AppendItem(item.ALCADataTypeState, "ALCADataTypeState");
+                sb.AppendItem(item.ALCADataTypeState, "ALCADataTypeState");
             }
         }
         
@@ -1333,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1450,11 +1461,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CreateReferenceToObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -81,11 +81,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AmbientColorsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -259,51 +260,51 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(AmbientColors.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, AmbientColors.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, AmbientColors.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(AmbientColors.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AmbientColors.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.DirectionalXPlus ?? true)
                     {
-                        fg.AppendItem(DirectionalXPlus, "DirectionalXPlus");
+                        sb.AppendItem(DirectionalXPlus, "DirectionalXPlus");
                     }
                     if (printMask?.DirectionalXMinus ?? true)
                     {
-                        fg.AppendItem(DirectionalXMinus, "DirectionalXMinus");
+                        sb.AppendItem(DirectionalXMinus, "DirectionalXMinus");
                     }
                     if (printMask?.DirectionalYPlus ?? true)
                     {
-                        fg.AppendItem(DirectionalYPlus, "DirectionalYPlus");
+                        sb.AppendItem(DirectionalYPlus, "DirectionalYPlus");
                     }
                     if (printMask?.DirectionalYMinus ?? true)
                     {
-                        fg.AppendItem(DirectionalYMinus, "DirectionalYMinus");
+                        sb.AppendItem(DirectionalYMinus, "DirectionalYMinus");
                     }
                     if (printMask?.DirectionalZPlus ?? true)
                     {
-                        fg.AppendItem(DirectionalZPlus, "DirectionalZPlus");
+                        sb.AppendItem(DirectionalZPlus, "DirectionalZPlus");
                     }
                     if (printMask?.DirectionalZMinus ?? true)
                     {
-                        fg.AppendItem(DirectionalZMinus, "DirectionalZMinus");
+                        sb.AppendItem(DirectionalZMinus, "DirectionalZMinus");
                     }
                     if (printMask?.Specular ?? true)
                     {
-                        fg.AppendItem(Specular, "Specular");
+                        sb.AppendItem(Specular, "Specular");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -450,41 +451,57 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(DirectionalXPlus, "DirectionalXPlus");
-                fg.AppendItem(DirectionalXMinus, "DirectionalXMinus");
-                fg.AppendItem(DirectionalYPlus, "DirectionalYPlus");
-                fg.AppendItem(DirectionalYMinus, "DirectionalYMinus");
-                fg.AppendItem(DirectionalZPlus, "DirectionalZPlus");
-                fg.AppendItem(DirectionalZMinus, "DirectionalZMinus");
-                fg.AppendItem(Specular, "Specular");
-                fg.AppendItem(Scale, "Scale");
+                {
+                    sb.AppendItem(DirectionalXPlus, "DirectionalXPlus");
+                }
+                {
+                    sb.AppendItem(DirectionalXMinus, "DirectionalXMinus");
+                }
+                {
+                    sb.AppendItem(DirectionalYPlus, "DirectionalYPlus");
+                }
+                {
+                    sb.AppendItem(DirectionalYMinus, "DirectionalYMinus");
+                }
+                {
+                    sb.AppendItem(DirectionalZPlus, "DirectionalZPlus");
+                }
+                {
+                    sb.AppendItem(DirectionalZMinus, "DirectionalZMinus");
+                }
+                {
+                    sb.AppendItem(Specular, "Specular");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
             }
             #endregion
 
@@ -624,7 +641,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -711,13 +728,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IAmbientColorsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AmbientColors.Mask<bool>? printMask = null)
         {
             ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1011,76 +1028,76 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             AmbientColors.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IAmbientColorsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AmbientColors.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AmbientColors =>");
+                sb.AppendLine($"AmbientColors =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AmbientColors) =>");
+                sb.AppendLine($"{name} (AmbientColors) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAmbientColorsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AmbientColors.Mask<bool>? printMask = null)
         {
             if (printMask?.DirectionalXPlus ?? true)
             {
-                fg.AppendItem(item.DirectionalXPlus, "DirectionalXPlus");
+                sb.AppendItem(item.DirectionalXPlus, "DirectionalXPlus");
             }
             if (printMask?.DirectionalXMinus ?? true)
             {
-                fg.AppendItem(item.DirectionalXMinus, "DirectionalXMinus");
+                sb.AppendItem(item.DirectionalXMinus, "DirectionalXMinus");
             }
             if (printMask?.DirectionalYPlus ?? true)
             {
-                fg.AppendItem(item.DirectionalYPlus, "DirectionalYPlus");
+                sb.AppendItem(item.DirectionalYPlus, "DirectionalYPlus");
             }
             if (printMask?.DirectionalYMinus ?? true)
             {
-                fg.AppendItem(item.DirectionalYMinus, "DirectionalYMinus");
+                sb.AppendItem(item.DirectionalYMinus, "DirectionalYMinus");
             }
             if (printMask?.DirectionalZPlus ?? true)
             {
-                fg.AppendItem(item.DirectionalZPlus, "DirectionalZPlus");
+                sb.AppendItem(item.DirectionalZPlus, "DirectionalZPlus");
             }
             if (printMask?.DirectionalZMinus ?? true)
             {
-                fg.AppendItem(item.DirectionalZMinus, "DirectionalZMinus");
+                sb.AppendItem(item.DirectionalZMinus, "DirectionalZMinus");
             }
             if (printMask?.Specular ?? true)
             {
-                fg.AppendItem(item.Specular, "Specular");
+                sb.AppendItem(item.Specular, "Specular");
             }
             if (printMask?.Scale ?? true)
             {
-                fg.AppendItem(item.Scale, "Scale");
+                sb.AppendItem(item.Scale, "Scale");
             }
         }
         
@@ -1411,7 +1428,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AmbientColorsBinaryWriteTranslation.Instance;
@@ -1482,11 +1499,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AmbientColorsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

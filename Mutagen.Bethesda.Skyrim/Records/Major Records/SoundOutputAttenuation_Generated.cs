@@ -86,11 +86,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundOutputAttenuationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -237,39 +238,39 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(SoundOutputAttenuation.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, SoundOutputAttenuation.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, SoundOutputAttenuation.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SoundOutputAttenuation.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundOutputAttenuation.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.MinDistance ?? true)
                     {
-                        fg.AppendItem(MinDistance, "MinDistance");
+                        sb.AppendItem(MinDistance, "MinDistance");
                     }
                     if (printMask?.MaxDistance ?? true)
                     {
-                        fg.AppendItem(MaxDistance, "MaxDistance");
+                        sb.AppendItem(MaxDistance, "MaxDistance");
                     }
                     if (printMask?.Curve ?? true)
                     {
-                        fg.AppendItem(Curve, "Curve");
+                        sb.AppendItem(Curve, "Curve");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -386,38 +387,48 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(MinDistance, "MinDistance");
-                fg.AppendItem(MaxDistance, "MaxDistance");
-                fg.AppendItem(Curve, "Curve");
-                fg.AppendItem(Unknown2, "Unknown2");
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(MinDistance, "MinDistance");
+                }
+                {
+                    sb.AppendItem(MaxDistance, "MaxDistance");
+                }
+                {
+                    sb.AppendItem(Curve, "Curve");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
             }
             #endregion
 
@@ -545,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -626,13 +637,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ISoundOutputAttenuationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundOutputAttenuation.Mask<bool>? printMask = null)
         {
             ((SoundOutputAttenuationCommon)((ISoundOutputAttenuationGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -928,64 +939,64 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             SoundOutputAttenuation.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ISoundOutputAttenuationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundOutputAttenuation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundOutputAttenuation =>");
+                sb.AppendLine($"SoundOutputAttenuation =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundOutputAttenuation) =>");
+                sb.AppendLine($"{name} (SoundOutputAttenuation) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundOutputAttenuationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundOutputAttenuation.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.MinDistance ?? true)
             {
-                fg.AppendItem(item.MinDistance, "MinDistance");
+                sb.AppendItem(item.MinDistance, "MinDistance");
             }
             if (printMask?.MaxDistance ?? true)
             {
-                fg.AppendItem(item.MaxDistance, "MaxDistance");
+                sb.AppendItem(item.MaxDistance, "MaxDistance");
             }
             if (printMask?.Curve ?? true)
             {
-                fg.AppendLine($"Curve => {SpanExt.ToHexString(item.Curve)}");
+                sb.AppendLine($"Curve => {SpanExt.ToHexString(item.Curve)}");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
+                sb.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
             }
         }
         
@@ -1282,7 +1293,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundOutputAttenuationBinaryWriteTranslation.Instance;
@@ -1351,11 +1362,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundOutputAttenuationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

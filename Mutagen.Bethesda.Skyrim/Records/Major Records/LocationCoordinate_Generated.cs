@@ -80,11 +80,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationCoordinateMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -237,46 +238,48 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(LocationCoordinate.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, LocationCoordinate.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, LocationCoordinate.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LocationCoordinate.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LocationCoordinate.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Location ?? true)
                     {
-                        fg.AppendItem(Location, "Location");
+                        sb.AppendItem(Location, "Location");
                     }
                     if ((printMask?.Coordinates?.Overall ?? true)
                         && Coordinates is {} CoordinatesItem)
                     {
-                        fg.AppendLine("Coordinates =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Coordinates =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(CoordinatesItem.Overall);
+                            sb.AppendItem(CoordinatesItem.Overall);
                             if (CoordinatesItem.Specific != null)
                             {
                                 foreach (var subItem in CoordinatesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -363,55 +366,59 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Location, "Location");
+                {
+                    sb.AppendItem(Location, "Location");
+                }
                 if (Coordinates is {} CoordinatesItem)
                 {
-                    fg.AppendLine("Coordinates =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Coordinates =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(CoordinatesItem.Overall);
+                        sb.AppendItem(CoordinatesItem.Overall);
                         if (CoordinatesItem.Specific != null)
                         {
                             foreach (var subItem in CoordinatesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -533,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -610,13 +617,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ILocationCoordinateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationCoordinate.Mask<bool>? printMask = null)
         {
             ((LocationCoordinateCommon)((ILocationCoordinateGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -896,66 +903,66 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             LocationCoordinate.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILocationCoordinateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationCoordinate.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocationCoordinate =>");
+                sb.AppendLine($"LocationCoordinate =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocationCoordinate) =>");
+                sb.AppendLine($"{name} (LocationCoordinate) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationCoordinateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LocationCoordinate.Mask<bool>? printMask = null)
         {
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location.FormKey, "Location");
+                sb.AppendItem(item.Location.FormKey, "Location");
             }
             if (printMask?.Coordinates?.Overall ?? true)
             {
-                fg.AppendLine("Coordinates =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Coordinates =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Coordinates)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1238,7 +1245,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCoordinateCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1308,11 +1315,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationCoordinateMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

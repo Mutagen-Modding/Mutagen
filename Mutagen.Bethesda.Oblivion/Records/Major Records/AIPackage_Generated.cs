@@ -118,11 +118,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AIPackageMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -339,58 +340,58 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(AIPackage.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, AIPackage.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, AIPackage.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(AIPackage.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AIPackage.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.ToString(sb);
                     }
                     if (printMask?.Location?.Overall ?? true)
                     {
-                        Location?.ToString(fg);
+                        Location?.ToString(sb);
                     }
                     if (printMask?.Schedule?.Overall ?? true)
                     {
-                        Schedule?.ToString(fg);
+                        Schedule?.ToString(sb);
                     }
                     if (printMask?.Target?.Overall ?? true)
                     {
-                        Target?.ToString(fg);
+                        Target?.ToString(sb);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -496,59 +497,59 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Data?.ToString(fg);
-                Location?.ToString(fg);
-                Schedule?.ToString(fg);
-                Target?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                Data?.ToString(sb);
+                Location?.ToString(sb);
+                Schedule?.ToString(sb);
+                Target?.ToString(sb);
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -718,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -805,13 +806,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IAIPackageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIPackage.Mask<bool>? printMask = null)
         {
             ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1161,86 +1162,86 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             AIPackage.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IAIPackageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIPackage.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AIPackage =>");
+                sb.AppendLine($"AIPackage =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AIPackage) =>");
+                sb.AppendLine($"{name} (AIPackage) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAIPackageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AIPackage.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.ToString(sb, "Data");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location is {} LocationItem)
             {
-                LocationItem?.ToString(fg, "Location");
+                LocationItem?.ToString(sb, "Location");
             }
             if ((printMask?.Schedule?.Overall ?? true)
                 && item.Schedule is {} ScheduleItem)
             {
-                ScheduleItem?.ToString(fg, "Schedule");
+                ScheduleItem?.ToString(sb, "Schedule");
             }
             if ((printMask?.Target?.Overall ?? true)
                 && item.Target is {} TargetItem)
             {
-                TargetItem?.ToString(fg, "Target");
+                TargetItem?.ToString(sb, "Target");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1966,7 +1967,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => AIPackageCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2114,11 +2115,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AIPackageMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

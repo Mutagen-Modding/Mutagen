@@ -105,11 +105,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RaceDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -370,63 +371,63 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(RaceData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, RaceData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, RaceData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RaceData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RaceData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.SkillBoost0?.Overall ?? true)
                     {
-                        SkillBoost0?.ToString(fg);
+                        SkillBoost0?.ToString(sb);
                     }
                     if (printMask?.SkillBoost1?.Overall ?? true)
                     {
-                        SkillBoost1?.ToString(fg);
+                        SkillBoost1?.ToString(sb);
                     }
                     if (printMask?.SkillBoost2?.Overall ?? true)
                     {
-                        SkillBoost2?.ToString(fg);
+                        SkillBoost2?.ToString(sb);
                     }
                     if (printMask?.SkillBoost3?.Overall ?? true)
                     {
-                        SkillBoost3?.ToString(fg);
+                        SkillBoost3?.ToString(sb);
                     }
                     if (printMask?.SkillBoost4?.Overall ?? true)
                     {
-                        SkillBoost4?.ToString(fg);
+                        SkillBoost4?.ToString(sb);
                     }
                     if (printMask?.SkillBoost5?.Overall ?? true)
                     {
-                        SkillBoost5?.ToString(fg);
+                        SkillBoost5?.ToString(sb);
                     }
                     if (printMask?.SkillBoost6?.Overall ?? true)
                     {
-                        SkillBoost6?.ToString(fg);
+                        SkillBoost6?.ToString(sb);
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"Height => {Height}");
+                        sb.AppendLine($"Height => {Height}");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"Weight => {Weight}");
+                        sb.AppendLine($"Weight => {Weight}");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -603,44 +604,52 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                SkillBoost0?.ToString(fg);
-                SkillBoost1?.ToString(fg);
-                SkillBoost2?.ToString(fg);
-                SkillBoost3?.ToString(fg);
-                SkillBoost4?.ToString(fg);
-                SkillBoost5?.ToString(fg);
-                SkillBoost6?.ToString(fg);
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendLine($"Height => {Height}");
-                fg.AppendLine($"Weight => {Weight}");
-                fg.AppendItem(Flags, "Flags");
+                SkillBoost0?.ToString(sb);
+                SkillBoost1?.ToString(sb);
+                SkillBoost2?.ToString(sb);
+                SkillBoost3?.ToString(sb);
+                SkillBoost4?.ToString(sb);
+                SkillBoost5?.ToString(sb);
+                SkillBoost6?.ToString(sb);
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendLine($"Height => {Height}");
+                }
+                {
+                    sb.AppendLine($"Weight => {Weight}");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -783,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -876,13 +885,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IRaceDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
             ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1202,88 +1211,88 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRaceDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RaceData =>");
+                sb.AppendLine($"RaceData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RaceData) =>");
+                sb.AppendLine($"{name} (RaceData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRaceDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RaceData.Mask<bool>? printMask = null)
         {
             if (printMask?.SkillBoost0?.Overall ?? true)
             {
-                item.SkillBoost0?.ToString(fg, "SkillBoost0");
+                item.SkillBoost0?.ToString(sb, "SkillBoost0");
             }
             if (printMask?.SkillBoost1?.Overall ?? true)
             {
-                item.SkillBoost1?.ToString(fg, "SkillBoost1");
+                item.SkillBoost1?.ToString(sb, "SkillBoost1");
             }
             if (printMask?.SkillBoost2?.Overall ?? true)
             {
-                item.SkillBoost2?.ToString(fg, "SkillBoost2");
+                item.SkillBoost2?.ToString(sb, "SkillBoost2");
             }
             if (printMask?.SkillBoost3?.Overall ?? true)
             {
-                item.SkillBoost3?.ToString(fg, "SkillBoost3");
+                item.SkillBoost3?.ToString(sb, "SkillBoost3");
             }
             if (printMask?.SkillBoost4?.Overall ?? true)
             {
-                item.SkillBoost4?.ToString(fg, "SkillBoost4");
+                item.SkillBoost4?.ToString(sb, "SkillBoost4");
             }
             if (printMask?.SkillBoost5?.Overall ?? true)
             {
-                item.SkillBoost5?.ToString(fg, "SkillBoost5");
+                item.SkillBoost5?.ToString(sb, "SkillBoost5");
             }
             if (printMask?.SkillBoost6?.Overall ?? true)
             {
-                item.SkillBoost6?.ToString(fg, "SkillBoost6");
+                item.SkillBoost6?.ToString(sb, "SkillBoost6");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendItem(item.Unused, "Unused");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (true)
             {
-                item.Height.ToString(fg, "Height");
+                item.Height.ToString(sb, "Height");
             }
             if (true)
             {
-                item.Weight.ToString(fg, "Weight");
+                item.Weight.ToString(sb, "Weight");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1826,7 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceDataBinaryWriteTranslation.Instance;
@@ -1923,11 +1932,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RaceDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

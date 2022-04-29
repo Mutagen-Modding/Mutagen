@@ -122,11 +122,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RegionObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -381,87 +382,87 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(RegionObject.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, RegionObject.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, RegionObject.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RegionObject.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RegionObject.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Object ?? true)
                     {
-                        fg.AppendItem(Object, "Object");
+                        sb.AppendItem(Object, "Object");
                     }
                     if (printMask?.ParentIndex ?? true)
                     {
-                        fg.AppendItem(ParentIndex, "ParentIndex");
+                        sb.AppendItem(ParentIndex, "ParentIndex");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Density ?? true)
                     {
-                        fg.AppendItem(Density, "Density");
+                        sb.AppendItem(Density, "Density");
                     }
                     if (printMask?.Clustering ?? true)
                     {
-                        fg.AppendItem(Clustering, "Clustering");
+                        sb.AppendItem(Clustering, "Clustering");
                     }
                     if (printMask?.MinSlope ?? true)
                     {
-                        fg.AppendItem(MinSlope, "MinSlope");
+                        sb.AppendItem(MinSlope, "MinSlope");
                     }
                     if (printMask?.MaxSlope ?? true)
                     {
-                        fg.AppendItem(MaxSlope, "MaxSlope");
+                        sb.AppendItem(MaxSlope, "MaxSlope");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.RadiusWrtPercent ?? true)
                     {
-                        fg.AppendItem(RadiusWrtPercent, "RadiusWrtPercent");
+                        sb.AppendItem(RadiusWrtPercent, "RadiusWrtPercent");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.MinHeight ?? true)
                     {
-                        fg.AppendItem(MinHeight, "MinHeight");
+                        sb.AppendItem(MinHeight, "MinHeight");
                     }
                     if (printMask?.MaxHeight ?? true)
                     {
-                        fg.AppendItem(MaxHeight, "MaxHeight");
+                        sb.AppendItem(MaxHeight, "MaxHeight");
                     }
                     if (printMask?.Sink ?? true)
                     {
-                        fg.AppendItem(Sink, "Sink");
+                        sb.AppendItem(Sink, "Sink");
                     }
                     if (printMask?.SinkVariance ?? true)
                     {
-                        fg.AppendItem(SinkVariance, "SinkVariance");
+                        sb.AppendItem(SinkVariance, "SinkVariance");
                     }
                     if (printMask?.SizeVariance ?? true)
                     {
-                        fg.AppendItem(SizeVariance, "SizeVariance");
+                        sb.AppendItem(SizeVariance, "SizeVariance");
                     }
                     if (printMask?.AngleVariance ?? true)
                     {
-                        fg.AppendItem(AngleVariance, "AngleVariance");
+                        sb.AppendItem(AngleVariance, "AngleVariance");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -698,50 +699,84 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Object, "Object");
-                fg.AppendItem(ParentIndex, "ParentIndex");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Density, "Density");
-                fg.AppendItem(Clustering, "Clustering");
-                fg.AppendItem(MinSlope, "MinSlope");
-                fg.AppendItem(MaxSlope, "MaxSlope");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(RadiusWrtPercent, "RadiusWrtPercent");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(MinHeight, "MinHeight");
-                fg.AppendItem(MaxHeight, "MaxHeight");
-                fg.AppendItem(Sink, "Sink");
-                fg.AppendItem(SinkVariance, "SinkVariance");
-                fg.AppendItem(SizeVariance, "SizeVariance");
-                fg.AppendItem(AngleVariance, "AngleVariance");
-                fg.AppendItem(Unknown2, "Unknown2");
+                {
+                    sb.AppendItem(Object, "Object");
+                }
+                {
+                    sb.AppendItem(ParentIndex, "ParentIndex");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Density, "Density");
+                }
+                {
+                    sb.AppendItem(Clustering, "Clustering");
+                }
+                {
+                    sb.AppendItem(MinSlope, "MinSlope");
+                }
+                {
+                    sb.AppendItem(MaxSlope, "MaxSlope");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(RadiusWrtPercent, "RadiusWrtPercent");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(MinHeight, "MinHeight");
+                }
+                {
+                    sb.AppendItem(MaxHeight, "MaxHeight");
+                }
+                {
+                    sb.AppendItem(Sink, "Sink");
+                }
+                {
+                    sb.AppendItem(SinkVariance, "SinkVariance");
+                }
+                {
+                    sb.AppendItem(SizeVariance, "SizeVariance");
+                }
+                {
+                    sb.AppendItem(AngleVariance, "AngleVariance");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
             }
             #endregion
 
@@ -922,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1029,13 +1064,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IRegionObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RegionObject.Mask<bool>? printMask = null)
         {
             ((RegionObjectCommon)((IRegionObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1357,112 +1392,112 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             RegionObject.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRegionObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RegionObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RegionObject =>");
+                sb.AppendLine($"RegionObject =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RegionObject) =>");
+                sb.AppendLine($"{name} (RegionObject) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRegionObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RegionObject.Mask<bool>? printMask = null)
         {
             if (printMask?.Object ?? true)
             {
-                fg.AppendItem(item.Object.FormKey, "Object");
+                sb.AppendItem(item.Object.FormKey, "Object");
             }
             if (printMask?.ParentIndex ?? true)
             {
-                fg.AppendItem(item.ParentIndex, "ParentIndex");
+                sb.AppendItem(item.ParentIndex, "ParentIndex");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Density ?? true)
             {
-                fg.AppendItem(item.Density, "Density");
+                sb.AppendItem(item.Density, "Density");
             }
             if (printMask?.Clustering ?? true)
             {
-                fg.AppendItem(item.Clustering, "Clustering");
+                sb.AppendItem(item.Clustering, "Clustering");
             }
             if (printMask?.MinSlope ?? true)
             {
-                fg.AppendItem(item.MinSlope, "MinSlope");
+                sb.AppendItem(item.MinSlope, "MinSlope");
             }
             if (printMask?.MaxSlope ?? true)
             {
-                fg.AppendItem(item.MaxSlope, "MaxSlope");
+                sb.AppendItem(item.MaxSlope, "MaxSlope");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.RadiusWrtPercent ?? true)
             {
-                fg.AppendItem(item.RadiusWrtPercent, "RadiusWrtPercent");
+                sb.AppendItem(item.RadiusWrtPercent, "RadiusWrtPercent");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendItem(item.Radius, "Radius");
+                sb.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.MinHeight ?? true)
             {
-                fg.AppendItem(item.MinHeight, "MinHeight");
+                sb.AppendItem(item.MinHeight, "MinHeight");
             }
             if (printMask?.MaxHeight ?? true)
             {
-                fg.AppendItem(item.MaxHeight, "MaxHeight");
+                sb.AppendItem(item.MaxHeight, "MaxHeight");
             }
             if (printMask?.Sink ?? true)
             {
-                fg.AppendItem(item.Sink, "Sink");
+                sb.AppendItem(item.Sink, "Sink");
             }
             if (printMask?.SinkVariance ?? true)
             {
-                fg.AppendItem(item.SinkVariance, "SinkVariance");
+                sb.AppendItem(item.SinkVariance, "SinkVariance");
             }
             if (printMask?.SizeVariance ?? true)
             {
-                fg.AppendItem(item.SizeVariance, "SizeVariance");
+                sb.AppendItem(item.SizeVariance, "SizeVariance");
             }
             if (printMask?.AngleVariance ?? true)
             {
-                fg.AppendItem(item.AngleVariance, "AngleVariance");
+                sb.AppendItem(item.AngleVariance, "AngleVariance");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
+                sb.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
             }
         }
         
@@ -1900,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1981,11 +2016,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RegionObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

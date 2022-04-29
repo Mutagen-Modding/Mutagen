@@ -20,10 +20,10 @@ public class RefAspect : AspectFieldInterfaceDefinition
 
         FieldActions = new()
         {
-            new (LoquiInterfaceType.Direct, memberName, (o, tg, fg) =>
+            new (LoquiInterfaceType.Direct, memberName, (o, tg, sb) =>
             {
-                fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                fg.AppendLine($"I{loquiName}Getter? {interfaceNickName}Getter.{memberName} => this.{memberName};");
+                sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                sb.AppendLine($"I{loquiName}Getter? {interfaceNickName}Getter.{memberName} => this.{memberName};");
             })
         };
     }

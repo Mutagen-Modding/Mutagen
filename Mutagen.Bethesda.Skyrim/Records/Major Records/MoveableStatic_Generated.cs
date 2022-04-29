@@ -160,11 +160,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MoveableStaticMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -348,43 +349,43 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(MoveableStatic.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MoveableStatic.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MoveableStatic.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MoveableStatic.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MoveableStatic.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(fg);
+                        Destructible?.ToString(sb);
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.LoopingSound ?? true)
                     {
-                        fg.AppendItem(LoopingSound, "LoopingSound");
+                        sb.AppendItem(LoopingSound, "LoopingSound");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -500,40 +501,46 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                Destructible?.ToString(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(LoopingSound, "LoopingSound");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.ToString(sb);
+                Destructible?.ToString(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(LoopingSound, "LoopingSound");
+                }
             }
             #endregion
 
@@ -730,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -867,13 +874,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IMoveableStaticGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MoveableStatic.Mask<bool>? printMask = null)
         {
             ((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1220,75 +1227,75 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             MoveableStatic.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMoveableStaticGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MoveableStatic.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MoveableStatic =>");
+                sb.AppendLine($"MoveableStatic =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MoveableStatic) =>");
+                sb.AppendLine($"{name} (MoveableStatic) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMoveableStaticGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MoveableStatic.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(fg, "Destructible");
+                DestructibleItem?.ToString(sb, "Destructible");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.LoopingSound ?? true)
             {
-                fg.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
+                sb.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
             }
         }
         
@@ -1991,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MoveableStaticCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2153,11 +2160,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MoveableStaticMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

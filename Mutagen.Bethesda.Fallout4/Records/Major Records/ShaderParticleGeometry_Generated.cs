@@ -139,11 +139,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ShaderParticleGeometryMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -483,123 +484,123 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(ShaderParticleGeometry.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ShaderParticleGeometry.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ShaderParticleGeometry.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ShaderParticleGeometry.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ShaderParticleGeometry.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.GravityVelocity ?? true)
                     {
-                        fg.AppendItem(GravityVelocity, "GravityVelocity");
+                        sb.AppendItem(GravityVelocity, "GravityVelocity");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(Unknown1, "Unknown1");
                     }
                     if (printMask?.RotationVelocity ?? true)
                     {
-                        fg.AppendItem(RotationVelocity, "RotationVelocity");
+                        sb.AppendItem(RotationVelocity, "RotationVelocity");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.ParticleSizeX ?? true)
                     {
-                        fg.AppendItem(ParticleSizeX, "ParticleSizeX");
+                        sb.AppendItem(ParticleSizeX, "ParticleSizeX");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                     if (printMask?.ParticleSizeY ?? true)
                     {
-                        fg.AppendItem(ParticleSizeY, "ParticleSizeY");
+                        sb.AppendItem(ParticleSizeY, "ParticleSizeY");
                     }
                     if (printMask?.Unknown4 ?? true)
                     {
-                        fg.AppendItem(Unknown4, "Unknown4");
+                        sb.AppendItem(Unknown4, "Unknown4");
                     }
                     if (printMask?.CenterOffsetMin ?? true)
                     {
-                        fg.AppendItem(CenterOffsetMin, "CenterOffsetMin");
+                        sb.AppendItem(CenterOffsetMin, "CenterOffsetMin");
                     }
                     if (printMask?.Unknown5 ?? true)
                     {
-                        fg.AppendItem(Unknown5, "Unknown5");
+                        sb.AppendItem(Unknown5, "Unknown5");
                     }
                     if (printMask?.CenterOffsetMax ?? true)
                     {
-                        fg.AppendItem(CenterOffsetMax, "CenterOffsetMax");
+                        sb.AppendItem(CenterOffsetMax, "CenterOffsetMax");
                     }
                     if (printMask?.Unknown6 ?? true)
                     {
-                        fg.AppendItem(Unknown6, "Unknown6");
+                        sb.AppendItem(Unknown6, "Unknown6");
                     }
                     if (printMask?.InitialRotation ?? true)
                     {
-                        fg.AppendItem(InitialRotation, "InitialRotation");
+                        sb.AppendItem(InitialRotation, "InitialRotation");
                     }
                     if (printMask?.Unknown7 ?? true)
                     {
-                        fg.AppendItem(Unknown7, "Unknown7");
+                        sb.AppendItem(Unknown7, "Unknown7");
                     }
                     if (printMask?.NumSubtexturesX ?? true)
                     {
-                        fg.AppendItem(NumSubtexturesX, "NumSubtexturesX");
+                        sb.AppendItem(NumSubtexturesX, "NumSubtexturesX");
                     }
                     if (printMask?.Unknown8 ?? true)
                     {
-                        fg.AppendItem(Unknown8, "Unknown8");
+                        sb.AppendItem(Unknown8, "Unknown8");
                     }
                     if (printMask?.NumSubtexturesY ?? true)
                     {
-                        fg.AppendItem(NumSubtexturesY, "NumSubtexturesY");
+                        sb.AppendItem(NumSubtexturesY, "NumSubtexturesY");
                     }
                     if (printMask?.Unknown9 ?? true)
                     {
-                        fg.AppendItem(Unknown9, "Unknown9");
+                        sb.AppendItem(Unknown9, "Unknown9");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Unknown10 ?? true)
                     {
-                        fg.AppendItem(Unknown10, "Unknown10");
+                        sb.AppendItem(Unknown10, "Unknown10");
                     }
                     if (printMask?.BoxSize ?? true)
                     {
-                        fg.AppendItem(BoxSize, "BoxSize");
+                        sb.AppendItem(BoxSize, "BoxSize");
                     }
                     if (printMask?.Unknown11 ?? true)
                     {
-                        fg.AppendItem(Unknown11, "Unknown11");
+                        sb.AppendItem(Unknown11, "Unknown11");
                     }
                     if (printMask?.ParticleDensity ?? true)
                     {
-                        fg.AppendItem(ParticleDensity, "ParticleDensity");
+                        sb.AppendItem(ParticleDensity, "ParticleDensity");
                     }
                     if (printMask?.Unknown12 ?? true)
                     {
-                        fg.AppendItem(Unknown12, "Unknown12");
+                        sb.AppendItem(Unknown12, "Unknown12");
                     }
                     if (printMask?.ParticleTexture ?? true)
                     {
-                        fg.AppendItem(ParticleTexture, "ParticleTexture");
+                        sb.AppendItem(ParticleTexture, "ParticleTexture");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -915,60 +916,112 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(GravityVelocity, "GravityVelocity");
-                fg.AppendItem(Unknown1, "Unknown1");
-                fg.AppendItem(RotationVelocity, "RotationVelocity");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(ParticleSizeX, "ParticleSizeX");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(ParticleSizeY, "ParticleSizeY");
-                fg.AppendItem(Unknown4, "Unknown4");
-                fg.AppendItem(CenterOffsetMin, "CenterOffsetMin");
-                fg.AppendItem(Unknown5, "Unknown5");
-                fg.AppendItem(CenterOffsetMax, "CenterOffsetMax");
-                fg.AppendItem(Unknown6, "Unknown6");
-                fg.AppendItem(InitialRotation, "InitialRotation");
-                fg.AppendItem(Unknown7, "Unknown7");
-                fg.AppendItem(NumSubtexturesX, "NumSubtexturesX");
-                fg.AppendItem(Unknown8, "Unknown8");
-                fg.AppendItem(NumSubtexturesY, "NumSubtexturesY");
-                fg.AppendItem(Unknown9, "Unknown9");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Unknown10, "Unknown10");
-                fg.AppendItem(BoxSize, "BoxSize");
-                fg.AppendItem(Unknown11, "Unknown11");
-                fg.AppendItem(ParticleDensity, "ParticleDensity");
-                fg.AppendItem(Unknown12, "Unknown12");
-                fg.AppendItem(ParticleTexture, "ParticleTexture");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(GravityVelocity, "GravityVelocity");
+                }
+                {
+                    sb.AppendItem(Unknown1, "Unknown1");
+                }
+                {
+                    sb.AppendItem(RotationVelocity, "RotationVelocity");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(ParticleSizeX, "ParticleSizeX");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(ParticleSizeY, "ParticleSizeY");
+                }
+                {
+                    sb.AppendItem(Unknown4, "Unknown4");
+                }
+                {
+                    sb.AppendItem(CenterOffsetMin, "CenterOffsetMin");
+                }
+                {
+                    sb.AppendItem(Unknown5, "Unknown5");
+                }
+                {
+                    sb.AppendItem(CenterOffsetMax, "CenterOffsetMax");
+                }
+                {
+                    sb.AppendItem(Unknown6, "Unknown6");
+                }
+                {
+                    sb.AppendItem(InitialRotation, "InitialRotation");
+                }
+                {
+                    sb.AppendItem(Unknown7, "Unknown7");
+                }
+                {
+                    sb.AppendItem(NumSubtexturesX, "NumSubtexturesX");
+                }
+                {
+                    sb.AppendItem(Unknown8, "Unknown8");
+                }
+                {
+                    sb.AppendItem(NumSubtexturesY, "NumSubtexturesY");
+                }
+                {
+                    sb.AppendItem(Unknown9, "Unknown9");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Unknown10, "Unknown10");
+                }
+                {
+                    sb.AppendItem(BoxSize, "BoxSize");
+                }
+                {
+                    sb.AppendItem(Unknown11, "Unknown11");
+                }
+                {
+                    sb.AppendItem(ParticleDensity, "ParticleDensity");
+                }
+                {
+                    sb.AppendItem(Unknown12, "Unknown12");
+                }
+                {
+                    sb.AppendItem(ParticleTexture, "ParticleTexture");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -1238,7 +1291,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1365,13 +1418,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IShaderParticleGeometryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ShaderParticleGeometry.Mask<bool>? printMask = null)
         {
             ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1761,153 +1814,153 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             ShaderParticleGeometry.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IShaderParticleGeometryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ShaderParticleGeometry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ShaderParticleGeometry =>");
+                sb.AppendLine($"ShaderParticleGeometry =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ShaderParticleGeometry) =>");
+                sb.AppendLine($"{name} (ShaderParticleGeometry) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IShaderParticleGeometryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ShaderParticleGeometry.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.GravityVelocity ?? true)
             {
-                fg.AppendItem(item.GravityVelocity, "GravityVelocity");
+                sb.AppendItem(item.GravityVelocity, "GravityVelocity");
             }
             if (printMask?.Unknown1 ?? true)
             {
-                fg.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.Unknown1, "Unknown1");
             }
             if (printMask?.RotationVelocity ?? true)
             {
-                fg.AppendItem(item.RotationVelocity, "RotationVelocity");
+                sb.AppendItem(item.RotationVelocity, "RotationVelocity");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.ParticleSizeX ?? true)
             {
-                fg.AppendItem(item.ParticleSizeX, "ParticleSizeX");
+                sb.AppendItem(item.ParticleSizeX, "ParticleSizeX");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendItem(item.Unknown3, "Unknown3");
+                sb.AppendItem(item.Unknown3, "Unknown3");
             }
             if (printMask?.ParticleSizeY ?? true)
             {
-                fg.AppendItem(item.ParticleSizeY, "ParticleSizeY");
+                sb.AppendItem(item.ParticleSizeY, "ParticleSizeY");
             }
             if (printMask?.Unknown4 ?? true)
             {
-                fg.AppendItem(item.Unknown4, "Unknown4");
+                sb.AppendItem(item.Unknown4, "Unknown4");
             }
             if (printMask?.CenterOffsetMin ?? true)
             {
-                fg.AppendItem(item.CenterOffsetMin, "CenterOffsetMin");
+                sb.AppendItem(item.CenterOffsetMin, "CenterOffsetMin");
             }
             if (printMask?.Unknown5 ?? true)
             {
-                fg.AppendItem(item.Unknown5, "Unknown5");
+                sb.AppendItem(item.Unknown5, "Unknown5");
             }
             if (printMask?.CenterOffsetMax ?? true)
             {
-                fg.AppendItem(item.CenterOffsetMax, "CenterOffsetMax");
+                sb.AppendItem(item.CenterOffsetMax, "CenterOffsetMax");
             }
             if (printMask?.Unknown6 ?? true)
             {
-                fg.AppendItem(item.Unknown6, "Unknown6");
+                sb.AppendItem(item.Unknown6, "Unknown6");
             }
             if (printMask?.InitialRotation ?? true)
             {
-                fg.AppendItem(item.InitialRotation, "InitialRotation");
+                sb.AppendItem(item.InitialRotation, "InitialRotation");
             }
             if (printMask?.Unknown7 ?? true)
             {
-                fg.AppendItem(item.Unknown7, "Unknown7");
+                sb.AppendItem(item.Unknown7, "Unknown7");
             }
             if (printMask?.NumSubtexturesX ?? true)
             {
-                fg.AppendItem(item.NumSubtexturesX, "NumSubtexturesX");
+                sb.AppendItem(item.NumSubtexturesX, "NumSubtexturesX");
             }
             if (printMask?.Unknown8 ?? true)
             {
-                fg.AppendItem(item.Unknown8, "Unknown8");
+                sb.AppendItem(item.Unknown8, "Unknown8");
             }
             if (printMask?.NumSubtexturesY ?? true)
             {
-                fg.AppendItem(item.NumSubtexturesY, "NumSubtexturesY");
+                sb.AppendItem(item.NumSubtexturesY, "NumSubtexturesY");
             }
             if (printMask?.Unknown9 ?? true)
             {
-                fg.AppendItem(item.Unknown9, "Unknown9");
+                sb.AppendItem(item.Unknown9, "Unknown9");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.Unknown10 ?? true)
             {
-                fg.AppendItem(item.Unknown10, "Unknown10");
+                sb.AppendItem(item.Unknown10, "Unknown10");
             }
             if (printMask?.BoxSize ?? true)
             {
-                fg.AppendItem(item.BoxSize, "BoxSize");
+                sb.AppendItem(item.BoxSize, "BoxSize");
             }
             if (printMask?.Unknown11 ?? true)
             {
-                fg.AppendItem(item.Unknown11, "Unknown11");
+                sb.AppendItem(item.Unknown11, "Unknown11");
             }
             if (printMask?.ParticleDensity ?? true)
             {
-                fg.AppendItem(item.ParticleDensity, "ParticleDensity");
+                sb.AppendItem(item.ParticleDensity, "ParticleDensity");
             }
             if (printMask?.Unknown12 ?? true)
             {
-                fg.AppendItem(item.Unknown12, "Unknown12");
+                sb.AppendItem(item.Unknown12, "Unknown12");
             }
             if ((printMask?.ParticleTexture ?? true)
                 && item.ParticleTexture is {} ParticleTextureItem)
             {
-                fg.AppendItem(ParticleTextureItem, "ParticleTexture");
+                sb.AppendItem(ParticleTextureItem, "ParticleTexture");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2742,7 +2795,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ShaderParticleGeometryBinaryWriteTranslation.Instance;
@@ -2973,11 +3026,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ShaderParticleGeometryMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

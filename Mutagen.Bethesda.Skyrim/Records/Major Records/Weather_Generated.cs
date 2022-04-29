@@ -448,11 +448,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1431,347 +1432,351 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Weather.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Weather.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Weather.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Weather.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Weather.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if ((printMask?.CloudTextures?.Overall ?? true)
                         && CloudTextures is {} CloudTexturesItem)
                     {
-                        fg.AppendLine("CloudTextures =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CloudTextures =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(CloudTexturesItem.Overall);
+                            sb.AppendItem(CloudTexturesItem.Overall);
                             if (CloudTexturesItem.Specific != null)
                             {
                                 foreach (var subItem in CloudTexturesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.DNAM ?? true)
                     {
-                        fg.AppendItem(DNAM, "DNAM");
+                        sb.AppendItem(DNAM, "DNAM");
                     }
                     if (printMask?.CNAM ?? true)
                     {
-                        fg.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(CNAM, "CNAM");
                     }
                     if (printMask?.ANAM ?? true)
                     {
-                        fg.AppendItem(ANAM, "ANAM");
+                        sb.AppendItem(ANAM, "ANAM");
                     }
                     if (printMask?.BNAM ?? true)
                     {
-                        fg.AppendItem(BNAM, "BNAM");
+                        sb.AppendItem(BNAM, "BNAM");
                     }
                     if (printMask?.LNAM ?? true)
                     {
-                        fg.AppendItem(LNAM, "LNAM");
+                        sb.AppendItem(LNAM, "LNAM");
                     }
                     if (printMask?.Precipitation ?? true)
                     {
-                        fg.AppendItem(Precipitation, "Precipitation");
+                        sb.AppendItem(Precipitation, "Precipitation");
                     }
                     if (printMask?.VisualEffect ?? true)
                     {
-                        fg.AppendItem(VisualEffect, "VisualEffect");
+                        sb.AppendItem(VisualEffect, "VisualEffect");
                     }
                     if (printMask?.ONAM ?? true)
                     {
-                        fg.AppendItem(ONAM, "ONAM");
+                        sb.AppendItem(ONAM, "ONAM");
                     }
                     if ((printMask?.Clouds?.Overall ?? true)
                         && Clouds is {} CloudsItem)
                     {
-                        fg.AppendLine("Clouds =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Clouds =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(CloudsItem.Overall);
+                            sb.AppendItem(CloudsItem.Overall);
                             if (CloudsItem.Specific != null)
                             {
                                 foreach (var subItem in CloudsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.SkyUpperColor?.Overall ?? true)
                     {
-                        SkyUpperColor?.ToString(fg);
+                        SkyUpperColor?.ToString(sb);
                     }
                     if (printMask?.FogNearColor?.Overall ?? true)
                     {
-                        FogNearColor?.ToString(fg);
+                        FogNearColor?.ToString(sb);
                     }
                     if (printMask?.UnknownColor?.Overall ?? true)
                     {
-                        UnknownColor?.ToString(fg);
+                        UnknownColor?.ToString(sb);
                     }
                     if (printMask?.AmbientColor?.Overall ?? true)
                     {
-                        AmbientColor?.ToString(fg);
+                        AmbientColor?.ToString(sb);
                     }
                     if (printMask?.SunlightColor?.Overall ?? true)
                     {
-                        SunlightColor?.ToString(fg);
+                        SunlightColor?.ToString(sb);
                     }
                     if (printMask?.SunColor?.Overall ?? true)
                     {
-                        SunColor?.ToString(fg);
+                        SunColor?.ToString(sb);
                     }
                     if (printMask?.StarsColor?.Overall ?? true)
                     {
-                        StarsColor?.ToString(fg);
+                        StarsColor?.ToString(sb);
                     }
                     if (printMask?.SkyLowerColor?.Overall ?? true)
                     {
-                        SkyLowerColor?.ToString(fg);
+                        SkyLowerColor?.ToString(sb);
                     }
                     if (printMask?.HorizonColor?.Overall ?? true)
                     {
-                        HorizonColor?.ToString(fg);
+                        HorizonColor?.ToString(sb);
                     }
                     if (printMask?.EffectLightingColor?.Overall ?? true)
                     {
-                        EffectLightingColor?.ToString(fg);
+                        EffectLightingColor?.ToString(sb);
                     }
                     if (printMask?.CloudLodDiffuseColor?.Overall ?? true)
                     {
-                        CloudLodDiffuseColor?.ToString(fg);
+                        CloudLodDiffuseColor?.ToString(sb);
                     }
                     if (printMask?.CloudLodAmbientColor?.Overall ?? true)
                     {
-                        CloudLodAmbientColor?.ToString(fg);
+                        CloudLodAmbientColor?.ToString(sb);
                     }
                     if (printMask?.FogFarColor?.Overall ?? true)
                     {
-                        FogFarColor?.ToString(fg);
+                        FogFarColor?.ToString(sb);
                     }
                     if (printMask?.SkyStaticsColor?.Overall ?? true)
                     {
-                        SkyStaticsColor?.ToString(fg);
+                        SkyStaticsColor?.ToString(sb);
                     }
                     if (printMask?.WaterMultiplierColor?.Overall ?? true)
                     {
-                        WaterMultiplierColor?.ToString(fg);
+                        WaterMultiplierColor?.ToString(sb);
                     }
                     if (printMask?.SunGlareColor?.Overall ?? true)
                     {
-                        SunGlareColor?.ToString(fg);
+                        SunGlareColor?.ToString(sb);
                     }
                     if (printMask?.MoonGlareColor?.Overall ?? true)
                     {
-                        MoonGlareColor?.ToString(fg);
+                        MoonGlareColor?.ToString(sb);
                     }
                     if (printMask?.FogDistanceDayNear ?? true)
                     {
-                        fg.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
+                        sb.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
                     }
                     if (printMask?.FogDistanceDayFar ?? true)
                     {
-                        fg.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
+                        sb.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
                     }
                     if (printMask?.FogDistanceNightNear ?? true)
                     {
-                        fg.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
+                        sb.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
                     }
                     if (printMask?.FogDistanceNightFar ?? true)
                     {
-                        fg.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
+                        sb.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
                     }
                     if (printMask?.FogDistanceDayPower ?? true)
                     {
-                        fg.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
+                        sb.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
                     }
                     if (printMask?.FogDistanceNightPower ?? true)
                     {
-                        fg.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
+                        sb.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
                     }
                     if (printMask?.FogDistanceDayMax ?? true)
                     {
-                        fg.AppendItem(FogDistanceDayMax, "FogDistanceDayMax");
+                        sb.AppendItem(FogDistanceDayMax, "FogDistanceDayMax");
                     }
                     if (printMask?.FogDistanceNightMax ?? true)
                     {
-                        fg.AppendItem(FogDistanceNightMax, "FogDistanceNightMax");
+                        sb.AppendItem(FogDistanceNightMax, "FogDistanceNightMax");
                     }
                     if (printMask?.WindSpeed ?? true)
                     {
-                        fg.AppendItem(WindSpeed, "WindSpeed");
+                        sb.AppendItem(WindSpeed, "WindSpeed");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.TransDelta ?? true)
                     {
-                        fg.AppendItem(TransDelta, "TransDelta");
+                        sb.AppendItem(TransDelta, "TransDelta");
                     }
                     if (printMask?.SunGlare ?? true)
                     {
-                        fg.AppendItem(SunGlare, "SunGlare");
+                        sb.AppendItem(SunGlare, "SunGlare");
                     }
                     if (printMask?.SunDamage ?? true)
                     {
-                        fg.AppendItem(SunDamage, "SunDamage");
+                        sb.AppendItem(SunDamage, "SunDamage");
                     }
                     if (printMask?.PrecipitationBeginFadeIn ?? true)
                     {
-                        fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                        sb.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
                     }
                     if (printMask?.PrecipitationEndFadeOut ?? true)
                     {
-                        fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                        sb.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
                     }
                     if (printMask?.ThunderLightningBeginFadeIn ?? true)
                     {
-                        fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                        sb.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
                     }
                     if (printMask?.ThunderLightningEndFadeOut ?? true)
                     {
-                        fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                        sb.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
                     }
                     if (printMask?.ThunderLightningFrequency ?? true)
                     {
-                        fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
+                        sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.LightningColor ?? true)
                     {
-                        fg.AppendItem(LightningColor, "LightningColor");
+                        sb.AppendItem(LightningColor, "LightningColor");
                     }
                     if (printMask?.VisualEffectBegin ?? true)
                     {
-                        fg.AppendItem(VisualEffectBegin, "VisualEffectBegin");
+                        sb.AppendItem(VisualEffectBegin, "VisualEffectBegin");
                     }
                     if (printMask?.VisualEffectEnd ?? true)
                     {
-                        fg.AppendItem(VisualEffectEnd, "VisualEffectEnd");
+                        sb.AppendItem(VisualEffectEnd, "VisualEffectEnd");
                     }
                     if (printMask?.WindDirection ?? true)
                     {
-                        fg.AppendItem(WindDirection, "WindDirection");
+                        sb.AppendItem(WindDirection, "WindDirection");
                     }
                     if (printMask?.WindDirectionRange ?? true)
                     {
-                        fg.AppendItem(WindDirectionRange, "WindDirectionRange");
+                        sb.AppendItem(WindDirectionRange, "WindDirectionRange");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
                         && Sounds is {} SoundsItem)
                     {
-                        fg.AppendLine("Sounds =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Sounds =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(SoundsItem.Overall);
+                            sb.AppendItem(SoundsItem.Overall);
                             if (SoundsItem.Specific != null)
                             {
                                 foreach (var subItem in SoundsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.SkyStatics?.Overall ?? true)
                         && SkyStatics is {} SkyStaticsItem)
                     {
-                        fg.AppendLine("SkyStatics =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("SkyStatics =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(SkyStaticsItem.Overall);
+                            sb.AppendItem(SkyStaticsItem.Overall);
                             if (SkyStaticsItem.Specific != null)
                             {
                                 foreach (var subItem in SkyStaticsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.ImageSpaces?.Overall ?? true)
                     {
-                        ImageSpaces?.ToString(fg);
+                        ImageSpaces?.ToString(sb);
                     }
                     if (printMask?.VolumetricLighting?.Overall ?? true)
                     {
-                        VolumetricLighting?.ToString(fg);
+                        VolumetricLighting?.ToString(sb);
                     }
                     if (printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                     {
-                        DirectionalAmbientLightingColors?.ToString(fg);
+                        DirectionalAmbientLightingColors?.ToString(sb);
                     }
                     if (printMask?.NAM2 ?? true)
                     {
-                        fg.AppendItem(NAM2, "NAM2");
+                        sb.AppendItem(NAM2, "NAM2");
                     }
                     if (printMask?.NAM3 ?? true)
                     {
-                        fg.AppendItem(NAM3, "NAM3");
+                        sb.AppendItem(NAM3, "NAM3");
                     }
                     if (printMask?.Aurora?.Overall ?? true)
                     {
-                        Aurora?.ToString(fg);
+                        Aurora?.ToString(sb);
                     }
                     if (printMask?.SunGlareLensFlare ?? true)
                     {
-                        fg.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
+                        sb.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
                     }
                     if (printMask?.NAM0DataTypeState ?? true)
                     {
-                        fg.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
+                        sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
                     }
                     if (printMask?.FNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
+                        sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -2457,181 +2462,261 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.ToString_FillInternal(sb);
                 if (CloudTextures is {} CloudTexturesItem)
                 {
-                    fg.AppendLine("CloudTextures =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CloudTextures =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(CloudTexturesItem.Overall);
+                        sb.AppendItem(CloudTexturesItem.Overall);
                         if (CloudTexturesItem.Specific != null)
                         {
                             foreach (var subItem in CloudTexturesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(DNAM, "DNAM");
-                fg.AppendItem(CNAM, "CNAM");
-                fg.AppendItem(ANAM, "ANAM");
-                fg.AppendItem(BNAM, "BNAM");
-                fg.AppendItem(LNAM, "LNAM");
-                fg.AppendItem(Precipitation, "Precipitation");
-                fg.AppendItem(VisualEffect, "VisualEffect");
-                fg.AppendItem(ONAM, "ONAM");
+                {
+                    sb.AppendItem(DNAM, "DNAM");
+                }
+                {
+                    sb.AppendItem(CNAM, "CNAM");
+                }
+                {
+                    sb.AppendItem(ANAM, "ANAM");
+                }
+                {
+                    sb.AppendItem(BNAM, "BNAM");
+                }
+                {
+                    sb.AppendItem(LNAM, "LNAM");
+                }
+                {
+                    sb.AppendItem(Precipitation, "Precipitation");
+                }
+                {
+                    sb.AppendItem(VisualEffect, "VisualEffect");
+                }
+                {
+                    sb.AppendItem(ONAM, "ONAM");
+                }
                 if (Clouds is {} CloudsItem)
                 {
-                    fg.AppendLine("Clouds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Clouds =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(CloudsItem.Overall);
+                        sb.AppendItem(CloudsItem.Overall);
                         if (CloudsItem.Specific != null)
                         {
                             foreach (var subItem in CloudsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                SkyUpperColor?.ToString(fg);
-                FogNearColor?.ToString(fg);
-                UnknownColor?.ToString(fg);
-                AmbientColor?.ToString(fg);
-                SunlightColor?.ToString(fg);
-                SunColor?.ToString(fg);
-                StarsColor?.ToString(fg);
-                SkyLowerColor?.ToString(fg);
-                HorizonColor?.ToString(fg);
-                EffectLightingColor?.ToString(fg);
-                CloudLodDiffuseColor?.ToString(fg);
-                CloudLodAmbientColor?.ToString(fg);
-                FogFarColor?.ToString(fg);
-                SkyStaticsColor?.ToString(fg);
-                WaterMultiplierColor?.ToString(fg);
-                SunGlareColor?.ToString(fg);
-                MoonGlareColor?.ToString(fg);
-                fg.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
-                fg.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
-                fg.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
-                fg.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
-                fg.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
-                fg.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
-                fg.AppendItem(FogDistanceDayMax, "FogDistanceDayMax");
-                fg.AppendItem(FogDistanceNightMax, "FogDistanceNightMax");
-                fg.AppendItem(WindSpeed, "WindSpeed");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(TransDelta, "TransDelta");
-                fg.AppendItem(SunGlare, "SunGlare");
-                fg.AppendItem(SunDamage, "SunDamage");
-                fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
-                fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
-                fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
-                fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
-                fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(LightningColor, "LightningColor");
-                fg.AppendItem(VisualEffectBegin, "VisualEffectBegin");
-                fg.AppendItem(VisualEffectEnd, "VisualEffectEnd");
-                fg.AppendItem(WindDirection, "WindDirection");
-                fg.AppendItem(WindDirectionRange, "WindDirectionRange");
+                SkyUpperColor?.ToString(sb);
+                FogNearColor?.ToString(sb);
+                UnknownColor?.ToString(sb);
+                AmbientColor?.ToString(sb);
+                SunlightColor?.ToString(sb);
+                SunColor?.ToString(sb);
+                StarsColor?.ToString(sb);
+                SkyLowerColor?.ToString(sb);
+                HorizonColor?.ToString(sb);
+                EffectLightingColor?.ToString(sb);
+                CloudLodDiffuseColor?.ToString(sb);
+                CloudLodAmbientColor?.ToString(sb);
+                FogFarColor?.ToString(sb);
+                SkyStaticsColor?.ToString(sb);
+                WaterMultiplierColor?.ToString(sb);
+                SunGlareColor?.ToString(sb);
+                MoonGlareColor?.ToString(sb);
+                {
+                    sb.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
+                }
+                {
+                    sb.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
+                }
+                {
+                    sb.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
+                }
+                {
+                    sb.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
+                }
+                {
+                    sb.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
+                }
+                {
+                    sb.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
+                }
+                {
+                    sb.AppendItem(FogDistanceDayMax, "FogDistanceDayMax");
+                }
+                {
+                    sb.AppendItem(FogDistanceNightMax, "FogDistanceNightMax");
+                }
+                {
+                    sb.AppendItem(WindSpeed, "WindSpeed");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(TransDelta, "TransDelta");
+                }
+                {
+                    sb.AppendItem(SunGlare, "SunGlare");
+                }
+                {
+                    sb.AppendItem(SunDamage, "SunDamage");
+                }
+                {
+                    sb.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                }
+                {
+                    sb.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                }
+                {
+                    sb.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                }
+                {
+                    sb.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                }
+                {
+                    sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(LightningColor, "LightningColor");
+                }
+                {
+                    sb.AppendItem(VisualEffectBegin, "VisualEffectBegin");
+                }
+                {
+                    sb.AppendItem(VisualEffectEnd, "VisualEffectEnd");
+                }
+                {
+                    sb.AppendItem(WindDirection, "WindDirection");
+                }
+                {
+                    sb.AppendItem(WindDirectionRange, "WindDirectionRange");
+                }
                 if (Sounds is {} SoundsItem)
                 {
-                    fg.AppendLine("Sounds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Sounds =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(SoundsItem.Overall);
+                        sb.AppendItem(SoundsItem.Overall);
                         if (SoundsItem.Specific != null)
                         {
                             foreach (var subItem in SoundsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (SkyStatics is {} SkyStaticsItem)
                 {
-                    fg.AppendLine("SkyStatics =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("SkyStatics =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(SkyStaticsItem.Overall);
+                        sb.AppendItem(SkyStaticsItem.Overall);
                         if (SkyStaticsItem.Specific != null)
                         {
                             foreach (var subItem in SkyStaticsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                ImageSpaces?.ToString(fg);
-                VolumetricLighting?.ToString(fg);
-                DirectionalAmbientLightingColors?.ToString(fg);
-                fg.AppendItem(NAM2, "NAM2");
-                fg.AppendItem(NAM3, "NAM3");
-                Aurora?.ToString(fg);
-                fg.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
-                fg.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
-                fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                ImageSpaces?.ToString(sb);
+                VolumetricLighting?.ToString(sb);
+                DirectionalAmbientLightingColors?.ToString(sb);
+                {
+                    sb.AppendItem(NAM2, "NAM2");
+                }
+                {
+                    sb.AppendItem(NAM3, "NAM3");
+                }
+                Aurora?.ToString(sb);
+                {
+                    sb.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
+                }
+                {
+                    sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
+                }
+                {
+                    sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -3045,7 +3130,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -3248,13 +3333,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IWeatherGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
             ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -3816,368 +3901,368 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeatherGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Weather =>");
+                sb.AppendLine($"Weather =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Weather) =>");
+                sb.AppendLine($"{name} (Weather) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Weather.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.CloudTextures?.Overall ?? true)
             {
-                fg.AppendLine("CloudTextures =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CloudTextures =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.CloudTextures)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.DNAM ?? true)
                 && item.DNAM is {} DNAMItem)
             {
-                fg.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
+                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
             }
             if ((printMask?.CNAM ?? true)
                 && item.CNAM is {} CNAMItem)
             {
-                fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
+                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if ((printMask?.ANAM ?? true)
                 && item.ANAM is {} ANAMItem)
             {
-                fg.AppendLine($"ANAM => {SpanExt.ToHexString(ANAMItem)}");
+                sb.AppendLine($"ANAM => {SpanExt.ToHexString(ANAMItem)}");
             }
             if ((printMask?.BNAM ?? true)
                 && item.BNAM is {} BNAMItem)
             {
-                fg.AppendLine($"BNAM => {SpanExt.ToHexString(BNAMItem)}");
+                sb.AppendLine($"BNAM => {SpanExt.ToHexString(BNAMItem)}");
             }
             if ((printMask?.LNAM ?? true)
                 && item.LNAM is {} LNAMItem)
             {
-                fg.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
+                sb.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
             }
             if (printMask?.Precipitation ?? true)
             {
-                fg.AppendItem(item.Precipitation.FormKeyNullable, "Precipitation");
+                sb.AppendItem(item.Precipitation.FormKeyNullable, "Precipitation");
             }
             if (printMask?.VisualEffect ?? true)
             {
-                fg.AppendItem(item.VisualEffect.FormKey, "VisualEffect");
+                sb.AppendItem(item.VisualEffect.FormKey, "VisualEffect");
             }
             if ((printMask?.ONAM ?? true)
                 && item.ONAM is {} ONAMItem)
             {
-                fg.AppendLine($"ONAM => {SpanExt.ToHexString(ONAMItem)}");
+                sb.AppendLine($"ONAM => {SpanExt.ToHexString(ONAMItem)}");
             }
             if (printMask?.Clouds?.Overall ?? true)
             {
-                fg.AppendLine("Clouds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Clouds =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Clouds)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.SkyUpperColor?.Overall ?? true)
             {
-                item.SkyUpperColor?.ToString(fg, "SkyUpperColor");
+                item.SkyUpperColor?.ToString(sb, "SkyUpperColor");
             }
             if (printMask?.FogNearColor?.Overall ?? true)
             {
-                item.FogNearColor?.ToString(fg, "FogNearColor");
+                item.FogNearColor?.ToString(sb, "FogNearColor");
             }
             if (printMask?.UnknownColor?.Overall ?? true)
             {
-                item.UnknownColor?.ToString(fg, "UnknownColor");
+                item.UnknownColor?.ToString(sb, "UnknownColor");
             }
             if (printMask?.AmbientColor?.Overall ?? true)
             {
-                item.AmbientColor?.ToString(fg, "AmbientColor");
+                item.AmbientColor?.ToString(sb, "AmbientColor");
             }
             if (printMask?.SunlightColor?.Overall ?? true)
             {
-                item.SunlightColor?.ToString(fg, "SunlightColor");
+                item.SunlightColor?.ToString(sb, "SunlightColor");
             }
             if (printMask?.SunColor?.Overall ?? true)
             {
-                item.SunColor?.ToString(fg, "SunColor");
+                item.SunColor?.ToString(sb, "SunColor");
             }
             if (printMask?.StarsColor?.Overall ?? true)
             {
-                item.StarsColor?.ToString(fg, "StarsColor");
+                item.StarsColor?.ToString(sb, "StarsColor");
             }
             if (printMask?.SkyLowerColor?.Overall ?? true)
             {
-                item.SkyLowerColor?.ToString(fg, "SkyLowerColor");
+                item.SkyLowerColor?.ToString(sb, "SkyLowerColor");
             }
             if (printMask?.HorizonColor?.Overall ?? true)
             {
-                item.HorizonColor?.ToString(fg, "HorizonColor");
+                item.HorizonColor?.ToString(sb, "HorizonColor");
             }
             if (printMask?.EffectLightingColor?.Overall ?? true)
             {
-                item.EffectLightingColor?.ToString(fg, "EffectLightingColor");
+                item.EffectLightingColor?.ToString(sb, "EffectLightingColor");
             }
             if (printMask?.CloudLodDiffuseColor?.Overall ?? true)
             {
-                item.CloudLodDiffuseColor?.ToString(fg, "CloudLodDiffuseColor");
+                item.CloudLodDiffuseColor?.ToString(sb, "CloudLodDiffuseColor");
             }
             if (printMask?.CloudLodAmbientColor?.Overall ?? true)
             {
-                item.CloudLodAmbientColor?.ToString(fg, "CloudLodAmbientColor");
+                item.CloudLodAmbientColor?.ToString(sb, "CloudLodAmbientColor");
             }
             if (printMask?.FogFarColor?.Overall ?? true)
             {
-                item.FogFarColor?.ToString(fg, "FogFarColor");
+                item.FogFarColor?.ToString(sb, "FogFarColor");
             }
             if (printMask?.SkyStaticsColor?.Overall ?? true)
             {
-                item.SkyStaticsColor?.ToString(fg, "SkyStaticsColor");
+                item.SkyStaticsColor?.ToString(sb, "SkyStaticsColor");
             }
             if (printMask?.WaterMultiplierColor?.Overall ?? true)
             {
-                item.WaterMultiplierColor?.ToString(fg, "WaterMultiplierColor");
+                item.WaterMultiplierColor?.ToString(sb, "WaterMultiplierColor");
             }
             if (printMask?.SunGlareColor?.Overall ?? true)
             {
-                item.SunGlareColor?.ToString(fg, "SunGlareColor");
+                item.SunGlareColor?.ToString(sb, "SunGlareColor");
             }
             if (printMask?.MoonGlareColor?.Overall ?? true)
             {
-                item.MoonGlareColor?.ToString(fg, "MoonGlareColor");
+                item.MoonGlareColor?.ToString(sb, "MoonGlareColor");
             }
             if (printMask?.FogDistanceDayNear ?? true)
             {
-                fg.AppendItem(item.FogDistanceDayNear, "FogDistanceDayNear");
+                sb.AppendItem(item.FogDistanceDayNear, "FogDistanceDayNear");
             }
             if (printMask?.FogDistanceDayFar ?? true)
             {
-                fg.AppendItem(item.FogDistanceDayFar, "FogDistanceDayFar");
+                sb.AppendItem(item.FogDistanceDayFar, "FogDistanceDayFar");
             }
             if (printMask?.FogDistanceNightNear ?? true)
             {
-                fg.AppendItem(item.FogDistanceNightNear, "FogDistanceNightNear");
+                sb.AppendItem(item.FogDistanceNightNear, "FogDistanceNightNear");
             }
             if (printMask?.FogDistanceNightFar ?? true)
             {
-                fg.AppendItem(item.FogDistanceNightFar, "FogDistanceNightFar");
+                sb.AppendItem(item.FogDistanceNightFar, "FogDistanceNightFar");
             }
             if (printMask?.FogDistanceDayPower ?? true)
             {
-                fg.AppendItem(item.FogDistanceDayPower, "FogDistanceDayPower");
+                sb.AppendItem(item.FogDistanceDayPower, "FogDistanceDayPower");
             }
             if (printMask?.FogDistanceNightPower ?? true)
             {
-                fg.AppendItem(item.FogDistanceNightPower, "FogDistanceNightPower");
+                sb.AppendItem(item.FogDistanceNightPower, "FogDistanceNightPower");
             }
             if (printMask?.FogDistanceDayMax ?? true)
             {
-                fg.AppendItem(item.FogDistanceDayMax, "FogDistanceDayMax");
+                sb.AppendItem(item.FogDistanceDayMax, "FogDistanceDayMax");
             }
             if (printMask?.FogDistanceNightMax ?? true)
             {
-                fg.AppendItem(item.FogDistanceNightMax, "FogDistanceNightMax");
+                sb.AppendItem(item.FogDistanceNightMax, "FogDistanceNightMax");
             }
             if (printMask?.WindSpeed ?? true)
             {
-                fg.AppendItem(item.WindSpeed, "WindSpeed");
+                sb.AppendItem(item.WindSpeed, "WindSpeed");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.TransDelta ?? true)
             {
-                fg.AppendItem(item.TransDelta, "TransDelta");
+                sb.AppendItem(item.TransDelta, "TransDelta");
             }
             if (printMask?.SunGlare ?? true)
             {
-                fg.AppendItem(item.SunGlare, "SunGlare");
+                sb.AppendItem(item.SunGlare, "SunGlare");
             }
             if (printMask?.SunDamage ?? true)
             {
-                fg.AppendItem(item.SunDamage, "SunDamage");
+                sb.AppendItem(item.SunDamage, "SunDamage");
             }
             if (printMask?.PrecipitationBeginFadeIn ?? true)
             {
-                fg.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                sb.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
             }
             if (printMask?.PrecipitationEndFadeOut ?? true)
             {
-                fg.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                sb.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
             }
             if (printMask?.ThunderLightningBeginFadeIn ?? true)
             {
-                fg.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                sb.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
             }
             if (printMask?.ThunderLightningEndFadeOut ?? true)
             {
-                fg.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                sb.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
             }
             if (printMask?.ThunderLightningFrequency ?? true)
             {
-                fg.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
+                sb.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.LightningColor ?? true)
             {
-                fg.AppendItem(item.LightningColor, "LightningColor");
+                sb.AppendItem(item.LightningColor, "LightningColor");
             }
             if (printMask?.VisualEffectBegin ?? true)
             {
-                fg.AppendItem(item.VisualEffectBegin, "VisualEffectBegin");
+                sb.AppendItem(item.VisualEffectBegin, "VisualEffectBegin");
             }
             if (printMask?.VisualEffectEnd ?? true)
             {
-                fg.AppendItem(item.VisualEffectEnd, "VisualEffectEnd");
+                sb.AppendItem(item.VisualEffectEnd, "VisualEffectEnd");
             }
             if (printMask?.WindDirection ?? true)
             {
-                fg.AppendItem(item.WindDirection, "WindDirection");
+                sb.AppendItem(item.WindDirection, "WindDirection");
             }
             if (printMask?.WindDirectionRange ?? true)
             {
-                fg.AppendItem(item.WindDirectionRange, "WindDirectionRange");
+                sb.AppendItem(item.WindDirectionRange, "WindDirectionRange");
             }
             if (printMask?.Sounds?.Overall ?? true)
             {
-                fg.AppendLine("Sounds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Sounds =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Sounds)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.SkyStatics?.Overall ?? true)
             {
-                fg.AppendLine("SkyStatics =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("SkyStatics =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.SkyStatics)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ImageSpaces?.Overall ?? true)
                 && item.ImageSpaces is {} ImageSpacesItem)
             {
-                ImageSpacesItem?.ToString(fg, "ImageSpaces");
+                ImageSpacesItem?.ToString(sb, "ImageSpaces");
             }
             if ((printMask?.VolumetricLighting?.Overall ?? true)
                 && item.VolumetricLighting is {} VolumetricLightingItem)
             {
-                VolumetricLightingItem?.ToString(fg, "VolumetricLighting");
+                VolumetricLightingItem?.ToString(sb, "VolumetricLighting");
             }
             if ((printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                 && item.DirectionalAmbientLightingColors is {} DirectionalAmbientLightingColorsItem)
             {
-                DirectionalAmbientLightingColorsItem?.ToString(fg, "DirectionalAmbientLightingColors");
+                DirectionalAmbientLightingColorsItem?.ToString(sb, "DirectionalAmbientLightingColors");
             }
             if ((printMask?.NAM2 ?? true)
                 && item.NAM2 is {} NAM2Item)
             {
-                fg.AppendLine($"NAM2 => {SpanExt.ToHexString(NAM2Item)}");
+                sb.AppendLine($"NAM2 => {SpanExt.ToHexString(NAM2Item)}");
             }
             if ((printMask?.NAM3 ?? true)
                 && item.NAM3 is {} NAM3Item)
             {
-                fg.AppendLine($"NAM3 => {SpanExt.ToHexString(NAM3Item)}");
+                sb.AppendLine($"NAM3 => {SpanExt.ToHexString(NAM3Item)}");
             }
             if ((printMask?.Aurora?.Overall ?? true)
                 && item.Aurora is {} AuroraItem)
             {
-                AuroraItem?.ToString(fg, "Aurora");
+                AuroraItem?.ToString(sb, "Aurora");
             }
             if (printMask?.SunGlareLensFlare ?? true)
             {
-                fg.AppendItem(item.SunGlareLensFlare.FormKeyNullable, "SunGlareLensFlare");
+                sb.AppendItem(item.SunGlareLensFlare.FormKeyNullable, "SunGlareLensFlare");
             }
             if (printMask?.NAM0DataTypeState ?? true)
             {
-                fg.AppendItem(item.NAM0DataTypeState, "NAM0DataTypeState");
+                sb.AppendItem(item.NAM0DataTypeState, "NAM0DataTypeState");
             }
             if (printMask?.FNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
+                sb.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -6540,7 +6625,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -7127,11 +7212,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -61,11 +61,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MiscellaneousDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -185,27 +186,27 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(MiscellaneousData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MiscellaneousData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MiscellaneousData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MiscellaneousData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MiscellaneousData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -292,35 +293,39 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
             }
             #endregion
 
@@ -436,7 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -511,13 +516,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IMiscellaneousDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MiscellaneousData.Mask<bool>? printMask = null)
         {
             ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -804,52 +809,52 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             MiscellaneousData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMiscellaneousDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MiscellaneousData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MiscellaneousData =>");
+                sb.AppendLine($"MiscellaneousData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MiscellaneousData) =>");
+                sb.AppendLine($"{name} (MiscellaneousData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMiscellaneousDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MiscellaneousData.Mask<bool>? printMask = null)
         {
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
         }
         
@@ -1107,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MiscellaneousDataBinaryWriteTranslation.Instance;
@@ -1173,11 +1178,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MiscellaneousDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

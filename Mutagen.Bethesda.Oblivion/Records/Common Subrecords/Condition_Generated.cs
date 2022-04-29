@@ -87,11 +87,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ConditionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -265,51 +266,51 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Condition.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Condition.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Condition.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Condition.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Condition.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.CompareOperator ?? true)
                     {
-                        fg.AppendItem(CompareOperator, "CompareOperator");
+                        sb.AppendItem(CompareOperator, "CompareOperator");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendItem(Fluff, "Fluff");
+                        sb.AppendItem(Fluff, "Fluff");
                     }
                     if (printMask?.ComparisonValue ?? true)
                     {
-                        fg.AppendItem(ComparisonValue, "ComparisonValue");
+                        sb.AppendItem(ComparisonValue, "ComparisonValue");
                     }
                     if (printMask?.Function ?? true)
                     {
-                        fg.AppendItem(Function, "Function");
+                        sb.AppendItem(Function, "Function");
                     }
                     if (printMask?.FirstParameter ?? true)
                     {
-                        fg.AppendItem(FirstParameter, "FirstParameter");
+                        sb.AppendItem(FirstParameter, "FirstParameter");
                     }
                     if (printMask?.SecondParameter ?? true)
                     {
-                        fg.AppendItem(SecondParameter, "SecondParameter");
+                        sb.AppendItem(SecondParameter, "SecondParameter");
                     }
                     if (printMask?.ThirdParameter ?? true)
                     {
-                        fg.AppendItem(ThirdParameter, "ThirdParameter");
+                        sb.AppendItem(ThirdParameter, "ThirdParameter");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -456,41 +457,57 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(CompareOperator, "CompareOperator");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Fluff, "Fluff");
-                fg.AppendItem(ComparisonValue, "ComparisonValue");
-                fg.AppendItem(Function, "Function");
-                fg.AppendItem(FirstParameter, "FirstParameter");
-                fg.AppendItem(SecondParameter, "SecondParameter");
-                fg.AppendItem(ThirdParameter, "ThirdParameter");
+                {
+                    sb.AppendItem(CompareOperator, "CompareOperator");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Fluff, "Fluff");
+                }
+                {
+                    sb.AppendItem(ComparisonValue, "ComparisonValue");
+                }
+                {
+                    sb.AppendItem(Function, "Function");
+                }
+                {
+                    sb.AppendItem(FirstParameter, "FirstParameter");
+                }
+                {
+                    sb.AppendItem(SecondParameter, "SecondParameter");
+                }
+                {
+                    sb.AppendItem(ThirdParameter, "ThirdParameter");
+                }
             }
             #endregion
 
@@ -644,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -731,13 +748,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IConditionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Condition.Mask<bool>? printMask = null)
         {
             ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1043,76 +1060,76 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Condition.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IConditionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Condition.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Condition =>");
+                sb.AppendLine($"Condition =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Condition) =>");
+                sb.AppendLine($"{name} (Condition) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IConditionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Condition.Mask<bool>? printMask = null)
         {
             if (printMask?.CompareOperator ?? true)
             {
-                fg.AppendItem(item.CompareOperator, "CompareOperator");
+                sb.AppendItem(item.CompareOperator, "CompareOperator");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                sb.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
             if (printMask?.ComparisonValue ?? true)
             {
-                fg.AppendItem(item.ComparisonValue, "ComparisonValue");
+                sb.AppendItem(item.ComparisonValue, "ComparisonValue");
             }
             if (printMask?.Function ?? true)
             {
-                fg.AppendItem(item.Function, "Function");
+                sb.AppendItem(item.Function, "Function");
             }
             if (printMask?.FirstParameter ?? true)
             {
-                fg.AppendItem(item.FirstParameter, "FirstParameter");
+                sb.AppendItem(item.FirstParameter, "FirstParameter");
             }
             if (printMask?.SecondParameter ?? true)
             {
-                fg.AppendItem(item.SecondParameter, "SecondParameter");
+                sb.AppendItem(item.SecondParameter, "SecondParameter");
             }
             if (printMask?.ThirdParameter ?? true)
             {
-                fg.AppendItem(item.ThirdParameter, "ThirdParameter");
+                sb.AppendItem(item.ThirdParameter, "ThirdParameter");
             }
         }
         
@@ -1462,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;
@@ -1549,11 +1566,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ConditionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

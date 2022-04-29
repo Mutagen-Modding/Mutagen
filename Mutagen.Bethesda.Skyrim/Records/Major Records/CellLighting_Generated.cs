@@ -110,11 +110,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CellLightingMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -377,87 +378,87 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CellLighting.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CellLighting.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CellLighting.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CellLighting.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CellLighting.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.AmbientColor ?? true)
                     {
-                        fg.AppendItem(AmbientColor, "AmbientColor");
+                        sb.AppendItem(AmbientColor, "AmbientColor");
                     }
                     if (printMask?.DirectionalColor ?? true)
                     {
-                        fg.AppendItem(DirectionalColor, "DirectionalColor");
+                        sb.AppendItem(DirectionalColor, "DirectionalColor");
                     }
                     if (printMask?.FogNearColor ?? true)
                     {
-                        fg.AppendItem(FogNearColor, "FogNearColor");
+                        sb.AppendItem(FogNearColor, "FogNearColor");
                     }
                     if (printMask?.FogNear ?? true)
                     {
-                        fg.AppendItem(FogNear, "FogNear");
+                        sb.AppendItem(FogNear, "FogNear");
                     }
                     if (printMask?.FogFar ?? true)
                     {
-                        fg.AppendItem(FogFar, "FogFar");
+                        sb.AppendItem(FogFar, "FogFar");
                     }
                     if (printMask?.DirectionalRotationXY ?? true)
                     {
-                        fg.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
+                        sb.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
                     }
                     if (printMask?.DirectionalRotationZ ?? true)
                     {
-                        fg.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
+                        sb.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
                     }
                     if (printMask?.DirectionalFade ?? true)
                     {
-                        fg.AppendItem(DirectionalFade, "DirectionalFade");
+                        sb.AppendItem(DirectionalFade, "DirectionalFade");
                     }
                     if (printMask?.FogClipDistance ?? true)
                     {
-                        fg.AppendItem(FogClipDistance, "FogClipDistance");
+                        sb.AppendItem(FogClipDistance, "FogClipDistance");
                     }
                     if (printMask?.FogPower ?? true)
                     {
-                        fg.AppendItem(FogPower, "FogPower");
+                        sb.AppendItem(FogPower, "FogPower");
                     }
                     if (printMask?.AmbientColors?.Overall ?? true)
                     {
-                        AmbientColors?.ToString(fg);
+                        AmbientColors?.ToString(sb);
                     }
                     if (printMask?.FogFarColor ?? true)
                     {
-                        fg.AppendItem(FogFarColor, "FogFarColor");
+                        sb.AppendItem(FogFarColor, "FogFarColor");
                     }
                     if (printMask?.FogMax ?? true)
                     {
-                        fg.AppendItem(FogMax, "FogMax");
+                        sb.AppendItem(FogMax, "FogMax");
                     }
                     if (printMask?.LightFadeBegin ?? true)
                     {
-                        fg.AppendItem(LightFadeBegin, "LightFadeBegin");
+                        sb.AppendItem(LightFadeBegin, "LightFadeBegin");
                     }
                     if (printMask?.LightFadeEnd ?? true)
                     {
-                        fg.AppendItem(LightFadeEnd, "LightFadeEnd");
+                        sb.AppendItem(LightFadeEnd, "LightFadeEnd");
                     }
                     if (printMask?.Inherits ?? true)
                     {
-                        fg.AppendItem(Inherits, "Inherits");
+                        sb.AppendItem(Inherits, "Inherits");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -694,50 +695,82 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(AmbientColor, "AmbientColor");
-                fg.AppendItem(DirectionalColor, "DirectionalColor");
-                fg.AppendItem(FogNearColor, "FogNearColor");
-                fg.AppendItem(FogNear, "FogNear");
-                fg.AppendItem(FogFar, "FogFar");
-                fg.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
-                fg.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
-                fg.AppendItem(DirectionalFade, "DirectionalFade");
-                fg.AppendItem(FogClipDistance, "FogClipDistance");
-                fg.AppendItem(FogPower, "FogPower");
-                AmbientColors?.ToString(fg);
-                fg.AppendItem(FogFarColor, "FogFarColor");
-                fg.AppendItem(FogMax, "FogMax");
-                fg.AppendItem(LightFadeBegin, "LightFadeBegin");
-                fg.AppendItem(LightFadeEnd, "LightFadeEnd");
-                fg.AppendItem(Inherits, "Inherits");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(AmbientColor, "AmbientColor");
+                }
+                {
+                    sb.AppendItem(DirectionalColor, "DirectionalColor");
+                }
+                {
+                    sb.AppendItem(FogNearColor, "FogNearColor");
+                }
+                {
+                    sb.AppendItem(FogNear, "FogNear");
+                }
+                {
+                    sb.AppendItem(FogFar, "FogFar");
+                }
+                {
+                    sb.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
+                }
+                {
+                    sb.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
+                }
+                {
+                    sb.AppendItem(DirectionalFade, "DirectionalFade");
+                }
+                {
+                    sb.AppendItem(FogClipDistance, "FogClipDistance");
+                }
+                {
+                    sb.AppendItem(FogPower, "FogPower");
+                }
+                AmbientColors?.ToString(sb);
+                {
+                    sb.AppendItem(FogFarColor, "FogFarColor");
+                }
+                {
+                    sb.AppendItem(FogMax, "FogMax");
+                }
+                {
+                    sb.AppendItem(LightFadeBegin, "LightFadeBegin");
+                }
+                {
+                    sb.AppendItem(LightFadeEnd, "LightFadeEnd");
+                }
+                {
+                    sb.AppendItem(Inherits, "Inherits");
+                }
             }
             #endregion
 
@@ -920,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1025,13 +1058,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICellLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
             ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1363,112 +1396,112 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICellLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CellLighting =>");
+                sb.AppendLine($"CellLighting =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CellLighting) =>");
+                sb.AppendLine($"{name} (CellLighting) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICellLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CellLighting.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.AmbientColor ?? true)
             {
-                fg.AppendItem(item.AmbientColor, "AmbientColor");
+                sb.AppendItem(item.AmbientColor, "AmbientColor");
             }
             if (printMask?.DirectionalColor ?? true)
             {
-                fg.AppendItem(item.DirectionalColor, "DirectionalColor");
+                sb.AppendItem(item.DirectionalColor, "DirectionalColor");
             }
             if (printMask?.FogNearColor ?? true)
             {
-                fg.AppendItem(item.FogNearColor, "FogNearColor");
+                sb.AppendItem(item.FogNearColor, "FogNearColor");
             }
             if (printMask?.FogNear ?? true)
             {
-                fg.AppendItem(item.FogNear, "FogNear");
+                sb.AppendItem(item.FogNear, "FogNear");
             }
             if (printMask?.FogFar ?? true)
             {
-                fg.AppendItem(item.FogFar, "FogFar");
+                sb.AppendItem(item.FogFar, "FogFar");
             }
             if (printMask?.DirectionalRotationXY ?? true)
             {
-                fg.AppendItem(item.DirectionalRotationXY, "DirectionalRotationXY");
+                sb.AppendItem(item.DirectionalRotationXY, "DirectionalRotationXY");
             }
             if (printMask?.DirectionalRotationZ ?? true)
             {
-                fg.AppendItem(item.DirectionalRotationZ, "DirectionalRotationZ");
+                sb.AppendItem(item.DirectionalRotationZ, "DirectionalRotationZ");
             }
             if (printMask?.DirectionalFade ?? true)
             {
-                fg.AppendItem(item.DirectionalFade, "DirectionalFade");
+                sb.AppendItem(item.DirectionalFade, "DirectionalFade");
             }
             if (printMask?.FogClipDistance ?? true)
             {
-                fg.AppendItem(item.FogClipDistance, "FogClipDistance");
+                sb.AppendItem(item.FogClipDistance, "FogClipDistance");
             }
             if (printMask?.FogPower ?? true)
             {
-                fg.AppendItem(item.FogPower, "FogPower");
+                sb.AppendItem(item.FogPower, "FogPower");
             }
             if (printMask?.AmbientColors?.Overall ?? true)
             {
-                item.AmbientColors?.ToString(fg, "AmbientColors");
+                item.AmbientColors?.ToString(sb, "AmbientColors");
             }
             if (printMask?.FogFarColor ?? true)
             {
-                fg.AppendItem(item.FogFarColor, "FogFarColor");
+                sb.AppendItem(item.FogFarColor, "FogFarColor");
             }
             if (printMask?.FogMax ?? true)
             {
-                fg.AppendItem(item.FogMax, "FogMax");
+                sb.AppendItem(item.FogMax, "FogMax");
             }
             if (printMask?.LightFadeBegin ?? true)
             {
-                fg.AppendItem(item.LightFadeBegin, "LightFadeBegin");
+                sb.AppendItem(item.LightFadeBegin, "LightFadeBegin");
             }
             if (printMask?.LightFadeEnd ?? true)
             {
-                fg.AppendItem(item.LightFadeEnd, "LightFadeEnd");
+                sb.AppendItem(item.LightFadeEnd, "LightFadeEnd");
             }
             if (printMask?.Inherits ?? true)
             {
-                fg.AppendItem(item.Inherits, "Inherits");
+                sb.AppendItem(item.Inherits, "Inherits");
             }
         }
         
@@ -1950,7 +1983,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellLightingBinaryWriteTranslation.Instance;
@@ -2034,11 +2067,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CellLightingMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

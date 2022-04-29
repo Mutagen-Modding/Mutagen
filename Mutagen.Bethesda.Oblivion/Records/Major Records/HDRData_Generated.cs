@@ -97,11 +97,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             HDRDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -329,75 +330,75 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(HDRData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, HDRData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, HDRData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(HDRData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(HDRData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.EyeAdaptSpeed ?? true)
                     {
-                        fg.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
+                        sb.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
                     }
                     if (printMask?.BlurRadius ?? true)
                     {
-                        fg.AppendItem(BlurRadius, "BlurRadius");
+                        sb.AppendItem(BlurRadius, "BlurRadius");
                     }
                     if (printMask?.BlurPasses ?? true)
                     {
-                        fg.AppendItem(BlurPasses, "BlurPasses");
+                        sb.AppendItem(BlurPasses, "BlurPasses");
                     }
                     if (printMask?.EmissiveMult ?? true)
                     {
-                        fg.AppendItem(EmissiveMult, "EmissiveMult");
+                        sb.AppendItem(EmissiveMult, "EmissiveMult");
                     }
                     if (printMask?.TargetLum ?? true)
                     {
-                        fg.AppendItem(TargetLum, "TargetLum");
+                        sb.AppendItem(TargetLum, "TargetLum");
                     }
                     if (printMask?.UpperLumClamp ?? true)
                     {
-                        fg.AppendItem(UpperLumClamp, "UpperLumClamp");
+                        sb.AppendItem(UpperLumClamp, "UpperLumClamp");
                     }
                     if (printMask?.BrightScale ?? true)
                     {
-                        fg.AppendItem(BrightScale, "BrightScale");
+                        sb.AppendItem(BrightScale, "BrightScale");
                     }
                     if (printMask?.BrightClamp ?? true)
                     {
-                        fg.AppendItem(BrightClamp, "BrightClamp");
+                        sb.AppendItem(BrightClamp, "BrightClamp");
                     }
                     if (printMask?.LumRampNoTex ?? true)
                     {
-                        fg.AppendItem(LumRampNoTex, "LumRampNoTex");
+                        sb.AppendItem(LumRampNoTex, "LumRampNoTex");
                     }
                     if (printMask?.LumRampMin ?? true)
                     {
-                        fg.AppendItem(LumRampMin, "LumRampMin");
+                        sb.AppendItem(LumRampMin, "LumRampMin");
                     }
                     if (printMask?.LumRampMax ?? true)
                     {
-                        fg.AppendItem(LumRampMax, "LumRampMax");
+                        sb.AppendItem(LumRampMax, "LumRampMax");
                     }
                     if (printMask?.SunlightDimmer ?? true)
                     {
-                        fg.AppendItem(SunlightDimmer, "SunlightDimmer");
+                        sb.AppendItem(SunlightDimmer, "SunlightDimmer");
                     }
                     if (printMask?.GrassDimmer ?? true)
                     {
-                        fg.AppendItem(GrassDimmer, "GrassDimmer");
+                        sb.AppendItem(GrassDimmer, "GrassDimmer");
                     }
                     if (printMask?.TreeDimmer ?? true)
                     {
-                        fg.AppendItem(TreeDimmer, "TreeDimmer");
+                        sb.AppendItem(TreeDimmer, "TreeDimmer");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -604,47 +605,75 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
-                fg.AppendItem(BlurRadius, "BlurRadius");
-                fg.AppendItem(BlurPasses, "BlurPasses");
-                fg.AppendItem(EmissiveMult, "EmissiveMult");
-                fg.AppendItem(TargetLum, "TargetLum");
-                fg.AppendItem(UpperLumClamp, "UpperLumClamp");
-                fg.AppendItem(BrightScale, "BrightScale");
-                fg.AppendItem(BrightClamp, "BrightClamp");
-                fg.AppendItem(LumRampNoTex, "LumRampNoTex");
-                fg.AppendItem(LumRampMin, "LumRampMin");
-                fg.AppendItem(LumRampMax, "LumRampMax");
-                fg.AppendItem(SunlightDimmer, "SunlightDimmer");
-                fg.AppendItem(GrassDimmer, "GrassDimmer");
-                fg.AppendItem(TreeDimmer, "TreeDimmer");
+                {
+                    sb.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
+                }
+                {
+                    sb.AppendItem(BlurRadius, "BlurRadius");
+                }
+                {
+                    sb.AppendItem(BlurPasses, "BlurPasses");
+                }
+                {
+                    sb.AppendItem(EmissiveMult, "EmissiveMult");
+                }
+                {
+                    sb.AppendItem(TargetLum, "TargetLum");
+                }
+                {
+                    sb.AppendItem(UpperLumClamp, "UpperLumClamp");
+                }
+                {
+                    sb.AppendItem(BrightScale, "BrightScale");
+                }
+                {
+                    sb.AppendItem(BrightClamp, "BrightClamp");
+                }
+                {
+                    sb.AppendItem(LumRampNoTex, "LumRampNoTex");
+                }
+                {
+                    sb.AppendItem(LumRampMin, "LumRampMin");
+                }
+                {
+                    sb.AppendItem(LumRampMax, "LumRampMax");
+                }
+                {
+                    sb.AppendItem(SunlightDimmer, "SunlightDimmer");
+                }
+                {
+                    sb.AppendItem(GrassDimmer, "GrassDimmer");
+                }
+                {
+                    sb.AppendItem(TreeDimmer, "TreeDimmer");
+                }
             }
             #endregion
 
@@ -808,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -907,13 +936,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IHDRDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HDRData.Mask<bool>? printMask = null)
         {
             ((HDRDataCommon)((IHDRDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1236,100 +1265,100 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             HDRData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IHDRDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HDRData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"HDRData =>");
+                sb.AppendLine($"HDRData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (HDRData) =>");
+                sb.AppendLine($"{name} (HDRData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IHDRDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             HDRData.Mask<bool>? printMask = null)
         {
             if (printMask?.EyeAdaptSpeed ?? true)
             {
-                fg.AppendItem(item.EyeAdaptSpeed, "EyeAdaptSpeed");
+                sb.AppendItem(item.EyeAdaptSpeed, "EyeAdaptSpeed");
             }
             if (printMask?.BlurRadius ?? true)
             {
-                fg.AppendItem(item.BlurRadius, "BlurRadius");
+                sb.AppendItem(item.BlurRadius, "BlurRadius");
             }
             if (printMask?.BlurPasses ?? true)
             {
-                fg.AppendItem(item.BlurPasses, "BlurPasses");
+                sb.AppendItem(item.BlurPasses, "BlurPasses");
             }
             if (printMask?.EmissiveMult ?? true)
             {
-                fg.AppendItem(item.EmissiveMult, "EmissiveMult");
+                sb.AppendItem(item.EmissiveMult, "EmissiveMult");
             }
             if (printMask?.TargetLum ?? true)
             {
-                fg.AppendItem(item.TargetLum, "TargetLum");
+                sb.AppendItem(item.TargetLum, "TargetLum");
             }
             if (printMask?.UpperLumClamp ?? true)
             {
-                fg.AppendItem(item.UpperLumClamp, "UpperLumClamp");
+                sb.AppendItem(item.UpperLumClamp, "UpperLumClamp");
             }
             if (printMask?.BrightScale ?? true)
             {
-                fg.AppendItem(item.BrightScale, "BrightScale");
+                sb.AppendItem(item.BrightScale, "BrightScale");
             }
             if (printMask?.BrightClamp ?? true)
             {
-                fg.AppendItem(item.BrightClamp, "BrightClamp");
+                sb.AppendItem(item.BrightClamp, "BrightClamp");
             }
             if (printMask?.LumRampNoTex ?? true)
             {
-                fg.AppendItem(item.LumRampNoTex, "LumRampNoTex");
+                sb.AppendItem(item.LumRampNoTex, "LumRampNoTex");
             }
             if (printMask?.LumRampMin ?? true)
             {
-                fg.AppendItem(item.LumRampMin, "LumRampMin");
+                sb.AppendItem(item.LumRampMin, "LumRampMin");
             }
             if (printMask?.LumRampMax ?? true)
             {
-                fg.AppendItem(item.LumRampMax, "LumRampMax");
+                sb.AppendItem(item.LumRampMax, "LumRampMax");
             }
             if (printMask?.SunlightDimmer ?? true)
             {
-                fg.AppendItem(item.SunlightDimmer, "SunlightDimmer");
+                sb.AppendItem(item.SunlightDimmer, "SunlightDimmer");
             }
             if (printMask?.GrassDimmer ?? true)
             {
-                fg.AppendItem(item.GrassDimmer, "GrassDimmer");
+                sb.AppendItem(item.GrassDimmer, "GrassDimmer");
             }
             if (printMask?.TreeDimmer ?? true)
             {
-                fg.AppendItem(item.TreeDimmer, "TreeDimmer");
+                sb.AppendItem(item.TreeDimmer, "TreeDimmer");
             }
         }
         
@@ -1745,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HDRDataBinaryWriteTranslation.Instance;
@@ -1823,11 +1852,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             HDRDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

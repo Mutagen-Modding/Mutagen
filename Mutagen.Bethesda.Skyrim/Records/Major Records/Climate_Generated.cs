@@ -128,11 +128,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClimateMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -390,86 +391,86 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Climate.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Climate.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Climate.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Climate.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Climate.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if ((printMask?.WeatherTypes?.Overall ?? true)
                         && WeatherTypes is {} WeatherTypesItem)
                     {
-                        fg.AppendLine("WeatherTypes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("WeatherTypes =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(WeatherTypesItem.Overall);
+                            sb.AppendItem(WeatherTypesItem.Overall);
                             if (WeatherTypesItem.Specific != null)
                             {
                                 foreach (var subItem in WeatherTypesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.SunTexture ?? true)
                     {
-                        fg.AppendItem(SunTexture, "SunTexture");
+                        sb.AppendItem(SunTexture, "SunTexture");
                     }
                     if (printMask?.SunGlareTexture ?? true)
                     {
-                        fg.AppendItem(SunGlareTexture, "SunGlareTexture");
+                        sb.AppendItem(SunGlareTexture, "SunGlareTexture");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.SunriseBeginRaw ?? true)
                     {
-                        fg.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
+                        sb.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
                     }
                     if (printMask?.SunriseEndRaw ?? true)
                     {
-                        fg.AppendItem(SunriseEndRaw, "SunriseEndRaw");
+                        sb.AppendItem(SunriseEndRaw, "SunriseEndRaw");
                     }
                     if (printMask?.SunsetBeginRaw ?? true)
                     {
-                        fg.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
+                        sb.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
                     }
                     if (printMask?.SunsetEndRaw ?? true)
                     {
-                        fg.AppendItem(SunsetEndRaw, "SunsetEndRaw");
+                        sb.AppendItem(SunsetEndRaw, "SunsetEndRaw");
                     }
                     if (printMask?.Volatility ?? true)
                     {
-                        fg.AppendItem(Volatility, "Volatility");
+                        sb.AppendItem(Volatility, "Volatility");
                     }
                     if (printMask?.Moons ?? true)
                     {
-                        fg.AppendItem(Moons, "Moons");
+                        sb.AppendItem(Moons, "Moons");
                     }
                     if (printMask?.PhaseLength ?? true)
                     {
-                        fg.AppendItem(PhaseLength, "PhaseLength");
+                        sb.AppendItem(PhaseLength, "PhaseLength");
                     }
                     if (printMask?.TNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                        sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -645,67 +646,87 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.ToString_FillInternal(sb);
                 if (WeatherTypes is {} WeatherTypesItem)
                 {
-                    fg.AppendLine("WeatherTypes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("WeatherTypes =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(WeatherTypesItem.Overall);
+                        sb.AppendItem(WeatherTypesItem.Overall);
                         if (WeatherTypesItem.Specific != null)
                         {
                             foreach (var subItem in WeatherTypesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(SunTexture, "SunTexture");
-                fg.AppendItem(SunGlareTexture, "SunGlareTexture");
-                Model?.ToString(fg);
-                fg.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
-                fg.AppendItem(SunriseEndRaw, "SunriseEndRaw");
-                fg.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
-                fg.AppendItem(SunsetEndRaw, "SunsetEndRaw");
-                fg.AppendItem(Volatility, "Volatility");
-                fg.AppendItem(Moons, "Moons");
-                fg.AppendItem(PhaseLength, "PhaseLength");
-                fg.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                {
+                    sb.AppendItem(SunTexture, "SunTexture");
+                }
+                {
+                    sb.AppendItem(SunGlareTexture, "SunGlareTexture");
+                }
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
+                }
+                {
+                    sb.AppendItem(SunriseEndRaw, "SunriseEndRaw");
+                }
+                {
+                    sb.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
+                }
+                {
+                    sb.AppendItem(SunsetEndRaw, "SunsetEndRaw");
+                }
+                {
+                    sb.AppendItem(Volatility, "Volatility");
+                }
+                {
+                    sb.AppendItem(Moons, "Moons");
+                }
+                {
+                    sb.AppendItem(PhaseLength, "PhaseLength");
+                }
+                {
+                    sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -926,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1037,13 +1058,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IClimateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
             ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1403,114 +1424,114 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IClimateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Climate =>");
+                sb.AppendLine($"Climate =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Climate) =>");
+                sb.AppendLine($"{name} (Climate) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IClimateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Climate.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.WeatherTypes?.Overall ?? true)
                 && item.WeatherTypes is {} WeatherTypesItem)
             {
-                fg.AppendLine("WeatherTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("WeatherTypes =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in WeatherTypesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.SunTexture ?? true)
                 && item.SunTexture is {} SunTextureItem)
             {
-                fg.AppendItem(SunTextureItem, "SunTexture");
+                sb.AppendItem(SunTextureItem, "SunTexture");
             }
             if ((printMask?.SunGlareTexture ?? true)
                 && item.SunGlareTexture is {} SunGlareTextureItem)
             {
-                fg.AppendItem(SunGlareTextureItem, "SunGlareTexture");
+                sb.AppendItem(SunGlareTextureItem, "SunGlareTexture");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if (printMask?.SunriseBeginRaw ?? true)
             {
-                fg.AppendItem(item.SunriseBeginRaw, "SunriseBeginRaw");
+                sb.AppendItem(item.SunriseBeginRaw, "SunriseBeginRaw");
             }
             if (printMask?.SunriseEndRaw ?? true)
             {
-                fg.AppendItem(item.SunriseEndRaw, "SunriseEndRaw");
+                sb.AppendItem(item.SunriseEndRaw, "SunriseEndRaw");
             }
             if (printMask?.SunsetBeginRaw ?? true)
             {
-                fg.AppendItem(item.SunsetBeginRaw, "SunsetBeginRaw");
+                sb.AppendItem(item.SunsetBeginRaw, "SunsetBeginRaw");
             }
             if (printMask?.SunsetEndRaw ?? true)
             {
-                fg.AppendItem(item.SunsetEndRaw, "SunsetEndRaw");
+                sb.AppendItem(item.SunsetEndRaw, "SunsetEndRaw");
             }
             if (printMask?.Volatility ?? true)
             {
-                fg.AppendItem(item.Volatility, "Volatility");
+                sb.AppendItem(item.Volatility, "Volatility");
             }
             if (printMask?.Moons ?? true)
             {
-                fg.AppendItem(item.Moons, "Moons");
+                sb.AppendItem(item.Moons, "Moons");
             }
             if (printMask?.PhaseLength ?? true)
             {
-                fg.AppendItem(item.PhaseLength, "PhaseLength");
+                sb.AppendItem(item.PhaseLength, "PhaseLength");
             }
             if (printMask?.TNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
+                sb.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
             }
         }
         
@@ -2278,7 +2299,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ClimateCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2456,11 +2477,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClimateMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

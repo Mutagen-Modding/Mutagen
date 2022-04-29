@@ -107,11 +107,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TerminalMenuItemMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -321,70 +322,70 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(TerminalMenuItem.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TerminalMenuItem.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TerminalMenuItem.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TerminalMenuItem.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TerminalMenuItem.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ItemText ?? true)
                     {
-                        fg.AppendItem(ItemText, "ItemText");
+                        sb.AppendItem(ItemText, "ItemText");
                     }
                     if (printMask?.ResponseText ?? true)
                     {
-                        fg.AppendItem(ResponseText, "ResponseText");
+                        sb.AppendItem(ResponseText, "ResponseText");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.ItemId ?? true)
                     {
-                        fg.AppendItem(ItemId, "ItemId");
+                        sb.AppendItem(ItemId, "ItemId");
                     }
                     if (printMask?.DisplayText ?? true)
                     {
-                        fg.AppendItem(DisplayText, "DisplayText");
+                        sb.AppendItem(DisplayText, "DisplayText");
                     }
                     if (printMask?.ImageFile ?? true)
                     {
-                        fg.AppendItem(ImageFile, "ImageFile");
+                        sb.AppendItem(ImageFile, "ImageFile");
                     }
                     if (printMask?.Submenu ?? true)
                     {
-                        fg.AppendItem(Submenu, "Submenu");
+                        sb.AppendItem(Submenu, "Submenu");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -531,61 +532,75 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ItemText, "ItemText");
-                fg.AppendItem(ResponseText, "ResponseText");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(ItemId, "ItemId");
-                fg.AppendItem(DisplayText, "DisplayText");
-                fg.AppendItem(ImageFile, "ImageFile");
-                fg.AppendItem(Submenu, "Submenu");
+                {
+                    sb.AppendItem(ItemText, "ItemText");
+                }
+                {
+                    sb.AppendItem(ResponseText, "ResponseText");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(ItemId, "ItemId");
+                }
+                {
+                    sb.AppendItem(DisplayText, "DisplayText");
+                }
+                {
+                    sb.AppendItem(ImageFile, "ImageFile");
+                }
+                {
+                    sb.AppendItem(Submenu, "Submenu");
+                }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -730,7 +745,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -819,13 +834,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this ITerminalMenuItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TerminalMenuItem.Mask<bool>? printMask = null)
         {
             ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1143,93 +1158,93 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             TerminalMenuItem.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITerminalMenuItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TerminalMenuItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TerminalMenuItem =>");
+                sb.AppendLine($"TerminalMenuItem =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TerminalMenuItem) =>");
+                sb.AppendLine($"{name} (TerminalMenuItem) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITerminalMenuItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TerminalMenuItem.Mask<bool>? printMask = null)
         {
             if (printMask?.ItemText ?? true)
             {
-                fg.AppendItem(item.ItemText, "ItemText");
+                sb.AppendItem(item.ItemText, "ItemText");
             }
             if ((printMask?.ResponseText ?? true)
                 && item.ResponseText is {} ResponseTextItem)
             {
-                fg.AppendItem(ResponseTextItem, "ResponseText");
+                sb.AppendItem(ResponseTextItem, "ResponseText");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.ItemId ?? true)
             {
-                fg.AppendItem(item.ItemId, "ItemId");
+                sb.AppendItem(item.ItemId, "ItemId");
             }
             if ((printMask?.DisplayText ?? true)
                 && item.DisplayText is {} DisplayTextItem)
             {
-                fg.AppendItem(DisplayTextItem, "DisplayText");
+                sb.AppendItem(DisplayTextItem, "DisplayText");
             }
             if ((printMask?.ImageFile ?? true)
                 && item.ImageFile is {} ImageFileItem)
             {
-                fg.AppendItem(ImageFileItem, "ImageFile");
+                sb.AppendItem(ImageFileItem, "ImageFile");
             }
             if (printMask?.Submenu ?? true)
             {
-                fg.AppendItem(item.Submenu.FormKeyNullable, "Submenu");
+                sb.AppendItem(item.Submenu.FormKeyNullable, "Submenu");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1698,7 +1713,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => TerminalMenuItemCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1861,11 +1876,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TerminalMenuItemMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

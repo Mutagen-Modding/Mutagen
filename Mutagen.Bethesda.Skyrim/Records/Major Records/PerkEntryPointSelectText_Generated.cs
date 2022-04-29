@@ -60,11 +60,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkEntryPointSelectTextMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -195,23 +196,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(PerkEntryPointSelectText.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PerkEntryPointSelectText.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PerkEntryPointSelectText.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PerkEntryPointSelectText.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PerkEntryPointSelectText.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Text ?? true)
                     {
-                        fg.AppendItem(Text, "Text");
+                        sb.AppendItem(Text, "Text");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -277,35 +278,37 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Text, "Text");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Text, "Text");
+                }
             }
             #endregion
 
@@ -410,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -478,13 +481,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IPerkEntryPointSelectTextGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkEntryPointSelectText.Mask<bool>? printMask = null)
         {
             ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -781,52 +784,52 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             PerkEntryPointSelectText.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPerkEntryPointSelectTextGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkEntryPointSelectText.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkEntryPointSelectText =>");
+                sb.AppendLine($"PerkEntryPointSelectText =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkEntryPointSelectText) =>");
+                sb.AppendLine($"{name} (PerkEntryPointSelectText) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkEntryPointSelectTextGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PerkEntryPointSelectText.Mask<bool>? printMask = null)
         {
             APerkEntryPointEffectCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Text ?? true)
             {
-                fg.AppendItem(item.Text, "Text");
+                sb.AppendItem(item.Text, "Text");
             }
         }
         
@@ -1195,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkEntryPointSelectTextBinaryWriteTranslation.Instance;
@@ -1263,11 +1266,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkEntryPointSelectTextMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

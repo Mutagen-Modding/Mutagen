@@ -61,11 +61,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcMorphMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -185,27 +186,27 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(NpcMorph.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NpcMorph.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NpcMorph.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NpcMorph.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcMorph.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Key ?? true)
                     {
-                        fg.AppendItem(Key, "Key");
+                        sb.AppendItem(Key, "Key");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -292,35 +293,39 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Key, "Key");
-                fg.AppendItem(Value, "Value");
+                {
+                    sb.AppendItem(Key, "Key");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
             }
             #endregion
 
@@ -436,7 +441,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -511,13 +516,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this INpcMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcMorph.Mask<bool>? printMask = null)
         {
             ((NpcMorphCommon)((INpcMorphGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -793,52 +798,52 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             NpcMorph.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INpcMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcMorph.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcMorph =>");
+                sb.AppendLine($"NpcMorph =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcMorph) =>");
+                sb.AppendLine($"{name} (NpcMorph) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcMorph.Mask<bool>? printMask = null)
         {
             if (printMask?.Key ?? true)
             {
-                fg.AppendItem(item.Key, "Key");
+                sb.AppendItem(item.Key, "Key");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
         }
         
@@ -1089,7 +1094,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcMorphBinaryWriteTranslation.Instance;
@@ -1154,11 +1159,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcMorphMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

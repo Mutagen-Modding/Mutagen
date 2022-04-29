@@ -14,7 +14,7 @@ public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor readerAccessor,
@@ -23,11 +23,11 @@ public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
         Accessor translationMaskAccessor)
     {
         BufferType zero = typeGen as BufferType;
-        fg.AppendLine($"{readerAccessor}.Position += {zero.Length};");
+        sb.AppendLine($"{readerAccessor}.Position += {zero.Length};");
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -46,11 +46,11 @@ public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
         BufferType buf = typeGen as BufferType;
-        fg.AppendLine($"{readerAccessor}.Position += {buf.Length};");
+        sb.AppendLine($"{readerAccessor}.Position += {buf.Length};");
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -60,7 +60,7 @@ public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
         Accessor converterAccessor)
     {
         BufferType zero = typeGen as BufferType;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write"))
         {
             args.Add($"writer: {writerAccessor}");

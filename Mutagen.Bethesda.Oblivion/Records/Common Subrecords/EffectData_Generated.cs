@@ -81,11 +81,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             EffectDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -241,43 +242,43 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(EffectData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, EffectData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, EffectData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(EffectData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(EffectData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.MagicEffect ?? true)
                     {
-                        fg.AppendItem(MagicEffect, "MagicEffect");
+                        sb.AppendItem(MagicEffect, "MagicEffect");
                     }
                     if (printMask?.Magnitude ?? true)
                     {
-                        fg.AppendItem(Magnitude, "Magnitude");
+                        sb.AppendItem(Magnitude, "Magnitude");
                     }
                     if (printMask?.Area ?? true)
                     {
-                        fg.AppendItem(Area, "Area");
+                        sb.AppendItem(Area, "Area");
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendItem(Duration, "Duration");
+                        sb.AppendItem(Duration, "Duration");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.ActorValue ?? true)
                     {
-                        fg.AppendItem(ActorValue, "ActorValue");
+                        sb.AppendItem(ActorValue, "ActorValue");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -404,39 +405,51 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(MagicEffect, "MagicEffect");
-                fg.AppendItem(Magnitude, "Magnitude");
-                fg.AppendItem(Area, "Area");
-                fg.AppendItem(Duration, "Duration");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(ActorValue, "ActorValue");
+                {
+                    sb.AppendItem(MagicEffect, "MagicEffect");
+                }
+                {
+                    sb.AppendItem(Magnitude, "Magnitude");
+                }
+                {
+                    sb.AppendItem(Area, "Area");
+                }
+                {
+                    sb.AppendItem(Duration, "Duration");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(ActorValue, "ActorValue");
+                }
             }
             #endregion
 
@@ -573,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -658,13 +671,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IEffectDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EffectData.Mask<bool>? printMask = null)
         {
             ((EffectDataCommon)((IEffectDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -963,68 +976,68 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             EffectData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IEffectDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EffectData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EffectData =>");
+                sb.AppendLine($"EffectData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EffectData) =>");
+                sb.AppendLine($"{name} (EffectData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IEffectDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             EffectData.Mask<bool>? printMask = null)
         {
             if (printMask?.MagicEffect ?? true)
             {
-                fg.AppendItem(item.MagicEffect.EDID, "MagicEffect");
+                sb.AppendItem(item.MagicEffect.EDID, "MagicEffect");
             }
             if (printMask?.Magnitude ?? true)
             {
-                fg.AppendItem(item.Magnitude, "Magnitude");
+                sb.AppendItem(item.Magnitude, "Magnitude");
             }
             if (printMask?.Area ?? true)
             {
-                fg.AppendItem(item.Area, "Area");
+                sb.AppendItem(item.Area, "Area");
             }
             if (printMask?.Duration ?? true)
             {
-                fg.AppendItem(item.Duration, "Duration");
+                sb.AppendItem(item.Duration, "Duration");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.ActorValue ?? true)
             {
-                fg.AppendItem(item.ActorValue, "ActorValue");
+                sb.AppendItem(item.ActorValue, "ActorValue");
             }
         }
         
@@ -1336,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => EffectDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1407,11 +1420,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             EffectDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

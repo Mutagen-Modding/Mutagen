@@ -61,11 +61,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             InterCellPointMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -185,27 +186,27 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(InterCellPoint.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, InterCellPoint.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, InterCellPoint.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(InterCellPoint.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(InterCellPoint.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.PointID ?? true)
                     {
-                        fg.AppendItem(PointID, "PointID");
+                        sb.AppendItem(PointID, "PointID");
                     }
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendItem(Point, "Point");
+                        sb.AppendItem(Point, "Point");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -292,35 +293,39 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(PointID, "PointID");
-                fg.AppendItem(Point, "Point");
+                {
+                    sb.AppendItem(PointID, "PointID");
+                }
+                {
+                    sb.AppendItem(Point, "Point");
+                }
             }
             #endregion
 
@@ -436,7 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -511,13 +516,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IInterCellPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             InterCellPoint.Mask<bool>? printMask = null)
         {
             ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -793,52 +798,52 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             InterCellPoint.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IInterCellPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             InterCellPoint.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"InterCellPoint =>");
+                sb.AppendLine($"InterCellPoint =>");
             }
             else
             {
-                fg.AppendLine($"{name} (InterCellPoint) =>");
+                sb.AppendLine($"{name} (InterCellPoint) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IInterCellPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             InterCellPoint.Mask<bool>? printMask = null)
         {
             if (printMask?.PointID ?? true)
             {
-                fg.AppendItem(item.PointID, "PointID");
+                sb.AppendItem(item.PointID, "PointID");
             }
             if (printMask?.Point ?? true)
             {
-                fg.AppendItem(item.Point, "Point");
+                sb.AppendItem(item.Point, "Point");
             }
         }
         
@@ -1089,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => InterCellPointBinaryWriteTranslation.Instance;
@@ -1154,11 +1159,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             InterCellPointMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

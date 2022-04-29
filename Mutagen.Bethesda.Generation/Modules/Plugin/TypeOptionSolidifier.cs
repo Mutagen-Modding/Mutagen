@@ -20,24 +20,24 @@ public class TypeOptionSolidifier : GenerationModule
     {
         if (proto.Protocol.Namespace.Equals("Bethesda")) return;
         bool generate = false;
-        FileGeneration fg = new FileGeneration();
+        StructuredStringBuilder sb = new StructuredStringBuilder();
 
         var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(o => o.GetObjectType() == ObjectType.Mod);
 
-        fg.AppendLine("using System.Collections.Generic;");
-        fg.AppendLine("using Mutagen.Bethesda.Plugins.Cache;");
-        fg.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
-        fg.AppendLine("using Mutagen.Bethesda.Plugins.Order.Internals;");
-        fg.AppendLine();
-        using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))
+        sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine("using Mutagen.Bethesda.Plugins.Cache;");
+        sb.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
+        sb.AppendLine("using Mutagen.Bethesda.Plugins.Order.Internals;");
+        sb.AppendLine();
+        using (var n = new NamespaceWrapper(sb, proto.DefaultNamespace, fileScoped: false))
         {
-            using (var c = new ClassWrapper(fg, "TypeOptionSolidifierMixIns"))
+            using (var c = new ClassWrapper(sb, "TypeOptionSolidifierMixIns"))
             {
                 c.Static = true;
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                using (new RegionWrapper(fg, "Normal"))
+                using (new RegionWrapper(sb, "Normal"))
                 {
                     foreach (var obj in proto.ObjectGenerationsByName
                                  .OrderBy(x => x.Key)
@@ -54,103 +54,103 @@ public class TypeOptionSolidifier : GenerationModule
                         });
                         var topLevelStr = topLevel ? "TopLevel" : string.Empty;
 
-                        using (var comment = new CommentWrapper(fg))
+                        using (var comment = new CommentWrapper(sb))
                         {
                             comment.Summary.AppendLine($"Scope a load order query to {obj.Name}");
                             comment.Parameters.GetOrAdd("listings").AppendLine("ModListings to query");
                             comment.Return.AppendLine($"A typed object to do further queries on {obj.Name}");
                         }
-                        using (var args = new FunctionWrapper(fg,
+                        using (var args = new FunctionWrapper(sb,
                                    $"public static {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
                         {
                             args.Add($"this IEnumerable<IModListingGetter<I{proto.Protocol.Namespace}ModGetter>> listings");
                         }
-                        using (new BraceWrapper(fg))
+                        using (sb.CurlyBrace())
                         {
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                             {
                                 args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
                                 args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                             }
                         }
-                        fg.AppendLine();
+                        sb.AppendLine();
 
-                        using (var comment = new CommentWrapper(fg))
+                        using (var comment = new CommentWrapper(sb))
                         {
                             comment.Summary.AppendLine($"Scope a load order query to {obj.Name}");
                             comment.Parameters.GetOrAdd("mods").AppendLine("Mods to query");
                             comment.Return.AppendLine($"A typed object to do further queries on {obj.Name}");
                         }
-                        using (var args = new FunctionWrapper(fg,
+                        using (var args = new FunctionWrapper(sb,
                                    $"public static {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
                         {
                             args.Add($"this IEnumerable<I{proto.Protocol.Namespace}ModGetter> mods");
                         }
-                        using (new BraceWrapper(fg))
+                        using (sb.CurlyBrace())
                         {
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                             {
                                 args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
                                 args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                             }
                         }
-                        fg.AppendLine();
+                        sb.AppendLine();
                         generate = true;
                     }
                 }
 
-                using (new RegionWrapper(fg, "Link Interfaces"))
+                using (new RegionWrapper(sb, "Link Interfaces"))
                 {
                     if (LinkInterfaceModule.ObjectMappings.TryGetValue(proto.Protocol, out var interfs))
                     {
                         foreach (var interf in interfs)
                         {
                             var getter = $"{interf.Key}Getter";
-                            using (var comment = new CommentWrapper(fg))
+                            using (var comment = new CommentWrapper(sb))
                             {
                                 comment.Summary.AppendLine($"Scope a load order query to {interf.Key}");
                                 comment.Parameters.GetOrAdd("listings").AppendLine("ModListings to query");
                                 comment.Return.AppendLine($"A typed object to do further queries on {interf.Key}");
                             }
-                            using (var args = new FunctionWrapper(fg,
+                            using (var args = new FunctionWrapper(sb,
                                        $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}> {interf.Key}"))
                             {
                                 args.Add($"this IEnumerable<IModListingGetter<I{proto.Protocol.Namespace}ModGetter>> listings");
                             }
-                            using (new BraceWrapper(fg))
+                            using (sb.CurlyBrace())
                             {
-                                using (var args = new ArgsWrapper(fg,
+                                using (var args = new ArgsWrapper(sb,
                                            $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
                                     args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                                 }
                             }
-                            fg.AppendLine();
+                            sb.AppendLine();
 
-                            using (var comment = new CommentWrapper(fg))
+                            using (var comment = new CommentWrapper(sb))
                             {
                                 comment.Summary.AppendLine($"Scope a load order query to {interf.Key}");
                                 comment.Parameters.GetOrAdd("mods").AppendLine("Mods to query");
                                 comment.Return.AppendLine($"A typed object to do further queries on {interf.Key}");
                             }
-                            using (var args = new FunctionWrapper(fg,
+                            using (var args = new FunctionWrapper(sb,
                                        $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}> {interf.Key}"))
                             {
                                 args.Add($"this IEnumerable<I{proto.Protocol.Namespace}ModGetter> mods");
                             }
-                            using (new BraceWrapper(fg))
+                            using (sb.CurlyBrace())
                             {
-                                using (var args = new ArgsWrapper(fg,
+                                using (var args = new ArgsWrapper(sb,
                                            $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
                                     args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                                 }
                             }
-                            fg.AppendLine();
+                            sb.AppendLine();
                         }
                     }
                 }
@@ -159,7 +159,7 @@ public class TypeOptionSolidifier : GenerationModule
 
         if (!generate) return;
         var path = Path.Combine(proto.DefFileLocation.FullName, $"TypeSolidifier{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
-        fg.Generate(path);
+        sb.Generate(path);
         proto.GeneratedFiles.Add(path, ProjItemType.Compile);
     }
 }

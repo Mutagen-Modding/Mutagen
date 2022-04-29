@@ -285,7 +285,7 @@ public class PluginTranslationModule : BinaryTranslationModule
     }
 
     #region Minor API Translations
-    private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
+    private void ConvertFromStreamOut(ObjectGeneration obj, StructuredStringBuilder sb, InternalTranslation internalToDo)
     {
         var objData = obj.GetObjectData();
         string gameReleaseStr;
@@ -297,8 +297,8 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             gameReleaseStr = $"item.{ModModule.ReleaseEnumName(obj)}.ToGameRelease()";
         }
-        fg.AppendLine("var modKey = item.ModKey;");
-        using (var args = new ArgsWrapper(fg,
+        sb.AppendLine("var modKey = item.ModKey;");
+        using (var args = new ArgsWrapper(sb,
                    $"using (var writer = new MutagenWriter",
                    suffixLine: ")",
                    semiColon: false))
@@ -307,16 +307,16 @@ public class PluginTranslationModule : BinaryTranslationModule
             args.Add($"new {nameof(WritingBundle)}({gameReleaseStr})");
             args.Add("dispose: false");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
             internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
         }
     }
 
-    private void ConvertFromStreamIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
+    private void ConvertFromStreamIn(ObjectGeneration obj, StructuredStringBuilder sb, InternalTranslation internalToDo)
     {
-        fg.AppendLine("try");
-        using (new BraceWrapper(fg))
+        sb.AppendLine("try");
+        using (sb.CurlyBrace())
         {
             string gameReleaseStr;
             if (obj.GetObjectData().GameReleaseOptions == null)
@@ -327,24 +327,24 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 gameReleaseStr = $"release.ToGameRelease()";
             }
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr}))");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr}))");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine("var frame = new MutagenFrame(reader);");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = modKey;");
+                sb.AppendLine("var frame = new MutagenFrame(reader);");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = modKey;");
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
-        fg.AppendLine("catch (Exception ex)"); 
-        using (new BraceWrapper(fg)) 
+        sb.AppendLine("catch (Exception ex)"); 
+        using (sb.CurlyBrace()) 
         { 
-            fg.AppendLine("throw RecordException.Enrich(ex, modKey);"); 
+            sb.AppendLine("throw RecordException.Enrich(ex, modKey);"); 
         } 
     }
 
-    private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
+    private void ConvertFromPathOut(ObjectGeneration obj, StructuredStringBuilder sb, InternalTranslation internalToDo)
     {
         var objData = obj.GetObjectData();
         string gameReleaseStr;
@@ -357,8 +357,8 @@ public class PluginTranslationModule : BinaryTranslationModule
             gameReleaseStr = $"item.{ModModule.ReleaseEnumName(obj)}.ToGameRelease()";
         }
 
-        fg.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
-        using (var args = new ArgsWrapper(fg,
+        sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
+        using (var args = new ArgsWrapper(sb,
                    $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
         {
             args.Add("mod: item");
@@ -366,11 +366,11 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         if (objData.UsesStringFiles)
         {
-            fg.AppendLine($"param.StringsWriter ??= (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncodingProvider)}.{nameof(MutagenEncodingProvider.Instance)}) : null);");
-            fg.AppendLine("bool disposeStrings = param.StringsWriter != null;");
+            sb.AppendLine($"param.StringsWriter ??= (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncodingProvider)}.{nameof(MutagenEncodingProvider.Instance)}) : null);");
+            sb.AppendLine("bool disposeStrings = param.StringsWriter != null;");
         }
-        fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
-        using (var prop = new PropertyCtorWrapper(fg))
+        sb.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
+        using (var prop = new PropertyCtorWrapper(sb))
         {
             if (objData.UsesStringFiles)
             {
@@ -379,8 +379,8 @@ public class PluginTranslationModule : BinaryTranslationModule
             prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
             prop.Add($"{nameof(WritingBundle.TargetLanguageOverride)} = param.{nameof(BinaryWriteParameters.TargetLanguageOverride)}");
         }
-        fg.AppendLine("using var memStream = new MemoryTributary();");
-        using (var args = new ArgsWrapper(fg,
+        sb.AppendLine("using var memStream = new MemoryTributary();");
+        using (var args = new ArgsWrapper(sb,
                    $"using (var writer = new MutagenWriter",
                    suffixLine: ")")
                {
@@ -391,30 +391,30 @@ public class PluginTranslationModule : BinaryTranslationModule
             args.Add("bundle");
             args.Add("dispose: false");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
             internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
         }
-        fg.AppendLine($"using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))");
-        using (new BraceWrapper(fg))
+        sb.AppendLine($"using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))");
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine($"memStream.Position = 0;");
-            fg.AppendLine($"memStream.CopyTo(fs);");
+            sb.AppendLine($"memStream.Position = 0;");
+            sb.AppendLine($"memStream.CopyTo(fs);");
         }
         if (objData.UsesStringFiles)
         {
-            fg.AppendLine("if (disposeStrings)");
-            using (new BraceWrapper(fg))
+            sb.AppendLine("if (disposeStrings)");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine("param.StringsWriter?.Dispose();");
+                sb.AppendLine("param.StringsWriter?.Dispose();");
             }
         }
     }
 
-    private void ConvertFromPathIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
+    private void ConvertFromPathIn(ObjectGeneration obj, StructuredStringBuilder sb, InternalTranslation internalToDo)
     {
-        fg.AppendLine("try");
-        using (new BraceWrapper(fg))
+        sb.AppendLine("try");
+        using (sb.CurlyBrace())
         {
             string gameReleaseStr;
             if (obj.GetObjectData().GameReleaseOptions == null)
@@ -423,38 +423,38 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             else
             {
-                fg.AppendLine($"var gameRelease = release.ToGameRelease();");
+                sb.AppendLine($"var gameRelease = release.ToGameRelease();");
                 gameReleaseStr = $"gameRelease";
             }
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine("var frame = new MutagenFrame(reader);");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = path.ModKey;");
+                sb.AppendLine("var frame = new MutagenFrame(reader);");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = path.ModKey;");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
-                    fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Absorb)}(stringsParam);");
-                    fg.AppendLine("if (reader.Remaining < 12)");
-                    using (new BraceWrapper(fg))
+                    sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Absorb)}(stringsParam);");
+                    sb.AppendLine("if (reader.Remaining < 12)");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
+                        sb.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
                     }
-                    fg.AppendLine($"var flags = reader.GetInt32(offset: 8);");
-                    fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
-                    using (new BraceWrapper(fg))
+                    sb.AppendLine($"var flags = reader.GetInt32(offset: 8);");
+                    sb.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
+                        sb.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
                     }
                 }
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
-        fg.AppendLine("catch (Exception ex)");
-        using (new BraceWrapper(fg))
+        sb.AppendLine("catch (Exception ex)");
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine("throw RecordException.Enrich(ex, path.ModKey);");
+            sb.AppendLine("throw RecordException.Enrich(ex, path.ModKey);");
         }
     }
 
@@ -465,12 +465,12 @@ public class PluginTranslationModule : BinaryTranslationModule
         return base.WantsTryCreateFromBinary(obj) && obj.GetObjectType() != ObjectType.Mod;
     }
 
-    protected override async Task GenerateBinaryOverlayCreates(ObjectGeneration obj, FileGeneration fg)
+    protected override async Task GenerateBinaryOverlayCreates(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (obj.GetObjectType() != ObjectType.Mod) return;
         var objData = obj.GetObjectData();
             
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
         {
             args.Add($"{nameof(ModPath)} path");
@@ -484,9 +484,9 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             args.Add($"IFileSystem? fileSystem = null");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
             {
                 args.AddPassArg("path");
@@ -501,9 +501,9 @@ public class PluginTranslationModule : BinaryTranslationModule
                 args.AddPassArg("fileSystem");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
         {
             args.Add($"{nameof(Stream)} stream");
@@ -513,9 +513,9 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             args.Add($"ModKey modKey");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
             {
                 string gameReleaseStr;
@@ -536,16 +536,16 @@ public class PluginTranslationModule : BinaryTranslationModule
                 args.Add("shouldDispose: false");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await base.GenerateInClass(obj, fg);
+        await base.GenerateInClass(obj, sb);
 
         if (obj.GetObjectType() == ObjectType.Mod)
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public{obj.NewOverride()}static {await this.ObjectReturn(obj, maskReturn: false)} {CreateFromPrefix}{TranslationTerm}"))
             {
                 foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(obj,
@@ -556,13 +556,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                     args.Add(API.Result);
                 }
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine("try");
-                using (new BraceWrapper(fg))
+                sb.AppendLine("try");
+                using (sb.CurlyBrace())
                 {
-                    await GenerateNewSnippet(obj, fg);
-                    using (var args = new ArgsWrapper(fg,
+                    await GenerateNewSnippet(obj, sb);
+                    using (var args = new ArgsWrapper(sb,
                                $"{Loqui.Generation.Utility.Await(await AsyncImport(obj))}{obj.CommonClassInstance("ret", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.{CopyInFromPrefix}{TranslationTerm}"))
                     {
                         args.Add("item: ret");
@@ -583,15 +583,15 @@ public class PluginTranslationModule : BinaryTranslationModule
                             args.AddPassArg("translationMask");
                         }
                     }
-                    fg.AppendLine("return ret;");
+                    sb.AppendLine("return ret;");
                 }
-                fg.AppendLine("catch (Exception ex)");
-                using (new BraceWrapper(fg))
+                sb.AppendLine("catch (Exception ex)");
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine("throw RecordException.Enrich(ex, frame.MetaData.ModKey);");
+                    sb.AppendLine("throw RecordException.Enrich(ex, frame.MetaData.ModKey);");
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
         }
     }
 
@@ -638,13 +638,13 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
     }
 
-    public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await GenerateCreateExtras(obj, fg);
-        await base.GenerateInTranslationCreateClass(obj, fg);
+        await GenerateCreateExtras(obj, sb);
+        await base.GenerateInTranslationCreateClass(obj, sb);
     }
 
-    private async Task GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
+    private async Task GenerateCreateExtras(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
         bool typelessStruct = obj.IsTypelessStruct();
@@ -654,28 +654,28 @@ public class PluginTranslationModule : BinaryTranslationModule
             if (data.TriggeringRecordTypes.Count == 1
                 && !obj.Abstract)
             {
-                fg.AppendLine($"public{obj.FunctionOverride()}RecordType RecordType => {obj.GetTriggeringSource()};");
+                sb.AppendLine($"public{obj.FunctionOverride()}RecordType RecordType => {obj.GetTriggeringSource()};");
             }
             else
             {
-                fg.AppendLine($"public{obj.FunctionOverride()}RecordType RecordType => throw new ArgumentException();");
+                sb.AppendLine($"public{obj.FunctionOverride()}RecordType RecordType => throw new ArgumentException();");
             }
         }
 
         if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
         {
             var async = HasAsyncStructs(obj, self: true);
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                 args.Add($"{ReaderClass} {ReaderMemberName}");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
                 if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"{Loqui.Generation.Utility.Await(async)}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}Structs"))
                     {
                         args.AddPassArg("item");
@@ -701,28 +701,28 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     if (field.Nullable)
                     {
-                        fg.AppendLine($"if (frame.Complete) return;");
+                        sb.AppendLine($"if (frame.Complete) return;");
                     }
 
                     if (field is BreakType)
                     {
-                        fg.AppendLine("if (frame.Complete)");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine("if (frame.Complete)");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
-                            fg.AppendLine("return;");
+                            sb.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
+                            sb.AppendLine("return;");
                         }
                         continue;
                     }
-                    await GenerateFillSnippet(obj, fg, field, generator, "frame");
+                    await GenerateFillSnippet(obj, sb, field, generator, "frame");
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
         }
 
         if (HasRecordTypeFields(obj))
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public static {Loqui.Generation.Utility.TaskWrap(nameof(ParseResult), HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
@@ -744,12 +744,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 args.Add($"{nameof(TypedParseParams)}? translationParams = null");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
                 var mutaObjType = obj.GetObjectType();
-                fg.AppendLine($"nextRecordType = translationParams.ConvertToStandard(nextRecordType);");
-                fg.AppendLine("switch (nextRecordType.TypeInt)");
-                using (new BraceWrapper(fg))
+                sb.AppendLine($"nextRecordType = translationParams.ConvertToStandard(nextRecordType);");
+                sb.AppendLine("switch (nextRecordType.TypeInt)");
+                using (sb.CurlyBrace())
                 {
                     var fields = new List<(int, int, TypeGeneration Field)>();
                     foreach (var field in obj.IterateFieldIndices(
@@ -814,15 +814,15 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                             foreach (var trigger in gen.Key)
                             {
-                                fg.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
                             }
-                            using (new BraceWrapper(fg))
+                            using (sb.CurlyBrace())
                             {
                                 if (doubles == null)
                                 {
                                     await GenerateLastParsedShortCircuit(
                                         obj: obj,
-                                        fg: fg,
+                                        sb: sb,
                                         field: field,
                                         doublesPotential: false,
                                         lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
@@ -832,26 +832,26 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
                                             if (groupMask)
                                             {
-                                                fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
+                                                sb.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
                                             }
-                                            using (new BraceWrapper(fg, doIt: groupMask))
+                                            using (sb.CurlyBrace(doIt: groupMask))
                                             {
-                                                await GenerateFillSnippet(obj, fg, gen.Value, generator, ReaderMemberName);
+                                                await GenerateFillSnippet(obj, sb, gen.Value, generator, ReaderMemberName);
                                             }
                                             if (groupMask)
                                             {
-                                                fg.AppendLine("else");
-                                                using (new BraceWrapper(fg))
+                                                sb.AppendLine("else");
+                                                using (sb.CurlyBrace())
                                                 {
-                                                    fg.AppendLine($"{ReaderMemberName}.Position += contentLength;");
+                                                    sb.AppendLine($"{ReaderMemberName}.Position += contentLength;");
                                                 }
                                             }
                                         });
                                 }
                                 else
                                 {
-                                    fg.AppendLine($"switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)");
-                                    using (new BraceWrapper(fg))
+                                    sb.AppendLine($"switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)");
+                                    using (sb.CurlyBrace())
                                     {
                                         int count = 0;
                                         foreach (var doublesField in doubles)
@@ -860,12 +860,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             {
                                                 throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
                                             }
-                                            fg.AppendLine($"case {count++}:");
-                                            using (new DepthWrapper(fg))
+                                            sb.AppendLine($"case {count++}:");
+                                            using (new DepthWrapper(sb))
                                             {
                                                 await GenerateLastParsedShortCircuit(
                                                     obj: obj,
-                                                    fg: fg,
+                                                    sb: sb,
                                                     field: doublesField,
                                                     doublesPotential: true,
                                                     lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
@@ -875,27 +875,27 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                         var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
                                                         if (groupMask)
                                                         {
-                                                            fg.AppendLine($"if (importMask?.{doublesField.Field.Name} ?? true)");
+                                                            sb.AppendLine($"if (importMask?.{doublesField.Field.Name} ?? true)");
                                                         }
-                                                        using (new BraceWrapper(fg, doIt: groupMask))
+                                                        using (sb.CurlyBrace(doIt: groupMask))
                                                         {
-                                                            await GenerateFillSnippet(obj, fg, doublesField.Field, doubleGen, ReaderMemberName);
+                                                            await GenerateFillSnippet(obj, sb, doublesField.Field, doubleGen, ReaderMemberName);
                                                         }
                                                         if (groupMask)
                                                         {
-                                                            fg.AppendLine("else");
-                                                            using (new BraceWrapper(fg))
+                                                            sb.AppendLine("else");
+                                                            using (sb.CurlyBrace())
                                                             {
-                                                                fg.AppendLine($"{ReaderMemberName}.Position += contentLength;");
+                                                                sb.AppendLine($"{ReaderMemberName}.Position += contentLength;");
                                                             }
                                                         }
                                                     });
                                             }
                                         }
-                                        fg.AppendLine($"default:");
-                                        using (new DepthWrapper(fg))
+                                        sb.AppendLine($"default:");
+                                        using (new DepthWrapper(sb))
                                         {
-                                            fg.AppendLine($"throw new NotImplementedException();");
+                                            sb.AppendLine($"throw new NotImplementedException();");
                                         }
                                     }
                                     doubles.Clear();
@@ -904,19 +904,19 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                     }
 
-                    AttachOverflowCases(fg, fields, "frame");
+                    AttachOverflowCases(sb, fields, "frame");
 
                     if (data.EndMarkerType.HasValue)
                     {
-                        fg.AppendLine($"case RecordTypeInts.{data.EndMarkerType}: // End Marker");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine($"case RecordTypeInts.{data.EndMarkerType}: // End Marker");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine($"{ReaderMemberName}.ReadSubrecord();");
-                            fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
+                            sb.AppendLine($"{ReaderMemberName}.ReadSubrecord();");
+                            sb.AppendLine($"return {nameof(ParseResult)}.Stop;");
                         }
                     }
-                    fg.AppendLine($"default:");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine($"default:");
+                    using (new DepthWrapper(sb))
                     {
                         bool first = true;
                         // Generic options 
@@ -934,7 +934,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                             if (generator.ShouldGenerateCopyIn(field.Field))
                             {
-                                using (var args = new IfWrapper(fg, ANDs: true, first: first))
+                                using (var args = new IfWrapper(sb, ANDs: true, first: first))
                                 {
                                     foreach (var trigger in fieldData.TriggeringRecordAccessors)
                                     {
@@ -942,10 +942,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     }
                                 }
                                 first = false;
-                                using (new BraceWrapper(fg))
+                                using (sb.CurlyBrace())
                                 {
-                                    await GenerateFillSnippet(obj, fg, field.Field, generator, ReaderMemberName);
-                                    fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
+                                    await GenerateFillSnippet(obj, sb, field.Field, generator, ReaderMemberName);
+                                    sb.AppendLine($"return {nameof(ParseResult)}.Stop;");
                                 }
                             }
                         }
@@ -953,7 +953,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         // Default case 
                         if (obj.GetObjectData().CustomRecordFallback)
                         {
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"return CustomRecordFallback"))
                             {
                                 args.AddPassArg($"item");
@@ -971,7 +971,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                         {
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}RecordTypes"))
                             {
                                 args.AddPassArg("item");
@@ -998,11 +998,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                             var failOnUnknown = obj.GetObjectData().FailOnUnknown;
                             if (mutaObjType == ObjectType.Subrecord)
                             {
-                                fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
+                                sb.AppendLine($"return {nameof(ParseResult)}.Stop;");
                             }
                             else if (failOnUnknown)
                             {
-                                fg.AppendLine($"throw new ArgumentException($\"Unexpected header {{nextRecordType.Type}} at position {{{ReaderMemberName}.Position}}\");");
+                                sb.AppendLine($"throw new ArgumentException($\"Unexpected header {{nextRecordType.Type}} at position {{{ReaderMemberName}.Position}}\");");
                             }
                             else
                             {
@@ -1022,21 +1022,21 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     default:
                                         throw new NotImplementedException();
                                 }
-                                fg.AppendLine($"{ReaderMemberName}.Position += contentLength{addString};");
-                                fg.AppendLine($"return default(int?);");
+                                sb.AppendLine($"{ReaderMemberName}.Position += contentLength{addString};");
+                                sb.AppendLine($"return default(int?);");
                             }
                         }
                     }
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
         }
 
         foreach (var field in obj.Fields)
         {
             if (field.GetFieldData().CustomVersion != null)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"static partial void {field.Name}CustomVersionParse"))
                 {
                     foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(
@@ -1052,12 +1052,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                     }
                 }
-                fg.AppendLine();
+                sb.AppendLine();
             }
         }
     }
 
-    private static void AttachOverflowCases(FileGeneration fg, List<(int, int, TypeGeneration Field)> fields, Accessor streamAccessor)
+    private static void AttachOverflowCases(StructuredStringBuilder sb, List<(int, int, TypeGeneration Field)> fields, Accessor streamAccessor)
     {
         var overflowGroups = fields.Select(x => x.Field)
             .Where(x => x.GetFieldData().OverflowRecordType != null)
@@ -1067,31 +1067,31 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             foreach (var overflows in overflowGroups)
             {
-                fg.AppendLine($"case RecordTypeInts.{overflows.Key}:");
+                sb.AppendLine($"case RecordTypeInts.{overflows.Key}:");
             }
 
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"var overflowHeader = {streamAccessor}.ReadSubrecord();");
-                fg.AppendLine(
+                sb.AppendLine($"var overflowHeader = {streamAccessor}.ReadSubrecord();");
+                sb.AppendLine(
                     $"return {nameof(ParseResult)}.{nameof(ParseResult.OverrideLength)}(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));");
             }
         }
     }
 
-    protected override async Task GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
+    protected override async Task GenerateFillSnippet(ObjectGeneration obj, StructuredStringBuilder sb, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
     {
         var fieldData = field.GetFieldData();
         if (field is DataType set)
         {
-            fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
-            fg.AppendLine($"var dataFrame = {frameAccessor}.SpawnWithLength(contentLength);");
+            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine($"var dataFrame = {frameAccessor}.SpawnWithLength(contentLength);");
             if (set.Nullable)
             {
-                fg.AppendLine($"if (!dataFrame.Complete)");
-                using (new BraceWrapper(fg))
+                sb.AppendLine($"if (!dataFrame.Complete)");
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"item.{set.StateName} = {obj.ObjectName}.{set.EnumName}.Has;");
+                    sb.AppendLine($"item.{set.StateName} = {obj.ObjectName}.{set.EnumName}.Has;");
                 }
             }
             bool isInRange = false;
@@ -1105,10 +1105,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                 if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
                 if (subField.BreakIndex != -1)
                 {
-                    fg.AppendLine($"if (dataFrame.Complete)");
-                    using (new BraceWrapper(fg))
+                    sb.AppendLine($"if (dataFrame.Complete)");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine($"item.{set.StateName} |= {obj.ObjectName}.{set.EnumName}.Break{subField.BreakIndex};");
+                        sb.AppendLine($"item.{set.StateName} |= {obj.ObjectName}.{set.EnumName}.Break{subField.BreakIndex};");
                         string enumName = null;
                         for (int i = subField.FieldIndex - 1; i >= 0; i--)
                         {
@@ -1121,30 +1121,30 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             enumName = $"(int){enumName}";
                         }
-                        fg.AppendLine($"return {enumName ?? "default(int?)"};");
+                        sb.AppendLine($"return {enumName ?? "default(int?)"};");
                     }
                 }
                 if (subField.Range != null && !isInRange)
                 {
                     isInRange = true;
-                    fg.AppendLine($"if (dataFrame.TotalLength > {subField.Range.DataSetSizeMin})");
-                    fg.AppendLine("{");
-                    fg.Depth++;
-                    fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Range{subField.RangeIndex};");
+                    sb.AppendLine($"if (dataFrame.TotalLength > {subField.Range.DataSetSizeMin})");
+                    sb.AppendLine("{");
+                    sb.Depth++;
+                    sb.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Range{subField.RangeIndex};");
                 }
                 if (subField.Range == null && isInRange)
                 {
                     isInRange = false;
-                    fg.Depth--;
-                    fg.AppendLine("}");
+                    sb.Depth--;
+                    sb.AppendLine("}");
                 }
-                await GenerateFillSnippet(obj, fg, subField.Field, subGenerator, "dataFrame");
+                await GenerateFillSnippet(obj, sb, subField.Field, subGenerator, "dataFrame");
             }
             if (isInRange)
             {
                 isInRange = false;
-                fg.AppendLine("}");
-                fg.Depth--;
+                sb.AppendLine("}");
+                sb.Depth--;
             }
             return;
         }
@@ -1158,7 +1158,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 return;
             case BinaryGenerationType.Custom:
                 CustomLogic.GenerateFill(
-                    fg,
+                    sb,
                     obj,
                     field,
                     frameAccessor,
@@ -1171,19 +1171,19 @@ public class PluginTranslationModule : BinaryTranslationModule
 
         if (data.CustomVersion != null)
         {
-            fg.AppendLine($"if (item.FormVersion <= {data.CustomVersion})");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"if (item.FormVersion <= {data.CustomVersion})");
+            using (sb.CurlyBrace())
             {
                 await GenerateLastParsedShortCircuit(
                     obj: obj,
-                    fg: fg,
+                    sb: sb,
                     field: field.GetIndexData(),
                     lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
                     doublesPotential: false,
                     nextRecAccessor: "nextRecordType",
                     toDo: async () =>
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"{field.Name}CustomVersionParse"))
                         {
                             args.AddPassArg($"item");
@@ -1199,22 +1199,22 @@ public class PluginTranslationModule : BinaryTranslationModule
         if (data.MarkerType != null && data.RecordType != null)
         {
             // Skip marker 
-            fg.AppendLine($"{ReaderMemberName}.Position += {ReaderMemberName}.MetaData.SubConstants.HeaderLength + contentLength;");
+            sb.AppendLine($"{ReaderMemberName}.Position += {ReaderMemberName}.MetaData.SubConstants.HeaderLength + contentLength;");
             // read in target record type. 
-            fg.AppendLine($"var nextRec = {ReaderMemberName}.MetaData.GetSubrecord({ReaderMemberName});");
+            sb.AppendLine($"var nextRec = {ReaderMemberName}.MetaData.GetSubrecord({ReaderMemberName});");
             // Return if it's not there 
-            fg.AppendLine($"if (nextRec.RecordType != {obj.RecordTypeHeaderName(data.RecordType.Value)}) throw new ArgumentException(\"Marker was read but not followed by expected subrecord.\");");
-            fg.AppendLine("contentLength = nextRec.RecordLength;");
+            sb.AppendLine($"if (nextRec.RecordType != {obj.RecordTypeHeaderName(data.RecordType.Value)}) throw new ArgumentException(\"Marker was read but not followed by expected subrecord.\");");
+            sb.AppendLine("contentLength = nextRec.RecordLength;");
         }
 
         if (data.HasVersioning)
         {
-            fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(data, $"{ReaderMemberName}.MetaData.FormVersion!.Value")})");
+            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(data, $"{ReaderMemberName}.MetaData.FormVersion!.Value")})");
         }
-        using (new BraceWrapper(fg, doIt: data.HasVersioning))
+        using (sb.CurlyBrace(doIt: data.HasVersioning))
         {
             await generator.GenerateCopyIn(
-                fg: fg,
+                sb: sb,
                 objGen: obj,
                 typeGen: field,
                 readerAccessor: frameAccessor,
@@ -1224,12 +1224,12 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
     }
          
-    public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInVoid(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await base.GenerateInVoid(obj, fg);
-        using (new NamespaceWrapper(fg, obj.Namespace, fileScoped: false))
+        await base.GenerateInVoid(obj, sb);
+        using (new NamespaceWrapper(sb, obj.Namespace, fileScoped: false))
         {
-            await GenerateImportWrapper(obj, fg);
+            await GenerateImportWrapper(obj, sb);
         }
     }
 
@@ -1240,7 +1240,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
     private static async Task GenerateLastParsedShortCircuit(
         ObjectGeneration obj,
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         (int PublicIndex, int InternalIndex, TypeGeneration Field) field,
         bool doublesPotential,
         int? lastRequiredIndex,
@@ -1259,7 +1259,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (dataSet != null)
             {
-                fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return {nameof(ParseResult)}.Stop;");
             }
             else if (field.Field is CustomLogic)
             {
@@ -1269,41 +1269,41 @@ public class PluginTranslationModule : BinaryTranslationModule
                 var enumName = lastReqField?.IndexEnumName ?? nextField.Field?.IndexEnumName ?? prevField.Field?.IndexEnumName;
                 if (enumName != null)
                 {
-                    fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){enumName}) return {nameof(ParseResult)}.Stop;");
+                    sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){enumName}) return {nameof(ParseResult)}.Stop;");
                 }
             }
             else if (field.Field is not MarkerType)
             {
-                fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){lastReqField?.IndexEnumName ?? field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){lastReqField?.IndexEnumName ?? field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
             }
         }
         await toDo();
         if (dataSet != null)
         {
-            fg.AppendLine($"return (int){dataSet.SubFields.Last(f => f.IntegrateField && f.Enabled).IndexEnumName};");
+            sb.AppendLine($"return (int){dataSet.SubFields.Last(f => f.IntegrateField && f.Enabled).IndexEnumName};");
         }
         else if (field.Field is CustomLogic)
         {
             if (!fieldData.HasTrigger)
             {
-                fg.AppendLine($"return {(typelessStruct ? "lastParsed" : "null")};");
+                sb.AppendLine($"return {(typelessStruct ? "lastParsed" : "null")};");
             }
         }
         else if (field.Field is MarkerType marker)
         {
             if (marker.EndMarker)
             {
-                fg.AppendLine($"return {nameof(ParseResult)}.{nameof(ParseResult.Stop)};");
+                sb.AppendLine($"return {nameof(ParseResult)}.{nameof(ParseResult.Stop)};");
             }
             else
             {
                 if (doublesPotential)
                 {
-                    fg.AppendLine($"return new {nameof(ParseResult)}(default(int?), {nextRecAccessor});");
+                    sb.AppendLine($"return new {nameof(ParseResult)}(default(int?), {nextRecAccessor});");
                 }
                 else
                 {
-                    fg.AppendLine($"return default(int?);");
+                    sb.AppendLine($"return default(int?);");
                 }
             }
         }
@@ -1311,20 +1311,20 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             if (doublesPotential)
             {
-                fg.AppendLine($"return new {nameof(ParseResult)}((int){field.Field.IndexEnumName}, {nextRecAccessor});");
+                sb.AppendLine($"return new {nameof(ParseResult)}((int){field.Field.IndexEnumName}, {nextRecAccessor});");
             }
             else
             {
-                fg.AppendLine($"return (int){field.Field.IndexEnumName};");
+                sb.AppendLine($"return (int){field.Field.IndexEnumName};");
             }
         }
     }
 
-    protected async Task GenerateOverlayExtras(ObjectGeneration obj, FileGeneration fg)
+    protected async Task GenerateOverlayExtras(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (HasRecordTypeFields(obj))
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}{nameof(ParseResult)} FillRecordType"))
             {
                 args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? nameof(IBinaryReadStream) : nameof(OverlayStream))} stream");
@@ -1338,11 +1338,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 args.Add($"{nameof(TypedParseParams)}? parseParams = null");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"type = parseParams.ConvertToStandard(type);");
-                fg.AppendLine("switch (type.TypeInt)");
-                using (new BraceWrapper(fg))
+                sb.AppendLine($"type = parseParams.ConvertToStandard(type);");
+                sb.AppendLine("switch (type.TypeInt)");
+                using (sb.CurlyBrace())
                 {
                     var fields = new List<(int, int, TypeGeneration Field)>();
                     foreach (var field in obj.IterateFieldIndices(
@@ -1408,15 +1408,15 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                             foreach (var trigger in gen.Key)
                             {
-                                fg.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
                             }
-                            using (new BraceWrapper(fg))
+                            using (sb.CurlyBrace())
                             {
                                 if (doubles == null)
                                 {
                                     await GenerateLastParsedShortCircuit(
                                         obj: obj,
-                                        fg: fg,
+                                        sb: sb,
                                         field: field,
                                         doublesPotential: false,
                                         lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
@@ -1430,7 +1430,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                 recConverter = $"{obj.RegistrationName}.{field.Field.Name}Converter";
                                             }
                                             await generator.GenerateWrapperRecordTypeParse(
-                                                fg: fg,
+                                                sb: sb,
                                                 objGen: obj,
                                                 typeGen: gen.Value,
                                                 locationAccessor: "(stream.Position - offset)",
@@ -1439,7 +1439,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             if (obj.GetObjectType() == ObjectType.Mod
                                                 && field.Field.Name == "ModHeader")
                                             {
-                                                using (var args = new ArgsWrapper(fg,
+                                                using (var args = new ArgsWrapper(sb,
                                                            $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo"))
                                                 {
                                                     args.Add(subFg =>
@@ -1448,7 +1448,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                         using (new DepthWrapper(subFg))
                                                         {
                                                             subFg.AppendLine($"master => new {nameof(MasterReference)}()");
-                                                            using (new BraceWrapper(subFg) { AppendParenthesis = true })
+                                                            using (subFg.CurlyBrace(appendParenthesis: true))
                                                             {
                                                                 subFg.AppendLine("Master = master.Master,");
                                                                 subFg.AppendLine("FileSize = master.FileSize,");
@@ -1461,8 +1461,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                                 else
                                 {
-                                    fg.AppendLine($"switch (recordParseCount?.GetOrAdd(type) ?? 0)");
-                                    using (new BraceWrapper(fg))
+                                    sb.AppendLine($"switch (recordParseCount?.GetOrAdd(type) ?? 0)");
+                                    using (sb.CurlyBrace())
                                     {
                                         int count = 0;
                                         foreach (var doublesField in doubles)
@@ -1472,12 +1472,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                 throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
                                             }
                                             var doublesFieldData = doublesField.Field.GetFieldData();
-                                            fg.AppendLine($"case {count++}:");
-                                            using (new DepthWrapper(fg))
+                                            sb.AppendLine($"case {count++}:");
+                                            using (new DepthWrapper(sb))
                                             {
                                                 await GenerateLastParsedShortCircuit(
                                                     obj: obj,
-                                                    fg: fg,
+                                                    sb: sb,
                                                     field: doublesField,
                                                     doublesPotential: true,
                                                     lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
@@ -1491,7 +1491,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                             recConverter = $"{obj.RegistrationName}.{doublesField.Field.Name}Converter";
                                                         }
                                                         await doubleGen.GenerateWrapperRecordTypeParse(
-                                                            fg: fg,
+                                                            sb: sb,
                                                             objGen: obj,
                                                             typeGen: doublesField.Field,
                                                             locationAccessor: "(stream.Position - offset)",
@@ -1500,7 +1500,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                         if (obj.GetObjectType() == ObjectType.Mod
                                                             && doublesField.Field.Name == "ModHeader")
                                                         {
-                                                            using (var args = new ArgsWrapper(fg,
+                                                            using (var args = new ArgsWrapper(sb,
                                                                        $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo"))
                                                             {
                                                                 args.Add(subFg =>
@@ -1509,7 +1509,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                                     using (new DepthWrapper(subFg))
                                                                     {
                                                                         subFg.AppendLine($"master => new {nameof(MasterReference)}()");
-                                                                        using (new BraceWrapper(subFg) { AppendParenthesis = true })
+                                                                        using (subFg.CurlyBrace(appendParenthesis: true))
                                                                         {
                                                                             subFg.AppendLine("Master = master.Master,");
                                                                             subFg.AppendLine("FileSize = master.FileSize,");
@@ -1521,10 +1521,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                     });
                                             }
                                         }
-                                        fg.AppendLine($"default:");
-                                        using (new DepthWrapper(fg))
+                                        sb.AppendLine($"default:");
+                                        using (new DepthWrapper(sb))
                                         {
-                                            fg.AppendLine($"throw new NotImplementedException();");
+                                            sb.AppendLine($"throw new NotImplementedException();");
                                         }
                                     }
                                     doubles.Clear();
@@ -1533,24 +1533,24 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                     }
                         
-                    AttachOverflowCases(fg, fields, "stream");
+                    AttachOverflowCases(sb, fields, "stream");
                         
                     var endMarkerType = obj.GetObjectData().EndMarkerType;
                     if (endMarkerType.HasValue)
                     {
-                        fg.AppendLine($"case RecordTypeInts.{endMarkerType}: // End Marker");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine($"case RecordTypeInts.{endMarkerType}: // End Marker");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine($"stream.ReadSubrecord();");
-                            fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
+                            sb.AppendLine($"stream.ReadSubrecord();");
+                            sb.AppendLine($"return {nameof(ParseResult)}.Stop;");
                         }
                     }
-                    fg.AppendLine("default:");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("default:");
+                    using (new DepthWrapper(sb))
                     {
                         if (obj.GetObjectData().CustomRecordFallback)
                         {
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"return CustomRecordFallback"))
                             {
                                 args.AddPassArg("stream");
@@ -1566,7 +1566,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b)))
                         {
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        "return base.FillRecordType"))
                             {
                                 args.AddPassArg("stream");
@@ -1586,15 +1586,15 @@ public class PluginTranslationModule : BinaryTranslationModule
                             var failOnUnknown = obj.GetObjectData().FailOnUnknown;
                             if (obj.GetObjectType() == ObjectType.Subrecord)
                             {
-                                fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
+                                sb.AppendLine($"return {nameof(ParseResult)}.Stop;");
                             }
                             else if (failOnUnknown)
                             {
-                                fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
+                                sb.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
                             }
                             else
                             {
-                                fg.AppendLine($"return default(int?);");
+                                sb.AppendLine($"return default(int?);");
                             }
                         }
                     }
@@ -1603,7 +1603,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
     }
 
-    protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, FileGeneration fg, Accessor accessor)
+    protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, StructuredStringBuilder sb, Accessor accessor)
     {
         var data = obj.GetObjectData();
 
@@ -1613,7 +1613,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         if (await obj.IsMajorRecord())
         {
             bool async = this.HasAsync(obj, self: true);
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{nameof(PluginUtilityTranslation)}.MajorRecordParse<{obj.Interface(getter: false, internalInterface: true)}>"))
             {
                 args.Add($"record: {accessor}");
@@ -1624,7 +1624,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (data.CustomBinaryEnd != CustomEnd.Off)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImport{(await this.AsyncImport(obj) ? null : "Public")}"))
                 {
                     args.AddPassArg(ReaderMemberName);
@@ -1646,11 +1646,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             if (obj.Fields.Any(f => f.GetFieldData().HasTrigger))
                             {
-                                fg.AppendLine($"{ReaderMemberName}.Position += {ReaderMemberName}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength;");
+                                sb.AppendLine($"{ReaderMemberName}.Position += {ReaderMemberName}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength;");
                             }
                             else
                             {
-                                using (var args = new ArgsWrapper(fg,
+                                using (var args = new ArgsWrapper(sb,
                                            $"{ReaderMemberName} = {ReaderMemberName}.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseSubrecord",
                                            suffixLine: ")"))
                                 {
@@ -1666,7 +1666,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         break;
                     case ObjectType.Record:
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"{ReaderMemberName} = {ReaderMemberName}.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseRecord",
                                    suffixLine: ")"))
                         {
@@ -1690,7 +1690,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             switch (objType)
             {
                 case ObjectType.Subrecord:
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"{utilityTranslation}.SubrecordParse",
                                suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                     {
@@ -1706,7 +1706,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     break;
                 case ObjectType.Record:
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"{utilityTranslation}.RecordParse",
                                suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                     {
@@ -1722,7 +1722,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     break;
                 case ObjectType.Group:
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"{utilityTranslation}.GroupParse",
                                suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                     {
@@ -1738,7 +1738,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     break;
                 case ObjectType.Mod:
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"{utilityTranslation}.ModParse",
                                suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                     {
@@ -1755,10 +1755,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                 default:
                     throw new NotImplementedException();
             }
-            GenerateStructStateSubscriptions(obj, fg);
+            GenerateStructStateSubscriptions(obj, sb);
             if (data.CustomBinaryEnd != CustomEnd.Off)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImportPublic"))
                 {
                     args.AddPassArg(ReaderMemberName);
@@ -1768,7 +1768,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
     }
 
-    private void GenerateStructStateSubscriptions(ObjectGeneration obj, FileGeneration fg)
+    private void GenerateStructStateSubscriptions(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (!obj.StructNullable()) return;
         List<TypeGeneration> affectedFields = new List<TypeGeneration>();
@@ -1784,13 +1784,13 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
     }
 
-    public override void CustomMainWriteMixInPreLoad(ObjectGeneration obj, FileGeneration fg)
+    public override void CustomMainWriteMixInPreLoad(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (obj.GetObjectType() != ObjectType.Mod) return;
-        fg.AppendLine("var modKey = item.ModKey;");
+        sb.AppendLine("var modKey = item.ModKey;");
     }
 
-    protected async Task GenerateImportWrapper(ObjectGeneration obj, FileGeneration fg)
+    protected async Task GenerateImportWrapper(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var objData = obj.GetObjectData();
         if (objData.BinaryOverlay != BinaryGenerationType.Normal) return;
@@ -1803,9 +1803,9 @@ public class PluginTranslationModule : BinaryTranslationModule
 
         if (obj.GetObjectType() == ObjectType.Mod)
         {
-            fg.AppendLine("[DebuggerDisplay(\"{GameRelease} {ModKey.ToString()}\")]");
+            sb.AppendLine("[DebuggerDisplay(\"{GameRelease} {ModKey.ToString()}\")]");
         }
-        using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
+        using (var args = new ClassWrapper(sb, $"{BinaryOverlayClass(obj)}"))
         {
             args.Public = PermissionLevel.@internal;
             args.Abstract = obj.Abstract;
@@ -1823,35 +1823,35 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            await obj.GenerateRouting(fg, getterOnly: true);
-            obj.GenerateGetterInterfaceImplementations(fg);
+            await obj.GenerateRouting(sb, getterOnly: true);
+            obj.GenerateGetterInterfaceImplementations(sb);
             if (obj.GetObjectType() == ObjectType.Mod)
             {
                 if (objData.GameReleaseOptions != null)
                 {
-                    fg.AppendLine($"public {ModModule.ReleaseEnumName(obj)} {ModModule.ReleaseEnumName(obj)} {{ get; }}");
-                    fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {ModModule.ReleaseEnumName(obj)}.ToGameRelease();");
+                    sb.AppendLine($"public {ModModule.ReleaseEnumName(obj)} {ModModule.ReleaseEnumName(obj)} {{ get; }}");
+                    sb.AppendLine($"public {nameof(GameRelease)} GameRelease => {ModModule.ReleaseEnumName(obj)}.ToGameRelease();");
                 }
                 else
                 {
-                    fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameCategory};");
+                    sb.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameCategory};");
                 }
-                fg.AppendLine($"IGroupGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
-                fg.AppendLine($"IGroupGetter {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
-                fg.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
-                fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);");
-                fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
+                sb.AppendLine($"IGroupGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
+                sb.AppendLine($"IGroupGetter {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
+                sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
+                sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);");
+                sb.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
-                    fg.AppendLine($"public bool CanUseLocalization => true;");
-                    fg.AppendLine($"public bool UsingLocalization => this.ModHeader.Flags.HasFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized);");
+                    sb.AppendLine($"public bool CanUseLocalization => true;");
+                    sb.AppendLine($"public bool UsingLocalization => this.ModHeader.Flags.HasFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized);");
                 }
                 else
                 {
-                    fg.AppendLine($"public bool CanUseLocalization => false;");
-                    fg.AppendLine($"public bool UsingLocalization => false;");
+                    sb.AppendLine($"public bool CanUseLocalization => false;");
+                    sb.AppendLine($"public bool UsingLocalization => false;");
                 }
 
             }
@@ -1859,17 +1859,17 @@ public class PluginTranslationModule : BinaryTranslationModule
             if (obj.GetObjectType() == ObjectType.Mod
                 || (await LinkModule.HasLinks(obj, includeBaseClass: false) != Case.No))
             {
-                await LinkModule.GenerateInterfaceImplementation(obj, fg, getter: true);
+                await LinkModule.GenerateInterfaceImplementation(obj, sb, getter: true);
             }
 
             if (obj.GetObjectType() == ObjectType.Mod)
             {
-                MajorRecordContextEnumerationModule.GenerateClassImplementation(obj, fg, onlyGetter: true);
+                MajorRecordContextEnumerationModule.GenerateClassImplementation(obj, sb, onlyGetter: true);
             }
 
             if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != Case.No)
             {
-                MajorRecordEnumerationModule.GenerateClassImplementation(obj, fg, onlyGetter: true);
+                MajorRecordEnumerationModule.GenerateClassImplementation(obj, sb, onlyGetter: true);
             }
 
             foreach (var transl in obj.ProtoGen.Gen.GenerationModules
@@ -1877,41 +1877,41 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 if (transl.DoTranslationInterface(obj))
                 {
-                    await transl.GenerateTranslationInterfaceImplementation(obj, fg);
+                    await transl.GenerateTranslationInterfaceImplementation(obj, sb);
                 }
             }
 
             if (obj.GetObjectType() == ObjectType.Mod)
             {
-                fg.AppendLine($"uint IModGetter.NextFormID => ModHeader.Stats.NextFormID;");
-                fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
-                fg.AppendLine($"private readonly {nameof(BinaryOverlayFactoryPackage)} _package;");
-                fg.AppendLine($"private readonly {nameof(IBinaryReadStream)} _data;");
-                fg.AppendLine($"private readonly bool _shouldDispose;");
+                sb.AppendLine($"uint IModGetter.NextFormID => ModHeader.Stats.NextFormID;");
+                sb.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
+                sb.AppendLine($"private readonly {nameof(BinaryOverlayFactoryPackage)} _package;");
+                sb.AppendLine($"private readonly {nameof(IBinaryReadStream)} _data;");
+                sb.AppendLine($"private readonly bool _shouldDispose;");
 
-                fg.AppendLine("public void Dispose()");
-                using (new BraceWrapper(fg))
+                sb.AppendLine("public void Dispose()");
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine("if (!_shouldDispose) return;");
-                    fg.AppendLine("_data.Dispose();");
+                    sb.AppendLine("if (!_shouldDispose) return;");
+                    sb.AppendLine("_data.Dispose();");
                 }
             }
 
             if (await obj.IsMajorRecord() && !obj.Abstract)
             {
-                fg.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
-                fg.AppendLine();
+                sb.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
+                sb.AppendLine();
             }
 
             if (obj.GetObjectData().MajorRecordFlags)
             {
-                fg.AppendLine($"public {obj.ObjectName}.MajorFlag MajorFlags => ({obj.ObjectName}.MajorFlag)this.MajorRecordFlagsRaw;");
+                sb.AppendLine($"public {obj.ObjectName}.MajorFlag MajorFlags => ({obj.ObjectName}.MajorFlag)this.MajorRecordFlagsRaw;");
             }
 
-            fg.AppendLine();
+            sb.AppendLine();
             if (obj.Fields.Any(f => f is BreakType))
             {
-                fg.AppendLine($"public {obj.ObjectName}.{VersioningModule.VersioningEnumName} {VersioningModule.VersioningFieldName} {{ get; private set; }}");
+                sb.AppendLine($"public {obj.ObjectName}.{VersioningModule.VersioningEnumName} {VersioningModule.VersioningFieldName} {{ get; private set; }}");
             }
 
             int? totalPassedLength = 0;
@@ -1934,7 +1934,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     if (!lengths.Field.IntegrateField) continue;
                     throw new NotImplementedException();
                 }
-                using (new RegionWrapper(fg, lengths.Field.Name)
+                using (new RegionWrapper(sb, lengths.Field.Name)
                        {
                            AppendExtraLine = false,
                            SkipIfOnlyOneLine = true
@@ -1949,7 +1949,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             break;
                     }
                     await typeGen.GenerateWrapperFields(
-                        fg,
+                        sb,
                         obj,
                         lengths.Field,
                         dataAccessor,
@@ -1958,30 +1958,30 @@ public class PluginTranslationModule : BinaryTranslationModule
                     if (data.HasVersioning
                         && !lengths.Field.Nullable)
                     {
-                        VersioningModule.AddVersionOffset(fg, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
+                        VersioningModule.AddVersionOffset(sb, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
                         lastVersionedField = lengths.Field;
                     }
                     if (!data.HasTrigger)
                     {
                         if (lengths.CurLength == null)
                         {
-                            fg.AppendLine($"protected int {lengths.Field.Name}EndingPos;");
+                            sb.AppendLine($"protected int {lengths.Field.Name}EndingPos;");
                             if (data.BinaryOverlayFallback == BinaryGenerationType.Custom)
                             {
-                                fg.AppendLine($"partial void Custom{lengths.Field.Name}EndPos();");
+                                sb.AppendLine($"partial void Custom{lengths.Field.Name}EndPos();");
                             }
                         }
                     }
                     foreach (var mod in Gen.GenerationModules)
                     {
-                        await mod.GenerateInField(obj, lengths.Field, fg, LoquiInterfaceType.IGetter);
+                        await mod.GenerateInField(obj, lengths.Field, sb, LoquiInterfaceType.IGetter);
                     }
                 }
             }
 
             if (obj.GetObjectType() != ObjectType.Mod)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"partial void CustomFactoryEnd"))
                 {
                     args.Add($"{nameof(OverlayStream)} stream");
@@ -1990,7 +1990,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 if (objData.CustomBinaryEnd != CustomEnd.Off)
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"partial void CustomEnd"))
                     {
                         args.Add($"{nameof(OverlayStream)} stream");
@@ -1998,14 +1998,14 @@ public class PluginTranslationModule : BinaryTranslationModule
                         args.Add($"int offset");
                     }
                 }
-                fg.AppendLine();
-                using (var args = new ArgsWrapper(fg,
+                sb.AppendLine();
+                using (var args = new ArgsWrapper(sb,
                            $"partial void CustomCtor"))
                 {
                 }
             }
 
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"protected {BinaryOverlayClassName(obj)}"))
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
@@ -2026,9 +2026,9 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (obj.GetObjectType() != ObjectType.Mod)
             {
-                using (new DepthWrapper(fg))
+                using (new DepthWrapper(sb))
                 {
-                    using (var args = new FunctionWrapper(fg,
+                    using (var args = new FunctionWrapper(sb,
                                ": base"))
                     {
                         args.AddPassArg("bytes");
@@ -2036,22 +2036,22 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                 }
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
-                    fg.AppendLine("this.ModKey = modKey;");
+                    sb.AppendLine("this.ModKey = modKey;");
                     if (objData.GameReleaseOptions != null)
                     {
-                        fg.AppendLine($"this.{ModModule.ReleaseEnumName(obj)} = release;");
+                        sb.AppendLine($"this.{ModModule.ReleaseEnumName(obj)} = release;");
                     }
-                    fg.AppendLine("this._data = stream;");
-                    using (var args = new ArgsWrapper(fg,
+                    sb.AppendLine("this._data = stream;");
+                    using (var args = new ArgsWrapper(sb,
                                $"this._package = new {nameof(BinaryOverlayFactoryPackage)}"))
                     {
                         args.Add($"stream.{nameof(IMutagenReadStream.MetaData)}");
                     }
-                    fg.AppendLine("this._shouldDispose = shouldDispose;");
+                    sb.AppendLine("this._shouldDispose = shouldDispose;");
                 }
                 foreach (var field in obj.IterateFields(
                              expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
@@ -2059,19 +2059,19 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
                     await typeGen.GenerateWrapperCtor(
-                        fg: fg,
+                        sb: sb,
                         objGen: obj,
                         typeGen: field);
                 }
                 if (obj.GetObjectType() != ObjectType.Mod)
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"this.CustomCtor"))
                     {
                     }
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
 
             if (!obj.Abstract)
             {
@@ -2087,7 +2087,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         gameReleaseStr = "release.ToGameRelease()";
                     }
 
-                    using (var args = new FunctionWrapper(fg,
+                    using (var args = new FunctionWrapper(sb,
                                $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                     {
                         args.Add($"{nameof(ModPath)} path");
@@ -2101,40 +2101,40 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         args.Add("IFileSystem? fileSystem = null");
                     }
-                    using (new BraceWrapper(fg))
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceCollection)}(path.ModKey))");
-                        using (new BraceWrapper(fg) { AppendSemicolon = true })
+                        sb.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceCollection)}(path.ModKey))");
+                        using (sb.CurlyBrace(appendSemiColon: true))
                         {
-                            fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
+                            sb.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
                         }
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"var stream = new {nameof(MutagenBinaryReadStream)}"))
                         {
                             args.Add($"path: path.{nameof(ModPath.Path)}");
                             args.Add($"metaData: meta");
                             args.AddPassArg("fileSystem");
                         }
-                        fg.AppendLine("try");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine("try");
+                        using (sb.CurlyBrace())
                         {
                             if (objData.UsesStringFiles)
                             {
-                                fg.AppendLine($"meta.{nameof(ParsingBundle.Absorb)}(stringsParam);");
-                                fg.AppendLine("if (stream.Remaining < 12)");
-                                using (new BraceWrapper(fg))
+                                sb.AppendLine($"meta.{nameof(ParsingBundle.Absorb)}(stringsParam);");
+                                sb.AppendLine("if (stream.Remaining < 12)");
+                                using (sb.CurlyBrace())
                                 {
-                                    fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
+                                    sb.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
                                 }
-                                fg.AppendLine($"var flags = stream.GetInt32(offset: 8);");
-                                fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
-                                using (new BraceWrapper(fg))
+                                sb.AppendLine($"var flags = stream.GetInt32(offset: 8);");
+                                sb.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
+                                using (sb.CurlyBrace())
                                 {
-                                    fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
+                                    sb.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
                                 }
                             }
 
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"return {obj.Name}Factory"))
                             {
                                 args.AddPassArg("stream");
@@ -2146,44 +2146,44 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.Add("shouldDispose: true");
                             }
                         }
-                        fg.AppendLine("catch (Exception)");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine("catch (Exception)");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine("stream.Dispose();");
-                            fg.AppendLine("throw;");
+                            sb.AppendLine("stream.Dispose();");
+                            sb.AppendLine("throw;");
                         }
                     }
-                    fg.AppendLine();
+                    sb.AppendLine();
                 }
 
                 if (obj.IsTopLevelGroup())
                 {
-                    using (var args = new FunctionWrapper(fg,
+                    using (var args = new FunctionWrapper(sb,
                                $"public static {obj.Interface(getter: true)} {obj.Name}Factory"))
                     {
                         args.Add($"{nameof(IBinaryReadStream)} stream");
                         args.Add("IReadOnlyList<RangeInt64> locs");
                         args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
                     }
-                    using (new BraceWrapper(fg))
+                    using (sb.CurlyBrace())
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"var subGroups = locs.Select(x => {obj.ProtoGen.Protocol.Namespace}GroupFactory",
                                    suffixLine: ").ToArray()"))
                         {
                             args.Add("new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package)");
                             args.Add("package");
                         }
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"return new {obj.ProtoGen.Protocol.Namespace}GroupWrapper<T>"))
                         {
                             args.Add($"new GroupMergeGetter<I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T>, T>(subGroups)");
                         }
                     }
-                    fg.AppendLine();
+                    sb.AppendLine();
                 }
 
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
@@ -2207,29 +2207,29 @@ public class PluginTranslationModule : BinaryTranslationModule
                         args.Add($"{nameof(TypedParseParams)}? parseParams = null");
                     }
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
                     if (await obj.IsMajorRecord())
                     {
                         if (objData.CustomBinaryEnd != CustomEnd.Off)
                         {
-                            fg.AppendLine("var origStream = stream;");
+                            sb.AppendLine("var origStream = stream;");
                         }
-                        fg.AppendLine($"stream = {nameof(Decompression)}.{nameof(Decompression.DecompressStream)}(stream);");
+                        sb.AppendLine($"stream = {nameof(Decompression)}.{nameof(Decompression.DecompressStream)}(stream);");
                     }
                     if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                     {
-                        fg.AppendLine($"var nextRecord = parseParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "SubrecordHeader" : "MajorRecordHeader")}().RecordType);");
-                        fg.AppendLine($"switch (nextRecord.TypeInt)");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine($"var nextRecord = parseParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "SubrecordHeader" : "MajorRecordHeader")}().RecordType);");
+                        sb.AppendLine($"switch (nextRecord.TypeInt)");
+                        using (sb.CurlyBrace())
                         {
                             foreach (var item in customLogicTriggers)
                             {
-                                fg.AppendLine($"case {item.TypeInt}: // {item.Type}");
+                                sb.AppendLine($"case {item.TypeInt}: // {item.Type}");
                             }
-                            using (new DepthWrapper(fg))
+                            using (new DepthWrapper(sb))
                             {
-                                using (var args = new ArgsWrapper(fg,
+                                using (var args = new ArgsWrapper(sb,
                                            "return CustomRecordTypeTrigger"))
                                 {
                                     args.AddPassArg($"stream");
@@ -2238,14 +2238,14 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     args.AddPassArg("parseParams");
                                 }
                             }
-                            fg.AppendLine("default:");
-                            using (new DepthWrapper(fg))
+                            sb.AppendLine("default:");
+                            using (new DepthWrapper(sb))
                             {
-                                fg.AppendLine("break;");
+                                sb.AppendLine("break;");
                             }
                         }
                     }
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"var ret = new {BinaryOverlayClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
                     {
                         if (obj.IsTypelessStruct())
@@ -2301,23 +2301,23 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     if (obj.IsTypelessStruct())
                     {
-                        fg.AppendLine($"int offset = stream.Position;");
+                        sb.AppendLine($"int offset = stream.Position;");
                     }
                     else
                     {
                         switch (obj.GetObjectType())
                         {
                             case ObjectType.Subrecord:
-                                fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));");
-                                fg.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
+                                sb.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));");
+                                sb.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
                                 break;
                             case ObjectType.Record:
-                                fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));");
-                                fg.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
+                                sb.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));");
+                                sb.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
                                 break;
                             case ObjectType.Group:
-                                fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetGroupHeader().TotalLength));");
-                                fg.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
+                                sb.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetGroupHeader().TotalLength));");
+                                sb.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
                                 break;
                             case ObjectType.Mod:
                                 break;
@@ -2328,7 +2328,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                     if (await obj.IsMajorRecord())
                     {
-                        fg.AppendLine("ret._package.FormVersion = ret;");
+                        sb.AppendLine("ret._package.FormVersion = ret;");
                     }
 
                     // Parse struct section ending positions 
@@ -2378,13 +2378,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                         switch (data.BinaryOverlayFallback)
                         {
                             case BinaryGenerationType.Custom:
-                                fg.AppendLine($"ret.Custom{lengths.Field.Name}EndPos();");
+                                sb.AppendLine($"ret.Custom{lengths.Field.Name}EndPos();");
                                 break;
                             case BinaryGenerationType.NoGeneration:
                                 break;
                             case BinaryGenerationType.Normal:
                                 await typeGen.GenerateWrapperUnknownLengthParse(
-                                    fg,
+                                    sb,
                                     obj,
                                     lengths.Field,
                                     lengths.PassedLength,
@@ -2403,13 +2403,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 switch (obj.GetObjectType())
                                 {
                                     case ObjectType.Subrecord:
-                                        fg.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
+                                        sb.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Record:
-                                        fg.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
+                                        sb.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Group:
-                                        fg.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
+                                        sb.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Mod:
                                         break;
@@ -2417,7 +2417,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         throw new NotImplementedException();
                                 }
                             }
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"ret.CustomFactoryEnd"))
                             {
                                 args.AddPassArg($"stream");
@@ -2457,7 +2457,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             default:
                                 throw new NotImplementedException();
                         }
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"{call}"))
                         {
                             if (await obj.IsMajorRecord())
@@ -2501,10 +2501,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 {
                                     if (lengths.Field is BreakType breakType)
                                     {
-                                        fg.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
-                                        using (new BraceWrapper(fg))
+                                        sb.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
+                                        using (sb.CurlyBrace())
                                         {
-                                            fg.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
+                                            sb.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
                                         }
                                     }
                                 }
@@ -2513,7 +2513,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             }
                             else if (structPassedAccessor != null)
                             {
-                                fg.AppendLine($"stream.Position += {structPassedAccessor};");
+                                sb.AppendLine($"stream.Position += {structPassedAccessor};");
                             }
                         }
                         else
@@ -2546,10 +2546,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 {
                                     if (lengths.Field is BreakType breakType)
                                     {
-                                        fg.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
-                                        using (new BraceWrapper(fg))
+                                        sb.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
+                                        using (sb.CurlyBrace())
                                         {
-                                            fg.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
+                                            sb.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
                                         }
                                     }
                                 }
@@ -2558,10 +2558,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                             }
                             else if (totalPassedLength != null)
                             {
-                                fg.AppendLine($"stream.Position += 0x{totalPassedLength.Value:X}{headerAddition};");
+                                sb.AppendLine($"stream.Position += 0x{totalPassedLength.Value:X}{headerAddition};");
                             }
                         }
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"ret.CustomFactoryEnd"))
                         {
                             args.AddPassArg($"stream");
@@ -2586,7 +2586,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         if (lengths.Field is DataType)
                         {
                             await typeGen.GenerateWrapperUnknownLengthParse(
-                                fg,
+                                sb,
                                 obj,
                                 lengths.Field,
                                 lengths.PassedLength,
@@ -2596,7 +2596,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                     if (objData.CustomBinaryEnd != CustomEnd.Off)
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    "ret.CustomEnd"))
                         {
                             if (obj.GetObjectType() == ObjectType.Record)
@@ -2611,22 +2611,22 @@ public class PluginTranslationModule : BinaryTranslationModule
                             args.AddPassArg("offset");
                         }
                     }
-                    fg.AppendLine("return ret;");
+                    sb.AppendLine("return ret;");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
                 if (obj.GetObjectType() != ObjectType.Mod)
                 {
-                    using (var args = new FunctionWrapper(fg,
+                    using (var args = new FunctionWrapper(sb,
                                $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                     {
                         args.Add($"ReadOnlyMemorySlice<byte> slice");
                         args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
                         args.Add($"{nameof(TypedParseParams)}? parseParams = null");
                     }
-                    using (new BraceWrapper(fg))
+                    using (sb.CurlyBrace())
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"return {obj.Name}Factory"))
                         {
                             args.Add($"stream: new {nameof(OverlayStream)}(slice, package)");
@@ -2640,41 +2640,41 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
 
-            await GenerateOverlayExtras(obj, fg);
+            await GenerateOverlayExtras(obj, sb);
 
-            await obj.GenerateToStringCode(fg);
+            await obj.GenerateToStringCode(sb);
 
             if (await obj.IsMajorRecord())
             {
-                fg.AppendLine($"public override string ToString()");
-                using (new BraceWrapper(fg))
+                sb.AppendLine($"public override string ToString()");
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return MajorRecordPrinter<{obj.Name}>.ToString(this);");
+                    sb.AppendLine($"return MajorRecordPrinter<{obj.Name}>.ToString(this);");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
             }
 
-            obj.GenerateEqualsSection(fg);
-            await MajorRecordLinkEqualityModule.Generate(obj, fg);
+            obj.GenerateEqualsSection(sb);
+            await MajorRecordLinkEqualityModule.Generate(obj, sb);
 
             if (obj.GetObjectType() == ObjectType.Mod)
             {
-                fg.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
+                sb.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
             }
 
         }
-        fg.AppendLine();
+        sb.AppendLine();
     }
 
-    public override async Task GenerateInTranslationWriteClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInTranslationWriteClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await GenerateWriteExtras(obj, fg);
-        await base.GenerateInTranslationWriteClass(obj, fg);
+        await GenerateWriteExtras(obj, sb);
+        await base.GenerateInTranslationWriteClass(obj, sb);
     }
 
-    protected override async Task GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
+    protected override async Task GenerateWriteSnippet(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
         var isMajor = await obj.IsMajorRecord();
@@ -2684,7 +2684,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             if (obj.GetObjectType() == ObjectType.Subrecord)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"using ({nameof(HeaderExport)}.Subrecord",
                            ")",
                            semiColon: false))
@@ -2699,7 +2699,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             else
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"using ({nameof(HeaderExport)}.{obj.GetObjectType()}",
                            ")",
                            semiColon: false))
@@ -2709,15 +2709,15 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
             }
         }
-        using (new BraceWrapper(fg, doIt: hasRecType))
+        using (sb.CurlyBrace(doIt: hasRecType))
         {
             if (isMajor)
             {
-                fg.AppendLine("try");
+                sb.AppendLine("try");
             }
             if (obj.GetObjectType() == ObjectType.Mod)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
                 {
                     args.AddPassArg("param");
@@ -2727,11 +2727,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                     args.AddPassArg("modKey");
                 }
             }
-            using (new BraceWrapper(fg, doIt: isMajor))
+            using (sb.CurlyBrace(doIt: isMajor))
             {
                 if (HasEmbeddedFields(obj))
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"WriteEmbedded"))
                     {
                         args.AddPassArg($"item");
@@ -2743,7 +2743,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
                     if (firstBase != null)
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"{this.TranslationWriteClass(firstBase)}.WriteEmbedded"))
                         {
                             args.AddPassArg($"item");
@@ -2755,9 +2755,9 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     if (await obj.IsMajorRecord())
                     {
-                        fg.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                        sb.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
                     }
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"WriteRecordTypes"))
                     {
                         args.AddPassArg($"item");
@@ -2773,7 +2773,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     if (await obj.IsMajorRecord())
                     {
-                        fg.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                        sb.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
                     }
                 }
                 else
@@ -2781,7 +2781,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasRecordTypeFields(b));
                     if (firstBase != null)
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                         {
                             args.AddPassArg($"item");
@@ -2793,16 +2793,16 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (isMajor)
             {
-                fg.AppendLine("catch (Exception ex)");
-                using (new BraceWrapper(fg))
+                sb.AppendLine("catch (Exception ex)");
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"throw RecordException.Enrich(ex, item);");
+                    sb.AppendLine($"throw RecordException.Enrich(ex, item);");
                 }
             }
         }
         if (data.CustomBinaryEnd != CustomEnd.Off)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"CustomBinaryEndExportInternal"))
             {
                 args.AddPassArg(WriterMemberName);
@@ -2811,26 +2811,26 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
     }
 
-    private async Task GenerateWriteExtras(ObjectGeneration obj, FileGeneration fg)
+    private async Task GenerateWriteExtras(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
         if (HasEmbeddedFields(obj))
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public static void WriteEmbedded{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                 args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
                 args.Add($"{WriterClass} {WriterMemberName}");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
                 if (obj.HasLoquiBaseObject)
                 {
                     var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
                     if (firstBase != null)
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"{TranslationWriteClass(firstBase)}.WriteEmbedded"))
                         {
                             args.AddPassArg("item");
@@ -2847,15 +2847,15 @@ public class PluginTranslationModule : BinaryTranslationModule
                     if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                     if (field is BreakType breakType)
                     {
-                        fg.AppendLine($"if (!item.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index}))");
-                        fg.AppendLine("{");
-                        fg.Depth++;
+                        sb.AppendLine($"if (!item.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index}))");
+                        sb.AppendLine("{");
+                        sb.Depth++;
                     }
                     if (!field.Enabled) continue;
                     List<string> conditions = new List<string>();
                     if (conditions.Count > 0)
                     {
-                        using (var args = new IfWrapper(fg, ANDs: true))
+                        using (var args = new IfWrapper(sb, ANDs: true))
                         {
                             foreach (var item in conditions)
                             {
@@ -2863,13 +2863,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                             }
                         }
                     }
-                    using (new BraceWrapper(fg, doIt: conditions.Count > 0))
+                    using (sb.CurlyBrace(doIt: conditions.Count > 0))
                     {
                         var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                         if (fieldData.Binary == BinaryGenerationType.Custom)
                         {
                             CustomLogic.GenerateWrite(
-                                fg: fg,
+                                sb: sb,
                                 obj: obj,
                                 field: field,
                                 writerAccessor: WriterMemberName);
@@ -2882,12 +2882,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         if (fieldData.HasVersioning)
                         {
-                            fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, "writer.MetaData.FormVersion!.Value")})");
+                            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, "writer.MetaData.FormVersion!.Value")})");
                         }
-                        using (new BraceWrapper(fg, doIt: fieldData.HasVersioning))
+                        using (sb.CurlyBrace(doIt: fieldData.HasVersioning))
                         {
                             await generator.GenerateWrite(
-                                fg: fg,
+                                sb: sb,
                                 objGen: obj,
                                 typeGen: field,
                                 writerAccessor: WriterMemberName,
@@ -2900,16 +2900,16 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 for (int i = 0; i < obj.Fields.WhereCastable<TypeGeneration, BreakType>().Count(); i++)
                 {
-                    fg.Depth--;
-                    fg.AppendLine("}");
+                    sb.Depth--;
+                    sb.AppendLine("}");
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
         }
 
         if (HasRecordTypeFields(obj))
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public static void WriteRecordTypes{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
@@ -2921,14 +2921,14 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 args.Add($"{nameof(TypedWriteParams)}? translationParams{(obj.GetObjectType() == ObjectType.Mod ? " = null" : null)}");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
                 if (obj.HasLoquiBaseObject)
                 {
                     var firstBase = obj.BaseClassTrail().FirstOrDefault((f) => HasRecordTypeFields(f));
                     if (firstBase != null)
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                         {
                             args.AddPassArg($"item");
@@ -2967,7 +2967,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             continue;
                         case BinaryGenerationType.Custom:
                             CustomLogic.GenerateWrite(
-                                fg: fg,
+                                sb: sb,
                                 obj: obj,
                                 field: field,
                                 writerAccessor: WriterMemberName);
@@ -2987,12 +2987,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             if (dataType.Nullable)
                             {
-                                fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
+                                sb.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
                             }
-                            using (new BraceWrapper(fg, doIt: dataType.Nullable))
+                            using (sb.CurlyBrace(doIt: dataType.Nullable))
                             {
-                                fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, translationParams.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
-                                using (new BraceWrapper(fg))
+                                sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, translationParams.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
+                                using (sb.CurlyBrace())
                                 {
                                     bool isInRange = false;
                                     foreach (var subField in dataType.IterateFieldsWithMeta())
@@ -3011,7 +3011,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             case BinaryGenerationType.NoGeneration:
                                                 continue;
                                             case BinaryGenerationType.Custom:
-                                                using (var args = new ArgsWrapper(fg,
+                                                using (var args = new ArgsWrapper(sb,
                                                            $"{TranslationWriteClass(obj)}.WriteBinary{subField.Field.Name}"))
                                                 {
                                                     args.AddPassArg(WriterMemberName);
@@ -3023,31 +3023,31 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         }
                                         if (subField.BreakIndex != -1)
                                         {
-                                            fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
-                                            fg.AppendLine("{");
-                                            fg.Depth++;
+                                            sb.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
+                                            sb.AppendLine("{");
+                                            sb.Depth++;
                                         }
                                         if (subField.Range != null && !isInRange)
                                         {
                                             isInRange = true;
-                                            fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
-                                            fg.AppendLine("{");
-                                            fg.Depth++;
+                                            sb.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
+                                            sb.AppendLine("{");
+                                            sb.Depth++;
                                         }
                                         if (subField.Range == null && isInRange)
                                         {
                                             isInRange = false;
-                                            fg.Depth--;
-                                            fg.AppendLine("}");
+                                            sb.Depth--;
+                                            sb.AppendLine("}");
                                         }
                                         if (subData.HasVersioning)
                                         {
-                                            fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(subData, $"{WriterMemberName}.MetaData.FormVersion!.Value")})");
+                                            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(subData, $"{WriterMemberName}.MetaData.FormVersion!.Value")})");
                                         }
-                                        using (new BraceWrapper(fg, doIt: subData.HasVersioning))
+                                        using (sb.CurlyBrace(doIt: subData.HasVersioning))
                                         {
                                             await subGenerator.GenerateWrite(
-                                                fg: fg,
+                                                sb: sb,
                                                 objGen: obj,
                                                 typeGen: subField.Field,
                                                 writerAccessor: WriterMemberName,
@@ -3059,8 +3059,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     }
                                     for (int i = 0; i < dataType.BreakIndices.Count; i++)
                                     {
-                                        fg.Depth--;
-                                        fg.AppendLine("}");
+                                        sb.Depth--;
+                                        sb.AppendLine("}");
                                     }
                                 }
                             }
@@ -3084,16 +3084,16 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 && loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group
                                 && obj.GetObjectType() == ObjectType.Mod)
                             {
-                                fg.AppendLine($"if (importMask?.{field.Name} ?? true)");
+                                sb.AppendLine($"if (importMask?.{field.Name} ?? true)");
                             }
                             else
                             {
                                 doIf = false;
                             }
-                            using (new BraceWrapper(fg, doIt: doIf))
+                            using (sb.CurlyBrace(doIt: doIf))
                             {
                                 await generator.GenerateWrite(
-                                    fg: fg,
+                                    sb: sb,
                                     objGen: obj,
                                     typeGen: field,
                                     writerAccessor: WriterMemberName,
@@ -3109,19 +3109,19 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         if (fieldData.HasVersioning)
                         {
-                            fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.FormVersion!.Value")})");
+                            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.FormVersion!.Value")})");
                         }
-                        using (new BraceWrapper(fg, doIt: fieldData.HasVersioning))
+                        using (sb.CurlyBrace(doIt: fieldData.HasVersioning))
                         {
                             await generate();
                         }
                     }
                     else
                     {
-                        fg.AppendLine($"if (item.FormVersion <= {fieldData.CustomVersion})");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine($"if (item.FormVersion <= {fieldData.CustomVersion})");
+                        using (sb.CurlyBrace())
                         {
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"{field.Name}CustomVersionWrite"))
                             {
                                 args.AddPassArg($"item");
@@ -3129,8 +3129,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.AddPassArg($"recordTypeConverter");
                             }
                         }
-                        fg.AppendLine("else");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine("else");
+                        using (sb.CurlyBrace())
                         {
                             await generate();
                         }
@@ -3139,10 +3139,10 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                 if (data.EndMarkerType.HasValue)
                 {
-                    fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(data.EndMarkerType.Value)})) {{ }} // End Marker");
+                    sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(data.EndMarkerType.Value)})) {{ }} // End Marker");
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
         }
 
         foreach (var field in obj.Fields)
@@ -3150,14 +3150,14 @@ public class PluginTranslationModule : BinaryTranslationModule
             var fieldData = field.GetFieldData();
             if (fieldData.CustomVersion != null)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"static partial void {field.Name}CustomVersionWrite"))
                 {
                     args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
                     args.Add($"{WriterClass} {WriterMemberName}");
                     args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
             }
         }
     }

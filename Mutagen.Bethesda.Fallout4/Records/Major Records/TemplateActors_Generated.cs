@@ -186,11 +186,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TemplateActorsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -409,71 +410,71 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(TemplateActors.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TemplateActors.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TemplateActors.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TemplateActors.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TemplateActors.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.TraitTemplate ?? true)
                     {
-                        fg.AppendItem(TraitTemplate, "TraitTemplate");
+                        sb.AppendItem(TraitTemplate, "TraitTemplate");
                     }
                     if (printMask?.StatsTemplate ?? true)
                     {
-                        fg.AppendItem(StatsTemplate, "StatsTemplate");
+                        sb.AppendItem(StatsTemplate, "StatsTemplate");
                     }
                     if (printMask?.FactionsTemplate ?? true)
                     {
-                        fg.AppendItem(FactionsTemplate, "FactionsTemplate");
+                        sb.AppendItem(FactionsTemplate, "FactionsTemplate");
                     }
                     if (printMask?.SpellListTemplate ?? true)
                     {
-                        fg.AppendItem(SpellListTemplate, "SpellListTemplate");
+                        sb.AppendItem(SpellListTemplate, "SpellListTemplate");
                     }
                     if (printMask?.AiDataTemplate ?? true)
                     {
-                        fg.AppendItem(AiDataTemplate, "AiDataTemplate");
+                        sb.AppendItem(AiDataTemplate, "AiDataTemplate");
                     }
                     if (printMask?.AiPackagesTemplate ?? true)
                     {
-                        fg.AppendItem(AiPackagesTemplate, "AiPackagesTemplate");
+                        sb.AppendItem(AiPackagesTemplate, "AiPackagesTemplate");
                     }
                     if (printMask?.ModelOrAnimationTemplate ?? true)
                     {
-                        fg.AppendItem(ModelOrAnimationTemplate, "ModelOrAnimationTemplate");
+                        sb.AppendItem(ModelOrAnimationTemplate, "ModelOrAnimationTemplate");
                     }
                     if (printMask?.BaseDataTemplate ?? true)
                     {
-                        fg.AppendItem(BaseDataTemplate, "BaseDataTemplate");
+                        sb.AppendItem(BaseDataTemplate, "BaseDataTemplate");
                     }
                     if (printMask?.InventoryTemplate ?? true)
                     {
-                        fg.AppendItem(InventoryTemplate, "InventoryTemplate");
+                        sb.AppendItem(InventoryTemplate, "InventoryTemplate");
                     }
                     if (printMask?.ScriptTemplate ?? true)
                     {
-                        fg.AppendItem(ScriptTemplate, "ScriptTemplate");
+                        sb.AppendItem(ScriptTemplate, "ScriptTemplate");
                     }
                     if (printMask?.DefPackListTemplate ?? true)
                     {
-                        fg.AppendItem(DefPackListTemplate, "DefPackListTemplate");
+                        sb.AppendItem(DefPackListTemplate, "DefPackListTemplate");
                     }
                     if (printMask?.AttackDataTemplate ?? true)
                     {
-                        fg.AppendItem(AttackDataTemplate, "AttackDataTemplate");
+                        sb.AppendItem(AttackDataTemplate, "AttackDataTemplate");
                     }
                     if (printMask?.KeywordsTemplate ?? true)
                     {
-                        fg.AppendItem(KeywordsTemplate, "KeywordsTemplate");
+                        sb.AppendItem(KeywordsTemplate, "KeywordsTemplate");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -670,46 +671,72 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(TraitTemplate, "TraitTemplate");
-                fg.AppendItem(StatsTemplate, "StatsTemplate");
-                fg.AppendItem(FactionsTemplate, "FactionsTemplate");
-                fg.AppendItem(SpellListTemplate, "SpellListTemplate");
-                fg.AppendItem(AiDataTemplate, "AiDataTemplate");
-                fg.AppendItem(AiPackagesTemplate, "AiPackagesTemplate");
-                fg.AppendItem(ModelOrAnimationTemplate, "ModelOrAnimationTemplate");
-                fg.AppendItem(BaseDataTemplate, "BaseDataTemplate");
-                fg.AppendItem(InventoryTemplate, "InventoryTemplate");
-                fg.AppendItem(ScriptTemplate, "ScriptTemplate");
-                fg.AppendItem(DefPackListTemplate, "DefPackListTemplate");
-                fg.AppendItem(AttackDataTemplate, "AttackDataTemplate");
-                fg.AppendItem(KeywordsTemplate, "KeywordsTemplate");
+                {
+                    sb.AppendItem(TraitTemplate, "TraitTemplate");
+                }
+                {
+                    sb.AppendItem(StatsTemplate, "StatsTemplate");
+                }
+                {
+                    sb.AppendItem(FactionsTemplate, "FactionsTemplate");
+                }
+                {
+                    sb.AppendItem(SpellListTemplate, "SpellListTemplate");
+                }
+                {
+                    sb.AppendItem(AiDataTemplate, "AiDataTemplate");
+                }
+                {
+                    sb.AppendItem(AiPackagesTemplate, "AiPackagesTemplate");
+                }
+                {
+                    sb.AppendItem(ModelOrAnimationTemplate, "ModelOrAnimationTemplate");
+                }
+                {
+                    sb.AppendItem(BaseDataTemplate, "BaseDataTemplate");
+                }
+                {
+                    sb.AppendItem(InventoryTemplate, "InventoryTemplate");
+                }
+                {
+                    sb.AppendItem(ScriptTemplate, "ScriptTemplate");
+                }
+                {
+                    sb.AppendItem(DefPackListTemplate, "DefPackListTemplate");
+                }
+                {
+                    sb.AppendItem(AttackDataTemplate, "AttackDataTemplate");
+                }
+                {
+                    sb.AppendItem(KeywordsTemplate, "KeywordsTemplate");
+                }
             }
             #endregion
 
@@ -874,7 +901,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -973,13 +1000,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this ITemplateActorsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TemplateActors.Mask<bool>? printMask = null)
         {
             ((TemplateActorsCommon)((ITemplateActorsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1312,96 +1339,96 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             TemplateActors.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITemplateActorsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TemplateActors.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TemplateActors =>");
+                sb.AppendLine($"TemplateActors =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TemplateActors) =>");
+                sb.AppendLine($"{name} (TemplateActors) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITemplateActorsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TemplateActors.Mask<bool>? printMask = null)
         {
             if (printMask?.TraitTemplate ?? true)
             {
-                fg.AppendItem(item.TraitTemplate.FormKey, "TraitTemplate");
+                sb.AppendItem(item.TraitTemplate.FormKey, "TraitTemplate");
             }
             if (printMask?.StatsTemplate ?? true)
             {
-                fg.AppendItem(item.StatsTemplate.FormKey, "StatsTemplate");
+                sb.AppendItem(item.StatsTemplate.FormKey, "StatsTemplate");
             }
             if (printMask?.FactionsTemplate ?? true)
             {
-                fg.AppendItem(item.FactionsTemplate.FormKey, "FactionsTemplate");
+                sb.AppendItem(item.FactionsTemplate.FormKey, "FactionsTemplate");
             }
             if (printMask?.SpellListTemplate ?? true)
             {
-                fg.AppendItem(item.SpellListTemplate.FormKey, "SpellListTemplate");
+                sb.AppendItem(item.SpellListTemplate.FormKey, "SpellListTemplate");
             }
             if (printMask?.AiDataTemplate ?? true)
             {
-                fg.AppendItem(item.AiDataTemplate.FormKey, "AiDataTemplate");
+                sb.AppendItem(item.AiDataTemplate.FormKey, "AiDataTemplate");
             }
             if (printMask?.AiPackagesTemplate ?? true)
             {
-                fg.AppendItem(item.AiPackagesTemplate.FormKey, "AiPackagesTemplate");
+                sb.AppendItem(item.AiPackagesTemplate.FormKey, "AiPackagesTemplate");
             }
             if (printMask?.ModelOrAnimationTemplate ?? true)
             {
-                fg.AppendItem(item.ModelOrAnimationTemplate.FormKey, "ModelOrAnimationTemplate");
+                sb.AppendItem(item.ModelOrAnimationTemplate.FormKey, "ModelOrAnimationTemplate");
             }
             if (printMask?.BaseDataTemplate ?? true)
             {
-                fg.AppendItem(item.BaseDataTemplate.FormKey, "BaseDataTemplate");
+                sb.AppendItem(item.BaseDataTemplate.FormKey, "BaseDataTemplate");
             }
             if (printMask?.InventoryTemplate ?? true)
             {
-                fg.AppendItem(item.InventoryTemplate.FormKey, "InventoryTemplate");
+                sb.AppendItem(item.InventoryTemplate.FormKey, "InventoryTemplate");
             }
             if (printMask?.ScriptTemplate ?? true)
             {
-                fg.AppendItem(item.ScriptTemplate.FormKey, "ScriptTemplate");
+                sb.AppendItem(item.ScriptTemplate.FormKey, "ScriptTemplate");
             }
             if (printMask?.DefPackListTemplate ?? true)
             {
-                fg.AppendItem(item.DefPackListTemplate.FormKey, "DefPackListTemplate");
+                sb.AppendItem(item.DefPackListTemplate.FormKey, "DefPackListTemplate");
             }
             if (printMask?.AttackDataTemplate ?? true)
             {
-                fg.AppendItem(item.AttackDataTemplate.FormKey, "AttackDataTemplate");
+                sb.AppendItem(item.AttackDataTemplate.FormKey, "AttackDataTemplate");
             }
             if (printMask?.KeywordsTemplate ?? true)
             {
-                fg.AppendItem(item.KeywordsTemplate.FormKey, "KeywordsTemplate");
+                sb.AppendItem(item.KeywordsTemplate.FormKey, "KeywordsTemplate");
             }
         }
         
@@ -1817,7 +1844,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => TemplateActorsCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1895,11 +1922,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TemplateActorsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

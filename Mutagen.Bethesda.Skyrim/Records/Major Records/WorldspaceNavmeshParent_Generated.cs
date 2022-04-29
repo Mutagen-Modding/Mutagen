@@ -71,11 +71,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WorldspaceNavmeshParentMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -203,27 +204,27 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(WorldspaceNavmeshParent.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, WorldspaceNavmeshParent.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, WorldspaceNavmeshParent.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WorldspaceNavmeshParent.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WorldspaceNavmeshParent.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Parent ?? true)
                     {
-                        fg.AppendItem(Parent, "Parent");
+                        sb.AppendItem(Parent, "Parent");
                     }
                     if (printMask?.Coordinates ?? true)
                     {
-                        fg.AppendItem(Coordinates, "Coordinates");
+                        sb.AppendItem(Coordinates, "Coordinates");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -299,36 +300,40 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Parent, "Parent");
-                fg.AppendItem(Coordinates, "Coordinates");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Parent, "Parent");
+                }
+                {
+                    sb.AppendItem(Coordinates, "Coordinates");
+                }
             }
             #endregion
 
@@ -437,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -509,13 +514,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IWorldspaceNavmeshParentGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceNavmeshParent.Mask<bool>? printMask = null)
         {
             ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -786,56 +791,56 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             WorldspaceNavmeshParent.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWorldspaceNavmeshParentGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceNavmeshParent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WorldspaceNavmeshParent =>");
+                sb.AppendLine($"WorldspaceNavmeshParent =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WorldspaceNavmeshParent) =>");
+                sb.AppendLine($"{name} (WorldspaceNavmeshParent) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWorldspaceNavmeshParentGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WorldspaceNavmeshParent.Mask<bool>? printMask = null)
         {
             ANavmeshParentCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent.FormKey, "Parent");
+                sb.AppendItem(item.Parent.FormKey, "Parent");
             }
             if (printMask?.Coordinates ?? true)
             {
-                fg.AppendItem(item.Coordinates, "Coordinates");
+                sb.AppendItem(item.Coordinates, "Coordinates");
             }
         }
         
@@ -1132,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceNavmeshParentCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1196,11 +1201,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WorldspaceNavmeshParentMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

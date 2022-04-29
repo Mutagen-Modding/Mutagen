@@ -137,11 +137,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DualCastDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -327,51 +328,51 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(DualCastData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, DualCastData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, DualCastData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DualCastData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DualCastData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Projectile ?? true)
                     {
-                        fg.AppendItem(Projectile, "Projectile");
+                        sb.AppendItem(Projectile, "Projectile");
                     }
                     if (printMask?.Explosion ?? true)
                     {
-                        fg.AppendItem(Explosion, "Explosion");
+                        sb.AppendItem(Explosion, "Explosion");
                     }
                     if (printMask?.EffectShader ?? true)
                     {
-                        fg.AppendItem(EffectShader, "EffectShader");
+                        sb.AppendItem(EffectShader, "EffectShader");
                     }
                     if (printMask?.HitEffectArt ?? true)
                     {
-                        fg.AppendItem(HitEffectArt, "HitEffectArt");
+                        sb.AppendItem(HitEffectArt, "HitEffectArt");
                     }
                     if (printMask?.ImpactDataSet ?? true)
                     {
-                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
                     }
                     if (printMask?.InheritScale ?? true)
                     {
-                        fg.AppendItem(InheritScale, "InheritScale");
+                        sb.AppendItem(InheritScale, "InheritScale");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -507,42 +508,56 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Projectile, "Projectile");
-                fg.AppendItem(Explosion, "Explosion");
-                fg.AppendItem(EffectShader, "EffectShader");
-                fg.AppendItem(HitEffectArt, "HitEffectArt");
-                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
-                fg.AppendItem(InheritScale, "InheritScale");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Projectile, "Projectile");
+                }
+                {
+                    sb.AppendItem(Explosion, "Explosion");
+                }
+                {
+                    sb.AppendItem(EffectShader, "EffectShader");
+                }
+                {
+                    sb.AppendItem(HitEffectArt, "HitEffectArt");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(InheritScale, "InheritScale");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -748,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -851,13 +866,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IDualCastDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DualCastData.Mask<bool>? printMask = null)
         {
             ((DualCastDataCommon)((IDualCastDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1198,80 +1213,80 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             DualCastData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDualCastDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DualCastData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DualCastData =>");
+                sb.AppendLine($"DualCastData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DualCastData) =>");
+                sb.AppendLine($"{name} (DualCastData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDualCastDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DualCastData.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if (printMask?.Projectile ?? true)
             {
-                fg.AppendItem(item.Projectile.FormKey, "Projectile");
+                sb.AppendItem(item.Projectile.FormKey, "Projectile");
             }
             if (printMask?.Explosion ?? true)
             {
-                fg.AppendItem(item.Explosion.FormKey, "Explosion");
+                sb.AppendItem(item.Explosion.FormKey, "Explosion");
             }
             if (printMask?.EffectShader ?? true)
             {
-                fg.AppendItem(item.EffectShader.FormKey, "EffectShader");
+                sb.AppendItem(item.EffectShader.FormKey, "EffectShader");
             }
             if (printMask?.HitEffectArt ?? true)
             {
-                fg.AppendItem(item.HitEffectArt.FormKey, "HitEffectArt");
+                sb.AppendItem(item.HitEffectArt.FormKey, "HitEffectArt");
             }
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
             }
             if (printMask?.InheritScale ?? true)
             {
-                fg.AppendItem(item.InheritScale, "InheritScale");
+                sb.AppendItem(item.InheritScale, "InheritScale");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1895,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DualCastDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2038,11 +2053,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DualCastDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

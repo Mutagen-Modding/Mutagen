@@ -228,11 +228,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -515,87 +516,87 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CombatStyle.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CombatStyle.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CombatStyle.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CombatStyle.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CombatStyle.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.OffensiveMult ?? true)
                     {
-                        fg.AppendItem(OffensiveMult, "OffensiveMult");
+                        sb.AppendItem(OffensiveMult, "OffensiveMult");
                     }
                     if (printMask?.DefensiveMult ?? true)
                     {
-                        fg.AppendItem(DefensiveMult, "DefensiveMult");
+                        sb.AppendItem(DefensiveMult, "DefensiveMult");
                     }
                     if (printMask?.GroupOffensiveMult ?? true)
                     {
-                        fg.AppendItem(GroupOffensiveMult, "GroupOffensiveMult");
+                        sb.AppendItem(GroupOffensiveMult, "GroupOffensiveMult");
                     }
                     if (printMask?.EquipmentScoreMultMelee ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
+                        sb.AppendItem(EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
                     }
                     if (printMask?.EquipmentScoreMultMagic ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
+                        sb.AppendItem(EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
                     }
                     if (printMask?.EquipmentScoreMultRanged ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
+                        sb.AppendItem(EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
                     }
                     if (printMask?.EquipmentScoreMultShout ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultShout, "EquipmentScoreMultShout");
+                        sb.AppendItem(EquipmentScoreMultShout, "EquipmentScoreMultShout");
                     }
                     if (printMask?.EquipmentScoreMultUnarmed ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
+                        sb.AppendItem(EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
                     }
                     if (printMask?.EquipmentScoreMultStaff ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
+                        sb.AppendItem(EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
                     }
                     if (printMask?.AvoidThreatChance ?? true)
                     {
-                        fg.AppendItem(AvoidThreatChance, "AvoidThreatChance");
+                        sb.AppendItem(AvoidThreatChance, "AvoidThreatChance");
                     }
                     if (printMask?.CSMD ?? true)
                     {
-                        fg.AppendItem(CSMD, "CSMD");
+                        sb.AppendItem(CSMD, "CSMD");
                     }
                     if (printMask?.Melee?.Overall ?? true)
                     {
-                        Melee?.ToString(fg);
+                        Melee?.ToString(sb);
                     }
                     if (printMask?.CloseRange?.Overall ?? true)
                     {
-                        CloseRange?.ToString(fg);
+                        CloseRange?.ToString(sb);
                     }
                     if (printMask?.LongRangeStrafeMult ?? true)
                     {
-                        fg.AppendItem(LongRangeStrafeMult, "LongRangeStrafeMult");
+                        sb.AppendItem(LongRangeStrafeMult, "LongRangeStrafeMult");
                     }
                     if (printMask?.Flight?.Overall ?? true)
                     {
-                        Flight?.ToString(fg);
+                        Flight?.ToString(sb);
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.CSGDDataTypeState ?? true)
                     {
-                        fg.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
+                        sb.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -821,51 +822,79 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(OffensiveMult, "OffensiveMult");
-                fg.AppendItem(DefensiveMult, "DefensiveMult");
-                fg.AppendItem(GroupOffensiveMult, "GroupOffensiveMult");
-                fg.AppendItem(EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
-                fg.AppendItem(EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
-                fg.AppendItem(EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
-                fg.AppendItem(EquipmentScoreMultShout, "EquipmentScoreMultShout");
-                fg.AppendItem(EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
-                fg.AppendItem(EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
-                fg.AppendItem(AvoidThreatChance, "AvoidThreatChance");
-                fg.AppendItem(CSMD, "CSMD");
-                Melee?.ToString(fg);
-                CloseRange?.ToString(fg);
-                fg.AppendItem(LongRangeStrafeMult, "LongRangeStrafeMult");
-                Flight?.ToString(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(OffensiveMult, "OffensiveMult");
+                }
+                {
+                    sb.AppendItem(DefensiveMult, "DefensiveMult");
+                }
+                {
+                    sb.AppendItem(GroupOffensiveMult, "GroupOffensiveMult");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultShout, "EquipmentScoreMultShout");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
+                }
+                {
+                    sb.AppendItem(AvoidThreatChance, "AvoidThreatChance");
+                }
+                {
+                    sb.AppendItem(CSMD, "CSMD");
+                }
+                Melee?.ToString(sb);
+                CloseRange?.ToString(sb);
+                {
+                    sb.AppendItem(LongRangeStrafeMult, "LongRangeStrafeMult");
+                }
+                Flight?.ToString(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
+                }
             }
             #endregion
 
@@ -1110,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1227,13 +1256,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICombatStyleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyle.Mask<bool>? printMask = null)
         {
             ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1613,122 +1642,122 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CombatStyle.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICombatStyleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyle.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CombatStyle =>");
+                sb.AppendLine($"CombatStyle =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CombatStyle) =>");
+                sb.AppendLine($"{name} (CombatStyle) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICombatStyleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CombatStyle.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.OffensiveMult ?? true)
             {
-                fg.AppendItem(item.OffensiveMult, "OffensiveMult");
+                sb.AppendItem(item.OffensiveMult, "OffensiveMult");
             }
             if (printMask?.DefensiveMult ?? true)
             {
-                fg.AppendItem(item.DefensiveMult, "DefensiveMult");
+                sb.AppendItem(item.DefensiveMult, "DefensiveMult");
             }
             if (printMask?.GroupOffensiveMult ?? true)
             {
-                fg.AppendItem(item.GroupOffensiveMult, "GroupOffensiveMult");
+                sb.AppendItem(item.GroupOffensiveMult, "GroupOffensiveMult");
             }
             if (printMask?.EquipmentScoreMultMelee ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
+                sb.AppendItem(item.EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
             }
             if (printMask?.EquipmentScoreMultMagic ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
+                sb.AppendItem(item.EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
             }
             if (printMask?.EquipmentScoreMultRanged ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
+                sb.AppendItem(item.EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
             }
             if (printMask?.EquipmentScoreMultShout ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultShout, "EquipmentScoreMultShout");
+                sb.AppendItem(item.EquipmentScoreMultShout, "EquipmentScoreMultShout");
             }
             if (printMask?.EquipmentScoreMultUnarmed ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
+                sb.AppendItem(item.EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
             }
             if (printMask?.EquipmentScoreMultStaff ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
+                sb.AppendItem(item.EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
             }
             if (printMask?.AvoidThreatChance ?? true)
             {
-                fg.AppendItem(item.AvoidThreatChance, "AvoidThreatChance");
+                sb.AppendItem(item.AvoidThreatChance, "AvoidThreatChance");
             }
             if ((printMask?.CSMD ?? true)
                 && item.CSMD is {} CSMDItem)
             {
-                fg.AppendLine($"CSMD => {SpanExt.ToHexString(CSMDItem)}");
+                sb.AppendLine($"CSMD => {SpanExt.ToHexString(CSMDItem)}");
             }
             if ((printMask?.Melee?.Overall ?? true)
                 && item.Melee is {} MeleeItem)
             {
-                MeleeItem?.ToString(fg, "Melee");
+                MeleeItem?.ToString(sb, "Melee");
             }
             if ((printMask?.CloseRange?.Overall ?? true)
                 && item.CloseRange is {} CloseRangeItem)
             {
-                CloseRangeItem?.ToString(fg, "CloseRange");
+                CloseRangeItem?.ToString(sb, "CloseRange");
             }
             if ((printMask?.LongRangeStrafeMult ?? true)
                 && item.LongRangeStrafeMult is {} LongRangeStrafeMultItem)
             {
-                fg.AppendItem(LongRangeStrafeMultItem, "LongRangeStrafeMult");
+                sb.AppendItem(LongRangeStrafeMultItem, "LongRangeStrafeMult");
             }
             if ((printMask?.Flight?.Overall ?? true)
                 && item.Flight is {} FlightItem)
             {
-                FlightItem?.ToString(fg, "Flight");
+                FlightItem?.ToString(sb, "Flight");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.CSGDDataTypeState ?? true)
             {
-                fg.AppendItem(item.CSGDDataTypeState, "CSGDDataTypeState");
+                sb.AppendItem(item.CSGDDataTypeState, "CSGDDataTypeState");
             }
         }
         
@@ -2597,7 +2626,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
@@ -2813,11 +2842,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

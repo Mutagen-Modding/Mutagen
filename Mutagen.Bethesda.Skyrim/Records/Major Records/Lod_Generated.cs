@@ -111,11 +111,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LodMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -289,51 +290,51 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Lod.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Lod.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Lod.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Lod.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Lod.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Level0 ?? true)
                     {
-                        fg.AppendItem(Level0, "Level0");
+                        sb.AppendItem(Level0, "Level0");
                     }
                     if (printMask?.Level0Extra ?? true)
                     {
-                        fg.AppendItem(Level0Extra, "Level0Extra");
+                        sb.AppendItem(Level0Extra, "Level0Extra");
                     }
                     if (printMask?.Level1 ?? true)
                     {
-                        fg.AppendItem(Level1, "Level1");
+                        sb.AppendItem(Level1, "Level1");
                     }
                     if (printMask?.Level1Extra ?? true)
                     {
-                        fg.AppendItem(Level1Extra, "Level1Extra");
+                        sb.AppendItem(Level1Extra, "Level1Extra");
                     }
                     if (printMask?.Level2 ?? true)
                     {
-                        fg.AppendItem(Level2, "Level2");
+                        sb.AppendItem(Level2, "Level2");
                     }
                     if (printMask?.Level2Extra ?? true)
                     {
-                        fg.AppendItem(Level2Extra, "Level2Extra");
+                        sb.AppendItem(Level2Extra, "Level2Extra");
                     }
                     if (printMask?.Level3 ?? true)
                     {
-                        fg.AppendItem(Level3, "Level3");
+                        sb.AppendItem(Level3, "Level3");
                     }
                     if (printMask?.Level3Extra ?? true)
                     {
-                        fg.AppendItem(Level3Extra, "Level3Extra");
+                        sb.AppendItem(Level3Extra, "Level3Extra");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -480,41 +481,57 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Level0, "Level0");
-                fg.AppendItem(Level0Extra, "Level0Extra");
-                fg.AppendItem(Level1, "Level1");
-                fg.AppendItem(Level1Extra, "Level1Extra");
-                fg.AppendItem(Level2, "Level2");
-                fg.AppendItem(Level2Extra, "Level2Extra");
-                fg.AppendItem(Level3, "Level3");
-                fg.AppendItem(Level3Extra, "Level3Extra");
+                {
+                    sb.AppendItem(Level0, "Level0");
+                }
+                {
+                    sb.AppendItem(Level0Extra, "Level0Extra");
+                }
+                {
+                    sb.AppendItem(Level1, "Level1");
+                }
+                {
+                    sb.AppendItem(Level1Extra, "Level1Extra");
+                }
+                {
+                    sb.AppendItem(Level2, "Level2");
+                }
+                {
+                    sb.AppendItem(Level2Extra, "Level2Extra");
+                }
+                {
+                    sb.AppendItem(Level3, "Level3");
+                }
+                {
+                    sb.AppendItem(Level3Extra, "Level3Extra");
+                }
             }
             #endregion
 
@@ -654,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -741,13 +758,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ILodGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Lod.Mask<bool>? printMask = null)
         {
             ((LodCommon)((ILodGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1052,80 +1069,80 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Lod.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILodGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Lod.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Lod =>");
+                sb.AppendLine($"Lod =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Lod) =>");
+                sb.AppendLine($"{name} (Lod) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILodGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Lod.Mask<bool>? printMask = null)
         {
             if (printMask?.Level0 ?? true)
             {
-                fg.AppendItem(item.Level0, "Level0");
+                sb.AppendItem(item.Level0, "Level0");
             }
             if ((printMask?.Level0Extra ?? true)
                 && item.Level0Extra is {} Level0ExtraItem)
             {
-                fg.AppendLine($"Level0Extra => {SpanExt.ToHexString(Level0ExtraItem)}");
+                sb.AppendLine($"Level0Extra => {SpanExt.ToHexString(Level0ExtraItem)}");
             }
             if (printMask?.Level1 ?? true)
             {
-                fg.AppendItem(item.Level1, "Level1");
+                sb.AppendItem(item.Level1, "Level1");
             }
             if ((printMask?.Level1Extra ?? true)
                 && item.Level1Extra is {} Level1ExtraItem)
             {
-                fg.AppendLine($"Level1Extra => {SpanExt.ToHexString(Level1ExtraItem)}");
+                sb.AppendLine($"Level1Extra => {SpanExt.ToHexString(Level1ExtraItem)}");
             }
             if (printMask?.Level2 ?? true)
             {
-                fg.AppendItem(item.Level2, "Level2");
+                sb.AppendItem(item.Level2, "Level2");
             }
             if ((printMask?.Level2Extra ?? true)
                 && item.Level2Extra is {} Level2ExtraItem)
             {
-                fg.AppendLine($"Level2Extra => {SpanExt.ToHexString(Level2ExtraItem)}");
+                sb.AppendLine($"Level2Extra => {SpanExt.ToHexString(Level2ExtraItem)}");
             }
             if (printMask?.Level3 ?? true)
             {
-                fg.AppendItem(item.Level3, "Level3");
+                sb.AppendItem(item.Level3, "Level3");
             }
             if ((printMask?.Level3Extra ?? true)
                 && item.Level3Extra is {} Level3ExtraItem)
             {
-                fg.AppendLine($"Level3Extra => {SpanExt.ToHexString(Level3ExtraItem)}");
+                sb.AppendLine($"Level3Extra => {SpanExt.ToHexString(Level3ExtraItem)}");
             }
         }
         
@@ -1494,7 +1511,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LodBinaryWriteTranslation.Instance;
@@ -1558,11 +1575,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LodMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

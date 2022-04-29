@@ -116,11 +116,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             OblivionModHeaderMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -347,74 +348,74 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(OblivionModHeader.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, OblivionModHeader.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, OblivionModHeader.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(OblivionModHeader.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(OblivionModHeader.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.FormID ?? true)
                     {
-                        fg.AppendItem(FormID, "FormID");
+                        sb.AppendItem(FormID, "FormID");
                     }
                     if (printMask?.Version ?? true)
                     {
-                        fg.AppendItem(Version, "Version");
+                        sb.AppendItem(Version, "Version");
                     }
                     if (printMask?.Stats?.Overall ?? true)
                     {
-                        Stats?.ToString(fg);
+                        Stats?.ToString(sb);
                     }
                     if (printMask?.TypeOffsets ?? true)
                     {
-                        fg.AppendItem(TypeOffsets, "TypeOffsets");
+                        sb.AppendItem(TypeOffsets, "TypeOffsets");
                     }
                     if (printMask?.Deleted ?? true)
                     {
-                        fg.AppendItem(Deleted, "Deleted");
+                        sb.AppendItem(Deleted, "Deleted");
                     }
                     if (printMask?.Author ?? true)
                     {
-                        fg.AppendItem(Author, "Author");
+                        sb.AppendItem(Author, "Author");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.MasterReferences?.Overall ?? true)
                         && MasterReferences is {} MasterReferencesItem)
                     {
-                        fg.AppendLine("MasterReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MasterReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(MasterReferencesItem.Overall);
+                            sb.AppendItem(MasterReferencesItem.Overall);
                             if (MasterReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in MasterReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -571,62 +572,76 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(FormID, "FormID");
-                fg.AppendItem(Version, "Version");
-                Stats?.ToString(fg);
-                fg.AppendItem(TypeOffsets, "TypeOffsets");
-                fg.AppendItem(Deleted, "Deleted");
-                fg.AppendItem(Author, "Author");
-                fg.AppendItem(Description, "Description");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(FormID, "FormID");
+                }
+                {
+                    sb.AppendItem(Version, "Version");
+                }
+                Stats?.ToString(sb);
+                {
+                    sb.AppendItem(TypeOffsets, "TypeOffsets");
+                }
+                {
+                    sb.AppendItem(Deleted, "Deleted");
+                }
+                {
+                    sb.AppendItem(Author, "Author");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (MasterReferences is {} MasterReferencesItem)
                 {
-                    fg.AppendLine("MasterReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MasterReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(MasterReferencesItem.Overall);
+                        sb.AppendItem(MasterReferencesItem.Overall);
                         if (MasterReferencesItem.Specific != null)
                         {
                             foreach (var subItem in MasterReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -773,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -862,13 +877,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IOblivionModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             OblivionModHeader.Mask<bool>? printMask = null)
         {
             ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1188,98 +1203,98 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             OblivionModHeader.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IOblivionModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             OblivionModHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"OblivionModHeader =>");
+                sb.AppendLine($"OblivionModHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (OblivionModHeader) =>");
+                sb.AppendLine($"{name} (OblivionModHeader) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IOblivionModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             OblivionModHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.FormID ?? true)
             {
-                fg.AppendItem(item.FormID, "FormID");
+                sb.AppendItem(item.FormID, "FormID");
             }
             if (printMask?.Version ?? true)
             {
-                fg.AppendItem(item.Version, "Version");
+                sb.AppendItem(item.Version, "Version");
             }
             if (printMask?.Stats?.Overall ?? true)
             {
-                item.Stats?.ToString(fg, "Stats");
+                item.Stats?.ToString(sb, "Stats");
             }
             if ((printMask?.TypeOffsets ?? true)
                 && item.TypeOffsets is {} TypeOffsetsItem)
             {
-                fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
+                sb.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
             }
             if ((printMask?.Deleted ?? true)
                 && item.Deleted is {} DeletedItem)
             {
-                fg.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
+                sb.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
             }
             if ((printMask?.Author ?? true)
                 && item.Author is {} AuthorItem)
             {
-                fg.AppendItem(AuthorItem, "Author");
+                sb.AppendItem(AuthorItem, "Author");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.MasterReferences?.Overall ?? true)
             {
-                fg.AppendLine("MasterReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MasterReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.MasterReferences)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1783,7 +1798,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => OblivionModHeaderBinaryWriteTranslation.Instance;
@@ -1928,11 +1943,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             OblivionModHeaderMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

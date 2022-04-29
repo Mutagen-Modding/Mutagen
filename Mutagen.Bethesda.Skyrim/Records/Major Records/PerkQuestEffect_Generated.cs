@@ -82,11 +82,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkQuestEffectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -231,31 +232,31 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(PerkQuestEffect.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PerkQuestEffect.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PerkQuestEffect.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PerkQuestEffect.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PerkQuestEffect.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Quest ?? true)
                     {
-                        fg.AppendItem(Quest, "Quest");
+                        sb.AppendItem(Quest, "Quest");
                     }
                     if (printMask?.Stage ?? true)
                     {
-                        fg.AppendItem(Stage, "Stage");
+                        sb.AppendItem(Stage, "Stage");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -341,37 +342,43 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Quest, "Quest");
-                fg.AppendItem(Stage, "Stage");
-                fg.AppendItem(Unknown, "Unknown");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                {
+                    sb.AppendItem(Stage, "Stage");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -484,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -558,13 +565,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IPerkQuestEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkQuestEffect.Mask<bool>? printMask = null)
         {
             ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -850,60 +857,60 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             PerkQuestEffect.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPerkQuestEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkQuestEffect.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkQuestEffect =>");
+                sb.AppendLine($"PerkQuestEffect =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkQuestEffect) =>");
+                sb.AppendLine($"{name} (PerkQuestEffect) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkQuestEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PerkQuestEffect.Mask<bool>? printMask = null)
         {
             APerkEffectCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKey, "Quest");
+                sb.AppendItem(item.Quest.FormKey, "Quest");
             }
             if (printMask?.Stage ?? true)
             {
-                fg.AppendItem(item.Stage, "Stage");
+                sb.AppendItem(item.Stage, "Stage");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
         }
         
@@ -1229,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkQuestEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1295,11 +1302,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkQuestEffectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

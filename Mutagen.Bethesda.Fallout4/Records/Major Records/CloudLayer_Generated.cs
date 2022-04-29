@@ -93,11 +93,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CloudLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -260,39 +261,39 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(CloudLayer.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CloudLayer.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CloudLayer.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CloudLayer.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CloudLayer.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Enabled ?? true)
                     {
-                        fg.AppendItem(Enabled, "Enabled");
+                        sb.AppendItem(Enabled, "Enabled");
                     }
                     if (printMask?.XSpeed ?? true)
                     {
-                        fg.AppendItem(XSpeed, "XSpeed");
+                        sb.AppendItem(XSpeed, "XSpeed");
                     }
                     if (printMask?.YSpeed ?? true)
                     {
-                        fg.AppendItem(YSpeed, "YSpeed");
+                        sb.AppendItem(YSpeed, "YSpeed");
                     }
                     if (printMask?.Colors?.Overall ?? true)
                     {
-                        Colors?.ToString(fg);
+                        Colors?.ToString(sb);
                     }
                     if (printMask?.Alphas?.Overall ?? true)
                     {
-                        Alphas?.ToString(fg);
+                        Alphas?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -409,38 +410,44 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Enabled, "Enabled");
-                fg.AppendItem(XSpeed, "XSpeed");
-                fg.AppendItem(YSpeed, "YSpeed");
-                Colors?.ToString(fg);
-                Alphas?.ToString(fg);
+                {
+                    sb.AppendItem(Enabled, "Enabled");
+                }
+                {
+                    sb.AppendItem(XSpeed, "XSpeed");
+                }
+                {
+                    sb.AppendItem(YSpeed, "YSpeed");
+                }
+                Colors?.ToString(sb);
+                Alphas?.ToString(sb);
             }
             #endregion
 
@@ -566,7 +573,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -647,13 +654,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this ICloudLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CloudLayer.Mask<bool>? printMask = null)
         {
             ((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -946,69 +953,69 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             CloudLayer.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICloudLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CloudLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CloudLayer =>");
+                sb.AppendLine($"CloudLayer =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CloudLayer) =>");
+                sb.AppendLine($"{name} (CloudLayer) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICloudLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CloudLayer.Mask<bool>? printMask = null)
         {
             if ((printMask?.Enabled ?? true)
                 && item.Enabled is {} EnabledItem)
             {
-                fg.AppendItem(EnabledItem, "Enabled");
+                sb.AppendItem(EnabledItem, "Enabled");
             }
             if ((printMask?.XSpeed ?? true)
                 && item.XSpeed is {} XSpeedItem)
             {
-                fg.AppendItem(XSpeedItem, "XSpeed");
+                sb.AppendItem(XSpeedItem, "XSpeed");
             }
             if ((printMask?.YSpeed ?? true)
                 && item.YSpeed is {} YSpeedItem)
             {
-                fg.AppendItem(YSpeedItem, "YSpeed");
+                sb.AppendItem(YSpeedItem, "YSpeed");
             }
             if ((printMask?.Colors?.Overall ?? true)
                 && item.Colors is {} ColorsItem)
             {
-                ColorsItem?.ToString(fg, "Colors");
+                ColorsItem?.ToString(sb, "Colors");
             }
             if ((printMask?.Alphas?.Overall ?? true)
                 && item.Alphas is {} AlphasItem)
             {
-                AlphasItem?.ToString(fg, "Alphas");
+                AlphasItem?.ToString(sb, "Alphas");
             }
         }
         
@@ -1347,7 +1354,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CloudLayerBinaryWriteTranslation.Instance;
@@ -1409,11 +1416,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CloudLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

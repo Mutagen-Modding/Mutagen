@@ -24,9 +24,9 @@ public class DataTypeModule : GenerationModule
         obj.GetObjectData().DataTypeModuleComplete.SetResult();
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await base.GenerateInClass(obj, fg);
+        await base.GenerateInClass(obj, sb);
 
         List<string> enumTypes;
         int breaks;
@@ -50,11 +50,11 @@ public class DataTypeModule : GenerationModule
                         break;
                 }
             }
-            fg.AppendLine("[Flags]");
-            fg.AppendLine($"public enum {dataType.EnumName}");
-            using (new BraceWrapper(fg))
+            sb.AppendLine("[Flags]");
+            sb.AppendLine($"public enum {dataType.EnumName}");
+            using (sb.CurlyBrace())
             {
-                using (var comma = new CommaWrapper(fg))
+                using (var comma = new CommaWrapper(sb))
                 {
                     var term = 1;
                     for (int i = 0; i < enumTypes.Count; i++)

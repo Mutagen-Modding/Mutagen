@@ -82,11 +82,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ImageSpaceHdrMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -269,55 +270,55 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ImageSpaceHdr.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ImageSpaceHdr.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ImageSpaceHdr.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ImageSpaceHdr.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ImageSpaceHdr.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.EyeAdaptSpeed ?? true)
                     {
-                        fg.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
+                        sb.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
                     }
                     if (printMask?.BloomBlurRadius ?? true)
                     {
-                        fg.AppendItem(BloomBlurRadius, "BloomBlurRadius");
+                        sb.AppendItem(BloomBlurRadius, "BloomBlurRadius");
                     }
                     if (printMask?.BloomThreshold ?? true)
                     {
-                        fg.AppendItem(BloomThreshold, "BloomThreshold");
+                        sb.AppendItem(BloomThreshold, "BloomThreshold");
                     }
                     if (printMask?.BloomScale ?? true)
                     {
-                        fg.AppendItem(BloomScale, "BloomScale");
+                        sb.AppendItem(BloomScale, "BloomScale");
                     }
                     if (printMask?.ReceiveBloomThreshold ?? true)
                     {
-                        fg.AppendItem(ReceiveBloomThreshold, "ReceiveBloomThreshold");
+                        sb.AppendItem(ReceiveBloomThreshold, "ReceiveBloomThreshold");
                     }
                     if (printMask?.White ?? true)
                     {
-                        fg.AppendItem(White, "White");
+                        sb.AppendItem(White, "White");
                     }
                     if (printMask?.SunlightScale ?? true)
                     {
-                        fg.AppendItem(SunlightScale, "SunlightScale");
+                        sb.AppendItem(SunlightScale, "SunlightScale");
                     }
                     if (printMask?.SkyScale ?? true)
                     {
-                        fg.AppendItem(SkyScale, "SkyScale");
+                        sb.AppendItem(SkyScale, "SkyScale");
                     }
                     if (printMask?.EyeAdaptStrength ?? true)
                     {
-                        fg.AppendItem(EyeAdaptStrength, "EyeAdaptStrength");
+                        sb.AppendItem(EyeAdaptStrength, "EyeAdaptStrength");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -474,42 +475,60 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
-                fg.AppendItem(BloomBlurRadius, "BloomBlurRadius");
-                fg.AppendItem(BloomThreshold, "BloomThreshold");
-                fg.AppendItem(BloomScale, "BloomScale");
-                fg.AppendItem(ReceiveBloomThreshold, "ReceiveBloomThreshold");
-                fg.AppendItem(White, "White");
-                fg.AppendItem(SunlightScale, "SunlightScale");
-                fg.AppendItem(SkyScale, "SkyScale");
-                fg.AppendItem(EyeAdaptStrength, "EyeAdaptStrength");
+                {
+                    sb.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
+                }
+                {
+                    sb.AppendItem(BloomBlurRadius, "BloomBlurRadius");
+                }
+                {
+                    sb.AppendItem(BloomThreshold, "BloomThreshold");
+                }
+                {
+                    sb.AppendItem(BloomScale, "BloomScale");
+                }
+                {
+                    sb.AppendItem(ReceiveBloomThreshold, "ReceiveBloomThreshold");
+                }
+                {
+                    sb.AppendItem(White, "White");
+                }
+                {
+                    sb.AppendItem(SunlightScale, "SunlightScale");
+                }
+                {
+                    sb.AppendItem(SkyScale, "SkyScale");
+                }
+                {
+                    sb.AppendItem(EyeAdaptStrength, "EyeAdaptStrength");
+                }
             }
             #endregion
 
@@ -653,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -742,13 +761,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IImageSpaceHdrGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceHdr.Mask<bool>? printMask = null)
         {
             ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1056,80 +1075,80 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ImageSpaceHdr.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IImageSpaceHdrGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceHdr.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ImageSpaceHdr =>");
+                sb.AppendLine($"ImageSpaceHdr =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ImageSpaceHdr) =>");
+                sb.AppendLine($"{name} (ImageSpaceHdr) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IImageSpaceHdrGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ImageSpaceHdr.Mask<bool>? printMask = null)
         {
             if (printMask?.EyeAdaptSpeed ?? true)
             {
-                fg.AppendItem(item.EyeAdaptSpeed, "EyeAdaptSpeed");
+                sb.AppendItem(item.EyeAdaptSpeed, "EyeAdaptSpeed");
             }
             if (printMask?.BloomBlurRadius ?? true)
             {
-                fg.AppendItem(item.BloomBlurRadius, "BloomBlurRadius");
+                sb.AppendItem(item.BloomBlurRadius, "BloomBlurRadius");
             }
             if (printMask?.BloomThreshold ?? true)
             {
-                fg.AppendItem(item.BloomThreshold, "BloomThreshold");
+                sb.AppendItem(item.BloomThreshold, "BloomThreshold");
             }
             if (printMask?.BloomScale ?? true)
             {
-                fg.AppendItem(item.BloomScale, "BloomScale");
+                sb.AppendItem(item.BloomScale, "BloomScale");
             }
             if (printMask?.ReceiveBloomThreshold ?? true)
             {
-                fg.AppendItem(item.ReceiveBloomThreshold, "ReceiveBloomThreshold");
+                sb.AppendItem(item.ReceiveBloomThreshold, "ReceiveBloomThreshold");
             }
             if (printMask?.White ?? true)
             {
-                fg.AppendItem(item.White, "White");
+                sb.AppendItem(item.White, "White");
             }
             if (printMask?.SunlightScale ?? true)
             {
-                fg.AppendItem(item.SunlightScale, "SunlightScale");
+                sb.AppendItem(item.SunlightScale, "SunlightScale");
             }
             if (printMask?.SkyScale ?? true)
             {
-                fg.AppendItem(item.SkyScale, "SkyScale");
+                sb.AppendItem(item.SkyScale, "SkyScale");
             }
             if (printMask?.EyeAdaptStrength ?? true)
             {
-                fg.AppendItem(item.EyeAdaptStrength, "EyeAdaptStrength");
+                sb.AppendItem(item.EyeAdaptStrength, "EyeAdaptStrength");
             }
         }
         
@@ -1480,7 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImageSpaceHdrBinaryWriteTranslation.Instance;
@@ -1553,11 +1572,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ImageSpaceHdrMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -13,7 +13,7 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -23,7 +23,7 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         Accessor converterAccessor)
     {
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{this.NamespacePrefix}FilePathBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -40,7 +40,7 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor frameAccessor,
@@ -51,13 +51,13 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
         if (data.HasTrigger)
         {
-            fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+            sb.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
         }
 
         TranslationGeneration.WrapParseCall(
             new TranslationWrapParseArgs()
             {
-                FG = fg,
+                FG = sb,
                 TypeGen = typeGen,
                 TranslatorLine = $"{this.NamespacePrefix}FilePathBinaryTranslation.Instance",
                 MaskAccessor = errorMaskAccessor,
@@ -70,7 +70,7 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -85,7 +85,7 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     {
         if (inline) throw new NotImplementedException();
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.NamespacePrefix}FilePathBinaryTranslation.Instance.Parse",
                    suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
         {

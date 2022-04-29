@@ -136,11 +136,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherGodRaysMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -314,51 +315,51 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(WeatherGodRays.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, WeatherGodRays.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, WeatherGodRays.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WeatherGodRays.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeatherGodRays.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.GodRaySunrise ?? true)
                     {
-                        fg.AppendItem(GodRaySunrise, "GodRaySunrise");
+                        sb.AppendItem(GodRaySunrise, "GodRaySunrise");
                     }
                     if (printMask?.GodRayDay ?? true)
                     {
-                        fg.AppendItem(GodRayDay, "GodRayDay");
+                        sb.AppendItem(GodRayDay, "GodRayDay");
                     }
                     if (printMask?.GodRaySunset ?? true)
                     {
-                        fg.AppendItem(GodRaySunset, "GodRaySunset");
+                        sb.AppendItem(GodRaySunset, "GodRaySunset");
                     }
                     if (printMask?.GodRayNight ?? true)
                     {
-                        fg.AppendItem(GodRayNight, "GodRayNight");
+                        sb.AppendItem(GodRayNight, "GodRayNight");
                     }
                     if (printMask?.GodRayEarlySunrise ?? true)
                     {
-                        fg.AppendItem(GodRayEarlySunrise, "GodRayEarlySunrise");
+                        sb.AppendItem(GodRayEarlySunrise, "GodRayEarlySunrise");
                     }
                     if (printMask?.GodRayLateSunrise ?? true)
                     {
-                        fg.AppendItem(GodRayLateSunrise, "GodRayLateSunrise");
+                        sb.AppendItem(GodRayLateSunrise, "GodRayLateSunrise");
                     }
                     if (printMask?.GodRayEarlySunset ?? true)
                     {
-                        fg.AppendItem(GodRayEarlySunset, "GodRayEarlySunset");
+                        sb.AppendItem(GodRayEarlySunset, "GodRayEarlySunset");
                     }
                     if (printMask?.GodRayLateSunset ?? true)
                     {
-                        fg.AppendItem(GodRayLateSunset, "GodRayLateSunset");
+                        sb.AppendItem(GodRayLateSunset, "GodRayLateSunset");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -505,41 +506,57 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(GodRaySunrise, "GodRaySunrise");
-                fg.AppendItem(GodRayDay, "GodRayDay");
-                fg.AppendItem(GodRaySunset, "GodRaySunset");
-                fg.AppendItem(GodRayNight, "GodRayNight");
-                fg.AppendItem(GodRayEarlySunrise, "GodRayEarlySunrise");
-                fg.AppendItem(GodRayLateSunrise, "GodRayLateSunrise");
-                fg.AppendItem(GodRayEarlySunset, "GodRayEarlySunset");
-                fg.AppendItem(GodRayLateSunset, "GodRayLateSunset");
+                {
+                    sb.AppendItem(GodRaySunrise, "GodRaySunrise");
+                }
+                {
+                    sb.AppendItem(GodRayDay, "GodRayDay");
+                }
+                {
+                    sb.AppendItem(GodRaySunset, "GodRaySunset");
+                }
+                {
+                    sb.AppendItem(GodRayNight, "GodRayNight");
+                }
+                {
+                    sb.AppendItem(GodRayEarlySunrise, "GodRayEarlySunrise");
+                }
+                {
+                    sb.AppendItem(GodRayLateSunrise, "GodRayLateSunrise");
+                }
+                {
+                    sb.AppendItem(GodRayEarlySunset, "GodRayEarlySunset");
+                }
+                {
+                    sb.AppendItem(GodRayLateSunset, "GodRayLateSunset");
+                }
             }
             #endregion
 
@@ -684,7 +701,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -773,13 +790,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IWeatherGodRaysGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherGodRays.Mask<bool>? printMask = null)
         {
             ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1092,76 +1109,76 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             WeatherGodRays.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeatherGodRaysGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherGodRays.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherGodRays =>");
+                sb.AppendLine($"WeatherGodRays =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherGodRays) =>");
+                sb.AppendLine($"{name} (WeatherGodRays) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherGodRaysGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeatherGodRays.Mask<bool>? printMask = null)
         {
             if (printMask?.GodRaySunrise ?? true)
             {
-                fg.AppendItem(item.GodRaySunrise.FormKey, "GodRaySunrise");
+                sb.AppendItem(item.GodRaySunrise.FormKey, "GodRaySunrise");
             }
             if (printMask?.GodRayDay ?? true)
             {
-                fg.AppendItem(item.GodRayDay.FormKey, "GodRayDay");
+                sb.AppendItem(item.GodRayDay.FormKey, "GodRayDay");
             }
             if (printMask?.GodRaySunset ?? true)
             {
-                fg.AppendItem(item.GodRaySunset.FormKey, "GodRaySunset");
+                sb.AppendItem(item.GodRaySunset.FormKey, "GodRaySunset");
             }
             if (printMask?.GodRayNight ?? true)
             {
-                fg.AppendItem(item.GodRayNight.FormKey, "GodRayNight");
+                sb.AppendItem(item.GodRayNight.FormKey, "GodRayNight");
             }
             if (printMask?.GodRayEarlySunrise ?? true)
             {
-                fg.AppendItem(item.GodRayEarlySunrise.FormKey, "GodRayEarlySunrise");
+                sb.AppendItem(item.GodRayEarlySunrise.FormKey, "GodRayEarlySunrise");
             }
             if (printMask?.GodRayLateSunrise ?? true)
             {
-                fg.AppendItem(item.GodRayLateSunrise.FormKey, "GodRayLateSunrise");
+                sb.AppendItem(item.GodRayLateSunrise.FormKey, "GodRayLateSunrise");
             }
             if (printMask?.GodRayEarlySunset ?? true)
             {
-                fg.AppendItem(item.GodRayEarlySunset.FormKey, "GodRayEarlySunset");
+                sb.AppendItem(item.GodRayEarlySunset.FormKey, "GodRayEarlySunset");
             }
             if (printMask?.GodRayLateSunset ?? true)
             {
-                fg.AppendItem(item.GodRayLateSunset.FormKey, "GodRayLateSunset");
+                sb.AppendItem(item.GodRayLateSunset.FormKey, "GodRayLateSunset");
             }
         }
         
@@ -1507,7 +1524,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherGodRaysCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1580,11 +1597,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherGodRaysMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -434,11 +434,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -928,162 +929,164 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Weapon.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Weapon.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Weapon.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Weapon.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Weapon.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Icons?.Overall ?? true)
                     {
-                        Icons?.ToString(fg);
+                        Icons?.ToString(sb);
                     }
                     if (printMask?.ObjectEffect ?? true)
                     {
-                        fg.AppendItem(ObjectEffect, "ObjectEffect");
+                        sb.AppendItem(ObjectEffect, "ObjectEffect");
                     }
                     if (printMask?.EnchantmentAmount ?? true)
                     {
-                        fg.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                        sb.AppendItem(EnchantmentAmount, "EnchantmentAmount");
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(fg);
+                        Destructible?.ToString(sb);
                     }
                     if (printMask?.EquipmentType ?? true)
                     {
-                        fg.AppendItem(EquipmentType, "EquipmentType");
+                        sb.AppendItem(EquipmentType, "EquipmentType");
                     }
                     if (printMask?.BlockBashImpact ?? true)
                     {
-                        fg.AppendItem(BlockBashImpact, "BlockBashImpact");
+                        sb.AppendItem(BlockBashImpact, "BlockBashImpact");
                     }
                     if (printMask?.AlternateBlockMaterial ?? true)
                     {
-                        fg.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                        sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
                     }
                     if (printMask?.PickUpSound ?? true)
                     {
-                        fg.AppendItem(PickUpSound, "PickUpSound");
+                        sb.AppendItem(PickUpSound, "PickUpSound");
                     }
                     if (printMask?.PutDownSound ?? true)
                     {
-                        fg.AppendItem(PutDownSound, "PutDownSound");
+                        sb.AppendItem(PutDownSound, "PutDownSound");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if (printMask?.ScopeModel?.Overall ?? true)
                     {
-                        ScopeModel?.ToString(fg);
+                        ScopeModel?.ToString(sb);
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.ImpactDataSet ?? true)
                     {
-                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
                     }
                     if (printMask?.FirstPersonModel ?? true)
                     {
-                        fg.AppendItem(FirstPersonModel, "FirstPersonModel");
+                        sb.AppendItem(FirstPersonModel, "FirstPersonModel");
                     }
                     if (printMask?.AttackSound ?? true)
                     {
-                        fg.AppendItem(AttackSound, "AttackSound");
+                        sb.AppendItem(AttackSound, "AttackSound");
                     }
                     if (printMask?.AttackSound2D ?? true)
                     {
-                        fg.AppendItem(AttackSound2D, "AttackSound2D");
+                        sb.AppendItem(AttackSound2D, "AttackSound2D");
                     }
                     if (printMask?.AttackLoopSound ?? true)
                     {
-                        fg.AppendItem(AttackLoopSound, "AttackLoopSound");
+                        sb.AppendItem(AttackLoopSound, "AttackLoopSound");
                     }
                     if (printMask?.AttackFailSound ?? true)
                     {
-                        fg.AppendItem(AttackFailSound, "AttackFailSound");
+                        sb.AppendItem(AttackFailSound, "AttackFailSound");
                     }
                     if (printMask?.IdleSound ?? true)
                     {
-                        fg.AppendItem(IdleSound, "IdleSound");
+                        sb.AppendItem(IdleSound, "IdleSound");
                     }
                     if (printMask?.EquipSound ?? true)
                     {
-                        fg.AppendItem(EquipSound, "EquipSound");
+                        sb.AppendItem(EquipSound, "EquipSound");
                     }
                     if (printMask?.UnequipSound ?? true)
                     {
-                        fg.AppendItem(UnequipSound, "UnequipSound");
+                        sb.AppendItem(UnequipSound, "UnequipSound");
                     }
                     if (printMask?.BasicStats?.Overall ?? true)
                     {
-                        BasicStats?.ToString(fg);
+                        BasicStats?.ToString(sb);
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.ToString(sb);
                     }
                     if (printMask?.Critical?.Overall ?? true)
                     {
-                        Critical?.ToString(fg);
+                        Critical?.ToString(sb);
                     }
                     if (printMask?.DetectionSoundLevel ?? true)
                     {
-                        fg.AppendItem(DetectionSoundLevel, "DetectionSoundLevel");
+                        sb.AppendItem(DetectionSoundLevel, "DetectionSoundLevel");
                     }
                     if (printMask?.Template ?? true)
                     {
-                        fg.AppendItem(Template, "Template");
+                        sb.AppendItem(Template, "Template");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1449,86 +1452,130 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                Icons?.ToString(fg);
-                fg.AppendItem(ObjectEffect, "ObjectEffect");
-                fg.AppendItem(EnchantmentAmount, "EnchantmentAmount");
-                Destructible?.ToString(fg);
-                fg.AppendItem(EquipmentType, "EquipmentType");
-                fg.AppendItem(BlockBashImpact, "BlockBashImpact");
-                fg.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
-                fg.AppendItem(PickUpSound, "PickUpSound");
-                fg.AppendItem(PutDownSound, "PutDownSound");
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.ToString(sb);
+                Icons?.ToString(sb);
+                {
+                    sb.AppendItem(ObjectEffect, "ObjectEffect");
+                }
+                {
+                    sb.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                }
+                Destructible?.ToString(sb);
+                {
+                    sb.AppendItem(EquipmentType, "EquipmentType");
+                }
+                {
+                    sb.AppendItem(BlockBashImpact, "BlockBashImpact");
+                }
+                {
+                    sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                }
+                {
+                    sb.AppendItem(PickUpSound, "PickUpSound");
+                }
+                {
+                    sb.AppendItem(PutDownSound, "PutDownSound");
+                }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Description, "Description");
-                ScopeModel?.ToString(fg);
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
-                fg.AppendItem(FirstPersonModel, "FirstPersonModel");
-                fg.AppendItem(AttackSound, "AttackSound");
-                fg.AppendItem(AttackSound2D, "AttackSound2D");
-                fg.AppendItem(AttackLoopSound, "AttackLoopSound");
-                fg.AppendItem(AttackFailSound, "AttackFailSound");
-                fg.AppendItem(IdleSound, "IdleSound");
-                fg.AppendItem(EquipSound, "EquipSound");
-                fg.AppendItem(UnequipSound, "UnequipSound");
-                BasicStats?.ToString(fg);
-                Data?.ToString(fg);
-                Critical?.ToString(fg);
-                fg.AppendItem(DetectionSoundLevel, "DetectionSoundLevel");
-                fg.AppendItem(Template, "Template");
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                ScopeModel?.ToString(sb);
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(FirstPersonModel, "FirstPersonModel");
+                }
+                {
+                    sb.AppendItem(AttackSound, "AttackSound");
+                }
+                {
+                    sb.AppendItem(AttackSound2D, "AttackSound2D");
+                }
+                {
+                    sb.AppendItem(AttackLoopSound, "AttackLoopSound");
+                }
+                {
+                    sb.AppendItem(AttackFailSound, "AttackFailSound");
+                }
+                {
+                    sb.AppendItem(IdleSound, "IdleSound");
+                }
+                {
+                    sb.AppendItem(EquipSound, "EquipSound");
+                }
+                {
+                    sb.AppendItem(UnequipSound, "UnequipSound");
+                }
+                BasicStats?.ToString(sb);
+                Data?.ToString(sb);
+                Critical?.ToString(sb);
+                {
+                    sb.AppendItem(DetectionSoundLevel, "DetectionSoundLevel");
+                }
+                {
+                    sb.AppendItem(Template, "Template");
+                }
             }
             #endregion
 
@@ -1819,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -2040,13 +2087,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IWeaponGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Weapon.Mask<bool>? printMask = null)
         {
             ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2552,200 +2599,200 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Weapon.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeaponGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Weapon.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Weapon =>");
+                sb.AppendLine($"Weapon =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Weapon) =>");
+                sb.AppendLine($"{name} (Weapon) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeaponGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Weapon.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if ((printMask?.Icons?.Overall ?? true)
                 && item.Icons is {} IconsItem)
             {
-                IconsItem?.ToString(fg, "Icons");
+                IconsItem?.ToString(sb, "Icons");
             }
             if (printMask?.ObjectEffect ?? true)
             {
-                fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
+                sb.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if ((printMask?.EnchantmentAmount ?? true)
                 && item.EnchantmentAmount is {} EnchantmentAmountItem)
             {
-                fg.AppendItem(EnchantmentAmountItem, "EnchantmentAmount");
+                sb.AppendItem(EnchantmentAmountItem, "EnchantmentAmount");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(fg, "Destructible");
+                DestructibleItem?.ToString(sb, "Destructible");
             }
             if (printMask?.EquipmentType ?? true)
             {
-                fg.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
+                sb.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
             }
             if (printMask?.BlockBashImpact ?? true)
             {
-                fg.AppendItem(item.BlockBashImpact.FormKeyNullable, "BlockBashImpact");
+                sb.AppendItem(item.BlockBashImpact.FormKeyNullable, "BlockBashImpact");
             }
             if (printMask?.AlternateBlockMaterial ?? true)
             {
-                fg.AppendItem(item.AlternateBlockMaterial.FormKeyNullable, "AlternateBlockMaterial");
+                sb.AppendItem(item.AlternateBlockMaterial.FormKeyNullable, "AlternateBlockMaterial");
             }
             if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
+                sb.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
             }
             if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
+                sb.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if ((printMask?.ScopeModel?.Overall ?? true)
                 && item.ScopeModel is {} ScopeModelItem)
             {
-                ScopeModelItem?.ToString(fg, "ScopeModel");
+                ScopeModelItem?.ToString(sb, "ScopeModel");
             }
             if ((printMask?.Unused ?? true)
                 && item.Unused is {} UnusedItem)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(UnusedItem)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(UnusedItem)}");
             }
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet.FormKeyNullable, "ImpactDataSet");
+                sb.AppendItem(item.ImpactDataSet.FormKeyNullable, "ImpactDataSet");
             }
             if (printMask?.FirstPersonModel ?? true)
             {
-                fg.AppendItem(item.FirstPersonModel.FormKeyNullable, "FirstPersonModel");
+                sb.AppendItem(item.FirstPersonModel.FormKeyNullable, "FirstPersonModel");
             }
             if (printMask?.AttackSound ?? true)
             {
-                fg.AppendItem(item.AttackSound.FormKeyNullable, "AttackSound");
+                sb.AppendItem(item.AttackSound.FormKeyNullable, "AttackSound");
             }
             if (printMask?.AttackSound2D ?? true)
             {
-                fg.AppendItem(item.AttackSound2D.FormKeyNullable, "AttackSound2D");
+                sb.AppendItem(item.AttackSound2D.FormKeyNullable, "AttackSound2D");
             }
             if (printMask?.AttackLoopSound ?? true)
             {
-                fg.AppendItem(item.AttackLoopSound.FormKeyNullable, "AttackLoopSound");
+                sb.AppendItem(item.AttackLoopSound.FormKeyNullable, "AttackLoopSound");
             }
             if (printMask?.AttackFailSound ?? true)
             {
-                fg.AppendItem(item.AttackFailSound.FormKeyNullable, "AttackFailSound");
+                sb.AppendItem(item.AttackFailSound.FormKeyNullable, "AttackFailSound");
             }
             if (printMask?.IdleSound ?? true)
             {
-                fg.AppendItem(item.IdleSound.FormKeyNullable, "IdleSound");
+                sb.AppendItem(item.IdleSound.FormKeyNullable, "IdleSound");
             }
             if (printMask?.EquipSound ?? true)
             {
-                fg.AppendItem(item.EquipSound.FormKeyNullable, "EquipSound");
+                sb.AppendItem(item.EquipSound.FormKeyNullable, "EquipSound");
             }
             if (printMask?.UnequipSound ?? true)
             {
-                fg.AppendItem(item.UnequipSound.FormKeyNullable, "UnequipSound");
+                sb.AppendItem(item.UnequipSound.FormKeyNullable, "UnequipSound");
             }
             if ((printMask?.BasicStats?.Overall ?? true)
                 && item.BasicStats is {} BasicStatsItem)
             {
-                BasicStatsItem?.ToString(fg, "BasicStats");
+                BasicStatsItem?.ToString(sb, "BasicStats");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.ToString(sb, "Data");
             }
             if ((printMask?.Critical?.Overall ?? true)
                 && item.Critical is {} CriticalItem)
             {
-                CriticalItem?.ToString(fg, "Critical");
+                CriticalItem?.ToString(sb, "Critical");
             }
             if ((printMask?.DetectionSoundLevel ?? true)
                 && item.DetectionSoundLevel is {} DetectionSoundLevelItem)
             {
-                fg.AppendItem(DetectionSoundLevelItem, "DetectionSoundLevel");
+                sb.AppendItem(DetectionSoundLevelItem, "DetectionSoundLevel");
             }
             if (printMask?.Template ?? true)
             {
-                fg.AppendItem(item.Template.FormKeyNullable, "Template");
+                sb.AppendItem(item.Template.FormKeyNullable, "Template");
             }
         }
         
@@ -4263,7 +4310,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeaponCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4658,11 +4705,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

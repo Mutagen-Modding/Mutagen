@@ -118,11 +118,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MaterialTypeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -291,47 +292,47 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(MaterialType.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MaterialType.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MaterialType.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MaterialType.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MaterialType.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Parent ?? true)
                     {
-                        fg.AppendItem(Parent, "Parent");
+                        sb.AppendItem(Parent, "Parent");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.HavokDisplayColor ?? true)
                     {
-                        fg.AppendItem(HavokDisplayColor, "HavokDisplayColor");
+                        sb.AppendItem(HavokDisplayColor, "HavokDisplayColor");
                     }
                     if (printMask?.Buoyancy ?? true)
                     {
-                        fg.AppendItem(Buoyancy, "Buoyancy");
+                        sb.AppendItem(Buoyancy, "Buoyancy");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.HavokImpactDataSet ?? true)
                     {
-                        fg.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
+                        sb.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
                     }
                     if (printMask?.BreakableFX ?? true)
                     {
-                        fg.AppendItem(BreakableFX, "BreakableFX");
+                        sb.AppendItem(BreakableFX, "BreakableFX");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -457,41 +458,55 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Parent, "Parent");
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(HavokDisplayColor, "HavokDisplayColor");
-                fg.AppendItem(Buoyancy, "Buoyancy");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
-                fg.AppendItem(BreakableFX, "BreakableFX");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Parent, "Parent");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(HavokDisplayColor, "HavokDisplayColor");
+                }
+                {
+                    sb.AppendItem(Buoyancy, "Buoyancy");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
+                }
+                {
+                    sb.AppendItem(BreakableFX, "BreakableFX");
+                }
             }
             #endregion
 
@@ -683,7 +698,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -786,13 +801,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IMaterialTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialType.Mask<bool>? printMask = null)
         {
             ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1132,80 +1147,80 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             MaterialType.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMaterialTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MaterialType =>");
+                sb.AppendLine($"MaterialType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MaterialType) =>");
+                sb.AppendLine($"{name} (MaterialType) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMaterialTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MaterialType.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
+                sb.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.HavokDisplayColor ?? true)
                 && item.HavokDisplayColor is {} HavokDisplayColorItem)
             {
-                fg.AppendItem(HavokDisplayColorItem, "HavokDisplayColor");
+                sb.AppendItem(HavokDisplayColorItem, "HavokDisplayColor");
             }
             if ((printMask?.Buoyancy ?? true)
                 && item.Buoyancy is {} BuoyancyItem)
             {
-                fg.AppendItem(BuoyancyItem, "Buoyancy");
+                sb.AppendItem(BuoyancyItem, "Buoyancy");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.HavokImpactDataSet ?? true)
             {
-                fg.AppendItem(item.HavokImpactDataSet.FormKeyNullable, "HavokImpactDataSet");
+                sb.AppendItem(item.HavokImpactDataSet.FormKeyNullable, "HavokImpactDataSet");
             }
             if (printMask?.BreakableFX ?? true)
             {
-                fg.AppendItem(item.BreakableFX, "BreakableFX");
+                sb.AppendItem(item.BreakableFX, "BreakableFX");
             }
         }
         
@@ -1838,7 +1853,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MaterialTypeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2001,11 +2016,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MaterialTypeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

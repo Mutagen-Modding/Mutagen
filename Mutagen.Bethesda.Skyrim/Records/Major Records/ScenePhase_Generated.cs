@@ -131,11 +131,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScenePhaseMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -379,81 +380,81 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ScenePhase.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ScenePhase.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ScenePhase.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ScenePhase.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ScenePhase.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if ((printMask?.StartConditions?.Overall ?? true)
                         && StartConditions is {} StartConditionsItem)
                     {
-                        fg.AppendLine("StartConditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("StartConditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(StartConditionsItem.Overall);
+                            sb.AppendItem(StartConditionsItem.Overall);
                             if (StartConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in StartConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.CompletionConditions?.Overall ?? true)
                         && CompletionConditions is {} CompletionConditionsItem)
                     {
-                        fg.AppendLine("CompletionConditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CompletionConditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(CompletionConditionsItem.Overall);
+                            sb.AppendItem(CompletionConditionsItem.Overall);
                             if (CompletionConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in CompletionConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Unused?.Overall ?? true)
                     {
-                        Unused?.ToString(fg);
+                        Unused?.ToString(sb);
                     }
                     if (printMask?.Unused2?.Overall ?? true)
                     {
-                        Unused2?.ToString(fg);
+                        Unused2?.ToString(sb);
                     }
                     if (printMask?.EditorWidth ?? true)
                     {
-                        fg.AppendItem(EditorWidth, "EditorWidth");
+                        sb.AppendItem(EditorWidth, "EditorWidth");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -580,81 +581,85 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Name, "Name");
+                {
+                    sb.AppendItem(Name, "Name");
+                }
                 if (StartConditions is {} StartConditionsItem)
                 {
-                    fg.AppendLine("StartConditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("StartConditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(StartConditionsItem.Overall);
+                        sb.AppendItem(StartConditionsItem.Overall);
                         if (StartConditionsItem.Specific != null)
                         {
                             foreach (var subItem in StartConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (CompletionConditions is {} CompletionConditionsItem)
                 {
-                    fg.AppendLine("CompletionConditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CompletionConditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(CompletionConditionsItem.Overall);
+                        sb.AppendItem(CompletionConditionsItem.Overall);
                         if (CompletionConditionsItem.Specific != null)
                         {
                             foreach (var subItem in CompletionConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                Unused?.ToString(fg);
-                Unused2?.ToString(fg);
-                fg.AppendItem(EditorWidth, "EditorWidth");
+                Unused?.ToString(sb);
+                Unused2?.ToString(sb);
+                {
+                    sb.AppendItem(EditorWidth, "EditorWidth");
+                }
             }
             #endregion
 
@@ -787,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -884,13 +889,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IScenePhaseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScenePhase.Mask<bool>? printMask = null)
         {
             ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1215,100 +1220,100 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ScenePhase.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IScenePhaseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScenePhase.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScenePhase =>");
+                sb.AppendLine($"ScenePhase =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScenePhase) =>");
+                sb.AppendLine($"{name} (ScenePhase) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IScenePhaseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ScenePhase.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.StartConditions?.Overall ?? true)
             {
-                fg.AppendLine("StartConditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("StartConditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.StartConditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.CompletionConditions?.Overall ?? true)
             {
-                fg.AppendLine("CompletionConditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CompletionConditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.CompletionConditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Unused?.Overall ?? true)
                 && item.Unused is {} UnusedItem)
             {
-                UnusedItem?.ToString(fg, "Unused");
+                UnusedItem?.ToString(sb, "Unused");
             }
             if ((printMask?.Unused2?.Overall ?? true)
                 && item.Unused2 is {} Unused2Item)
             {
-                Unused2Item?.ToString(fg, "Unused2");
+                Unused2Item?.ToString(sb, "Unused2");
             }
             if ((printMask?.EditorWidth ?? true)
                 && item.EditorWidth is {} EditorWidthItem)
             {
-                fg.AppendItem(EditorWidthItem, "EditorWidth");
+                sb.AppendItem(EditorWidthItem, "EditorWidth");
             }
         }
         
@@ -1853,7 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScenePhaseCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2033,11 +2038,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScenePhaseMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

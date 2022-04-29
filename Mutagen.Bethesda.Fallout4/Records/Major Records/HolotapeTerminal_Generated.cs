@@ -68,11 +68,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             HolotapeTerminalMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -184,23 +185,23 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(HolotapeTerminal.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, HolotapeTerminal.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, HolotapeTerminal.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(HolotapeTerminal.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(HolotapeTerminal.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Terminal ?? true)
                     {
-                        fg.AppendItem(Terminal, "Terminal");
+                        sb.AppendItem(Terminal, "Terminal");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -266,35 +267,37 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Terminal, "Terminal");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Terminal, "Terminal");
+                }
             }
             #endregion
 
@@ -399,7 +402,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -469,13 +472,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IHolotapeTerminalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HolotapeTerminal.Mask<bool>? printMask = null)
         {
             ((HolotapeTerminalCommon)((IHolotapeTerminalGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -743,52 +746,52 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             HolotapeTerminal.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IHolotapeTerminalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HolotapeTerminal.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"HolotapeTerminal =>");
+                sb.AppendLine($"HolotapeTerminal =>");
             }
             else
             {
-                fg.AppendLine($"{name} (HolotapeTerminal) =>");
+                sb.AppendLine($"{name} (HolotapeTerminal) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IHolotapeTerminalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             HolotapeTerminal.Mask<bool>? printMask = null)
         {
             AHolotapeDataCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Terminal ?? true)
             {
-                fg.AppendItem(item.Terminal.FormKey, "Terminal");
+                sb.AppendItem(item.Terminal.FormKey, "Terminal");
             }
         }
         
@@ -1072,7 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => HolotapeTerminalCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1135,11 +1138,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             HolotapeTerminalMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

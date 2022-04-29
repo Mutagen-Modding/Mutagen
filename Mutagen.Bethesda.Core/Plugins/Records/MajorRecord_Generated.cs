@@ -75,11 +75,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MajorRecordMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -201,35 +202,35 @@ namespace Mutagen.Bethesda.Plugins.Records
 
             public string ToString(MajorRecord.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MajorRecord.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MajorRecord.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MajorRecord.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MajorRecord.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.MajorRecordFlagsRaw ?? true)
                     {
-                        fg.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
+                        sb.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
                     }
                     if (printMask?.FormKey ?? true)
                     {
-                        fg.AppendItem(FormKey, "FormKey");
+                        sb.AppendItem(FormKey, "FormKey");
                     }
                     if (printMask?.VersionControl ?? true)
                     {
-                        fg.AppendItem(VersionControl, "VersionControl");
+                        sb.AppendItem(VersionControl, "VersionControl");
                     }
                     if (printMask?.EditorID ?? true)
                     {
-                        fg.AppendItem(EditorID, "EditorID");
+                        sb.AppendItem(EditorID, "EditorID");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -336,37 +337,45 @@ namespace Mutagen.Bethesda.Plugins.Records
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
-                fg.AppendItem(FormKey, "FormKey");
-                fg.AppendItem(VersionControl, "VersionControl");
-                fg.AppendItem(EditorID, "EditorID");
+                {
+                    sb.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
+                }
+                {
+                    sb.AppendItem(FormKey, "FormKey");
+                }
+                {
+                    sb.AppendItem(VersionControl, "VersionControl");
+                }
+                {
+                    sb.AppendItem(EditorID, "EditorID");
+                }
             }
             #endregion
 
@@ -553,7 +562,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -646,13 +655,13 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         public static void ToString(
             this IMajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
             ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1214,61 +1223,61 @@ namespace Mutagen.Bethesda.Plugins.Records
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MajorRecord =>");
+                sb.AppendLine($"MajorRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MajorRecord) =>");
+                sb.AppendLine($"{name} (MajorRecord) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MajorRecord.Mask<bool>? printMask = null)
         {
             if (printMask?.MajorRecordFlagsRaw ?? true)
             {
-                fg.AppendItem(item.MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
+                sb.AppendItem(item.MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
             }
             if (printMask?.FormKey ?? true)
             {
-                fg.AppendItem(item.FormKey, "FormKey");
+                sb.AppendItem(item.FormKey, "FormKey");
             }
             if (printMask?.VersionControl ?? true)
             {
-                fg.AppendItem(item.VersionControl, "VersionControl");
+                sb.AppendItem(item.VersionControl, "VersionControl");
             }
             if ((printMask?.EditorID ?? true)
                 && item.EditorID is {} EditorIDItem)
             {
-                fg.AppendItem(EditorIDItem, "EditorID");
+                sb.AppendItem(EditorIDItem, "EditorID");
             }
         }
         
@@ -1667,7 +1676,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => MajorRecordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
@@ -1738,11 +1747,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MajorRecordMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

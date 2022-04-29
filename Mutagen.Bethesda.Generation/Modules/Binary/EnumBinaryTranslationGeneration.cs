@@ -30,7 +30,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         bool squashedRepeatedList) => false;
 
     public override async Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -42,7 +42,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         var eType = typeGen as EnumType;
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
         var nullable = typeGen.Nullable && eType.NullableFallbackInt == null;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write{(nullable ? "Nullable" : null)}"))
         {
             args.Add(writerAccessor.Access);
@@ -71,7 +71,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor frameAccessor,
@@ -83,13 +83,13 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         var eType = typeGen as EnumType;
         if (data.HasTrigger)
         {
-            fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
         TranslationGeneration.WrapParseCall(
             new TranslationWrapParseArgs()
             {
-                FG = fg,
+                FG = sb,
                 TypeGen = typeGen,
                 TranslatorLine = GetTranslatorInstance(typeGen, getter: true),
                 MaskAccessor = errorMaskAccessor,
@@ -103,7 +103,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -123,7 +123,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         else
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{retAccessor}{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Parse"))
             {
                 args.Add($"reader: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
@@ -140,7 +140,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrapperFields(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor dataAccessor,
@@ -159,7 +159,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
                 return;
             case BinaryGenerationType.Custom:
                 await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
-                    fg,
+                    sb,
                     objGen,
                     typeGen,
                     dataAccessor,
@@ -173,11 +173,11 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
 
         if (dataType == null && data.HasVersioning && !typeGen.Nullable)
         {
-            fg.AppendLine($"private bool _{typeGen.Name}_IsSet => {VersioningModule.GetVersionIfCheck(data, "_package.FormVersion!.FormVersion!.Value")};");
+            sb.AppendLine($"private bool _{typeGen.Name}_IsSet => {VersioningModule.GetVersionIfCheck(data, "_package.FormVersion!.FormVersion!.Value")};");
         }
         if (data.HasTrigger)
         {
-            fg.AppendLine($"private int? _{typeGen.Name}Location;");
+            sb.AppendLine($"private int? _{typeGen.Name}Location;");
         }
         var posStr = dataType == null ? passedLengthAccessor : $"_{typeGen.Name}Location";
         posStr ??= "0x0";
@@ -194,22 +194,22 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
 
         if (dataType != null)
         {
-            DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
+            DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
         }
 
         bool isSetCheck = dataType != null || data.HasVersioning;
 
         if (eType.NullableFallbackInt != null)
         {
-            fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name}");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name}");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine("get");
-                using (new BraceWrapper(fg))
+                sb.AppendLine("get");
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"var val = {getType};");
-                    fg.AppendLine($"if (((int)val) == {eType.NullableFallbackInt}) return null;");
-                    fg.AppendLine("return val;");
+                    sb.AppendLine($"var val = {getType};");
+                    sb.AppendLine($"if (((int)val) == {eType.NullableFallbackInt}) return null;");
+                    sb.AppendLine("return val;");
                 }
             }
         }
@@ -217,11 +217,11 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             if (typeGen.CanBeNullable(getter: true))
             {
-                fg.AppendLine($"public {eType.TypeName(getter: true)}{(nullable ? "?" : null)} {eType.Name} => _{typeGen.Name}Location.HasValue ? {getType} : default({eType.TypeName(getter: true)}{(nullable ? "?" : null)});");
+                sb.AppendLine($"public {eType.TypeName(getter: true)}{(nullable ? "?" : null)} {eType.Name} => _{typeGen.Name}Location.HasValue ? {getType} : default({eType.TypeName(getter: true)}{(nullable ? "?" : null)});");
             }
             else
             {
-                fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
+                sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
             }
         }
         else
@@ -230,16 +230,16 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
             {
                 if (data.IsAfterBreak)
                 {
-                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {dataAccessor}.Span.Length <= {posStr} ? default : {getType};");
+                    sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {dataAccessor}.Span.Length <= {posStr} ? default : {getType};");
                 }
                 else
                 {
-                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
+                    sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
                 }
             }
             else
             {
-                fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? {getType} : default;");
+                sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? {getType} : default;");
             }
         }
 

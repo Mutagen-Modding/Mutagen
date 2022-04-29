@@ -161,11 +161,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedNpcMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -383,59 +384,59 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(PlacedNpc.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PlacedNpc.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PlacedNpc.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PlacedNpc.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedNpc.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Base ?? true)
                     {
-                        fg.AppendItem(Base, "Base");
+                        sb.AppendItem(Base, "Base");
                     }
                     if (printMask?.XPCIFluff ?? true)
                     {
-                        fg.AppendItem(XPCIFluff, "XPCIFluff");
+                        sb.AppendItem(XPCIFluff, "XPCIFluff");
                     }
                     if (printMask?.FULLFluff ?? true)
                     {
-                        fg.AppendItem(FULLFluff, "FULLFluff");
+                        sb.AppendItem(FULLFluff, "FULLFluff");
                     }
                     if (printMask?.DistantLODData?.Overall ?? true)
                     {
-                        DistantLODData?.ToString(fg);
+                        DistantLODData?.ToString(sb);
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
-                        EnableParent?.ToString(fg);
+                        EnableParent?.ToString(sb);
                     }
                     if (printMask?.MerchantContainer ?? true)
                     {
-                        fg.AppendItem(MerchantContainer, "MerchantContainer");
+                        sb.AppendItem(MerchantContainer, "MerchantContainer");
                     }
                     if (printMask?.Horse ?? true)
                     {
-                        fg.AppendItem(Horse, "Horse");
+                        sb.AppendItem(Horse, "Horse");
                     }
                     if (printMask?.RagdollData ?? true)
                     {
-                        fg.AppendItem(RagdollData, "RagdollData");
+                        sb.AppendItem(RagdollData, "RagdollData");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.Location?.Overall ?? true)
                     {
-                        Location?.ToString(fg);
+                        Location?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -591,44 +592,58 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Base, "Base");
-                fg.AppendItem(XPCIFluff, "XPCIFluff");
-                fg.AppendItem(FULLFluff, "FULLFluff");
-                DistantLODData?.ToString(fg);
-                EnableParent?.ToString(fg);
-                fg.AppendItem(MerchantContainer, "MerchantContainer");
-                fg.AppendItem(Horse, "Horse");
-                fg.AppendItem(RagdollData, "RagdollData");
-                fg.AppendItem(Scale, "Scale");
-                Location?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Base, "Base");
+                }
+                {
+                    sb.AppendItem(XPCIFluff, "XPCIFluff");
+                }
+                {
+                    sb.AppendItem(FULLFluff, "FULLFluff");
+                }
+                DistantLODData?.ToString(sb);
+                EnableParent?.ToString(sb);
+                {
+                    sb.AppendItem(MerchantContainer, "MerchantContainer");
+                }
+                {
+                    sb.AppendItem(Horse, "Horse");
+                }
+                {
+                    sb.AppendItem(RagdollData, "RagdollData");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                Location?.ToString(sb);
             }
             #endregion
 
@@ -819,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -918,13 +933,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IPlacedNpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
             ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1289,95 +1304,95 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPlacedNpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedNpc =>");
+                sb.AppendLine($"PlacedNpc =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedNpc) =>");
+                sb.AppendLine($"{name} (PlacedNpc) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedNpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedNpc.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKeyNullable, "Base");
+                sb.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if ((printMask?.XPCIFluff ?? true)
                 && item.XPCIFluff is {} XPCIFluffItem)
             {
-                fg.AppendLine($"XPCIFluff => {SpanExt.ToHexString(XPCIFluffItem)}");
+                sb.AppendLine($"XPCIFluff => {SpanExt.ToHexString(XPCIFluffItem)}");
             }
             if ((printMask?.FULLFluff ?? true)
                 && item.FULLFluff is {} FULLFluffItem)
             {
-                fg.AppendLine($"FULLFluff => {SpanExt.ToHexString(FULLFluffItem)}");
+                sb.AppendLine($"FULLFluff => {SpanExt.ToHexString(FULLFluffItem)}");
             }
             if ((printMask?.DistantLODData?.Overall ?? true)
                 && item.DistantLODData is {} DistantLODDataItem)
             {
-                DistantLODDataItem?.ToString(fg, "DistantLODData");
+                DistantLODDataItem?.ToString(sb, "DistantLODData");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
             {
-                EnableParentItem?.ToString(fg, "EnableParent");
+                EnableParentItem?.ToString(sb, "EnableParent");
             }
             if (printMask?.MerchantContainer ?? true)
             {
-                fg.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
+                sb.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
             }
             if (printMask?.Horse ?? true)
             {
-                fg.AppendItem(item.Horse.FormKeyNullable, "Horse");
+                sb.AppendItem(item.Horse.FormKeyNullable, "Horse");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData is {} RagdollDataItem)
             {
-                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
+                sb.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.Scale ?? true)
                 && item.Scale is {} ScaleItem)
             {
-                fg.AppendItem(ScaleItem, "Scale");
+                sb.AppendItem(ScaleItem, "Scale");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location is {} LocationItem)
             {
-                LocationItem?.ToString(fg, "Location");
+                LocationItem?.ToString(sb, "Location");
             }
         }
         
@@ -2184,7 +2199,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2371,11 +2386,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedNpcMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

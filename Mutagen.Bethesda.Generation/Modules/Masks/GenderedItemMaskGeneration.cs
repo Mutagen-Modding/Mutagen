@@ -27,7 +27,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         }
     }
 
-    public override void GenerateForField(FileGeneration fg, TypeGeneration field, string typeStr)
+    public override void GenerateForField(StructuredStringBuilder sb, TypeGeneration field, string typeStr)
     {
         if (!field.IntegrateField) return;
         GenderedType gendered = field as GenderedType;
@@ -40,17 +40,17 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         {
             maskStr = $"GenderedItem<{SubMaskString(field, typeStr)}>";
         }
-        fg.AppendLine($"public {maskStr} {field.Name};");
+        sb.AppendLine($"public {maskStr} {field.Name};");
     }
 
-    public override void GenerateForAll(FileGeneration fg, TypeGeneration field, Accessor accessor, bool nullCheck, bool indexed)
+    public override void GenerateForAll(StructuredStringBuilder sb, TypeGeneration field, Accessor accessor, bool nullCheck, bool indexed)
     {
         if (!field.IntegrateField) return;
         GenderedType gendered = field as GenderedType;
         var isLoqui = gendered.SubTypeGeneration is LoquiType;
         if (field.Nullable || isLoqui)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"if (!{nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AllMask) : nameof(GenderedItem.All))}",
                        suffixLine: ") return false"))
             {
@@ -60,18 +60,18 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         }
         else
         {
-            fg.AppendLine($"if (!eval({accessor}{(indexed ? ".Value" : null)}.Male) || !eval({accessor}{(indexed ? ".Value" : null)}.Female)) return false;");
+            sb.AppendLine($"if (!eval({accessor}{(indexed ? ".Value" : null)}.Male) || !eval({accessor}{(indexed ? ".Value" : null)}.Female)) return false;");
         }
     }
 
-    public override void GenerateForAny(FileGeneration fg, TypeGeneration field, Accessor accessor, bool nullCheck, bool indexed)
+    public override void GenerateForAny(StructuredStringBuilder sb, TypeGeneration field, Accessor accessor, bool nullCheck, bool indexed)
     {
         if (!field.IntegrateField) return;
         GenderedType gendered = field as GenderedType;
         var isLoqui = gendered.SubTypeGeneration is LoquiType;
         if (field.Nullable || isLoqui)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"if ({nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AnyMask) : nameof(GenderedItem.Any))}",
                        suffixLine: ") return true"))
             {
@@ -81,18 +81,18 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         }
         else
         {
-            fg.AppendLine($"if (eval({accessor}{(indexed ? ".Value" : null)}.Male) || eval({accessor}{(indexed ? ".Value" : null)}.Female)) return true;");
+            sb.AppendLine($"if (eval({accessor}{(indexed ? ".Value" : null)}.Male) || eval({accessor}{(indexed ? ".Value" : null)}.Female)) return true;");
         }
     }
 
-    public override void GenerateForTranslate(FileGeneration fg, TypeGeneration field, string retAccessor, string rhsAccessor, bool indexed)
+    public override void GenerateForTranslate(StructuredStringBuilder sb, TypeGeneration field, string retAccessor, string rhsAccessor, bool indexed)
     {
         if (!field.IntegrateField) return;
         var gendered = field as GenderedType;
         var loqui = gendered.SubTypeGeneration as LoquiType;
         if (field.Nullable || loqui != null)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{retAccessor} = GenderedItem.TranslateHelper"))
             {
                 args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}");
@@ -105,7 +105,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         }
         else
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{retAccessor} = new GenderedItem<{SubMaskString(field, "R")}>"))
             {
                 if (loqui != null)
@@ -122,25 +122,25 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         }
     }
 
-    public override void GenerateForCtor(FileGeneration fg, TypeGeneration field, string typeStr, string valueStr)
+    public override void GenerateForCtor(StructuredStringBuilder sb, TypeGeneration field, string typeStr, string valueStr)
     {
         if (!field.IntegrateField) return;
         var gendered = field as GenderedType;
         if (field.Nullable || gendered.SubTypeGeneration is LoquiType)
         {
-            fg.AppendLine($"this.{field.Name} = new MaskItem<{MaskModule.GenItem}, GenderedItem<{SubMaskString(field, typeStr)}>?>({valueStr}, default);");
+            sb.AppendLine($"this.{field.Name} = new MaskItem<{MaskModule.GenItem}, GenderedItem<{SubMaskString(field, typeStr)}>?>({valueStr}, default);");
         }
         else
         {
-            fg.AppendLine($"this.{field.Name} = new GenderedItem<{SubMaskString(field, typeStr)}>({valueStr}, {valueStr});");
+            sb.AppendLine($"this.{field.Name} = new GenderedItem<{SubMaskString(field, typeStr)}>({valueStr}, {valueStr});");
         }
     }
 
-    public override void GenerateMaskToString(FileGeneration fg, TypeGeneration field, Accessor accessor, bool topLevel, bool printMask)
+    public override void GenerateMaskToString(StructuredStringBuilder sb, TypeGeneration field, Accessor accessor, bool topLevel, bool printMask)
     {
         if (!field.IntegrateField) return;
         bool doIf;
-        using (var args = new IfWrapper(fg, ANDs: true))
+        using (var args = new IfWrapper(sb, ANDs: true))
         {
             if (field.Nullable)
             {
@@ -152,9 +152,9 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
             }
             doIf = !args.Empty;
         }
-        using (new BraceWrapper(fg, doIf))
+        using (sb.CurlyBrace(doIf))
         {
-            fg.AppendLine($"fg.{nameof(FileGeneration.AppendLine)}($\"{field.Name} => {{{accessor}}}\");");
+            sb.AppendLine($"sb.{nameof(StructuredStringBuilder.AppendLine)}($\"{field.Name} => {{{accessor}}}\");");
         }
     }
 
@@ -177,19 +177,19 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         return $"MaskItem<Exception?, GenderedItem<Exception?>?>";
     }
 
-    public override void GenerateSetException(FileGeneration fg, TypeGeneration field)
+    public override void GenerateSetException(StructuredStringBuilder sb, TypeGeneration field)
     {
-        fg.AppendLine($"this.{field.Name} = new {GetErrorMaskTypeStr(field)}(ex, null);");
+        sb.AppendLine($"this.{field.Name} = new {GetErrorMaskTypeStr(field)}(ex, null);");
     }
 
-    public override void GenerateForErrorMaskCombine(FileGeneration fg, TypeGeneration field, string accessor, string retAccessor, string rhsAccessor)
+    public override void GenerateForErrorMaskCombine(StructuredStringBuilder sb, TypeGeneration field, string accessor, string retAccessor, string rhsAccessor)
     {
-        fg.AppendLine($"{retAccessor} = new {GetErrorMaskTypeStr(field)}(ExceptionExt.Combine({accessor}?.Overall, {rhsAccessor}?.Overall), GenderedItem.Combine({accessor}?.Specific, {rhsAccessor}?.Specific));");
+        sb.AppendLine($"{retAccessor} = new {GetErrorMaskTypeStr(field)}(ExceptionExt.Combine({accessor}?.Overall, {rhsAccessor}?.Overall), GenderedItem.Combine({accessor}?.Specific, {rhsAccessor}?.Specific));");
     }
 
-    public override void GenerateForTranslationMask(FileGeneration fg, TypeGeneration field)
+    public override void GenerateForTranslationMask(StructuredStringBuilder sb, TypeGeneration field)
     {
-        fg.AppendLine($"public {GetTranslationMaskTypeStr(field)} {field.Name};");
+        sb.AppendLine($"public {GetTranslationMaskTypeStr(field)} {field.Name};");
     }
 
     public override string GetTranslationMaskTypeStr(TypeGeneration field)
@@ -205,7 +205,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         }
     }
 
-    public override void GenerateForTranslationMaskSet(FileGeneration fg, TypeGeneration field, Accessor accessor, string onAccessor)
+    public override void GenerateForTranslationMaskSet(StructuredStringBuilder sb, TypeGeneration field, Accessor accessor, string onAccessor)
     {
         // Nothing
     }

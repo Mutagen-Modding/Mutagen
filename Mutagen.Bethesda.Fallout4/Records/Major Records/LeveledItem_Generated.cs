@@ -146,11 +146,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LeveledItemMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -417,93 +418,93 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(LeveledItem.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, LeveledItem.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, LeveledItem.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LeveledItem.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LeveledItem.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.ChanceNone ?? true)
                     {
-                        fg.AppendItem(ChanceNone, "ChanceNone");
+                        sb.AppendItem(ChanceNone, "ChanceNone");
                     }
                     if (printMask?.MaxCount ?? true)
                     {
-                        fg.AppendItem(MaxCount, "MaxCount");
+                        sb.AppendItem(MaxCount, "MaxCount");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Global ?? true)
                     {
-                        fg.AppendItem(Global, "Global");
+                        sb.AppendItem(Global, "Global");
                     }
                     if ((printMask?.Entries?.Overall ?? true)
                         && Entries is {} EntriesItem)
                     {
-                        fg.AppendLine("Entries =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Entries =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(EntriesItem.Overall);
+                            sb.AppendItem(EntriesItem.Overall);
                             if (EntriesItem.Specific != null)
                             {
                                 foreach (var subItem in EntriesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.FilterKeywordChances?.Overall ?? true)
                         && FilterKeywordChances is {} FilterKeywordChancesItem)
                     {
-                        fg.AppendLine("FilterKeywordChances =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("FilterKeywordChances =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(FilterKeywordChancesItem.Overall);
+                            sb.AppendItem(FilterKeywordChancesItem.Overall);
                             if (FilterKeywordChancesItem.Specific != null)
                             {
                                 foreach (var subItem in FilterKeywordChancesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.EpicLootChance ?? true)
                     {
-                        fg.AppendItem(EpicLootChance, "EpicLootChance");
+                        sb.AppendItem(EpicLootChance, "EpicLootChance");
                     }
                     if (printMask?.OverrideName ?? true)
                     {
-                        fg.AppendItem(OverrideName, "OverrideName");
+                        sb.AppendItem(OverrideName, "OverrideName");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -649,85 +650,97 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(ChanceNone, "ChanceNone");
-                fg.AppendItem(MaxCount, "MaxCount");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Global, "Global");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(ChanceNone, "ChanceNone");
+                }
+                {
+                    sb.AppendItem(MaxCount, "MaxCount");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Global, "Global");
+                }
                 if (Entries is {} EntriesItem)
                 {
-                    fg.AppendLine("Entries =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Entries =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(EntriesItem.Overall);
+                        sb.AppendItem(EntriesItem.Overall);
                         if (EntriesItem.Specific != null)
                         {
                             foreach (var subItem in EntriesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (FilterKeywordChances is {} FilterKeywordChancesItem)
                 {
-                    fg.AppendLine("FilterKeywordChances =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("FilterKeywordChances =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(FilterKeywordChancesItem.Overall);
+                        sb.AppendItem(FilterKeywordChancesItem.Overall);
                         if (FilterKeywordChancesItem.Specific != null)
                         {
                             foreach (var subItem in FilterKeywordChancesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(EpicLootChance, "EpicLootChance");
-                fg.AppendItem(OverrideName, "OverrideName");
+                {
+                    sb.AppendItem(EpicLootChance, "EpicLootChance");
+                }
+                {
+                    sb.AppendItem(OverrideName, "OverrideName");
+                }
             }
             #endregion
 
@@ -924,7 +937,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1035,13 +1048,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this ILeveledItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LeveledItem.Mask<bool>? printMask = null)
         {
             ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1399,116 +1412,116 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             LeveledItem.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILeveledItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LeveledItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LeveledItem =>");
+                sb.AppendLine($"LeveledItem =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LeveledItem) =>");
+                sb.AppendLine($"{name} (LeveledItem) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILeveledItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LeveledItem.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if (printMask?.ChanceNone ?? true)
             {
-                fg.AppendItem(item.ChanceNone, "ChanceNone");
+                sb.AppendItem(item.ChanceNone, "ChanceNone");
             }
             if ((printMask?.MaxCount ?? true)
                 && item.MaxCount is {} MaxCountItem)
             {
-                fg.AppendItem(MaxCountItem, "MaxCount");
+                sb.AppendItem(MaxCountItem, "MaxCount");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Global ?? true)
             {
-                fg.AppendItem(item.Global.FormKeyNullable, "Global");
+                sb.AppendItem(item.Global.FormKeyNullable, "Global");
             }
             if ((printMask?.Entries?.Overall ?? true)
                 && item.Entries is {} EntriesItem)
             {
-                fg.AppendLine("Entries =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Entries =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in EntriesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.FilterKeywordChances?.Overall ?? true)
                 && item.FilterKeywordChances is {} FilterKeywordChancesItem)
             {
-                fg.AppendLine("FilterKeywordChances =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("FilterKeywordChances =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in FilterKeywordChancesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.EpicLootChance ?? true)
             {
-                fg.AppendItem(item.EpicLootChance.FormKeyNullable, "EpicLootChance");
+                sb.AppendItem(item.EpicLootChance.FormKeyNullable, "EpicLootChance");
             }
             if ((printMask?.OverrideName ?? true)
                 && item.OverrideName is {} OverrideNameItem)
             {
-                fg.AppendItem(OverrideNameItem, "OverrideName");
+                sb.AppendItem(OverrideNameItem, "OverrideName");
             }
         }
         
@@ -2294,7 +2307,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2482,11 +2495,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LeveledItemMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

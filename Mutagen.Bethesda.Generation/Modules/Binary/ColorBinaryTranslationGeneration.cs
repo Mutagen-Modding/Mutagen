@@ -33,10 +33,10 @@ public class ColorBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         this.AdditionalWriteParams.Add(AdditionalParam);
         this.AdditionalCopyInParams.Add(AdditionalParam);
         this.AdditionalCopyInRetParams.Add(AdditionalParam);
-        CustomRead = (fg, objGen, typeGen, reader, item) =>
+        CustomRead = (sb, objGen, typeGen, reader, item) =>
         {
             var binaryType = BinaryType(typeGen);
-            fg.AppendLine($"{item} = {reader}.ReadColor({nameof(ColorBinaryType)}.{binaryType});");
+            sb.AppendLine($"{item} = {reader}.ReadColor({nameof(ColorBinaryType)}.{binaryType});");
             return true;
         };
     }

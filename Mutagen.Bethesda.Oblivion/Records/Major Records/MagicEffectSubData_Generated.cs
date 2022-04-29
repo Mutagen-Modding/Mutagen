@@ -112,11 +112,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MagicEffectSubDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -281,47 +282,47 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(MagicEffectSubData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MagicEffectSubData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MagicEffectSubData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MagicEffectSubData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MagicEffectSubData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.EnchantEffect ?? true)
                     {
-                        fg.AppendItem(EnchantEffect, "EnchantEffect");
+                        sb.AppendItem(EnchantEffect, "EnchantEffect");
                     }
                     if (printMask?.CastingSound ?? true)
                     {
-                        fg.AppendItem(CastingSound, "CastingSound");
+                        sb.AppendItem(CastingSound, "CastingSound");
                     }
                     if (printMask?.BoltSound ?? true)
                     {
-                        fg.AppendItem(BoltSound, "BoltSound");
+                        sb.AppendItem(BoltSound, "BoltSound");
                     }
                     if (printMask?.HitSound ?? true)
                     {
-                        fg.AppendItem(HitSound, "HitSound");
+                        sb.AppendItem(HitSound, "HitSound");
                     }
                     if (printMask?.AreaSound ?? true)
                     {
-                        fg.AppendItem(AreaSound, "AreaSound");
+                        sb.AppendItem(AreaSound, "AreaSound");
                     }
                     if (printMask?.ConstantEffectEnchantmentFactor ?? true)
                     {
-                        fg.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+                        sb.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
                     }
                     if (printMask?.ConstantEffectBarterFactor ?? true)
                     {
-                        fg.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                        sb.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -458,40 +459,54 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(EnchantEffect, "EnchantEffect");
-                fg.AppendItem(CastingSound, "CastingSound");
-                fg.AppendItem(BoltSound, "BoltSound");
-                fg.AppendItem(HitSound, "HitSound");
-                fg.AppendItem(AreaSound, "AreaSound");
-                fg.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
-                fg.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                {
+                    sb.AppendItem(EnchantEffect, "EnchantEffect");
+                }
+                {
+                    sb.AppendItem(CastingSound, "CastingSound");
+                }
+                {
+                    sb.AppendItem(BoltSound, "BoltSound");
+                }
+                {
+                    sb.AppendItem(HitSound, "HitSound");
+                }
+                {
+                    sb.AppendItem(AreaSound, "AreaSound");
+                }
+                {
+                    sb.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+                }
+                {
+                    sb.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                }
             }
             #endregion
 
@@ -632,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -719,13 +734,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IMagicEffectSubDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffectSubData.Mask<bool>? printMask = null)
         {
             ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1021,72 +1036,72 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             MagicEffectSubData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMagicEffectSubDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffectSubData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MagicEffectSubData =>");
+                sb.AppendLine($"MagicEffectSubData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MagicEffectSubData) =>");
+                sb.AppendLine($"{name} (MagicEffectSubData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMagicEffectSubDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MagicEffectSubData.Mask<bool>? printMask = null)
         {
             if (printMask?.EnchantEffect ?? true)
             {
-                fg.AppendItem(item.EnchantEffect.FormKey, "EnchantEffect");
+                sb.AppendItem(item.EnchantEffect.FormKey, "EnchantEffect");
             }
             if (printMask?.CastingSound ?? true)
             {
-                fg.AppendItem(item.CastingSound.FormKey, "CastingSound");
+                sb.AppendItem(item.CastingSound.FormKey, "CastingSound");
             }
             if (printMask?.BoltSound ?? true)
             {
-                fg.AppendItem(item.BoltSound.FormKey, "BoltSound");
+                sb.AppendItem(item.BoltSound.FormKey, "BoltSound");
             }
             if (printMask?.HitSound ?? true)
             {
-                fg.AppendItem(item.HitSound.FormKey, "HitSound");
+                sb.AppendItem(item.HitSound.FormKey, "HitSound");
             }
             if (printMask?.AreaSound ?? true)
             {
-                fg.AppendItem(item.AreaSound.FormKey, "AreaSound");
+                sb.AppendItem(item.AreaSound.FormKey, "AreaSound");
             }
             if (printMask?.ConstantEffectEnchantmentFactor ?? true)
             {
-                fg.AppendItem(item.ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+                sb.AppendItem(item.ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
             }
             if (printMask?.ConstantEffectBarterFactor ?? true)
             {
-                fg.AppendItem(item.ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                sb.AppendItem(item.ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
             }
         }
         
@@ -1409,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => MagicEffectSubDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1480,11 +1495,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MagicEffectSubDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

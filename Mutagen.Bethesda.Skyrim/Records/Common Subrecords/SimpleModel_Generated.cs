@@ -73,11 +73,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SimpleModelMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -197,27 +198,27 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(SimpleModel.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, SimpleModel.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, SimpleModel.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SimpleModel.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SimpleModel.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.File ?? true)
                     {
-                        fg.AppendItem(File, "File");
+                        sb.AppendItem(File, "File");
                     }
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendItem(Data, "Data");
+                        sb.AppendItem(Data, "Data");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -304,35 +305,39 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(File, "File");
-                fg.AppendItem(Data, "Data");
+                {
+                    sb.AppendItem(File, "File");
+                }
+                {
+                    sb.AppendItem(Data, "Data");
+                }
             }
             #endregion
 
@@ -453,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -536,13 +541,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ISimpleModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
             ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -829,53 +834,53 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ISimpleModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SimpleModel =>");
+                sb.AppendLine($"SimpleModel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SimpleModel) =>");
+                sb.AppendLine($"{name} (SimpleModel) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISimpleModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SimpleModel.Mask<bool>? printMask = null)
         {
             if (printMask?.File ?? true)
             {
-                fg.AppendItem(item.File, "File");
+                sb.AppendItem(item.File, "File");
             }
             if ((printMask?.Data ?? true)
                 && item.Data is {} DataItem)
             {
-                fg.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
+                sb.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
             }
         }
         
@@ -1173,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1273,11 +1278,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SimpleModelMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

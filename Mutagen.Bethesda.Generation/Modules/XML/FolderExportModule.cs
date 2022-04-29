@@ -21,17 +21,17 @@ public class FolderExportModule : GenerationModule
         field.GetFieldData().CustomFolder = node.TryGetAttribute<bool>("customFolder", out var customFolder) && customFolder;
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await base.GenerateInClass(obj, fg);
+        await base.GenerateInClass(obj, sb);
 
         switch (obj.GetObjectType())
         {
             case ObjectType.Record:
-                await GenerateForRecord(obj, fg);
+                await GenerateForRecord(obj, sb);
                 break;
             case ObjectType.Mod:
-                await GenerateForMod(obj, fg);
+                await GenerateForMod(obj, sb);
                 break;
             case ObjectType.Subrecord:
             case ObjectType.Group:
@@ -40,17 +40,17 @@ public class FolderExportModule : GenerationModule
         }
     }
 
-    private async Task GenerateForMod(ObjectGeneration obj, FileGeneration fg)
+    private async Task GenerateForMod(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public static Task<{obj.Name}> CreateFromXmlFolder"))
         {
             args.Add("DirectoryPath dir");
             args.Add("ModKey modKey");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        "return CreateFromXmlFolder"))
             {
                 args.Add("dir: dir");
@@ -58,45 +58,45 @@ public class FolderExportModule : GenerationModule
                 args.Add("errorMask: null");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public static async Task<({obj.Name} Mod, {obj.Mask(MaskType.Error)} ErrorMask)> CreateFromXmlFolderWithErrorMask"))
         {
             args.Add("DirectoryPath dir");
             args.Add("ModKey modKey");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine("ErrorMaskBuilder? errorMaskBuilder = new ErrorMaskBuilder();");
-            using (var args = new ArgsWrapper(fg,
+            sb.AppendLine("ErrorMaskBuilder? errorMaskBuilder = new ErrorMaskBuilder();");
+            using (var args = new ArgsWrapper(sb,
                        "var ret = await CreateFromXmlFolder"))
             {
                 args.Add("dir: dir");
                 args.Add("modKey: modKey");
                 args.Add("errorMask: errorMaskBuilder");
             }
-            fg.AppendLine($"var errorMask = {obj.Mask(MaskType.Error)}.Factory(errorMaskBuilder);");
-            fg.AppendLine("return (ret, errorMask);");
+            sb.AppendLine($"var errorMask = {obj.Mask(MaskType.Error)}.Factory(errorMaskBuilder);");
+            sb.AppendLine("return (ret, errorMask);");
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public static async Task<{obj.Name}> CreateFromXmlFolder"))
         {
             args.Add("DirectoryPath dir");
             args.Add("ModKey modKey");
             args.Add("ErrorMaskBuilder? errorMask");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine($"var item = new {obj.Name}(modKey);");
-            fg.AppendLine($"var tasks = new List<Task>();");
+            sb.AppendLine($"var item = new {obj.Name}(modKey);");
+            sb.AppendLine($"var tasks = new List<Task>();");
             foreach (var field in obj.IterateFields())
             {
                 if (field.GetFieldData().CustomFolder)
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"tasks.Add(Task.Run(() => item.CreateFromXmlFolder{field.Name}",
                                suffixLine: "))"))
                     {
@@ -114,7 +114,7 @@ public class FolderExportModule : GenerationModule
                 switch (loqui.TargetObjectGeneration.GetObjectType())
                 {
                     case ObjectType.Record:
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"item.{field.Name}.CopyInFromXml"))
                         {
                             args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
@@ -124,7 +124,7 @@ public class FolderExportModule : GenerationModule
                         break;
                     case ObjectType.Group:
                         if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"tasks.Add(Task.Run(() => item.{field.Name}.CreateFromXmlFolder<{subObj.Name}>",
                                    suffixLine: "))"))
                         {
@@ -138,25 +138,25 @@ public class FolderExportModule : GenerationModule
                         break;
                 }
             }
-            fg.AppendLine("await Task.WhenAll(tasks);");
-            fg.AppendLine("return item;");
+            sb.AppendLine("await Task.WhenAll(tasks);");
+            sb.AppendLine("return item;");
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public async Task<{obj.Mask(MaskType.Error)}?> WriteToXmlFolder"))
         {
             args.Add("DirectoryPath dir");
             args.Add("bool doMasks = true");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine($"ErrorMaskBuilder? errorMaskBuilder = null;");
-            fg.AppendLine("dir.Create();");
-            fg.AppendLine("using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"ErrorMaskBuilder? errorMaskBuilder = null;");
+            sb.AppendLine("dir.Create();");
+            sb.AppendLine("using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"var tasks = new List<Task>();");
+                sb.AppendLine($"var tasks = new List<Task>();");
                 foreach (var field in obj.IterateFields())
                 {
                     if (!(field is LoquiType loqui))
@@ -165,7 +165,7 @@ public class FolderExportModule : GenerationModule
                     }
                     if (field.GetFieldData().CustomFolder)
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"tasks.Add(Task.Run(() => WriteToXmlFolder{field.Name}",
                                    suffixLine: "))"))
                         {
@@ -179,7 +179,7 @@ public class FolderExportModule : GenerationModule
                     switch (loqui.TargetObjectGeneration.GetObjectType())
                     {
                         case ObjectType.Record:
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"tasks.Add(Task.Run(() => this.{field.Name}.WriteToXml",
                                        suffixLine: "))"))
                             {
@@ -193,7 +193,7 @@ public class FolderExportModule : GenerationModule
                             if (field is GroupType group)
                             {
                                 if (!group.TryGetSpecificationAsObject("T", out subObj)) continue;
-                                using (var args = new ArgsWrapper(fg,
+                                using (var args = new ArgsWrapper(sb,
                                            $"tasks.Add(Task.Run(() => {field.Name}.WriteToXmlFolder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>",
                                            suffixLine: "))"))
                                 {
@@ -205,7 +205,7 @@ public class FolderExportModule : GenerationModule
                             }
                             else
                             {
-                                using (var args = new ArgsWrapper(fg,
+                                using (var args = new ArgsWrapper(sb,
                                            $"tasks.Add(Task.Run(() => {field.Name}.WriteToXmlFolder",
                                            suffixLine: "))"))
                                 {
@@ -220,17 +220,17 @@ public class FolderExportModule : GenerationModule
                             break;
                     }
                 }
-                fg.AppendLine("await Task.WhenAll(tasks);");
+                sb.AppendLine("await Task.WhenAll(tasks);");
             }
-            fg.AppendLine("return null;");
+            sb.AppendLine("return null;");
         }
     }
 
-    private async Task GenerateForRecord(ObjectGeneration obj, FileGeneration fg)
+    private async Task GenerateForRecord(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (!obj.IsTopClass) return;
 
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public{obj.FunctionOverride()}async Task WriteToXmlFolder"))
         {
             args.Add("DirectoryPath dir");
@@ -239,9 +239,9 @@ public class FolderExportModule : GenerationModule
             args.Add("int counter");
             args.Add($"ErrorMaskBuilder? errorMask");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        "this.WriteToXml"))
             {
                 args.Add("node: node");

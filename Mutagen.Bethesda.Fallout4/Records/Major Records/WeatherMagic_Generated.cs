@@ -88,11 +88,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherMagicMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -248,43 +249,43 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(WeatherMagic.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, WeatherMagic.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, WeatherMagic.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WeatherMagic.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeatherMagic.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.OnLightningStrikeSpell ?? true)
                     {
-                        fg.AppendItem(OnLightningStrikeSpell, "OnLightningStrikeSpell");
+                        sb.AppendItem(OnLightningStrikeSpell, "OnLightningStrikeSpell");
                     }
                     if (printMask?.OnLightningStrikeThreshold ?? true)
                     {
-                        fg.AppendItem(OnLightningStrikeThreshold, "OnLightningStrikeThreshold");
+                        sb.AppendItem(OnLightningStrikeThreshold, "OnLightningStrikeThreshold");
                     }
                     if (printMask?.OnWeatherActivateSpell ?? true)
                     {
-                        fg.AppendItem(OnWeatherActivateSpell, "OnWeatherActivateSpell");
+                        sb.AppendItem(OnWeatherActivateSpell, "OnWeatherActivateSpell");
                     }
                     if (printMask?.OnWeatherActivateThreshold ?? true)
                     {
-                        fg.AppendItem(OnWeatherActivateThreshold, "OnWeatherActivateThreshold");
+                        sb.AppendItem(OnWeatherActivateThreshold, "OnWeatherActivateThreshold");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -411,39 +412,51 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(OnLightningStrikeSpell, "OnLightningStrikeSpell");
-                fg.AppendItem(OnLightningStrikeThreshold, "OnLightningStrikeThreshold");
-                fg.AppendItem(OnWeatherActivateSpell, "OnWeatherActivateSpell");
-                fg.AppendItem(OnWeatherActivateThreshold, "OnWeatherActivateThreshold");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(OnLightningStrikeSpell, "OnLightningStrikeSpell");
+                }
+                {
+                    sb.AppendItem(OnLightningStrikeThreshold, "OnLightningStrikeThreshold");
+                }
+                {
+                    sb.AppendItem(OnWeatherActivateSpell, "OnWeatherActivateSpell");
+                }
+                {
+                    sb.AppendItem(OnWeatherActivateThreshold, "OnWeatherActivateThreshold");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -585,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -670,13 +683,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IWeatherMagicGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherMagic.Mask<bool>? printMask = null)
         {
             ((WeatherMagicCommon)((IWeatherMagicGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -977,68 +990,68 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             WeatherMagic.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeatherMagicGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherMagic.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherMagic =>");
+                sb.AppendLine($"WeatherMagic =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherMagic) =>");
+                sb.AppendLine($"{name} (WeatherMagic) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherMagicGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeatherMagic.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.OnLightningStrikeSpell ?? true)
             {
-                fg.AppendItem(item.OnLightningStrikeSpell.FormKey, "OnLightningStrikeSpell");
+                sb.AppendItem(item.OnLightningStrikeSpell.FormKey, "OnLightningStrikeSpell");
             }
             if (printMask?.OnLightningStrikeThreshold ?? true)
             {
-                fg.AppendItem(item.OnLightningStrikeThreshold, "OnLightningStrikeThreshold");
+                sb.AppendItem(item.OnLightningStrikeThreshold, "OnLightningStrikeThreshold");
             }
             if (printMask?.OnWeatherActivateSpell ?? true)
             {
-                fg.AppendItem(item.OnWeatherActivateSpell.FormKey, "OnWeatherActivateSpell");
+                sb.AppendItem(item.OnWeatherActivateSpell.FormKey, "OnWeatherActivateSpell");
             }
             if (printMask?.OnWeatherActivateThreshold ?? true)
             {
-                fg.AppendItem(item.OnWeatherActivateThreshold, "OnWeatherActivateThreshold");
+                sb.AppendItem(item.OnWeatherActivateThreshold, "OnWeatherActivateThreshold");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1355,7 +1368,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherMagicCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1429,11 +1442,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherMagicMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

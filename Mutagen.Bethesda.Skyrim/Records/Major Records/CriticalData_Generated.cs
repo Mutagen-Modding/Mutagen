@@ -98,11 +98,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CriticalDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -285,55 +286,55 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CriticalData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CriticalData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CriticalData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CriticalData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CriticalData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.Damage ?? true)
                     {
-                        fg.AppendItem(Damage, "Damage");
+                        sb.AppendItem(Damage, "Damage");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.PercentMult ?? true)
                     {
-                        fg.AppendItem(PercentMult, "PercentMult");
+                        sb.AppendItem(PercentMult, "PercentMult");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unused2 ?? true)
                     {
-                        fg.AppendItem(Unused2, "Unused2");
+                        sb.AppendItem(Unused2, "Unused2");
                     }
                     if (printMask?.Unused3 ?? true)
                     {
-                        fg.AppendItem(Unused3, "Unused3");
+                        sb.AppendItem(Unused3, "Unused3");
                     }
                     if (printMask?.Effect ?? true)
                     {
-                        fg.AppendItem(Effect, "Effect");
+                        sb.AppendItem(Effect, "Effect");
                     }
                     if (printMask?.Unused4 ?? true)
                     {
-                        fg.AppendItem(Unused4, "Unused4");
+                        sb.AppendItem(Unused4, "Unused4");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -490,42 +491,60 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Damage, "Damage");
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendItem(PercentMult, "PercentMult");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Unused2, "Unused2");
-                fg.AppendItem(Unused3, "Unused3");
-                fg.AppendItem(Effect, "Effect");
-                fg.AppendItem(Unused4, "Unused4");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Damage, "Damage");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(PercentMult, "PercentMult");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unused2, "Unused2");
+                }
+                {
+                    sb.AppendItem(Unused3, "Unused3");
+                }
+                {
+                    sb.AppendItem(Effect, "Effect");
+                }
+                {
+                    sb.AppendItem(Unused4, "Unused4");
+                }
             }
             #endregion
 
@@ -679,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -770,13 +789,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICriticalDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CriticalData.Mask<bool>? printMask = null)
         {
             ((CriticalDataCommon)((ICriticalDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1085,80 +1104,80 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CriticalData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICriticalDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CriticalData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CriticalData =>");
+                sb.AppendLine($"CriticalData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CriticalData) =>");
+                sb.AppendLine($"{name} (CriticalData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICriticalDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CriticalData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.Damage ?? true)
             {
-                fg.AppendItem(item.Damage, "Damage");
+                sb.AppendItem(item.Damage, "Damage");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendItem(item.Unused, "Unused");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.PercentMult ?? true)
             {
-                fg.AppendItem(item.PercentMult, "PercentMult");
+                sb.AppendItem(item.PercentMult, "PercentMult");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unused2 ?? true)
             {
-                fg.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
+                sb.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
             }
             if (printMask?.Unused3 ?? true)
             {
-                fg.AppendItem(item.Unused3, "Unused3");
+                sb.AppendItem(item.Unused3, "Unused3");
             }
             if (printMask?.Effect ?? true)
             {
-                fg.AppendItem(item.Effect.FormKey, "Effect");
+                sb.AppendItem(item.Effect.FormKey, "Effect");
             }
             if (printMask?.Unused4 ?? true)
             {
-                fg.AppendItem(item.Unused4, "Unused4");
+                sb.AppendItem(item.Unused4, "Unused4");
             }
         }
         
@@ -1522,7 +1541,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => CriticalDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1605,11 +1624,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CriticalDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

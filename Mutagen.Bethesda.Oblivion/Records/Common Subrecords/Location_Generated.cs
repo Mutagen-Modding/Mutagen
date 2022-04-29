@@ -61,11 +61,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -185,27 +186,27 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Location.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Location.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Location.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Position ?? true)
                     {
-                        fg.AppendItem(Position, "Position");
+                        sb.AppendItem(Position, "Position");
                     }
                     if (printMask?.Rotation ?? true)
                     {
-                        fg.AppendItem(Rotation, "Rotation");
+                        sb.AppendItem(Rotation, "Rotation");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -292,35 +293,39 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Position, "Position");
-                fg.AppendItem(Rotation, "Rotation");
+                {
+                    sb.AppendItem(Position, "Position");
+                }
+                {
+                    sb.AppendItem(Rotation, "Rotation");
+                }
             }
             #endregion
 
@@ -436,7 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -511,13 +516,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ILocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
             ((LocationCommon)((ILocationGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -793,52 +798,52 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Location =>");
+                sb.AppendLine($"Location =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Location) =>");
+                sb.AppendLine($"{name} (Location) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Location.Mask<bool>? printMask = null)
         {
             if (printMask?.Position ?? true)
             {
-                fg.AppendItem(item.Position, "Position");
+                sb.AppendItem(item.Position, "Position");
             }
             if (printMask?.Rotation ?? true)
             {
-                fg.AppendItem(item.Rotation, "Rotation");
+                sb.AppendItem(item.Rotation, "Rotation");
             }
         }
         
@@ -1091,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
@@ -1156,11 +1161,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

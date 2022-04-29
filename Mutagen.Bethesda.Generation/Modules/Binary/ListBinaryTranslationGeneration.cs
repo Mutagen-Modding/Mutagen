@@ -42,7 +42,7 @@ public abstract class ListBinaryTranslationGeneration : BinaryTranslationGenerat
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,

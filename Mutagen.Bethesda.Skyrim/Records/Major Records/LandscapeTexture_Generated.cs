@@ -111,11 +111,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LandscapeTextureMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -326,70 +327,72 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(LandscapeTexture.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, LandscapeTexture.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, LandscapeTexture.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LandscapeTexture.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LandscapeTexture.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.TextureSet ?? true)
                     {
-                        fg.AppendItem(TextureSet, "TextureSet");
+                        sb.AppendItem(TextureSet, "TextureSet");
                     }
                     if (printMask?.MaterialType ?? true)
                     {
-                        fg.AppendItem(MaterialType, "MaterialType");
+                        sb.AppendItem(MaterialType, "MaterialType");
                     }
                     if (printMask?.HavokFriction ?? true)
                     {
-                        fg.AppendItem(HavokFriction, "HavokFriction");
+                        sb.AppendItem(HavokFriction, "HavokFriction");
                     }
                     if (printMask?.HavokRestitution ?? true)
                     {
-                        fg.AppendItem(HavokRestitution, "HavokRestitution");
+                        sb.AppendItem(HavokRestitution, "HavokRestitution");
                     }
                     if (printMask?.TextureSpecularExponent ?? true)
                     {
-                        fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
+                        sb.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
                     }
                     if ((printMask?.Grasses?.Overall ?? true)
                         && Grasses is {} GrassesItem)
                     {
-                        fg.AppendLine("Grasses =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Grasses =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(GrassesItem.Overall);
+                            sb.AppendItem(GrassesItem.Overall);
                             if (GrassesItem.Specific != null)
                             {
                                 foreach (var subItem in GrassesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.HNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
+                        sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -525,63 +528,79 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(TextureSet, "TextureSet");
-                fg.AppendItem(MaterialType, "MaterialType");
-                fg.AppendItem(HavokFriction, "HavokFriction");
-                fg.AppendItem(HavokRestitution, "HavokRestitution");
-                fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(TextureSet, "TextureSet");
+                }
+                {
+                    sb.AppendItem(MaterialType, "MaterialType");
+                }
+                {
+                    sb.AppendItem(HavokFriction, "HavokFriction");
+                }
+                {
+                    sb.AppendItem(HavokRestitution, "HavokRestitution");
+                }
+                {
+                    sb.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
+                }
                 if (Grasses is {} GrassesItem)
                 {
-                    fg.AppendLine("Grasses =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Grasses =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(GrassesItem.Overall);
+                        sb.AppendItem(GrassesItem.Overall);
                         if (GrassesItem.Specific != null)
                         {
                             foreach (var subItem in GrassesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -788,7 +807,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -883,13 +902,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ILandscapeTextureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LandscapeTexture.Mask<bool>? printMask = null)
         {
             ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1235,95 +1254,95 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             LandscapeTexture.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILandscapeTextureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LandscapeTexture.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LandscapeTexture =>");
+                sb.AppendLine($"LandscapeTexture =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LandscapeTexture) =>");
+                sb.AppendLine($"{name} (LandscapeTexture) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILandscapeTextureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LandscapeTexture.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.TextureSet ?? true)
             {
-                fg.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
+                sb.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
             }
             if (printMask?.MaterialType ?? true)
             {
-                fg.AppendItem(item.MaterialType.FormKey, "MaterialType");
+                sb.AppendItem(item.MaterialType.FormKey, "MaterialType");
             }
             if (printMask?.HavokFriction ?? true)
             {
-                fg.AppendItem(item.HavokFriction, "HavokFriction");
+                sb.AppendItem(item.HavokFriction, "HavokFriction");
             }
             if (printMask?.HavokRestitution ?? true)
             {
-                fg.AppendItem(item.HavokRestitution, "HavokRestitution");
+                sb.AppendItem(item.HavokRestitution, "HavokRestitution");
             }
             if (printMask?.TextureSpecularExponent ?? true)
             {
-                fg.AppendItem(item.TextureSpecularExponent, "TextureSpecularExponent");
+                sb.AppendItem(item.TextureSpecularExponent, "TextureSpecularExponent");
             }
             if (printMask?.Grasses?.Overall ?? true)
             {
-                fg.AppendLine("Grasses =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Grasses =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Grasses)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.HNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
+                sb.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
             }
         }
         
@@ -1982,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LandscapeTextureCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2146,11 +2165,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LandscapeTextureMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

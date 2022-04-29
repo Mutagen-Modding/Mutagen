@@ -113,11 +113,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ConstructibleObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -340,77 +341,77 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ConstructibleObject.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ConstructibleObject.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ConstructibleObject.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ConstructibleObject.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ConstructibleObject.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if ((printMask?.Items?.Overall ?? true)
                         && Items is {} ItemsItem)
                     {
-                        fg.AppendLine("Items =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Items =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ItemsItem.Overall);
+                            sb.AppendItem(ItemsItem.Overall);
                             if (ItemsItem.Specific != null)
                             {
                                 foreach (var subItem in ItemsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.CreatedObject ?? true)
                     {
-                        fg.AppendItem(CreatedObject, "CreatedObject");
+                        sb.AppendItem(CreatedObject, "CreatedObject");
                     }
                     if (printMask?.WorkbenchKeyword ?? true)
                     {
-                        fg.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
+                        sb.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
                     }
                     if (printMask?.CreatedObjectCount ?? true)
                     {
-                        fg.AppendItem(CreatedObjectCount, "CreatedObjectCount");
+                        sb.AppendItem(CreatedObjectCount, "CreatedObjectCount");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -516,81 +517,87 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.ToString_FillInternal(sb);
                 if (Items is {} ItemsItem)
                 {
-                    fg.AppendLine("Items =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Items =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ItemsItem.Overall);
+                        sb.AppendItem(ItemsItem.Overall);
                         if (ItemsItem.Specific != null)
                         {
                             foreach (var subItem in ItemsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(CreatedObject, "CreatedObject");
-                fg.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
-                fg.AppendItem(CreatedObjectCount, "CreatedObjectCount");
+                {
+                    sb.AppendItem(CreatedObject, "CreatedObject");
+                }
+                {
+                    sb.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
+                }
+                {
+                    sb.AppendItem(CreatedObjectCount, "CreatedObjectCount");
+                }
             }
             #endregion
 
@@ -779,7 +786,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -866,13 +873,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IConstructibleObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ConstructibleObject.Mask<bool>? printMask = null)
         {
             ((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1216,98 +1223,98 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ConstructibleObject.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IConstructibleObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ConstructibleObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ConstructibleObject =>");
+                sb.AppendLine($"ConstructibleObject =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ConstructibleObject) =>");
+                sb.AppendLine($"{name} (ConstructibleObject) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IConstructibleObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ConstructibleObject.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Items?.Overall ?? true)
                 && item.Items is {} ItemsItem)
             {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Items =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ItemsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.CreatedObject ?? true)
             {
-                fg.AppendItem(item.CreatedObject.FormKeyNullable, "CreatedObject");
+                sb.AppendItem(item.CreatedObject.FormKeyNullable, "CreatedObject");
             }
             if (printMask?.WorkbenchKeyword ?? true)
             {
-                fg.AppendItem(item.WorkbenchKeyword.FormKeyNullable, "WorkbenchKeyword");
+                sb.AppendItem(item.WorkbenchKeyword.FormKeyNullable, "WorkbenchKeyword");
             }
             if ((printMask?.CreatedObjectCount ?? true)
                 && item.CreatedObjectCount is {} CreatedObjectCountItem)
             {
-                fg.AppendItem(CreatedObjectCountItem, "CreatedObjectCount");
+                sb.AppendItem(CreatedObjectCountItem, "CreatedObjectCount");
             }
         }
         
@@ -1972,7 +1979,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ConstructibleObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2128,11 +2135,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ConstructibleObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

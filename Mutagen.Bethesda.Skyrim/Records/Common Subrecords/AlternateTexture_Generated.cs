@@ -76,11 +76,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AlternateTextureMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -209,31 +210,31 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(AlternateTexture.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, AlternateTexture.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, AlternateTexture.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(AlternateTexture.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AlternateTexture.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.NewTexture ?? true)
                     {
-                        fg.AppendItem(NewTexture, "NewTexture");
+                        sb.AppendItem(NewTexture, "NewTexture");
                     }
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -330,36 +331,42 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(NewTexture, "NewTexture");
-                fg.AppendItem(Index, "Index");
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(NewTexture, "NewTexture");
+                }
+                {
+                    sb.AppendItem(Index, "Index");
+                }
             }
             #endregion
 
@@ -484,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -573,13 +580,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IAlternateTextureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AlternateTexture.Mask<bool>? printMask = null)
         {
             ((AlternateTextureCommon)((IAlternateTextureGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -859,56 +866,56 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             AlternateTexture.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IAlternateTextureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AlternateTexture.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AlternateTexture =>");
+                sb.AppendLine($"AlternateTexture =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AlternateTexture) =>");
+                sb.AppendLine($"{name} (AlternateTexture) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAlternateTextureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AlternateTexture.Mask<bool>? printMask = null)
         {
             if (printMask?.Name ?? true)
             {
-                fg.AppendItem(item.Name, "Name");
+                sb.AppendItem(item.Name, "Name");
             }
             if (printMask?.NewTexture ?? true)
             {
-                fg.AppendItem(item.NewTexture.FormKey, "NewTexture");
+                sb.AppendItem(item.NewTexture.FormKey, "NewTexture");
             }
             if (printMask?.Index ?? true)
             {
-                fg.AppendItem(item.Index, "Index");
+                sb.AppendItem(item.Index, "Index");
             }
         }
         
@@ -1176,7 +1183,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => AlternateTextureCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1247,11 +1254,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AlternateTextureMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -133,11 +133,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedCreatureMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -329,51 +330,51 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(PlacedCreature.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PlacedCreature.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PlacedCreature.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PlacedCreature.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedCreature.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Base ?? true)
                     {
-                        fg.AppendItem(Base, "Base");
+                        sb.AppendItem(Base, "Base");
                     }
                     if (printMask?.Owner ?? true)
                     {
-                        fg.AppendItem(Owner, "Owner");
+                        sb.AppendItem(Owner, "Owner");
                     }
                     if (printMask?.FactionRank ?? true)
                     {
-                        fg.AppendItem(FactionRank, "FactionRank");
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.GlobalVariable ?? true)
                     {
-                        fg.AppendItem(GlobalVariable, "GlobalVariable");
+                        sb.AppendItem(GlobalVariable, "GlobalVariable");
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
-                        EnableParent?.ToString(fg);
+                        EnableParent?.ToString(sb);
                     }
                     if (printMask?.RagdollData ?? true)
                     {
-                        fg.AppendItem(RagdollData, "RagdollData");
+                        sb.AppendItem(RagdollData, "RagdollData");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.Location?.Overall ?? true)
                     {
-                        Location?.ToString(fg);
+                        Location?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -509,42 +510,54 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Base, "Base");
-                fg.AppendItem(Owner, "Owner");
-                fg.AppendItem(FactionRank, "FactionRank");
-                fg.AppendItem(GlobalVariable, "GlobalVariable");
-                EnableParent?.ToString(fg);
-                fg.AppendItem(RagdollData, "RagdollData");
-                fg.AppendItem(Scale, "Scale");
-                Location?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Base, "Base");
+                }
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                {
+                    sb.AppendItem(GlobalVariable, "GlobalVariable");
+                }
+                EnableParent?.ToString(sb);
+                {
+                    sb.AppendItem(RagdollData, "RagdollData");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                Location?.ToString(sb);
             }
             #endregion
 
@@ -728,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -823,13 +836,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IPlacedCreatureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedCreature.Mask<bool>? printMask = null)
         {
             ((PlacedCreatureCommon)((IPlacedCreatureGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1182,85 +1195,85 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             PlacedCreature.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPlacedCreatureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedCreature.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedCreature =>");
+                sb.AppendLine($"PlacedCreature =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedCreature) =>");
+                sb.AppendLine($"{name} (PlacedCreature) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedCreatureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedCreature.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKeyNullable, "Base");
+                sb.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank is {} FactionRankItem)
             {
-                fg.AppendItem(FactionRankItem, "FactionRank");
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if (printMask?.GlobalVariable ?? true)
             {
-                fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
+                sb.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
             {
-                EnableParentItem?.ToString(fg, "EnableParent");
+                EnableParentItem?.ToString(sb, "EnableParent");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData is {} RagdollDataItem)
             {
-                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
+                sb.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.Scale ?? true)
                 && item.Scale is {} ScaleItem)
             {
-                fg.AppendItem(ScaleItem, "Scale");
+                sb.AppendItem(ScaleItem, "Scale");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location is {} LocationItem)
             {
-                LocationItem?.ToString(fg, "Location");
+                LocationItem?.ToString(sb, "Location");
             }
         }
         
@@ -1981,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedCreatureCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2150,11 +2163,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedCreatureMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -23,11 +23,11 @@ public class MajorRecordModule : GenerationModule
         }
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await base.GenerateInClass(obj, fg);
+        await base.GenerateInClass(obj, sb);
         if (!await obj.IsMajorRecord()) return;
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public {obj.Name}"))
         {
             args.Add($"{nameof(FormKey)} formKey");
@@ -36,56 +36,56 @@ public class MajorRecordModule : GenerationModule
                 args.Add($"{obj.GetObjectData().GameCategory}Release gameRelease");
             }
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine("this.FormKey = formKey;");
+            sb.AppendLine("this.FormKey = formKey;");
             if (obj.GetObjectData().HasMultipleReleases)
             {
-                fg.AppendLine("this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;");
+                sb.AppendLine("this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;");
             }
-            fg.AppendLine("CustomCtor();");
+            sb.AppendLine("CustomCtor();");
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         // Used for reflection based construction
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"private {obj.Name}"))
         {
             args.Add($"{nameof(FormKey)} formKey");
             args.Add($"{nameof(GameRelease)} gameRelease");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine("this.FormKey = formKey;");
+            sb.AppendLine("this.FormKey = formKey;");
             if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
             {
-                fg.AppendLine("this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;");
+                sb.AppendLine("this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;");
             }
-            fg.AppendLine("CustomCtor();");
+            sb.AppendLine("CustomCtor();");
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"internal {obj.Name}"))
             {
                 args.Add($"{nameof(FormKey)} formKey");
                 args.Add($"ushort formVersion");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine("this.FormKey = formKey;");
-                fg.AppendLine("this.FormVersion = formVersion;");
-                fg.AppendLine("CustomCtor();");
+                sb.AppendLine("this.FormKey = formKey;");
+                sb.AppendLine("this.FormVersion = formVersion;");
+                sb.AppendLine("CustomCtor();");
             }
-            fg.AppendLine();
+            sb.AppendLine();
         }
 
-        fg.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod)");
-        using (new DepthWrapper(fg))
+        sb.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod)");
+        using (new DepthWrapper(sb))
         {
-            using (var args = new FunctionWrapper(fg, ": this"))
+            using (var args = new FunctionWrapper(sb, ": this"))
             {
                 args.Add($"mod.{nameof(IMod.GetNextFormKey)}()");
                 if (obj.GetObjectData().HasMultipleReleases)
@@ -94,15 +94,15 @@ public class MajorRecordModule : GenerationModule
                 }
             }
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        fg.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod, string editorID)");
-        using (new DepthWrapper(fg))
+        sb.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod, string editorID)");
+        using (new DepthWrapper(sb))
         {
-            using (var args = new FunctionWrapper(fg, ": this"))
+            using (var args = new FunctionWrapper(sb, ": this"))
             {
                 args.Add($"mod.{nameof(IMod.GetNextFormKey)}(editorID)");
                 if (obj.GetObjectData().HasMultipleReleases)
@@ -111,23 +111,23 @@ public class MajorRecordModule : GenerationModule
                 }
             }
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine("this.EditorID = editorID;");
+            sb.AppendLine("this.EditorID = editorID;");
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        fg.AppendLine($"public override string ToString()");
-        using (new BraceWrapper(fg))
+        sb.AppendLine($"public override string ToString()");
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine($"return MajorRecordPrinter<{obj.Name}>.ToString(this);");
+            sb.AppendLine($"return MajorRecordPrinter<{obj.Name}>.ToString(this);");
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         if (!obj.Abstract)
         {
-            fg.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
-            fg.AppendLine();
+            sb.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
+            sb.AppendLine();
         }
     }
 

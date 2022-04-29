@@ -76,11 +76,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavmeshTriangleMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -245,47 +246,47 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(NavmeshTriangle.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NavmeshTriangle.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NavmeshTriangle.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NavmeshTriangle.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavmeshTriangle.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Vertices ?? true)
                     {
-                        fg.AppendItem(Vertices, "Vertices");
+                        sb.AppendItem(Vertices, "Vertices");
                     }
                     if (printMask?.EdgeLink_0_1 ?? true)
                     {
-                        fg.AppendItem(EdgeLink_0_1, "EdgeLink_0_1");
+                        sb.AppendItem(EdgeLink_0_1, "EdgeLink_0_1");
                     }
                     if (printMask?.EdgeLink_1_2 ?? true)
                     {
-                        fg.AppendItem(EdgeLink_1_2, "EdgeLink_1_2");
+                        sb.AppendItem(EdgeLink_1_2, "EdgeLink_1_2");
                     }
                     if (printMask?.EdgeLink_2_0 ?? true)
                     {
-                        fg.AppendItem(EdgeLink_2_0, "EdgeLink_2_0");
+                        sb.AppendItem(EdgeLink_2_0, "EdgeLink_2_0");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.CoverFlags ?? true)
                     {
-                        fg.AppendItem(CoverFlags, "CoverFlags");
+                        sb.AppendItem(CoverFlags, "CoverFlags");
                     }
                     if (printMask?.IsCover ?? true)
                     {
-                        fg.AppendItem(IsCover, "IsCover");
+                        sb.AppendItem(IsCover, "IsCover");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -422,40 +423,54 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Vertices, "Vertices");
-                fg.AppendItem(EdgeLink_0_1, "EdgeLink_0_1");
-                fg.AppendItem(EdgeLink_1_2, "EdgeLink_1_2");
-                fg.AppendItem(EdgeLink_2_0, "EdgeLink_2_0");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(CoverFlags, "CoverFlags");
-                fg.AppendItem(IsCover, "IsCover");
+                {
+                    sb.AppendItem(Vertices, "Vertices");
+                }
+                {
+                    sb.AppendItem(EdgeLink_0_1, "EdgeLink_0_1");
+                }
+                {
+                    sb.AppendItem(EdgeLink_1_2, "EdgeLink_1_2");
+                }
+                {
+                    sb.AppendItem(EdgeLink_2_0, "EdgeLink_2_0");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(CoverFlags, "CoverFlags");
+                }
+                {
+                    sb.AppendItem(IsCover, "IsCover");
+                }
             }
             #endregion
 
@@ -591,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -676,13 +691,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this INavmeshTriangleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
             ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -973,72 +988,72 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INavmeshTriangleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavmeshTriangle =>");
+                sb.AppendLine($"NavmeshTriangle =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavmeshTriangle) =>");
+                sb.AppendLine($"{name} (NavmeshTriangle) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavmeshTriangleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
             if (printMask?.Vertices ?? true)
             {
-                fg.AppendItem(item.Vertices, "Vertices");
+                sb.AppendItem(item.Vertices, "Vertices");
             }
             if (printMask?.EdgeLink_0_1 ?? true)
             {
-                fg.AppendItem(item.EdgeLink_0_1, "EdgeLink_0_1");
+                sb.AppendItem(item.EdgeLink_0_1, "EdgeLink_0_1");
             }
             if (printMask?.EdgeLink_1_2 ?? true)
             {
-                fg.AppendItem(item.EdgeLink_1_2, "EdgeLink_1_2");
+                sb.AppendItem(item.EdgeLink_1_2, "EdgeLink_1_2");
             }
             if (printMask?.EdgeLink_2_0 ?? true)
             {
-                fg.AppendItem(item.EdgeLink_2_0, "EdgeLink_2_0");
+                sb.AppendItem(item.EdgeLink_2_0, "EdgeLink_2_0");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.CoverFlags ?? true)
             {
-                fg.AppendItem(item.CoverFlags, "CoverFlags");
+                sb.AppendItem(item.CoverFlags, "CoverFlags");
             }
             if (printMask?.IsCover ?? true)
             {
-                fg.AppendItem(item.IsCover, "IsCover");
+                sb.AppendItem(item.IsCover, "IsCover");
             }
         }
         
@@ -1347,7 +1362,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshTriangleBinaryWriteTranslation.Instance;
@@ -1416,11 +1431,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavmeshTriangleMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

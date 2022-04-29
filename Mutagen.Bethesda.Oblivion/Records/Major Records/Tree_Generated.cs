@@ -119,11 +119,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TreeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -329,58 +330,60 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Tree.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Tree.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Tree.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Tree.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Tree.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendItem(Icon, "Icon");
+                        sb.AppendItem(Icon, "Icon");
                     }
                     if ((printMask?.SpeedTreeSeeds?.Overall ?? true)
                         && SpeedTreeSeeds is {} SpeedTreeSeedsItem)
                     {
-                        fg.AppendLine("SpeedTreeSeeds =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("SpeedTreeSeeds =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(SpeedTreeSeedsItem.Overall);
+                            sb.AppendItem(SpeedTreeSeedsItem.Overall);
                             if (SpeedTreeSeedsItem.Specific != null)
                             {
                                 foreach (var subItem in SpeedTreeSeedsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.ToString(sb);
                     }
                     if (printMask?.BillboardDimensions?.Overall ?? true)
                     {
-                        BillboardDimensions?.ToString(fg);
+                        BillboardDimensions?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -486,60 +489,64 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Model?.ToString(fg);
-                fg.AppendItem(Icon, "Icon");
+                base.ToString_FillInternal(sb);
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(Icon, "Icon");
+                }
                 if (SpeedTreeSeeds is {} SpeedTreeSeedsItem)
                 {
-                    fg.AppendLine("SpeedTreeSeeds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("SpeedTreeSeeds =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(SpeedTreeSeedsItem.Overall);
+                        sb.AppendItem(SpeedTreeSeedsItem.Overall);
                         if (SpeedTreeSeedsItem.Specific != null)
                         {
                             foreach (var subItem in SpeedTreeSeedsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                Data?.ToString(fg);
-                BillboardDimensions?.ToString(fg);
+                Data?.ToString(sb);
+                BillboardDimensions?.ToString(sb);
             }
             #endregion
 
@@ -708,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -803,13 +810,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ITreeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
             ((TreeCommon)((ITreeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1153,87 +1160,87 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITreeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Tree =>");
+                sb.AppendLine($"Tree =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Tree) =>");
+                sb.AppendLine($"{name} (Tree) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITreeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Tree.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if ((printMask?.Icon ?? true)
                 && item.Icon is {} IconItem)
             {
-                fg.AppendItem(IconItem, "Icon");
+                sb.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.SpeedTreeSeeds?.Overall ?? true)
                 && item.SpeedTreeSeeds is {} SpeedTreeSeedsItem)
             {
-                fg.AppendLine("SpeedTreeSeeds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("SpeedTreeSeeds =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in SpeedTreeSeedsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.ToString(sb, "Data");
             }
             if ((printMask?.BillboardDimensions?.Overall ?? true)
                 && item.BillboardDimensions is {} BillboardDimensionsItem)
             {
-                BillboardDimensionsItem?.ToString(fg, "BillboardDimensions");
+                BillboardDimensionsItem?.ToString(sb, "BillboardDimensions");
             }
         }
         
@@ -1924,7 +1931,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
@@ -2068,11 +2075,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TreeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

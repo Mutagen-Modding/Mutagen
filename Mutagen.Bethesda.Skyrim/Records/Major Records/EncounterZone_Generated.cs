@@ -135,11 +135,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             EncounterZoneMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -308,47 +309,47 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(EncounterZone.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, EncounterZone.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, EncounterZone.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(EncounterZone.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(EncounterZone.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Owner ?? true)
                     {
-                        fg.AppendItem(Owner, "Owner");
+                        sb.AppendItem(Owner, "Owner");
                     }
                     if (printMask?.Location ?? true)
                     {
-                        fg.AppendItem(Location, "Location");
+                        sb.AppendItem(Location, "Location");
                     }
                     if (printMask?.Rank ?? true)
                     {
-                        fg.AppendItem(Rank, "Rank");
+                        sb.AppendItem(Rank, "Rank");
                     }
                     if (printMask?.MinLevel ?? true)
                     {
-                        fg.AppendItem(MinLevel, "MinLevel");
+                        sb.AppendItem(MinLevel, "MinLevel");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.MaxLevel ?? true)
                     {
-                        fg.AppendItem(MaxLevel, "MaxLevel");
+                        sb.AppendItem(MaxLevel, "MaxLevel");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -474,41 +475,55 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Owner, "Owner");
-                fg.AppendItem(Location, "Location");
-                fg.AppendItem(Rank, "Rank");
-                fg.AppendItem(MinLevel, "MinLevel");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(MaxLevel, "MaxLevel");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(Rank, "Rank");
+                }
+                {
+                    sb.AppendItem(MinLevel, "MinLevel");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(MaxLevel, "MaxLevel");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -712,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -803,13 +818,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IEncounterZoneGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EncounterZone.Mask<bool>? printMask = null)
         {
             ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1143,76 +1158,76 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             EncounterZone.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IEncounterZoneGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EncounterZone.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EncounterZone =>");
+                sb.AppendLine($"EncounterZone =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EncounterZone) =>");
+                sb.AppendLine($"{name} (EncounterZone) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IEncounterZoneGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             EncounterZone.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner.FormKey, "Owner");
+                sb.AppendItem(item.Owner.FormKey, "Owner");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location.FormKey, "Location");
+                sb.AppendItem(item.Location.FormKey, "Location");
             }
             if (printMask?.Rank ?? true)
             {
-                fg.AppendItem(item.Rank, "Rank");
+                sb.AppendItem(item.Rank, "Rank");
             }
             if (printMask?.MinLevel ?? true)
             {
-                fg.AppendItem(item.MinLevel, "MinLevel");
+                sb.AppendItem(item.MinLevel, "MinLevel");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.MaxLevel ?? true)
             {
-                fg.AppendItem(item.MaxLevel, "MaxLevel");
+                sb.AppendItem(item.MaxLevel, "MaxLevel");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1794,7 +1809,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => EncounterZoneCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1932,11 +1947,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             EncounterZoneMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

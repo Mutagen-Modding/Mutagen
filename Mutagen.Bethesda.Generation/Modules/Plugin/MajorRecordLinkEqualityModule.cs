@@ -12,38 +12,38 @@ public class MajorRecordLinkEqualityModule : GenerationModule
         obj.GenerateEquals = false;
     }
 
-    public override Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        return Generate(obj, fg);
+        return Generate(obj, sb);
     }
 
-    public static async Task Generate(ObjectGeneration obj, FileGeneration fg)
+    public static async Task Generate(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (!(await obj.IsMajorRecord())) return;
-        using (new RegionWrapper(fg, "Equals and Hash"))
+        using (new RegionWrapper(sb, "Equals and Hash"))
         {
-            fg.AppendLine("public override bool Equals(object? obj)");
-            using (new BraceWrapper(fg))
+            sb.AppendLine("public override bool Equals(object? obj)");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine("if (obj is IFormLinkGetter formLink)");
-                using (new BraceWrapper(fg))
+                sb.AppendLine("if (obj is IFormLinkGetter formLink)");
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return formLink.Equals(this);");
+                    sb.AppendLine($"return formLink.Equals(this);");
                 }
-                fg.AppendLine($"if (obj is not {obj.Interface(getter: true, internalInterface: true)} rhs) return false;");
-                fg.AppendLine($"return {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Equals(this, rhs, crystal: null);");
+                sb.AppendLine($"if (obj is not {obj.Interface(getter: true, internalInterface: true)} rhs) return false;");
+                sb.AppendLine($"return {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Equals(this, rhs, crystal: null);");
             }
-            fg.AppendLine();
+            sb.AppendLine();
 
-            fg.AppendLine($"public bool Equals({obj.Interface(getter: true, internalInterface: true)}? obj)");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"public bool Equals({obj.Interface(getter: true, internalInterface: true)}? obj)");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"return {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Equals(this, obj, crystal: null);");
+                sb.AppendLine($"return {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Equals(this, obj, crystal: null);");
             }
-            fg.AppendLine();
+            sb.AppendLine();
 
-            fg.AppendLine($"public override int GetHashCode() => {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.GetHashCode(this);");
-            fg.AppendLine();
+            sb.AppendLine($"public override int GetHashCode() => {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.GetHashCode(this);");
+            sb.AppendLine();
         }
     }
 }

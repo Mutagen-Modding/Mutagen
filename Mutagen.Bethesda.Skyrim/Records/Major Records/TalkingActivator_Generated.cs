@@ -216,11 +216,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TalkingActivatorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -481,78 +482,80 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(TalkingActivator.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TalkingActivator.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TalkingActivator.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TalkingActivator.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TalkingActivator.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(fg);
+                        Destructible?.ToString(sb);
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.PNAM ?? true)
                     {
-                        fg.AppendItem(PNAM, "PNAM");
+                        sb.AppendItem(PNAM, "PNAM");
                     }
                     if (printMask?.LoopingSound ?? true)
                     {
-                        fg.AppendItem(LoopingSound, "LoopingSound");
+                        sb.AppendItem(LoopingSound, "LoopingSound");
                     }
                     if (printMask?.FNAM ?? true)
                     {
-                        fg.AppendItem(FNAM, "FNAM");
+                        sb.AppendItem(FNAM, "FNAM");
                     }
                     if (printMask?.VoiceType ?? true)
                     {
-                        fg.AppendItem(VoiceType, "VoiceType");
+                        sb.AppendItem(VoiceType, "VoiceType");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -708,65 +711,77 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                Destructible?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.ToString(sb);
+                Destructible?.ToString(sb);
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(PNAM, "PNAM");
-                fg.AppendItem(LoopingSound, "LoopingSound");
-                fg.AppendItem(FNAM, "FNAM");
-                fg.AppendItem(VoiceType, "VoiceType");
+                {
+                    sb.AppendItem(PNAM, "PNAM");
+                }
+                {
+                    sb.AppendItem(LoopingSound, "LoopingSound");
+                }
+                {
+                    sb.AppendItem(FNAM, "FNAM");
+                }
+                {
+                    sb.AppendItem(VoiceType, "VoiceType");
+                }
             }
             #endregion
 
@@ -978,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1139,13 +1154,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ITalkingActivatorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TalkingActivator.Mask<bool>? printMask = null)
         {
             ((TalkingActivatorCommon)((ITalkingActivatorGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1519,109 +1534,109 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             TalkingActivator.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITalkingActivatorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TalkingActivator.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TalkingActivator =>");
+                sb.AppendLine($"TalkingActivator =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TalkingActivator) =>");
+                sb.AppendLine($"{name} (TalkingActivator) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITalkingActivatorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TalkingActivator.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(fg, "Destructible");
+                DestructibleItem?.ToString(sb, "Destructible");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.PNAM ?? true)
                 && item.PNAM is {} PNAMItem)
             {
-                fg.AppendItem(PNAMItem, "PNAM");
+                sb.AppendItem(PNAMItem, "PNAM");
             }
             if (printMask?.LoopingSound ?? true)
             {
-                fg.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
+                sb.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM is {} FNAMItem)
             {
-                fg.AppendItem(FNAMItem, "FNAM");
+                sb.AppendItem(FNAMItem, "FNAM");
             }
             if (printMask?.VoiceType ?? true)
             {
-                fg.AppendItem(item.VoiceType.FormKeyNullable, "VoiceType");
+                sb.AppendItem(item.VoiceType.FormKeyNullable, "VoiceType");
             }
         }
         
@@ -2490,7 +2505,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => TalkingActivatorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2696,11 +2711,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TalkingActivatorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

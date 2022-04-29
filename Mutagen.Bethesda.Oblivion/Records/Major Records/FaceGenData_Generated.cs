@@ -88,11 +88,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FaceGenDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -221,31 +222,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(FaceGenData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, FaceGenData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, FaceGenData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(FaceGenData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FaceGenData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.SymmetricGeometry ?? true)
                     {
-                        fg.AppendItem(SymmetricGeometry, "SymmetricGeometry");
+                        sb.AppendItem(SymmetricGeometry, "SymmetricGeometry");
                     }
                     if (printMask?.AsymmetricGeometry ?? true)
                     {
-                        fg.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
+                        sb.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
                     }
                     if (printMask?.SymmetricTexture ?? true)
                     {
-                        fg.AppendItem(SymmetricTexture, "SymmetricTexture");
+                        sb.AppendItem(SymmetricTexture, "SymmetricTexture");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -342,36 +343,42 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(SymmetricGeometry, "SymmetricGeometry");
-                fg.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
-                fg.AppendItem(SymmetricTexture, "SymmetricTexture");
+                {
+                    sb.AppendItem(SymmetricGeometry, "SymmetricGeometry");
+                }
+                {
+                    sb.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
+                }
+                {
+                    sb.AppendItem(SymmetricTexture, "SymmetricTexture");
+                }
             }
             #endregion
 
@@ -491,7 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -568,13 +575,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IFaceGenDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FaceGenData.Mask<bool>? printMask = null)
         {
             ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -863,59 +870,59 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             FaceGenData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IFaceGenDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FaceGenData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FaceGenData =>");
+                sb.AppendLine($"FaceGenData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FaceGenData) =>");
+                sb.AppendLine($"{name} (FaceGenData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFaceGenDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FaceGenData.Mask<bool>? printMask = null)
         {
             if ((printMask?.SymmetricGeometry ?? true)
                 && item.SymmetricGeometry is {} SymmetricGeometryItem)
             {
-                fg.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(SymmetricGeometryItem)}");
+                sb.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(SymmetricGeometryItem)}");
             }
             if ((printMask?.AsymmetricGeometry ?? true)
                 && item.AsymmetricGeometry is {} AsymmetricGeometryItem)
             {
-                fg.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(AsymmetricGeometryItem)}");
+                sb.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(AsymmetricGeometryItem)}");
             }
             if ((printMask?.SymmetricTexture ?? true)
                 && item.SymmetricTexture is {} SymmetricTextureItem)
             {
-                fg.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(SymmetricTextureItem)}");
+                sb.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(SymmetricTextureItem)}");
             }
         }
         
@@ -1251,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FaceGenDataBinaryWriteTranslation.Instance;
@@ -1361,11 +1368,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FaceGenDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

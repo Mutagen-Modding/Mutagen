@@ -14,7 +14,7 @@ public class GenerationLineDetector
         var lines = settings.Lines.QueryWhenChanged(q => q)
             .Replay(1)
             .RefCount();
-        LineDetected = FileGeneration.LineAppended
+        LineDetected = StructuredStringBuilder.LineAppended
             .WithLatestFrom(
                 lines,
                 (Line, Lines) => (Line, Lines))

@@ -49,11 +49,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MagicEffectPeakValueModArchetypeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -166,19 +167,19 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(MagicEffectPeakValueModArchetype.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MagicEffectPeakValueModArchetype.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MagicEffectPeakValueModArchetype.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MagicEffectPeakValueModArchetype.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MagicEffectPeakValueModArchetype.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -231,34 +232,34 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.ToString_FillInternal(sb);
             }
             #endregion
 
@@ -351,7 +352,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -424,13 +425,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IMagicEffectPeakValueModArchetypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffectPeakValueModArchetype.Mask<bool>? printMask = null)
         {
             ((MagicEffectPeakValueModArchetypeCommon)((IMagicEffectPeakValueModArchetypeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -697,48 +698,48 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             MagicEffectPeakValueModArchetype.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMagicEffectPeakValueModArchetypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffectPeakValueModArchetype.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MagicEffectPeakValueModArchetype =>");
+                sb.AppendLine($"MagicEffectPeakValueModArchetype =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MagicEffectPeakValueModArchetype) =>");
+                sb.AppendLine($"{name} (MagicEffectPeakValueModArchetype) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMagicEffectPeakValueModArchetypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MagicEffectPeakValueModArchetype.Mask<bool>? printMask = null)
         {
             MagicEffectArchetypeCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
         }
         
@@ -1031,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectPeakValueModArchetypeBinaryWriteTranslation.Instance;
@@ -1091,11 +1092,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MagicEffectPeakValueModArchetypeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

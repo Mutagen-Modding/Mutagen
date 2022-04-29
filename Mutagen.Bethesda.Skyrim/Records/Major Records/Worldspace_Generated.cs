@@ -343,11 +343,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WorldspaceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -868,181 +869,181 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Worldspace.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Worldspace.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Worldspace.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Worldspace.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Worldspace.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if ((printMask?.LargeReferences?.Overall ?? true)
                         && LargeReferences is {} LargeReferencesItem)
                     {
-                        fg.AppendLine("LargeReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LargeReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LargeReferencesItem.Overall);
+                            sb.AppendItem(LargeReferencesItem.Overall);
                             if (LargeReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in LargeReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.MaxHeight?.Overall ?? true)
                     {
-                        MaxHeight?.ToString(fg);
+                        MaxHeight?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.FixedDimensionsCenterCell ?? true)
                     {
-                        fg.AppendItem(FixedDimensionsCenterCell, "FixedDimensionsCenterCell");
+                        sb.AppendItem(FixedDimensionsCenterCell, "FixedDimensionsCenterCell");
                     }
                     if (printMask?.InteriorLighting ?? true)
                     {
-                        fg.AppendItem(InteriorLighting, "InteriorLighting");
+                        sb.AppendItem(InteriorLighting, "InteriorLighting");
                     }
                     if (printMask?.EncounterZone ?? true)
                     {
-                        fg.AppendItem(EncounterZone, "EncounterZone");
+                        sb.AppendItem(EncounterZone, "EncounterZone");
                     }
                     if (printMask?.Location ?? true)
                     {
-                        fg.AppendItem(Location, "Location");
+                        sb.AppendItem(Location, "Location");
                     }
                     if (printMask?.Parent?.Overall ?? true)
                     {
-                        Parent?.ToString(fg);
+                        Parent?.ToString(sb);
                     }
                     if (printMask?.Climate ?? true)
                     {
-                        fg.AppendItem(Climate, "Climate");
+                        sb.AppendItem(Climate, "Climate");
                     }
                     if (printMask?.Water ?? true)
                     {
-                        fg.AppendItem(Water, "Water");
+                        sb.AppendItem(Water, "Water");
                     }
                     if (printMask?.LodWater ?? true)
                     {
-                        fg.AppendItem(LodWater, "LodWater");
+                        sb.AppendItem(LodWater, "LodWater");
                     }
                     if (printMask?.LodWaterHeight ?? true)
                     {
-                        fg.AppendItem(LodWaterHeight, "LodWaterHeight");
+                        sb.AppendItem(LodWaterHeight, "LodWaterHeight");
                     }
                     if (printMask?.LandDefaults?.Overall ?? true)
                     {
-                        LandDefaults?.ToString(fg);
+                        LandDefaults?.ToString(sb);
                     }
                     if (printMask?.MapImage ?? true)
                     {
-                        fg.AppendItem(MapImage, "MapImage");
+                        sb.AppendItem(MapImage, "MapImage");
                     }
                     if (printMask?.CloudModel?.Overall ?? true)
                     {
-                        CloudModel?.ToString(fg);
+                        CloudModel?.ToString(sb);
                     }
                     if (printMask?.MapData?.Overall ?? true)
                     {
-                        MapData?.ToString(fg);
+                        MapData?.ToString(sb);
                     }
                     if (printMask?.MapOffset?.Overall ?? true)
                     {
-                        MapOffset?.ToString(fg);
+                        MapOffset?.ToString(sb);
                     }
                     if (printMask?.DistantLodMultiplier ?? true)
                     {
-                        fg.AppendItem(DistantLodMultiplier, "DistantLodMultiplier");
+                        sb.AppendItem(DistantLodMultiplier, "DistantLodMultiplier");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Music ?? true)
                     {
-                        fg.AppendItem(Music, "Music");
+                        sb.AppendItem(Music, "Music");
                     }
                     if (printMask?.CanopyShadow ?? true)
                     {
-                        fg.AppendItem(CanopyShadow, "CanopyShadow");
+                        sb.AppendItem(CanopyShadow, "CanopyShadow");
                     }
                     if (printMask?.WaterNoiseTexture ?? true)
                     {
-                        fg.AppendItem(WaterNoiseTexture, "WaterNoiseTexture");
+                        sb.AppendItem(WaterNoiseTexture, "WaterNoiseTexture");
                     }
                     if (printMask?.HdLodDiffuseTexture ?? true)
                     {
-                        fg.AppendItem(HdLodDiffuseTexture, "HdLodDiffuseTexture");
+                        sb.AppendItem(HdLodDiffuseTexture, "HdLodDiffuseTexture");
                     }
                     if (printMask?.HdLodNormalTexture ?? true)
                     {
-                        fg.AppendItem(HdLodNormalTexture, "HdLodNormalTexture");
+                        sb.AppendItem(HdLodNormalTexture, "HdLodNormalTexture");
                     }
                     if (printMask?.WaterEnvironmentMap ?? true)
                     {
-                        fg.AppendItem(WaterEnvironmentMap, "WaterEnvironmentMap");
+                        sb.AppendItem(WaterEnvironmentMap, "WaterEnvironmentMap");
                     }
                     if (printMask?.OffsetData ?? true)
                     {
-                        fg.AppendItem(OffsetData, "OffsetData");
+                        sb.AppendItem(OffsetData, "OffsetData");
                     }
                     if (printMask?.TopCell?.Overall ?? true)
                     {
-                        TopCell?.ToString(fg);
+                        TopCell?.ToString(sb);
                     }
                     if (printMask?.SubCellsTimestamp ?? true)
                     {
-                        fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
+                        sb.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
                     }
                     if (printMask?.SubCellsUnknown ?? true)
                     {
-                        fg.AppendItem(SubCellsUnknown, "SubCellsUnknown");
+                        sb.AppendItem(SubCellsUnknown, "SubCellsUnknown");
                     }
                     if ((printMask?.SubCells?.Overall ?? true)
                         && SubCells is {} SubCellsItem)
                     {
-                        fg.AppendLine("SubCells =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("SubCells =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(SubCellsItem.Overall);
+                            sb.AppendItem(SubCellsItem.Overall);
                             if (SubCellsItem.Specific != null)
                             {
                                 foreach (var subItem in SubCellsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1408,106 +1409,148 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.ToString_FillInternal(sb);
                 if (LargeReferences is {} LargeReferencesItem)
                 {
-                    fg.AppendLine("LargeReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LargeReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LargeReferencesItem.Overall);
+                        sb.AppendItem(LargeReferencesItem.Overall);
                         if (LargeReferencesItem.Specific != null)
                         {
                             foreach (var subItem in LargeReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                MaxHeight?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(FixedDimensionsCenterCell, "FixedDimensionsCenterCell");
-                fg.AppendItem(InteriorLighting, "InteriorLighting");
-                fg.AppendItem(EncounterZone, "EncounterZone");
-                fg.AppendItem(Location, "Location");
-                Parent?.ToString(fg);
-                fg.AppendItem(Climate, "Climate");
-                fg.AppendItem(Water, "Water");
-                fg.AppendItem(LodWater, "LodWater");
-                fg.AppendItem(LodWaterHeight, "LodWaterHeight");
-                LandDefaults?.ToString(fg);
-                fg.AppendItem(MapImage, "MapImage");
-                CloudModel?.ToString(fg);
-                MapData?.ToString(fg);
-                MapOffset?.ToString(fg);
-                fg.AppendItem(DistantLodMultiplier, "DistantLodMultiplier");
-                fg.AppendItem(Flags, "Flags");
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Music, "Music");
-                fg.AppendItem(CanopyShadow, "CanopyShadow");
-                fg.AppendItem(WaterNoiseTexture, "WaterNoiseTexture");
-                fg.AppendItem(HdLodDiffuseTexture, "HdLodDiffuseTexture");
-                fg.AppendItem(HdLodNormalTexture, "HdLodNormalTexture");
-                fg.AppendItem(WaterEnvironmentMap, "WaterEnvironmentMap");
-                fg.AppendItem(OffsetData, "OffsetData");
-                TopCell?.ToString(fg);
-                fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
-                fg.AppendItem(SubCellsUnknown, "SubCellsUnknown");
+                MaxHeight?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(FixedDimensionsCenterCell, "FixedDimensionsCenterCell");
+                }
+                {
+                    sb.AppendItem(InteriorLighting, "InteriorLighting");
+                }
+                {
+                    sb.AppendItem(EncounterZone, "EncounterZone");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                Parent?.ToString(sb);
+                {
+                    sb.AppendItem(Climate, "Climate");
+                }
+                {
+                    sb.AppendItem(Water, "Water");
+                }
+                {
+                    sb.AppendItem(LodWater, "LodWater");
+                }
+                {
+                    sb.AppendItem(LodWaterHeight, "LodWaterHeight");
+                }
+                LandDefaults?.ToString(sb);
+                {
+                    sb.AppendItem(MapImage, "MapImage");
+                }
+                CloudModel?.ToString(sb);
+                MapData?.ToString(sb);
+                MapOffset?.ToString(sb);
+                {
+                    sb.AppendItem(DistantLodMultiplier, "DistantLodMultiplier");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Music, "Music");
+                }
+                {
+                    sb.AppendItem(CanopyShadow, "CanopyShadow");
+                }
+                {
+                    sb.AppendItem(WaterNoiseTexture, "WaterNoiseTexture");
+                }
+                {
+                    sb.AppendItem(HdLodDiffuseTexture, "HdLodDiffuseTexture");
+                }
+                {
+                    sb.AppendItem(HdLodNormalTexture, "HdLodNormalTexture");
+                }
+                {
+                    sb.AppendItem(WaterEnvironmentMap, "WaterEnvironmentMap");
+                }
+                {
+                    sb.AppendItem(OffsetData, "OffsetData");
+                }
+                TopCell?.ToString(sb);
+                {
+                    sb.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
+                }
+                {
+                    sb.AppendItem(SubCellsUnknown, "SubCellsUnknown");
+                }
                 if (SubCells is {} SubCellsItem)
                 {
-                    fg.AppendLine("SubCells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("SubCells =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(SubCellsItem.Overall);
+                        sb.AppendItem(SubCellsItem.Overall);
                         if (SubCellsItem.Specific != null)
                         {
                             foreach (var subItem in SubCellsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -1832,7 +1875,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1999,13 +2042,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IWorldspaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Worldspace.Mask<bool>? printMask = null)
         {
             ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -3040,218 +3083,218 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Worldspace.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWorldspaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Worldspace.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Worldspace =>");
+                sb.AppendLine($"Worldspace =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Worldspace) =>");
+                sb.AppendLine($"{name} (Worldspace) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWorldspaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Worldspace.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.LargeReferences?.Overall ?? true)
             {
-                fg.AppendLine("LargeReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LargeReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.LargeReferences)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.MaxHeight?.Overall ?? true)
                 && item.MaxHeight is {} MaxHeightItem)
             {
-                MaxHeightItem?.ToString(fg, "MaxHeight");
+                MaxHeightItem?.ToString(sb, "MaxHeight");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.FixedDimensionsCenterCell ?? true)
                 && item.FixedDimensionsCenterCell is {} FixedDimensionsCenterCellItem)
             {
-                fg.AppendItem(FixedDimensionsCenterCellItem, "FixedDimensionsCenterCell");
+                sb.AppendItem(FixedDimensionsCenterCellItem, "FixedDimensionsCenterCell");
             }
             if (printMask?.InteriorLighting ?? true)
             {
-                fg.AppendItem(item.InteriorLighting.FormKeyNullable, "InteriorLighting");
+                sb.AppendItem(item.InteriorLighting.FormKeyNullable, "InteriorLighting");
             }
             if (printMask?.EncounterZone ?? true)
             {
-                fg.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
+                sb.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location.FormKeyNullable, "Location");
+                sb.AppendItem(item.Location.FormKeyNullable, "Location");
             }
             if ((printMask?.Parent?.Overall ?? true)
                 && item.Parent is {} ParentItem)
             {
-                ParentItem?.ToString(fg, "Parent");
+                ParentItem?.ToString(sb, "Parent");
             }
             if (printMask?.Climate ?? true)
             {
-                fg.AppendItem(item.Climate.FormKeyNullable, "Climate");
+                sb.AppendItem(item.Climate.FormKeyNullable, "Climate");
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendItem(item.Water.FormKeyNullable, "Water");
+                sb.AppendItem(item.Water.FormKeyNullable, "Water");
             }
             if (printMask?.LodWater ?? true)
             {
-                fg.AppendItem(item.LodWater.FormKeyNullable, "LodWater");
+                sb.AppendItem(item.LodWater.FormKeyNullable, "LodWater");
             }
             if ((printMask?.LodWaterHeight ?? true)
                 && item.LodWaterHeight is {} LodWaterHeightItem)
             {
-                fg.AppendItem(LodWaterHeightItem, "LodWaterHeight");
+                sb.AppendItem(LodWaterHeightItem, "LodWaterHeight");
             }
             if ((printMask?.LandDefaults?.Overall ?? true)
                 && item.LandDefaults is {} LandDefaultsItem)
             {
-                LandDefaultsItem?.ToString(fg, "LandDefaults");
+                LandDefaultsItem?.ToString(sb, "LandDefaults");
             }
             if ((printMask?.MapImage ?? true)
                 && item.MapImage is {} MapImageItem)
             {
-                fg.AppendItem(MapImageItem, "MapImage");
+                sb.AppendItem(MapImageItem, "MapImage");
             }
             if ((printMask?.CloudModel?.Overall ?? true)
                 && item.CloudModel is {} CloudModelItem)
             {
-                CloudModelItem?.ToString(fg, "CloudModel");
+                CloudModelItem?.ToString(sb, "CloudModel");
             }
             if ((printMask?.MapData?.Overall ?? true)
                 && item.MapData is {} MapDataItem)
             {
-                MapDataItem?.ToString(fg, "MapData");
+                MapDataItem?.ToString(sb, "MapData");
             }
             if (printMask?.MapOffset?.Overall ?? true)
             {
-                item.MapOffset?.ToString(fg, "MapOffset");
+                item.MapOffset?.ToString(sb, "MapOffset");
             }
             if ((printMask?.DistantLodMultiplier ?? true)
                 && item.DistantLodMultiplier is {} DistantLodMultiplierItem)
             {
-                fg.AppendItem(DistantLodMultiplierItem, "DistantLodMultiplier");
+                sb.AppendItem(DistantLodMultiplierItem, "DistantLodMultiplier");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.ObjectBounds?.Overall ?? true)
                 && item.ObjectBounds is {} ObjectBoundsItem)
             {
-                ObjectBoundsItem?.ToString(fg, "ObjectBounds");
+                ObjectBoundsItem?.ToString(sb, "ObjectBounds");
             }
             if (printMask?.Music ?? true)
             {
-                fg.AppendItem(item.Music.FormKeyNullable, "Music");
+                sb.AppendItem(item.Music.FormKeyNullable, "Music");
             }
             if ((printMask?.CanopyShadow ?? true)
                 && item.CanopyShadow is {} CanopyShadowItem)
             {
-                fg.AppendItem(CanopyShadowItem, "CanopyShadow");
+                sb.AppendItem(CanopyShadowItem, "CanopyShadow");
             }
             if ((printMask?.WaterNoiseTexture ?? true)
                 && item.WaterNoiseTexture is {} WaterNoiseTextureItem)
             {
-                fg.AppendItem(WaterNoiseTextureItem, "WaterNoiseTexture");
+                sb.AppendItem(WaterNoiseTextureItem, "WaterNoiseTexture");
             }
             if ((printMask?.HdLodDiffuseTexture ?? true)
                 && item.HdLodDiffuseTexture is {} HdLodDiffuseTextureItem)
             {
-                fg.AppendItem(HdLodDiffuseTextureItem, "HdLodDiffuseTexture");
+                sb.AppendItem(HdLodDiffuseTextureItem, "HdLodDiffuseTexture");
             }
             if ((printMask?.HdLodNormalTexture ?? true)
                 && item.HdLodNormalTexture is {} HdLodNormalTextureItem)
             {
-                fg.AppendItem(HdLodNormalTextureItem, "HdLodNormalTexture");
+                sb.AppendItem(HdLodNormalTextureItem, "HdLodNormalTexture");
             }
             if ((printMask?.WaterEnvironmentMap ?? true)
                 && item.WaterEnvironmentMap is {} WaterEnvironmentMapItem)
             {
-                fg.AppendItem(WaterEnvironmentMapItem, "WaterEnvironmentMap");
+                sb.AppendItem(WaterEnvironmentMapItem, "WaterEnvironmentMap");
             }
             if ((printMask?.OffsetData ?? true)
                 && item.OffsetData is {} OffsetDataItem)
             {
-                fg.AppendLine($"OffsetData => {SpanExt.ToHexString(OffsetDataItem)}");
+                sb.AppendLine($"OffsetData => {SpanExt.ToHexString(OffsetDataItem)}");
             }
             if ((printMask?.TopCell?.Overall ?? true)
                 && item.TopCell is {} TopCellItem)
             {
-                TopCellItem?.ToString(fg, "TopCell");
+                TopCellItem?.ToString(sb, "TopCell");
             }
             if (printMask?.SubCellsTimestamp ?? true)
             {
-                fg.AppendItem(item.SubCellsTimestamp, "SubCellsTimestamp");
+                sb.AppendItem(item.SubCellsTimestamp, "SubCellsTimestamp");
             }
             if (printMask?.SubCellsUnknown ?? true)
             {
-                fg.AppendItem(item.SubCellsUnknown, "SubCellsUnknown");
+                sb.AppendItem(item.SubCellsUnknown, "SubCellsUnknown");
             }
             if (printMask?.SubCells?.Overall ?? true)
             {
-                fg.AppendLine("SubCells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("SubCells =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.SubCells)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -5408,7 +5451,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
@@ -5800,11 +5843,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WorldspaceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

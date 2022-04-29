@@ -71,11 +71,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FindMatchingRefFromEventMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -195,27 +196,27 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(FindMatchingRefFromEvent.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, FindMatchingRefFromEvent.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, FindMatchingRefFromEvent.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(FindMatchingRefFromEvent.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FindMatchingRefFromEvent.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.FromEvent ?? true)
                     {
-                        fg.AppendItem(FromEvent, "FromEvent");
+                        sb.AppendItem(FromEvent, "FromEvent");
                     }
                     if (printMask?.EventData ?? true)
                     {
-                        fg.AppendItem(EventData, "EventData");
+                        sb.AppendItem(EventData, "EventData");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -302,35 +303,39 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(FromEvent, "FromEvent");
-                fg.AppendItem(EventData, "EventData");
+                {
+                    sb.AppendItem(FromEvent, "FromEvent");
+                }
+                {
+                    sb.AppendItem(EventData, "EventData");
+                }
             }
             #endregion
 
@@ -446,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -521,13 +526,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IFindMatchingRefFromEventGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
             ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -812,54 +817,54 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IFindMatchingRefFromEventGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FindMatchingRefFromEvent =>");
+                sb.AppendLine($"FindMatchingRefFromEvent =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FindMatchingRefFromEvent) =>");
+                sb.AppendLine($"{name} (FindMatchingRefFromEvent) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFindMatchingRefFromEventGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
             if ((printMask?.FromEvent ?? true)
                 && item.FromEvent is {} FromEventItem)
             {
-                fg.AppendItem(FromEventItem, "FromEvent");
+                sb.AppendItem(FromEventItem, "FromEvent");
             }
             if ((printMask?.EventData ?? true)
                 && item.EventData is {} EventDataItem)
             {
-                fg.AppendLine($"EventData => {SpanExt.ToHexString(EventDataItem)}");
+                sb.AppendLine($"EventData => {SpanExt.ToHexString(EventDataItem)}");
             }
         }
         
@@ -1158,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FindMatchingRefFromEventBinaryWriteTranslation.Instance;
@@ -1258,11 +1263,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FindMatchingRefFromEventMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

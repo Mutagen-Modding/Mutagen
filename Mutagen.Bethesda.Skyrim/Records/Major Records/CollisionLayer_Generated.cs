@@ -96,11 +96,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CollisionLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -293,62 +294,64 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CollisionLayer.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CollisionLayer.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CollisionLayer.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CollisionLayer.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CollisionLayer.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.DebugColor ?? true)
                     {
-                        fg.AppendItem(DebugColor, "DebugColor");
+                        sb.AppendItem(DebugColor, "DebugColor");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if ((printMask?.CollidesWith?.Overall ?? true)
                         && CollidesWith is {} CollidesWithItem)
                     {
-                        fg.AppendLine("CollidesWith =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CollidesWith =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(CollidesWithItem.Overall);
+                            sb.AppendItem(CollidesWithItem.Overall);
                             if (CollidesWithItem.Specific != null)
                             {
                                 foreach (var subItem in CollidesWithItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -464,60 +467,72 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Description, "Description");
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(DebugColor, "DebugColor");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Name, "Name");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(DebugColor, "DebugColor");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
                 if (CollidesWith is {} CollidesWithItem)
                 {
-                    fg.AppendLine("CollidesWith =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CollidesWith =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(CollidesWithItem.Overall);
+                        sb.AppendItem(CollidesWithItem.Overall);
                         if (CollidesWithItem.Specific != null)
                         {
                             foreach (var subItem in CollidesWithItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -713,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -812,13 +827,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICollisionLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CollisionLayer.Mask<bool>? printMask = null)
         {
             ((CollisionLayerCommon)((ICollisionLayerGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1157,87 +1172,87 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CollisionLayer.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICollisionLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CollisionLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CollisionLayer =>");
+                sb.AppendLine($"CollisionLayer =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CollisionLayer) =>");
+                sb.AppendLine($"{name} (CollisionLayer) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICollisionLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CollisionLayer.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Description ?? true)
             {
-                fg.AppendItem(item.Description, "Description");
+                sb.AppendItem(item.Description, "Description");
             }
             if (printMask?.Index ?? true)
             {
-                fg.AppendItem(item.Index, "Index");
+                sb.AppendItem(item.Index, "Index");
             }
             if (printMask?.DebugColor ?? true)
             {
-                fg.AppendItem(item.DebugColor, "DebugColor");
+                sb.AppendItem(item.DebugColor, "DebugColor");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Name ?? true)
             {
-                fg.AppendItem(item.Name, "Name");
+                sb.AppendItem(item.Name, "Name");
             }
             if ((printMask?.CollidesWith?.Overall ?? true)
                 && item.CollidesWith is {} CollidesWithItem)
             {
-                fg.AppendLine("CollidesWith =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CollidesWith =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in CollidesWithItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1879,7 +1894,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CollisionLayerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2034,11 +2049,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CollisionLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

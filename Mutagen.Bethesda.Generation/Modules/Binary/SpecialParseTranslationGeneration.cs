@@ -9,7 +9,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
     public override bool ShouldGenerateWrite(TypeGeneration typeGen) => true;
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
         Accessor readerAccessor,
@@ -18,7 +18,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
         Accessor translationMaskAccessor)
     {
         var data = typeGen.GetFieldData();
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"SpecialParse_{typeGen.Name}"))
         {
             args.AddPassArg("item");
@@ -27,7 +27,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
         TypeGeneration targetGen,
@@ -44,7 +44,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -54,7 +54,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{objGen.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.SpecialWrite_{typeGen.Name}_Internal"))
         {
             args.AddPassArg("item");
@@ -72,14 +72,14 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
     public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
 
     public override async Task GenerateWrapperRecordTypeParse(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
         Accessor locationAccessor, 
         Accessor packageAccessor, 
         Accessor converterAccessor)
     {
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{typeGen.Name}SpecialParse"))
         {
             args.AddPassArg("stream");

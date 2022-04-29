@@ -323,11 +323,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ProjectileMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -763,155 +764,155 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(Projectile.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Projectile.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Projectile.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Projectile.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Projectile.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(fg);
+                        Destructible?.ToString(sb);
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Gravity ?? true)
                     {
-                        fg.AppendItem(Gravity, "Gravity");
+                        sb.AppendItem(Gravity, "Gravity");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Range ?? true)
                     {
-                        fg.AppendItem(Range, "Range");
+                        sb.AppendItem(Range, "Range");
                     }
                     if (printMask?.Light ?? true)
                     {
-                        fg.AppendItem(Light, "Light");
+                        sb.AppendItem(Light, "Light");
                     }
                     if (printMask?.MuzzleFlash ?? true)
                     {
-                        fg.AppendItem(MuzzleFlash, "MuzzleFlash");
+                        sb.AppendItem(MuzzleFlash, "MuzzleFlash");
                     }
                     if (printMask?.ExplosionAltTriggerProximity ?? true)
                     {
-                        fg.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
+                        sb.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
                     }
                     if (printMask?.ExplosionAltTriggerTimer ?? true)
                     {
-                        fg.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
+                        sb.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
                     }
                     if (printMask?.Explosion ?? true)
                     {
-                        fg.AppendItem(Explosion, "Explosion");
+                        sb.AppendItem(Explosion, "Explosion");
                     }
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendItem(Sound, "Sound");
+                        sb.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.MuzzleFlashDuration ?? true)
                     {
-                        fg.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
+                        sb.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
                     }
                     if (printMask?.FadeDuration ?? true)
                     {
-                        fg.AppendItem(FadeDuration, "FadeDuration");
+                        sb.AppendItem(FadeDuration, "FadeDuration");
                     }
                     if (printMask?.ImpactForce ?? true)
                     {
-                        fg.AppendItem(ImpactForce, "ImpactForce");
+                        sb.AppendItem(ImpactForce, "ImpactForce");
                     }
                     if (printMask?.CountdownSound ?? true)
                     {
-                        fg.AppendItem(CountdownSound, "CountdownSound");
+                        sb.AppendItem(CountdownSound, "CountdownSound");
                     }
                     if (printMask?.DisaleSound ?? true)
                     {
-                        fg.AppendItem(DisaleSound, "DisaleSound");
+                        sb.AppendItem(DisaleSound, "DisaleSound");
                     }
                     if (printMask?.DefaultWeaponSource ?? true)
                     {
-                        fg.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
+                        sb.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
                     }
                     if (printMask?.ConeSpread ?? true)
                     {
-                        fg.AppendItem(ConeSpread, "ConeSpread");
+                        sb.AppendItem(ConeSpread, "ConeSpread");
                     }
                     if (printMask?.CollisionRadius ?? true)
                     {
-                        fg.AppendItem(CollisionRadius, "CollisionRadius");
+                        sb.AppendItem(CollisionRadius, "CollisionRadius");
                     }
                     if (printMask?.Lifetime ?? true)
                     {
-                        fg.AppendItem(Lifetime, "Lifetime");
+                        sb.AppendItem(Lifetime, "Lifetime");
                     }
                     if (printMask?.RelaunchInterval ?? true)
                     {
-                        fg.AppendItem(RelaunchInterval, "RelaunchInterval");
+                        sb.AppendItem(RelaunchInterval, "RelaunchInterval");
                     }
                     if (printMask?.DecalData ?? true)
                     {
-                        fg.AppendItem(DecalData, "DecalData");
+                        sb.AppendItem(DecalData, "DecalData");
                     }
                     if (printMask?.CollisionLayer ?? true)
                     {
-                        fg.AppendItem(CollisionLayer, "CollisionLayer");
+                        sb.AppendItem(CollisionLayer, "CollisionLayer");
                     }
                     if (printMask?.TracerFrequency ?? true)
                     {
-                        fg.AppendItem(TracerFrequency, "TracerFrequency");
+                        sb.AppendItem(TracerFrequency, "TracerFrequency");
                     }
                     if (printMask?.VATSProjectile ?? true)
                     {
-                        fg.AppendItem(VATSProjectile, "VATSProjectile");
+                        sb.AppendItem(VATSProjectile, "VATSProjectile");
                     }
                     if (printMask?.MuzzleFlashModel ?? true)
                     {
-                        fg.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
+                        sb.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
                     }
                     if (printMask?.TextureFilesHashes ?? true)
                     {
-                        fg.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                        sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
                     }
                     if (printMask?.SoundLevel ?? true)
                     {
-                        fg.AppendItem(SoundLevel, "SoundLevel");
+                        sb.AppendItem(SoundLevel, "SoundLevel");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1307,68 +1308,130 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                Destructible?.ToString(fg);
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Gravity, "Gravity");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Range, "Range");
-                fg.AppendItem(Light, "Light");
-                fg.AppendItem(MuzzleFlash, "MuzzleFlash");
-                fg.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
-                fg.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
-                fg.AppendItem(Explosion, "Explosion");
-                fg.AppendItem(Sound, "Sound");
-                fg.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
-                fg.AppendItem(FadeDuration, "FadeDuration");
-                fg.AppendItem(ImpactForce, "ImpactForce");
-                fg.AppendItem(CountdownSound, "CountdownSound");
-                fg.AppendItem(DisaleSound, "DisaleSound");
-                fg.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
-                fg.AppendItem(ConeSpread, "ConeSpread");
-                fg.AppendItem(CollisionRadius, "CollisionRadius");
-                fg.AppendItem(Lifetime, "Lifetime");
-                fg.AppendItem(RelaunchInterval, "RelaunchInterval");
-                fg.AppendItem(DecalData, "DecalData");
-                fg.AppendItem(CollisionLayer, "CollisionLayer");
-                fg.AppendItem(TracerFrequency, "TracerFrequency");
-                fg.AppendItem(VATSProjectile, "VATSProjectile");
-                fg.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
-                fg.AppendItem(TextureFilesHashes, "TextureFilesHashes");
-                fg.AppendItem(SoundLevel, "SoundLevel");
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.ToString(sb);
+                Destructible?.ToString(sb);
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Gravity, "Gravity");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Range, "Range");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(MuzzleFlash, "MuzzleFlash");
+                }
+                {
+                    sb.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
+                }
+                {
+                    sb.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
+                }
+                {
+                    sb.AppendItem(Explosion, "Explosion");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
+                }
+                {
+                    sb.AppendItem(FadeDuration, "FadeDuration");
+                }
+                {
+                    sb.AppendItem(ImpactForce, "ImpactForce");
+                }
+                {
+                    sb.AppendItem(CountdownSound, "CountdownSound");
+                }
+                {
+                    sb.AppendItem(DisaleSound, "DisaleSound");
+                }
+                {
+                    sb.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
+                }
+                {
+                    sb.AppendItem(ConeSpread, "ConeSpread");
+                }
+                {
+                    sb.AppendItem(CollisionRadius, "CollisionRadius");
+                }
+                {
+                    sb.AppendItem(Lifetime, "Lifetime");
+                }
+                {
+                    sb.AppendItem(RelaunchInterval, "RelaunchInterval");
+                }
+                {
+                    sb.AppendItem(DecalData, "DecalData");
+                }
+                {
+                    sb.AppendItem(CollisionLayer, "CollisionLayer");
+                }
+                {
+                    sb.AppendItem(TracerFrequency, "TracerFrequency");
+                }
+                {
+                    sb.AppendItem(VATSProjectile, "VATSProjectile");
+                }
+                {
+                    sb.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
+                }
+                {
+                    sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -1669,7 +1732,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1854,13 +1917,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IProjectileGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Projectile.Mask<bool>? printMask = null)
         {
             ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2305,189 +2368,189 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             Projectile.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IProjectileGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Projectile.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Projectile =>");
+                sb.AppendLine($"Projectile =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Projectile) =>");
+                sb.AppendLine($"{name} (Projectile) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IProjectileGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Projectile.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(fg, "Destructible");
+                DestructibleItem?.ToString(sb, "Destructible");
             }
             if ((printMask?.Unused ?? true)
                 && item.Unused is {} UnusedItem)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(UnusedItem)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(UnusedItem)}");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.Gravity ?? true)
             {
-                fg.AppendItem(item.Gravity, "Gravity");
+                sb.AppendItem(item.Gravity, "Gravity");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Range ?? true)
             {
-                fg.AppendItem(item.Range, "Range");
+                sb.AppendItem(item.Range, "Range");
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendItem(item.Light.FormKey, "Light");
+                sb.AppendItem(item.Light.FormKey, "Light");
             }
             if (printMask?.MuzzleFlash ?? true)
             {
-                fg.AppendItem(item.MuzzleFlash.FormKey, "MuzzleFlash");
+                sb.AppendItem(item.MuzzleFlash.FormKey, "MuzzleFlash");
             }
             if (printMask?.ExplosionAltTriggerProximity ?? true)
             {
-                fg.AppendItem(item.ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
+                sb.AppendItem(item.ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
             }
             if (printMask?.ExplosionAltTriggerTimer ?? true)
             {
-                fg.AppendItem(item.ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
+                sb.AppendItem(item.ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
             }
             if (printMask?.Explosion ?? true)
             {
-                fg.AppendItem(item.Explosion.FormKey, "Explosion");
+                sb.AppendItem(item.Explosion.FormKey, "Explosion");
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                sb.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.MuzzleFlashDuration ?? true)
             {
-                fg.AppendItem(item.MuzzleFlashDuration, "MuzzleFlashDuration");
+                sb.AppendItem(item.MuzzleFlashDuration, "MuzzleFlashDuration");
             }
             if (printMask?.FadeDuration ?? true)
             {
-                fg.AppendItem(item.FadeDuration, "FadeDuration");
+                sb.AppendItem(item.FadeDuration, "FadeDuration");
             }
             if (printMask?.ImpactForce ?? true)
             {
-                fg.AppendItem(item.ImpactForce, "ImpactForce");
+                sb.AppendItem(item.ImpactForce, "ImpactForce");
             }
             if (printMask?.CountdownSound ?? true)
             {
-                fg.AppendItem(item.CountdownSound.FormKey, "CountdownSound");
+                sb.AppendItem(item.CountdownSound.FormKey, "CountdownSound");
             }
             if (printMask?.DisaleSound ?? true)
             {
-                fg.AppendItem(item.DisaleSound.FormKey, "DisaleSound");
+                sb.AppendItem(item.DisaleSound.FormKey, "DisaleSound");
             }
             if (printMask?.DefaultWeaponSource ?? true)
             {
-                fg.AppendItem(item.DefaultWeaponSource.FormKey, "DefaultWeaponSource");
+                sb.AppendItem(item.DefaultWeaponSource.FormKey, "DefaultWeaponSource");
             }
             if (printMask?.ConeSpread ?? true)
             {
-                fg.AppendItem(item.ConeSpread, "ConeSpread");
+                sb.AppendItem(item.ConeSpread, "ConeSpread");
             }
             if (printMask?.CollisionRadius ?? true)
             {
-                fg.AppendItem(item.CollisionRadius, "CollisionRadius");
+                sb.AppendItem(item.CollisionRadius, "CollisionRadius");
             }
             if (printMask?.Lifetime ?? true)
             {
-                fg.AppendItem(item.Lifetime, "Lifetime");
+                sb.AppendItem(item.Lifetime, "Lifetime");
             }
             if (printMask?.RelaunchInterval ?? true)
             {
-                fg.AppendItem(item.RelaunchInterval, "RelaunchInterval");
+                sb.AppendItem(item.RelaunchInterval, "RelaunchInterval");
             }
             if (printMask?.DecalData ?? true)
             {
-                fg.AppendItem(item.DecalData.FormKey, "DecalData");
+                sb.AppendItem(item.DecalData.FormKey, "DecalData");
             }
             if (printMask?.CollisionLayer ?? true)
             {
-                fg.AppendItem(item.CollisionLayer.FormKey, "CollisionLayer");
+                sb.AppendItem(item.CollisionLayer.FormKey, "CollisionLayer");
             }
             if (printMask?.TracerFrequency ?? true)
             {
-                fg.AppendItem(item.TracerFrequency, "TracerFrequency");
+                sb.AppendItem(item.TracerFrequency, "TracerFrequency");
             }
             if (printMask?.VATSProjectile ?? true)
             {
-                fg.AppendItem(item.VATSProjectile.FormKey, "VATSProjectile");
+                sb.AppendItem(item.VATSProjectile.FormKey, "VATSProjectile");
             }
             if (printMask?.MuzzleFlashModel ?? true)
             {
-                fg.AppendItem(item.MuzzleFlashModel, "MuzzleFlashModel");
+                sb.AppendItem(item.MuzzleFlashModel, "MuzzleFlashModel");
             }
             if ((printMask?.TextureFilesHashes ?? true)
                 && item.TextureFilesHashes is {} TextureFilesHashesItem)
             {
-                fg.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
+                sb.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
             }
             if (printMask?.SoundLevel ?? true)
             {
-                fg.AppendItem(item.SoundLevel, "SoundLevel");
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -3612,7 +3675,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ProjectileCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3925,11 +3988,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ProjectileMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

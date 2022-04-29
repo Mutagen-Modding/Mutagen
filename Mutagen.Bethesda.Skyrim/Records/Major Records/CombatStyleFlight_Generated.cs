@@ -82,11 +82,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleFlightMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -269,55 +270,55 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CombatStyleFlight.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CombatStyleFlight.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CombatStyleFlight.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CombatStyleFlight.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CombatStyleFlight.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.HoverChance ?? true)
                     {
-                        fg.AppendItem(HoverChance, "HoverChance");
+                        sb.AppendItem(HoverChance, "HoverChance");
                     }
                     if (printMask?.DiveBombChance ?? true)
                     {
-                        fg.AppendItem(DiveBombChance, "DiveBombChance");
+                        sb.AppendItem(DiveBombChance, "DiveBombChance");
                     }
                     if (printMask?.GroundAttackChance ?? true)
                     {
-                        fg.AppendItem(GroundAttackChance, "GroundAttackChance");
+                        sb.AppendItem(GroundAttackChance, "GroundAttackChance");
                     }
                     if (printMask?.HoverTime ?? true)
                     {
-                        fg.AppendItem(HoverTime, "HoverTime");
+                        sb.AppendItem(HoverTime, "HoverTime");
                     }
                     if (printMask?.GroundAttackTime ?? true)
                     {
-                        fg.AppendItem(GroundAttackTime, "GroundAttackTime");
+                        sb.AppendItem(GroundAttackTime, "GroundAttackTime");
                     }
                     if (printMask?.PerchAttackChance ?? true)
                     {
-                        fg.AppendItem(PerchAttackChance, "PerchAttackChance");
+                        sb.AppendItem(PerchAttackChance, "PerchAttackChance");
                     }
                     if (printMask?.PerchAttackTime ?? true)
                     {
-                        fg.AppendItem(PerchAttackTime, "PerchAttackTime");
+                        sb.AppendItem(PerchAttackTime, "PerchAttackTime");
                     }
                     if (printMask?.FlyingAttackChance ?? true)
                     {
-                        fg.AppendItem(FlyingAttackChance, "FlyingAttackChance");
+                        sb.AppendItem(FlyingAttackChance, "FlyingAttackChance");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -474,42 +475,60 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(HoverChance, "HoverChance");
-                fg.AppendItem(DiveBombChance, "DiveBombChance");
-                fg.AppendItem(GroundAttackChance, "GroundAttackChance");
-                fg.AppendItem(HoverTime, "HoverTime");
-                fg.AppendItem(GroundAttackTime, "GroundAttackTime");
-                fg.AppendItem(PerchAttackChance, "PerchAttackChance");
-                fg.AppendItem(PerchAttackTime, "PerchAttackTime");
-                fg.AppendItem(FlyingAttackChance, "FlyingAttackChance");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(HoverChance, "HoverChance");
+                }
+                {
+                    sb.AppendItem(DiveBombChance, "DiveBombChance");
+                }
+                {
+                    sb.AppendItem(GroundAttackChance, "GroundAttackChance");
+                }
+                {
+                    sb.AppendItem(HoverTime, "HoverTime");
+                }
+                {
+                    sb.AppendItem(GroundAttackTime, "GroundAttackTime");
+                }
+                {
+                    sb.AppendItem(PerchAttackChance, "PerchAttackChance");
+                }
+                {
+                    sb.AppendItem(PerchAttackTime, "PerchAttackTime");
+                }
+                {
+                    sb.AppendItem(FlyingAttackChance, "FlyingAttackChance");
+                }
             }
             #endregion
 
@@ -664,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -753,13 +772,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICombatStyleFlightGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleFlight.Mask<bool>? printMask = null)
         {
             ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1067,80 +1086,80 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CombatStyleFlight.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICombatStyleFlightGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleFlight.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CombatStyleFlight =>");
+                sb.AppendLine($"CombatStyleFlight =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CombatStyleFlight) =>");
+                sb.AppendLine($"{name} (CombatStyleFlight) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICombatStyleFlightGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CombatStyleFlight.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.HoverChance ?? true)
             {
-                fg.AppendItem(item.HoverChance, "HoverChance");
+                sb.AppendItem(item.HoverChance, "HoverChance");
             }
             if (printMask?.DiveBombChance ?? true)
             {
-                fg.AppendItem(item.DiveBombChance, "DiveBombChance");
+                sb.AppendItem(item.DiveBombChance, "DiveBombChance");
             }
             if (printMask?.GroundAttackChance ?? true)
             {
-                fg.AppendItem(item.GroundAttackChance, "GroundAttackChance");
+                sb.AppendItem(item.GroundAttackChance, "GroundAttackChance");
             }
             if (printMask?.HoverTime ?? true)
             {
-                fg.AppendItem(item.HoverTime, "HoverTime");
+                sb.AppendItem(item.HoverTime, "HoverTime");
             }
             if (printMask?.GroundAttackTime ?? true)
             {
-                fg.AppendItem(item.GroundAttackTime, "GroundAttackTime");
+                sb.AppendItem(item.GroundAttackTime, "GroundAttackTime");
             }
             if (printMask?.PerchAttackChance ?? true)
             {
-                fg.AppendItem(item.PerchAttackChance, "PerchAttackChance");
+                sb.AppendItem(item.PerchAttackChance, "PerchAttackChance");
             }
             if (printMask?.PerchAttackTime ?? true)
             {
-                fg.AppendItem(item.PerchAttackTime, "PerchAttackTime");
+                sb.AppendItem(item.PerchAttackTime, "PerchAttackTime");
             }
             if (printMask?.FlyingAttackChance ?? true)
             {
-                fg.AppendItem(item.FlyingAttackChance, "FlyingAttackChance");
+                sb.AppendItem(item.FlyingAttackChance, "FlyingAttackChance");
             }
         }
         
@@ -1523,7 +1542,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleFlightBinaryWriteTranslation.Instance;
@@ -1611,11 +1630,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleFlightMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -67,11 +67,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FogDistanceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -209,35 +210,35 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(FogDistance.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, FogDistance.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, FogDistance.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(FogDistance.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FogDistance.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.DayNear ?? true)
                     {
-                        fg.AppendItem(DayNear, "DayNear");
+                        sb.AppendItem(DayNear, "DayNear");
                     }
                     if (printMask?.DayFar ?? true)
                     {
-                        fg.AppendItem(DayFar, "DayFar");
+                        sb.AppendItem(DayFar, "DayFar");
                     }
                     if (printMask?.NightNear ?? true)
                     {
-                        fg.AppendItem(NightNear, "NightNear");
+                        sb.AppendItem(NightNear, "NightNear");
                     }
                     if (printMask?.NightFar ?? true)
                     {
-                        fg.AppendItem(NightFar, "NightFar");
+                        sb.AppendItem(NightFar, "NightFar");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -344,37 +345,45 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(DayNear, "DayNear");
-                fg.AppendItem(DayFar, "DayFar");
-                fg.AppendItem(NightNear, "NightNear");
-                fg.AppendItem(NightFar, "NightFar");
+                {
+                    sb.AppendItem(DayNear, "DayNear");
+                }
+                {
+                    sb.AppendItem(DayFar, "DayFar");
+                }
+                {
+                    sb.AppendItem(NightNear, "NightNear");
+                }
+                {
+                    sb.AppendItem(NightFar, "NightFar");
+                }
             }
             #endregion
 
@@ -498,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -577,13 +586,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IFogDistanceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FogDistance.Mask<bool>? printMask = null)
         {
             ((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -876,60 +885,60 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             FogDistance.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IFogDistanceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FogDistance.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FogDistance =>");
+                sb.AppendLine($"FogDistance =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FogDistance) =>");
+                sb.AppendLine($"{name} (FogDistance) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFogDistanceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FogDistance.Mask<bool>? printMask = null)
         {
             if (printMask?.DayNear ?? true)
             {
-                fg.AppendItem(item.DayNear, "DayNear");
+                sb.AppendItem(item.DayNear, "DayNear");
             }
             if (printMask?.DayFar ?? true)
             {
-                fg.AppendItem(item.DayFar, "DayFar");
+                sb.AppendItem(item.DayFar, "DayFar");
             }
             if (printMask?.NightNear ?? true)
             {
-                fg.AppendItem(item.NightNear, "NightNear");
+                sb.AppendItem(item.NightNear, "NightNear");
             }
             if (printMask?.NightFar ?? true)
             {
-                fg.AppendItem(item.NightFar, "NightFar");
+                sb.AppendItem(item.NightFar, "NightFar");
             }
         }
         
@@ -1215,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FogDistanceBinaryWriteTranslation.Instance;
@@ -1283,11 +1292,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FogDistanceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -85,11 +85,12 @@ namespace Mutagen.Bethesda.Pex
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PexObjectPropertyMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -279,51 +280,51 @@ namespace Mutagen.Bethesda.Pex
 
             public string ToString(PexObjectProperty.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PexObjectProperty.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PexObjectProperty.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PexObjectProperty.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PexObjectProperty.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.TypeName ?? true)
                     {
-                        fg.AppendItem(TypeName, "TypeName");
+                        sb.AppendItem(TypeName, "TypeName");
                     }
                     if (printMask?.DocString ?? true)
                     {
-                        fg.AppendItem(DocString, "DocString");
+                        sb.AppendItem(DocString, "DocString");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.AutoVarName ?? true)
                     {
-                        fg.AppendItem(AutoVarName, "AutoVarName");
+                        sb.AppendItem(AutoVarName, "AutoVarName");
                     }
                     if (printMask?.ReadHandler?.Overall ?? true)
                     {
-                        ReadHandler?.ToString(fg);
+                        ReadHandler?.ToString(sb);
                     }
                     if (printMask?.WriteHandler?.Overall ?? true)
                     {
-                        WriteHandler?.ToString(fg);
+                        WriteHandler?.ToString(sb);
                     }
                     if (printMask?.RawUserFlags ?? true)
                     {
-                        fg.AppendItem(RawUserFlags, "RawUserFlags");
+                        sb.AppendItem(RawUserFlags, "RawUserFlags");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -470,41 +471,53 @@ namespace Mutagen.Bethesda.Pex
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(TypeName, "TypeName");
-                fg.AppendItem(DocString, "DocString");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(AutoVarName, "AutoVarName");
-                ReadHandler?.ToString(fg);
-                WriteHandler?.ToString(fg);
-                fg.AppendItem(RawUserFlags, "RawUserFlags");
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(TypeName, "TypeName");
+                }
+                {
+                    sb.AppendItem(DocString, "DocString");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(AutoVarName, "AutoVarName");
+                }
+                ReadHandler?.ToString(sb);
+                WriteHandler?.ToString(sb);
+                {
+                    sb.AppendItem(RawUserFlags, "RawUserFlags");
+                }
             }
             #endregion
 
@@ -600,7 +613,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -688,13 +701,13 @@ namespace Mutagen.Bethesda.Pex
 
         public static void ToString(
             this IPexObjectPropertyGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PexObjectProperty.Mask<bool>? printMask = null)
         {
             ((PexObjectPropertyCommon)((IPexObjectPropertyGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -959,82 +972,82 @@ namespace Mutagen.Bethesda.Pex
             string? name = null,
             PexObjectProperty.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPexObjectPropertyGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PexObjectProperty.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PexObjectProperty =>");
+                sb.AppendLine($"PexObjectProperty =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PexObjectProperty) =>");
+                sb.AppendLine($"{name} (PexObjectProperty) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPexObjectPropertyGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PexObjectProperty.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.TypeName ?? true)
                 && item.TypeName is {} TypeNameItem)
             {
-                fg.AppendItem(TypeNameItem, "TypeName");
+                sb.AppendItem(TypeNameItem, "TypeName");
             }
             if ((printMask?.DocString ?? true)
                 && item.DocString is {} DocStringItem)
             {
-                fg.AppendItem(DocStringItem, "DocString");
+                sb.AppendItem(DocStringItem, "DocString");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.AutoVarName ?? true)
                 && item.AutoVarName is {} AutoVarNameItem)
             {
-                fg.AppendItem(AutoVarNameItem, "AutoVarName");
+                sb.AppendItem(AutoVarNameItem, "AutoVarName");
             }
             if ((printMask?.ReadHandler?.Overall ?? true)
                 && item.ReadHandler is {} ReadHandlerItem)
             {
-                ReadHandlerItem?.ToString(fg, "ReadHandler");
+                ReadHandlerItem?.ToString(sb, "ReadHandler");
             }
             if ((printMask?.WriteHandler?.Overall ?? true)
                 && item.WriteHandler is {} WriteHandlerItem)
             {
-                WriteHandlerItem?.ToString(fg, "WriteHandler");
+                WriteHandlerItem?.ToString(sb, "WriteHandler");
             }
             if (printMask?.RawUserFlags ?? true)
             {
-                fg.AppendItem(item.RawUserFlags, "RawUserFlags");
+                sb.AppendItem(item.RawUserFlags, "RawUserFlags");
             }
         }
         

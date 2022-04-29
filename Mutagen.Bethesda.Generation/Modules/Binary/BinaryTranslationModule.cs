@@ -77,28 +77,28 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         }
     }
 
-    public override async Task GenerateInTranslationWriteClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInTranslationWriteClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        GenerateCustomWritePartials(obj, fg);
-        GenerateCustomBinaryEndWritePartial(obj, fg);
-        await base.GenerateInTranslationWriteClass(obj, fg);
+        GenerateCustomWritePartials(obj, sb);
+        GenerateCustomBinaryEndWritePartial(obj, sb);
+        await base.GenerateInTranslationWriteClass(obj, sb);
     }
 
-    public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        GenerateCustomCreatePartials(obj, fg);
-        GenerateCustomBinaryEndCreatePartial(obj, fg);
-        await base.GenerateInTranslationCreateClass(obj, fg);
+        GenerateCustomCreatePartials(obj, sb);
+        GenerateCustomBinaryEndCreatePartial(obj, sb);
+        await base.GenerateInTranslationCreateClass(obj, sb);
     }
 
     public virtual bool WantsTryCreateFromBinary(ObjectGeneration obj) => !obj.Abstract;
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await base.GenerateInClass(obj, fg);
+        await base.GenerateInClass(obj, sb);
         if (WantsTryCreateFromBinary(obj))
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        "public static bool TryCreateFromBinary"))
             {
                 foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(
@@ -112,40 +112,40 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                     }
                 }
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"var startPos = {ReaderMemberName}.Position;");
-                using (var args = new ArgsWrapper(fg,
+                sb.AppendLine($"var startPos = {ReaderMemberName}.Position;");
+                using (var args = new ArgsWrapper(sb,
                            $"item = CreateFromBinary"))
                 {
                     args.Add(this.MainAPI.PassArgs(obj, TranslationDirection.Reader));
                 }
-                fg.AppendLine($"return startPos != {ReaderMemberName}.Position;");
+                sb.AppendLine($"return startPos != {ReaderMemberName}.Position;");
             }
         }
-        await GenerateBinaryOverlayCreates(obj, fg);
+        await GenerateBinaryOverlayCreates(obj, sb);
     }
 
-    private void GenerateCustomWritePartials(ObjectGeneration obj, FileGeneration fg)
+    private void GenerateCustomWritePartials(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         foreach (var field in obj.IterateFields(nonIntegrated: true))
         {
             if (field.GetFieldData().Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
             CustomLogicTranslationGeneration.GenerateWritePartialMethods(
-                fg: fg,
+                sb: sb,
                 obj: obj,
                 field: field,
                 isAsync: false);
         }
     }
 
-    private void GenerateCustomCreatePartials(ObjectGeneration obj, FileGeneration fg)
+    private void GenerateCustomCreatePartials(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         foreach (var field in obj.IterateFields(nonIntegrated: true))
         {
             if (field.GetFieldData().Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
             CustomLogicTranslationGeneration.GenerateCreatePartialMethods(
-                fg: fg,
+                sb: sb,
                 obj: obj,
                 field: field,
                 isAsync: false,
@@ -229,29 +229,29 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                || HasAsyncRecords(obj, self);
     }
 
-    protected virtual async Task GenerateBinaryOverlayCreates(ObjectGeneration obj, FileGeneration fg)
+    protected virtual async Task GenerateBinaryOverlayCreates(ObjectGeneration obj, StructuredStringBuilder sb)
     {
     }
 
-    private void GenerateCustomBinaryEndWritePartial(ObjectGeneration obj, FileGeneration fg)
+    private void GenerateCustomBinaryEndWritePartial(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
         if (data.CustomBinaryEnd == CustomEnd.Off) return;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"public static partial void CustomBinaryEndExport"))
         {
             args.Add($"{WriterClass} {WriterMemberName}");
             args.Add($"{obj.Interface(internalInterface: true, getter: true)} obj");
         }
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public static void CustomBinaryEndExportInternal"))
         {
             args.Add($"{WriterClass} {WriterMemberName}");
             args.Add($"{obj.Interface(internalInterface: true, getter: true)} obj");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"CustomBinaryEndExport"))
             {
                 args.AddPassArg(WriterMemberName);
@@ -260,27 +260,27 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         }
     }
 
-    private void GenerateCustomBinaryEndCreatePartial(ObjectGeneration obj, FileGeneration fg)
+    private void GenerateCustomBinaryEndCreatePartial(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
         if (data.CustomBinaryEnd == CustomEnd.Off) return;
         if (data.CustomBinaryEnd == CustomEnd.Normal)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"public static partial void CustomBinaryEndImport"))
             {
                 args.Add($"{ReaderClass} {ReaderMemberName}");
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
             }
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public static void CustomBinaryEndImportPublic"))
             {
                 args.Add($"{ReaderClass} {ReaderMemberName}");
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"CustomBinaryEndImport"))
                 {
                     args.AddPassArg(ReaderMemberName);
@@ -296,33 +296,33 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         return !data.CustomBinary && obj.GetObjectType() != ObjectType.Mod;
     }
 
-    protected override async Task GenerateNewSnippet(ObjectGeneration obj, FileGeneration fg)
+    protected override async Task GenerateNewSnippet(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (await obj.IsMajorRecord())
         {
-            fg.AppendLine($"var ret = new {obj.Name}();");
+            sb.AppendLine($"var ret = new {obj.Name}();");
         }
         else
         {
             if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"var nextRecord = HeaderTranslation.GetNext{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "Record")}Type"))
                 {
                     args.Add($"reader: {ReaderMemberName}.Reader");
                     args.Add("contentLength: out var customLen");
                 }
-                fg.AppendLine("nextRecord = translationParams.ConvertToCustom(nextRecord);");
-                fg.AppendLine("switch (nextRecord.TypeInt)");
-                using (new BraceWrapper(fg))
+                sb.AppendLine("nextRecord = translationParams.ConvertToCustom(nextRecord);");
+                sb.AppendLine("switch (nextRecord.TypeInt)");
+                using (sb.CurlyBrace())
                 {
                     foreach (var item in customLogicTriggers)
                     {
-                        fg.AppendLine($"case {item.TypeInt}: // {item.Type}");
+                        sb.AppendLine($"case {item.TypeInt}: // {item.Type}");
                     }
-                    using (new DepthWrapper(fg))
+                    using (new DepthWrapper(sb))
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    "return CustomRecordTypeTrigger"))
                         {
                             args.Add($"{ReaderMemberName}: {ReaderMemberName}.SpawnWithLength(customLen + {ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)})");
@@ -330,14 +330,14 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                             args.AddPassArg("translationParams");
                         }
                     }
-                    fg.AppendLine("default:");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("default:");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendLine("break;");
+                        sb.AppendLine("break;");
                     }
                 }
             }
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
@@ -370,11 +370,11 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         return $"{converterAccessor}.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
     }
 
-    protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, FileGeneration fg, Accessor accessor)
+    protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, StructuredStringBuilder sb, Accessor accessor)
     {
         if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"base.{CopyInFromPrefix}{ModuleNickname}"))
             {
                 args.AddPassArg("item");
@@ -400,27 +400,27 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             }
             if (field.Nullable)
             {
-                fg.AppendLine($"if (frame.Complete) return;");
+                sb.AppendLine($"if (frame.Complete) return;");
             }
 
             if (field is BreakType)
             {
-                fg.AppendLine("if (frame.Complete)");
-                using (new BraceWrapper(fg))
+                sb.AppendLine("if (frame.Complete)");
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
-                    fg.AppendLine("return;");
+                    sb.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
+                    sb.AppendLine("return;");
                 }
                 continue;
             }
-            await GenerateFillSnippet(obj, fg, field, generator, "frame");
+            await GenerateFillSnippet(obj, sb, field, generator, "frame");
         }
     }
 
-    protected virtual async Task GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
+    protected virtual async Task GenerateFillSnippet(ObjectGeneration obj, StructuredStringBuilder sb, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
     {
         await generator.GenerateCopyIn(
-            fg: fg,
+            sb: sb,
             objGen: obj,
             typeGen: field,
             readerAccessor: frameAccessor,
@@ -429,7 +429,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             errorMaskAccessor: null);
     }
 
-    protected override async Task GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
+    protected override async Task GenerateWriteSnippet(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
 
@@ -438,7 +438,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             var firstBase = obj.BaseClassTrail().FirstOrDefault();
             if (firstBase != null)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{TranslationWriteClass(firstBase)}.Instance.Write"))
                 {
                     args.AddPassArg($"item");
@@ -459,7 +459,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                     continue;
                 case BinaryGenerationType.Custom:
                     CustomLogic.GenerateWrite(
-                        fg: fg,
+                        sb: sb,
                         obj: obj,
                         field: field,
                         writerAccessor: WriterMemberName);
@@ -476,7 +476,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             if (fieldData.Binary == BinaryGenerationType.NoGeneration) return;
 
             await generator.GenerateWrite(
-                fg: fg,
+                sb: sb,
                 objGen: obj,
                 typeGen: field,
                 writerAccessor: WriterMemberName,

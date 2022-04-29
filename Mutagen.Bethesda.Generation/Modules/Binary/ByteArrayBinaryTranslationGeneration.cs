@@ -20,7 +20,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -30,7 +30,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -52,7 +52,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor frameAccessor,
@@ -63,7 +63,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
         if (data.HasTrigger)
         {
-            fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
         string framePass;
@@ -83,7 +83,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         TranslationGeneration.WrapParseCall(
             new TranslationWrapParseArgs()
             {
-                FG = fg,
+                FG = sb,
                 TypeGen = typeGen,
                 TranslatorLine = $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}",
                 MaskAccessor = errorMaskAccessor,
@@ -95,7 +95,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -110,11 +110,11 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
     {
         if (inline)
         {
-            fg.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse");
+            sb.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse");
             return;
         }
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Parse",
                    suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
         {
@@ -139,7 +139,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
     }
 
     public override async Task GenerateWrapperFields(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor dataAccessor,
@@ -156,7 +156,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
                 return;
             case BinaryGenerationType.Custom:
                 await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
-                    fg,
+                    sb,
                     objGen,
                     typeGen,
                     dataAccessor,
@@ -169,15 +169,15 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         }
         if (data.HasTrigger)
         {
-            fg.AppendLine($"private int? _{typeGen.Name}Location;");
+            sb.AppendLine($"private int? _{typeGen.Name}Location;");
         }
         if (data.RecordType.HasValue)
         {
             if (dataType != null) throw new ArgumentException();
             if (data.OverflowRecordType.HasValue)
             {
-                fg.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
-                using (var args = new ArgsWrapper(fg,
+                sb.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
+                using (var args = new ArgsWrapper(sb,
                            $"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.ReadByteArrayWithOverflow)}"))
                 {
                     args.Add(dataAccessor.ToString());
@@ -188,7 +188,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             }
             else
             {
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}) : {(typeGen.Nullable ? $"default(ReadOnlyMemorySlice<byte>?)" : "Array.Empty<byte>()")};");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}) : {(typeGen.Nullable ? $"default(ReadOnlyMemorySlice<byte>?)" : "Array.Empty<byte>()")};");
             }
         }
         else
@@ -197,21 +197,21 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             {
                 if (typeGen.Nullable)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + (await this.ExpectedLength(objGen, typeGen)).Value)} ? {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + (await this.ExpectedLength(objGen, typeGen)).Value)} ? {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
                 }
                 else if (data.Length.HasValue)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{data.Length.Value:X}).ToArray();");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{data.Length.Value:X}).ToArray();");
                 }
                 else
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
                 }
             }
             else
             {
-                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span.Slice(_{typeGen.Name}Location, {(await this.ExpectedLength(objGen, typeGen)).Value}).ToArray() : default(ReadOnlyMemorySlice<byte>{(typeGen.Nullable ? "?" : null)});");
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span.Slice(_{typeGen.Name}Location, {(await this.ExpectedLength(objGen, typeGen)).Value}).ToArray() : default(ReadOnlyMemorySlice<byte>{(typeGen.Nullable ? "?" : null)});");
             }
         }
     }
@@ -240,7 +240,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
     }
 
     public override async Task GenerateWrapperRecordTypeParse(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor locationAccessor,
@@ -248,15 +248,15 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
-        await base.GenerateWrapperRecordTypeParse(fg, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
+        await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
         if (data.OverflowRecordType.HasValue
             && data.BinaryOverlayFallback != BinaryGenerationType.Custom)
         {
-            fg.AppendLine($"_{typeGen.Name}LengthOverride = lastParsed.{nameof(PreviousParse.LengthOverride)};");
-            fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.LengthOverride)}.HasValue)");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"_{typeGen.Name}LengthOverride = lastParsed.{nameof(PreviousParse.LengthOverride)};");
+            sb.AppendLine($"if (lastParsed.{nameof(PreviousParse.LengthOverride)}.HasValue)");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"stream.Position += lastParsed.{nameof(PreviousParse.LengthOverride)}.Value;");
+                sb.AppendLine($"stream.Position += lastParsed.{nameof(PreviousParse.LengthOverride)}.Value;");
             }
         }
     }

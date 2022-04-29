@@ -77,11 +77,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClimateDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -246,47 +247,47 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(ClimateData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ClimateData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ClimateData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ClimateData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ClimateData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.SunriseBegin ?? true)
                     {
-                        fg.AppendItem(SunriseBegin, "SunriseBegin");
+                        sb.AppendItem(SunriseBegin, "SunriseBegin");
                     }
                     if (printMask?.SunriseEnd ?? true)
                     {
-                        fg.AppendItem(SunriseEnd, "SunriseEnd");
+                        sb.AppendItem(SunriseEnd, "SunriseEnd");
                     }
                     if (printMask?.SunsetBegin ?? true)
                     {
-                        fg.AppendItem(SunsetBegin, "SunsetBegin");
+                        sb.AppendItem(SunsetBegin, "SunsetBegin");
                     }
                     if (printMask?.SunsetEnd ?? true)
                     {
-                        fg.AppendItem(SunsetEnd, "SunsetEnd");
+                        sb.AppendItem(SunsetEnd, "SunsetEnd");
                     }
                     if (printMask?.Volatility ?? true)
                     {
-                        fg.AppendItem(Volatility, "Volatility");
+                        sb.AppendItem(Volatility, "Volatility");
                     }
                     if (printMask?.Phase ?? true)
                     {
-                        fg.AppendItem(Phase, "Phase");
+                        sb.AppendItem(Phase, "Phase");
                     }
                     if (printMask?.PhaseLength ?? true)
                     {
-                        fg.AppendItem(PhaseLength, "PhaseLength");
+                        sb.AppendItem(PhaseLength, "PhaseLength");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -423,40 +424,54 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(SunriseBegin, "SunriseBegin");
-                fg.AppendItem(SunriseEnd, "SunriseEnd");
-                fg.AppendItem(SunsetBegin, "SunsetBegin");
-                fg.AppendItem(SunsetEnd, "SunsetEnd");
-                fg.AppendItem(Volatility, "Volatility");
-                fg.AppendItem(Phase, "Phase");
-                fg.AppendItem(PhaseLength, "PhaseLength");
+                {
+                    sb.AppendItem(SunriseBegin, "SunriseBegin");
+                }
+                {
+                    sb.AppendItem(SunriseEnd, "SunriseEnd");
+                }
+                {
+                    sb.AppendItem(SunsetBegin, "SunsetBegin");
+                }
+                {
+                    sb.AppendItem(SunsetEnd, "SunsetEnd");
+                }
+                {
+                    sb.AppendItem(Volatility, "Volatility");
+                }
+                {
+                    sb.AppendItem(Phase, "Phase");
+                }
+                {
+                    sb.AppendItem(PhaseLength, "PhaseLength");
+                }
             }
             #endregion
 
@@ -592,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -677,13 +692,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IClimateDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClimateData.Mask<bool>? printMask = null)
         {
             ((ClimateDataCommon)((IClimateDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -985,72 +1000,72 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             ClimateData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IClimateDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClimateData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ClimateData =>");
+                sb.AppendLine($"ClimateData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ClimateData) =>");
+                sb.AppendLine($"{name} (ClimateData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IClimateDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ClimateData.Mask<bool>? printMask = null)
         {
             if (printMask?.SunriseBegin ?? true)
             {
-                fg.AppendItem(item.SunriseBegin, "SunriseBegin");
+                sb.AppendItem(item.SunriseBegin, "SunriseBegin");
             }
             if (printMask?.SunriseEnd ?? true)
             {
-                fg.AppendItem(item.SunriseEnd, "SunriseEnd");
+                sb.AppendItem(item.SunriseEnd, "SunriseEnd");
             }
             if (printMask?.SunsetBegin ?? true)
             {
-                fg.AppendItem(item.SunsetBegin, "SunsetBegin");
+                sb.AppendItem(item.SunsetBegin, "SunsetBegin");
             }
             if (printMask?.SunsetEnd ?? true)
             {
-                fg.AppendItem(item.SunsetEnd, "SunsetEnd");
+                sb.AppendItem(item.SunsetEnd, "SunsetEnd");
             }
             if (printMask?.Volatility ?? true)
             {
-                fg.AppendItem(item.Volatility, "Volatility");
+                sb.AppendItem(item.Volatility, "Volatility");
             }
             if (printMask?.Phase ?? true)
             {
-                fg.AppendItem(item.Phase, "Phase");
+                sb.AppendItem(item.Phase, "Phase");
             }
             if (printMask?.PhaseLength ?? true)
             {
-                fg.AppendItem(item.PhaseLength, "PhaseLength");
+                sb.AppendItem(item.PhaseLength, "PhaseLength");
             }
         }
         
@@ -1487,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ClimateDataBinaryWriteTranslation.Instance;
@@ -1577,11 +1592,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClimateDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

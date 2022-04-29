@@ -231,11 +231,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             BodyPartMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -634,151 +635,151 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(BodyPart.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, BodyPart.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, BodyPart.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(BodyPart.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(BodyPart.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.PoseMatching ?? true)
                     {
-                        fg.AppendItem(PoseMatching, "PoseMatching");
+                        sb.AppendItem(PoseMatching, "PoseMatching");
                     }
                     if (printMask?.PartNode ?? true)
                     {
-                        fg.AppendItem(PartNode, "PartNode");
+                        sb.AppendItem(PartNode, "PartNode");
                     }
                     if (printMask?.VatsTarget ?? true)
                     {
-                        fg.AppendItem(VatsTarget, "VatsTarget");
+                        sb.AppendItem(VatsTarget, "VatsTarget");
                     }
                     if (printMask?.IkStartNode ?? true)
                     {
-                        fg.AppendItem(IkStartNode, "IkStartNode");
+                        sb.AppendItem(IkStartNode, "IkStartNode");
                     }
                     if (printMask?.DamageMult ?? true)
                     {
-                        fg.AppendItem(DamageMult, "DamageMult");
+                        sb.AppendItem(DamageMult, "DamageMult");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.HealthPercent ?? true)
                     {
-                        fg.AppendItem(HealthPercent, "HealthPercent");
+                        sb.AppendItem(HealthPercent, "HealthPercent");
                     }
                     if (printMask?.ActorValue ?? true)
                     {
-                        fg.AppendItem(ActorValue, "ActorValue");
+                        sb.AppendItem(ActorValue, "ActorValue");
                     }
                     if (printMask?.ToHitChance ?? true)
                     {
-                        fg.AppendItem(ToHitChance, "ToHitChance");
+                        sb.AppendItem(ToHitChance, "ToHitChance");
                     }
                     if (printMask?.ExplodableExplosionChance ?? true)
                     {
-                        fg.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
+                        sb.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
                     }
                     if (printMask?.ExplodableDebrisCount ?? true)
                     {
-                        fg.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
+                        sb.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
                     }
                     if (printMask?.ExplodableDebris ?? true)
                     {
-                        fg.AppendItem(ExplodableDebris, "ExplodableDebris");
+                        sb.AppendItem(ExplodableDebris, "ExplodableDebris");
                     }
                     if (printMask?.ExplodableExplosion ?? true)
                     {
-                        fg.AppendItem(ExplodableExplosion, "ExplodableExplosion");
+                        sb.AppendItem(ExplodableExplosion, "ExplodableExplosion");
                     }
                     if (printMask?.TrackingMaxAngle ?? true)
                     {
-                        fg.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
+                        sb.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
                     }
                     if (printMask?.ExplodableDebrisScale ?? true)
                     {
-                        fg.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
+                        sb.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
                     }
                     if (printMask?.SeverableDebrisCount ?? true)
                     {
-                        fg.AppendItem(SeverableDebrisCount, "SeverableDebrisCount");
+                        sb.AppendItem(SeverableDebrisCount, "SeverableDebrisCount");
                     }
                     if (printMask?.SeverableDebris ?? true)
                     {
-                        fg.AppendItem(SeverableDebris, "SeverableDebris");
+                        sb.AppendItem(SeverableDebris, "SeverableDebris");
                     }
                     if (printMask?.SeverableExplosion ?? true)
                     {
-                        fg.AppendItem(SeverableExplosion, "SeverableExplosion");
+                        sb.AppendItem(SeverableExplosion, "SeverableExplosion");
                     }
                     if (printMask?.SeverableDebrisScale ?? true)
                     {
-                        fg.AppendItem(SeverableDebrisScale, "SeverableDebrisScale");
+                        sb.AppendItem(SeverableDebrisScale, "SeverableDebrisScale");
                     }
                     if (printMask?.GorePositioning ?? true)
                     {
-                        fg.AppendItem(GorePositioning, "GorePositioning");
+                        sb.AppendItem(GorePositioning, "GorePositioning");
                     }
                     if (printMask?.GoreRotation ?? true)
                     {
-                        fg.AppendItem(GoreRotation, "GoreRotation");
+                        sb.AppendItem(GoreRotation, "GoreRotation");
                     }
                     if (printMask?.SeverableImpactData ?? true)
                     {
-                        fg.AppendItem(SeverableImpactData, "SeverableImpactData");
+                        sb.AppendItem(SeverableImpactData, "SeverableImpactData");
                     }
                     if (printMask?.ExplodableImpactData ?? true)
                     {
-                        fg.AppendItem(ExplodableImpactData, "ExplodableImpactData");
+                        sb.AppendItem(ExplodableImpactData, "ExplodableImpactData");
                     }
                     if (printMask?.SeverableDecalCount ?? true)
                     {
-                        fg.AppendItem(SeverableDecalCount, "SeverableDecalCount");
+                        sb.AppendItem(SeverableDecalCount, "SeverableDecalCount");
                     }
                     if (printMask?.ExplodableDecalCount ?? true)
                     {
-                        fg.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
+                        sb.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.LimbReplacementScale ?? true)
                     {
-                        fg.AppendItem(LimbReplacementScale, "LimbReplacementScale");
+                        sb.AppendItem(LimbReplacementScale, "LimbReplacementScale");
                     }
                     if (printMask?.LimbReplacementModel ?? true)
                     {
-                        fg.AppendItem(LimbReplacementModel, "LimbReplacementModel");
+                        sb.AppendItem(LimbReplacementModel, "LimbReplacementModel");
                     }
                     if (printMask?.GoreTargetBone ?? true)
                     {
-                        fg.AppendItem(GoreTargetBone, "GoreTargetBone");
+                        sb.AppendItem(GoreTargetBone, "GoreTargetBone");
                     }
                     if (printMask?.TextureFilesHashes ?? true)
                     {
-                        fg.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                        sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
                     }
                     if (printMask?.BPNDDataTypeState ?? true)
                     {
-                        fg.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
+                        sb.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1175,66 +1176,132 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(PoseMatching, "PoseMatching");
-                fg.AppendItem(PartNode, "PartNode");
-                fg.AppendItem(VatsTarget, "VatsTarget");
-                fg.AppendItem(IkStartNode, "IkStartNode");
-                fg.AppendItem(DamageMult, "DamageMult");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(HealthPercent, "HealthPercent");
-                fg.AppendItem(ActorValue, "ActorValue");
-                fg.AppendItem(ToHitChance, "ToHitChance");
-                fg.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
-                fg.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
-                fg.AppendItem(ExplodableDebris, "ExplodableDebris");
-                fg.AppendItem(ExplodableExplosion, "ExplodableExplosion");
-                fg.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
-                fg.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
-                fg.AppendItem(SeverableDebrisCount, "SeverableDebrisCount");
-                fg.AppendItem(SeverableDebris, "SeverableDebris");
-                fg.AppendItem(SeverableExplosion, "SeverableExplosion");
-                fg.AppendItem(SeverableDebrisScale, "SeverableDebrisScale");
-                fg.AppendItem(GorePositioning, "GorePositioning");
-                fg.AppendItem(GoreRotation, "GoreRotation");
-                fg.AppendItem(SeverableImpactData, "SeverableImpactData");
-                fg.AppendItem(ExplodableImpactData, "ExplodableImpactData");
-                fg.AppendItem(SeverableDecalCount, "SeverableDecalCount");
-                fg.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(LimbReplacementScale, "LimbReplacementScale");
-                fg.AppendItem(LimbReplacementModel, "LimbReplacementModel");
-                fg.AppendItem(GoreTargetBone, "GoreTargetBone");
-                fg.AppendItem(TextureFilesHashes, "TextureFilesHashes");
-                fg.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(PoseMatching, "PoseMatching");
+                }
+                {
+                    sb.AppendItem(PartNode, "PartNode");
+                }
+                {
+                    sb.AppendItem(VatsTarget, "VatsTarget");
+                }
+                {
+                    sb.AppendItem(IkStartNode, "IkStartNode");
+                }
+                {
+                    sb.AppendItem(DamageMult, "DamageMult");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(HealthPercent, "HealthPercent");
+                }
+                {
+                    sb.AppendItem(ActorValue, "ActorValue");
+                }
+                {
+                    sb.AppendItem(ToHitChance, "ToHitChance");
+                }
+                {
+                    sb.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
+                }
+                {
+                    sb.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
+                }
+                {
+                    sb.AppendItem(ExplodableDebris, "ExplodableDebris");
+                }
+                {
+                    sb.AppendItem(ExplodableExplosion, "ExplodableExplosion");
+                }
+                {
+                    sb.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
+                }
+                {
+                    sb.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
+                }
+                {
+                    sb.AppendItem(SeverableDebrisCount, "SeverableDebrisCount");
+                }
+                {
+                    sb.AppendItem(SeverableDebris, "SeverableDebris");
+                }
+                {
+                    sb.AppendItem(SeverableExplosion, "SeverableExplosion");
+                }
+                {
+                    sb.AppendItem(SeverableDebrisScale, "SeverableDebrisScale");
+                }
+                {
+                    sb.AppendItem(GorePositioning, "GorePositioning");
+                }
+                {
+                    sb.AppendItem(GoreRotation, "GoreRotation");
+                }
+                {
+                    sb.AppendItem(SeverableImpactData, "SeverableImpactData");
+                }
+                {
+                    sb.AppendItem(ExplodableImpactData, "ExplodableImpactData");
+                }
+                {
+                    sb.AppendItem(SeverableDecalCount, "SeverableDecalCount");
+                }
+                {
+                    sb.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(LimbReplacementScale, "LimbReplacementScale");
+                }
+                {
+                    sb.AppendItem(LimbReplacementModel, "LimbReplacementModel");
+                }
+                {
+                    sb.AppendItem(GoreTargetBone, "GoreTargetBone");
+                }
+                {
+                    sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                }
+                {
+                    sb.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
+                }
             }
             #endregion
 
@@ -1483,7 +1550,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1634,13 +1701,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IBodyPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
             ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2033,178 +2100,178 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IBodyPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BodyPart =>");
+                sb.AppendLine($"BodyPart =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BodyPart) =>");
+                sb.AppendLine($"{name} (BodyPart) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBodyPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             BodyPart.Mask<bool>? printMask = null)
         {
             if (printMask?.Name ?? true)
             {
-                fg.AppendItem(item.Name, "Name");
+                sb.AppendItem(item.Name, "Name");
             }
             if ((printMask?.PoseMatching ?? true)
                 && item.PoseMatching is {} PoseMatchingItem)
             {
-                fg.AppendItem(PoseMatchingItem, "PoseMatching");
+                sb.AppendItem(PoseMatchingItem, "PoseMatching");
             }
             if (printMask?.PartNode ?? true)
             {
-                fg.AppendItem(item.PartNode, "PartNode");
+                sb.AppendItem(item.PartNode, "PartNode");
             }
             if (printMask?.VatsTarget ?? true)
             {
-                fg.AppendItem(item.VatsTarget, "VatsTarget");
+                sb.AppendItem(item.VatsTarget, "VatsTarget");
             }
             if (printMask?.IkStartNode ?? true)
             {
-                fg.AppendItem(item.IkStartNode, "IkStartNode");
+                sb.AppendItem(item.IkStartNode, "IkStartNode");
             }
             if (printMask?.DamageMult ?? true)
             {
-                fg.AppendItem(item.DamageMult, "DamageMult");
+                sb.AppendItem(item.DamageMult, "DamageMult");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.HealthPercent ?? true)
             {
-                fg.AppendItem(item.HealthPercent, "HealthPercent");
+                sb.AppendItem(item.HealthPercent, "HealthPercent");
             }
             if (printMask?.ActorValue ?? true)
             {
-                fg.AppendItem(item.ActorValue, "ActorValue");
+                sb.AppendItem(item.ActorValue, "ActorValue");
             }
             if (printMask?.ToHitChance ?? true)
             {
-                fg.AppendItem(item.ToHitChance, "ToHitChance");
+                sb.AppendItem(item.ToHitChance, "ToHitChance");
             }
             if (printMask?.ExplodableExplosionChance ?? true)
             {
-                fg.AppendItem(item.ExplodableExplosionChance, "ExplodableExplosionChance");
+                sb.AppendItem(item.ExplodableExplosionChance, "ExplodableExplosionChance");
             }
             if (printMask?.ExplodableDebrisCount ?? true)
             {
-                fg.AppendItem(item.ExplodableDebrisCount, "ExplodableDebrisCount");
+                sb.AppendItem(item.ExplodableDebrisCount, "ExplodableDebrisCount");
             }
             if (printMask?.ExplodableDebris ?? true)
             {
-                fg.AppendItem(item.ExplodableDebris.FormKey, "ExplodableDebris");
+                sb.AppendItem(item.ExplodableDebris.FormKey, "ExplodableDebris");
             }
             if (printMask?.ExplodableExplosion ?? true)
             {
-                fg.AppendItem(item.ExplodableExplosion.FormKey, "ExplodableExplosion");
+                sb.AppendItem(item.ExplodableExplosion.FormKey, "ExplodableExplosion");
             }
             if (printMask?.TrackingMaxAngle ?? true)
             {
-                fg.AppendItem(item.TrackingMaxAngle, "TrackingMaxAngle");
+                sb.AppendItem(item.TrackingMaxAngle, "TrackingMaxAngle");
             }
             if (printMask?.ExplodableDebrisScale ?? true)
             {
-                fg.AppendItem(item.ExplodableDebrisScale, "ExplodableDebrisScale");
+                sb.AppendItem(item.ExplodableDebrisScale, "ExplodableDebrisScale");
             }
             if (printMask?.SeverableDebrisCount ?? true)
             {
-                fg.AppendItem(item.SeverableDebrisCount, "SeverableDebrisCount");
+                sb.AppendItem(item.SeverableDebrisCount, "SeverableDebrisCount");
             }
             if (printMask?.SeverableDebris ?? true)
             {
-                fg.AppendItem(item.SeverableDebris.FormKey, "SeverableDebris");
+                sb.AppendItem(item.SeverableDebris.FormKey, "SeverableDebris");
             }
             if (printMask?.SeverableExplosion ?? true)
             {
-                fg.AppendItem(item.SeverableExplosion.FormKey, "SeverableExplosion");
+                sb.AppendItem(item.SeverableExplosion.FormKey, "SeverableExplosion");
             }
             if (printMask?.SeverableDebrisScale ?? true)
             {
-                fg.AppendItem(item.SeverableDebrisScale, "SeverableDebrisScale");
+                sb.AppendItem(item.SeverableDebrisScale, "SeverableDebrisScale");
             }
             if (printMask?.GorePositioning ?? true)
             {
-                fg.AppendItem(item.GorePositioning, "GorePositioning");
+                sb.AppendItem(item.GorePositioning, "GorePositioning");
             }
             if (printMask?.GoreRotation ?? true)
             {
-                fg.AppendItem(item.GoreRotation, "GoreRotation");
+                sb.AppendItem(item.GoreRotation, "GoreRotation");
             }
             if (printMask?.SeverableImpactData ?? true)
             {
-                fg.AppendItem(item.SeverableImpactData.FormKey, "SeverableImpactData");
+                sb.AppendItem(item.SeverableImpactData.FormKey, "SeverableImpactData");
             }
             if (printMask?.ExplodableImpactData ?? true)
             {
-                fg.AppendItem(item.ExplodableImpactData.FormKey, "ExplodableImpactData");
+                sb.AppendItem(item.ExplodableImpactData.FormKey, "ExplodableImpactData");
             }
             if (printMask?.SeverableDecalCount ?? true)
             {
-                fg.AppendItem(item.SeverableDecalCount, "SeverableDecalCount");
+                sb.AppendItem(item.SeverableDecalCount, "SeverableDecalCount");
             }
             if (printMask?.ExplodableDecalCount ?? true)
             {
-                fg.AppendItem(item.ExplodableDecalCount, "ExplodableDecalCount");
+                sb.AppendItem(item.ExplodableDecalCount, "ExplodableDecalCount");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.LimbReplacementScale ?? true)
             {
-                fg.AppendItem(item.LimbReplacementScale, "LimbReplacementScale");
+                sb.AppendItem(item.LimbReplacementScale, "LimbReplacementScale");
             }
             if (printMask?.LimbReplacementModel ?? true)
             {
-                fg.AppendItem(item.LimbReplacementModel, "LimbReplacementModel");
+                sb.AppendItem(item.LimbReplacementModel, "LimbReplacementModel");
             }
             if (printMask?.GoreTargetBone ?? true)
             {
-                fg.AppendItem(item.GoreTargetBone, "GoreTargetBone");
+                sb.AppendItem(item.GoreTargetBone, "GoreTargetBone");
             }
             if ((printMask?.TextureFilesHashes ?? true)
                 && item.TextureFilesHashes is {} TextureFilesHashesItem)
             {
-                fg.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
+                sb.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
             }
             if (printMask?.BPNDDataTypeState ?? true)
             {
-                fg.AppendItem(item.BPNDDataTypeState, "BPNDDataTypeState");
+                sb.AppendItem(item.BPNDDataTypeState, "BPNDDataTypeState");
             }
         }
         
@@ -2977,7 +3044,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3262,11 +3329,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             BodyPartMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

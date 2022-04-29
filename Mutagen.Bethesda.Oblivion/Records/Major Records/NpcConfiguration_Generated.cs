@@ -76,11 +76,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcConfigurationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -245,47 +246,47 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(NpcConfiguration.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NpcConfiguration.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NpcConfiguration.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NpcConfiguration.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcConfiguration.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.BaseSpellPoints ?? true)
                     {
-                        fg.AppendItem(BaseSpellPoints, "BaseSpellPoints");
+                        sb.AppendItem(BaseSpellPoints, "BaseSpellPoints");
                     }
                     if (printMask?.Fatigue ?? true)
                     {
-                        fg.AppendItem(Fatigue, "Fatigue");
+                        sb.AppendItem(Fatigue, "Fatigue");
                     }
                     if (printMask?.BarterGold ?? true)
                     {
-                        fg.AppendItem(BarterGold, "BarterGold");
+                        sb.AppendItem(BarterGold, "BarterGold");
                     }
                     if (printMask?.LevelOffset ?? true)
                     {
-                        fg.AppendItem(LevelOffset, "LevelOffset");
+                        sb.AppendItem(LevelOffset, "LevelOffset");
                     }
                     if (printMask?.CalcMin ?? true)
                     {
-                        fg.AppendItem(CalcMin, "CalcMin");
+                        sb.AppendItem(CalcMin, "CalcMin");
                     }
                     if (printMask?.CalcMax ?? true)
                     {
-                        fg.AppendItem(CalcMax, "CalcMax");
+                        sb.AppendItem(CalcMax, "CalcMax");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -422,40 +423,54 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(BaseSpellPoints, "BaseSpellPoints");
-                fg.AppendItem(Fatigue, "Fatigue");
-                fg.AppendItem(BarterGold, "BarterGold");
-                fg.AppendItem(LevelOffset, "LevelOffset");
-                fg.AppendItem(CalcMin, "CalcMin");
-                fg.AppendItem(CalcMax, "CalcMax");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(BaseSpellPoints, "BaseSpellPoints");
+                }
+                {
+                    sb.AppendItem(Fatigue, "Fatigue");
+                }
+                {
+                    sb.AppendItem(BarterGold, "BarterGold");
+                }
+                {
+                    sb.AppendItem(LevelOffset, "LevelOffset");
+                }
+                {
+                    sb.AppendItem(CalcMin, "CalcMin");
+                }
+                {
+                    sb.AppendItem(CalcMax, "CalcMax");
+                }
             }
             #endregion
 
@@ -591,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -676,13 +691,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this INpcConfigurationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
             ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -984,72 +999,72 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INpcConfigurationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcConfiguration =>");
+                sb.AppendLine($"NpcConfiguration =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcConfiguration) =>");
+                sb.AppendLine($"{name} (NpcConfiguration) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcConfigurationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.BaseSpellPoints ?? true)
             {
-                fg.AppendItem(item.BaseSpellPoints, "BaseSpellPoints");
+                sb.AppendItem(item.BaseSpellPoints, "BaseSpellPoints");
             }
             if (printMask?.Fatigue ?? true)
             {
-                fg.AppendItem(item.Fatigue, "Fatigue");
+                sb.AppendItem(item.Fatigue, "Fatigue");
             }
             if (printMask?.BarterGold ?? true)
             {
-                fg.AppendItem(item.BarterGold, "BarterGold");
+                sb.AppendItem(item.BarterGold, "BarterGold");
             }
             if (printMask?.LevelOffset ?? true)
             {
-                fg.AppendItem(item.LevelOffset, "LevelOffset");
+                sb.AppendItem(item.LevelOffset, "LevelOffset");
             }
             if (printMask?.CalcMin ?? true)
             {
-                fg.AppendItem(item.CalcMin, "CalcMin");
+                sb.AppendItem(item.CalcMin, "CalcMin");
             }
             if (printMask?.CalcMax ?? true)
             {
-                fg.AppendItem(item.CalcMax, "CalcMax");
+                sb.AppendItem(item.CalcMax, "CalcMax");
             }
         }
         
@@ -1365,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcConfigurationBinaryWriteTranslation.Instance;
@@ -1436,11 +1451,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcConfigurationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

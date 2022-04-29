@@ -96,11 +96,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponExtraDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -301,63 +302,63 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(WeaponExtraData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, WeaponExtraData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, WeaponExtraData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WeaponExtraData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeaponExtraData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.AnimationFireSeconds ?? true)
                     {
-                        fg.AppendItem(AnimationFireSeconds, "AnimationFireSeconds");
+                        sb.AppendItem(AnimationFireSeconds, "AnimationFireSeconds");
                     }
                     if (printMask?.RumbleLeftMotorStrength ?? true)
                     {
-                        fg.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
+                        sb.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
                     }
                     if (printMask?.RumbleRightMotorStrength ?? true)
                     {
-                        fg.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
+                        sb.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
                     }
                     if (printMask?.RumbleDuration ?? true)
                     {
-                        fg.AppendItem(RumbleDuration, "RumbleDuration");
+                        sb.AppendItem(RumbleDuration, "RumbleDuration");
                     }
                     if (printMask?.AnimationReloadSeconds ?? true)
                     {
-                        fg.AppendItem(AnimationReloadSeconds, "AnimationReloadSeconds");
+                        sb.AppendItem(AnimationReloadSeconds, "AnimationReloadSeconds");
                     }
                     if (printMask?.BoltAnimSeconds ?? true)
                     {
-                        fg.AppendItem(BoltAnimSeconds, "BoltAnimSeconds");
+                        sb.AppendItem(BoltAnimSeconds, "BoltAnimSeconds");
                     }
                     if (printMask?.SightedTransitionSeconds ?? true)
                     {
-                        fg.AppendItem(SightedTransitionSeconds, "SightedTransitionSeconds");
+                        sb.AppendItem(SightedTransitionSeconds, "SightedTransitionSeconds");
                     }
                     if (printMask?.NumProjectiles ?? true)
                     {
-                        fg.AppendItem(NumProjectiles, "NumProjectiles");
+                        sb.AppendItem(NumProjectiles, "NumProjectiles");
                     }
                     if (printMask?.ProjectileOverride ?? true)
                     {
-                        fg.AppendItem(ProjectileOverride, "ProjectileOverride");
+                        sb.AppendItem(ProjectileOverride, "ProjectileOverride");
                     }
                     if (printMask?.Pattern ?? true)
                     {
-                        fg.AppendItem(Pattern, "Pattern");
+                        sb.AppendItem(Pattern, "Pattern");
                     }
                     if (printMask?.RumblePeriodMs ?? true)
                     {
-                        fg.AppendItem(RumblePeriodMs, "RumblePeriodMs");
+                        sb.AppendItem(RumblePeriodMs, "RumblePeriodMs");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -534,44 +535,66 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(AnimationFireSeconds, "AnimationFireSeconds");
-                fg.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
-                fg.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
-                fg.AppendItem(RumbleDuration, "RumbleDuration");
-                fg.AppendItem(AnimationReloadSeconds, "AnimationReloadSeconds");
-                fg.AppendItem(BoltAnimSeconds, "BoltAnimSeconds");
-                fg.AppendItem(SightedTransitionSeconds, "SightedTransitionSeconds");
-                fg.AppendItem(NumProjectiles, "NumProjectiles");
-                fg.AppendItem(ProjectileOverride, "ProjectileOverride");
-                fg.AppendItem(Pattern, "Pattern");
-                fg.AppendItem(RumblePeriodMs, "RumblePeriodMs");
+                {
+                    sb.AppendItem(AnimationFireSeconds, "AnimationFireSeconds");
+                }
+                {
+                    sb.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
+                }
+                {
+                    sb.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
+                }
+                {
+                    sb.AppendItem(RumbleDuration, "RumbleDuration");
+                }
+                {
+                    sb.AppendItem(AnimationReloadSeconds, "AnimationReloadSeconds");
+                }
+                {
+                    sb.AppendItem(BoltAnimSeconds, "BoltAnimSeconds");
+                }
+                {
+                    sb.AppendItem(SightedTransitionSeconds, "SightedTransitionSeconds");
+                }
+                {
+                    sb.AppendItem(NumProjectiles, "NumProjectiles");
+                }
+                {
+                    sb.AppendItem(ProjectileOverride, "ProjectileOverride");
+                }
+                {
+                    sb.AppendItem(Pattern, "Pattern");
+                }
+                {
+                    sb.AppendItem(RumblePeriodMs, "RumblePeriodMs");
+                }
             }
             #endregion
 
@@ -728,7 +751,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -823,13 +846,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IWeaponExtraDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponExtraData.Mask<bool>? printMask = null)
         {
             ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1144,88 +1167,88 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             WeaponExtraData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeaponExtraDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponExtraData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeaponExtraData =>");
+                sb.AppendLine($"WeaponExtraData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeaponExtraData) =>");
+                sb.AppendLine($"{name} (WeaponExtraData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeaponExtraDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeaponExtraData.Mask<bool>? printMask = null)
         {
             if (printMask?.AnimationFireSeconds ?? true)
             {
-                fg.AppendItem(item.AnimationFireSeconds, "AnimationFireSeconds");
+                sb.AppendItem(item.AnimationFireSeconds, "AnimationFireSeconds");
             }
             if (printMask?.RumbleLeftMotorStrength ?? true)
             {
-                fg.AppendItem(item.RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
+                sb.AppendItem(item.RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
             }
             if (printMask?.RumbleRightMotorStrength ?? true)
             {
-                fg.AppendItem(item.RumbleRightMotorStrength, "RumbleRightMotorStrength");
+                sb.AppendItem(item.RumbleRightMotorStrength, "RumbleRightMotorStrength");
             }
             if (printMask?.RumbleDuration ?? true)
             {
-                fg.AppendItem(item.RumbleDuration, "RumbleDuration");
+                sb.AppendItem(item.RumbleDuration, "RumbleDuration");
             }
             if (printMask?.AnimationReloadSeconds ?? true)
             {
-                fg.AppendItem(item.AnimationReloadSeconds, "AnimationReloadSeconds");
+                sb.AppendItem(item.AnimationReloadSeconds, "AnimationReloadSeconds");
             }
             if (printMask?.BoltAnimSeconds ?? true)
             {
-                fg.AppendItem(item.BoltAnimSeconds, "BoltAnimSeconds");
+                sb.AppendItem(item.BoltAnimSeconds, "BoltAnimSeconds");
             }
             if (printMask?.SightedTransitionSeconds ?? true)
             {
-                fg.AppendItem(item.SightedTransitionSeconds, "SightedTransitionSeconds");
+                sb.AppendItem(item.SightedTransitionSeconds, "SightedTransitionSeconds");
             }
             if (printMask?.NumProjectiles ?? true)
             {
-                fg.AppendItem(item.NumProjectiles, "NumProjectiles");
+                sb.AppendItem(item.NumProjectiles, "NumProjectiles");
             }
             if (printMask?.ProjectileOverride ?? true)
             {
-                fg.AppendItem(item.ProjectileOverride.FormKey, "ProjectileOverride");
+                sb.AppendItem(item.ProjectileOverride.FormKey, "ProjectileOverride");
             }
             if (printMask?.Pattern ?? true)
             {
-                fg.AppendItem(item.Pattern, "Pattern");
+                sb.AppendItem(item.Pattern, "Pattern");
             }
             if (printMask?.RumblePeriodMs ?? true)
             {
-                fg.AppendItem(item.RumblePeriodMs, "RumblePeriodMs");
+                sb.AppendItem(item.RumblePeriodMs, "RumblePeriodMs");
             }
         }
         
@@ -1602,7 +1625,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => WeaponExtraDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1678,11 +1701,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponExtraDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

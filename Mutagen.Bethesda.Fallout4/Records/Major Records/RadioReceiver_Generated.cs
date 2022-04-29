@@ -81,11 +81,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RadioReceiverMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -241,43 +242,43 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(RadioReceiver.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, RadioReceiver.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, RadioReceiver.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RadioReceiver.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RadioReceiver.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.SoundModel ?? true)
                     {
-                        fg.AppendItem(SoundModel, "SoundModel");
+                        sb.AppendItem(SoundModel, "SoundModel");
                     }
                     if (printMask?.Frequency ?? true)
                     {
-                        fg.AppendItem(Frequency, "Frequency");
+                        sb.AppendItem(Frequency, "Frequency");
                     }
                     if (printMask?.Volume ?? true)
                     {
-                        fg.AppendItem(Volume, "Volume");
+                        sb.AppendItem(Volume, "Volume");
                     }
                     if (printMask?.StartsActive ?? true)
                     {
-                        fg.AppendItem(StartsActive, "StartsActive");
+                        sb.AppendItem(StartsActive, "StartsActive");
                     }
                     if (printMask?.NoSignalStatic ?? true)
                     {
-                        fg.AppendItem(NoSignalStatic, "NoSignalStatic");
+                        sb.AppendItem(NoSignalStatic, "NoSignalStatic");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -404,39 +405,51 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(SoundModel, "SoundModel");
-                fg.AppendItem(Frequency, "Frequency");
-                fg.AppendItem(Volume, "Volume");
-                fg.AppendItem(StartsActive, "StartsActive");
-                fg.AppendItem(NoSignalStatic, "NoSignalStatic");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(SoundModel, "SoundModel");
+                }
+                {
+                    sb.AppendItem(Frequency, "Frequency");
+                }
+                {
+                    sb.AppendItem(Volume, "Volume");
+                }
+                {
+                    sb.AppendItem(StartsActive, "StartsActive");
+                }
+                {
+                    sb.AppendItem(NoSignalStatic, "NoSignalStatic");
+                }
             }
             #endregion
 
@@ -578,7 +591,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -663,13 +676,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IRadioReceiverGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RadioReceiver.Mask<bool>? printMask = null)
         {
             ((RadioReceiverCommon)((IRadioReceiverGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -969,68 +982,68 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             RadioReceiver.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRadioReceiverGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RadioReceiver.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RadioReceiver =>");
+                sb.AppendLine($"RadioReceiver =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RadioReceiver) =>");
+                sb.AppendLine($"{name} (RadioReceiver) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRadioReceiverGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RadioReceiver.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.SoundModel ?? true)
             {
-                fg.AppendItem(item.SoundModel.FormKey, "SoundModel");
+                sb.AppendItem(item.SoundModel.FormKey, "SoundModel");
             }
             if (printMask?.Frequency ?? true)
             {
-                fg.AppendItem(item.Frequency, "Frequency");
+                sb.AppendItem(item.Frequency, "Frequency");
             }
             if (printMask?.Volume ?? true)
             {
-                fg.AppendItem(item.Volume, "Volume");
+                sb.AppendItem(item.Volume, "Volume");
             }
             if (printMask?.StartsActive ?? true)
             {
-                fg.AppendItem(item.StartsActive, "StartsActive");
+                sb.AppendItem(item.StartsActive, "StartsActive");
             }
             if (printMask?.NoSignalStatic ?? true)
             {
-                fg.AppendItem(item.NoSignalStatic, "NoSignalStatic");
+                sb.AppendItem(item.NoSignalStatic, "NoSignalStatic");
             }
         }
         
@@ -1344,7 +1357,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => RadioReceiverCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1418,11 +1431,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RadioReceiverMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

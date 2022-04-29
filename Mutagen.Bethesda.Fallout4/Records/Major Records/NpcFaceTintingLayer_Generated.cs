@@ -97,11 +97,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcFaceTintingLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -266,47 +267,47 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(NpcFaceTintingLayer.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NpcFaceTintingLayer.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NpcFaceTintingLayer.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NpcFaceTintingLayer.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcFaceTintingLayer.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.DataType ?? true)
                     {
-                        fg.AppendItem(DataType, "DataType");
+                        sb.AppendItem(DataType, "DataType");
                     }
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.TemplateColorIndex ?? true)
                     {
-                        fg.AppendItem(TemplateColorIndex, "TemplateColorIndex");
+                        sb.AppendItem(TemplateColorIndex, "TemplateColorIndex");
                     }
                     if (printMask?.TETIDataTypeState ?? true)
                     {
-                        fg.AppendItem(TETIDataTypeState, "TETIDataTypeState");
+                        sb.AppendItem(TETIDataTypeState, "TETIDataTypeState");
                     }
                     if (printMask?.TENDDataTypeState ?? true)
                     {
-                        fg.AppendItem(TENDDataTypeState, "TENDDataTypeState");
+                        sb.AppendItem(TENDDataTypeState, "TENDDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -443,40 +444,54 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(DataType, "DataType");
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(TemplateColorIndex, "TemplateColorIndex");
-                fg.AppendItem(TETIDataTypeState, "TETIDataTypeState");
-                fg.AppendItem(TENDDataTypeState, "TENDDataTypeState");
+                {
+                    sb.AppendItem(DataType, "DataType");
+                }
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(TemplateColorIndex, "TemplateColorIndex");
+                }
+                {
+                    sb.AppendItem(TETIDataTypeState, "TETIDataTypeState");
+                }
+                {
+                    sb.AppendItem(TENDDataTypeState, "TENDDataTypeState");
+                }
             }
             #endregion
 
@@ -624,7 +639,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -709,13 +724,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this INpcFaceTintingLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcFaceTintingLayer.Mask<bool>? printMask = null)
         {
             ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1017,72 +1032,72 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             NpcFaceTintingLayer.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INpcFaceTintingLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcFaceTintingLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcFaceTintingLayer =>");
+                sb.AppendLine($"NpcFaceTintingLayer =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcFaceTintingLayer) =>");
+                sb.AppendLine($"{name} (NpcFaceTintingLayer) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcFaceTintingLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcFaceTintingLayer.Mask<bool>? printMask = null)
         {
             if (printMask?.DataType ?? true)
             {
-                fg.AppendItem(item.DataType, "DataType");
+                sb.AppendItem(item.DataType, "DataType");
             }
             if (printMask?.Index ?? true)
             {
-                fg.AppendItem(item.Index, "Index");
+                sb.AppendItem(item.Index, "Index");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color, "Color");
+                sb.AppendItem(item.Color, "Color");
             }
             if (printMask?.TemplateColorIndex ?? true)
             {
-                fg.AppendItem(item.TemplateColorIndex, "TemplateColorIndex");
+                sb.AppendItem(item.TemplateColorIndex, "TemplateColorIndex");
             }
             if (printMask?.TETIDataTypeState ?? true)
             {
-                fg.AppendItem(item.TETIDataTypeState, "TETIDataTypeState");
+                sb.AppendItem(item.TETIDataTypeState, "TETIDataTypeState");
             }
             if (printMask?.TENDDataTypeState ?? true)
             {
-                fg.AppendItem(item.TENDDataTypeState, "TENDDataTypeState");
+                sb.AppendItem(item.TENDDataTypeState, "TENDDataTypeState");
             }
         }
         
@@ -1451,7 +1466,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcFaceTintingLayerBinaryWriteTranslation.Instance;
@@ -1576,11 +1591,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcFaceTintingLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

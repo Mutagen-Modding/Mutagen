@@ -178,11 +178,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -617,167 +618,167 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(CombatStyleData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CombatStyleData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CombatStyleData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CombatStyleData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CombatStyleData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.DodgePercentChance ?? true)
                     {
-                        fg.AppendItem(DodgePercentChance, "DodgePercentChance");
+                        sb.AppendItem(DodgePercentChance, "DodgePercentChance");
                     }
                     if (printMask?.LeftRightPercentChance ?? true)
                     {
-                        fg.AppendItem(LeftRightPercentChance, "LeftRightPercentChance");
+                        sb.AppendItem(LeftRightPercentChance, "LeftRightPercentChance");
                     }
                     if (printMask?.DodgeLeftRightTimerMin ?? true)
                     {
-                        fg.AppendItem(DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
+                        sb.AppendItem(DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
                     }
                     if (printMask?.DodgeLeftRightTimerMax ?? true)
                     {
-                        fg.AppendItem(DodgeLeftRightTimerMax, "DodgeLeftRightTimerMax");
+                        sb.AppendItem(DodgeLeftRightTimerMax, "DodgeLeftRightTimerMax");
                     }
                     if (printMask?.DodgeForwardTimerMin ?? true)
                     {
-                        fg.AppendItem(DodgeForwardTimerMin, "DodgeForwardTimerMin");
+                        sb.AppendItem(DodgeForwardTimerMin, "DodgeForwardTimerMin");
                     }
                     if (printMask?.DodgeForwardTimerMax ?? true)
                     {
-                        fg.AppendItem(DodgeForwardTimerMax, "DodgeForwardTimerMax");
+                        sb.AppendItem(DodgeForwardTimerMax, "DodgeForwardTimerMax");
                     }
                     if (printMask?.DodgeBackTimerMin ?? true)
                     {
-                        fg.AppendItem(DodgeBackTimerMin, "DodgeBackTimerMin");
+                        sb.AppendItem(DodgeBackTimerMin, "DodgeBackTimerMin");
                     }
                     if (printMask?.DodgeBackTimerMax ?? true)
                     {
-                        fg.AppendItem(DodgeBackTimerMax, "DodgeBackTimerMax");
+                        sb.AppendItem(DodgeBackTimerMax, "DodgeBackTimerMax");
                     }
                     if (printMask?.IdleTimerMin ?? true)
                     {
-                        fg.AppendItem(IdleTimerMin, "IdleTimerMin");
+                        sb.AppendItem(IdleTimerMin, "IdleTimerMin");
                     }
                     if (printMask?.IdleTimerMax ?? true)
                     {
-                        fg.AppendItem(IdleTimerMax, "IdleTimerMax");
+                        sb.AppendItem(IdleTimerMax, "IdleTimerMax");
                     }
                     if (printMask?.BlockPercentChance ?? true)
                     {
-                        fg.AppendItem(BlockPercentChance, "BlockPercentChance");
+                        sb.AppendItem(BlockPercentChance, "BlockPercentChance");
                     }
                     if (printMask?.AttackPercentChance ?? true)
                     {
-                        fg.AppendItem(AttackPercentChance, "AttackPercentChance");
+                        sb.AppendItem(AttackPercentChance, "AttackPercentChance");
                     }
                     if (printMask?.RecoilStaggerBonusToAttack ?? true)
                     {
-                        fg.AppendItem(RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
+                        sb.AppendItem(RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
                     }
                     if (printMask?.UnconsciousBonusToAttack ?? true)
                     {
-                        fg.AppendItem(UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
+                        sb.AppendItem(UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
                     }
                     if (printMask?.HandToHandBonusToAttack ?? true)
                     {
-                        fg.AppendItem(HandToHandBonusToAttack, "HandToHandBonusToAttack");
+                        sb.AppendItem(HandToHandBonusToAttack, "HandToHandBonusToAttack");
                     }
                     if (printMask?.PowerAttackPercentChance ?? true)
                     {
-                        fg.AppendItem(PowerAttackPercentChance, "PowerAttackPercentChance");
+                        sb.AppendItem(PowerAttackPercentChance, "PowerAttackPercentChance");
                     }
                     if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
                     {
-                        fg.AppendItem(RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
+                        sb.AppendItem(RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
                     }
                     if (printMask?.UnconsciousBonusToPowerAttack ?? true)
                     {
-                        fg.AppendItem(UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
+                        sb.AppendItem(UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
                     }
                     if (printMask?.PowerAttackNormal ?? true)
                     {
-                        fg.AppendItem(PowerAttackNormal, "PowerAttackNormal");
+                        sb.AppendItem(PowerAttackNormal, "PowerAttackNormal");
                     }
                     if (printMask?.PowerAttackForward ?? true)
                     {
-                        fg.AppendItem(PowerAttackForward, "PowerAttackForward");
+                        sb.AppendItem(PowerAttackForward, "PowerAttackForward");
                     }
                     if (printMask?.PowerAttackBack ?? true)
                     {
-                        fg.AppendItem(PowerAttackBack, "PowerAttackBack");
+                        sb.AppendItem(PowerAttackBack, "PowerAttackBack");
                     }
                     if (printMask?.PowerAttackLeft ?? true)
                     {
-                        fg.AppendItem(PowerAttackLeft, "PowerAttackLeft");
+                        sb.AppendItem(PowerAttackLeft, "PowerAttackLeft");
                     }
                     if (printMask?.PowerAttackRight ?? true)
                     {
-                        fg.AppendItem(PowerAttackRight, "PowerAttackRight");
+                        sb.AppendItem(PowerAttackRight, "PowerAttackRight");
                     }
                     if (printMask?.HoldTimerMin ?? true)
                     {
-                        fg.AppendItem(HoldTimerMin, "HoldTimerMin");
+                        sb.AppendItem(HoldTimerMin, "HoldTimerMin");
                     }
                     if (printMask?.HoldTimerMax ?? true)
                     {
-                        fg.AppendItem(HoldTimerMax, "HoldTimerMax");
+                        sb.AppendItem(HoldTimerMax, "HoldTimerMax");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.AcrobaticDodgePercentChance ?? true)
                     {
-                        fg.AppendItem(AcrobaticDodgePercentChance, "AcrobaticDodgePercentChance");
+                        sb.AppendItem(AcrobaticDodgePercentChance, "AcrobaticDodgePercentChance");
                     }
                     if (printMask?.RangeMultOptimal ?? true)
                     {
-                        fg.AppendItem(RangeMultOptimal, "RangeMultOptimal");
+                        sb.AppendItem(RangeMultOptimal, "RangeMultOptimal");
                     }
                     if (printMask?.RangeMultMax ?? true)
                     {
-                        fg.AppendItem(RangeMultMax, "RangeMultMax");
+                        sb.AppendItem(RangeMultMax, "RangeMultMax");
                     }
                     if (printMask?.SwitchDistanceMelee ?? true)
                     {
-                        fg.AppendItem(SwitchDistanceMelee, "SwitchDistanceMelee");
+                        sb.AppendItem(SwitchDistanceMelee, "SwitchDistanceMelee");
                     }
                     if (printMask?.SwitchDistanceRanged ?? true)
                     {
-                        fg.AppendItem(SwitchDistanceRanged, "SwitchDistanceRanged");
+                        sb.AppendItem(SwitchDistanceRanged, "SwitchDistanceRanged");
                     }
                     if (printMask?.BuffStandoffDistance ?? true)
                     {
-                        fg.AppendItem(BuffStandoffDistance, "BuffStandoffDistance");
+                        sb.AppendItem(BuffStandoffDistance, "BuffStandoffDistance");
                     }
                     if (printMask?.RangedStandoffDistance ?? true)
                     {
-                        fg.AppendItem(RangedStandoffDistance, "RangedStandoffDistance");
+                        sb.AppendItem(RangedStandoffDistance, "RangedStandoffDistance");
                     }
                     if (printMask?.GroupStandoffDistance ?? true)
                     {
-                        fg.AppendItem(GroupStandoffDistance, "GroupStandoffDistance");
+                        sb.AppendItem(GroupStandoffDistance, "GroupStandoffDistance");
                     }
                     if (printMask?.RushingAttackPercentChance ?? true)
                     {
-                        fg.AppendItem(RushingAttackPercentChance, "RushingAttackPercentChance");
+                        sb.AppendItem(RushingAttackPercentChance, "RushingAttackPercentChance");
                     }
                     if (printMask?.RushingAttackDistanceMult ?? true)
                     {
-                        fg.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                        sb.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1214,70 +1215,144 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(DodgePercentChance, "DodgePercentChance");
-                fg.AppendItem(LeftRightPercentChance, "LeftRightPercentChance");
-                fg.AppendItem(DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
-                fg.AppendItem(DodgeLeftRightTimerMax, "DodgeLeftRightTimerMax");
-                fg.AppendItem(DodgeForwardTimerMin, "DodgeForwardTimerMin");
-                fg.AppendItem(DodgeForwardTimerMax, "DodgeForwardTimerMax");
-                fg.AppendItem(DodgeBackTimerMin, "DodgeBackTimerMin");
-                fg.AppendItem(DodgeBackTimerMax, "DodgeBackTimerMax");
-                fg.AppendItem(IdleTimerMin, "IdleTimerMin");
-                fg.AppendItem(IdleTimerMax, "IdleTimerMax");
-                fg.AppendItem(BlockPercentChance, "BlockPercentChance");
-                fg.AppendItem(AttackPercentChance, "AttackPercentChance");
-                fg.AppendItem(RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
-                fg.AppendItem(UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
-                fg.AppendItem(HandToHandBonusToAttack, "HandToHandBonusToAttack");
-                fg.AppendItem(PowerAttackPercentChance, "PowerAttackPercentChance");
-                fg.AppendItem(RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
-                fg.AppendItem(UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
-                fg.AppendItem(PowerAttackNormal, "PowerAttackNormal");
-                fg.AppendItem(PowerAttackForward, "PowerAttackForward");
-                fg.AppendItem(PowerAttackBack, "PowerAttackBack");
-                fg.AppendItem(PowerAttackLeft, "PowerAttackLeft");
-                fg.AppendItem(PowerAttackRight, "PowerAttackRight");
-                fg.AppendItem(HoldTimerMin, "HoldTimerMin");
-                fg.AppendItem(HoldTimerMax, "HoldTimerMax");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(AcrobaticDodgePercentChance, "AcrobaticDodgePercentChance");
-                fg.AppendItem(RangeMultOptimal, "RangeMultOptimal");
-                fg.AppendItem(RangeMultMax, "RangeMultMax");
-                fg.AppendItem(SwitchDistanceMelee, "SwitchDistanceMelee");
-                fg.AppendItem(SwitchDistanceRanged, "SwitchDistanceRanged");
-                fg.AppendItem(BuffStandoffDistance, "BuffStandoffDistance");
-                fg.AppendItem(RangedStandoffDistance, "RangedStandoffDistance");
-                fg.AppendItem(GroupStandoffDistance, "GroupStandoffDistance");
-                fg.AppendItem(RushingAttackPercentChance, "RushingAttackPercentChance");
-                fg.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(DodgePercentChance, "DodgePercentChance");
+                }
+                {
+                    sb.AppendItem(LeftRightPercentChance, "LeftRightPercentChance");
+                }
+                {
+                    sb.AppendItem(DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
+                }
+                {
+                    sb.AppendItem(DodgeLeftRightTimerMax, "DodgeLeftRightTimerMax");
+                }
+                {
+                    sb.AppendItem(DodgeForwardTimerMin, "DodgeForwardTimerMin");
+                }
+                {
+                    sb.AppendItem(DodgeForwardTimerMax, "DodgeForwardTimerMax");
+                }
+                {
+                    sb.AppendItem(DodgeBackTimerMin, "DodgeBackTimerMin");
+                }
+                {
+                    sb.AppendItem(DodgeBackTimerMax, "DodgeBackTimerMax");
+                }
+                {
+                    sb.AppendItem(IdleTimerMin, "IdleTimerMin");
+                }
+                {
+                    sb.AppendItem(IdleTimerMax, "IdleTimerMax");
+                }
+                {
+                    sb.AppendItem(BlockPercentChance, "BlockPercentChance");
+                }
+                {
+                    sb.AppendItem(AttackPercentChance, "AttackPercentChance");
+                }
+                {
+                    sb.AppendItem(RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
+                }
+                {
+                    sb.AppendItem(UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
+                }
+                {
+                    sb.AppendItem(HandToHandBonusToAttack, "HandToHandBonusToAttack");
+                }
+                {
+                    sb.AppendItem(PowerAttackPercentChance, "PowerAttackPercentChance");
+                }
+                {
+                    sb.AppendItem(RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
+                }
+                {
+                    sb.AppendItem(UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
+                }
+                {
+                    sb.AppendItem(PowerAttackNormal, "PowerAttackNormal");
+                }
+                {
+                    sb.AppendItem(PowerAttackForward, "PowerAttackForward");
+                }
+                {
+                    sb.AppendItem(PowerAttackBack, "PowerAttackBack");
+                }
+                {
+                    sb.AppendItem(PowerAttackLeft, "PowerAttackLeft");
+                }
+                {
+                    sb.AppendItem(PowerAttackRight, "PowerAttackRight");
+                }
+                {
+                    sb.AppendItem(HoldTimerMin, "HoldTimerMin");
+                }
+                {
+                    sb.AppendItem(HoldTimerMax, "HoldTimerMax");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(AcrobaticDodgePercentChance, "AcrobaticDodgePercentChance");
+                }
+                {
+                    sb.AppendItem(RangeMultOptimal, "RangeMultOptimal");
+                }
+                {
+                    sb.AppendItem(RangeMultMax, "RangeMultMax");
+                }
+                {
+                    sb.AppendItem(SwitchDistanceMelee, "SwitchDistanceMelee");
+                }
+                {
+                    sb.AppendItem(SwitchDistanceRanged, "SwitchDistanceRanged");
+                }
+                {
+                    sb.AppendItem(BuffStandoffDistance, "BuffStandoffDistance");
+                }
+                {
+                    sb.AppendItem(RangedStandoffDistance, "RangedStandoffDistance");
+                }
+                {
+                    sb.AppendItem(GroupStandoffDistance, "GroupStandoffDistance");
+                }
+                {
+                    sb.AppendItem(RushingAttackPercentChance, "RushingAttackPercentChance");
+                }
+                {
+                    sb.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                }
             }
             #endregion
 
@@ -1545,7 +1620,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1690,13 +1765,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ICombatStyleDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleData.Mask<bool>? printMask = null)
         {
             ((CombatStyleDataCommon)((ICombatStyleDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2088,192 +2163,192 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             CombatStyleData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICombatStyleDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CombatStyleData =>");
+                sb.AppendLine($"CombatStyleData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CombatStyleData) =>");
+                sb.AppendLine($"{name} (CombatStyleData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICombatStyleDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CombatStyleData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.DodgePercentChance ?? true)
             {
-                fg.AppendItem(item.DodgePercentChance, "DodgePercentChance");
+                sb.AppendItem(item.DodgePercentChance, "DodgePercentChance");
             }
             if (printMask?.LeftRightPercentChance ?? true)
             {
-                fg.AppendItem(item.LeftRightPercentChance, "LeftRightPercentChance");
+                sb.AppendItem(item.LeftRightPercentChance, "LeftRightPercentChance");
             }
             if (printMask?.DodgeLeftRightTimerMin ?? true)
             {
-                fg.AppendItem(item.DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
+                sb.AppendItem(item.DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
             }
             if (printMask?.DodgeLeftRightTimerMax ?? true)
             {
-                fg.AppendItem(item.DodgeLeftRightTimerMax, "DodgeLeftRightTimerMax");
+                sb.AppendItem(item.DodgeLeftRightTimerMax, "DodgeLeftRightTimerMax");
             }
             if (printMask?.DodgeForwardTimerMin ?? true)
             {
-                fg.AppendItem(item.DodgeForwardTimerMin, "DodgeForwardTimerMin");
+                sb.AppendItem(item.DodgeForwardTimerMin, "DodgeForwardTimerMin");
             }
             if (printMask?.DodgeForwardTimerMax ?? true)
             {
-                fg.AppendItem(item.DodgeForwardTimerMax, "DodgeForwardTimerMax");
+                sb.AppendItem(item.DodgeForwardTimerMax, "DodgeForwardTimerMax");
             }
             if (printMask?.DodgeBackTimerMin ?? true)
             {
-                fg.AppendItem(item.DodgeBackTimerMin, "DodgeBackTimerMin");
+                sb.AppendItem(item.DodgeBackTimerMin, "DodgeBackTimerMin");
             }
             if (printMask?.DodgeBackTimerMax ?? true)
             {
-                fg.AppendItem(item.DodgeBackTimerMax, "DodgeBackTimerMax");
+                sb.AppendItem(item.DodgeBackTimerMax, "DodgeBackTimerMax");
             }
             if (printMask?.IdleTimerMin ?? true)
             {
-                fg.AppendItem(item.IdleTimerMin, "IdleTimerMin");
+                sb.AppendItem(item.IdleTimerMin, "IdleTimerMin");
             }
             if (printMask?.IdleTimerMax ?? true)
             {
-                fg.AppendItem(item.IdleTimerMax, "IdleTimerMax");
+                sb.AppendItem(item.IdleTimerMax, "IdleTimerMax");
             }
             if (printMask?.BlockPercentChance ?? true)
             {
-                fg.AppendItem(item.BlockPercentChance, "BlockPercentChance");
+                sb.AppendItem(item.BlockPercentChance, "BlockPercentChance");
             }
             if (printMask?.AttackPercentChance ?? true)
             {
-                fg.AppendItem(item.AttackPercentChance, "AttackPercentChance");
+                sb.AppendItem(item.AttackPercentChance, "AttackPercentChance");
             }
             if (printMask?.RecoilStaggerBonusToAttack ?? true)
             {
-                fg.AppendItem(item.RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
+                sb.AppendItem(item.RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
             }
             if (printMask?.UnconsciousBonusToAttack ?? true)
             {
-                fg.AppendItem(item.UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
+                sb.AppendItem(item.UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
             }
             if (printMask?.HandToHandBonusToAttack ?? true)
             {
-                fg.AppendItem(item.HandToHandBonusToAttack, "HandToHandBonusToAttack");
+                sb.AppendItem(item.HandToHandBonusToAttack, "HandToHandBonusToAttack");
             }
             if (printMask?.PowerAttackPercentChance ?? true)
             {
-                fg.AppendItem(item.PowerAttackPercentChance, "PowerAttackPercentChance");
+                sb.AppendItem(item.PowerAttackPercentChance, "PowerAttackPercentChance");
             }
             if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
             {
-                fg.AppendItem(item.RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
+                sb.AppendItem(item.RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
             }
             if (printMask?.UnconsciousBonusToPowerAttack ?? true)
             {
-                fg.AppendItem(item.UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
+                sb.AppendItem(item.UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
             }
             if (printMask?.PowerAttackNormal ?? true)
             {
-                fg.AppendItem(item.PowerAttackNormal, "PowerAttackNormal");
+                sb.AppendItem(item.PowerAttackNormal, "PowerAttackNormal");
             }
             if (printMask?.PowerAttackForward ?? true)
             {
-                fg.AppendItem(item.PowerAttackForward, "PowerAttackForward");
+                sb.AppendItem(item.PowerAttackForward, "PowerAttackForward");
             }
             if (printMask?.PowerAttackBack ?? true)
             {
-                fg.AppendItem(item.PowerAttackBack, "PowerAttackBack");
+                sb.AppendItem(item.PowerAttackBack, "PowerAttackBack");
             }
             if (printMask?.PowerAttackLeft ?? true)
             {
-                fg.AppendItem(item.PowerAttackLeft, "PowerAttackLeft");
+                sb.AppendItem(item.PowerAttackLeft, "PowerAttackLeft");
             }
             if (printMask?.PowerAttackRight ?? true)
             {
-                fg.AppendItem(item.PowerAttackRight, "PowerAttackRight");
+                sb.AppendItem(item.PowerAttackRight, "PowerAttackRight");
             }
             if (printMask?.HoldTimerMin ?? true)
             {
-                fg.AppendItem(item.HoldTimerMin, "HoldTimerMin");
+                sb.AppendItem(item.HoldTimerMin, "HoldTimerMin");
             }
             if (printMask?.HoldTimerMax ?? true)
             {
-                fg.AppendItem(item.HoldTimerMax, "HoldTimerMax");
+                sb.AppendItem(item.HoldTimerMax, "HoldTimerMax");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.AcrobaticDodgePercentChance ?? true)
             {
-                fg.AppendItem(item.AcrobaticDodgePercentChance, "AcrobaticDodgePercentChance");
+                sb.AppendItem(item.AcrobaticDodgePercentChance, "AcrobaticDodgePercentChance");
             }
             if (printMask?.RangeMultOptimal ?? true)
             {
-                fg.AppendItem(item.RangeMultOptimal, "RangeMultOptimal");
+                sb.AppendItem(item.RangeMultOptimal, "RangeMultOptimal");
             }
             if (printMask?.RangeMultMax ?? true)
             {
-                fg.AppendItem(item.RangeMultMax, "RangeMultMax");
+                sb.AppendItem(item.RangeMultMax, "RangeMultMax");
             }
             if (printMask?.SwitchDistanceMelee ?? true)
             {
-                fg.AppendItem(item.SwitchDistanceMelee, "SwitchDistanceMelee");
+                sb.AppendItem(item.SwitchDistanceMelee, "SwitchDistanceMelee");
             }
             if (printMask?.SwitchDistanceRanged ?? true)
             {
-                fg.AppendItem(item.SwitchDistanceRanged, "SwitchDistanceRanged");
+                sb.AppendItem(item.SwitchDistanceRanged, "SwitchDistanceRanged");
             }
             if (printMask?.BuffStandoffDistance ?? true)
             {
-                fg.AppendItem(item.BuffStandoffDistance, "BuffStandoffDistance");
+                sb.AppendItem(item.BuffStandoffDistance, "BuffStandoffDistance");
             }
             if (printMask?.RangedStandoffDistance ?? true)
             {
-                fg.AppendItem(item.RangedStandoffDistance, "RangedStandoffDistance");
+                sb.AppendItem(item.RangedStandoffDistance, "RangedStandoffDistance");
             }
             if (printMask?.GroupStandoffDistance ?? true)
             {
-                fg.AppendItem(item.GroupStandoffDistance, "GroupStandoffDistance");
+                sb.AppendItem(item.GroupStandoffDistance, "GroupStandoffDistance");
             }
             if (printMask?.RushingAttackPercentChance ?? true)
             {
-                fg.AppendItem(item.RushingAttackPercentChance, "RushingAttackPercentChance");
+                sb.AppendItem(item.RushingAttackPercentChance, "RushingAttackPercentChance");
             }
             if (printMask?.RushingAttackDistanceMult ?? true)
             {
-                fg.AppendItem(item.RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                sb.AppendItem(item.RushingAttackDistanceMult, "RushingAttackDistanceMult");
             }
         }
         
@@ -3043,7 +3118,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleDataBinaryWriteTranslation.Instance;
@@ -3171,11 +3246,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

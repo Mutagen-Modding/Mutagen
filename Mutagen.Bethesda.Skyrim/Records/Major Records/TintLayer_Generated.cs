@@ -76,11 +76,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TintLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -218,35 +219,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(TintLayer.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TintLayer.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TintLayer.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TintLayer.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TintLayer.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.InterpolationValue ?? true)
                     {
-                        fg.AppendItem(InterpolationValue, "InterpolationValue");
+                        sb.AppendItem(InterpolationValue, "InterpolationValue");
                     }
                     if (printMask?.Preset ?? true)
                     {
-                        fg.AppendItem(Preset, "Preset");
+                        sb.AppendItem(Preset, "Preset");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -353,37 +354,45 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(InterpolationValue, "InterpolationValue");
-                fg.AppendItem(Preset, "Preset");
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(InterpolationValue, "InterpolationValue");
+                }
+                {
+                    sb.AppendItem(Preset, "Preset");
+                }
             }
             #endregion
 
@@ -507,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -586,13 +595,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ITintLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TintLayer.Mask<bool>? printMask = null)
         {
             ((TintLayerCommon)((ITintLayerGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -885,64 +894,64 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             TintLayer.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITintLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TintLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TintLayer =>");
+                sb.AppendLine($"TintLayer =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TintLayer) =>");
+                sb.AppendLine($"{name} (TintLayer) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITintLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TintLayer.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Color ?? true)
                 && item.Color is {} ColorItem)
             {
-                fg.AppendItem(ColorItem, "Color");
+                sb.AppendItem(ColorItem, "Color");
             }
             if ((printMask?.InterpolationValue ?? true)
                 && item.InterpolationValue is {} InterpolationValueItem)
             {
-                fg.AppendItem(InterpolationValueItem, "InterpolationValue");
+                sb.AppendItem(InterpolationValueItem, "InterpolationValue");
             }
             if ((printMask?.Preset ?? true)
                 && item.Preset is {} PresetItem)
             {
-                fg.AppendItem(PresetItem, "Preset");
+                sb.AppendItem(PresetItem, "Preset");
             }
         }
         
@@ -1285,7 +1294,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintLayerBinaryWriteTranslation.Instance;
@@ -1405,11 +1414,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TintLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

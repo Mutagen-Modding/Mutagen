@@ -18,12 +18,12 @@ public class UnexpectedlyMoreData : Exception, IPrintable
         return $"{Path} had more data past position 0x{Position} than source stream.";
     }
 
-    public void ToString(FileGeneration fg, string name)
+    public void ToString(StructuredStringBuilder sb, string name)
     {
-        fg.AppendLine(Path);
-        using (new DepthWrapper(fg))
+        sb.AppendLine(Path);
+        using (new DepthWrapper(sb))
         {
-            fg.AppendLine($"had more data past position 0x{Position} than source stream.");
+            sb.AppendLine($"had more data past position 0x{Position} than source stream.");
         }
     }
 }

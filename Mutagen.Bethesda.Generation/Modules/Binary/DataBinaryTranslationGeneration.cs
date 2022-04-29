@@ -14,7 +14,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
     public override bool ShouldGenerateWrite(TypeGeneration typeGen) => true;
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor readerAccessor,
@@ -25,7 +25,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -41,7 +41,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -58,7 +58,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrapperFields(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor dataAccessor,
@@ -68,13 +68,13 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
     {
         DataType dataType = typeGen as DataType;
 
-        fg.AppendLine($"private {nameof(RangeInt32)}? _{dataType.GetFieldData().RecordType}Location;");
-        fg.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.StateName} {{ get; private set; }}");
+        sb.AppendLine($"private {nameof(RangeInt32)}? _{dataType.GetFieldData().RecordType}Location;");
+        sb.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.StateName} {{ get; private set; }}");
         switch (typeGen.GetFieldData().BinaryOverlayFallback)
         {
             case BinaryGenerationType.Custom:
                 await this.Module.CustomLogic.GenerateWrapperFields(
-                    fg,
+                    sb,
                     objGen,
                     typeGen,
                     dataAccessor,
@@ -95,7 +95,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             if (!field.Field.Enabled) continue;
             if (!this.Module.TryGetTypeGeneration(field.Field.GetType(), out var subTypeGen)) continue;
-            using (new RegionWrapper(fg, field.Field.Name)
+            using (new RegionWrapper(sb, field.Field.Name)
                    {
                        AppendExtraLine = false,
                        SkipIfOnlyOneLine = true
@@ -120,7 +120,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 }
 
                 await subTypeGen.GenerateWrapperFields(
-                    fg,
+                    sb,
                     objGen,
                     field.Field,
                     dataAccessor,
@@ -129,15 +129,15 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                     data: dataType);
                 if (fieldData.HasVersioning)
                 {
-                    VersioningModule.AddVersionOffset(fg, field.Field, length.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
+                    VersioningModule.AddVersionOffset(sb, field.Field, length.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
                     lastVersionedField = field.Field;
                 }
                 if (length.CurLength == null)
                 {
-                    fg.AppendLine($"protected int {length.Field.Name}EndingPos;");
+                    sb.AppendLine($"protected int {length.Field.Name}EndingPos;");
                     if (fieldData.BinaryOverlayFallback == BinaryGenerationType.Custom)
                     {
-                        fg.AppendLine($"partial void Custom{length.Field.Name}EndPos();");
+                        sb.AppendLine($"partial void Custom{length.Field.Name}EndPos();");
                     }
                 }
             }
@@ -145,7 +145,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrapperRecordTypeParse(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration field,
         Accessor locationAccessor,
@@ -161,7 +161,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 return;
             case BinaryGenerationType.Custom:
                 await this.Module.CustomLogic.GenerateWrapperRecordTypeParse(
-                    fg,
+                    sb,
                     objGen,
                     field,
                     locationAccessor,
@@ -171,10 +171,10 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
             default:
                 break;
         }
-        fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = new({locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength, finalPos - offset - 1);");
+        sb.AppendLine($"_{dataType.GetFieldData().RecordType}Location = new({locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength, finalPos - offset - 1);");
         if (dataType.Nullable)
         {
-            fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
+            sb.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
         }
         bool generatedStart = false;
         var lengths = await this.Module.IteratePassedLengths(
@@ -195,12 +195,12 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 if (!generatedStart)
                 {
                     generatedStart = true;
-                    fg.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
+                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                 }
-                fg.AppendLine($"if (subLen <= {length.PassedAccessor})");
-                using (new BraceWrapper(fg))
+                sb.AppendLine($"if (subLen <= {length.PassedAccessor})");
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Break{item.BreakIndex};");
+                    sb.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Break{item.BreakIndex};");
                 }
             }
             if (item.RangeIndex != -1)
@@ -208,17 +208,17 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 if (!generatedStart)
                 {
                     generatedStart = true;
-                    fg.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
+                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                 }
             }
         }
         for (int i = 0; i < dataType.RangeIndices.Count; i++)
         {
             var range = dataType.RangeIndices[i];
-            fg.AppendLine($"if (subLen > {range.DataSetSizeMin})");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"if (subLen > {range.DataSetSizeMin})");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Range{i};");
+                sb.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Range{i};");
             }
         }
     }
@@ -227,7 +227,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
 
     public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
 
-    public static void GenerateWrapperExtraMembers(FileGeneration fg, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, string posAccessor)
+    public static void GenerateWrapperExtraMembers(StructuredStringBuilder sb, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, string posAccessor)
     {
         var fieldData = typeGen.GetFieldData();
         var dataMeta = dataType.IterateFieldsWithMeta().First(item => item.Field == typeGen);
@@ -245,11 +245,11 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             extraChecks.Add(VersioningModule.GetVersionIfCheck(fieldData, "_package.FormVersion!.FormVersion!.Value"));
         }
-        fg.AppendLine($"private int _{typeGen.Name}Location => {posAccessor};");
+        sb.AppendLine($"private int _{typeGen.Name}Location => {posAccessor};");
         switch (typeGen.GetFieldData().BinaryOverlayFallback)
         {
             case BinaryGenerationType.Normal:
-                fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{dataType.GetFieldData().RecordType}Location.HasValue{(extraChecks.Count > 0 ? $" && {string.Join(" && ", extraChecks)}" : null)};");
+                sb.AppendLine($"private bool _{typeGen.Name}_IsSet => _{dataType.GetFieldData().RecordType}Location.HasValue{(extraChecks.Count > 0 ? $" && {string.Join(" && ", extraChecks)}" : null)};");
                 break;
             case BinaryGenerationType.Custom:
                 break;
@@ -259,7 +259,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrapperUnknownLengthParse(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         int? passedLength,
@@ -290,7 +290,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
             switch (data.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Custom:
-                    fg.AppendLine($"ret.Custom{field.Field.Name}EndPos();");
+                    sb.AppendLine($"ret.Custom{field.Field.Name}EndPos();");
                     break;
                 case BinaryGenerationType.NoGeneration:
                     break;
@@ -301,7 +301,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                         throw new ArgumentException();
                     }
                     await subTypeGen.GenerateWrapperUnknownLengthParse(
-                        fg,
+                        sb,
                         objGen,
                         field.Field,
                         length.PassedLength,

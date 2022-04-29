@@ -167,11 +167,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ImpactMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -437,83 +438,83 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Impact.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Impact.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Impact.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Impact.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Impact.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendItem(Duration, "Duration");
+                        sb.AppendItem(Duration, "Duration");
                     }
                     if (printMask?.Orientation ?? true)
                     {
-                        fg.AppendItem(Orientation, "Orientation");
+                        sb.AppendItem(Orientation, "Orientation");
                     }
                     if (printMask?.AngleThreshold ?? true)
                     {
-                        fg.AppendItem(AngleThreshold, "AngleThreshold");
+                        sb.AppendItem(AngleThreshold, "AngleThreshold");
                     }
                     if (printMask?.PlacementRadius ?? true)
                     {
-                        fg.AppendItem(PlacementRadius, "PlacementRadius");
+                        sb.AppendItem(PlacementRadius, "PlacementRadius");
                     }
                     if (printMask?.SoundLevel ?? true)
                     {
-                        fg.AppendItem(SoundLevel, "SoundLevel");
+                        sb.AppendItem(SoundLevel, "SoundLevel");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Result ?? true)
                     {
-                        fg.AppendItem(Result, "Result");
+                        sb.AppendItem(Result, "Result");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Decal?.Overall ?? true)
                     {
-                        Decal?.ToString(fg);
+                        Decal?.ToString(sb);
                     }
                     if (printMask?.TextureSet ?? true)
                     {
-                        fg.AppendItem(TextureSet, "TextureSet");
+                        sb.AppendItem(TextureSet, "TextureSet");
                     }
                     if (printMask?.SecondaryTextureSet ?? true)
                     {
-                        fg.AppendItem(SecondaryTextureSet, "SecondaryTextureSet");
+                        sb.AppendItem(SecondaryTextureSet, "SecondaryTextureSet");
                     }
                     if (printMask?.Sound1 ?? true)
                     {
-                        fg.AppendItem(Sound1, "Sound1");
+                        sb.AppendItem(Sound1, "Sound1");
                     }
                     if (printMask?.Sound2 ?? true)
                     {
-                        fg.AppendItem(Sound2, "Sound2");
+                        sb.AppendItem(Sound2, "Sound2");
                     }
                     if (printMask?.Hazard ?? true)
                     {
-                        fg.AppendItem(Hazard, "Hazard");
+                        sb.AppendItem(Hazard, "Hazard");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -729,50 +730,78 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Model?.ToString(fg);
-                fg.AppendItem(Duration, "Duration");
-                fg.AppendItem(Orientation, "Orientation");
-                fg.AppendItem(AngleThreshold, "AngleThreshold");
-                fg.AppendItem(PlacementRadius, "PlacementRadius");
-                fg.AppendItem(SoundLevel, "SoundLevel");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Result, "Result");
-                fg.AppendItem(Unknown, "Unknown");
-                Decal?.ToString(fg);
-                fg.AppendItem(TextureSet, "TextureSet");
-                fg.AppendItem(SecondaryTextureSet, "SecondaryTextureSet");
-                fg.AppendItem(Sound1, "Sound1");
-                fg.AppendItem(Sound2, "Sound2");
-                fg.AppendItem(Hazard, "Hazard");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.ToString_FillInternal(sb);
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(Duration, "Duration");
+                }
+                {
+                    sb.AppendItem(Orientation, "Orientation");
+                }
+                {
+                    sb.AppendItem(AngleThreshold, "AngleThreshold");
+                }
+                {
+                    sb.AppendItem(PlacementRadius, "PlacementRadius");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Result, "Result");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                Decal?.ToString(sb);
+                {
+                    sb.AppendItem(TextureSet, "TextureSet");
+                }
+                {
+                    sb.AppendItem(SecondaryTextureSet, "SecondaryTextureSet");
+                }
+                {
+                    sb.AppendItem(Sound1, "Sound1");
+                }
+                {
+                    sb.AppendItem(Sound2, "Sound2");
+                }
+                {
+                    sb.AppendItem(Hazard, "Hazard");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -1009,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1128,13 +1157,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IImpactGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Impact.Mask<bool>? printMask = null)
         {
             ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1514,114 +1543,114 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Impact.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IImpactGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Impact.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Impact =>");
+                sb.AppendLine($"Impact =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Impact) =>");
+                sb.AppendLine($"{name} (Impact) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IImpactGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Impact.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if (printMask?.Duration ?? true)
             {
-                fg.AppendItem(item.Duration, "Duration");
+                sb.AppendItem(item.Duration, "Duration");
             }
             if (printMask?.Orientation ?? true)
             {
-                fg.AppendItem(item.Orientation, "Orientation");
+                sb.AppendItem(item.Orientation, "Orientation");
             }
             if (printMask?.AngleThreshold ?? true)
             {
-                fg.AppendItem(item.AngleThreshold, "AngleThreshold");
+                sb.AppendItem(item.AngleThreshold, "AngleThreshold");
             }
             if (printMask?.PlacementRadius ?? true)
             {
-                fg.AppendItem(item.PlacementRadius, "PlacementRadius");
+                sb.AppendItem(item.PlacementRadius, "PlacementRadius");
             }
             if (printMask?.SoundLevel ?? true)
             {
-                fg.AppendItem(item.SoundLevel, "SoundLevel");
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Result ?? true)
             {
-                fg.AppendItem(item.Result, "Result");
+                sb.AppendItem(item.Result, "Result");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.Decal?.Overall ?? true)
                 && item.Decal is {} DecalItem)
             {
-                DecalItem?.ToString(fg, "Decal");
+                DecalItem?.ToString(sb, "Decal");
             }
             if (printMask?.TextureSet ?? true)
             {
-                fg.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
+                sb.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
             }
             if (printMask?.SecondaryTextureSet ?? true)
             {
-                fg.AppendItem(item.SecondaryTextureSet.FormKeyNullable, "SecondaryTextureSet");
+                sb.AppendItem(item.SecondaryTextureSet.FormKeyNullable, "SecondaryTextureSet");
             }
             if (printMask?.Sound1 ?? true)
             {
-                fg.AppendItem(item.Sound1.FormKeyNullable, "Sound1");
+                sb.AppendItem(item.Sound1.FormKeyNullable, "Sound1");
             }
             if (printMask?.Sound2 ?? true)
             {
-                fg.AppendItem(item.Sound2.FormKeyNullable, "Sound2");
+                sb.AppendItem(item.Sound2.FormKeyNullable, "Sound2");
             }
             if (printMask?.Hazard ?? true)
             {
-                fg.AppendItem(item.Hazard.FormKeyNullable, "Hazard");
+                sb.AppendItem(item.Hazard.FormKeyNullable, "Hazard");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2456,7 +2485,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ImpactCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2662,11 +2691,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ImpactMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

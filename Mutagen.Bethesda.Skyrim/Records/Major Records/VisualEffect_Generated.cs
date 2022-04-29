@@ -86,11 +86,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             VisualEffectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -232,35 +233,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(VisualEffect.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, VisualEffect.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, VisualEffect.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(VisualEffect.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(VisualEffect.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.EffectArt ?? true)
                     {
-                        fg.AppendItem(EffectArt, "EffectArt");
+                        sb.AppendItem(EffectArt, "EffectArt");
                     }
                     if (printMask?.Shader ?? true)
                     {
-                        fg.AppendItem(Shader, "Shader");
+                        sb.AppendItem(Shader, "Shader");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -356,38 +357,46 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(EffectArt, "EffectArt");
-                fg.AppendItem(Shader, "Shader");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(EffectArt, "EffectArt");
+                }
+                {
+                    sb.AppendItem(Shader, "Shader");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -578,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -663,13 +672,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IVisualEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VisualEffect.Mask<bool>? printMask = null)
         {
             ((VisualEffectCommon)((IVisualEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -994,64 +1003,64 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             VisualEffect.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IVisualEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VisualEffect.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"VisualEffect =>");
+                sb.AppendLine($"VisualEffect =>");
             }
             else
             {
-                fg.AppendLine($"{name} (VisualEffect) =>");
+                sb.AppendLine($"{name} (VisualEffect) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IVisualEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             VisualEffect.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.EffectArt ?? true)
             {
-                fg.AppendItem(item.EffectArt.FormKey, "EffectArt");
+                sb.AppendItem(item.EffectArt.FormKey, "EffectArt");
             }
             if (printMask?.Shader ?? true)
             {
-                fg.AppendItem(item.Shader.FormKey, "Shader");
+                sb.AppendItem(item.Shader.FormKey, "Shader");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1592,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => VisualEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1710,11 +1719,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             VisualEffectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

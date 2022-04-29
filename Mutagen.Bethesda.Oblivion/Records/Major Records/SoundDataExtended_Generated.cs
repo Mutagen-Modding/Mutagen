@@ -68,11 +68,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundDataExtendedMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -217,31 +218,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(SoundDataExtended.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, SoundDataExtended.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, SoundDataExtended.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SoundDataExtended.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundDataExtended.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.StaticAttenuation ?? true)
                     {
-                        fg.AppendItem(StaticAttenuation, "StaticAttenuation");
+                        sb.AppendItem(StaticAttenuation, "StaticAttenuation");
                     }
                     if (printMask?.StopTime ?? true)
                     {
-                        fg.AppendItem(StopTime, "StopTime");
+                        sb.AppendItem(StopTime, "StopTime");
                     }
                     if (printMask?.StartTime ?? true)
                     {
-                        fg.AppendItem(StartTime, "StartTime");
+                        sb.AppendItem(StartTime, "StartTime");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -327,37 +328,43 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(StaticAttenuation, "StaticAttenuation");
-                fg.AppendItem(StopTime, "StopTime");
-                fg.AppendItem(StartTime, "StartTime");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(StaticAttenuation, "StaticAttenuation");
+                }
+                {
+                    sb.AppendItem(StopTime, "StopTime");
+                }
+                {
+                    sb.AppendItem(StartTime, "StartTime");
+                }
             }
             #endregion
 
@@ -465,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -551,13 +558,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ISoundDataExtendedInternalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
             ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -844,60 +851,60 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ISoundDataExtendedInternalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundDataExtended =>");
+                sb.AppendLine($"SoundDataExtended =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundDataExtended) =>");
+                sb.AppendLine($"{name} (SoundDataExtended) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundDataExtendedInternalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
             SoundDataCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.StaticAttenuation ?? true)
             {
-                fg.AppendItem(item.StaticAttenuation, "StaticAttenuation");
+                sb.AppendItem(item.StaticAttenuation, "StaticAttenuation");
             }
             if (printMask?.StopTime ?? true)
             {
-                fg.AppendItem(item.StopTime, "StopTime");
+                sb.AppendItem(item.StopTime, "StopTime");
             }
             if (printMask?.StartTime ?? true)
             {
-                fg.AppendItem(item.StartTime, "StartTime");
+                sb.AppendItem(item.StartTime, "StartTime");
             }
         }
         
@@ -1295,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundDataExtendedBinaryWriteTranslation.Instance;
@@ -1366,11 +1373,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundDataExtendedMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

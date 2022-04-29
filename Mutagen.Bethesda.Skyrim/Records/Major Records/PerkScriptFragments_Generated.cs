@@ -76,11 +76,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkScriptFragmentsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -245,50 +246,50 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(PerkScriptFragments.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PerkScriptFragments.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PerkScriptFragments.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PerkScriptFragments.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PerkScriptFragments.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.FileName ?? true)
                     {
-                        fg.AppendItem(FileName, "FileName");
+                        sb.AppendItem(FileName, "FileName");
                     }
                     if ((printMask?.Fragments?.Overall ?? true)
                         && Fragments is {} FragmentsItem)
                     {
-                        fg.AppendLine("Fragments =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Fragments =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(FragmentsItem.Overall);
+                            sb.AppendItem(FragmentsItem.Overall);
                             if (FragmentsItem.Specific != null)
                             {
                                 foreach (var subItem in FragmentsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -385,56 +386,60 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(FileName, "FileName");
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(FileName, "FileName");
+                }
                 if (Fragments is {} FragmentsItem)
                 {
-                    fg.AppendLine("Fragments =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Fragments =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(FragmentsItem.Overall);
+                        sb.AppendItem(FragmentsItem.Overall);
                         if (FragmentsItem.Specific != null)
                         {
                             foreach (var subItem in FragmentsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -554,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -631,13 +636,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IPerkScriptFragmentsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkScriptFragments.Mask<bool>? printMask = null)
         {
             ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -919,70 +924,70 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             PerkScriptFragments.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPerkScriptFragmentsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkScriptFragments.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkScriptFragments =>");
+                sb.AppendLine($"PerkScriptFragments =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkScriptFragments) =>");
+                sb.AppendLine($"{name} (PerkScriptFragments) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkScriptFragmentsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PerkScriptFragments.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.FileName ?? true)
             {
-                fg.AppendItem(item.FileName, "FileName");
+                sb.AppendItem(item.FileName, "FileName");
             }
             if (printMask?.Fragments?.Overall ?? true)
             {
-                fg.AppendLine("Fragments =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Fragments =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Fragments)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1282,7 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PerkScriptFragmentsBinaryWriteTranslation.Instance;
@@ -1356,11 +1361,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkScriptFragmentsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

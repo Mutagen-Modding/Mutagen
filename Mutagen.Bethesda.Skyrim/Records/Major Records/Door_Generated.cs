@@ -198,11 +198,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DoorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -421,55 +422,55 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Door.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Door.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Door.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Door.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Door.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(fg);
+                        Destructible?.ToString(sb);
                     }
                     if (printMask?.OpenSound ?? true)
                     {
-                        fg.AppendItem(OpenSound, "OpenSound");
+                        sb.AppendItem(OpenSound, "OpenSound");
                     }
                     if (printMask?.CloseSound ?? true)
                     {
-                        fg.AppendItem(CloseSound, "CloseSound");
+                        sb.AppendItem(CloseSound, "CloseSound");
                     }
                     if (printMask?.LoopSound ?? true)
                     {
-                        fg.AppendItem(LoopSound, "LoopSound");
+                        sb.AppendItem(LoopSound, "LoopSound");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -615,43 +616,53 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                Destructible?.ToString(fg);
-                fg.AppendItem(OpenSound, "OpenSound");
-                fg.AppendItem(CloseSound, "CloseSound");
-                fg.AppendItem(LoopSound, "LoopSound");
-                fg.AppendItem(Flags, "Flags");
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.ToString(sb);
+                Destructible?.ToString(sb);
+                {
+                    sb.AppendItem(OpenSound, "OpenSound");
+                }
+                {
+                    sb.AppendItem(CloseSound, "CloseSound");
+                }
+                {
+                    sb.AppendItem(LoopSound, "LoopSound");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -859,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1012,13 +1023,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IDoorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Door.Mask<bool>? printMask = null)
         {
             ((DoorCommon)((IDoorGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1384,88 +1395,88 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Door.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDoorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Door.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Door =>");
+                sb.AppendLine($"Door =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Door) =>");
+                sb.AppendLine($"{name} (Door) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDoorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Door.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(fg, "Destructible");
+                DestructibleItem?.ToString(sb, "Destructible");
             }
             if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
+                sb.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
             }
             if (printMask?.CloseSound ?? true)
             {
-                fg.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
+                sb.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
             }
             if (printMask?.LoopSound ?? true)
             {
-                fg.AppendItem(item.LoopSound.FormKeyNullable, "LoopSound");
+                sb.AppendItem(item.LoopSound.FormKeyNullable, "LoopSound");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -2271,7 +2282,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DoorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2460,11 +2471,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DoorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

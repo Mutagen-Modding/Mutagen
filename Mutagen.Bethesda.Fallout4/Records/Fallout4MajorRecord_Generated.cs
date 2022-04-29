@@ -68,11 +68,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             Fallout4MajorRecordMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -192,27 +193,27 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(Fallout4MajorRecord.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Fallout4MajorRecord.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Fallout4MajorRecord.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Fallout4MajorRecord.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Fallout4MajorRecord.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.FormVersion ?? true)
                     {
-                        fg.AppendItem(FormVersion, "FormVersion");
+                        sb.AppendItem(FormVersion, "FormVersion");
                     }
                     if (printMask?.Version2 ?? true)
                     {
-                        fg.AppendItem(Version2, "Version2");
+                        sb.AppendItem(Version2, "Version2");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -288,36 +289,40 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(FormVersion, "FormVersion");
-                fg.AppendItem(Version2, "Version2");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(FormVersion, "FormVersion");
+                }
+                {
+                    sb.AppendItem(Version2, "Version2");
+                }
             }
             #endregion
 
@@ -460,7 +465,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -545,13 +550,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IFallout4MajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Fallout4MajorRecord.Mask<bool>? printMask = null)
         {
             ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -834,56 +839,56 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             Fallout4MajorRecord.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IFallout4MajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Fallout4MajorRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Fallout4MajorRecord =>");
+                sb.AppendLine($"Fallout4MajorRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Fallout4MajorRecord) =>");
+                sb.AppendLine($"{name} (Fallout4MajorRecord) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFallout4MajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Fallout4MajorRecord.Mask<bool>? printMask = null)
         {
             MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.FormVersion ?? true)
             {
-                fg.AppendItem(item.FormVersion, "FormVersion");
+                sb.AppendItem(item.FormVersion, "FormVersion");
             }
             if (printMask?.Version2 ?? true)
             {
-                fg.AppendItem(item.Version2, "Version2");
+                sb.AppendItem(item.Version2, "Version2");
             }
         }
         
@@ -1252,7 +1257,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4MajorRecordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1289,11 +1294,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             Fallout4MajorRecordMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

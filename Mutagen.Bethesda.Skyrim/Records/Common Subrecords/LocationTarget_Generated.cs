@@ -68,11 +68,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationTargetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -184,23 +185,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(LocationTarget.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, LocationTarget.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, LocationTarget.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LocationTarget.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LocationTarget.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Link ?? true)
                     {
-                        fg.AppendItem(Link, "Link");
+                        sb.AppendItem(Link, "Link");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -266,35 +267,37 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Link, "Link");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Link, "Link");
+                }
             }
             #endregion
 
@@ -399,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -469,13 +472,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ILocationTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationTarget.Mask<bool>? printMask = null)
         {
             ((LocationTargetCommon)((ILocationTargetGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -743,52 +746,52 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             LocationTarget.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILocationTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationTarget.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocationTarget =>");
+                sb.AppendLine($"LocationTarget =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocationTarget) =>");
+                sb.AppendLine($"{name} (LocationTarget) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LocationTarget.Mask<bool>? printMask = null)
         {
             ALocationTargetCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Link ?? true)
             {
-                fg.AppendItem(item.Link.FormKey, "Link");
+                sb.AppendItem(item.Link.FormKey, "Link");
             }
         }
         
@@ -1072,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationTargetCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1135,11 +1138,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationTargetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

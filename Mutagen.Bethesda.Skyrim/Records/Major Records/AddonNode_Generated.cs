@@ -121,11 +121,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AddonNodeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -310,47 +311,47 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(AddonNode.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, AddonNode.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, AddonNode.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(AddonNode.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AddonNode.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.NodeIndex ?? true)
                     {
-                        fg.AppendItem(NodeIndex, "NodeIndex");
+                        sb.AppendItem(NodeIndex, "NodeIndex");
                     }
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendItem(Sound, "Sound");
+                        sb.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.MasterParticleSystemCap ?? true)
                     {
-                        fg.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
+                        sb.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
                     }
                     if (printMask?.AlwaysLoaded ?? true)
                     {
-                        fg.AppendItem(AlwaysLoaded, "AlwaysLoaded");
+                        sb.AppendItem(AlwaysLoaded, "AlwaysLoaded");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -476,41 +477,51 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                Model?.ToString(fg);
-                fg.AppendItem(NodeIndex, "NodeIndex");
-                fg.AppendItem(Sound, "Sound");
-                fg.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
-                fg.AppendItem(AlwaysLoaded, "AlwaysLoaded");
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(NodeIndex, "NodeIndex");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
+                }
+                {
+                    sb.AppendItem(AlwaysLoaded, "AlwaysLoaded");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -711,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -822,13 +833,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IAddonNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AddonNode.Mask<bool>? printMask = null)
         {
             ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1170,77 +1181,77 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             AddonNode.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IAddonNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AddonNode.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AddonNode =>");
+                sb.AppendLine($"AddonNode =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AddonNode) =>");
+                sb.AppendLine($"{name} (AddonNode) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAddonNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AddonNode.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if (printMask?.NodeIndex ?? true)
             {
-                fg.AppendItem(item.NodeIndex, "NodeIndex");
+                sb.AppendItem(item.NodeIndex, "NodeIndex");
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
+                sb.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if (printMask?.MasterParticleSystemCap ?? true)
             {
-                fg.AppendItem(item.MasterParticleSystemCap, "MasterParticleSystemCap");
+                sb.AppendItem(item.MasterParticleSystemCap, "MasterParticleSystemCap");
             }
             if (printMask?.AlwaysLoaded ?? true)
             {
-                fg.AppendItem(item.AlwaysLoaded, "AlwaysLoaded");
+                sb.AppendItem(item.AlwaysLoaded, "AlwaysLoaded");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -1922,7 +1933,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => AddonNodeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2072,11 +2083,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AddonNodeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

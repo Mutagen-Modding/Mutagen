@@ -62,11 +62,12 @@ namespace Mutagen.Bethesda.Pex
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DebugFunctionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -246,58 +247,60 @@ namespace Mutagen.Bethesda.Pex
 
             public string ToString(DebugFunction.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, DebugFunction.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, DebugFunction.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DebugFunction.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DebugFunction.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectName ?? true)
                     {
-                        fg.AppendItem(ObjectName, "ObjectName");
+                        sb.AppendItem(ObjectName, "ObjectName");
                     }
                     if (printMask?.StateName ?? true)
                     {
-                        fg.AppendItem(StateName, "StateName");
+                        sb.AppendItem(StateName, "StateName");
                     }
                     if (printMask?.FunctionName ?? true)
                     {
-                        fg.AppendItem(FunctionName, "FunctionName");
+                        sb.AppendItem(FunctionName, "FunctionName");
                     }
                     if (printMask?.FunctionType ?? true)
                     {
-                        fg.AppendItem(FunctionType, "FunctionType");
+                        sb.AppendItem(FunctionType, "FunctionType");
                     }
                     if ((printMask?.Instructions?.Overall ?? true)
                         && Instructions is {} InstructionsItem)
                     {
-                        fg.AppendLine("Instructions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Instructions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(InstructionsItem.Overall);
+                            sb.AppendItem(InstructionsItem.Overall);
                             if (InstructionsItem.Specific != null)
                             {
                                 foreach (var subItem in InstructionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -414,58 +417,68 @@ namespace Mutagen.Bethesda.Pex
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ObjectName, "ObjectName");
-                fg.AppendItem(StateName, "StateName");
-                fg.AppendItem(FunctionName, "FunctionName");
-                fg.AppendItem(FunctionType, "FunctionType");
+                {
+                    sb.AppendItem(ObjectName, "ObjectName");
+                }
+                {
+                    sb.AppendItem(StateName, "StateName");
+                }
+                {
+                    sb.AppendItem(FunctionName, "FunctionName");
+                }
+                {
+                    sb.AppendItem(FunctionType, "FunctionType");
+                }
                 if (Instructions is {} InstructionsItem)
                 {
-                    fg.AppendLine("Instructions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Instructions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(InstructionsItem.Overall);
+                        sb.AppendItem(InstructionsItem.Overall);
                         if (InstructionsItem.Specific != null)
                         {
                             foreach (var subItem in InstructionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -552,7 +565,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -632,13 +645,13 @@ namespace Mutagen.Bethesda.Pex
 
         public static void ToString(
             this IDebugFunctionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugFunction.Mask<bool>? printMask = null)
         {
             ((DebugFunctionCommon)((IDebugFunctionGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -889,78 +902,78 @@ namespace Mutagen.Bethesda.Pex
             string? name = null,
             DebugFunction.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDebugFunctionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugFunction.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DebugFunction =>");
+                sb.AppendLine($"DebugFunction =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DebugFunction) =>");
+                sb.AppendLine($"{name} (DebugFunction) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDebugFunctionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DebugFunction.Mask<bool>? printMask = null)
         {
             if (printMask?.ObjectName ?? true)
             {
-                fg.AppendItem(item.ObjectName, "ObjectName");
+                sb.AppendItem(item.ObjectName, "ObjectName");
             }
             if (printMask?.StateName ?? true)
             {
-                fg.AppendItem(item.StateName, "StateName");
+                sb.AppendItem(item.StateName, "StateName");
             }
             if (printMask?.FunctionName ?? true)
             {
-                fg.AppendItem(item.FunctionName, "FunctionName");
+                sb.AppendItem(item.FunctionName, "FunctionName");
             }
             if (printMask?.FunctionType ?? true)
             {
-                fg.AppendItem(item.FunctionType, "FunctionType");
+                sb.AppendItem(item.FunctionType, "FunctionType");
             }
             if (printMask?.Instructions?.Overall ?? true)
             {
-                fg.AppendLine("Instructions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Instructions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Instructions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         

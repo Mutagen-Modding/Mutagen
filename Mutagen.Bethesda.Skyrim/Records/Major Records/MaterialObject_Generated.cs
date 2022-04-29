@@ -168,11 +168,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MaterialObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -427,86 +428,88 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(MaterialObject.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MaterialObject.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MaterialObject.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MaterialObject.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MaterialObject.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if ((printMask?.DNAMs?.Overall ?? true)
                         && DNAMs is {} DNAMsItem)
                     {
-                        fg.AppendLine("DNAMs =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("DNAMs =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(DNAMsItem.Overall);
+                            sb.AppendItem(DNAMsItem.Overall);
                             if (DNAMsItem.Specific != null)
                             {
                                 foreach (var subItem in DNAMsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.FalloffScale ?? true)
                     {
-                        fg.AppendItem(FalloffScale, "FalloffScale");
+                        sb.AppendItem(FalloffScale, "FalloffScale");
                     }
                     if (printMask?.FalloffBias ?? true)
                     {
-                        fg.AppendItem(FalloffBias, "FalloffBias");
+                        sb.AppendItem(FalloffBias, "FalloffBias");
                     }
                     if (printMask?.NoiseUvScale ?? true)
                     {
-                        fg.AppendItem(NoiseUvScale, "NoiseUvScale");
+                        sb.AppendItem(NoiseUvScale, "NoiseUvScale");
                     }
                     if (printMask?.MaterialUvScale ?? true)
                     {
-                        fg.AppendItem(MaterialUvScale, "MaterialUvScale");
+                        sb.AppendItem(MaterialUvScale, "MaterialUvScale");
                     }
                     if (printMask?.ProjectionVector ?? true)
                     {
-                        fg.AppendItem(ProjectionVector, "ProjectionVector");
+                        sb.AppendItem(ProjectionVector, "ProjectionVector");
                     }
                     if (printMask?.NormalDampener ?? true)
                     {
-                        fg.AppendItem(NormalDampener, "NormalDampener");
+                        sb.AppendItem(NormalDampener, "NormalDampener");
                     }
                     if (printMask?.SinglePassColor ?? true)
                     {
-                        fg.AppendItem(SinglePassColor, "SinglePassColor");
+                        sb.AppendItem(SinglePassColor, "SinglePassColor");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.HasSnow ?? true)
                     {
-                        fg.AppendItem(HasSnow, "HasSnow");
+                        sb.AppendItem(HasSnow, "HasSnow");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -682,67 +685,89 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Model?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                Model?.ToString(sb);
                 if (DNAMs is {} DNAMsItem)
                 {
-                    fg.AppendLine("DNAMs =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("DNAMs =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(DNAMsItem.Overall);
+                        sb.AppendItem(DNAMsItem.Overall);
                         if (DNAMsItem.Specific != null)
                         {
                             foreach (var subItem in DNAMsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(FalloffScale, "FalloffScale");
-                fg.AppendItem(FalloffBias, "FalloffBias");
-                fg.AppendItem(NoiseUvScale, "NoiseUvScale");
-                fg.AppendItem(MaterialUvScale, "MaterialUvScale");
-                fg.AppendItem(ProjectionVector, "ProjectionVector");
-                fg.AppendItem(NormalDampener, "NormalDampener");
-                fg.AppendItem(SinglePassColor, "SinglePassColor");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(HasSnow, "HasSnow");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                {
+                    sb.AppendItem(FalloffScale, "FalloffScale");
+                }
+                {
+                    sb.AppendItem(FalloffBias, "FalloffBias");
+                }
+                {
+                    sb.AppendItem(NoiseUvScale, "NoiseUvScale");
+                }
+                {
+                    sb.AppendItem(MaterialUvScale, "MaterialUvScale");
+                }
+                {
+                    sb.AppendItem(ProjectionVector, "ProjectionVector");
+                }
+                {
+                    sb.AppendItem(NormalDampener, "NormalDampener");
+                }
+                {
+                    sb.AppendItem(SinglePassColor, "SinglePassColor");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(HasSnow, "HasSnow");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -967,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1078,13 +1103,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IMaterialObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialObject.Mask<bool>? printMask = null)
         {
             ((MaterialObjectCommon)((IMaterialObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1441,111 +1466,111 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             MaterialObject.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMaterialObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MaterialObject =>");
+                sb.AppendLine($"MaterialObject =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MaterialObject) =>");
+                sb.AppendLine($"{name} (MaterialObject) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMaterialObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MaterialObject.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if (printMask?.DNAMs?.Overall ?? true)
             {
-                fg.AppendLine("DNAMs =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("DNAMs =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.DNAMs)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"Item => {SpanExt.ToHexString(subItem)}");
+                            sb.AppendLine($"Item => {SpanExt.ToHexString(subItem)}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.FalloffScale ?? true)
             {
-                fg.AppendItem(item.FalloffScale, "FalloffScale");
+                sb.AppendItem(item.FalloffScale, "FalloffScale");
             }
             if (printMask?.FalloffBias ?? true)
             {
-                fg.AppendItem(item.FalloffBias, "FalloffBias");
+                sb.AppendItem(item.FalloffBias, "FalloffBias");
             }
             if (printMask?.NoiseUvScale ?? true)
             {
-                fg.AppendItem(item.NoiseUvScale, "NoiseUvScale");
+                sb.AppendItem(item.NoiseUvScale, "NoiseUvScale");
             }
             if (printMask?.MaterialUvScale ?? true)
             {
-                fg.AppendItem(item.MaterialUvScale, "MaterialUvScale");
+                sb.AppendItem(item.MaterialUvScale, "MaterialUvScale");
             }
             if (printMask?.ProjectionVector ?? true)
             {
-                fg.AppendItem(item.ProjectionVector, "ProjectionVector");
+                sb.AppendItem(item.ProjectionVector, "ProjectionVector");
             }
             if (printMask?.NormalDampener ?? true)
             {
-                fg.AppendItem(item.NormalDampener, "NormalDampener");
+                sb.AppendItem(item.NormalDampener, "NormalDampener");
             }
             if (printMask?.SinglePassColor ?? true)
             {
-                fg.AppendItem(item.SinglePassColor, "SinglePassColor");
+                sb.AppendItem(item.SinglePassColor, "SinglePassColor");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.HasSnow ?? true)
             {
-                fg.AppendItem(item.HasSnow, "HasSnow");
+                sb.AppendItem(item.HasSnow, "HasSnow");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2284,7 +2309,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MaterialObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2469,11 +2494,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MaterialObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

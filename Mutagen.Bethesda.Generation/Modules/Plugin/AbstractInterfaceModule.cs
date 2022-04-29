@@ -58,7 +58,7 @@ public class AbstractInterfaceModule : GenerationModule
             }
         }
 
-        FileGeneration mappingGen = new FileGeneration();
+        StructuredStringBuilder mappingGen = new StructuredStringBuilder();
         ObjectGeneration.AddAutogenerationComment(mappingGen);
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
@@ -73,7 +73,7 @@ public class AbstractInterfaceModule : GenerationModule
                 c.Interfaces.Add(nameof(IInterfaceMapping));
             }
         
-            using (new BraceWrapper(mappingGen))
+            using (mappingGen.CurlyBrace())
             {
                 mappingGen.AppendLine(
                     $"public IReadOnlyDictionary<Type, {nameof(InterfaceMappingResult)}> InterfaceToObjectTypes {{ get; }}");
@@ -83,14 +83,14 @@ public class AbstractInterfaceModule : GenerationModule
                 mappingGen.AppendLine();
         
                 mappingGen.AppendLine($"public {proto.Protocol.Namespace}IsolatedAbstractInterfaceMapping()");
-                using (new BraceWrapper(mappingGen))
+                using (mappingGen.CurlyBrace())
                 {
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     foreach (var rec in baseClasses.OrderBy(x => x.Name))
                     {
                         mappingGen.AppendLine(
                             $"dict[typeof({rec.Interface(getter: false)})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
-                        using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
+                        using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
                         {
                             foreach (var inheriting in await rec.InheritingObjects())
                             {
@@ -132,7 +132,7 @@ public class AbstractInterfaceModule : GenerationModule
             }
         }
 
-        FileGeneration mappingGen = new FileGeneration();
+        StructuredStringBuilder mappingGen = new StructuredStringBuilder();
         ObjectGeneration.AddAutogenerationComment(mappingGen);
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
@@ -147,7 +147,7 @@ public class AbstractInterfaceModule : GenerationModule
                 c.Interfaces.Add(nameof(IInterfaceMapping));
             }
 
-            using (new BraceWrapper(mappingGen))
+            using (mappingGen.CurlyBrace())
             {
                 mappingGen.AppendLine(
                     $"public IReadOnlyDictionary<Type, {nameof(InterfaceMappingResult)}> InterfaceToObjectTypes {{ get; }}");
@@ -157,14 +157,14 @@ public class AbstractInterfaceModule : GenerationModule
                 mappingGen.AppendLine();
 
                 mappingGen.AppendLine($"public {proto.Protocol.Namespace}InheritingInterfaceMapping()");
-                using (new BraceWrapper(mappingGen))
+                using (mappingGen.CurlyBrace())
                 {
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     foreach (var rec in inheritingChildren.OrderBy(x => x.Key.Name))
                     {
                         mappingGen.AppendLine(
                             $"dict[typeof({rec.Key.Interface(getter: false)})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
-                        using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
+                        using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
                         {
                             mappingGen.AppendLine($"{rec.Value.RegistrationName}.Instance,");
                         }

@@ -254,18 +254,18 @@ public static class ObjectGenerationExt
         return objGen.Fields.Any(f => f.GetFieldData().CustomVersion != null);
     }
 
-    public static void AppendSwitchCases(this ObjectGeneration obj, FileGeneration fg)
+    public static void AppendSwitchCases(this ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        fg.AppendLine($"case \"{obj.ObjectName}\":");
-        fg.AppendLine($"case \"{obj.Interface(getter: true)}\":");
-        fg.AppendLine($"case \"{obj.Interface(getter: false)}\":");
+        sb.AppendLine($"case \"{obj.ObjectName}\":");
+        sb.AppendLine($"case \"{obj.Interface(getter: true)}\":");
+        sb.AppendLine($"case \"{obj.Interface(getter: false)}\":");
         if (obj.HasInternalGetInterface)
         {
-            fg.AppendLine($"case \"{obj.Interface(getter: true, internalInterface: true)}\":");
+            sb.AppendLine($"case \"{obj.Interface(getter: true, internalInterface: true)}\":");
         }
         if (obj.HasInternalSetInterface)
         {
-            fg.AppendLine($"case \"{obj.Interface(getter: false, internalInterface: true)}\":");
+            sb.AppendLine($"case \"{obj.Interface(getter: false, internalInterface: true)}\":");
         }
     }
 }

@@ -64,11 +64,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ImageSpaceCinematicMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -197,31 +198,31 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ImageSpaceCinematic.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ImageSpaceCinematic.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ImageSpaceCinematic.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ImageSpaceCinematic.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ImageSpaceCinematic.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Saturation ?? true)
                     {
-                        fg.AppendItem(Saturation, "Saturation");
+                        sb.AppendItem(Saturation, "Saturation");
                     }
                     if (printMask?.Brightness ?? true)
                     {
-                        fg.AppendItem(Brightness, "Brightness");
+                        sb.AppendItem(Brightness, "Brightness");
                     }
                     if (printMask?.Contrast ?? true)
                     {
-                        fg.AppendItem(Contrast, "Contrast");
+                        sb.AppendItem(Contrast, "Contrast");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -318,36 +319,42 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Saturation, "Saturation");
-                fg.AppendItem(Brightness, "Brightness");
-                fg.AppendItem(Contrast, "Contrast");
+                {
+                    sb.AppendItem(Saturation, "Saturation");
+                }
+                {
+                    sb.AppendItem(Brightness, "Brightness");
+                }
+                {
+                    sb.AppendItem(Contrast, "Contrast");
+                }
             }
             #endregion
 
@@ -467,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -544,13 +551,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IImageSpaceCinematicGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceCinematic.Mask<bool>? printMask = null)
         {
             ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -840,56 +847,56 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ImageSpaceCinematic.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IImageSpaceCinematicGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceCinematic.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ImageSpaceCinematic =>");
+                sb.AppendLine($"ImageSpaceCinematic =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ImageSpaceCinematic) =>");
+                sb.AppendLine($"{name} (ImageSpaceCinematic) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IImageSpaceCinematicGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ImageSpaceCinematic.Mask<bool>? printMask = null)
         {
             if (printMask?.Saturation ?? true)
             {
-                fg.AppendItem(item.Saturation, "Saturation");
+                sb.AppendItem(item.Saturation, "Saturation");
             }
             if (printMask?.Brightness ?? true)
             {
-                fg.AppendItem(item.Brightness, "Brightness");
+                sb.AppendItem(item.Brightness, "Brightness");
             }
             if (printMask?.Contrast ?? true)
             {
-                fg.AppendItem(item.Contrast, "Contrast");
+                sb.AppendItem(item.Contrast, "Contrast");
             }
         }
         
@@ -1162,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImageSpaceCinematicBinaryWriteTranslation.Instance;
@@ -1229,11 +1236,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ImageSpaceCinematicMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

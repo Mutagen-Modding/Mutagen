@@ -77,11 +77,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ImageSpaceDepthOfFieldMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -246,47 +247,47 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ImageSpaceDepthOfField.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ImageSpaceDepthOfField.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ImageSpaceDepthOfField.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ImageSpaceDepthOfField.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ImageSpaceDepthOfField.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.Strength ?? true)
                     {
-                        fg.AppendItem(Strength, "Strength");
+                        sb.AppendItem(Strength, "Strength");
                     }
                     if (printMask?.Distance ?? true)
                     {
-                        fg.AppendItem(Distance, "Distance");
+                        sb.AppendItem(Distance, "Distance");
                     }
                     if (printMask?.Range ?? true)
                     {
-                        fg.AppendItem(Range, "Range");
+                        sb.AppendItem(Range, "Range");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.BlurRadius ?? true)
                     {
-                        fg.AppendItem(BlurRadius, "BlurRadius");
+                        sb.AppendItem(BlurRadius, "BlurRadius");
                     }
                     if (printMask?.Sky ?? true)
                     {
-                        fg.AppendItem(Sky, "Sky");
+                        sb.AppendItem(Sky, "Sky");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -423,40 +424,54 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Strength, "Strength");
-                fg.AppendItem(Distance, "Distance");
-                fg.AppendItem(Range, "Range");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(BlurRadius, "BlurRadius");
-                fg.AppendItem(Sky, "Sky");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Strength, "Strength");
+                }
+                {
+                    sb.AppendItem(Distance, "Distance");
+                }
+                {
+                    sb.AppendItem(Range, "Range");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(BlurRadius, "BlurRadius");
+                }
+                {
+                    sb.AppendItem(Sky, "Sky");
+                }
             }
             #endregion
 
@@ -600,7 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -685,13 +700,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IImageSpaceDepthOfFieldGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceDepthOfField.Mask<bool>? printMask = null)
         {
             ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -993,72 +1008,72 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ImageSpaceDepthOfField.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IImageSpaceDepthOfFieldGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceDepthOfField.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ImageSpaceDepthOfField =>");
+                sb.AppendLine($"ImageSpaceDepthOfField =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ImageSpaceDepthOfField) =>");
+                sb.AppendLine($"{name} (ImageSpaceDepthOfField) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IImageSpaceDepthOfFieldGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ImageSpaceDepthOfField.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.Strength ?? true)
             {
-                fg.AppendItem(item.Strength, "Strength");
+                sb.AppendItem(item.Strength, "Strength");
             }
             if (printMask?.Distance ?? true)
             {
-                fg.AppendItem(item.Distance, "Distance");
+                sb.AppendItem(item.Distance, "Distance");
             }
             if (printMask?.Range ?? true)
             {
-                fg.AppendItem(item.Range, "Range");
+                sb.AppendItem(item.Range, "Range");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.BlurRadius ?? true)
             {
-                fg.AppendItem(item.BlurRadius, "BlurRadius");
+                sb.AppendItem(item.BlurRadius, "BlurRadius");
             }
             if (printMask?.Sky ?? true)
             {
-                fg.AppendItem(item.Sky, "Sky");
+                sb.AppendItem(item.Sky, "Sky");
             }
         }
         
@@ -1424,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImageSpaceDepthOfFieldBinaryWriteTranslation.Instance;
@@ -1508,11 +1523,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ImageSpaceDepthOfFieldMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -116,11 +116,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             IdleAnimationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -385,97 +386,99 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(IdleAnimation.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, IdleAnimation.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, IdleAnimation.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(IdleAnimation.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(IdleAnimation.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Filename ?? true)
                     {
-                        fg.AppendItem(Filename, "Filename");
+                        sb.AppendItem(Filename, "Filename");
                     }
                     if (printMask?.AnimationEvent ?? true)
                     {
-                        fg.AppendItem(AnimationEvent, "AnimationEvent");
+                        sb.AppendItem(AnimationEvent, "AnimationEvent");
                     }
                     if ((printMask?.RelatedIdles?.Overall ?? true)
                         && RelatedIdles is {} RelatedIdlesItem)
                     {
-                        fg.AppendLine("RelatedIdles =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("RelatedIdles =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(RelatedIdlesItem.Overall);
+                            sb.AppendItem(RelatedIdlesItem.Overall);
                             if (RelatedIdlesItem.Specific != null)
                             {
                                 foreach (var subItem in RelatedIdlesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.LoopingSecondsMin ?? true)
                     {
-                        fg.AppendItem(LoopingSecondsMin, "LoopingSecondsMin");
+                        sb.AppendItem(LoopingSecondsMin, "LoopingSecondsMin");
                     }
                     if (printMask?.LoopingSecondsMax ?? true)
                     {
-                        fg.AppendItem(LoopingSecondsMax, "LoopingSecondsMax");
+                        sb.AppendItem(LoopingSecondsMax, "LoopingSecondsMax");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.AnimationGroupSection ?? true)
                     {
-                        fg.AppendItem(AnimationGroupSection, "AnimationGroupSection");
+                        sb.AppendItem(AnimationGroupSection, "AnimationGroupSection");
                     }
                     if (printMask?.ReplayDelay ?? true)
                     {
-                        fg.AppendItem(ReplayDelay, "ReplayDelay");
+                        sb.AppendItem(ReplayDelay, "ReplayDelay");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -631,86 +634,104 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.ToString_FillInternal(sb);
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Filename, "Filename");
-                fg.AppendItem(AnimationEvent, "AnimationEvent");
+                {
+                    sb.AppendItem(Filename, "Filename");
+                }
+                {
+                    sb.AppendItem(AnimationEvent, "AnimationEvent");
+                }
                 if (RelatedIdles is {} RelatedIdlesItem)
                 {
-                    fg.AppendLine("RelatedIdles =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("RelatedIdles =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(RelatedIdlesItem.Overall);
+                        sb.AppendItem(RelatedIdlesItem.Overall);
                         if (RelatedIdlesItem.Specific != null)
                         {
                             foreach (var subItem in RelatedIdlesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(LoopingSecondsMin, "LoopingSecondsMin");
-                fg.AppendItem(LoopingSecondsMax, "LoopingSecondsMax");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(AnimationGroupSection, "AnimationGroupSection");
-                fg.AppendItem(ReplayDelay, "ReplayDelay");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                {
+                    sb.AppendItem(LoopingSecondsMin, "LoopingSecondsMin");
+                }
+                {
+                    sb.AppendItem(LoopingSecondsMax, "LoopingSecondsMax");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(AnimationGroupSection, "AnimationGroupSection");
+                }
+                {
+                    sb.AppendItem(ReplayDelay, "ReplayDelay");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -924,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1023,13 +1044,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IIdleAnimationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             IdleAnimation.Mask<bool>? printMask = null)
         {
             ((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1384,118 +1405,118 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             IdleAnimation.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IIdleAnimationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             IdleAnimation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"IdleAnimation =>");
+                sb.AppendLine($"IdleAnimation =>");
             }
             else
             {
-                fg.AppendLine($"{name} (IdleAnimation) =>");
+                sb.AppendLine($"{name} (IdleAnimation) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IIdleAnimationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             IdleAnimation.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Filename ?? true)
                 && item.Filename is {} FilenameItem)
             {
-                fg.AppendItem(FilenameItem, "Filename");
+                sb.AppendItem(FilenameItem, "Filename");
             }
             if ((printMask?.AnimationEvent ?? true)
                 && item.AnimationEvent is {} AnimationEventItem)
             {
-                fg.AppendItem(AnimationEventItem, "AnimationEvent");
+                sb.AppendItem(AnimationEventItem, "AnimationEvent");
             }
             if (printMask?.RelatedIdles?.Overall ?? true)
             {
-                fg.AppendLine("RelatedIdles =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("RelatedIdles =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.RelatedIdles)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.LoopingSecondsMin ?? true)
             {
-                fg.AppendItem(item.LoopingSecondsMin, "LoopingSecondsMin");
+                sb.AppendItem(item.LoopingSecondsMin, "LoopingSecondsMin");
             }
             if (printMask?.LoopingSecondsMax ?? true)
             {
-                fg.AppendItem(item.LoopingSecondsMax, "LoopingSecondsMax");
+                sb.AppendItem(item.LoopingSecondsMax, "LoopingSecondsMax");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.AnimationGroupSection ?? true)
             {
-                fg.AppendItem(item.AnimationGroupSection, "AnimationGroupSection");
+                sb.AppendItem(item.AnimationGroupSection, "AnimationGroupSection");
             }
             if (printMask?.ReplayDelay ?? true)
             {
-                fg.AppendItem(item.ReplayDelay, "ReplayDelay");
+                sb.AppendItem(item.ReplayDelay, "ReplayDelay");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2204,7 +2225,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => IdleAnimationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2381,11 +2402,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             IdleAnimationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

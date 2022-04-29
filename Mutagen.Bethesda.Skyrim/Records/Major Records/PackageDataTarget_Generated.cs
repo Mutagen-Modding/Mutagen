@@ -62,11 +62,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PackageDataTargetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -206,27 +207,27 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(PackageDataTarget.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PackageDataTarget.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PackageDataTarget.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PackageDataTarget.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PackageDataTarget.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Target?.Overall ?? true)
                     {
-                        Target?.ToString(fg);
+                        Target?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -302,36 +303,38 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Type, "Type");
-                Target?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                Target?.ToString(sb);
             }
             #endregion
 
@@ -439,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -515,13 +518,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IPackageDataTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageDataTarget.Mask<bool>? printMask = null)
         {
             ((PackageDataTargetCommon)((IPackageDataTargetGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -807,56 +810,56 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             PackageDataTarget.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPackageDataTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageDataTarget.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PackageDataTarget =>");
+                sb.AppendLine($"PackageDataTarget =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PackageDataTarget) =>");
+                sb.AppendLine($"{name} (PackageDataTarget) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPackageDataTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PackageDataTarget.Mask<bool>? printMask = null)
         {
             APackageDataCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.Target?.Overall ?? true)
             {
-                item.Target?.ToString(fg, "Target");
+                item.Target?.ToString(sb, "Target");
             }
         }
         
@@ -1215,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageDataTargetCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1300,11 +1303,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PackageDataTargetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

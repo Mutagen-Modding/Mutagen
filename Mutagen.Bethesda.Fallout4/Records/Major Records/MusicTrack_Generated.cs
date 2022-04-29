@@ -136,11 +136,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MusicTrackMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -437,112 +438,116 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(MusicTrack.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MusicTrack.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MusicTrack.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MusicTrack.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MusicTrack.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendItem(Duration, "Duration");
+                        sb.AppendItem(Duration, "Duration");
                     }
                     if (printMask?.FadeOut ?? true)
                     {
-                        fg.AppendItem(FadeOut, "FadeOut");
+                        sb.AppendItem(FadeOut, "FadeOut");
                     }
                     if (printMask?.TrackFilename ?? true)
                     {
-                        fg.AppendItem(TrackFilename, "TrackFilename");
+                        sb.AppendItem(TrackFilename, "TrackFilename");
                     }
                     if (printMask?.FinaleFilename ?? true)
                     {
-                        fg.AppendItem(FinaleFilename, "FinaleFilename");
+                        sb.AppendItem(FinaleFilename, "FinaleFilename");
                     }
                     if (printMask?.LoopData?.Overall ?? true)
                     {
-                        LoopData?.ToString(fg);
+                        LoopData?.ToString(sb);
                     }
                     if ((printMask?.CuePoints?.Overall ?? true)
                         && CuePoints is {} CuePointsItem)
                     {
-                        fg.AppendLine("CuePoints =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CuePoints =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(CuePointsItem.Overall);
+                            sb.AppendItem(CuePointsItem.Overall);
                             if (CuePointsItem.Specific != null)
                             {
                                 foreach (var subItem in CuePointsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Tracks?.Overall ?? true)
                         && Tracks is {} TracksItem)
                     {
-                        fg.AppendLine("Tracks =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Tracks =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(TracksItem.Overall);
+                            sb.AppendItem(TracksItem.Overall);
                             if (TracksItem.Specific != null)
                             {
                                 foreach (var subItem in TracksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -688,105 +693,119 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Duration, "Duration");
-                fg.AppendItem(FadeOut, "FadeOut");
-                fg.AppendItem(TrackFilename, "TrackFilename");
-                fg.AppendItem(FinaleFilename, "FinaleFilename");
-                LoopData?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Duration, "Duration");
+                }
+                {
+                    sb.AppendItem(FadeOut, "FadeOut");
+                }
+                {
+                    sb.AppendItem(TrackFilename, "TrackFilename");
+                }
+                {
+                    sb.AppendItem(FinaleFilename, "FinaleFilename");
+                }
+                LoopData?.ToString(sb);
                 if (CuePoints is {} CuePointsItem)
                 {
-                    fg.AppendLine("CuePoints =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CuePoints =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(CuePointsItem.Overall);
+                        sb.AppendItem(CuePointsItem.Overall);
                         if (CuePointsItem.Specific != null)
                         {
                             foreach (var subItem in CuePointsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Tracks is {} TracksItem)
                 {
-                    fg.AppendLine("Tracks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Tracks =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(TracksItem.Overall);
+                        sb.AppendItem(TracksItem.Overall);
                         if (TracksItem.Specific != null)
                         {
                             foreach (var subItem in TracksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -985,7 +1004,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1080,13 +1099,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IMusicTrackGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MusicTrack.Mask<bool>? printMask = null)
         {
             ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1450,134 +1469,134 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             MusicTrack.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMusicTrackGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MusicTrack.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MusicTrack =>");
+                sb.AppendLine($"MusicTrack =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MusicTrack) =>");
+                sb.AppendLine($"{name} (MusicTrack) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMusicTrackGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MusicTrack.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if ((printMask?.Duration ?? true)
                 && item.Duration is {} DurationItem)
             {
-                fg.AppendItem(DurationItem, "Duration");
+                sb.AppendItem(DurationItem, "Duration");
             }
             if ((printMask?.FadeOut ?? true)
                 && item.FadeOut is {} FadeOutItem)
             {
-                fg.AppendItem(FadeOutItem, "FadeOut");
+                sb.AppendItem(FadeOutItem, "FadeOut");
             }
             if ((printMask?.TrackFilename ?? true)
                 && item.TrackFilename is {} TrackFilenameItem)
             {
-                fg.AppendItem(TrackFilenameItem, "TrackFilename");
+                sb.AppendItem(TrackFilenameItem, "TrackFilename");
             }
             if ((printMask?.FinaleFilename ?? true)
                 && item.FinaleFilename is {} FinaleFilenameItem)
             {
-                fg.AppendItem(FinaleFilenameItem, "FinaleFilename");
+                sb.AppendItem(FinaleFilenameItem, "FinaleFilename");
             }
             if ((printMask?.LoopData?.Overall ?? true)
                 && item.LoopData is {} LoopDataItem)
             {
-                LoopDataItem?.ToString(fg, "LoopData");
+                LoopDataItem?.ToString(sb, "LoopData");
             }
             if ((printMask?.CuePoints?.Overall ?? true)
                 && item.CuePoints is {} CuePointsItem)
             {
-                fg.AppendLine("CuePoints =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CuePoints =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in CuePointsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Conditions?.Overall ?? true)
                 && item.Conditions is {} ConditionsItem)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ConditionsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Tracks?.Overall ?? true)
                 && item.Tracks is {} TracksItem)
             {
-                fg.AppendLine("Tracks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Tracks =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in TracksItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -2390,7 +2409,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MusicTrackCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2585,11 +2604,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MusicTrackMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

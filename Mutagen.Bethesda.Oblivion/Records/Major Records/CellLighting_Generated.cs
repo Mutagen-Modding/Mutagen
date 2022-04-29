@@ -83,11 +83,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CellLightingMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -270,55 +271,55 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(CellLighting.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CellLighting.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CellLighting.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CellLighting.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CellLighting.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.AmbientColor ?? true)
                     {
-                        fg.AppendItem(AmbientColor, "AmbientColor");
+                        sb.AppendItem(AmbientColor, "AmbientColor");
                     }
                     if (printMask?.DirectionalColor ?? true)
                     {
-                        fg.AppendItem(DirectionalColor, "DirectionalColor");
+                        sb.AppendItem(DirectionalColor, "DirectionalColor");
                     }
                     if (printMask?.FogColor ?? true)
                     {
-                        fg.AppendItem(FogColor, "FogColor");
+                        sb.AppendItem(FogColor, "FogColor");
                     }
                     if (printMask?.FogNear ?? true)
                     {
-                        fg.AppendItem(FogNear, "FogNear");
+                        sb.AppendItem(FogNear, "FogNear");
                     }
                     if (printMask?.FogFar ?? true)
                     {
-                        fg.AppendItem(FogFar, "FogFar");
+                        sb.AppendItem(FogFar, "FogFar");
                     }
                     if (printMask?.DirectionalRotationXY ?? true)
                     {
-                        fg.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
+                        sb.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
                     }
                     if (printMask?.DirectionalRotationZ ?? true)
                     {
-                        fg.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
+                        sb.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
                     }
                     if (printMask?.DirectionalFade ?? true)
                     {
-                        fg.AppendItem(DirectionalFade, "DirectionalFade");
+                        sb.AppendItem(DirectionalFade, "DirectionalFade");
                     }
                     if (printMask?.FogClipDistance ?? true)
                     {
-                        fg.AppendItem(FogClipDistance, "FogClipDistance");
+                        sb.AppendItem(FogClipDistance, "FogClipDistance");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -475,42 +476,60 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(AmbientColor, "AmbientColor");
-                fg.AppendItem(DirectionalColor, "DirectionalColor");
-                fg.AppendItem(FogColor, "FogColor");
-                fg.AppendItem(FogNear, "FogNear");
-                fg.AppendItem(FogFar, "FogFar");
-                fg.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
-                fg.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
-                fg.AppendItem(DirectionalFade, "DirectionalFade");
-                fg.AppendItem(FogClipDistance, "FogClipDistance");
+                {
+                    sb.AppendItem(AmbientColor, "AmbientColor");
+                }
+                {
+                    sb.AppendItem(DirectionalColor, "DirectionalColor");
+                }
+                {
+                    sb.AppendItem(FogColor, "FogColor");
+                }
+                {
+                    sb.AppendItem(FogNear, "FogNear");
+                }
+                {
+                    sb.AppendItem(FogFar, "FogFar");
+                }
+                {
+                    sb.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
+                }
+                {
+                    sb.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
+                }
+                {
+                    sb.AppendItem(DirectionalFade, "DirectionalFade");
+                }
+                {
+                    sb.AppendItem(FogClipDistance, "FogClipDistance");
+                }
             }
             #endregion
 
@@ -654,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -743,13 +762,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ICellLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
             ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1057,80 +1076,80 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICellLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CellLighting =>");
+                sb.AppendLine($"CellLighting =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CellLighting) =>");
+                sb.AppendLine($"{name} (CellLighting) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICellLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CellLighting.Mask<bool>? printMask = null)
         {
             if (printMask?.AmbientColor ?? true)
             {
-                fg.AppendItem(item.AmbientColor, "AmbientColor");
+                sb.AppendItem(item.AmbientColor, "AmbientColor");
             }
             if (printMask?.DirectionalColor ?? true)
             {
-                fg.AppendItem(item.DirectionalColor, "DirectionalColor");
+                sb.AppendItem(item.DirectionalColor, "DirectionalColor");
             }
             if (printMask?.FogColor ?? true)
             {
-                fg.AppendItem(item.FogColor, "FogColor");
+                sb.AppendItem(item.FogColor, "FogColor");
             }
             if (printMask?.FogNear ?? true)
             {
-                fg.AppendItem(item.FogNear, "FogNear");
+                sb.AppendItem(item.FogNear, "FogNear");
             }
             if (printMask?.FogFar ?? true)
             {
-                fg.AppendItem(item.FogFar, "FogFar");
+                sb.AppendItem(item.FogFar, "FogFar");
             }
             if (printMask?.DirectionalRotationXY ?? true)
             {
-                fg.AppendItem(item.DirectionalRotationXY, "DirectionalRotationXY");
+                sb.AppendItem(item.DirectionalRotationXY, "DirectionalRotationXY");
             }
             if (printMask?.DirectionalRotationZ ?? true)
             {
-                fg.AppendItem(item.DirectionalRotationZ, "DirectionalRotationZ");
+                sb.AppendItem(item.DirectionalRotationZ, "DirectionalRotationZ");
             }
             if (printMask?.DirectionalFade ?? true)
             {
-                fg.AppendItem(item.DirectionalFade, "DirectionalFade");
+                sb.AppendItem(item.DirectionalFade, "DirectionalFade");
             }
             if (printMask?.FogClipDistance ?? true)
             {
-                fg.AppendItem(item.FogClipDistance, "FogClipDistance");
+                sb.AppendItem(item.FogClipDistance, "FogClipDistance");
             }
         }
         
@@ -1477,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellLightingBinaryWriteTranslation.Instance;
@@ -1550,11 +1569,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CellLightingMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -79,11 +79,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TreeDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -257,51 +258,51 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(TreeData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TreeData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TreeData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TreeData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TreeData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.LeafCurvature ?? true)
                     {
-                        fg.AppendItem(LeafCurvature, "LeafCurvature");
+                        sb.AppendItem(LeafCurvature, "LeafCurvature");
                     }
                     if (printMask?.MinimumLeafAngle ?? true)
                     {
-                        fg.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
+                        sb.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
                     }
                     if (printMask?.MaximumLeafAngle ?? true)
                     {
-                        fg.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
+                        sb.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
                     }
                     if (printMask?.BranchDimmingValue ?? true)
                     {
-                        fg.AppendItem(BranchDimmingValue, "BranchDimmingValue");
+                        sb.AppendItem(BranchDimmingValue, "BranchDimmingValue");
                     }
                     if (printMask?.LeafDimmingValue ?? true)
                     {
-                        fg.AppendItem(LeafDimmingValue, "LeafDimmingValue");
+                        sb.AppendItem(LeafDimmingValue, "LeafDimmingValue");
                     }
                     if (printMask?.ShadowRadius ?? true)
                     {
-                        fg.AppendItem(ShadowRadius, "ShadowRadius");
+                        sb.AppendItem(ShadowRadius, "ShadowRadius");
                     }
                     if (printMask?.RockingSpeed ?? true)
                     {
-                        fg.AppendItem(RockingSpeed, "RockingSpeed");
+                        sb.AppendItem(RockingSpeed, "RockingSpeed");
                     }
                     if (printMask?.RustleSpeed ?? true)
                     {
-                        fg.AppendItem(RustleSpeed, "RustleSpeed");
+                        sb.AppendItem(RustleSpeed, "RustleSpeed");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -448,41 +449,57 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(LeafCurvature, "LeafCurvature");
-                fg.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
-                fg.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
-                fg.AppendItem(BranchDimmingValue, "BranchDimmingValue");
-                fg.AppendItem(LeafDimmingValue, "LeafDimmingValue");
-                fg.AppendItem(ShadowRadius, "ShadowRadius");
-                fg.AppendItem(RockingSpeed, "RockingSpeed");
-                fg.AppendItem(RustleSpeed, "RustleSpeed");
+                {
+                    sb.AppendItem(LeafCurvature, "LeafCurvature");
+                }
+                {
+                    sb.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
+                }
+                {
+                    sb.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
+                }
+                {
+                    sb.AppendItem(BranchDimmingValue, "BranchDimmingValue");
+                }
+                {
+                    sb.AppendItem(LeafDimmingValue, "LeafDimmingValue");
+                }
+                {
+                    sb.AppendItem(ShadowRadius, "ShadowRadius");
+                }
+                {
+                    sb.AppendItem(RockingSpeed, "RockingSpeed");
+                }
+                {
+                    sb.AppendItem(RustleSpeed, "RustleSpeed");
+                }
             }
             #endregion
 
@@ -622,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -709,13 +726,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ITreeDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TreeData.Mask<bool>? printMask = null)
         {
             ((TreeDataCommon)((ITreeDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1020,76 +1037,76 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             TreeData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITreeDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TreeData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TreeData =>");
+                sb.AppendLine($"TreeData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TreeData) =>");
+                sb.AppendLine($"{name} (TreeData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITreeDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TreeData.Mask<bool>? printMask = null)
         {
             if (printMask?.LeafCurvature ?? true)
             {
-                fg.AppendItem(item.LeafCurvature, "LeafCurvature");
+                sb.AppendItem(item.LeafCurvature, "LeafCurvature");
             }
             if (printMask?.MinimumLeafAngle ?? true)
             {
-                fg.AppendItem(item.MinimumLeafAngle, "MinimumLeafAngle");
+                sb.AppendItem(item.MinimumLeafAngle, "MinimumLeafAngle");
             }
             if (printMask?.MaximumLeafAngle ?? true)
             {
-                fg.AppendItem(item.MaximumLeafAngle, "MaximumLeafAngle");
+                sb.AppendItem(item.MaximumLeafAngle, "MaximumLeafAngle");
             }
             if (printMask?.BranchDimmingValue ?? true)
             {
-                fg.AppendItem(item.BranchDimmingValue, "BranchDimmingValue");
+                sb.AppendItem(item.BranchDimmingValue, "BranchDimmingValue");
             }
             if (printMask?.LeafDimmingValue ?? true)
             {
-                fg.AppendItem(item.LeafDimmingValue, "LeafDimmingValue");
+                sb.AppendItem(item.LeafDimmingValue, "LeafDimmingValue");
             }
             if (printMask?.ShadowRadius ?? true)
             {
-                fg.AppendItem(item.ShadowRadius, "ShadowRadius");
+                sb.AppendItem(item.ShadowRadius, "ShadowRadius");
             }
             if (printMask?.RockingSpeed ?? true)
             {
-                fg.AppendItem(item.RockingSpeed, "RockingSpeed");
+                sb.AppendItem(item.RockingSpeed, "RockingSpeed");
             }
             if (printMask?.RustleSpeed ?? true)
             {
-                fg.AppendItem(item.RustleSpeed, "RustleSpeed");
+                sb.AppendItem(item.RustleSpeed, "RustleSpeed");
             }
         }
         
@@ -1425,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TreeDataBinaryWriteTranslation.Instance;
@@ -1497,11 +1514,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TreeDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

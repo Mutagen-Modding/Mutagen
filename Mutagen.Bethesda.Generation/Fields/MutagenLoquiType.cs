@@ -30,17 +30,17 @@ public class MutagenLoquiType : LoquiType
         return this.TargetObjectGeneration?.GetObjectType();
     }
 
-    public override void GenerateTypicalMakeCopy(FileGeneration fg, Accessor retAccessor, Accessor rhsAccessor, Accessor copyMaskAccessor, bool deepCopy, bool doTranslationMask)
+    public override void GenerateTypicalMakeCopy(StructuredStringBuilder sb, Accessor retAccessor, Accessor rhsAccessor, Accessor copyMaskAccessor, bool deepCopy, bool doTranslationMask)
     {
         if (this.GetObjectType() != ObjectType.Record)
         {
-            base.GenerateTypicalMakeCopy(fg, retAccessor, rhsAccessor, copyMaskAccessor, deepCopy, doTranslationMask: doTranslationMask);
+            base.GenerateTypicalMakeCopy(sb, retAccessor, rhsAccessor, copyMaskAccessor, deepCopy, doTranslationMask: doTranslationMask);
             return;
         }
         switch (this.RefType)
         {
             case LoquiRefType.Direct:
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{retAccessor}({this.TargetObjectGeneration.ObjectName}){rhsAccessor}.{(deepCopy ? "Deep" : null)}Copy"))
                 {
                     if (this.RefType == LoquiRefType.Direct)
@@ -64,21 +64,21 @@ public class MutagenLoquiType : LoquiType
             case LoquiRefType.Generic:
                 if (deepCopy)
                 {
-                    fg.AppendLine($"{retAccessor}(r.DeepCopy() as {_generic})!;");
+                    sb.AppendLine($"{retAccessor}(r.DeepCopy() as {_generic})!;");
                 }
                 else
                 {
-                    fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{_generic}, {_generic}Getter>()({rhsAccessor}, null);");
+                    sb.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{_generic}, {_generic}Getter>()({rhsAccessor}, null);");
                 }
                 break;
             case LoquiRefType.Interface:
                 if (deepCopy)
                 {
-                    fg.AppendLine($"{retAccessor}(r.DeepCopy() as {this.TypeNameInternal(getter: false, internalInterface: true)})!;");
+                    sb.AppendLine($"{retAccessor}(r.DeepCopy() as {this.TypeNameInternal(getter: false, internalInterface: true)})!;");
                 }
                 else
                 {
-                    fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{this.TypeName()}, {this.TypeName(getter: true)}>(r.GetType(), typeof({this.TypeName(getter: true)}))({rhsAccessor}, null);");
+                    sb.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{this.TypeName()}, {this.TypeName(getter: true)}>(r.GetType(), typeof({this.TypeName(getter: true)}))({rhsAccessor}, null);");
                 }
                 break;
             default:

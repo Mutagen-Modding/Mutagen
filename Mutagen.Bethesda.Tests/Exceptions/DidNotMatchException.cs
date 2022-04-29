@@ -45,7 +45,7 @@ public class DidNotMatchException : Exception, IPrintable
     //    return BinaryStringUtility.ToZString(bytes);
     //}
 
-    public void ToString(FileGeneration fg, string name)
+    public void ToString(StructuredStringBuilder fg, string name)
     {
         fg.AppendLine($"{Path} Bytes did not match at positions:");
         using (new DepthWrapper(fg))

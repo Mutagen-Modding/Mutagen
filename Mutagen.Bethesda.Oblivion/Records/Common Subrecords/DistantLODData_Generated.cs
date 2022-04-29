@@ -64,11 +64,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DistantLODDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -197,31 +198,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(DistantLODData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, DistantLODData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, DistantLODData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DistantLODData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DistantLODData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Unknown0 ?? true)
                     {
-                        fg.AppendItem(Unknown0, "Unknown0");
+                        sb.AppendItem(Unknown0, "Unknown0");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(Unknown1, "Unknown1");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -318,36 +319,42 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Unknown0, "Unknown0");
-                fg.AppendItem(Unknown1, "Unknown1");
-                fg.AppendItem(Unknown2, "Unknown2");
+                {
+                    sb.AppendItem(Unknown0, "Unknown0");
+                }
+                {
+                    sb.AppendItem(Unknown1, "Unknown1");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
             }
             #endregion
 
@@ -467,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -544,13 +551,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IDistantLODDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DistantLODData.Mask<bool>? printMask = null)
         {
             ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -840,56 +847,56 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             DistantLODData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDistantLODDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DistantLODData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DistantLODData =>");
+                sb.AppendLine($"DistantLODData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DistantLODData) =>");
+                sb.AppendLine($"{name} (DistantLODData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDistantLODDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DistantLODData.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown0 ?? true)
             {
-                fg.AppendItem(item.Unknown0, "Unknown0");
+                sb.AppendItem(item.Unknown0, "Unknown0");
             }
             if (printMask?.Unknown1 ?? true)
             {
-                fg.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.Unknown1, "Unknown1");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         
@@ -1162,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DistantLODDataBinaryWriteTranslation.Instance;
@@ -1229,11 +1236,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DistantLODDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

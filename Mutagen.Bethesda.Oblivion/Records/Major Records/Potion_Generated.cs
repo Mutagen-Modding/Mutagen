@@ -142,11 +142,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PotionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -365,66 +366,66 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Potion.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Potion.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Potion.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Potion.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Potion.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendItem(Icon, "Icon");
+                        sb.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendItem(Script, "Script");
+                        sb.AppendItem(Script, "Script");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.ToString(sb);
                     }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects is {} EffectsItem)
                     {
-                        fg.AppendLine("Effects =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Effects =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(EffectsItem.Overall);
+                            sb.AppendItem(EffectsItem.Overall);
                             if (EffectsItem.Specific != null)
                             {
                                 foreach (var subItem in EffectsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -550,61 +551,69 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                fg.AppendItem(Icon, "Icon");
-                fg.AppendItem(Script, "Script");
-                fg.AppendItem(Weight, "Weight");
-                Data?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(Icon, "Icon");
+                }
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                Data?.ToString(sb);
                 if (Effects is {} EffectsItem)
                 {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Effects =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(EffectsItem.Overall);
+                        sb.AppendItem(EffectsItem.Overall);
                         if (EffectsItem.Specific != null)
                         {
                             foreach (var subItem in EffectsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -784,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -899,13 +908,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IPotionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Potion.Mask<bool>? printMask = null)
         {
             ((PotionCommon)((IPotionGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1257,95 +1266,95 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Potion.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPotionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Potion.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Potion =>");
+                sb.AppendLine($"Potion =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Potion) =>");
+                sb.AppendLine($"{name} (Potion) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPotionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Potion.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if ((printMask?.Icon ?? true)
                 && item.Icon is {} IconItem)
             {
-                fg.AppendItem(IconItem, "Icon");
+                sb.AppendItem(IconItem, "Icon");
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKeyNullable, "Script");
+                sb.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if ((printMask?.Weight ?? true)
                 && item.Weight is {} WeightItem)
             {
-                fg.AppendItem(WeightItem, "Weight");
+                sb.AppendItem(WeightItem, "Weight");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.ToString(sb, "Data");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
-                fg.AppendLine("Effects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Effects =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Effects)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -2065,7 +2074,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PotionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2230,11 +2239,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PotionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

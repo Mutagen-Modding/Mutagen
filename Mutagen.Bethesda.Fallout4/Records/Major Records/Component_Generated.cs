@@ -153,11 +153,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ComponentMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -325,43 +326,43 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(Component.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Component.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Component.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Component.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Component.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.CraftingSound ?? true)
                     {
-                        fg.AppendItem(CraftingSound, "CraftingSound");
+                        sb.AppendItem(CraftingSound, "CraftingSound");
                     }
                     if (printMask?.AutoCalcValue ?? true)
                     {
-                        fg.AppendItem(AutoCalcValue, "AutoCalcValue");
+                        sb.AppendItem(AutoCalcValue, "AutoCalcValue");
                     }
                     if (printMask?.ScrapItem ?? true)
                     {
-                        fg.AppendItem(ScrapItem, "ScrapItem");
+                        sb.AppendItem(ScrapItem, "ScrapItem");
                     }
                     if (printMask?.ModScrapScalar ?? true)
                     {
-                        fg.AppendItem(ModScrapScalar, "ModScrapScalar");
+                        sb.AppendItem(ModScrapScalar, "ModScrapScalar");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -477,40 +478,50 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(CraftingSound, "CraftingSound");
-                fg.AppendItem(AutoCalcValue, "AutoCalcValue");
-                fg.AppendItem(ScrapItem, "ScrapItem");
-                fg.AppendItem(ModScrapScalar, "ModScrapScalar");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(CraftingSound, "CraftingSound");
+                }
+                {
+                    sb.AppendItem(AutoCalcValue, "AutoCalcValue");
+                }
+                {
+                    sb.AppendItem(ScrapItem, "ScrapItem");
+                }
+                {
+                    sb.AppendItem(ModScrapScalar, "ModScrapScalar");
+                }
             }
             #endregion
 
@@ -697,7 +708,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -812,13 +823,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IComponentGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Component.Mask<bool>? printMask = null)
         {
             ((ComponentCommon)((IComponentGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1155,74 +1166,74 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             Component.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IComponentGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Component.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Component =>");
+                sb.AppendLine($"Component =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Component) =>");
+                sb.AppendLine($"{name} (Component) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IComponentGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Component.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.CraftingSound ?? true)
             {
-                fg.AppendItem(item.CraftingSound.FormKeyNullable, "CraftingSound");
+                sb.AppendItem(item.CraftingSound.FormKeyNullable, "CraftingSound");
             }
             if ((printMask?.AutoCalcValue ?? true)
                 && item.AutoCalcValue is {} AutoCalcValueItem)
             {
-                fg.AppendItem(AutoCalcValueItem, "AutoCalcValue");
+                sb.AppendItem(AutoCalcValueItem, "AutoCalcValue");
             }
             if (printMask?.ScrapItem ?? true)
             {
-                fg.AppendItem(item.ScrapItem.FormKeyNullable, "ScrapItem");
+                sb.AppendItem(item.ScrapItem.FormKeyNullable, "ScrapItem");
             }
             if (printMask?.ModScrapScalar ?? true)
             {
-                fg.AppendItem(item.ModScrapScalar.FormKeyNullable, "ModScrapScalar");
+                sb.AppendItem(item.ModScrapScalar.FormKeyNullable, "ModScrapScalar");
             }
         }
         
@@ -1851,7 +1862,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ComponentCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2010,11 +2021,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ComponentMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

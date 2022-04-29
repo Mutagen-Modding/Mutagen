@@ -89,11 +89,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             StoryManagerQuestNodeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -277,54 +278,54 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(StoryManagerQuestNode.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, StoryManagerQuestNode.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, StoryManagerQuestNode.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(StoryManagerQuestNode.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(StoryManagerQuestNode.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.MaxConcurrentQuests ?? true)
                     {
-                        fg.AppendItem(MaxConcurrentQuests, "MaxConcurrentQuests");
+                        sb.AppendItem(MaxConcurrentQuests, "MaxConcurrentQuests");
                     }
                     if (printMask?.MaxNumQuestsToRun ?? true)
                     {
-                        fg.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
+                        sb.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
                     }
                     if ((printMask?.Quests?.Overall ?? true)
                         && Quests is {} QuestsItem)
                     {
-                        fg.AppendLine("Quests =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Quests =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(QuestsItem.Overall);
+                            sb.AppendItem(QuestsItem.Overall);
                             if (QuestsItem.Specific != null)
                             {
                                 foreach (var subItem in QuestsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -420,58 +421,64 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(MaxConcurrentQuests, "MaxConcurrentQuests");
-                fg.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(MaxConcurrentQuests, "MaxConcurrentQuests");
+                }
+                {
+                    sb.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
+                }
                 if (Quests is {} QuestsItem)
                 {
-                    fg.AppendLine("Quests =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Quests =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(QuestsItem.Overall);
+                        sb.AppendItem(QuestsItem.Overall);
                         if (QuestsItem.Specific != null)
                         {
                             foreach (var subItem in QuestsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -658,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -743,13 +750,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IStoryManagerQuestNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             StoryManagerQuestNode.Mask<bool>? printMask = null)
         {
             ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1101,81 +1108,81 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             StoryManagerQuestNode.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IStoryManagerQuestNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             StoryManagerQuestNode.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"StoryManagerQuestNode =>");
+                sb.AppendLine($"StoryManagerQuestNode =>");
             }
             else
             {
-                fg.AppendLine($"{name} (StoryManagerQuestNode) =>");
+                sb.AppendLine($"{name} (StoryManagerQuestNode) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IStoryManagerQuestNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             StoryManagerQuestNode.Mask<bool>? printMask = null)
         {
             AStoryManagerNodeCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.MaxConcurrentQuests ?? true)
                 && item.MaxConcurrentQuests is {} MaxConcurrentQuestsItem)
             {
-                fg.AppendItem(MaxConcurrentQuestsItem, "MaxConcurrentQuests");
+                sb.AppendItem(MaxConcurrentQuestsItem, "MaxConcurrentQuests");
             }
             if ((printMask?.MaxNumQuestsToRun ?? true)
                 && item.MaxNumQuestsToRun is {} MaxNumQuestsToRunItem)
             {
-                fg.AppendItem(MaxNumQuestsToRunItem, "MaxNumQuestsToRun");
+                sb.AppendItem(MaxNumQuestsToRunItem, "MaxNumQuestsToRun");
             }
             if (printMask?.Quests?.Overall ?? true)
             {
-                fg.AppendLine("Quests =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Quests =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Quests)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1870,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => StoryManagerQuestNodeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2010,11 +2017,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             StoryManagerQuestNodeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

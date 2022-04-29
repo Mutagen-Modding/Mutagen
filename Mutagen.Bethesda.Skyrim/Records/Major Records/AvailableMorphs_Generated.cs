@@ -100,11 +100,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AvailableMorphsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -274,35 +275,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(AvailableMorphs.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, AvailableMorphs.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, AvailableMorphs.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(AvailableMorphs.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AvailableMorphs.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Nose?.Overall ?? true)
                     {
-                        Nose?.ToString(fg);
+                        Nose?.ToString(sb);
                     }
                     if (printMask?.Brow?.Overall ?? true)
                     {
-                        Brow?.ToString(fg);
+                        Brow?.ToString(sb);
                     }
                     if (printMask?.Eye?.Overall ?? true)
                     {
-                        Eye?.ToString(fg);
+                        Eye?.ToString(sb);
                     }
                     if (printMask?.Lip?.Overall ?? true)
                     {
-                        Lip?.ToString(fg);
+                        Lip?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -409,37 +410,37 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                Nose?.ToString(fg);
-                Brow?.ToString(fg);
-                Eye?.ToString(fg);
-                Lip?.ToString(fg);
+                Nose?.ToString(sb);
+                Brow?.ToString(sb);
+                Eye?.ToString(sb);
+                Lip?.ToString(sb);
             }
             #endregion
 
@@ -559,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -638,13 +639,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IAvailableMorphsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
             ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -950,64 +951,64 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IAvailableMorphsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AvailableMorphs =>");
+                sb.AppendLine($"AvailableMorphs =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AvailableMorphs) =>");
+                sb.AppendLine($"{name} (AvailableMorphs) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAvailableMorphsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
             if ((printMask?.Nose?.Overall ?? true)
                 && item.Nose is {} NoseItem)
             {
-                NoseItem?.ToString(fg, "Nose");
+                NoseItem?.ToString(sb, "Nose");
             }
             if ((printMask?.Brow?.Overall ?? true)
                 && item.Brow is {} BrowItem)
             {
-                BrowItem?.ToString(fg, "Brow");
+                BrowItem?.ToString(sb, "Brow");
             }
             if ((printMask?.Eye?.Overall ?? true)
                 && item.Eye is {} EyeItem)
             {
-                EyeItem?.ToString(fg, "Eye");
+                EyeItem?.ToString(sb, "Eye");
             }
             if ((printMask?.Lip?.Overall ?? true)
                 && item.Lip is {} LipItem)
             {
-                LipItem?.ToString(fg, "Lip");
+                LipItem?.ToString(sb, "Lip");
             }
         }
         
@@ -1443,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AvailableMorphsBinaryWriteTranslation.Instance;
@@ -1537,11 +1538,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AvailableMorphsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -71,11 +71,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FactionOwnerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -203,27 +204,27 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(FactionOwner.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, FactionOwner.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, FactionOwner.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(FactionOwner.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FactionOwner.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Faction ?? true)
                     {
-                        fg.AppendItem(Faction, "Faction");
+                        sb.AppendItem(Faction, "Faction");
                     }
                     if (printMask?.RequiredRank ?? true)
                     {
-                        fg.AppendItem(RequiredRank, "RequiredRank");
+                        sb.AppendItem(RequiredRank, "RequiredRank");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -299,36 +300,40 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Faction, "Faction");
-                fg.AppendItem(RequiredRank, "RequiredRank");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Faction, "Faction");
+                }
+                {
+                    sb.AppendItem(RequiredRank, "RequiredRank");
+                }
             }
             #endregion
 
@@ -437,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -509,13 +514,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IFactionOwnerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FactionOwner.Mask<bool>? printMask = null)
         {
             ((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -786,56 +791,56 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             FactionOwner.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IFactionOwnerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FactionOwner.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FactionOwner =>");
+                sb.AppendLine($"FactionOwner =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FactionOwner) =>");
+                sb.AppendLine($"{name} (FactionOwner) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFactionOwnerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FactionOwner.Mask<bool>? printMask = null)
         {
             OwnerTargetCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Faction ?? true)
             {
-                fg.AppendItem(item.Faction.FormKey, "Faction");
+                sb.AppendItem(item.Faction.FormKey, "Faction");
             }
             if (printMask?.RequiredRank ?? true)
             {
-                fg.AppendItem(item.RequiredRank, "RequiredRank");
+                sb.AppendItem(item.RequiredRank, "RequiredRank");
             }
         }
         
@@ -1130,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FactionOwnerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1194,11 +1199,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FactionOwnerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

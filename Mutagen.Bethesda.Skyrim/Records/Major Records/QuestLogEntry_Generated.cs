@@ -125,11 +125,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             QuestLogEntryMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -330,66 +331,66 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(QuestLogEntry.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, QuestLogEntry.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, QuestLogEntry.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(QuestLogEntry.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(QuestLogEntry.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Entry ?? true)
                     {
-                        fg.AppendItem(Entry, "Entry");
+                        sb.AppendItem(Entry, "Entry");
                     }
                     if (printMask?.NextQuest ?? true)
                     {
-                        fg.AppendItem(NextQuest, "NextQuest");
+                        sb.AppendItem(NextQuest, "NextQuest");
                     }
                     if (printMask?.SCHR ?? true)
                     {
-                        fg.AppendItem(SCHR, "SCHR");
+                        sb.AppendItem(SCHR, "SCHR");
                     }
                     if (printMask?.SCTX ?? true)
                     {
-                        fg.AppendItem(SCTX, "SCTX");
+                        sb.AppendItem(SCTX, "SCTX");
                     }
                     if (printMask?.QNAM ?? true)
                     {
-                        fg.AppendItem(QNAM, "QNAM");
+                        sb.AppendItem(QNAM, "QNAM");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -526,61 +527,73 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Entry, "Entry");
-                fg.AppendItem(NextQuest, "NextQuest");
-                fg.AppendItem(SCHR, "SCHR");
-                fg.AppendItem(SCTX, "SCTX");
-                fg.AppendItem(QNAM, "QNAM");
+                {
+                    sb.AppendItem(Entry, "Entry");
+                }
+                {
+                    sb.AppendItem(NextQuest, "NextQuest");
+                }
+                {
+                    sb.AppendItem(SCHR, "SCHR");
+                }
+                {
+                    sb.AppendItem(SCTX, "SCTX");
+                }
+                {
+                    sb.AppendItem(QNAM, "QNAM");
+                }
             }
             #endregion
 
@@ -720,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -807,13 +820,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IQuestLogEntryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestLogEntry.Mask<bool>? printMask = null)
         {
             ((QuestLogEntryCommon)((IQuestLogEntryGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1133,91 +1146,91 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             QuestLogEntry.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IQuestLogEntryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestLogEntry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"QuestLogEntry =>");
+                sb.AppendLine($"QuestLogEntry =>");
             }
             else
             {
-                fg.AppendLine($"{name} (QuestLogEntry) =>");
+                sb.AppendLine($"{name} (QuestLogEntry) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IQuestLogEntryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             QuestLogEntry.Mask<bool>? printMask = null)
         {
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Entry ?? true)
                 && item.Entry is {} EntryItem)
             {
-                fg.AppendItem(EntryItem, "Entry");
+                sb.AppendItem(EntryItem, "Entry");
             }
             if (printMask?.NextQuest ?? true)
             {
-                fg.AppendItem(item.NextQuest.FormKeyNullable, "NextQuest");
+                sb.AppendItem(item.NextQuest.FormKeyNullable, "NextQuest");
             }
             if ((printMask?.SCHR ?? true)
                 && item.SCHR is {} SCHRItem)
             {
-                fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
+                sb.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
             if ((printMask?.SCTX ?? true)
                 && item.SCTX is {} SCTXItem)
             {
-                fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
+                sb.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }
             if ((printMask?.QNAM ?? true)
                 && item.QNAM is {} QNAMItem)
             {
-                fg.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
+                sb.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
             }
         }
         
@@ -1687,7 +1700,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestLogEntryCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1847,11 +1860,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             QuestLogEntryMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

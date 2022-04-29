@@ -120,11 +120,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DialogViewMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -341,77 +342,81 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(DialogView.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, DialogView.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, DialogView.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DialogView.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DialogView.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Quest ?? true)
                     {
-                        fg.AppendItem(Quest, "Quest");
+                        sb.AppendItem(Quest, "Quest");
                     }
                     if ((printMask?.Branches?.Overall ?? true)
                         && Branches is {} BranchesItem)
                     {
-                        fg.AppendLine("Branches =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Branches =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(BranchesItem.Overall);
+                            sb.AppendItem(BranchesItem.Overall);
                             if (BranchesItem.Specific != null)
                             {
                                 foreach (var subItem in BranchesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.TNAMs?.Overall ?? true)
                         && TNAMs is {} TNAMsItem)
                     {
-                        fg.AppendLine("TNAMs =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("TNAMs =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(TNAMsItem.Overall);
+                            sb.AppendItem(TNAMsItem.Overall);
                             if (TNAMsItem.Specific != null)
                             {
                                 foreach (var subItem in TNAMsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.ENAM ?? true)
                     {
-                        fg.AppendItem(ENAM, "ENAM");
+                        sb.AppendItem(ENAM, "ENAM");
                     }
                     if (printMask?.DNAM ?? true)
                     {
-                        fg.AppendItem(DNAM, "DNAM");
+                        sb.AppendItem(DNAM, "DNAM");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -517,81 +522,91 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Quest, "Quest");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
                 if (Branches is {} BranchesItem)
                 {
-                    fg.AppendLine("Branches =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Branches =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(BranchesItem.Overall);
+                        sb.AppendItem(BranchesItem.Overall);
                         if (BranchesItem.Specific != null)
                         {
                             foreach (var subItem in BranchesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (TNAMs is {} TNAMsItem)
                 {
-                    fg.AppendLine("TNAMs =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("TNAMs =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(TNAMsItem.Overall);
+                        sb.AppendItem(TNAMsItem.Overall);
                         if (TNAMsItem.Specific != null)
                         {
                             foreach (var subItem in TNAMsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(ENAM, "ENAM");
-                fg.AppendItem(DNAM, "DNAM");
+                {
+                    sb.AppendItem(ENAM, "ENAM");
+                }
+                {
+                    sb.AppendItem(DNAM, "DNAM");
+                }
             }
             #endregion
 
@@ -782,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -869,13 +884,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IDialogViewGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogView.Mask<bool>? printMask = null)
         {
             ((DialogViewCommon)((IDialogViewGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1213,98 +1228,98 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             DialogView.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDialogViewGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogView.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogView =>");
+                sb.AppendLine($"DialogView =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogView) =>");
+                sb.AppendLine($"{name} (DialogView) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDialogViewGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DialogView.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKey, "Quest");
+                sb.AppendItem(item.Quest.FormKey, "Quest");
             }
             if (printMask?.Branches?.Overall ?? true)
             {
-                fg.AppendLine("Branches =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Branches =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Branches)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.TNAMs?.Overall ?? true)
             {
-                fg.AppendLine("TNAMs =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("TNAMs =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.TNAMs)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"Item => {SpanExt.ToHexString(subItem)}");
+                            sb.AppendLine($"Item => {SpanExt.ToHexString(subItem)}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ENAM ?? true)
                 && item.ENAM is {} ENAMItem)
             {
-                fg.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
+                sb.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
             }
             if ((printMask?.DNAM ?? true)
                 && item.DNAM is {} DNAMItem)
             {
-                fg.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
+                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
             }
         }
         
@@ -1937,7 +1952,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogViewCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2090,11 +2105,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DialogViewMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

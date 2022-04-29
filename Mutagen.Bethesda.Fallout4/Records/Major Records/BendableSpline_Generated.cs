@@ -121,11 +121,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             BendableSplineMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -320,55 +321,55 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(BendableSpline.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, BendableSpline.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, BendableSpline.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(BendableSpline.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(BendableSpline.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.DefaultNumberOfTiles ?? true)
                     {
-                        fg.AppendItem(DefaultNumberOfTiles, "DefaultNumberOfTiles");
+                        sb.AppendItem(DefaultNumberOfTiles, "DefaultNumberOfTiles");
                     }
                     if (printMask?.DefaultNumberOfSlices ?? true)
                     {
-                        fg.AppendItem(DefaultNumberOfSlices, "DefaultNumberOfSlices");
+                        sb.AppendItem(DefaultNumberOfSlices, "DefaultNumberOfSlices");
                     }
                     if (printMask?.DefaultNumberOfTilesIsRelativeToLength ?? true)
                     {
-                        fg.AppendItem(DefaultNumberOfTilesIsRelativeToLength, "DefaultNumberOfTilesIsRelativeToLength");
+                        sb.AppendItem(DefaultNumberOfTilesIsRelativeToLength, "DefaultNumberOfTilesIsRelativeToLength");
                     }
                     if (printMask?.DefaultColor ?? true)
                     {
-                        fg.AppendItem(DefaultColor, "DefaultColor");
+                        sb.AppendItem(DefaultColor, "DefaultColor");
                     }
                     if (printMask?.WindSensibility ?? true)
                     {
-                        fg.AppendItem(WindSensibility, "WindSensibility");
+                        sb.AppendItem(WindSensibility, "WindSensibility");
                     }
                     if (printMask?.WindFlexibility ?? true)
                     {
-                        fg.AppendItem(WindFlexibility, "WindFlexibility");
+                        sb.AppendItem(WindFlexibility, "WindFlexibility");
                     }
                     if (printMask?.Texture ?? true)
                     {
-                        fg.AppendItem(Texture, "Texture");
+                        sb.AppendItem(Texture, "Texture");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -514,43 +515,59 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(DefaultNumberOfTiles, "DefaultNumberOfTiles");
-                fg.AppendItem(DefaultNumberOfSlices, "DefaultNumberOfSlices");
-                fg.AppendItem(DefaultNumberOfTilesIsRelativeToLength, "DefaultNumberOfTilesIsRelativeToLength");
-                fg.AppendItem(DefaultColor, "DefaultColor");
-                fg.AppendItem(WindSensibility, "WindSensibility");
-                fg.AppendItem(WindFlexibility, "WindFlexibility");
-                fg.AppendItem(Texture, "Texture");
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(DefaultNumberOfTiles, "DefaultNumberOfTiles");
+                }
+                {
+                    sb.AppendItem(DefaultNumberOfSlices, "DefaultNumberOfSlices");
+                }
+                {
+                    sb.AppendItem(DefaultNumberOfTilesIsRelativeToLength, "DefaultNumberOfTilesIsRelativeToLength");
+                }
+                {
+                    sb.AppendItem(DefaultColor, "DefaultColor");
+                }
+                {
+                    sb.AppendItem(WindSensibility, "WindSensibility");
+                }
+                {
+                    sb.AppendItem(WindFlexibility, "WindFlexibility");
+                }
+                {
+                    sb.AppendItem(Texture, "Texture");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -754,7 +771,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -859,13 +876,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IBendableSplineGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BendableSpline.Mask<bool>? printMask = null)
         {
             ((BendableSplineCommon)((IBendableSplineGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1210,85 +1227,85 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             BendableSpline.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IBendableSplineGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BendableSpline.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BendableSpline =>");
+                sb.AppendLine($"BendableSpline =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BendableSpline) =>");
+                sb.AppendLine($"{name} (BendableSpline) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBendableSplineGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             BendableSpline.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.ObjectBounds?.Overall ?? true)
                 && item.ObjectBounds is {} ObjectBoundsItem)
             {
-                ObjectBoundsItem?.ToString(fg, "ObjectBounds");
+                ObjectBoundsItem?.ToString(sb, "ObjectBounds");
             }
             if (printMask?.DefaultNumberOfTiles ?? true)
             {
-                fg.AppendItem(item.DefaultNumberOfTiles, "DefaultNumberOfTiles");
+                sb.AppendItem(item.DefaultNumberOfTiles, "DefaultNumberOfTiles");
             }
             if (printMask?.DefaultNumberOfSlices ?? true)
             {
-                fg.AppendItem(item.DefaultNumberOfSlices, "DefaultNumberOfSlices");
+                sb.AppendItem(item.DefaultNumberOfSlices, "DefaultNumberOfSlices");
             }
             if (printMask?.DefaultNumberOfTilesIsRelativeToLength ?? true)
             {
-                fg.AppendItem(item.DefaultNumberOfTilesIsRelativeToLength, "DefaultNumberOfTilesIsRelativeToLength");
+                sb.AppendItem(item.DefaultNumberOfTilesIsRelativeToLength, "DefaultNumberOfTilesIsRelativeToLength");
             }
             if (printMask?.DefaultColor ?? true)
             {
-                fg.AppendItem(item.DefaultColor, "DefaultColor");
+                sb.AppendItem(item.DefaultColor, "DefaultColor");
             }
             if (printMask?.WindSensibility ?? true)
             {
-                fg.AppendItem(item.WindSensibility, "WindSensibility");
+                sb.AppendItem(item.WindSensibility, "WindSensibility");
             }
             if (printMask?.WindFlexibility ?? true)
             {
-                fg.AppendItem(item.WindFlexibility, "WindFlexibility");
+                sb.AppendItem(item.WindFlexibility, "WindFlexibility");
             }
             if (printMask?.Texture ?? true)
             {
-                fg.AppendItem(item.Texture.FormKeyNullable, "Texture");
+                sb.AppendItem(item.Texture.FormKeyNullable, "Texture");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -1943,7 +1960,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => BendableSplineCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2099,11 +2116,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             BendableSplineMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

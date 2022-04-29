@@ -97,11 +97,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScriptFieldsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -328,77 +329,77 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(ScriptFields.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ScriptFields.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ScriptFields.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ScriptFields.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ScriptFields.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.MetadataSummary?.Overall ?? true)
                     {
-                        MetadataSummary?.ToString(fg);
+                        MetadataSummary?.ToString(sb);
                     }
                     if (printMask?.CompiledScript ?? true)
                     {
-                        fg.AppendItem(CompiledScript, "CompiledScript");
+                        sb.AppendItem(CompiledScript, "CompiledScript");
                     }
                     if (printMask?.SourceCode ?? true)
                     {
-                        fg.AppendItem(SourceCode, "SourceCode");
+                        sb.AppendItem(SourceCode, "SourceCode");
                     }
                     if ((printMask?.LocalVariables?.Overall ?? true)
                         && LocalVariables is {} LocalVariablesItem)
                     {
-                        fg.AppendLine("LocalVariables =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocalVariables =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LocalVariablesItem.Overall);
+                            sb.AppendItem(LocalVariablesItem.Overall);
                             if (LocalVariablesItem.Specific != null)
                             {
                                 foreach (var subItem in LocalVariablesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.References?.Overall ?? true)
                         && References is {} ReferencesItem)
                     {
-                        fg.AppendLine("References =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("References =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ReferencesItem.Overall);
+                            sb.AppendItem(ReferencesItem.Overall);
                             if (ReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -515,79 +516,83 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                MetadataSummary?.ToString(fg);
-                fg.AppendItem(CompiledScript, "CompiledScript");
-                fg.AppendItem(SourceCode, "SourceCode");
+                MetadataSummary?.ToString(sb);
+                {
+                    sb.AppendItem(CompiledScript, "CompiledScript");
+                }
+                {
+                    sb.AppendItem(SourceCode, "SourceCode");
+                }
                 if (LocalVariables is {} LocalVariablesItem)
                 {
-                    fg.AppendLine("LocalVariables =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocalVariables =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LocalVariablesItem.Overall);
+                        sb.AppendItem(LocalVariablesItem.Overall);
                         if (LocalVariablesItem.Specific != null)
                         {
                             foreach (var subItem in LocalVariablesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (References is {} ReferencesItem)
                 {
-                    fg.AppendLine("References =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("References =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ReferencesItem.Overall);
+                        sb.AppendItem(ReferencesItem.Overall);
                         if (ReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -718,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -801,13 +806,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IScriptFieldsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptFields.Mask<bool>? printMask = null)
         {
             ((ScriptFieldsCommon)((IScriptFieldsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1116,94 +1121,94 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             ScriptFields.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IScriptFieldsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptFields.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScriptFields =>");
+                sb.AppendLine($"ScriptFields =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScriptFields) =>");
+                sb.AppendLine($"{name} (ScriptFields) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IScriptFieldsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ScriptFields.Mask<bool>? printMask = null)
         {
             if (printMask?.MetadataSummary?.Overall ?? true)
             {
-                item.MetadataSummary?.ToString(fg, "MetadataSummary");
+                item.MetadataSummary?.ToString(sb, "MetadataSummary");
             }
             if ((printMask?.CompiledScript ?? true)
                 && item.CompiledScript is {} CompiledScriptItem)
             {
-                fg.AppendLine($"CompiledScript => {SpanExt.ToHexString(CompiledScriptItem)}");
+                sb.AppendLine($"CompiledScript => {SpanExt.ToHexString(CompiledScriptItem)}");
             }
             if ((printMask?.SourceCode ?? true)
                 && item.SourceCode is {} SourceCodeItem)
             {
-                fg.AppendItem(SourceCodeItem, "SourceCode");
+                sb.AppendItem(SourceCodeItem, "SourceCode");
             }
             if (printMask?.LocalVariables?.Overall ?? true)
             {
-                fg.AppendLine("LocalVariables =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocalVariables =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.LocalVariables)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.References?.Overall ?? true)
             {
-                fg.AppendLine("References =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("References =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.References)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1700,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptFieldsCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1857,11 +1862,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScriptFieldsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

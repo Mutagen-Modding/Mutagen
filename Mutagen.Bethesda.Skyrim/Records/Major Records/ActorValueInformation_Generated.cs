@@ -144,11 +144,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ActorValueInformationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -352,62 +353,62 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ActorValueInformation.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ActorValueInformation.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ActorValueInformation.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if (printMask?.Abbreviation ?? true)
                     {
-                        fg.AppendItem(Abbreviation, "Abbreviation");
+                        sb.AppendItem(Abbreviation, "Abbreviation");
                     }
                     if (printMask?.CNAM ?? true)
                     {
-                        fg.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(CNAM, "CNAM");
                     }
                     if (printMask?.Skill?.Overall ?? true)
                     {
-                        Skill?.ToString(fg);
+                        Skill?.ToString(sb);
                     }
                     if ((printMask?.PerkTree?.Overall ?? true)
                         && PerkTree is {} PerkTreeItem)
                     {
-                        fg.AppendLine("PerkTree =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("PerkTree =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(PerkTreeItem.Overall);
+                            sb.AppendItem(PerkTreeItem.Overall);
                             if (PerkTreeItem.Specific != null)
                             {
                                 foreach (var subItem in PerkTreeItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -523,60 +524,68 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Description, "Description");
-                fg.AppendItem(Abbreviation, "Abbreviation");
-                fg.AppendItem(CNAM, "CNAM");
-                Skill?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(Abbreviation, "Abbreviation");
+                }
+                {
+                    sb.AppendItem(CNAM, "CNAM");
+                }
+                Skill?.ToString(sb);
                 if (PerkTree is {} PerkTreeItem)
                 {
-                    fg.AppendLine("PerkTree =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("PerkTree =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(PerkTreeItem.Overall);
+                        sb.AppendItem(PerkTreeItem.Overall);
                         if (PerkTreeItem.Specific != null)
                         {
                             foreach (var subItem in PerkTreeItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -770,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -875,13 +884,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IActorValueInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
             ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1230,91 +1239,91 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IActorValueInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ActorValueInformation =>");
+                sb.AppendLine($"ActorValueInformation =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ActorValueInformation) =>");
+                sb.AppendLine($"{name} (ActorValueInformation) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IActorValueInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if ((printMask?.Abbreviation ?? true)
                 && item.Abbreviation is {} AbbreviationItem)
             {
-                fg.AppendItem(AbbreviationItem, "Abbreviation");
+                sb.AppendItem(AbbreviationItem, "Abbreviation");
             }
             if ((printMask?.CNAM ?? true)
                 && item.CNAM is {} CNAMItem)
             {
-                fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
+                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if ((printMask?.Skill?.Overall ?? true)
                 && item.Skill is {} SkillItem)
             {
-                SkillItem?.ToString(fg, "Skill");
+                SkillItem?.ToString(sb, "Skill");
             }
             if (printMask?.PerkTree?.Overall ?? true)
             {
-                fg.AppendLine("PerkTree =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("PerkTree =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.PerkTree)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1996,7 +2005,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ActorValueInformationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2155,11 +2164,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ActorValueInformationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

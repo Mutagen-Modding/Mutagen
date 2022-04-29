@@ -16,23 +16,23 @@ public class KeywordedAspect : AspectFieldInterfaceDefinition
     {
         FieldActions = new()
         {
-            new(LoquiInterfaceType.Direct, "Keywords", (o, tg, fg) =>
+            new(LoquiInterfaceType.Direct, "Keywords", (o, tg, sb) =>
             {
-                fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;");
-                fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
+                sb.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;");
+                sb.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
                 if (!tg.Nullable)
                 {
-                    fg.AppendLine("ExtendedList<IFormLinkGetter<IKeywordGetter>>? IKeyworded<IKeywordGetter>.Keywords");
-                    using (new BraceWrapper(fg))
+                    sb.AppendLine("ExtendedList<IFormLinkGetter<IKeywordGetter>>? IKeyworded<IKeywordGetter>.Keywords");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine($"get => this._Keywords;");
-                        fg.AppendLine($"set => this._Keywords = value ?? new();");
+                        sb.AppendLine($"get => this._Keywords;");
+                        sb.AppendLine($"set => this._Keywords = value ?? new();");
                     }
                 }
             }),
-            new(LoquiInterfaceType.IGetter, "Keywords", (o, tg, fg) =>
+            new(LoquiInterfaceType.IGetter, "Keywords", (o, tg, sb) =>
             {
-                fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
+                sb.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
             })
         };
     }

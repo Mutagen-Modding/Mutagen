@@ -90,11 +90,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DialogBranchMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -236,35 +237,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(DialogBranch.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, DialogBranch.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, DialogBranch.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DialogBranch.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DialogBranch.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Quest ?? true)
                     {
-                        fg.AppendItem(Quest, "Quest");
+                        sb.AppendItem(Quest, "Quest");
                     }
                     if (printMask?.TNAM ?? true)
                     {
-                        fg.AppendItem(TNAM, "TNAM");
+                        sb.AppendItem(TNAM, "TNAM");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.StartingTopic ?? true)
                     {
-                        fg.AppendItem(StartingTopic, "StartingTopic");
+                        sb.AppendItem(StartingTopic, "StartingTopic");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -360,38 +361,46 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Quest, "Quest");
-                fg.AppendItem(TNAM, "TNAM");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(StartingTopic, "StartingTopic");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                {
+                    sb.AppendItem(TNAM, "TNAM");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(StartingTopic, "StartingTopic");
+                }
             }
             #endregion
 
@@ -578,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -663,13 +672,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IDialogBranchGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogBranch.Mask<bool>? printMask = null)
         {
             ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -997,66 +1006,66 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             DialogBranch.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDialogBranchGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogBranch.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogBranch =>");
+                sb.AppendLine($"DialogBranch =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogBranch) =>");
+                sb.AppendLine($"{name} (DialogBranch) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDialogBranchGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DialogBranch.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKey, "Quest");
+                sb.AppendItem(item.Quest.FormKey, "Quest");
             }
             if ((printMask?.TNAM ?? true)
                 && item.TNAM is {} TNAMItem)
             {
-                fg.AppendItem(TNAMItem, "TNAM");
+                sb.AppendItem(TNAMItem, "TNAM");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.StartingTopic ?? true)
             {
-                fg.AppendItem(item.StartingTopic.FormKeyNullable, "StartingTopic");
+                sb.AppendItem(item.StartingTopic.FormKeyNullable, "StartingTopic");
             }
         }
         
@@ -1616,7 +1625,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogBranchCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1748,11 +1757,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DialogBranchMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

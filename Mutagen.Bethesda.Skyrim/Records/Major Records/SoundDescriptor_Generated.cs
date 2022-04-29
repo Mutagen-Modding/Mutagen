@@ -163,11 +163,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundDescriptorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -476,113 +477,115 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(SoundDescriptor.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, SoundDescriptor.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, SoundDescriptor.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SoundDescriptor.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundDescriptor.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.CNAM ?? true)
                     {
-                        fg.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(CNAM, "CNAM");
                     }
                     if (printMask?.Category ?? true)
                     {
-                        fg.AppendItem(Category, "Category");
+                        sb.AppendItem(Category, "Category");
                     }
                     if (printMask?.AlternateSoundFor ?? true)
                     {
-                        fg.AppendItem(AlternateSoundFor, "AlternateSoundFor");
+                        sb.AppendItem(AlternateSoundFor, "AlternateSoundFor");
                     }
                     if ((printMask?.SoundFiles?.Overall ?? true)
                         && SoundFiles is {} SoundFilesItem)
                     {
-                        fg.AppendLine("SoundFiles =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("SoundFiles =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(SoundFilesItem.Overall);
+                            sb.AppendItem(SoundFilesItem.Overall);
                             if (SoundFilesItem.Specific != null)
                             {
                                 foreach (var subItem in SoundFilesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.OutputModel ?? true)
                     {
-                        fg.AppendItem(OutputModel, "OutputModel");
+                        sb.AppendItem(OutputModel, "OutputModel");
                     }
                     if (printMask?.String ?? true)
                     {
-                        fg.AppendItem(String, "String");
+                        sb.AppendItem(String, "String");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.LoopAndRumble?.Overall ?? true)
                     {
-                        LoopAndRumble?.ToString(fg);
+                        LoopAndRumble?.ToString(sb);
                     }
                     if (printMask?.PercentFrequencyShift ?? true)
                     {
-                        fg.AppendItem(PercentFrequencyShift, "PercentFrequencyShift");
+                        sb.AppendItem(PercentFrequencyShift, "PercentFrequencyShift");
                     }
                     if (printMask?.PercentFrequencyVariance ?? true)
                     {
-                        fg.AppendItem(PercentFrequencyVariance, "PercentFrequencyVariance");
+                        sb.AppendItem(PercentFrequencyVariance, "PercentFrequencyVariance");
                     }
                     if (printMask?.Priority ?? true)
                     {
-                        fg.AppendItem(Priority, "Priority");
+                        sb.AppendItem(Priority, "Priority");
                     }
                     if (printMask?.Variance ?? true)
                     {
-                        fg.AppendItem(Variance, "Variance");
+                        sb.AppendItem(Variance, "Variance");
                     }
                     if (printMask?.StaticAttenuation ?? true)
                     {
-                        fg.AppendItem(StaticAttenuation, "StaticAttenuation");
+                        sb.AppendItem(StaticAttenuation, "StaticAttenuation");
                     }
                     if (printMask?.BNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
+                        sb.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -778,90 +781,114 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(CNAM, "CNAM");
-                fg.AppendItem(Category, "Category");
-                fg.AppendItem(AlternateSoundFor, "AlternateSoundFor");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(CNAM, "CNAM");
+                }
+                {
+                    sb.AppendItem(Category, "Category");
+                }
+                {
+                    sb.AppendItem(AlternateSoundFor, "AlternateSoundFor");
+                }
                 if (SoundFiles is {} SoundFilesItem)
                 {
-                    fg.AppendLine("SoundFiles =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("SoundFiles =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(SoundFilesItem.Overall);
+                        sb.AppendItem(SoundFilesItem.Overall);
                         if (SoundFilesItem.Specific != null)
                         {
                             foreach (var subItem in SoundFilesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(OutputModel, "OutputModel");
-                fg.AppendItem(String, "String");
+                {
+                    sb.AppendItem(OutputModel, "OutputModel");
+                }
+                {
+                    sb.AppendItem(String, "String");
+                }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                LoopAndRumble?.ToString(fg);
-                fg.AppendItem(PercentFrequencyShift, "PercentFrequencyShift");
-                fg.AppendItem(PercentFrequencyVariance, "PercentFrequencyVariance");
-                fg.AppendItem(Priority, "Priority");
-                fg.AppendItem(Variance, "Variance");
-                fg.AppendItem(StaticAttenuation, "StaticAttenuation");
-                fg.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
+                LoopAndRumble?.ToString(sb);
+                {
+                    sb.AppendItem(PercentFrequencyShift, "PercentFrequencyShift");
+                }
+                {
+                    sb.AppendItem(PercentFrequencyVariance, "PercentFrequencyVariance");
+                }
+                {
+                    sb.AppendItem(Priority, "Priority");
+                }
+                {
+                    sb.AppendItem(Variance, "Variance");
+                }
+                {
+                    sb.AppendItem(StaticAttenuation, "StaticAttenuation");
+                }
+                {
+                    sb.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -1090,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1197,13 +1224,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ISoundDescriptorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundDescriptor.Mask<bool>? printMask = null)
         {
             ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1580,135 +1607,135 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             SoundDescriptor.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ISoundDescriptorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundDescriptor.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundDescriptor =>");
+                sb.AppendLine($"SoundDescriptor =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundDescriptor) =>");
+                sb.AppendLine($"{name} (SoundDescriptor) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundDescriptorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundDescriptor.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.CNAM ?? true)
                 && item.CNAM is {} CNAMItem)
             {
-                fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
+                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if (printMask?.Category ?? true)
             {
-                fg.AppendItem(item.Category.FormKeyNullable, "Category");
+                sb.AppendItem(item.Category.FormKeyNullable, "Category");
             }
             if (printMask?.AlternateSoundFor ?? true)
             {
-                fg.AppendItem(item.AlternateSoundFor.FormKeyNullable, "AlternateSoundFor");
+                sb.AppendItem(item.AlternateSoundFor.FormKeyNullable, "AlternateSoundFor");
             }
             if (printMask?.SoundFiles?.Overall ?? true)
             {
-                fg.AppendLine("SoundFiles =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("SoundFiles =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.SoundFiles)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.OutputModel ?? true)
             {
-                fg.AppendItem(item.OutputModel.FormKeyNullable, "OutputModel");
+                sb.AppendItem(item.OutputModel.FormKeyNullable, "OutputModel");
             }
             if ((printMask?.String ?? true)
                 && item.String is {} StringItem)
             {
-                fg.AppendItem(StringItem, "String");
+                sb.AppendItem(StringItem, "String");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.LoopAndRumble?.Overall ?? true)
                 && item.LoopAndRumble is {} LoopAndRumbleItem)
             {
-                LoopAndRumbleItem?.ToString(fg, "LoopAndRumble");
+                LoopAndRumbleItem?.ToString(sb, "LoopAndRumble");
             }
             if (printMask?.PercentFrequencyShift ?? true)
             {
-                fg.AppendItem(item.PercentFrequencyShift, "PercentFrequencyShift");
+                sb.AppendItem(item.PercentFrequencyShift, "PercentFrequencyShift");
             }
             if (printMask?.PercentFrequencyVariance ?? true)
             {
-                fg.AppendItem(item.PercentFrequencyVariance, "PercentFrequencyVariance");
+                sb.AppendItem(item.PercentFrequencyVariance, "PercentFrequencyVariance");
             }
             if (printMask?.Priority ?? true)
             {
-                fg.AppendItem(item.Priority, "Priority");
+                sb.AppendItem(item.Priority, "Priority");
             }
             if (printMask?.Variance ?? true)
             {
-                fg.AppendItem(item.Variance, "Variance");
+                sb.AppendItem(item.Variance, "Variance");
             }
             if (printMask?.StaticAttenuation ?? true)
             {
-                fg.AppendItem(item.StaticAttenuation, "StaticAttenuation");
+                sb.AppendItem(item.StaticAttenuation, "StaticAttenuation");
             }
             if (printMask?.BNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.BNAMDataTypeState, "BNAMDataTypeState");
+                sb.AppendItem(item.BNAMDataTypeState, "BNAMDataTypeState");
             }
         }
         
@@ -2531,7 +2558,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SoundDescriptorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2746,11 +2773,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundDescriptorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

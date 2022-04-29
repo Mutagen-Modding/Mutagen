@@ -112,11 +112,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcFaceMorphMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -389,95 +390,95 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(NpcFaceMorph.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NpcFaceMorph.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NpcFaceMorph.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NpcFaceMorph.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcFaceMorph.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.NoseLongVsShort ?? true)
                     {
-                        fg.AppendItem(NoseLongVsShort, "NoseLongVsShort");
+                        sb.AppendItem(NoseLongVsShort, "NoseLongVsShort");
                     }
                     if (printMask?.NoseUpVsDown ?? true)
                     {
-                        fg.AppendItem(NoseUpVsDown, "NoseUpVsDown");
+                        sb.AppendItem(NoseUpVsDown, "NoseUpVsDown");
                     }
                     if (printMask?.JawUpVsDown ?? true)
                     {
-                        fg.AppendItem(JawUpVsDown, "JawUpVsDown");
+                        sb.AppendItem(JawUpVsDown, "JawUpVsDown");
                     }
                     if (printMask?.JawNarrowVsWide ?? true)
                     {
-                        fg.AppendItem(JawNarrowVsWide, "JawNarrowVsWide");
+                        sb.AppendItem(JawNarrowVsWide, "JawNarrowVsWide");
                     }
                     if (printMask?.JawForwardVsBack ?? true)
                     {
-                        fg.AppendItem(JawForwardVsBack, "JawForwardVsBack");
+                        sb.AppendItem(JawForwardVsBack, "JawForwardVsBack");
                     }
                     if (printMask?.CheeksUpVsDown ?? true)
                     {
-                        fg.AppendItem(CheeksUpVsDown, "CheeksUpVsDown");
+                        sb.AppendItem(CheeksUpVsDown, "CheeksUpVsDown");
                     }
                     if (printMask?.CheeksForwardVsBack ?? true)
                     {
-                        fg.AppendItem(CheeksForwardVsBack, "CheeksForwardVsBack");
+                        sb.AppendItem(CheeksForwardVsBack, "CheeksForwardVsBack");
                     }
                     if (printMask?.EyesUpVsDown ?? true)
                     {
-                        fg.AppendItem(EyesUpVsDown, "EyesUpVsDown");
+                        sb.AppendItem(EyesUpVsDown, "EyesUpVsDown");
                     }
                     if (printMask?.EyesInVsOut ?? true)
                     {
-                        fg.AppendItem(EyesInVsOut, "EyesInVsOut");
+                        sb.AppendItem(EyesInVsOut, "EyesInVsOut");
                     }
                     if (printMask?.BrowsUpVsDown ?? true)
                     {
-                        fg.AppendItem(BrowsUpVsDown, "BrowsUpVsDown");
+                        sb.AppendItem(BrowsUpVsDown, "BrowsUpVsDown");
                     }
                     if (printMask?.BrowsInVsOut ?? true)
                     {
-                        fg.AppendItem(BrowsInVsOut, "BrowsInVsOut");
+                        sb.AppendItem(BrowsInVsOut, "BrowsInVsOut");
                     }
                     if (printMask?.BrowsForwardVsBack ?? true)
                     {
-                        fg.AppendItem(BrowsForwardVsBack, "BrowsForwardVsBack");
+                        sb.AppendItem(BrowsForwardVsBack, "BrowsForwardVsBack");
                     }
                     if (printMask?.LipsUpVsDown ?? true)
                     {
-                        fg.AppendItem(LipsUpVsDown, "LipsUpVsDown");
+                        sb.AppendItem(LipsUpVsDown, "LipsUpVsDown");
                     }
                     if (printMask?.LipsInVsOut ?? true)
                     {
-                        fg.AppendItem(LipsInVsOut, "LipsInVsOut");
+                        sb.AppendItem(LipsInVsOut, "LipsInVsOut");
                     }
                     if (printMask?.ChinNarrowVsWide ?? true)
                     {
-                        fg.AppendItem(ChinNarrowVsWide, "ChinNarrowVsWide");
+                        sb.AppendItem(ChinNarrowVsWide, "ChinNarrowVsWide");
                     }
                     if (printMask?.ChinUpVsDown ?? true)
                     {
-                        fg.AppendItem(ChinUpVsDown, "ChinUpVsDown");
+                        sb.AppendItem(ChinUpVsDown, "ChinUpVsDown");
                     }
                     if (printMask?.ChinUnderbiteVsOverbite ?? true)
                     {
-                        fg.AppendItem(ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
+                        sb.AppendItem(ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
                     }
                     if (printMask?.EyesForwardVsBack ?? true)
                     {
-                        fg.AppendItem(EyesForwardVsBack, "EyesForwardVsBack");
+                        sb.AppendItem(EyesForwardVsBack, "EyesForwardVsBack");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -734,52 +735,90 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(NoseLongVsShort, "NoseLongVsShort");
-                fg.AppendItem(NoseUpVsDown, "NoseUpVsDown");
-                fg.AppendItem(JawUpVsDown, "JawUpVsDown");
-                fg.AppendItem(JawNarrowVsWide, "JawNarrowVsWide");
-                fg.AppendItem(JawForwardVsBack, "JawForwardVsBack");
-                fg.AppendItem(CheeksUpVsDown, "CheeksUpVsDown");
-                fg.AppendItem(CheeksForwardVsBack, "CheeksForwardVsBack");
-                fg.AppendItem(EyesUpVsDown, "EyesUpVsDown");
-                fg.AppendItem(EyesInVsOut, "EyesInVsOut");
-                fg.AppendItem(BrowsUpVsDown, "BrowsUpVsDown");
-                fg.AppendItem(BrowsInVsOut, "BrowsInVsOut");
-                fg.AppendItem(BrowsForwardVsBack, "BrowsForwardVsBack");
-                fg.AppendItem(LipsUpVsDown, "LipsUpVsDown");
-                fg.AppendItem(LipsInVsOut, "LipsInVsOut");
-                fg.AppendItem(ChinNarrowVsWide, "ChinNarrowVsWide");
-                fg.AppendItem(ChinUpVsDown, "ChinUpVsDown");
-                fg.AppendItem(ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
-                fg.AppendItem(EyesForwardVsBack, "EyesForwardVsBack");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(NoseLongVsShort, "NoseLongVsShort");
+                }
+                {
+                    sb.AppendItem(NoseUpVsDown, "NoseUpVsDown");
+                }
+                {
+                    sb.AppendItem(JawUpVsDown, "JawUpVsDown");
+                }
+                {
+                    sb.AppendItem(JawNarrowVsWide, "JawNarrowVsWide");
+                }
+                {
+                    sb.AppendItem(JawForwardVsBack, "JawForwardVsBack");
+                }
+                {
+                    sb.AppendItem(CheeksUpVsDown, "CheeksUpVsDown");
+                }
+                {
+                    sb.AppendItem(CheeksForwardVsBack, "CheeksForwardVsBack");
+                }
+                {
+                    sb.AppendItem(EyesUpVsDown, "EyesUpVsDown");
+                }
+                {
+                    sb.AppendItem(EyesInVsOut, "EyesInVsOut");
+                }
+                {
+                    sb.AppendItem(BrowsUpVsDown, "BrowsUpVsDown");
+                }
+                {
+                    sb.AppendItem(BrowsInVsOut, "BrowsInVsOut");
+                }
+                {
+                    sb.AppendItem(BrowsForwardVsBack, "BrowsForwardVsBack");
+                }
+                {
+                    sb.AppendItem(LipsUpVsDown, "LipsUpVsDown");
+                }
+                {
+                    sb.AppendItem(LipsInVsOut, "LipsInVsOut");
+                }
+                {
+                    sb.AppendItem(ChinNarrowVsWide, "ChinNarrowVsWide");
+                }
+                {
+                    sb.AppendItem(ChinUpVsDown, "ChinUpVsDown");
+                }
+                {
+                    sb.AppendItem(ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
+                }
+                {
+                    sb.AppendItem(EyesForwardVsBack, "EyesForwardVsBack");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -963,7 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1072,13 +1111,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this INpcFaceMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
             ((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1416,120 +1455,120 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INpcFaceMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcFaceMorph =>");
+                sb.AppendLine($"NpcFaceMorph =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcFaceMorph) =>");
+                sb.AppendLine($"{name} (NpcFaceMorph) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcFaceMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
             if (printMask?.NoseLongVsShort ?? true)
             {
-                fg.AppendItem(item.NoseLongVsShort, "NoseLongVsShort");
+                sb.AppendItem(item.NoseLongVsShort, "NoseLongVsShort");
             }
             if (printMask?.NoseUpVsDown ?? true)
             {
-                fg.AppendItem(item.NoseUpVsDown, "NoseUpVsDown");
+                sb.AppendItem(item.NoseUpVsDown, "NoseUpVsDown");
             }
             if (printMask?.JawUpVsDown ?? true)
             {
-                fg.AppendItem(item.JawUpVsDown, "JawUpVsDown");
+                sb.AppendItem(item.JawUpVsDown, "JawUpVsDown");
             }
             if (printMask?.JawNarrowVsWide ?? true)
             {
-                fg.AppendItem(item.JawNarrowVsWide, "JawNarrowVsWide");
+                sb.AppendItem(item.JawNarrowVsWide, "JawNarrowVsWide");
             }
             if (printMask?.JawForwardVsBack ?? true)
             {
-                fg.AppendItem(item.JawForwardVsBack, "JawForwardVsBack");
+                sb.AppendItem(item.JawForwardVsBack, "JawForwardVsBack");
             }
             if (printMask?.CheeksUpVsDown ?? true)
             {
-                fg.AppendItem(item.CheeksUpVsDown, "CheeksUpVsDown");
+                sb.AppendItem(item.CheeksUpVsDown, "CheeksUpVsDown");
             }
             if (printMask?.CheeksForwardVsBack ?? true)
             {
-                fg.AppendItem(item.CheeksForwardVsBack, "CheeksForwardVsBack");
+                sb.AppendItem(item.CheeksForwardVsBack, "CheeksForwardVsBack");
             }
             if (printMask?.EyesUpVsDown ?? true)
             {
-                fg.AppendItem(item.EyesUpVsDown, "EyesUpVsDown");
+                sb.AppendItem(item.EyesUpVsDown, "EyesUpVsDown");
             }
             if (printMask?.EyesInVsOut ?? true)
             {
-                fg.AppendItem(item.EyesInVsOut, "EyesInVsOut");
+                sb.AppendItem(item.EyesInVsOut, "EyesInVsOut");
             }
             if (printMask?.BrowsUpVsDown ?? true)
             {
-                fg.AppendItem(item.BrowsUpVsDown, "BrowsUpVsDown");
+                sb.AppendItem(item.BrowsUpVsDown, "BrowsUpVsDown");
             }
             if (printMask?.BrowsInVsOut ?? true)
             {
-                fg.AppendItem(item.BrowsInVsOut, "BrowsInVsOut");
+                sb.AppendItem(item.BrowsInVsOut, "BrowsInVsOut");
             }
             if (printMask?.BrowsForwardVsBack ?? true)
             {
-                fg.AppendItem(item.BrowsForwardVsBack, "BrowsForwardVsBack");
+                sb.AppendItem(item.BrowsForwardVsBack, "BrowsForwardVsBack");
             }
             if (printMask?.LipsUpVsDown ?? true)
             {
-                fg.AppendItem(item.LipsUpVsDown, "LipsUpVsDown");
+                sb.AppendItem(item.LipsUpVsDown, "LipsUpVsDown");
             }
             if (printMask?.LipsInVsOut ?? true)
             {
-                fg.AppendItem(item.LipsInVsOut, "LipsInVsOut");
+                sb.AppendItem(item.LipsInVsOut, "LipsInVsOut");
             }
             if (printMask?.ChinNarrowVsWide ?? true)
             {
-                fg.AppendItem(item.ChinNarrowVsWide, "ChinNarrowVsWide");
+                sb.AppendItem(item.ChinNarrowVsWide, "ChinNarrowVsWide");
             }
             if (printMask?.ChinUpVsDown ?? true)
             {
-                fg.AppendItem(item.ChinUpVsDown, "ChinUpVsDown");
+                sb.AppendItem(item.ChinUpVsDown, "ChinUpVsDown");
             }
             if (printMask?.ChinUnderbiteVsOverbite ?? true)
             {
-                fg.AppendItem(item.ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
+                sb.AppendItem(item.ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
             }
             if (printMask?.EyesForwardVsBack ?? true)
             {
-                fg.AppendItem(item.EyesForwardVsBack, "EyesForwardVsBack");
+                sb.AppendItem(item.EyesForwardVsBack, "EyesForwardVsBack");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -2010,7 +2049,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcFaceMorphBinaryWriteTranslation.Instance;
@@ -2093,11 +2132,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcFaceMorphMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Generation;
 public class StringXmlTranslationGeneration : Loqui.Generation.PrimitiveXmlTranslationGeneration<string>
 {
     public override void GenerateWrite(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor, 
@@ -19,7 +19,7 @@ public class StringXmlTranslationGeneration : Loqui.Generation.PrimitiveXmlTrans
         StringType str = typeGen as StringType;
         if (str.Translated.HasValue)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write"))
             {
                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {writerAccessor}");
@@ -34,7 +34,7 @@ public class StringXmlTranslationGeneration : Loqui.Generation.PrimitiveXmlTrans
         }
         else
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{this.TypeName(typeGen)}XmlTranslation.Instance.Write"))
             {
                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {writerAccessor}");

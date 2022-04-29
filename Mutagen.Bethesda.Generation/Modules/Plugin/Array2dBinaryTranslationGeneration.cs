@@ -25,7 +25,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writerAccessor,
+        StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writerAccessor,
         Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor, Accessor converterAccessor)
     {
         var arr2d = typeGen as Array2dType;
@@ -43,7 +43,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         bool needsMasters = arr2d.SubTypeGeneration is FormLinkType || arr2d.SubTypeGeneration is LoquiType;
         
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
             $"{this.NamespacePrefix}Array2dBinaryTranslation<{typeName}>.Instance.Write"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -62,17 +62,17 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                 {
                     var listTranslMask = this.MaskModule.GetMaskModule(arr2d.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(arr2d.SubTypeGeneration);
                     gen.AppendLine($"transl: ({nameof(MutagenWriter)} subWriter, {typeName} subItem{(needsMasters ? $", {nameof(TypedWriteParams)}? conv" : null)}) =>");
-                    using (new BraceWrapper(gen))
+                    using (gen.CurlyBrace())
                     {
                         var major = loqui != null && await loqui.TargetObjectGeneration.IsMajorRecord();
                         if (major)
                         {
                             gen.AppendLine("try");
                         }
-                        using (new BraceWrapper(gen, doIt: major))
+                        using (gen.CurlyBrace(doIt: major))
                         {
                             await subTransl.GenerateWrite(
-                                fg: gen,
+                                sb: gen,
                                 objGen: objGen,
                                 typeGen: arr2d.SubTypeGeneration,
                                 writerAccessor: "subWriter",
@@ -84,7 +84,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                         if (major)
                         {
                             gen.AppendLine("catch (Exception ex)");
-                            using (new BraceWrapper(gen))
+                            using (gen.CurlyBrace())
                             {
                                 gen.AppendLine("throw RecordException.Enrich(ex, subItem);");
                             }
@@ -108,7 +108,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor readerAccessor,
+        StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor readerAccessor,
         Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor)
     {
         var arr2d = typeGen as Array2dType;
@@ -123,10 +123,10 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
 
         if (data.HasTrigger)
         {
-            fg.AppendLine("frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;");
+            sb.AppendLine("frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;");
         }
 
-        WrapSet(fg, itemAccessor, arr2d, (wrapFg) =>
+        WrapSet(sb, itemAccessor, arr2d, (wrapFg) =>
         {
             using (var args = new ArgsWrapper(wrapFg,
                 $"{this.NamespacePrefix}Array2dBinaryTranslation<{arr2d.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>.Instance.Parse")
@@ -151,7 +151,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                     args.Add(subFg =>
                     {
                         subGen.GenerateCopyInRet(
-                            fg: subFg,
+                            sb: subFg,
                             objGen: objGen,
                             targetGen: arr2d.SubTypeGeneration,
                             typeGen: arr2d.SubTypeGeneration,
@@ -190,7 +190,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                                 squashedRepeatedList: false))
                             {
                                 subGen.GenerateCopyInRet(
-                                    fg: gen,
+                                    sb: gen,
                                     objGen: objGen,
                                     targetGen: arr2d.SubTypeGeneration,
                                     typeGen: arr2d.SubTypeGeneration,
@@ -206,10 +206,10 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                             else
                             {
                                 gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, [MaybeNullWhen(false)] out {arr2d.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
-                                using (new BraceWrapper(gen))
+                                using (gen.CurlyBrace())
                                 {
                                     subGen.GenerateCopyInRet(
-                                        fg: gen,
+                                        sb: gen,
                                         objGen: objGen,
                                         targetGen: arr2d.SubTypeGeneration,
                                         typeGen: arr2d.SubTypeGeneration,
@@ -227,10 +227,10 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                         else
                         {
                             gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, [MaybeNullWhen(false)] out {arr2d.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem{(needsRecordConv ? $", {nameof(TypedParseParams)}? translationParams" : null)}) =>");
-                            using (new BraceWrapper(gen))
+                            using (gen.CurlyBrace())
                             {
                                 gen.AppendLine("switch (header.TypeInt)");
-                                using (new BraceWrapper(gen))
+                                using (gen.CurlyBrace())
                                 {
                                     foreach (var item in subGenTypes)
                                     {
@@ -241,10 +241,10 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                                             gen.AppendLine($"case 0x{trigger.TypeInt:X}: // {trigger.Type}");
                                         }
                                         LoquiType targetLoqui = arr2d.SubTypeGeneration as LoquiType;
-                                        using (new BraceWrapper(gen))
+                                        using (gen.CurlyBrace())
                                         {
                                             subGen.GenerateCopyInRet(
-                                                fg: gen,
+                                                sb: gen,
                                                 objGen: objGen,
                                                 targetGen: arr2d.SubTypeGeneration,
                                                 typeGen: item.Value,
@@ -272,20 +272,20 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         });
     }
     
-    public void WrapSet(FileGeneration fg, Accessor accessor, ListType list, Action<FileGeneration> a)
+    public void WrapSet(StructuredStringBuilder sb, Accessor accessor, ListType list, Action<StructuredStringBuilder> a)
     {
         if (list.Nullable)
         {
-            fg.AppendLine($"{accessor} = ");
-            using (new DepthWrapper(fg))
+            sb.AppendLine($"{accessor} = ");
+            using (new DepthWrapper(sb))
             {
-                a(fg);
-                fg.AppendLine(";");
+                a(sb);
+                sb.AppendLine(";");
             }
         }
         else
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{accessor}.SetTo"))
             {
                 args.Add(subFg => a(subFg));
@@ -293,7 +293,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         }
     }
 
-    public override void GenerateCopyInRet(FileGeneration fg, ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen,
+    public override void GenerateCopyInRet(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen,
         Accessor readerAccessor, AsyncMode asyncMode, Accessor retAccessor, Accessor outItemAccessor,
         Accessor errorMaskAccessor, Accessor translationAccessor, Accessor converterAccessor, bool inline)
     {
@@ -301,7 +301,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrapperFields(
-        FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, 
+        StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, 
         Accessor dataAccessor, int? passedLength, string passedLengthAccessor, DataType? dataType = null)
     {
         Array2dType arr2d = typeGen as Array2dType;
@@ -315,7 +315,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
             case BinaryGenerationType.Custom:
                 if (typeGen.GetFieldData().HasTrigger)
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                         $"partial void {typeGen.Name}CustomParse"))
                     {
                         args.Add($"{nameof(OverlayStream)} stream");
@@ -351,11 +351,11 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             if (typeGen.Nullable)
             {
-                fg.AppendLine($"public {arr2d.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}");
+                sb.AppendLine($"public {arr2d.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}");
             }
             else
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"public {arr2d.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayArray2d.Factory<{typeName}>"))
                 {
                     args.Add($"mem: {dataAccessor}.Slice({passedLength})");
@@ -368,7 +368,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         }
     }
 
-    public override async Task GenerateWrapperRecordTypeParse(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen,
+    public override async Task GenerateWrapperRecordTypeParse(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen,
         Accessor locationAccessor, Accessor packageAccessor, Accessor converterAccessor)
     {
         Array2dType arr2d = typeGen as Array2dType;
@@ -392,7 +392,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         string dataAccess;
         if (arr2d.GetFieldData().HasTrigger)
         {
-            fg.AppendLine($"var subMeta = stream.ReadSubrecordHeader();");
+            sb.AppendLine($"var subMeta = stream.ReadSubrecordHeader();");
             dataAccess = "stream.RemainingMemory.Slice(0, subMeta.ContentLength)";
         }
         else
@@ -400,7 +400,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
             dataAccess = "stream.RemainingMemory";
         }
         
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"this.{typeGen.Name} = BinaryOverlayArray2d.Factory<{typeName}>"))
         {
             args.Add($"mem: {dataAccess}");

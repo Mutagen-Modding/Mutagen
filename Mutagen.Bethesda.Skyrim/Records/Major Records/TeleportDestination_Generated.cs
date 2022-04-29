@@ -75,11 +75,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TeleportDestinationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -217,35 +218,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(TeleportDestination.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TeleportDestination.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TeleportDestination.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TeleportDestination.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TeleportDestination.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Door ?? true)
                     {
-                        fg.AppendItem(Door, "Door");
+                        sb.AppendItem(Door, "Door");
                     }
                     if (printMask?.Position ?? true)
                     {
-                        fg.AppendItem(Position, "Position");
+                        sb.AppendItem(Position, "Position");
                     }
                     if (printMask?.Rotation ?? true)
                     {
-                        fg.AppendItem(Rotation, "Rotation");
+                        sb.AppendItem(Rotation, "Rotation");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -352,37 +353,45 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Door, "Door");
-                fg.AppendItem(Position, "Position");
-                fg.AppendItem(Rotation, "Rotation");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Door, "Door");
+                }
+                {
+                    sb.AppendItem(Position, "Position");
+                }
+                {
+                    sb.AppendItem(Rotation, "Rotation");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -511,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -594,13 +603,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ITeleportDestinationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TeleportDestination.Mask<bool>? printMask = null)
         {
             ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -894,60 +903,60 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             TeleportDestination.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITeleportDestinationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TeleportDestination.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TeleportDestination =>");
+                sb.AppendLine($"TeleportDestination =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TeleportDestination) =>");
+                sb.AppendLine($"{name} (TeleportDestination) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITeleportDestinationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TeleportDestination.Mask<bool>? printMask = null)
         {
             if (printMask?.Door ?? true)
             {
-                fg.AppendItem(item.Door.FormKey, "Door");
+                sb.AppendItem(item.Door.FormKey, "Door");
             }
             if (printMask?.Position ?? true)
             {
-                fg.AppendItem(item.Position, "Position");
+                sb.AppendItem(item.Position, "Position");
             }
             if (printMask?.Rotation ?? true)
             {
-                fg.AppendItem(item.Rotation, "Rotation");
+                sb.AppendItem(item.Rotation, "Rotation");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1237,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => TeleportDestinationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1306,11 +1315,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TeleportDestinationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

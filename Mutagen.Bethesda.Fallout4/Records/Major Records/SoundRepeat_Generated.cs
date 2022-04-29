@@ -67,11 +67,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundRepeatMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -209,35 +210,35 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(SoundRepeat.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, SoundRepeat.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, SoundRepeat.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SoundRepeat.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundRepeat.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.MinTime ?? true)
                     {
-                        fg.AppendItem(MinTime, "MinTime");
+                        sb.AppendItem(MinTime, "MinTime");
                     }
                     if (printMask?.MaxTime ?? true)
                     {
-                        fg.AppendItem(MaxTime, "MaxTime");
+                        sb.AppendItem(MaxTime, "MaxTime");
                     }
                     if (printMask?.Stackable ?? true)
                     {
-                        fg.AppendItem(Stackable, "Stackable");
+                        sb.AppendItem(Stackable, "Stackable");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -344,37 +345,45 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(MinTime, "MinTime");
-                fg.AppendItem(MaxTime, "MaxTime");
-                fg.AppendItem(Stackable, "Stackable");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(MinTime, "MinTime");
+                }
+                {
+                    sb.AppendItem(MaxTime, "MaxTime");
+                }
+                {
+                    sb.AppendItem(Stackable, "Stackable");
+                }
             }
             #endregion
 
@@ -506,7 +515,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -585,13 +594,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this ISoundRepeatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundRepeat.Mask<bool>? printMask = null)
         {
             ((SoundRepeatCommon)((ISoundRepeatGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -884,60 +893,60 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             SoundRepeat.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ISoundRepeatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundRepeat.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundRepeat =>");
+                sb.AppendLine($"SoundRepeat =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundRepeat) =>");
+                sb.AppendLine($"{name} (SoundRepeat) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundRepeatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundRepeat.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.MinTime ?? true)
             {
-                fg.AppendItem(item.MinTime, "MinTime");
+                sb.AppendItem(item.MinTime, "MinTime");
             }
             if (printMask?.MaxTime ?? true)
             {
-                fg.AppendItem(item.MaxTime, "MaxTime");
+                sb.AppendItem(item.MaxTime, "MaxTime");
             }
             if (printMask?.Stackable ?? true)
             {
-                fg.AppendItem(item.Stackable, "Stackable");
+                sb.AppendItem(item.Stackable, "Stackable");
             }
         }
         
@@ -1226,7 +1235,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundRepeatBinaryWriteTranslation.Instance;
@@ -1297,11 +1306,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoundRepeatMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

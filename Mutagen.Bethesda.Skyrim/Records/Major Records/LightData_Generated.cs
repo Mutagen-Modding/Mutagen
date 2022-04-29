@@ -73,11 +73,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LightDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -233,43 +234,43 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(LightData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, LightData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, LightData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LightData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LightData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.FovOffset ?? true)
                     {
-                        fg.AppendItem(FovOffset, "FovOffset");
+                        sb.AppendItem(FovOffset, "FovOffset");
                     }
                     if (printMask?.FadeOffset ?? true)
                     {
-                        fg.AppendItem(FadeOffset, "FadeOffset");
+                        sb.AppendItem(FadeOffset, "FadeOffset");
                     }
                     if (printMask?.EndDistanceCap ?? true)
                     {
-                        fg.AppendItem(EndDistanceCap, "EndDistanceCap");
+                        sb.AppendItem(EndDistanceCap, "EndDistanceCap");
                     }
                     if (printMask?.ShadowDepthBias ?? true)
                     {
-                        fg.AppendItem(ShadowDepthBias, "ShadowDepthBias");
+                        sb.AppendItem(ShadowDepthBias, "ShadowDepthBias");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -396,39 +397,51 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(FovOffset, "FovOffset");
-                fg.AppendItem(FadeOffset, "FadeOffset");
-                fg.AppendItem(EndDistanceCap, "EndDistanceCap");
-                fg.AppendItem(ShadowDepthBias, "ShadowDepthBias");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(FovOffset, "FovOffset");
+                }
+                {
+                    sb.AppendItem(FadeOffset, "FadeOffset");
+                }
+                {
+                    sb.AppendItem(EndDistanceCap, "EndDistanceCap");
+                }
+                {
+                    sb.AppendItem(ShadowDepthBias, "ShadowDepthBias");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -568,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -651,13 +664,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ILightDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
             ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -956,68 +969,68 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILightDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LightData =>");
+                sb.AppendLine($"LightData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LightData) =>");
+                sb.AppendLine($"{name} (LightData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILightDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LightData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.FovOffset ?? true)
             {
-                fg.AppendItem(item.FovOffset, "FovOffset");
+                sb.AppendItem(item.FovOffset, "FovOffset");
             }
             if (printMask?.FadeOffset ?? true)
             {
-                fg.AppendItem(item.FadeOffset, "FadeOffset");
+                sb.AppendItem(item.FadeOffset, "FadeOffset");
             }
             if (printMask?.EndDistanceCap ?? true)
             {
-                fg.AppendItem(item.EndDistanceCap, "EndDistanceCap");
+                sb.AppendItem(item.EndDistanceCap, "EndDistanceCap");
             }
             if (printMask?.ShadowDepthBias ?? true)
             {
-                fg.AppendItem(item.ShadowDepthBias, "ShadowDepthBias");
+                sb.AppendItem(item.ShadowDepthBias, "ShadowDepthBias");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1332,7 +1345,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LightDataBinaryWriteTranslation.Instance;
@@ -1405,11 +1418,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LightDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

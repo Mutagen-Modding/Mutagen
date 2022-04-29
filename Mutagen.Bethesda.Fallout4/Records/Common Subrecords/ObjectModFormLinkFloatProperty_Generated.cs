@@ -75,11 +75,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ObjectModFormLinkFloatPropertyMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -146,7 +147,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -225,14 +226,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString<T>(
             this IObjectModFormLinkFloatPropertyGetter<T> item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ObjectModFormLinkFloatProperty.Mask<bool>? printMask = null)
             where T : struct, Enum
         {
             ((ObjectModFormLinkFloatPropertyCommon<T>)((IObjectModFormLinkFloatPropertyGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -535,60 +536,60 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             ObjectModFormLinkFloatProperty.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IObjectModFormLinkFloatPropertyGetter<T> item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ObjectModFormLinkFloatProperty.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ObjectModFormLinkFloatProperty<{typeof(T).Name}> =>");
+                sb.AppendLine($"ObjectModFormLinkFloatProperty<{typeof(T).Name}> =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ObjectModFormLinkFloatProperty<{typeof(T).Name}>) =>");
+                sb.AppendLine($"{name} (ObjectModFormLinkFloatProperty<{typeof(T).Name}>) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IObjectModFormLinkFloatPropertyGetter<T> item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ObjectModFormLinkFloatProperty.Mask<bool>? printMask = null)
         {
             AObjectModPropertyCommon<T>.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Record ?? true)
             {
-                fg.AppendItem(item.Record.FormKey, "Record");
+                sb.AppendItem(item.Record.FormKey, "Record");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.FunctionType ?? true)
             {
-                fg.AppendItem(item.FunctionType, "FunctionType");
+                sb.AppendItem(item.FunctionType, "FunctionType");
             }
         }
         
@@ -916,7 +917,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ObjectModFormLinkFloatPropertyCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -981,11 +982,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ObjectModFormLinkFloatPropertyMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1136,31 +1138,31 @@ namespace Mutagen.Bethesda.Fallout4
         
             public string ToString(ObjectModFormLinkFloatProperty.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
         
-            public void ToString(FileGeneration fg, ObjectModFormLinkFloatProperty.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ObjectModFormLinkFloatProperty.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ObjectModFormLinkFloatProperty.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ObjectModFormLinkFloatProperty.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Record ?? true)
                     {
-                        fg.AppendItem(Record, "Record");
+                        sb.AppendItem(Record, "Record");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.FunctionType ?? true)
                     {
-                        fg.AppendItem(FunctionType, "FunctionType");
+                        sb.AppendItem(FunctionType, "FunctionType");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
         
@@ -1246,37 +1248,43 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
         
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Record, "Record");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(FunctionType, "FunctionType");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Record, "Record");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(FunctionType, "FunctionType");
+                }
             }
             #endregion
         

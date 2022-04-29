@@ -64,11 +64,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             HavokDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -197,31 +198,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(HavokData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, HavokData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, HavokData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(HavokData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(HavokData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Material ?? true)
                     {
-                        fg.AppendItem(Material, "Material");
+                        sb.AppendItem(Material, "Material");
                     }
                     if (printMask?.Friction ?? true)
                     {
-                        fg.AppendItem(Friction, "Friction");
+                        sb.AppendItem(Friction, "Friction");
                     }
                     if (printMask?.Restitution ?? true)
                     {
-                        fg.AppendItem(Restitution, "Restitution");
+                        sb.AppendItem(Restitution, "Restitution");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -318,36 +319,42 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Material, "Material");
-                fg.AppendItem(Friction, "Friction");
-                fg.AppendItem(Restitution, "Restitution");
+                {
+                    sb.AppendItem(Material, "Material");
+                }
+                {
+                    sb.AppendItem(Friction, "Friction");
+                }
+                {
+                    sb.AppendItem(Restitution, "Restitution");
+                }
             }
             #endregion
 
@@ -467,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -544,13 +551,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IHavokDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HavokData.Mask<bool>? printMask = null)
         {
             ((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -840,56 +847,56 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             HavokData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IHavokDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HavokData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"HavokData =>");
+                sb.AppendLine($"HavokData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (HavokData) =>");
+                sb.AppendLine($"{name} (HavokData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IHavokDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             HavokData.Mask<bool>? printMask = null)
         {
             if (printMask?.Material ?? true)
             {
-                fg.AppendItem(item.Material, "Material");
+                sb.AppendItem(item.Material, "Material");
             }
             if (printMask?.Friction ?? true)
             {
-                fg.AppendItem(item.Friction, "Friction");
+                sb.AppendItem(item.Friction, "Friction");
             }
             if (printMask?.Restitution ?? true)
             {
-                fg.AppendItem(item.Restitution, "Restitution");
+                sb.AppendItem(item.Restitution, "Restitution");
             }
         }
         
@@ -1161,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HavokDataBinaryWriteTranslation.Instance;
@@ -1228,11 +1235,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             HavokDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

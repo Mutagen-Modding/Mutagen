@@ -18,28 +18,28 @@ public class RecordTypeOrderExporterModule : GenerationModule
             {
                 File.Delete(path);
             }
-            FileGeneration fg = new();
+            StructuredStringBuilder sb = new();
             var set = new HashSet<RecordType>();
-            await WriteRecordTypes(obj, fg, null, set);
-            fg.Generate(path);
+            await WriteRecordTypes(obj, sb, null, set);
+            sb.Generate(path);
         }
     }
 
-    public async Task WriteRecordTypes(ObjectGeneration obj, FileGeneration fg, RecordTypeConverter? converter, HashSet<RecordType> set)
+    public async Task WriteRecordTypes(ObjectGeneration obj, StructuredStringBuilder sb, RecordTypeConverter? converter, HashSet<RecordType> set)
     {
         var fields = obj.IterateFields(includeBaseClass: true).ToArray();
         foreach (var f in fields)
         {
-            await WriteRecordTypes(f, fg, converter, set);
+            await WriteRecordTypes(f, sb, converter, set);
         }
         if (obj.GetObjectData().EndMarkerType.HasValue
             && set.Add(obj.GetObjectData().EndMarkerType.Value))
         {
-            fg.AppendLine($"RecordTypes.{obj.GetObjectData().EndMarkerType.Value},");
+            sb.AppendLine($"RecordTypes.{obj.GetObjectData().EndMarkerType.Value},");
         }
     }
 
-    public async Task WriteRecordTypes(TypeGeneration typeGen, FileGeneration fg, RecordTypeConverter? converter, HashSet<RecordType> set)
+    public async Task WriteRecordTypes(TypeGeneration typeGen, StructuredStringBuilder sb, RecordTypeConverter? converter, HashSet<RecordType> set)
     {
         if (!typeGen.GetFieldData().HasTrigger) return;
         foreach (var item in typeGen.GetFieldData().TriggeringRecordTypes)
@@ -47,17 +47,17 @@ public class RecordTypeOrderExporterModule : GenerationModule
             var toAdd = converter.ConvertToCustom(item);
             if (set.Add(toAdd))
             {
-                fg.AppendLine($"RecordTypes.{toAdd},");
+                sb.AppendLine($"RecordTypes.{toAdd},");
             }
         }
         if (typeGen is ContainerType cont)
         {
-            await WriteRecordTypes(cont.SubTypeGeneration, fg, typeGen.GetFieldData().RecordTypeConverter, set);
+            await WriteRecordTypes(cont.SubTypeGeneration, sb, typeGen.GetFieldData().RecordTypeConverter, set);
         }
         else if (typeGen is LoquiType loqui
                 && loqui.TargetObjectGeneration != null)
         {
-            await WriteRecordTypes(loqui.TargetObjectGeneration, fg, typeGen.GetFieldData().RecordTypeConverter, set);
+            await WriteRecordTypes(loqui.TargetObjectGeneration, sb, typeGen.GetFieldData().RecordTypeConverter, set);
         }
     }
 }

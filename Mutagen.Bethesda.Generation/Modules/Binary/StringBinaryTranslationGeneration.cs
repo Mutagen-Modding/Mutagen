@@ -40,7 +40,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     } 
  
     public override async Task GenerateWrite( 
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
         Accessor writerAccessor, 
@@ -51,7 +51,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     { 
         var stringType = typeGen as StringType; 
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData; 
-        using (var args = new ArgsWrapper(fg, 
+        using (var args = new ArgsWrapper(sb, 
                    $"{this.NamespacePrefix}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}")) 
         { 
             args.Add($"writer: {writerAccessor}"); 
@@ -81,7 +81,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     }
  
     public override async Task GenerateCopyIn( 
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
         Accessor frameAccessor, 
@@ -93,7 +93,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         var data = typeGen.GetFieldData(); 
         if (data.HasTrigger) 
         { 
-            fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};"); 
+            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};"); 
         } 
  
         List<string> extraArgs = new List<string>(); 
@@ -118,7 +118,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         TranslationGeneration.WrapParseCall( 
             new TranslationWrapParseArgs() 
             { 
-                FG = fg, 
+                FG = sb, 
                 TypeGen = typeGen, 
                 TranslatorLine = $"{this.NamespacePrefix}StringBinaryTranslation.Instance", 
                 MaskAccessor = errorMaskAccessor, 
@@ -131,7 +131,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     } 
  
     public override void GenerateCopyInRet( 
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration targetGen, 
         TypeGeneration typeGen, 
@@ -146,13 +146,13 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     { 
         if (inline) 
         { 
-            fg.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse"); 
+            sb.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse"); 
             return; 
         } 
         if (asyncMode != AsyncMode.Off) throw new NotImplementedException(); 
         var stringType = typeGen as StringType; 
         var data = typeGen.GetFieldData(); 
-        using (var args = new ArgsWrapper(fg, 
+        using (var args = new ArgsWrapper(sb, 
                    $"{retAccessor}{this.NamespacePrefix}StringBinaryTranslation.Instance.Parse")) 
         { 
             args.Add(nodeAccessor.Access); 
@@ -175,7 +175,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     } 
  
     public override async Task GenerateWrapperFields( 
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen,  
         TypeGeneration typeGen,  
         Accessor dataAccessor,  
@@ -187,16 +187,16 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         var data = str.GetFieldData(); 
         if (data.HasTrigger) 
         { 
-            await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType); 
+            await base.GenerateWrapperFields(sb, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType); 
             return; 
         } 
         switch (str.BinaryType) 
         { 
             case StringBinaryType.NullTerminate: 
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{str.NullChar} {typeGen.Name} {{ get; private set; }} = {(str.Translated.HasValue ? $"{nameof(TranslatedString)}.{nameof(TranslatedString.Empty)}" : "string.Empty")};"); 
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{str.NullChar} {typeGen.Name} {{ get; private set; }} = {(str.Translated.HasValue ? $"{nameof(TranslatedString)}.{nameof(TranslatedString.Empty)}" : "string.Empty")};"); 
                 break; 
             default: 
-                await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType); 
+                await base.GenerateWrapperFields(sb, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType); 
                 return; 
         } 
  
@@ -241,7 +241,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     } 
  
     public override async Task GenerateWrapperUnknownLengthParse( 
-        FileGeneration fg,  
+        StructuredStringBuilder sb,  
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
         int? passedLength, 
@@ -251,14 +251,14 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         switch (str.BinaryType) 
         { 
             case StringBinaryType.PrependLength: 
-                fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;"); 
+                sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;"); 
                 break; 
             case StringBinaryType.PrependLengthUShort: 
-                fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;"); 
+                sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;"); 
                 break; 
             case StringBinaryType.NullTerminate: 
-                fg.AppendLine($"ret.{typeGen.Name} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)});"); 
-                fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(str.Translated == null ? $"ret.{typeGen.Name}.Length + 1" : "5")};"); 
+                sb.AppendLine($"ret.{typeGen.Name} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)});"); 
+                sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(str.Translated == null ? $"ret.{typeGen.Name}.Length + 1" : "5")};"); 
                 break; 
             default: 
                 if (typeGen.GetFieldData().Binary == BinaryGenerationType.Custom) return; 

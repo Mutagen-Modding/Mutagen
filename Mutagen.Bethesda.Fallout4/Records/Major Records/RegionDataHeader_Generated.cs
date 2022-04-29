@@ -70,11 +70,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RegionDataHeaderMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -203,31 +204,31 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(RegionDataHeader.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, RegionDataHeader.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, RegionDataHeader.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RegionDataHeader.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RegionDataHeader.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.DataType ?? true)
                     {
-                        fg.AppendItem(DataType, "DataType");
+                        sb.AppendItem(DataType, "DataType");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Priority ?? true)
                     {
-                        fg.AppendItem(Priority, "Priority");
+                        sb.AppendItem(Priority, "Priority");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -324,36 +325,42 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(DataType, "DataType");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Priority, "Priority");
+                {
+                    sb.AppendItem(DataType, "DataType");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Priority, "Priority");
+                }
             }
             #endregion
 
@@ -473,7 +480,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -556,13 +563,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IRegionDataHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RegionDataHeader.Mask<bool>? printMask = null)
         {
             ((RegionDataHeaderCommon)((IRegionDataHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -851,56 +858,56 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             RegionDataHeader.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRegionDataHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RegionDataHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RegionDataHeader =>");
+                sb.AppendLine($"RegionDataHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RegionDataHeader) =>");
+                sb.AppendLine($"{name} (RegionDataHeader) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRegionDataHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RegionDataHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.DataType ?? true)
             {
-                fg.AppendItem(item.DataType, "DataType");
+                sb.AppendItem(item.DataType, "DataType");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Priority ?? true)
             {
-                fg.AppendItem(item.Priority, "Priority");
+                sb.AppendItem(item.Priority, "Priority");
             }
         }
         
@@ -1194,7 +1201,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RegionDataHeaderBinaryWriteTranslation.Instance;
@@ -1261,11 +1268,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RegionDataHeaderMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

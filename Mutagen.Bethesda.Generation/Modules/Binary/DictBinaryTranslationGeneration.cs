@@ -78,7 +78,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -93,7 +93,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
         var data = typeGen.GetFieldData();
         if (data.MarkerType.HasValue)
         {
-            fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
+            sb.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
         }
         var binaryType = GetDictType(dict);
         if (!this.Module.TryGetTypeGeneration(dict.ValueTypeGen.GetType(), out var valTransl))
@@ -105,7 +105,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
             || binaryType == DictBinaryType.EnumMap)
         {
             var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{this.NamespacePrefix}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
@@ -123,11 +123,11 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
                     await args.Add(async (gen) =>
                     {
                         gen.AppendLine($"transl: (MutagenWriter r, {dict.ValueTypeGen.TypeName(getter: true)} dictSubItem) =>");
-                        using (new BraceWrapper(gen))
+                        using (gen.CurlyBrace())
                         {
                             LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
                             await valTransl.GenerateWrite(
-                                fg: gen,
+                                sb: gen,
                                 objGen: objGen,
                                 typeGen: targetLoqui,
                                 itemAccessor: new Accessor("dictSubItem"),
@@ -147,7 +147,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor nodeAccessor,
@@ -168,16 +168,16 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
 
         if (data.MarkerType.HasValue)
         {
-            fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + long; // Skip marker");
+            sb.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + long; // Skip marker");
         }
         else if (binaryType == DictBinaryType.Trigger)
         {
-            fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
+            sb.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
         }
 
         var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
 
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{Loqui.Generation.Utility.Await(isAsync)}{this.NamespacePrefix}{term}{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse{(binaryType == DictBinaryType.EnumMap ? $"<{dict.KeyTypeGen.TypeName(false)}>" : null)}",
                    suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
         {
@@ -209,10 +209,10 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
                 args.Add((gen) =>
                 {
                     gen.AppendLine($"transl: (MutagenFrame r, RecordType header{(isAsync ? null : $", out {dict.ValueTypeGen.TypeName(getter: false)} dictSubItem")}) =>");
-                    using (new BraceWrapper(gen))
+                    using (gen.CurlyBrace())
                     {
                         gen.AppendLine("switch (header.Type)");
-                        using (new BraceWrapper(gen))
+                        using (gen.CurlyBrace())
                         {
                             foreach (var item in subGenTypes)
                             {
@@ -225,7 +225,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
                                 using (new DepthWrapper(gen))
                                 {
                                     subGen.GenerateCopyInRet(
-                                        fg: gen,
+                                        sb: gen,
                                         objGen: objGen,
                                         targetGen: dict.ValueTypeGen,
                                         typeGen: item.Value,
@@ -254,7 +254,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
                 {
                     LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
                     subGen.GenerateCopyInRet(
-                        fg: gen,
+                        sb: gen,
                         objGen: objGen,
                         targetGen: dict.ValueTypeGen,
                         typeGen: targetLoqui,
@@ -272,7 +272,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -289,7 +289,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrapperFields(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
         Accessor dataAccessor,
@@ -312,10 +312,10 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
         var posStr = data == null ? passedLengthAccessor : $"_{typeGen.Name}Location";
         if (data != null)
         {
-            DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, data, objGen, typeGen, passedLengthAccessor);
+            DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, data, objGen, typeGen, passedLengthAccessor);
         }
 
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"public IReadOnlyDictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}> {typeGen.Name} => DictBinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse<{dict.KeyTypeGen.TypeName(false)}>"))
         {
             args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({dataAccessor}{(posStr == null ? null : $".Slice({posStr})")}, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}))");

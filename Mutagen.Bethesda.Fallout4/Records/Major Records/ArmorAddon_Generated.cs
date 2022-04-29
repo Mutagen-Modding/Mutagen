@@ -150,11 +150,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ArmorAddonMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -475,106 +476,108 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(ArmorAddon.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ArmorAddon.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ArmorAddon.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ArmorAddon.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ArmorAddon.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.BodyTemplate?.Overall ?? true)
                     {
-                        BodyTemplate?.ToString(fg);
+                        BodyTemplate?.ToString(sb);
                     }
                     if (printMask?.Race ?? true)
                     {
-                        fg.AppendItem(Race, "Race");
+                        sb.AppendItem(Race, "Race");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"Priority => {Priority}");
+                        sb.AppendLine($"Priority => {Priority}");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
+                        sb.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.DetectionSoundValue ?? true)
                     {
-                        fg.AppendItem(DetectionSoundValue, "DetectionSoundValue");
+                        sb.AppendItem(DetectionSoundValue, "DetectionSoundValue");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.WeaponAdjust ?? true)
                     {
-                        fg.AppendItem(WeaponAdjust, "WeaponAdjust");
+                        sb.AppendItem(WeaponAdjust, "WeaponAdjust");
                     }
                     if (WorldModel != null
                         && (printMask?.WorldModel?.Overall ?? true))
                     {
-                        fg.AppendLine($"WorldModel => {WorldModel}");
+                        sb.AppendLine($"WorldModel => {WorldModel}");
                     }
                     if (FirstPersonModel != null
                         && (printMask?.FirstPersonModel?.Overall ?? true))
                     {
-                        fg.AppendLine($"FirstPersonModel => {FirstPersonModel}");
+                        sb.AppendLine($"FirstPersonModel => {FirstPersonModel}");
                     }
                     if (SkinTexture != null
                         && (printMask?.SkinTexture?.Overall ?? true))
                     {
-                        fg.AppendLine($"SkinTexture => {SkinTexture}");
+                        sb.AppendLine($"SkinTexture => {SkinTexture}");
                     }
                     if (TextureSwapList != null
                         && (printMask?.TextureSwapList?.Overall ?? true))
                     {
-                        fg.AppendLine($"TextureSwapList => {TextureSwapList}");
+                        sb.AppendLine($"TextureSwapList => {TextureSwapList}");
                     }
                     if ((printMask?.AdditionalRaces?.Overall ?? true)
                         && AdditionalRaces is {} AdditionalRacesItem)
                     {
-                        fg.AppendLine("AdditionalRaces =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("AdditionalRaces =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(AdditionalRacesItem.Overall);
+                            sb.AppendItem(AdditionalRacesItem.Overall);
                             if (AdditionalRacesItem.Specific != null)
                             {
                                 foreach (var subItem in AdditionalRacesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.FootstepSound ?? true)
                     {
-                        fg.AppendItem(FootstepSound, "FootstepSound");
+                        sb.AppendItem(FootstepSound, "FootstepSound");
                     }
                     if (printMask?.ArtObject ?? true)
                     {
-                        fg.AppendItem(ArtObject, "ArtObject");
+                        sb.AppendItem(ArtObject, "ArtObject");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -790,83 +793,105 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                BodyTemplate?.ToString(fg);
-                fg.AppendItem(Race, "Race");
-                fg.AppendLine($"Priority => {Priority}");
-                fg.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(DetectionSoundValue, "DetectionSoundValue");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(WeaponAdjust, "WeaponAdjust");
+                base.ToString_FillInternal(sb);
+                BodyTemplate?.ToString(sb);
+                {
+                    sb.AppendItem(Race, "Race");
+                }
+                {
+                    sb.AppendLine($"Priority => {Priority}");
+                }
+                {
+                    sb.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(DetectionSoundValue, "DetectionSoundValue");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(WeaponAdjust, "WeaponAdjust");
+                }
                 if (WorldModel != null)
                 {
-                    fg.AppendLine($"WorldModel => {WorldModel}");
+                    sb.AppendLine($"WorldModel => {WorldModel}");
                 }
                 if (FirstPersonModel != null)
                 {
-                    fg.AppendLine($"FirstPersonModel => {FirstPersonModel}");
+                    sb.AppendLine($"FirstPersonModel => {FirstPersonModel}");
                 }
                 if (SkinTexture != null)
                 {
-                    fg.AppendLine($"SkinTexture => {SkinTexture}");
+                    sb.AppendLine($"SkinTexture => {SkinTexture}");
                 }
                 if (TextureSwapList != null)
                 {
-                    fg.AppendLine($"TextureSwapList => {TextureSwapList}");
+                    sb.AppendLine($"TextureSwapList => {TextureSwapList}");
                 }
                 if (AdditionalRaces is {} AdditionalRacesItem)
                 {
-                    fg.AppendLine("AdditionalRaces =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("AdditionalRaces =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(AdditionalRacesItem.Overall);
+                        sb.AppendItem(AdditionalRacesItem.Overall);
                         if (AdditionalRacesItem.Specific != null)
                         {
                             foreach (var subItem in AdditionalRacesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(FootstepSound, "FootstepSound");
-                fg.AppendItem(ArtObject, "ArtObject");
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                {
+                    sb.AppendItem(FootstepSound, "FootstepSound");
+                }
+                {
+                    sb.AppendItem(ArtObject, "ArtObject");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -1096,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1219,13 +1244,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IArmorAddonGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
             ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1683,131 +1708,131 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IArmorAddonGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ArmorAddon =>");
+                sb.AppendLine($"ArmorAddon =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ArmorAddon) =>");
+                sb.AppendLine($"{name} (ArmorAddon) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IArmorAddonGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ArmorAddon.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.BodyTemplate?.Overall ?? true)
                 && item.BodyTemplate is {} BodyTemplateItem)
             {
-                BodyTemplateItem?.ToString(fg, "BodyTemplate");
+                BodyTemplateItem?.ToString(sb, "BodyTemplate");
             }
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race.FormKeyNullable, "Race");
+                sb.AppendItem(item.Race.FormKeyNullable, "Race");
             }
             if (true)
             {
-                item.Priority.ToString(fg, "Priority");
+                item.Priority.ToString(sb, "Priority");
             }
             if (true)
             {
-                item.WeightSliderEnabled.ToString(fg, "WeightSliderEnabled");
+                item.WeightSliderEnabled.ToString(sb, "WeightSliderEnabled");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.DetectionSoundValue ?? true)
             {
-                fg.AppendItem(item.DetectionSoundValue, "DetectionSoundValue");
+                sb.AppendItem(item.DetectionSoundValue, "DetectionSoundValue");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.WeaponAdjust ?? true)
             {
-                fg.AppendItem(item.WeaponAdjust, "WeaponAdjust");
+                sb.AppendItem(item.WeaponAdjust, "WeaponAdjust");
             }
             if ((printMask?.WorldModel?.Overall ?? true)
                 && item.WorldModel is {} WorldModelItem)
             {
-                WorldModelItem?.ToString(fg, "WorldModel");
+                WorldModelItem?.ToString(sb, "WorldModel");
             }
             if ((printMask?.FirstPersonModel?.Overall ?? true)
                 && item.FirstPersonModel is {} FirstPersonModelItem)
             {
-                FirstPersonModelItem?.ToString(fg, "FirstPersonModel");
+                FirstPersonModelItem?.ToString(sb, "FirstPersonModel");
             }
             if ((printMask?.SkinTexture?.Overall ?? true)
                 && item.SkinTexture is {} SkinTextureItem)
             {
-                SkinTextureItem?.ToString(fg, "SkinTexture");
+                SkinTextureItem?.ToString(sb, "SkinTexture");
             }
             if ((printMask?.TextureSwapList?.Overall ?? true)
                 && item.TextureSwapList is {} TextureSwapListItem)
             {
-                TextureSwapListItem?.ToString(fg, "TextureSwapList");
+                TextureSwapListItem?.ToString(sb, "TextureSwapList");
             }
             if (printMask?.AdditionalRaces?.Overall ?? true)
             {
-                fg.AppendLine("AdditionalRaces =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("AdditionalRaces =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.AdditionalRaces)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.FootstepSound ?? true)
             {
-                fg.AppendItem(item.FootstepSound.FormKeyNullable, "FootstepSound");
+                sb.AppendItem(item.FootstepSound.FormKeyNullable, "FootstepSound");
             }
             if (printMask?.ArtObject ?? true)
             {
-                fg.AppendItem(item.ArtObject.FormKeyNullable, "ArtObject");
+                sb.AppendItem(item.ArtObject.FormKeyNullable, "ArtObject");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -2782,7 +2807,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorAddonCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3047,11 +3072,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ArmorAddonMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

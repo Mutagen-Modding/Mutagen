@@ -75,11 +75,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TintTemplateColorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -217,35 +218,35 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(TintTemplateColor.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TintTemplateColor.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TintTemplateColor.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TintTemplateColor.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TintTemplateColor.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.Alpha ?? true)
                     {
-                        fg.AppendItem(Alpha, "Alpha");
+                        sb.AppendItem(Alpha, "Alpha");
                     }
                     if (printMask?.TemplateIndex ?? true)
                     {
-                        fg.AppendItem(TemplateIndex, "TemplateIndex");
+                        sb.AppendItem(TemplateIndex, "TemplateIndex");
                     }
                     if (printMask?.BlendOperation ?? true)
                     {
-                        fg.AppendItem(BlendOperation, "BlendOperation");
+                        sb.AppendItem(BlendOperation, "BlendOperation");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -352,37 +353,45 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(Alpha, "Alpha");
-                fg.AppendItem(TemplateIndex, "TemplateIndex");
-                fg.AppendItem(BlendOperation, "BlendOperation");
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(Alpha, "Alpha");
+                }
+                {
+                    sb.AppendItem(TemplateIndex, "TemplateIndex");
+                }
+                {
+                    sb.AppendItem(BlendOperation, "BlendOperation");
+                }
             }
             #endregion
 
@@ -511,7 +520,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -592,13 +601,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this ITintTemplateColorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TintTemplateColor.Mask<bool>? printMask = null)
         {
             ((TintTemplateColorCommon)((ITintTemplateColorGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -881,60 +890,60 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             TintTemplateColor.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITintTemplateColorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TintTemplateColor.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TintTemplateColor =>");
+                sb.AppendLine($"TintTemplateColor =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TintTemplateColor) =>");
+                sb.AppendLine($"{name} (TintTemplateColor) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITintTemplateColorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TintTemplateColor.Mask<bool>? printMask = null)
         {
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color.FormKey, "Color");
+                sb.AppendItem(item.Color.FormKey, "Color");
             }
             if (printMask?.Alpha ?? true)
             {
-                fg.AppendItem(item.Alpha, "Alpha");
+                sb.AppendItem(item.Alpha, "Alpha");
             }
             if (printMask?.TemplateIndex ?? true)
             {
-                fg.AppendItem(item.TemplateIndex, "TemplateIndex");
+                sb.AppendItem(item.TemplateIndex, "TemplateIndex");
             }
             if (printMask?.BlendOperation ?? true)
             {
-                fg.AppendItem(item.BlendOperation, "BlendOperation");
+                sb.AppendItem(item.BlendOperation, "BlendOperation");
             }
         }
         
@@ -1215,7 +1224,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintTemplateColorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1283,11 +1292,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TintTemplateColorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

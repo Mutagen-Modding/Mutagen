@@ -73,11 +73,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FootstepMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -201,27 +202,27 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(Footstep.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Footstep.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Footstep.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Footstep.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Footstep.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ImpactDataSet ?? true)
                     {
-                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
                     }
                     if (printMask?.Tag ?? true)
                     {
-                        fg.AppendItem(Tag, "Tag");
+                        sb.AppendItem(Tag, "Tag");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -297,36 +298,40 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
-                fg.AppendItem(Tag, "Tag");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(Tag, "Tag");
+                }
             }
             #endregion
 
@@ -498,7 +503,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -579,13 +584,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IFootstepGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Footstep.Mask<bool>? printMask = null)
         {
             ((FootstepCommon)((IFootstepGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -904,56 +909,56 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             Footstep.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IFootstepGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Footstep.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Footstep =>");
+                sb.AppendLine($"Footstep =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Footstep) =>");
+                sb.AppendLine($"{name} (Footstep) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFootstepGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Footstep.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
             }
             if (printMask?.Tag ?? true)
             {
-                fg.AppendItem(item.Tag, "Tag");
+                sb.AppendItem(item.Tag, "Tag");
             }
         }
         
@@ -1465,7 +1470,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FootstepCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1579,11 +1584,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             FootstepMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

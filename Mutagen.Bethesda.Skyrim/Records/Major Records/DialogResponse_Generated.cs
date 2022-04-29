@@ -137,11 +137,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DialogResponseMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -369,75 +370,75 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(DialogResponse.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, DialogResponse.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, DialogResponse.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DialogResponse.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DialogResponse.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Emotion ?? true)
                     {
-                        fg.AppendItem(Emotion, "Emotion");
+                        sb.AppendItem(Emotion, "Emotion");
                     }
                     if (printMask?.EmotionValue ?? true)
                     {
-                        fg.AppendItem(EmotionValue, "EmotionValue");
+                        sb.AppendItem(EmotionValue, "EmotionValue");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.ResponseNumber ?? true)
                     {
-                        fg.AppendItem(ResponseNumber, "ResponseNumber");
+                        sb.AppendItem(ResponseNumber, "ResponseNumber");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendItem(Sound, "Sound");
+                        sb.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                     if (printMask?.Text ?? true)
                     {
-                        fg.AppendItem(Text, "Text");
+                        sb.AppendItem(Text, "Text");
                     }
                     if (printMask?.ScriptNotes ?? true)
                     {
-                        fg.AppendItem(ScriptNotes, "ScriptNotes");
+                        sb.AppendItem(ScriptNotes, "ScriptNotes");
                     }
                     if (printMask?.Edits ?? true)
                     {
-                        fg.AppendItem(Edits, "Edits");
+                        sb.AppendItem(Edits, "Edits");
                     }
                     if (printMask?.SpeakerIdleAnimation ?? true)
                     {
-                        fg.AppendItem(SpeakerIdleAnimation, "SpeakerIdleAnimation");
+                        sb.AppendItem(SpeakerIdleAnimation, "SpeakerIdleAnimation");
                     }
                     if (printMask?.ListenerIdleAnimation ?? true)
                     {
-                        fg.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
+                        sb.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
                     }
                     if (printMask?.TRDTDataTypeState ?? true)
                     {
-                        fg.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
+                        sb.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -644,47 +645,75 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Emotion, "Emotion");
-                fg.AppendItem(EmotionValue, "EmotionValue");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(ResponseNumber, "ResponseNumber");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Sound, "Sound");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(Text, "Text");
-                fg.AppendItem(ScriptNotes, "ScriptNotes");
-                fg.AppendItem(Edits, "Edits");
-                fg.AppendItem(SpeakerIdleAnimation, "SpeakerIdleAnimation");
-                fg.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
-                fg.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
+                {
+                    sb.AppendItem(Emotion, "Emotion");
+                }
+                {
+                    sb.AppendItem(EmotionValue, "EmotionValue");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(ResponseNumber, "ResponseNumber");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(Text, "Text");
+                }
+                {
+                    sb.AppendItem(ScriptNotes, "ScriptNotes");
+                }
+                {
+                    sb.AppendItem(Edits, "Edits");
+                }
+                {
+                    sb.AppendItem(SpeakerIdleAnimation, "SpeakerIdleAnimation");
+                }
+                {
+                    sb.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
+                }
+                {
+                    sb.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
+                }
             }
             #endregion
 
@@ -857,7 +886,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -958,13 +987,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IDialogResponseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
             ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1294,100 +1323,100 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDialogResponseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogResponse =>");
+                sb.AppendLine($"DialogResponse =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogResponse) =>");
+                sb.AppendLine($"{name} (DialogResponse) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDialogResponseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DialogResponse.Mask<bool>? printMask = null)
         {
             if (printMask?.Emotion ?? true)
             {
-                fg.AppendItem(item.Emotion, "Emotion");
+                sb.AppendItem(item.Emotion, "Emotion");
             }
             if (printMask?.EmotionValue ?? true)
             {
-                fg.AppendItem(item.EmotionValue, "EmotionValue");
+                sb.AppendItem(item.EmotionValue, "EmotionValue");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.ResponseNumber ?? true)
             {
-                fg.AppendItem(item.ResponseNumber, "ResponseNumber");
+                sb.AppendItem(item.ResponseNumber, "ResponseNumber");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
+                sb.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                sb.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
+                sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
             if (printMask?.Text ?? true)
             {
-                fg.AppendItem(item.Text, "Text");
+                sb.AppendItem(item.Text, "Text");
             }
             if (printMask?.ScriptNotes ?? true)
             {
-                fg.AppendItem(item.ScriptNotes, "ScriptNotes");
+                sb.AppendItem(item.ScriptNotes, "ScriptNotes");
             }
             if (printMask?.Edits ?? true)
             {
-                fg.AppendItem(item.Edits, "Edits");
+                sb.AppendItem(item.Edits, "Edits");
             }
             if (printMask?.SpeakerIdleAnimation ?? true)
             {
-                fg.AppendItem(item.SpeakerIdleAnimation.FormKeyNullable, "SpeakerIdleAnimation");
+                sb.AppendItem(item.SpeakerIdleAnimation.FormKeyNullable, "SpeakerIdleAnimation");
             }
             if (printMask?.ListenerIdleAnimation ?? true)
             {
-                fg.AppendItem(item.ListenerIdleAnimation.FormKeyNullable, "ListenerIdleAnimation");
+                sb.AppendItem(item.ListenerIdleAnimation.FormKeyNullable, "ListenerIdleAnimation");
             }
             if (printMask?.TRDTDataTypeState ?? true)
             {
-                fg.AppendItem(item.TRDTDataTypeState, "TRDTDataTypeState");
+                sb.AppendItem(item.TRDTDataTypeState, "TRDTDataTypeState");
             }
         }
         
@@ -1880,7 +1909,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2054,11 +2083,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DialogResponseMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -101,11 +101,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RuleNameMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -303,66 +304,68 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(RuleName.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, RuleName.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, RuleName.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RuleName.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RuleName.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Text ?? true)
                     {
-                        fg.AppendItem(Text, "Text");
+                        sb.AppendItem(Text, "Text");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.PropertyEnum ?? true)
                     {
-                        fg.AppendItem(PropertyEnum, "PropertyEnum");
+                        sb.AppendItem(PropertyEnum, "PropertyEnum");
                     }
                     if (printMask?.OpEnum ?? true)
                     {
-                        fg.AppendItem(OpEnum, "OpEnum");
+                        sb.AppendItem(OpEnum, "OpEnum");
                     }
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.XNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(XNAMDataTypeState, "XNAMDataTypeState");
+                        sb.AppendItem(XNAMDataTypeState, "XNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -499,61 +502,75 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Text, "Text");
+                {
+                    sb.AppendItem(Text, "Text");
+                }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(PropertyEnum, "PropertyEnum");
-                fg.AppendItem(OpEnum, "OpEnum");
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(XNAMDataTypeState, "XNAMDataTypeState");
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(PropertyEnum, "PropertyEnum");
+                }
+                {
+                    sb.AppendItem(OpEnum, "OpEnum");
+                }
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(XNAMDataTypeState, "XNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -698,7 +715,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -795,13 +812,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IRuleNameGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RuleName.Mask<bool>? printMask = null)
         {
             ((RuleNameCommon)((IRuleNameGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1113,89 +1130,89 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             RuleName.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRuleNameGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RuleName.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RuleName =>");
+                sb.AppendLine($"RuleName =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RuleName) =>");
+                sb.AppendLine($"{name} (RuleName) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRuleNameGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RuleName.Mask<bool>? printMask = null)
         {
             if ((printMask?.Text ?? true)
                 && item.Text is {} TextItem)
             {
-                fg.AppendItem(TextItem, "Text");
+                sb.AppendItem(TextItem, "Text");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.PropertyEnum ?? true)
             {
-                fg.AppendItem(item.PropertyEnum, "PropertyEnum");
+                sb.AppendItem(item.PropertyEnum, "PropertyEnum");
             }
             if (printMask?.OpEnum ?? true)
             {
-                fg.AppendItem(item.OpEnum, "OpEnum");
+                sb.AppendItem(item.OpEnum, "OpEnum");
             }
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
             if (printMask?.XNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.XNAMDataTypeState, "XNAMDataTypeState");
+                sb.AppendItem(item.XNAMDataTypeState, "XNAMDataTypeState");
             }
         }
         
@@ -1629,7 +1646,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => RuleNameCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1770,11 +1787,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RuleNameMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

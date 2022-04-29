@@ -17,24 +17,24 @@ public class ObjectBoundedAspect : AspectFieldInterfaceDefinition
     {
         FieldActions = new()
         {
-            new (LoquiInterfaceType.Direct, "ObjectBounds", (o, tg, fg) =>
+            new (LoquiInterfaceType.Direct, "ObjectBounds", (o, tg, sb) =>
             {
                 if (tg is not LoquiType field) throw new ArgumentException("ObjectBounds is not LoquiType", nameof(tg));
 
                 if (!field.Nullable)
                 {
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine("ObjectBounds? IObjectBoundedOptional.ObjectBounds");
-                    using (new BraceWrapper(fg))
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("ObjectBounds? IObjectBoundedOptional.ObjectBounds");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine($"get => this.ObjectBounds;");
-                        fg.AppendLine($"set => this.ObjectBounds = value ?? new ObjectBounds();");
+                        sb.AppendLine($"get => this.ObjectBounds;");
+                        sb.AppendLine($"set => this.ObjectBounds = value ?? new ObjectBounds();");
                     }
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine("IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;");
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;");
                 }
-                fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                fg.AppendLine("IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;");
+                sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                sb.AppendLine("IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;");
             })
         };
     }

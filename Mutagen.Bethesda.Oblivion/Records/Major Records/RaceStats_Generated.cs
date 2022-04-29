@@ -79,11 +79,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RaceStatsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -257,51 +258,51 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(RaceStats.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, RaceStats.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, RaceStats.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RaceStats.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RaceStats.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Strength ?? true)
                     {
-                        fg.AppendItem(Strength, "Strength");
+                        sb.AppendItem(Strength, "Strength");
                     }
                     if (printMask?.Intelligence ?? true)
                     {
-                        fg.AppendItem(Intelligence, "Intelligence");
+                        sb.AppendItem(Intelligence, "Intelligence");
                     }
                     if (printMask?.Willpower ?? true)
                     {
-                        fg.AppendItem(Willpower, "Willpower");
+                        sb.AppendItem(Willpower, "Willpower");
                     }
                     if (printMask?.Agility ?? true)
                     {
-                        fg.AppendItem(Agility, "Agility");
+                        sb.AppendItem(Agility, "Agility");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Endurance ?? true)
                     {
-                        fg.AppendItem(Endurance, "Endurance");
+                        sb.AppendItem(Endurance, "Endurance");
                     }
                     if (printMask?.Personality ?? true)
                     {
-                        fg.AppendItem(Personality, "Personality");
+                        sb.AppendItem(Personality, "Personality");
                     }
                     if (printMask?.Luck ?? true)
                     {
-                        fg.AppendItem(Luck, "Luck");
+                        sb.AppendItem(Luck, "Luck");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -448,41 +449,57 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Strength, "Strength");
-                fg.AppendItem(Intelligence, "Intelligence");
-                fg.AppendItem(Willpower, "Willpower");
-                fg.AppendItem(Agility, "Agility");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Endurance, "Endurance");
-                fg.AppendItem(Personality, "Personality");
-                fg.AppendItem(Luck, "Luck");
+                {
+                    sb.AppendItem(Strength, "Strength");
+                }
+                {
+                    sb.AppendItem(Intelligence, "Intelligence");
+                }
+                {
+                    sb.AppendItem(Willpower, "Willpower");
+                }
+                {
+                    sb.AppendItem(Agility, "Agility");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Endurance, "Endurance");
+                }
+                {
+                    sb.AppendItem(Personality, "Personality");
+                }
+                {
+                    sb.AppendItem(Luck, "Luck");
+                }
             }
             #endregion
 
@@ -622,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -709,13 +726,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IRaceStatsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RaceStats.Mask<bool>? printMask = null)
         {
             ((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1009,76 +1026,76 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             RaceStats.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRaceStatsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RaceStats.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RaceStats =>");
+                sb.AppendLine($"RaceStats =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RaceStats) =>");
+                sb.AppendLine($"{name} (RaceStats) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRaceStatsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RaceStats.Mask<bool>? printMask = null)
         {
             if (printMask?.Strength ?? true)
             {
-                fg.AppendItem(item.Strength, "Strength");
+                sb.AppendItem(item.Strength, "Strength");
             }
             if (printMask?.Intelligence ?? true)
             {
-                fg.AppendItem(item.Intelligence, "Intelligence");
+                sb.AppendItem(item.Intelligence, "Intelligence");
             }
             if (printMask?.Willpower ?? true)
             {
-                fg.AppendItem(item.Willpower, "Willpower");
+                sb.AppendItem(item.Willpower, "Willpower");
             }
             if (printMask?.Agility ?? true)
             {
-                fg.AppendItem(item.Agility, "Agility");
+                sb.AppendItem(item.Agility, "Agility");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Endurance ?? true)
             {
-                fg.AppendItem(item.Endurance, "Endurance");
+                sb.AppendItem(item.Endurance, "Endurance");
             }
             if (printMask?.Personality ?? true)
             {
-                fg.AppendItem(item.Personality, "Personality");
+                sb.AppendItem(item.Personality, "Personality");
             }
             if (printMask?.Luck ?? true)
             {
-                fg.AppendItem(item.Luck, "Luck");
+                sb.AppendItem(item.Luck, "Luck");
             }
         }
         
@@ -1393,7 +1410,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceStatsBinaryWriteTranslation.Instance;
@@ -1464,11 +1481,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RaceStatsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

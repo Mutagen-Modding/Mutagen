@@ -153,11 +153,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -493,123 +494,123 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(WeaponData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, WeaponData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, WeaponData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WeaponData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeaponData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.AnimationType ?? true)
                     {
-                        fg.AppendItem(AnimationType, "AnimationType");
+                        sb.AppendItem(AnimationType, "AnimationType");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Reach ?? true)
                     {
-                        fg.AppendItem(Reach, "Reach");
+                        sb.AppendItem(Reach, "Reach");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unused2 ?? true)
                     {
-                        fg.AppendItem(Unused2, "Unused2");
+                        sb.AppendItem(Unused2, "Unused2");
                     }
                     if (printMask?.SightFOV ?? true)
                     {
-                        fg.AppendItem(SightFOV, "SightFOV");
+                        sb.AppendItem(SightFOV, "SightFOV");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.BaseVATStoHitChance ?? true)
                     {
-                        fg.AppendItem(BaseVATStoHitChance, "BaseVATStoHitChance");
+                        sb.AppendItem(BaseVATStoHitChance, "BaseVATStoHitChance");
                     }
                     if (printMask?.AttackAnimation ?? true)
                     {
-                        fg.AppendItem(AttackAnimation, "AttackAnimation");
+                        sb.AppendItem(AttackAnimation, "AttackAnimation");
                     }
                     if (printMask?.NumProjectiles ?? true)
                     {
-                        fg.AppendItem(NumProjectiles, "NumProjectiles");
+                        sb.AppendItem(NumProjectiles, "NumProjectiles");
                     }
                     if (printMask?.EmbeddedWeaponAV ?? true)
                     {
-                        fg.AppendItem(EmbeddedWeaponAV, "EmbeddedWeaponAV");
+                        sb.AppendItem(EmbeddedWeaponAV, "EmbeddedWeaponAV");
                     }
                     if (printMask?.RangeMin ?? true)
                     {
-                        fg.AppendItem(RangeMin, "RangeMin");
+                        sb.AppendItem(RangeMin, "RangeMin");
                     }
                     if (printMask?.RangeMax ?? true)
                     {
-                        fg.AppendItem(RangeMax, "RangeMax");
+                        sb.AppendItem(RangeMax, "RangeMax");
                     }
                     if (printMask?.OnHit ?? true)
                     {
-                        fg.AppendItem(OnHit, "OnHit");
+                        sb.AppendItem(OnHit, "OnHit");
                     }
                     if (printMask?.AnimationAttackMult ?? true)
                     {
-                        fg.AppendItem(AnimationAttackMult, "AnimationAttackMult");
+                        sb.AppendItem(AnimationAttackMult, "AnimationAttackMult");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.RumbleLeftMotorStrength ?? true)
                     {
-                        fg.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
+                        sb.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
                     }
                     if (printMask?.RumbleRightMotorStrength ?? true)
                     {
-                        fg.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
+                        sb.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
                     }
                     if (printMask?.RumbleDuration ?? true)
                     {
-                        fg.AppendItem(RumbleDuration, "RumbleDuration");
+                        sb.AppendItem(RumbleDuration, "RumbleDuration");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                     if (printMask?.Skill ?? true)
                     {
-                        fg.AppendItem(Skill, "Skill");
+                        sb.AppendItem(Skill, "Skill");
                     }
                     if (printMask?.Unknown4 ?? true)
                     {
-                        fg.AppendItem(Unknown4, "Unknown4");
+                        sb.AppendItem(Unknown4, "Unknown4");
                     }
                     if (printMask?.Resist ?? true)
                     {
-                        fg.AppendItem(Resist, "Resist");
+                        sb.AppendItem(Resist, "Resist");
                     }
                     if (printMask?.Unknown5 ?? true)
                     {
-                        fg.AppendItem(Unknown5, "Unknown5");
+                        sb.AppendItem(Unknown5, "Unknown5");
                     }
                     if (printMask?.Stagger ?? true)
                     {
-                        fg.AppendItem(Stagger, "Stagger");
+                        sb.AppendItem(Stagger, "Stagger");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -936,59 +937,111 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(AnimationType, "AnimationType");
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Reach, "Reach");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Unused2, "Unused2");
-                fg.AppendItem(SightFOV, "SightFOV");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(BaseVATStoHitChance, "BaseVATStoHitChance");
-                fg.AppendItem(AttackAnimation, "AttackAnimation");
-                fg.AppendItem(NumProjectiles, "NumProjectiles");
-                fg.AppendItem(EmbeddedWeaponAV, "EmbeddedWeaponAV");
-                fg.AppendItem(RangeMin, "RangeMin");
-                fg.AppendItem(RangeMax, "RangeMax");
-                fg.AppendItem(OnHit, "OnHit");
-                fg.AppendItem(AnimationAttackMult, "AnimationAttackMult");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
-                fg.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
-                fg.AppendItem(RumbleDuration, "RumbleDuration");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(Skill, "Skill");
-                fg.AppendItem(Unknown4, "Unknown4");
-                fg.AppendItem(Resist, "Resist");
-                fg.AppendItem(Unknown5, "Unknown5");
-                fg.AppendItem(Stagger, "Stagger");
+                {
+                    sb.AppendItem(AnimationType, "AnimationType");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Reach, "Reach");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unused2, "Unused2");
+                }
+                {
+                    sb.AppendItem(SightFOV, "SightFOV");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(BaseVATStoHitChance, "BaseVATStoHitChance");
+                }
+                {
+                    sb.AppendItem(AttackAnimation, "AttackAnimation");
+                }
+                {
+                    sb.AppendItem(NumProjectiles, "NumProjectiles");
+                }
+                {
+                    sb.AppendItem(EmbeddedWeaponAV, "EmbeddedWeaponAV");
+                }
+                {
+                    sb.AppendItem(RangeMin, "RangeMin");
+                }
+                {
+                    sb.AppendItem(RangeMax, "RangeMax");
+                }
+                {
+                    sb.AppendItem(OnHit, "OnHit");
+                }
+                {
+                    sb.AppendItem(AnimationAttackMult, "AnimationAttackMult");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
+                }
+                {
+                    sb.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
+                }
+                {
+                    sb.AppendItem(RumbleDuration, "RumbleDuration");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(Skill, "Skill");
+                }
+                {
+                    sb.AppendItem(Unknown4, "Unknown4");
+                }
+                {
+                    sb.AppendItem(Resist, "Resist");
+                }
+                {
+                    sb.AppendItem(Unknown5, "Unknown5");
+                }
+                {
+                    sb.AppendItem(Stagger, "Stagger");
+                }
             }
             #endregion
 
@@ -1200,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1323,13 +1376,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IWeaponDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
             ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1688,149 +1741,149 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeaponDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeaponData =>");
+                sb.AppendLine($"WeaponData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeaponData) =>");
+                sb.AppendLine($"{name} (WeaponData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeaponDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeaponData.Mask<bool>? printMask = null)
         {
             if (printMask?.AnimationType ?? true)
             {
-                fg.AppendItem(item.AnimationType, "AnimationType");
+                sb.AppendItem(item.AnimationType, "AnimationType");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Reach ?? true)
             {
-                fg.AppendItem(item.Reach, "Reach");
+                sb.AppendItem(item.Reach, "Reach");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unused2 ?? true)
             {
-                fg.AppendItem(item.Unused2, "Unused2");
+                sb.AppendItem(item.Unused2, "Unused2");
             }
             if (printMask?.SightFOV ?? true)
             {
-                fg.AppendItem(item.SightFOV, "SightFOV");
+                sb.AppendItem(item.SightFOV, "SightFOV");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.BaseVATStoHitChance ?? true)
             {
-                fg.AppendItem(item.BaseVATStoHitChance, "BaseVATStoHitChance");
+                sb.AppendItem(item.BaseVATStoHitChance, "BaseVATStoHitChance");
             }
             if (printMask?.AttackAnimation ?? true)
             {
-                fg.AppendItem(item.AttackAnimation, "AttackAnimation");
+                sb.AppendItem(item.AttackAnimation, "AttackAnimation");
             }
             if (printMask?.NumProjectiles ?? true)
             {
-                fg.AppendItem(item.NumProjectiles, "NumProjectiles");
+                sb.AppendItem(item.NumProjectiles, "NumProjectiles");
             }
             if (printMask?.EmbeddedWeaponAV ?? true)
             {
-                fg.AppendItem(item.EmbeddedWeaponAV, "EmbeddedWeaponAV");
+                sb.AppendItem(item.EmbeddedWeaponAV, "EmbeddedWeaponAV");
             }
             if (printMask?.RangeMin ?? true)
             {
-                fg.AppendItem(item.RangeMin, "RangeMin");
+                sb.AppendItem(item.RangeMin, "RangeMin");
             }
             if (printMask?.RangeMax ?? true)
             {
-                fg.AppendItem(item.RangeMax, "RangeMax");
+                sb.AppendItem(item.RangeMax, "RangeMax");
             }
             if (printMask?.OnHit ?? true)
             {
-                fg.AppendItem(item.OnHit, "OnHit");
+                sb.AppendItem(item.OnHit, "OnHit");
             }
             if (printMask?.AnimationAttackMult ?? true)
             {
-                fg.AppendItem(item.AnimationAttackMult, "AnimationAttackMult");
+                sb.AppendItem(item.AnimationAttackMult, "AnimationAttackMult");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.RumbleLeftMotorStrength ?? true)
             {
-                fg.AppendItem(item.RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
+                sb.AppendItem(item.RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
             }
             if (printMask?.RumbleRightMotorStrength ?? true)
             {
-                fg.AppendItem(item.RumbleRightMotorStrength, "RumbleRightMotorStrength");
+                sb.AppendItem(item.RumbleRightMotorStrength, "RumbleRightMotorStrength");
             }
             if (printMask?.RumbleDuration ?? true)
             {
-                fg.AppendItem(item.RumbleDuration, "RumbleDuration");
+                sb.AppendItem(item.RumbleDuration, "RumbleDuration");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
+                sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
             if ((printMask?.Skill ?? true)
                 && item.Skill is {} SkillItem)
             {
-                fg.AppendItem(SkillItem, "Skill");
+                sb.AppendItem(SkillItem, "Skill");
             }
             if (printMask?.Unknown4 ?? true)
             {
-                fg.AppendItem(item.Unknown4, "Unknown4");
+                sb.AppendItem(item.Unknown4, "Unknown4");
             }
             if (printMask?.Resist ?? true)
             {
-                fg.AppendItem(item.Resist, "Resist");
+                sb.AppendItem(item.Resist, "Resist");
             }
             if (printMask?.Unknown5 ?? true)
             {
-                fg.AppendItem(item.Unknown5, "Unknown5");
+                sb.AppendItem(item.Unknown5, "Unknown5");
             }
             if (printMask?.Stagger ?? true)
             {
-                fg.AppendItem(item.Stagger, "Stagger");
+                sb.AppendItem(item.Stagger, "Stagger");
             }
         }
         
@@ -2447,7 +2500,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponDataBinaryWriteTranslation.Instance;
@@ -2555,11 +2608,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

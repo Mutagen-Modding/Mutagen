@@ -7,9 +7,9 @@ public class SByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
     public SByteBinaryTranslationGeneration()
         : base(expectedLen: 1)
     {
-        CustomRead = (fg, o, t, reader, item) =>
+        CustomRead = (sb, o, t, reader, item) =>
         {
-            fg.AppendLine($"{item} = {reader}.ReadInt8();");
+            sb.AppendLine($"{item} = {reader}.ReadInt8();");
             return true;
         };
     }

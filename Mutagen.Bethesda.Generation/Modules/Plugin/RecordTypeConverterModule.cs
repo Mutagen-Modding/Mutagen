@@ -59,10 +59,10 @@ public class RecordTypeConverterModule : GenerationModule
         await base.PreLoad(obj);
     }
 
-    public override Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
+    public override Task GenerateInRegistration(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var objData = obj.GetObjectData();
-        GenerateConverterMember(fg, obj.BaseClass, objData.BaseRecordTypeConverter, "Base");
+        GenerateConverterMember(sb, obj.BaseClass, objData.BaseRecordTypeConverter, "Base");
         foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
         {
             LoquiType loquiType = field as LoquiType;
@@ -79,25 +79,25 @@ public class RecordTypeConverterModule : GenerationModule
                 }
             }
             var fieldData = loquiType.GetFieldData();
-            GenerateConverterMember(fg, loquiType.TargetObjectGeneration, fieldData.RecordTypeConverter, field.Name);
+            GenerateConverterMember(sb, loquiType.TargetObjectGeneration, fieldData.RecordTypeConverter, field.Name);
         }
         if (objData.GameReleaseConverters != null)
         {
             foreach (var kv in objData.GameReleaseConverters)
             {
-                GenerateConverterMember(fg, obj, kv.Value, kv.Key.ToString());
+                GenerateConverterMember(sb, obj, kv.Value, kv.Key.ToString());
             }
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public static {nameof(RecordTypeConverter)}? Get"))
             {
                 args.Add($"{nameof(GameRelease)} release");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"return release switch");
-                using (new BraceWrapper(fg) { AppendSemicolon = true })
+                sb.AppendLine($"return release switch");
+                using (sb.CurlyBrace(appendSemiColon: true))
                 {
-                    using (var comma = new CommaWrapper(fg))
+                    using (var comma = new CommaWrapper(sb))
                     {
                         foreach (var kv in objData.GameReleaseConverters)
                         {
@@ -112,36 +112,36 @@ public class RecordTypeConverterModule : GenerationModule
         {
             foreach (var kv in objData.VersionConverters)
             {
-                GenerateConverterMember(fg, obj, kv.Value, $"Version{kv.Key}");
+                GenerateConverterMember(sb, obj, kv.Value, $"Version{kv.Key}");
             }
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public static {nameof(RecordTypeConverter)}? Get"))
             {
                 args.Add($"int? version");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
                 bool first = true;
-                fg.AppendLine($"if (version == null) return default({nameof(RecordTypeConverter)});");
+                sb.AppendLine($"if (version == null) return default({nameof(RecordTypeConverter)});");
                 foreach (var kv in objData.VersionConverters.OrderBy(kv => kv.Key))
                 {
-                    fg.AppendLine($"{(first ? null : "else ")}if (version.Value >= {kv.Key})");
-                    using (new BraceWrapper(fg))
+                    sb.AppendLine($"{(first ? null : "else ")}if (version.Value >= {kv.Key})");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine($"return Version{kv.Key}Converter;");
+                        sb.AppendLine($"return Version{kv.Key}Converter;");
                     }
                     first = false;
                 }
-                fg.AppendLine($"return default({nameof(RecordTypeConverter)});");
+                sb.AppendLine($"return default({nameof(RecordTypeConverter)});");
             }
         }
-        return base.GenerateInRegistration(obj, fg);
+        return base.GenerateInRegistration(obj, sb);
     }
 
-    public static void GenerateConverterMember(FileGeneration fg, ObjectGeneration objGen, RecordTypeConverter recordTypeConverter, string nickName)
+    public static void GenerateConverterMember(StructuredStringBuilder sb, ObjectGeneration objGen, RecordTypeConverter recordTypeConverter, string nickName)
     {
         if (recordTypeConverter == null || recordTypeConverter.FromConversions.Count == 0) return;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"public static RecordTypeConverter {nickName}Converter = new RecordTypeConverter"))
         {
             foreach (var conv in recordTypeConverter.FromConversions)

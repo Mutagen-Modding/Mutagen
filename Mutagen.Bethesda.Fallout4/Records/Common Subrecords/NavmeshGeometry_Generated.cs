@@ -165,11 +165,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavmeshGeometryMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -576,173 +577,179 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(NavmeshGeometry.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NavmeshGeometry.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NavmeshGeometry.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NavmeshGeometry.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavmeshGeometry.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.NavmeshVersion ?? true)
                     {
-                        fg.AppendItem(NavmeshVersion, "NavmeshVersion");
+                        sb.AppendItem(NavmeshVersion, "NavmeshVersion");
                     }
                     if (printMask?.Magic ?? true)
                     {
-                        fg.AppendItem(Magic, "Magic");
+                        sb.AppendItem(Magic, "Magic");
                     }
                     if (printMask?.Parent?.Overall ?? true)
                     {
-                        Parent?.ToString(fg);
+                        Parent?.ToString(sb);
                     }
                     if ((printMask?.Vertices?.Overall ?? true)
                         && Vertices is {} VerticesItem)
                     {
-                        fg.AppendLine("Vertices =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Vertices =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(VerticesItem.Overall);
+                            sb.AppendItem(VerticesItem.Overall);
                             if (VerticesItem.Specific != null)
                             {
                                 foreach (var subItem in VerticesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Triangles?.Overall ?? true)
                         && Triangles is {} TrianglesItem)
                     {
-                        fg.AppendLine("Triangles =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Triangles =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(TrianglesItem.Overall);
+                            sb.AppendItem(TrianglesItem.Overall);
                             if (TrianglesItem.Specific != null)
                             {
                                 foreach (var subItem in TrianglesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.EdgeLinks?.Overall ?? true)
                         && EdgeLinks is {} EdgeLinksItem)
                     {
-                        fg.AppendLine("EdgeLinks =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("EdgeLinks =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(EdgeLinksItem.Overall);
+                            sb.AppendItem(EdgeLinksItem.Overall);
                             if (EdgeLinksItem.Specific != null)
                             {
                                 foreach (var subItem in EdgeLinksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.DoorTriangles?.Overall ?? true)
                         && DoorTriangles is {} DoorTrianglesItem)
                     {
-                        fg.AppendLine("DoorTriangles =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("DoorTriangles =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(DoorTrianglesItem.Overall);
+                            sb.AppendItem(DoorTrianglesItem.Overall);
                             if (DoorTrianglesItem.Specific != null)
                             {
                                 foreach (var subItem in DoorTrianglesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Unknown?.Overall ?? true)
                         && Unknown is {} UnknownItem)
                     {
-                        fg.AppendLine("Unknown =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(UnknownItem.Overall);
+                            sb.AppendItem(UnknownItem.Overall);
                             if (UnknownItem.Specific != null)
                             {
                                 foreach (var subItem in UnknownItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Unknown2?.Overall ?? true)
                         && Unknown2 is {} Unknown2Item)
                     {
-                        fg.AppendLine("Unknown2 =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown2 =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(Unknown2Item.Overall);
+                            sb.AppendItem(Unknown2Item.Overall);
                             if (Unknown2Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown2Item.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.NavmeshGrid ?? true)
                     {
-                        fg.AppendItem(NavmeshGrid, "NavmeshGrid");
+                        sb.AppendItem(NavmeshGrid, "NavmeshGrid");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -909,169 +916,181 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(NavmeshVersion, "NavmeshVersion");
-                fg.AppendItem(Magic, "Magic");
-                Parent?.ToString(fg);
+                {
+                    sb.AppendItem(NavmeshVersion, "NavmeshVersion");
+                }
+                {
+                    sb.AppendItem(Magic, "Magic");
+                }
+                Parent?.ToString(sb);
                 if (Vertices is {} VerticesItem)
                 {
-                    fg.AppendLine("Vertices =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Vertices =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(VerticesItem.Overall);
+                        sb.AppendItem(VerticesItem.Overall);
                         if (VerticesItem.Specific != null)
                         {
                             foreach (var subItem in VerticesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Triangles is {} TrianglesItem)
                 {
-                    fg.AppendLine("Triangles =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Triangles =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(TrianglesItem.Overall);
+                        sb.AppendItem(TrianglesItem.Overall);
                         if (TrianglesItem.Specific != null)
                         {
                             foreach (var subItem in TrianglesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (EdgeLinks is {} EdgeLinksItem)
                 {
-                    fg.AppendLine("EdgeLinks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("EdgeLinks =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(EdgeLinksItem.Overall);
+                        sb.AppendItem(EdgeLinksItem.Overall);
                         if (EdgeLinksItem.Specific != null)
                         {
                             foreach (var subItem in EdgeLinksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (DoorTriangles is {} DoorTrianglesItem)
                 {
-                    fg.AppendLine("DoorTriangles =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("DoorTriangles =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(DoorTrianglesItem.Overall);
+                        sb.AppendItem(DoorTrianglesItem.Overall);
                         if (DoorTrianglesItem.Specific != null)
                         {
                             foreach (var subItem in DoorTrianglesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Unknown is {} UnknownItem)
                 {
-                    fg.AppendLine("Unknown =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(UnknownItem.Overall);
+                        sb.AppendItem(UnknownItem.Overall);
                         if (UnknownItem.Specific != null)
                         {
                             foreach (var subItem in UnknownItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Unknown2 is {} Unknown2Item)
                 {
-                    fg.AppendLine("Unknown2 =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown2 =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(Unknown2Item.Overall);
+                        sb.AppendItem(Unknown2Item.Overall);
                         if (Unknown2Item.Specific != null)
                         {
                             foreach (var subItem in Unknown2Item.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(NavmeshGrid, "NavmeshGrid");
+                {
+                    sb.AppendItem(NavmeshGrid, "NavmeshGrid");
+                }
             }
             #endregion
 
@@ -1220,7 +1239,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1313,13 +1332,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this INavmeshGeometryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshGeometry.Mask<bool>? printMask = null)
         {
             ((NavmeshGeometryCommon)((INavmeshGeometryGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1651,168 +1670,168 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             NavmeshGeometry.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INavmeshGeometryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshGeometry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavmeshGeometry =>");
+                sb.AppendLine($"NavmeshGeometry =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavmeshGeometry) =>");
+                sb.AppendLine($"{name} (NavmeshGeometry) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavmeshGeometryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavmeshGeometry.Mask<bool>? printMask = null)
         {
             if (printMask?.NavmeshVersion ?? true)
             {
-                fg.AppendItem(item.NavmeshVersion, "NavmeshVersion");
+                sb.AppendItem(item.NavmeshVersion, "NavmeshVersion");
             }
             if (printMask?.Magic ?? true)
             {
-                fg.AppendItem(item.Magic, "Magic");
+                sb.AppendItem(item.Magic, "Magic");
             }
             if (printMask?.Parent?.Overall ?? true)
             {
-                item.Parent?.ToString(fg, "Parent");
+                item.Parent?.ToString(sb, "Parent");
             }
             if (printMask?.Vertices?.Overall ?? true)
             {
-                fg.AppendLine("Vertices =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Vertices =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Vertices)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Triangles?.Overall ?? true)
             {
-                fg.AppendLine("Triangles =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Triangles =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Triangles)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.EdgeLinks?.Overall ?? true)
             {
-                fg.AppendLine("EdgeLinks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("EdgeLinks =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.EdgeLinks)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.DoorTriangles?.Overall ?? true)
             {
-                fg.AppendLine("DoorTriangles =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("DoorTriangles =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.DoorTriangles)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Unknown?.Overall ?? true)
             {
-                fg.AppendLine("Unknown =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Unknown)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Unknown2?.Overall ?? true)
             {
-                fg.AppendLine("Unknown2 =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown2 =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Unknown2)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.NavmeshGrid ?? true)
             {
-                fg.AppendLine($"NavmeshGrid => {SpanExt.ToHexString(item.NavmeshGrid)}");
+                sb.AppendLine($"NavmeshGrid => {SpanExt.ToHexString(item.NavmeshGrid)}");
             }
         }
         
@@ -2403,7 +2422,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavmeshGeometryCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2503,11 +2522,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavmeshGeometryMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

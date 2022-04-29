@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class GenericsModule : GenerationModule
 {
-    private IEnumerable<string> GetGenerics(ObjectGeneration obj, FileGeneration fg)
+    private IEnumerable<string> GetGenerics(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         HashSet<string> genericNames = new HashSet<string>();
         foreach (var field in obj.IterateFields())
@@ -53,21 +53,21 @@ public class GenericsModule : GenerationModule
         return genericNames;
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        foreach (var genName in GetGenerics(obj, fg))
+        foreach (var genName in GetGenerics(obj, sb))
         {
-            fg.AppendLine($"public static readonly {nameof(RecordType)} {genName}_RecordType;");
+            sb.AppendLine($"public static readonly {nameof(RecordType)} {genName}_RecordType;");
         }
-        await base.GenerateInClass(obj, fg);
+        await base.GenerateInClass(obj, sb);
     }
 
-    public override async Task GenerateInStaticCtor(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInStaticCtor(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        foreach (var genName in GetGenerics(obj, fg))
+        foreach (var genName in GetGenerics(obj, sb))
         {
-            fg.AppendLine($"{genName}_RecordType = {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.GetRecordType)}<T>();");
+            sb.AppendLine($"{genName}_RecordType = {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.GetRecordType)}<T>();");
         }
-        await base.GenerateInStaticCtor(obj, fg);
+        await base.GenerateInStaticCtor(obj, sb);
     }
 }

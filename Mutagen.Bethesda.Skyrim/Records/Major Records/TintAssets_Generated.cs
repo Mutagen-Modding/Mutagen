@@ -96,11 +96,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TintAssetsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -283,58 +284,58 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(TintAssets.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, TintAssets.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, TintAssets.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TintAssets.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TintAssets.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.FileName ?? true)
                     {
-                        fg.AppendItem(FileName, "FileName");
+                        sb.AppendItem(FileName, "FileName");
                     }
                     if (printMask?.MaskType ?? true)
                     {
-                        fg.AppendItem(MaskType, "MaskType");
+                        sb.AppendItem(MaskType, "MaskType");
                     }
                     if (printMask?.PresetDefault ?? true)
                     {
-                        fg.AppendItem(PresetDefault, "PresetDefault");
+                        sb.AppendItem(PresetDefault, "PresetDefault");
                     }
                     if ((printMask?.Presets?.Overall ?? true)
                         && Presets is {} PresetsItem)
                     {
-                        fg.AppendLine("Presets =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Presets =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(PresetsItem.Overall);
+                            sb.AppendItem(PresetsItem.Overall);
                             if (PresetsItem.Specific != null)
                             {
                                 foreach (var subItem in PresetsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -451,58 +452,66 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(FileName, "FileName");
-                fg.AppendItem(MaskType, "MaskType");
-                fg.AppendItem(PresetDefault, "PresetDefault");
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(FileName, "FileName");
+                }
+                {
+                    sb.AppendItem(MaskType, "MaskType");
+                }
+                {
+                    sb.AppendItem(PresetDefault, "PresetDefault");
+                }
                 if (Presets is {} PresetsItem)
                 {
-                    fg.AppendLine("Presets =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Presets =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(PresetsItem.Overall);
+                        sb.AppendItem(PresetsItem.Overall);
                         if (PresetsItem.Specific != null)
                         {
                             foreach (var subItem in PresetsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -635,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -718,13 +727,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ITintAssetsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TintAssets.Mask<bool>? printMask = null)
         {
             ((TintAssetsCommon)((ITintAssetsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1028,81 +1037,81 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             TintAssets.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITintAssetsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TintAssets.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TintAssets =>");
+                sb.AppendLine($"TintAssets =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TintAssets) =>");
+                sb.AppendLine($"{name} (TintAssets) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITintAssetsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TintAssets.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.FileName ?? true)
                 && item.FileName is {} FileNameItem)
             {
-                fg.AppendItem(FileNameItem, "FileName");
+                sb.AppendItem(FileNameItem, "FileName");
             }
             if ((printMask?.MaskType ?? true)
                 && item.MaskType is {} MaskTypeItem)
             {
-                fg.AppendItem(MaskTypeItem, "MaskType");
+                sb.AppendItem(MaskTypeItem, "MaskType");
             }
             if (printMask?.PresetDefault ?? true)
             {
-                fg.AppendItem(item.PresetDefault.FormKeyNullable, "PresetDefault");
+                sb.AppendItem(item.PresetDefault.FormKeyNullable, "PresetDefault");
             }
             if (printMask?.Presets?.Overall ?? true)
             {
-                fg.AppendLine("Presets =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Presets =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Presets)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1504,7 +1513,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1638,11 +1647,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TintAssetsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

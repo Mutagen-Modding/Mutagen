@@ -133,11 +133,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoulGemMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -320,47 +321,47 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(SoulGem.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, SoulGem.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, SoulGem.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SoulGem.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoulGem.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendItem(Icon, "Icon");
+                        sb.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendItem(Script, "Script");
+                        sb.AppendItem(Script, "Script");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.ToString(sb);
                     }
                     if (printMask?.ContainedSoul ?? true)
                     {
-                        fg.AppendItem(ContainedSoul, "ContainedSoul");
+                        sb.AppendItem(ContainedSoul, "ContainedSoul");
                     }
                     if (printMask?.MaximumCapacity ?? true)
                     {
-                        fg.AppendItem(MaximumCapacity, "MaximumCapacity");
+                        sb.AppendItem(MaximumCapacity, "MaximumCapacity");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -486,41 +487,51 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                fg.AppendItem(Icon, "Icon");
-                fg.AppendItem(Script, "Script");
-                Data?.ToString(fg);
-                fg.AppendItem(ContainedSoul, "ContainedSoul");
-                fg.AppendItem(MaximumCapacity, "MaximumCapacity");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(Icon, "Icon");
+                }
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                Data?.ToString(sb);
+                {
+                    sb.AppendItem(ContainedSoul, "ContainedSoul");
+                }
+                {
+                    sb.AppendItem(MaximumCapacity, "MaximumCapacity");
+                }
             }
             #endregion
 
@@ -700,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -815,13 +826,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ISoulGemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoulGem.Mask<bool>? printMask = null)
         {
             ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1167,82 +1178,82 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             SoulGem.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ISoulGemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoulGem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoulGem =>");
+                sb.AppendLine($"SoulGem =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoulGem) =>");
+                sb.AppendLine($"{name} (SoulGem) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoulGemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoulGem.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if ((printMask?.Icon ?? true)
                 && item.Icon is {} IconItem)
             {
-                fg.AppendItem(IconItem, "Icon");
+                sb.AppendItem(IconItem, "Icon");
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKeyNullable, "Script");
+                sb.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.ToString(sb, "Data");
             }
             if ((printMask?.ContainedSoul ?? true)
                 && item.ContainedSoul is {} ContainedSoulItem)
             {
-                fg.AppendItem(ContainedSoulItem, "ContainedSoul");
+                sb.AppendItem(ContainedSoulItem, "ContainedSoul");
             }
             if ((printMask?.MaximumCapacity ?? true)
                 && item.MaximumCapacity is {} MaximumCapacityItem)
             {
-                fg.AppendItem(MaximumCapacityItem, "MaximumCapacity");
+                sb.AppendItem(MaximumCapacityItem, "MaximumCapacity");
             }
         }
         
@@ -1935,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SoulGemCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2098,11 +2109,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             SoulGemMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

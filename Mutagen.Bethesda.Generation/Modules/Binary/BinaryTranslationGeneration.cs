@@ -30,7 +30,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         bool squashedRepeatedList) => true;
 
     public abstract Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -42,7 +42,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
     public abstract string GetTranslatorInstance(TypeGeneration typeGen, bool getter);
 
     public abstract Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor readerAccessor,
@@ -51,7 +51,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         Accessor translationAccessor);
 
     public abstract void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -65,7 +65,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         bool inline);
 
     public virtual async Task GenerateWrapperFields(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor dataAccessor,
@@ -76,7 +76,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
     }
 
     public virtual async Task GenerateWrapperUnknownLengthParse(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         int? passedLength,
@@ -85,7 +85,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
     }
 
     public virtual async Task GenerateWrapperCtor(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen)
     {
@@ -102,7 +102,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
     }
 
     public virtual async Task GenerateWrapperRecordTypeParse(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor locationAccessor,
@@ -112,10 +112,10 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         switch (typeGen.GetFieldData().BinaryOverlayFallback)
         {
             case BinaryGenerationType.Normal:
-                fg.AppendLine($"_{typeGen.Name}Location = {locationAccessor};");
+                sb.AppendLine($"_{typeGen.Name}Location = {locationAccessor};");
                 break;
             case BinaryGenerationType.Custom:
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{typeGen.Name}CustomParse"))
                 {
                     args.AddPassArg($"stream");

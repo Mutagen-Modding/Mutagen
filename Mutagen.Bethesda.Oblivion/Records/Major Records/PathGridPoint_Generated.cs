@@ -86,11 +86,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PathGridPointMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -261,54 +262,56 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(PathGridPoint.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PathGridPoint.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PathGridPoint.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PathGridPoint.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PathGridPoint.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendItem(Point, "Point");
+                        sb.AppendItem(Point, "Point");
                     }
                     if (printMask?.NumConnections ?? true)
                     {
-                        fg.AppendItem(NumConnections, "NumConnections");
+                        sb.AppendItem(NumConnections, "NumConnections");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if ((printMask?.Connections?.Overall ?? true)
                         && Connections is {} ConnectionsItem)
                     {
-                        fg.AppendLine("Connections =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Connections =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConnectionsItem.Overall);
+                            sb.AppendItem(ConnectionsItem.Overall);
                             if (ConnectionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConnectionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -415,57 +418,65 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Point, "Point");
-                fg.AppendItem(NumConnections, "NumConnections");
-                fg.AppendItem(Unused, "Unused");
+                {
+                    sb.AppendItem(Point, "Point");
+                }
+                {
+                    sb.AppendItem(NumConnections, "NumConnections");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
                 if (Connections is {} ConnectionsItem)
                 {
-                    fg.AppendLine("Connections =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Connections =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConnectionsItem.Overall);
+                        sb.AppendItem(ConnectionsItem.Overall);
                         if (ConnectionsItem.Specific != null)
                         {
                             foreach (var subItem in ConnectionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -590,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -669,13 +680,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IPathGridPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PathGridPoint.Mask<bool>? printMask = null)
         {
             ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -960,74 +971,74 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             PathGridPoint.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPathGridPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PathGridPoint.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PathGridPoint =>");
+                sb.AppendLine($"PathGridPoint =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PathGridPoint) =>");
+                sb.AppendLine($"{name} (PathGridPoint) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPathGridPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PathGridPoint.Mask<bool>? printMask = null)
         {
             if (printMask?.Point ?? true)
             {
-                fg.AppendItem(item.Point, "Point");
+                sb.AppendItem(item.Point, "Point");
             }
             if (printMask?.NumConnections ?? true)
             {
-                fg.AppendItem(item.NumConnections, "NumConnections");
+                sb.AppendItem(item.NumConnections, "NumConnections");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if (printMask?.Connections?.Overall ?? true)
             {
-                fg.AppendLine("Connections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Connections =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Connections)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1313,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PathGridPointBinaryWriteTranslation.Instance;
@@ -1379,11 +1390,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PathGridPointMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

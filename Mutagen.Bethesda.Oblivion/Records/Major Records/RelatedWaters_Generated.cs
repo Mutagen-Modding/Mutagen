@@ -86,11 +86,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RelatedWatersMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -219,31 +220,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(RelatedWaters.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, RelatedWaters.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, RelatedWaters.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RelatedWaters.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RelatedWaters.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.RelatedWaterDaytime ?? true)
                     {
-                        fg.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
+                        sb.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
                     }
                     if (printMask?.RelatedWaterNighttime ?? true)
                     {
-                        fg.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
+                        sb.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
                     }
                     if (printMask?.RelatedWaterUnderwater ?? true)
                     {
-                        fg.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
+                        sb.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -340,36 +341,42 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
-                fg.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
-                fg.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
+                {
+                    sb.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
+                }
+                {
+                    sb.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
+                }
+                {
+                    sb.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
+                }
             }
             #endregion
 
@@ -494,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -573,13 +580,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IRelatedWatersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RelatedWaters.Mask<bool>? printMask = null)
         {
             ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -872,56 +879,56 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             RelatedWaters.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRelatedWatersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RelatedWaters.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RelatedWaters =>");
+                sb.AppendLine($"RelatedWaters =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RelatedWaters) =>");
+                sb.AppendLine($"{name} (RelatedWaters) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRelatedWatersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RelatedWaters.Mask<bool>? printMask = null)
         {
             if (printMask?.RelatedWaterDaytime ?? true)
             {
-                fg.AppendItem(item.RelatedWaterDaytime.FormKey, "RelatedWaterDaytime");
+                sb.AppendItem(item.RelatedWaterDaytime.FormKey, "RelatedWaterDaytime");
             }
             if (printMask?.RelatedWaterNighttime ?? true)
             {
-                fg.AppendItem(item.RelatedWaterNighttime.FormKey, "RelatedWaterNighttime");
+                sb.AppendItem(item.RelatedWaterNighttime.FormKey, "RelatedWaterNighttime");
             }
             if (printMask?.RelatedWaterUnderwater ?? true)
             {
-                fg.AppendItem(item.RelatedWaterUnderwater.FormKey, "RelatedWaterUnderwater");
+                sb.AppendItem(item.RelatedWaterUnderwater.FormKey, "RelatedWaterUnderwater");
             }
         }
         
@@ -1197,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => RelatedWatersCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1265,11 +1272,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RelatedWatersMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

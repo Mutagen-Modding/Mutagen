@@ -258,7 +258,7 @@ public class TriggeringRecordModule : GenerationModule
         }
     }
 
-    public override async Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInRegistration(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         HashSet<RecordType> trigRecordTypes = new HashSet<RecordType>();
         var data = obj.GetObjectData();
@@ -266,7 +266,7 @@ public class TriggeringRecordModule : GenerationModule
 
         if (trigRecordTypes.Count == 1)
         {
-            fg.AppendLine($"public static readonly {nameof(RecordType)} {Plugins.Internals.Constants.TriggeringRecordTypeMember} = {obj.RecordTypeHeaderName(trigRecordTypes.First())};");
+            sb.AppendLine($"public static readonly {nameof(RecordType)} {Plugins.Internals.Constants.TriggeringRecordTypeMember} = {obj.RecordTypeHeaderName(trigRecordTypes.First())};");
         }
 
         if (obj.GetObjectType() == ObjectType.Group || obj.GetObjectType() == ObjectType.Mod) return;
@@ -277,13 +277,13 @@ public class TriggeringRecordModule : GenerationModule
 
         if (trigRecordTypes.Count == 0 && all.Length == 0) return;
 
-        fg.AppendLine($"public static {nameof(RecordTriggerSpecs)} TriggerSpecs => _recordSpecs.Value;");
-        fg.AppendLine($"private static readonly Lazy<{nameof(RecordTriggerSpecs)}> _recordSpecs = new Lazy<{nameof(RecordTriggerSpecs)}>(() =>");
-        using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
+        sb.AppendLine($"public static {nameof(RecordTriggerSpecs)} TriggerSpecs => _recordSpecs.Value;");
+        sb.AppendLine($"private static readonly Lazy<{nameof(RecordTriggerSpecs)}> _recordSpecs = new Lazy<{nameof(RecordTriggerSpecs)}>(() =>");
+        using (sb.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
         {
             if (same)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                     "var all = RecordCollection.Factory"))
                 {
                     foreach (var trigger in all)
@@ -291,11 +291,11 @@ public class TriggeringRecordModule : GenerationModule
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
                 }
-                fg.AppendLine($"return new RecordTriggerSpecs(allRecordTypes: all);");
+                sb.AppendLine($"return new RecordTriggerSpecs(allRecordTypes: all);");
             }
             else
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                     "var triggers = RecordCollection.Factory"))
                 {
                     foreach (var trigger in trigRecordTypes)
@@ -303,7 +303,7 @@ public class TriggeringRecordModule : GenerationModule
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
                 }
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                     "var all = RecordCollection.Factory"))
                 {
                     foreach (var trigger in all)
@@ -311,11 +311,11 @@ public class TriggeringRecordModule : GenerationModule
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
                 }
-                fg.AppendLine($"return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);");
+                sb.AppendLine($"return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);");
             }
         }
 
-        await base.GenerateInRegistration(obj, fg);
+        await base.GenerateInRegistration(obj, sb);
     }
 
     private async Task SetContainerSubTriggers(
@@ -784,23 +784,23 @@ public class TriggeringRecordModule : GenerationModule
         }
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (obj.GetObjectType() == ObjectType.Group)
         {
             var grupLoqui = await obj.GetGroupLoquiType();
             if (grupLoqui.GenericDef == null)
             {
-                fg.AppendLine($"public static readonly {nameof(RecordType)} {Plugins.Internals.Constants.GrupRecordTypeMember} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Plugins.Internals.Constants.GrupRecordTypeMember};");
+                sb.AppendLine($"public static readonly {nameof(RecordType)} {Plugins.Internals.Constants.GrupRecordTypeMember} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Plugins.Internals.Constants.GrupRecordTypeMember};");
             }
         }
         else if (await obj.IsSingleTriggerSource() 
             && (obj.GetObjectType() != ObjectType.Mod && obj.GetObjectType() != ObjectType.Subrecord))
         {
             await obj.IsSingleTriggerSource();
-            fg.AppendLine($"public{obj.NewOverride(b => !b.Abstract)}static readonly {nameof(RecordType)} {Plugins.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Plugins.Internals.Constants.TriggeringRecordTypeMember};");
+            sb.AppendLine($"public{obj.NewOverride(b => !b.Abstract)}static readonly {nameof(RecordType)} {Plugins.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Plugins.Internals.Constants.TriggeringRecordTypeMember};");
         }
-        await base.GenerateInClass(obj, fg);
+        await base.GenerateInClass(obj, sb);
     }
 
     public override async Task FinalizeGeneration(ProtocolGeneration proto)
@@ -816,44 +816,44 @@ public class TriggeringRecordModule : GenerationModule
         recordTypes.Add("EDID");
         recordTypes.Add("XXXX");
         
-        FileGeneration fg = new FileGeneration();
-        fg.AppendLine("using Mutagen.Bethesda.Plugins;");
-        fg.AppendLine();
+        StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("using Mutagen.Bethesda.Plugins;");
+        sb.AppendLine();
 
-        using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
+        using (var n = new NamespaceWrapper(sb, $"{proto.DefaultNamespace}.Internals"))
         {
-            using (var c = new ClassWrapper(fg, "RecordTypes"))
+            using (var c = new ClassWrapper(sb, "RecordTypes"))
             {
                 c.Partial = true;
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
                 foreach (var type in recordTypes.OrderBy(r => r.Type))
                 {
-                    fg.AppendLine($"public static readonly {nameof(RecordType)} {type.CheckedType} = new(0x{type.TypeInt:X});");
+                    sb.AppendLine($"public static readonly {nameof(RecordType)} {type.CheckedType} = new(0x{type.TypeInt:X});");
                 }
             }
         }
         var path = Path.Combine(proto.DefFileLocation.FullName, $"RecordTypes{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
-        fg.Generate(path);
+        sb.Generate(path);
         proto.GeneratedFiles.Add(path, ProjItemType.Compile);
-        fg = new FileGeneration();
-        using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
+        sb = new StructuredStringBuilder();
+        using (var n = new NamespaceWrapper(sb, $"{proto.DefaultNamespace}.Internals"))
         {
-            using (var c = new ClassWrapper(fg, "RecordTypeInts"))
+            using (var c = new ClassWrapper(sb, "RecordTypeInts"))
             {
                 c.Partial = true;
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
                 foreach (var type in recordTypes.OrderBy(r => r.Type))
                 {
-                    fg.AppendLine($"public const int {type.CheckedType} = 0x{type.TypeInt:X};");
+                    sb.AppendLine($"public const int {type.CheckedType} = 0x{type.TypeInt:X};");
                 }
             }
         }
         path = Path.Combine(proto.DefFileLocation.FullName, $"RecordTypeInts{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
-        fg.Generate(path);
+        sb.Generate(path);
         proto.GeneratedFiles.Add(path, ProjItemType.Compile);
     }
 }

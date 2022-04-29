@@ -65,11 +65,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponBasicStatsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,31 +199,31 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(WeaponBasicStats.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, WeaponBasicStats.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, WeaponBasicStats.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WeaponBasicStats.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeaponBasicStats.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.Damage ?? true)
                     {
-                        fg.AppendItem(Damage, "Damage");
+                        sb.AppendItem(Damage, "Damage");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -319,36 +320,42 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(Damage, "Damage");
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(Damage, "Damage");
+                }
             }
             #endregion
 
@@ -468,7 +475,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -547,13 +554,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IWeaponBasicStatsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponBasicStats.Mask<bool>? printMask = null)
         {
             ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -843,56 +850,56 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             WeaponBasicStats.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeaponBasicStatsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponBasicStats.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeaponBasicStats =>");
+                sb.AppendLine($"WeaponBasicStats =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeaponBasicStats) =>");
+                sb.AppendLine($"{name} (WeaponBasicStats) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeaponBasicStatsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeaponBasicStats.Mask<bool>? printMask = null)
         {
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.Damage ?? true)
             {
-                fg.AppendItem(item.Damage, "Damage");
+                sb.AppendItem(item.Damage, "Damage");
             }
         }
         
@@ -1161,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponBasicStatsBinaryWriteTranslation.Instance;
@@ -1228,11 +1235,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponBasicStatsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

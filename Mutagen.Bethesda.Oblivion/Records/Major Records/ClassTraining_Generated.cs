@@ -65,11 +65,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClassTrainingMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,31 +199,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(ClassTraining.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ClassTraining.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ClassTraining.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ClassTraining.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ClassTraining.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.TrainedSkill ?? true)
                     {
-                        fg.AppendItem(TrainedSkill, "TrainedSkill");
+                        sb.AppendItem(TrainedSkill, "TrainedSkill");
                     }
                     if (printMask?.MaximumTrainingLevel ?? true)
                     {
-                        fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                        sb.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -319,36 +320,42 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(TrainedSkill, "TrainedSkill");
-                fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(TrainedSkill, "TrainedSkill");
+                }
+                {
+                    sb.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -468,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -545,13 +552,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IClassTrainingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClassTraining.Mask<bool>? printMask = null)
         {
             ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -830,56 +837,56 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             ClassTraining.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IClassTrainingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClassTraining.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ClassTraining =>");
+                sb.AppendLine($"ClassTraining =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ClassTraining) =>");
+                sb.AppendLine($"{name} (ClassTraining) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IClassTrainingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ClassTraining.Mask<bool>? printMask = null)
         {
             if (printMask?.TrainedSkill ?? true)
             {
-                fg.AppendItem(item.TrainedSkill, "TrainedSkill");
+                sb.AppendItem(item.TrainedSkill, "TrainedSkill");
             }
             if (printMask?.MaximumTrainingLevel ?? true)
             {
-                fg.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
+                sb.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1144,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ClassTrainingBinaryWriteTranslation.Instance;
@@ -1210,11 +1217,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClassTrainingMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

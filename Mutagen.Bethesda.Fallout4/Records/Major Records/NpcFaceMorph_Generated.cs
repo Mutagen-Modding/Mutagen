@@ -78,11 +78,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcFaceMorphMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -247,47 +248,47 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(NpcFaceMorph.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NpcFaceMorph.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NpcFaceMorph.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NpcFaceMorph.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcFaceMorph.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.Position ?? true)
                     {
-                        fg.AppendItem(Position, "Position");
+                        sb.AppendItem(Position, "Position");
                     }
                     if (printMask?.Rotation ?? true)
                     {
-                        fg.AppendItem(Rotation, "Rotation");
+                        sb.AppendItem(Rotation, "Rotation");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(Unknown1, "Unknown1");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.FMRSDataTypeState ?? true)
                     {
-                        fg.AppendItem(FMRSDataTypeState, "FMRSDataTypeState");
+                        sb.AppendItem(FMRSDataTypeState, "FMRSDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -424,40 +425,54 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(Position, "Position");
-                fg.AppendItem(Rotation, "Rotation");
-                fg.AppendItem(Scale, "Scale");
-                fg.AppendItem(Unknown1, "Unknown1");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(FMRSDataTypeState, "FMRSDataTypeState");
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(Position, "Position");
+                }
+                {
+                    sb.AppendItem(Rotation, "Rotation");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                {
+                    sb.AppendItem(Unknown1, "Unknown1");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(FMRSDataTypeState, "FMRSDataTypeState");
+                }
             }
             #endregion
 
@@ -600,7 +615,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -685,13 +700,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this INpcFaceMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
             ((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -991,73 +1006,73 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INpcFaceMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcFaceMorph =>");
+                sb.AppendLine($"NpcFaceMorph =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcFaceMorph) =>");
+                sb.AppendLine($"{name} (NpcFaceMorph) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcFaceMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
             if (printMask?.Position ?? true)
             {
-                fg.AppendItem(item.Position, "Position");
+                sb.AppendItem(item.Position, "Position");
             }
             if (printMask?.Rotation ?? true)
             {
-                fg.AppendItem(item.Rotation, "Rotation");
+                sb.AppendItem(item.Rotation, "Rotation");
             }
             if (printMask?.Scale ?? true)
             {
-                fg.AppendItem(item.Scale, "Scale");
+                sb.AppendItem(item.Scale, "Scale");
             }
             if (printMask?.Unknown1 ?? true)
             {
-                fg.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.Unknown1, "Unknown1");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.FMRSDataTypeState ?? true)
             {
-                fg.AppendItem(item.FMRSDataTypeState, "FMRSDataTypeState");
+                sb.AppendItem(item.FMRSDataTypeState, "FMRSDataTypeState");
             }
         }
         
@@ -1419,7 +1434,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcFaceMorphBinaryWriteTranslation.Instance;
@@ -1542,11 +1557,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcFaceMorphMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

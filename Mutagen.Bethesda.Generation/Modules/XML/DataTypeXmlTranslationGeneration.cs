@@ -13,7 +13,7 @@ public class DataTypeXmlTranslationGeneration : XmlTranslationGeneration
     }
 
     public override void GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor nodeAccessor,
@@ -40,7 +40,7 @@ public class DataTypeXmlTranslationGeneration : XmlTranslationGeneration
     }
 
     public override void GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration obj,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -51,7 +51,7 @@ public class DataTypeXmlTranslationGeneration : XmlTranslationGeneration
     {
         var dataType = typeGen as DataType;
         bool isInRange = false;
-        var origDepth = fg.Depth;
+        var origDepth = sb.Depth;
         foreach (var subField in dataType.IterateFieldsWithMeta())
         {
             if (!this.XmlMod.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
@@ -63,22 +63,22 @@ public class DataTypeXmlTranslationGeneration : XmlTranslationGeneration
             if (!subGenerator.ShouldGenerateWrite(subField.Field)) continue;
             if (subField.BreakIndex != -1)
             {
-                fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
-                fg.AppendLine("{");
-                fg.Depth++;
+                sb.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
+                sb.AppendLine("{");
+                sb.Depth++;
             }
             if (subField.Range != null && !isInRange)
             {
                 isInRange = true;
-                fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
-                fg.AppendLine("{");
-                fg.Depth++;
+                sb.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
+                sb.AppendLine("{");
+                sb.Depth++;
             }
             if (subField.Range == null && isInRange)
             {
                 isInRange = false;
-                fg.Depth--;
-                fg.AppendLine("}");
+                sb.Depth--;
+                sb.AppendLine("}");
             }
 
             List<string> conditions = new List<string>();
@@ -89,7 +89,7 @@ public class DataTypeXmlTranslationGeneration : XmlTranslationGeneration
             }
             if (conditions.Count > 0)
             {
-                using (var args = new IfWrapper(fg, ANDs: true))
+                using (var args = new IfWrapper(sb, ANDs: true))
                 {
                     foreach (var item in conditions)
                     {
@@ -97,10 +97,10 @@ public class DataTypeXmlTranslationGeneration : XmlTranslationGeneration
                     }
                 }
             }
-            using (new BraceWrapper(fg, doIt: conditions.Count > 0))
+            using (sb.CurlyBrace(doIt: conditions.Count > 0))
             {
                 subGenerator.GenerateWrite(
-                    fg: fg,
+                    sb: sb,
                     objGen: obj,
                     nameAccessor: $"nameof(item.{subField.Field.Name})",
                     typeGen: subField.Field,
@@ -110,10 +110,10 @@ public class DataTypeXmlTranslationGeneration : XmlTranslationGeneration
                     errorMaskAccessor: $"errorMask");
             }
         }
-        for (int i = fg.Depth - origDepth; i > 0; i--)
+        for (int i = sb.Depth - origDepth; i > 0; i--)
         {
-            fg.Depth--;
-            fg.AppendLine("}");
+            sb.Depth--;
+            sb.AppendLine("}");
         }
     }
 

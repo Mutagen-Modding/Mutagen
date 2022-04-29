@@ -64,11 +64,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MountDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -197,31 +198,31 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(MountData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MountData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MountData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MountData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MountData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.MountOffset ?? true)
                     {
-                        fg.AppendItem(MountOffset, "MountOffset");
+                        sb.AppendItem(MountOffset, "MountOffset");
                     }
                     if (printMask?.DismountOffset ?? true)
                     {
-                        fg.AppendItem(DismountOffset, "DismountOffset");
+                        sb.AppendItem(DismountOffset, "DismountOffset");
                     }
                     if (printMask?.MountCameraOffset ?? true)
                     {
-                        fg.AppendItem(MountCameraOffset, "MountCameraOffset");
+                        sb.AppendItem(MountCameraOffset, "MountCameraOffset");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -318,36 +319,42 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(MountOffset, "MountOffset");
-                fg.AppendItem(DismountOffset, "DismountOffset");
-                fg.AppendItem(MountCameraOffset, "MountCameraOffset");
+                {
+                    sb.AppendItem(MountOffset, "MountOffset");
+                }
+                {
+                    sb.AppendItem(DismountOffset, "DismountOffset");
+                }
+                {
+                    sb.AppendItem(MountCameraOffset, "MountCameraOffset");
+                }
             }
             #endregion
 
@@ -467,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -544,13 +551,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IMountDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MountData.Mask<bool>? printMask = null)
         {
             ((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -829,56 +836,56 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             MountData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMountDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MountData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MountData =>");
+                sb.AppendLine($"MountData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MountData) =>");
+                sb.AppendLine($"{name} (MountData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMountDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MountData.Mask<bool>? printMask = null)
         {
             if (printMask?.MountOffset ?? true)
             {
-                fg.AppendItem(item.MountOffset, "MountOffset");
+                sb.AppendItem(item.MountOffset, "MountOffset");
             }
             if (printMask?.DismountOffset ?? true)
             {
-                fg.AppendItem(item.DismountOffset, "DismountOffset");
+                sb.AppendItem(item.DismountOffset, "DismountOffset");
             }
             if (printMask?.MountCameraOffset ?? true)
             {
-                fg.AppendItem(item.MountCameraOffset, "MountCameraOffset");
+                sb.AppendItem(item.MountCameraOffset, "MountCameraOffset");
             }
         }
         
@@ -1144,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MountDataBinaryWriteTranslation.Instance;
@@ -1210,11 +1217,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MountDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -371,11 +371,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ArmorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -973,239 +974,243 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(Armor.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Armor.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Armor.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Armor.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Armor.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.PreviewTransform ?? true)
                     {
-                        fg.AppendItem(PreviewTransform, "PreviewTransform");
+                        sb.AppendItem(PreviewTransform, "PreviewTransform");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.ObjectEffect ?? true)
                     {
-                        fg.AppendItem(ObjectEffect, "ObjectEffect");
+                        sb.AppendItem(ObjectEffect, "ObjectEffect");
                     }
                     if (WorldModel != null
                         && (printMask?.WorldModel?.Overall ?? true))
                     {
-                        fg.AppendLine($"WorldModel => {WorldModel}");
+                        sb.AppendLine($"WorldModel => {WorldModel}");
                     }
                     if (printMask?.BipedBodyTemplate?.Overall ?? true)
                     {
-                        BipedBodyTemplate?.ToString(fg);
+                        BipedBodyTemplate?.ToString(sb);
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(fg);
+                        Destructible?.ToString(sb);
                     }
                     if (printMask?.PickUpSound ?? true)
                     {
-                        fg.AppendItem(PickUpSound, "PickUpSound");
+                        sb.AppendItem(PickUpSound, "PickUpSound");
                     }
                     if (printMask?.PutDownSound ?? true)
                     {
-                        fg.AppendItem(PutDownSound, "PutDownSound");
+                        sb.AppendItem(PutDownSound, "PutDownSound");
                     }
                     if (printMask?.EquipmentType ?? true)
                     {
-                        fg.AppendItem(EquipmentType, "EquipmentType");
+                        sb.AppendItem(EquipmentType, "EquipmentType");
                     }
                     if (printMask?.BlockBashImpactDataSet ?? true)
                     {
-                        fg.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
+                        sb.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
                     }
                     if (printMask?.AlternateBlockMaterial ?? true)
                     {
-                        fg.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                        sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
                     }
                     if (printMask?.Race ?? true)
                     {
-                        fg.AppendItem(Race, "Race");
+                        sb.AppendItem(Race, "Race");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if (printMask?.InstanceNaming ?? true)
                     {
-                        fg.AppendItem(InstanceNaming, "InstanceNaming");
+                        sb.AppendItem(InstanceNaming, "InstanceNaming");
                     }
                     if ((printMask?.Armatures?.Overall ?? true)
                         && Armatures is {} ArmaturesItem)
                     {
-                        fg.AppendLine("Armatures =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Armatures =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ArmaturesItem.Overall);
+                            sb.AppendItem(ArmaturesItem.Overall);
                             if (ArmaturesItem.Specific != null)
                             {
                                 foreach (var subItem in ArmaturesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if (printMask?.ArmorRating ?? true)
                     {
-                        fg.AppendItem(ArmorRating, "ArmorRating");
+                        sb.AppendItem(ArmorRating, "ArmorRating");
                     }
                     if (printMask?.BaseAddonIndex ?? true)
                     {
-                        fg.AppendItem(BaseAddonIndex, "BaseAddonIndex");
+                        sb.AppendItem(BaseAddonIndex, "BaseAddonIndex");
                     }
                     if (printMask?.StaggerRating ?? true)
                     {
-                        fg.AppendItem(StaggerRating, "StaggerRating");
+                        sb.AppendItem(StaggerRating, "StaggerRating");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Resistances?.Overall ?? true)
                         && Resistances is {} ResistancesItem)
                     {
-                        fg.AppendLine("Resistances =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Resistances =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ResistancesItem.Overall);
+                            sb.AppendItem(ResistancesItem.Overall);
                             if (ResistancesItem.Specific != null)
                             {
                                 foreach (var subItem in ResistancesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.TemplateArmor ?? true)
                     {
-                        fg.AppendItem(TemplateArmor, "TemplateArmor");
+                        sb.AppendItem(TemplateArmor, "TemplateArmor");
                     }
                     if ((printMask?.AttachParentSlots?.Overall ?? true)
                         && AttachParentSlots is {} AttachParentSlotsItem)
                     {
-                        fg.AppendLine("AttachParentSlots =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("AttachParentSlots =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(AttachParentSlotsItem.Overall);
+                            sb.AppendItem(AttachParentSlotsItem.Overall);
                             if (AttachParentSlotsItem.Specific != null)
                             {
                                 foreach (var subItem in AttachParentSlotsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ObjectTemplates?.Overall ?? true)
                         && ObjectTemplates is {} ObjectTemplatesItem)
                     {
-                        fg.AppendLine("ObjectTemplates =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ObjectTemplates =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ObjectTemplatesItem.Overall);
+                            sb.AppendItem(ObjectTemplatesItem.Overall);
                             if (ObjectTemplatesItem.Specific != null)
                             {
                                 foreach (var subItem in ObjectTemplatesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                     if (printMask?.FNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
+                        sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1571,173 +1576,219 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(PreviewTransform, "PreviewTransform");
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(ObjectEffect, "ObjectEffect");
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(PreviewTransform, "PreviewTransform");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(ObjectEffect, "ObjectEffect");
+                }
                 if (WorldModel != null)
                 {
-                    fg.AppendLine($"WorldModel => {WorldModel}");
+                    sb.AppendLine($"WorldModel => {WorldModel}");
                 }
-                BipedBodyTemplate?.ToString(fg);
-                Destructible?.ToString(fg);
-                fg.AppendItem(PickUpSound, "PickUpSound");
-                fg.AppendItem(PutDownSound, "PutDownSound");
-                fg.AppendItem(EquipmentType, "EquipmentType");
-                fg.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
-                fg.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
-                fg.AppendItem(Race, "Race");
+                BipedBodyTemplate?.ToString(sb);
+                Destructible?.ToString(sb);
+                {
+                    sb.AppendItem(PickUpSound, "PickUpSound");
+                }
+                {
+                    sb.AppendItem(PutDownSound, "PutDownSound");
+                }
+                {
+                    sb.AppendItem(EquipmentType, "EquipmentType");
+                }
+                {
+                    sb.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
+                }
+                {
+                    sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                }
+                {
+                    sb.AppendItem(Race, "Race");
+                }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Description, "Description");
-                fg.AppendItem(InstanceNaming, "InstanceNaming");
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(InstanceNaming, "InstanceNaming");
+                }
                 if (Armatures is {} ArmaturesItem)
                 {
-                    fg.AppendLine("Armatures =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Armatures =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ArmaturesItem.Overall);
+                        sb.AppendItem(ArmaturesItem.Overall);
                         if (ArmaturesItem.Specific != null)
                         {
                             foreach (var subItem in ArmaturesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(ArmorRating, "ArmorRating");
-                fg.AppendItem(BaseAddonIndex, "BaseAddonIndex");
-                fg.AppendItem(StaggerRating, "StaggerRating");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(ArmorRating, "ArmorRating");
+                }
+                {
+                    sb.AppendItem(BaseAddonIndex, "BaseAddonIndex");
+                }
+                {
+                    sb.AppendItem(StaggerRating, "StaggerRating");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
                 if (Resistances is {} ResistancesItem)
                 {
-                    fg.AppendLine("Resistances =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Resistances =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ResistancesItem.Overall);
+                        sb.AppendItem(ResistancesItem.Overall);
                         if (ResistancesItem.Specific != null)
                         {
                             foreach (var subItem in ResistancesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(TemplateArmor, "TemplateArmor");
+                {
+                    sb.AppendItem(TemplateArmor, "TemplateArmor");
+                }
                 if (AttachParentSlots is {} AttachParentSlotsItem)
                 {
-                    fg.AppendLine("AttachParentSlots =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("AttachParentSlots =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(AttachParentSlotsItem.Overall);
+                        sb.AppendItem(AttachParentSlotsItem.Overall);
                         if (AttachParentSlotsItem.Specific != null)
                         {
                             foreach (var subItem in AttachParentSlotsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ObjectTemplates is {} ObjectTemplatesItem)
                 {
-                    fg.AppendLine("ObjectTemplates =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ObjectTemplates =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ObjectTemplatesItem.Overall);
+                        sb.AppendItem(ObjectTemplatesItem.Overall);
                         if (ObjectTemplatesItem.Specific != null)
                         {
                             foreach (var subItem in ObjectTemplatesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
-                fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
+                {
+                    sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -2030,7 +2081,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -2238,13 +2289,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IArmorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Armor.Mask<bool>? printMask = null)
         {
             ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2764,252 +2815,252 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             Armor.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IArmorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Armor.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Armor =>");
+                sb.AppendLine($"Armor =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Armor) =>");
+                sb.AppendLine($"{name} (Armor) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IArmorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Armor.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if (printMask?.PreviewTransform ?? true)
             {
-                fg.AppendItem(item.PreviewTransform.FormKeyNullable, "PreviewTransform");
+                sb.AppendItem(item.PreviewTransform.FormKeyNullable, "PreviewTransform");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.ObjectEffect ?? true)
             {
-                fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
+                sb.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if ((printMask?.WorldModel?.Overall ?? true)
                 && item.WorldModel is {} WorldModelItem)
             {
-                WorldModelItem?.ToString(fg, "WorldModel");
+                WorldModelItem?.ToString(sb, "WorldModel");
             }
             if ((printMask?.BipedBodyTemplate?.Overall ?? true)
                 && item.BipedBodyTemplate is {} BipedBodyTemplateItem)
             {
-                BipedBodyTemplateItem?.ToString(fg, "BipedBodyTemplate");
+                BipedBodyTemplateItem?.ToString(sb, "BipedBodyTemplate");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(fg, "Destructible");
+                DestructibleItem?.ToString(sb, "Destructible");
             }
             if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
+                sb.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
             }
             if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
+                sb.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if (printMask?.EquipmentType ?? true)
             {
-                fg.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
+                sb.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
             }
             if (printMask?.BlockBashImpactDataSet ?? true)
             {
-                fg.AppendItem(item.BlockBashImpactDataSet.FormKeyNullable, "BlockBashImpactDataSet");
+                sb.AppendItem(item.BlockBashImpactDataSet.FormKeyNullable, "BlockBashImpactDataSet");
             }
             if (printMask?.AlternateBlockMaterial ?? true)
             {
-                fg.AppendItem(item.AlternateBlockMaterial.FormKeyNullable, "AlternateBlockMaterial");
+                sb.AppendItem(item.AlternateBlockMaterial.FormKeyNullable, "AlternateBlockMaterial");
             }
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race.FormKeyNullable, "Race");
+                sb.AppendItem(item.Race.FormKeyNullable, "Race");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.InstanceNaming ?? true)
             {
-                fg.AppendItem(item.InstanceNaming.FormKeyNullable, "InstanceNaming");
+                sb.AppendItem(item.InstanceNaming.FormKeyNullable, "InstanceNaming");
             }
             if (printMask?.Armatures?.Overall ?? true)
             {
-                fg.AppendLine("Armatures =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Armatures =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Armatures)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.Health ?? true)
             {
-                fg.AppendItem(item.Health, "Health");
+                sb.AppendItem(item.Health, "Health");
             }
             if (printMask?.ArmorRating ?? true)
             {
-                fg.AppendItem(item.ArmorRating, "ArmorRating");
+                sb.AppendItem(item.ArmorRating, "ArmorRating");
             }
             if (printMask?.BaseAddonIndex ?? true)
             {
-                fg.AppendItem(item.BaseAddonIndex, "BaseAddonIndex");
+                sb.AppendItem(item.BaseAddonIndex, "BaseAddonIndex");
             }
             if (printMask?.StaggerRating ?? true)
             {
-                fg.AppendItem(item.StaggerRating, "StaggerRating");
+                sb.AppendItem(item.StaggerRating, "StaggerRating");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.Resistances?.Overall ?? true)
                 && item.Resistances is {} ResistancesItem)
             {
-                fg.AppendLine("Resistances =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Resistances =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ResistancesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.TemplateArmor ?? true)
             {
-                fg.AppendItem(item.TemplateArmor.FormKeyNullable, "TemplateArmor");
+                sb.AppendItem(item.TemplateArmor.FormKeyNullable, "TemplateArmor");
             }
             if ((printMask?.AttachParentSlots?.Overall ?? true)
                 && item.AttachParentSlots is {} AttachParentSlotsItem)
             {
-                fg.AppendLine("AttachParentSlots =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("AttachParentSlots =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in AttachParentSlotsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ObjectTemplates?.Overall ?? true)
                 && item.ObjectTemplates is {} ObjectTemplatesItem)
             {
-                fg.AppendLine("ObjectTemplates =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ObjectTemplates =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ObjectTemplatesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
             if (printMask?.FNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
+                sb.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
             }
         }
         
@@ -4471,7 +4522,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4861,11 +4912,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ArmorMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

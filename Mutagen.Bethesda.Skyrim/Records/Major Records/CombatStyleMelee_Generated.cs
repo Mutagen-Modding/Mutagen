@@ -82,11 +82,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleMeleeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -269,55 +270,55 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CombatStyleMelee.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CombatStyleMelee.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CombatStyleMelee.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CombatStyleMelee.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CombatStyleMelee.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.AttackStaggeredMult ?? true)
                     {
-                        fg.AppendItem(AttackStaggeredMult, "AttackStaggeredMult");
+                        sb.AppendItem(AttackStaggeredMult, "AttackStaggeredMult");
                     }
                     if (printMask?.PowerAttackStaggeredMult ?? true)
                     {
-                        fg.AppendItem(PowerAttackStaggeredMult, "PowerAttackStaggeredMult");
+                        sb.AppendItem(PowerAttackStaggeredMult, "PowerAttackStaggeredMult");
                     }
                     if (printMask?.PowerAttackBlockingMult ?? true)
                     {
-                        fg.AppendItem(PowerAttackBlockingMult, "PowerAttackBlockingMult");
+                        sb.AppendItem(PowerAttackBlockingMult, "PowerAttackBlockingMult");
                     }
                     if (printMask?.BashMult ?? true)
                     {
-                        fg.AppendItem(BashMult, "BashMult");
+                        sb.AppendItem(BashMult, "BashMult");
                     }
                     if (printMask?.BashRecoilMult ?? true)
                     {
-                        fg.AppendItem(BashRecoilMult, "BashRecoilMult");
+                        sb.AppendItem(BashRecoilMult, "BashRecoilMult");
                     }
                     if (printMask?.BashAttackMult ?? true)
                     {
-                        fg.AppendItem(BashAttackMult, "BashAttackMult");
+                        sb.AppendItem(BashAttackMult, "BashAttackMult");
                     }
                     if (printMask?.BashPowerAttackMult ?? true)
                     {
-                        fg.AppendItem(BashPowerAttackMult, "BashPowerAttackMult");
+                        sb.AppendItem(BashPowerAttackMult, "BashPowerAttackMult");
                     }
                     if (printMask?.SpecialAttackMult ?? true)
                     {
-                        fg.AppendItem(SpecialAttackMult, "SpecialAttackMult");
+                        sb.AppendItem(SpecialAttackMult, "SpecialAttackMult");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -474,42 +475,60 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(AttackStaggeredMult, "AttackStaggeredMult");
-                fg.AppendItem(PowerAttackStaggeredMult, "PowerAttackStaggeredMult");
-                fg.AppendItem(PowerAttackBlockingMult, "PowerAttackBlockingMult");
-                fg.AppendItem(BashMult, "BashMult");
-                fg.AppendItem(BashRecoilMult, "BashRecoilMult");
-                fg.AppendItem(BashAttackMult, "BashAttackMult");
-                fg.AppendItem(BashPowerAttackMult, "BashPowerAttackMult");
-                fg.AppendItem(SpecialAttackMult, "SpecialAttackMult");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(AttackStaggeredMult, "AttackStaggeredMult");
+                }
+                {
+                    sb.AppendItem(PowerAttackStaggeredMult, "PowerAttackStaggeredMult");
+                }
+                {
+                    sb.AppendItem(PowerAttackBlockingMult, "PowerAttackBlockingMult");
+                }
+                {
+                    sb.AppendItem(BashMult, "BashMult");
+                }
+                {
+                    sb.AppendItem(BashRecoilMult, "BashRecoilMult");
+                }
+                {
+                    sb.AppendItem(BashAttackMult, "BashAttackMult");
+                }
+                {
+                    sb.AppendItem(BashPowerAttackMult, "BashPowerAttackMult");
+                }
+                {
+                    sb.AppendItem(SpecialAttackMult, "SpecialAttackMult");
+                }
             }
             #endregion
 
@@ -661,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -750,13 +769,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICombatStyleMeleeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleMelee.Mask<bool>? printMask = null)
         {
             ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1064,80 +1083,80 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CombatStyleMelee.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICombatStyleMeleeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleMelee.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CombatStyleMelee =>");
+                sb.AppendLine($"CombatStyleMelee =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CombatStyleMelee) =>");
+                sb.AppendLine($"{name} (CombatStyleMelee) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICombatStyleMeleeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CombatStyleMelee.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.AttackStaggeredMult ?? true)
             {
-                fg.AppendItem(item.AttackStaggeredMult, "AttackStaggeredMult");
+                sb.AppendItem(item.AttackStaggeredMult, "AttackStaggeredMult");
             }
             if (printMask?.PowerAttackStaggeredMult ?? true)
             {
-                fg.AppendItem(item.PowerAttackStaggeredMult, "PowerAttackStaggeredMult");
+                sb.AppendItem(item.PowerAttackStaggeredMult, "PowerAttackStaggeredMult");
             }
             if (printMask?.PowerAttackBlockingMult ?? true)
             {
-                fg.AppendItem(item.PowerAttackBlockingMult, "PowerAttackBlockingMult");
+                sb.AppendItem(item.PowerAttackBlockingMult, "PowerAttackBlockingMult");
             }
             if (printMask?.BashMult ?? true)
             {
-                fg.AppendItem(item.BashMult, "BashMult");
+                sb.AppendItem(item.BashMult, "BashMult");
             }
             if (printMask?.BashRecoilMult ?? true)
             {
-                fg.AppendItem(item.BashRecoilMult, "BashRecoilMult");
+                sb.AppendItem(item.BashRecoilMult, "BashRecoilMult");
             }
             if (printMask?.BashAttackMult ?? true)
             {
-                fg.AppendItem(item.BashAttackMult, "BashAttackMult");
+                sb.AppendItem(item.BashAttackMult, "BashAttackMult");
             }
             if (printMask?.BashPowerAttackMult ?? true)
             {
-                fg.AppendItem(item.BashPowerAttackMult, "BashPowerAttackMult");
+                sb.AppendItem(item.BashPowerAttackMult, "BashPowerAttackMult");
             }
             if (printMask?.SpecialAttackMult ?? true)
             {
-                fg.AppendItem(item.SpecialAttackMult, "SpecialAttackMult");
+                sb.AppendItem(item.SpecialAttackMult, "SpecialAttackMult");
             }
         }
         
@@ -1493,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleMeleeBinaryWriteTranslation.Instance;
@@ -1569,11 +1588,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleMeleeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -68,11 +68,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedPrimitiveMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -210,35 +211,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(PlacedPrimitive.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PlacedPrimitive.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PlacedPrimitive.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PlacedPrimitive.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedPrimitive.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Bounds ?? true)
                     {
-                        fg.AppendItem(Bounds, "Bounds");
+                        sb.AppendItem(Bounds, "Bounds");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -345,37 +346,45 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Bounds, "Bounds");
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Type, "Type");
+                {
+                    sb.AppendItem(Bounds, "Bounds");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
             }
             #endregion
 
@@ -499,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -578,13 +587,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IPlacedPrimitiveGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
             ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -877,60 +886,60 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPlacedPrimitiveGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedPrimitive =>");
+                sb.AppendLine($"PlacedPrimitive =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedPrimitive) =>");
+                sb.AppendLine($"{name} (PlacedPrimitive) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedPrimitiveGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
             if (printMask?.Bounds ?? true)
             {
-                fg.AppendItem(item.Bounds, "Bounds");
+                sb.AppendItem(item.Bounds, "Bounds");
             }
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color, "Color");
+                sb.AppendItem(item.Color, "Color");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
         }
         
@@ -1239,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PlacedPrimitiveBinaryWriteTranslation.Instance;
@@ -1310,11 +1319,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedPrimitiveMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

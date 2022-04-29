@@ -76,11 +76,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ConditionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -209,31 +210,31 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(Condition.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Condition.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Condition.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Condition.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Condition.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.CompareOperator ?? true)
                     {
-                        fg.AppendItem(CompareOperator, "CompareOperator");
+                        sb.AppendItem(CompareOperator, "CompareOperator");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(Unknown1, "Unknown1");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -330,36 +331,42 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(CompareOperator, "CompareOperator");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Unknown1, "Unknown1");
+                {
+                    sb.AppendItem(CompareOperator, "CompareOperator");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unknown1, "Unknown1");
+                }
             }
             #endregion
 
@@ -458,7 +465,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -543,13 +550,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IConditionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Condition.Mask<bool>? printMask = null)
         {
             ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -834,56 +841,56 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             Condition.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IConditionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Condition.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Condition =>");
+                sb.AppendLine($"Condition =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Condition) =>");
+                sb.AppendLine($"{name} (Condition) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IConditionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Condition.Mask<bool>? printMask = null)
         {
             if (printMask?.CompareOperator ?? true)
             {
-                fg.AppendItem(item.CompareOperator, "CompareOperator");
+                sb.AppendItem(item.CompareOperator, "CompareOperator");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unknown1 ?? true)
             {
-                fg.AppendLine($"Unknown1 => {SpanExt.ToHexString(item.Unknown1)}");
+                sb.AppendLine($"Unknown1 => {SpanExt.ToHexString(item.Unknown1)}");
             }
         }
         
@@ -1171,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1213,11 +1220,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ConditionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

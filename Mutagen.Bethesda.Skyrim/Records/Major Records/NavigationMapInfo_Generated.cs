@@ -155,11 +155,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavigationMapInfoMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -479,124 +480,128 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(NavigationMapInfo.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NavigationMapInfo.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NavigationMapInfo.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NavigationMapInfo.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavigationMapInfo.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.NavigationMesh ?? true)
                     {
-                        fg.AppendItem(NavigationMesh, "NavigationMesh");
+                        sb.AppendItem(NavigationMesh, "NavigationMesh");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendItem(Point, "Point");
+                        sb.AppendItem(Point, "Point");
                     }
                     if (printMask?.PreferredMergesFlag ?? true)
                     {
-                        fg.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
+                        sb.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
                     }
                     if ((printMask?.MergedTo?.Overall ?? true)
                         && MergedTo is {} MergedToItem)
                     {
-                        fg.AppendLine("MergedTo =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MergedTo =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(MergedToItem.Overall);
+                            sb.AppendItem(MergedToItem.Overall);
                             if (MergedToItem.Specific != null)
                             {
                                 foreach (var subItem in MergedToItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.PreferredMerges?.Overall ?? true)
                         && PreferredMerges is {} PreferredMergesItem)
                     {
-                        fg.AppendLine("PreferredMerges =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("PreferredMerges =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(PreferredMergesItem.Overall);
+                            sb.AppendItem(PreferredMergesItem.Overall);
                             if (PreferredMergesItem.Specific != null)
                             {
                                 foreach (var subItem in PreferredMergesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.LinkedDoors?.Overall ?? true)
                         && LinkedDoors is {} LinkedDoorsItem)
                     {
-                        fg.AppendLine("LinkedDoors =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LinkedDoors =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LinkedDoorsItem.Overall);
+                            sb.AppendItem(LinkedDoorsItem.Overall);
                             if (LinkedDoorsItem.Specific != null)
                             {
                                 foreach (var subItem in LinkedDoorsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Island?.Overall ?? true)
                     {
-                        Island?.ToString(fg);
+                        Island?.ToString(sb);
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.ParentWorldspace ?? true)
                     {
-                        fg.AppendItem(ParentWorldspace, "ParentWorldspace");
+                        sb.AppendItem(ParentWorldspace, "ParentWorldspace");
                     }
                     if (printMask?.ParentWorldspaceCoord ?? true)
                     {
-                        fg.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
+                        sb.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
                     }
                     if (printMask?.ParentCell ?? true)
                     {
-                        fg.AppendItem(ParentCell, "ParentCell");
+                        sb.AppendItem(ParentCell, "ParentCell");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -783,108 +788,128 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(NavigationMesh, "NavigationMesh");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Point, "Point");
-                fg.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
+                {
+                    sb.AppendItem(NavigationMesh, "NavigationMesh");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Point, "Point");
+                }
+                {
+                    sb.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
+                }
                 if (MergedTo is {} MergedToItem)
                 {
-                    fg.AppendLine("MergedTo =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MergedTo =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(MergedToItem.Overall);
+                        sb.AppendItem(MergedToItem.Overall);
                         if (MergedToItem.Specific != null)
                         {
                             foreach (var subItem in MergedToItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (PreferredMerges is {} PreferredMergesItem)
                 {
-                    fg.AppendLine("PreferredMerges =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("PreferredMerges =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(PreferredMergesItem.Overall);
+                        sb.AppendItem(PreferredMergesItem.Overall);
                         if (PreferredMergesItem.Specific != null)
                         {
                             foreach (var subItem in PreferredMergesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (LinkedDoors is {} LinkedDoorsItem)
                 {
-                    fg.AppendLine("LinkedDoors =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LinkedDoors =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LinkedDoorsItem.Overall);
+                        sb.AppendItem(LinkedDoorsItem.Overall);
                         if (LinkedDoorsItem.Specific != null)
                         {
                             foreach (var subItem in LinkedDoorsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                Island?.ToString(fg);
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(ParentWorldspace, "ParentWorldspace");
-                fg.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
-                fg.AppendItem(ParentCell, "ParentCell");
+                Island?.ToString(sb);
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(ParentWorldspace, "ParentWorldspace");
+                }
+                {
+                    sb.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
+                }
+                {
+                    sb.AppendItem(ParentCell, "ParentCell");
+                }
             }
             #endregion
 
@@ -1043,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1140,13 +1165,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this INavigationMapInfoGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationMapInfo.Mask<bool>? printMask = null)
         {
             ((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1482,135 +1507,135 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             NavigationMapInfo.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INavigationMapInfoGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationMapInfo.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavigationMapInfo =>");
+                sb.AppendLine($"NavigationMapInfo =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavigationMapInfo) =>");
+                sb.AppendLine($"{name} (NavigationMapInfo) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavigationMapInfoGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavigationMapInfo.Mask<bool>? printMask = null)
         {
             if (printMask?.NavigationMesh ?? true)
             {
-                fg.AppendItem(item.NavigationMesh.FormKey, "NavigationMesh");
+                sb.AppendItem(item.NavigationMesh.FormKey, "NavigationMesh");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Point ?? true)
             {
-                fg.AppendItem(item.Point, "Point");
+                sb.AppendItem(item.Point, "Point");
             }
             if (printMask?.PreferredMergesFlag ?? true)
             {
-                fg.AppendItem(item.PreferredMergesFlag, "PreferredMergesFlag");
+                sb.AppendItem(item.PreferredMergesFlag, "PreferredMergesFlag");
             }
             if (printMask?.MergedTo?.Overall ?? true)
             {
-                fg.AppendLine("MergedTo =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MergedTo =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.MergedTo)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.PreferredMerges?.Overall ?? true)
             {
-                fg.AppendLine("PreferredMerges =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("PreferredMerges =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.PreferredMerges)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.LinkedDoors?.Overall ?? true)
             {
-                fg.AppendLine("LinkedDoors =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LinkedDoors =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.LinkedDoors)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Island?.Overall ?? true)
                 && item.Island is {} IslandItem)
             {
-                IslandItem?.ToString(fg, "Island");
+                IslandItem?.ToString(sb, "Island");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.ParentWorldspace ?? true)
             {
-                fg.AppendItem(item.ParentWorldspace.FormKey, "ParentWorldspace");
+                sb.AppendItem(item.ParentWorldspace.FormKey, "ParentWorldspace");
             }
             if (printMask?.ParentWorldspaceCoord ?? true)
             {
-                fg.AppendItem(item.ParentWorldspaceCoord, "ParentWorldspaceCoord");
+                sb.AppendItem(item.ParentWorldspaceCoord, "ParentWorldspaceCoord");
             }
             if (printMask?.ParentCell ?? true)
             {
-                fg.AppendItem(item.ParentCell.FormKey, "ParentCell");
+                sb.AppendItem(item.ParentCell.FormKey, "ParentCell");
             }
         }
         
@@ -2158,7 +2183,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2256,11 +2281,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavigationMapInfoMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

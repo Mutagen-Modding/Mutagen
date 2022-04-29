@@ -139,11 +139,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LoadScreenMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -382,74 +383,74 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(LoadScreen.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, LoadScreen.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, LoadScreen.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LoadScreen.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LoadScreen.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Icons?.Overall ?? true)
                     {
-                        Icons?.ToString(fg);
+                        Icons?.ToString(sb);
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.LoadingScreenNif ?? true)
                     {
-                        fg.AppendItem(LoadingScreenNif, "LoadingScreenNif");
+                        sb.AppendItem(LoadingScreenNif, "LoadingScreenNif");
                     }
                     if (printMask?.InitialScale ?? true)
                     {
-                        fg.AppendItem(InitialScale, "InitialScale");
+                        sb.AppendItem(InitialScale, "InitialScale");
                     }
                     if (printMask?.InitialRotation ?? true)
                     {
-                        fg.AppendItem(InitialRotation, "InitialRotation");
+                        sb.AppendItem(InitialRotation, "InitialRotation");
                     }
                     if (printMask?.RotationOffsetConstraints?.Overall ?? true)
                     {
-                        RotationOffsetConstraints?.ToString(fg);
+                        RotationOffsetConstraints?.ToString(sb);
                     }
                     if (printMask?.InitialTranslationOffset ?? true)
                     {
-                        fg.AppendItem(InitialTranslationOffset, "InitialTranslationOffset");
+                        sb.AppendItem(InitialTranslationOffset, "InitialTranslationOffset");
                     }
                     if (printMask?.CameraPath ?? true)
                     {
-                        fg.AppendItem(CameraPath, "CameraPath");
+                        sb.AppendItem(CameraPath, "CameraPath");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -595,64 +596,76 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Icons?.ToString(fg);
-                fg.AppendItem(Description, "Description");
+                base.ToString_FillInternal(sb);
+                Icons?.ToString(sb);
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(LoadingScreenNif, "LoadingScreenNif");
-                fg.AppendItem(InitialScale, "InitialScale");
-                fg.AppendItem(InitialRotation, "InitialRotation");
-                RotationOffsetConstraints?.ToString(fg);
-                fg.AppendItem(InitialTranslationOffset, "InitialTranslationOffset");
-                fg.AppendItem(CameraPath, "CameraPath");
+                {
+                    sb.AppendItem(LoadingScreenNif, "LoadingScreenNif");
+                }
+                {
+                    sb.AppendItem(InitialScale, "InitialScale");
+                }
+                {
+                    sb.AppendItem(InitialRotation, "InitialRotation");
+                }
+                RotationOffsetConstraints?.ToString(sb);
+                {
+                    sb.AppendItem(InitialTranslationOffset, "InitialTranslationOffset");
+                }
+                {
+                    sb.AppendItem(CameraPath, "CameraPath");
+                }
             }
             #endregion
 
@@ -861,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -974,13 +987,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ILoadScreenGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LoadScreen.Mask<bool>? printMask = null)
         {
             ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1341,104 +1354,104 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             LoadScreen.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILoadScreenGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LoadScreen.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LoadScreen =>");
+                sb.AppendLine($"LoadScreen =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LoadScreen) =>");
+                sb.AppendLine($"{name} (LoadScreen) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILoadScreenGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LoadScreen.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Icons?.Overall ?? true)
                 && item.Icons is {} IconsItem)
             {
-                IconsItem?.ToString(fg, "Icons");
+                IconsItem?.ToString(sb, "Icons");
             }
             if (printMask?.Description ?? true)
             {
-                fg.AppendItem(item.Description, "Description");
+                sb.AppendItem(item.Description, "Description");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.LoadingScreenNif ?? true)
             {
-                fg.AppendItem(item.LoadingScreenNif.FormKey, "LoadingScreenNif");
+                sb.AppendItem(item.LoadingScreenNif.FormKey, "LoadingScreenNif");
             }
             if ((printMask?.InitialScale ?? true)
                 && item.InitialScale is {} InitialScaleItem)
             {
-                fg.AppendItem(InitialScaleItem, "InitialScale");
+                sb.AppendItem(InitialScaleItem, "InitialScale");
             }
             if ((printMask?.InitialRotation ?? true)
                 && item.InitialRotation is {} InitialRotationItem)
             {
-                fg.AppendItem(InitialRotationItem, "InitialRotation");
+                sb.AppendItem(InitialRotationItem, "InitialRotation");
             }
             if ((printMask?.RotationOffsetConstraints?.Overall ?? true)
                 && item.RotationOffsetConstraints is {} RotationOffsetConstraintsItem)
             {
-                RotationOffsetConstraintsItem?.ToString(fg, "RotationOffsetConstraints");
+                RotationOffsetConstraintsItem?.ToString(sb, "RotationOffsetConstraints");
             }
             if ((printMask?.InitialTranslationOffset ?? true)
                 && item.InitialTranslationOffset is {} InitialTranslationOffsetItem)
             {
-                fg.AppendItem(InitialTranslationOffsetItem, "InitialTranslationOffset");
+                sb.AppendItem(InitialTranslationOffsetItem, "InitialTranslationOffset");
             }
             if ((printMask?.CameraPath ?? true)
                 && item.CameraPath is {} CameraPathItem)
             {
-                fg.AppendItem(CameraPathItem, "CameraPath");
+                sb.AppendItem(CameraPathItem, "CameraPath");
             }
         }
         
@@ -2204,7 +2217,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2392,11 +2405,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LoadScreenMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

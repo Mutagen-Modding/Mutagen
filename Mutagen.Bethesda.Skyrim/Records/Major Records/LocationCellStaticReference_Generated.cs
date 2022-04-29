@@ -89,11 +89,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationCellStaticReferenceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -231,35 +232,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(LocationCellStaticReference.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, LocationCellStaticReference.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, LocationCellStaticReference.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LocationCellStaticReference.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LocationCellStaticReference.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.LocationRefType ?? true)
                     {
-                        fg.AppendItem(LocationRefType, "LocationRefType");
+                        sb.AppendItem(LocationRefType, "LocationRefType");
                     }
                     if (printMask?.Marker ?? true)
                     {
-                        fg.AppendItem(Marker, "Marker");
+                        sb.AppendItem(Marker, "Marker");
                     }
                     if (printMask?.Location ?? true)
                     {
-                        fg.AppendItem(Location, "Location");
+                        sb.AppendItem(Location, "Location");
                     }
                     if (printMask?.Grid ?? true)
                     {
-                        fg.AppendItem(Grid, "Grid");
+                        sb.AppendItem(Grid, "Grid");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -366,37 +367,45 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(LocationRefType, "LocationRefType");
-                fg.AppendItem(Marker, "Marker");
-                fg.AppendItem(Location, "Location");
-                fg.AppendItem(Grid, "Grid");
+                {
+                    sb.AppendItem(LocationRefType, "LocationRefType");
+                }
+                {
+                    sb.AppendItem(Marker, "Marker");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(Grid, "Grid");
+                }
             }
             #endregion
 
@@ -525,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -606,13 +615,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ILocationCellStaticReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationCellStaticReference.Mask<bool>? printMask = null)
         {
             ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -897,60 +906,60 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             LocationCellStaticReference.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILocationCellStaticReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationCellStaticReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocationCellStaticReference =>");
+                sb.AppendLine($"LocationCellStaticReference =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocationCellStaticReference) =>");
+                sb.AppendLine($"{name} (LocationCellStaticReference) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationCellStaticReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LocationCellStaticReference.Mask<bool>? printMask = null)
         {
             if (printMask?.LocationRefType ?? true)
             {
-                fg.AppendItem(item.LocationRefType.FormKey, "LocationRefType");
+                sb.AppendItem(item.LocationRefType.FormKey, "LocationRefType");
             }
             if (printMask?.Marker ?? true)
             {
-                fg.AppendItem(item.Marker.FormKey, "Marker");
+                sb.AppendItem(item.Marker.FormKey, "Marker");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location.FormKey, "Location");
+                sb.AppendItem(item.Location.FormKey, "Location");
             }
             if (printMask?.Grid ?? true)
             {
-                fg.AppendItem(item.Grid, "Grid");
+                sb.AppendItem(item.Grid, "Grid");
             }
         }
         
@@ -1235,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCellStaticReferenceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1303,11 +1312,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LocationCellStaticReferenceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -67,11 +67,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MovementRotationDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -209,35 +210,35 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(MovementRotationData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MovementRotationData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MovementRotationData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MovementRotationData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MovementRotationData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Unused1 ?? true)
                     {
-                        fg.AppendItem(Unused1, "Unused1");
+                        sb.AppendItem(Unused1, "Unused1");
                     }
                     if (printMask?.Walk ?? true)
                     {
-                        fg.AppendItem(Walk, "Walk");
+                        sb.AppendItem(Walk, "Walk");
                     }
                     if (printMask?.Run ?? true)
                     {
-                        fg.AppendItem(Run, "Run");
+                        sb.AppendItem(Run, "Run");
                     }
                     if (printMask?.Unused2 ?? true)
                     {
-                        fg.AppendItem(Unused2, "Unused2");
+                        sb.AppendItem(Unused2, "Unused2");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -344,37 +345,45 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Unused1, "Unused1");
-                fg.AppendItem(Walk, "Walk");
-                fg.AppendItem(Run, "Run");
-                fg.AppendItem(Unused2, "Unused2");
+                {
+                    sb.AppendItem(Unused1, "Unused1");
+                }
+                {
+                    sb.AppendItem(Walk, "Walk");
+                }
+                {
+                    sb.AppendItem(Run, "Run");
+                }
+                {
+                    sb.AppendItem(Unused2, "Unused2");
+                }
             }
             #endregion
 
@@ -498,7 +507,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -577,13 +586,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IMovementRotationDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MovementRotationData.Mask<bool>? printMask = null)
         {
             ((MovementRotationDataCommon)((IMovementRotationDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -865,60 +874,60 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             MovementRotationData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMovementRotationDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MovementRotationData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MovementRotationData =>");
+                sb.AppendLine($"MovementRotationData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MovementRotationData) =>");
+                sb.AppendLine($"{name} (MovementRotationData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMovementRotationDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MovementRotationData.Mask<bool>? printMask = null)
         {
             if (printMask?.Unused1 ?? true)
             {
-                fg.AppendItem(item.Unused1, "Unused1");
+                sb.AppendItem(item.Unused1, "Unused1");
             }
             if (printMask?.Walk ?? true)
             {
-                fg.AppendItem(item.Walk, "Walk");
+                sb.AppendItem(item.Walk, "Walk");
             }
             if (printMask?.Run ?? true)
             {
-                fg.AppendItem(item.Run, "Run");
+                sb.AppendItem(item.Run, "Run");
             }
             if (printMask?.Unused2 ?? true)
             {
-                fg.AppendItem(item.Unused2, "Unused2");
+                sb.AppendItem(item.Unused2, "Unused2");
             }
         }
         
@@ -1199,7 +1208,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MovementRotationDataBinaryWriteTranslation.Instance;
@@ -1266,11 +1275,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MovementRotationDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

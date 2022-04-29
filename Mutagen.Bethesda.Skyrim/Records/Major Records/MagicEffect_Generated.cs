@@ -415,11 +415,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MagicEffectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1084,275 +1085,279 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(MagicEffect.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MagicEffect.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MagicEffect.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MagicEffect.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MagicEffect.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.MenuDisplayObject ?? true)
                     {
-                        fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                        sb.AppendItem(MenuDisplayObject, "MenuDisplayObject");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.BaseCost ?? true)
                     {
-                        fg.AppendItem(BaseCost, "BaseCost");
+                        sb.AppendItem(BaseCost, "BaseCost");
                     }
                     if (printMask?.MagicSkill ?? true)
                     {
-                        fg.AppendItem(MagicSkill, "MagicSkill");
+                        sb.AppendItem(MagicSkill, "MagicSkill");
                     }
                     if (printMask?.ResistValue ?? true)
                     {
-                        fg.AppendItem(ResistValue, "ResistValue");
+                        sb.AppendItem(ResistValue, "ResistValue");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(Unknown1, "Unknown1");
                     }
                     if (printMask?.CastingLight ?? true)
                     {
-                        fg.AppendItem(CastingLight, "CastingLight");
+                        sb.AppendItem(CastingLight, "CastingLight");
                     }
                     if (printMask?.TaperWeight ?? true)
                     {
-                        fg.AppendItem(TaperWeight, "TaperWeight");
+                        sb.AppendItem(TaperWeight, "TaperWeight");
                     }
                     if (printMask?.HitShader ?? true)
                     {
-                        fg.AppendItem(HitShader, "HitShader");
+                        sb.AppendItem(HitShader, "HitShader");
                     }
                     if (printMask?.EnchantShader ?? true)
                     {
-                        fg.AppendItem(EnchantShader, "EnchantShader");
+                        sb.AppendItem(EnchantShader, "EnchantShader");
                     }
                     if (printMask?.MinimumSkillLevel ?? true)
                     {
-                        fg.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
+                        sb.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
                     }
                     if (printMask?.SpellmakingArea ?? true)
                     {
-                        fg.AppendItem(SpellmakingArea, "SpellmakingArea");
+                        sb.AppendItem(SpellmakingArea, "SpellmakingArea");
                     }
                     if (printMask?.SpellmakingCastingTime ?? true)
                     {
-                        fg.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
+                        sb.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
                     }
                     if (printMask?.TaperCurve ?? true)
                     {
-                        fg.AppendItem(TaperCurve, "TaperCurve");
+                        sb.AppendItem(TaperCurve, "TaperCurve");
                     }
                     if (printMask?.TaperDuration ?? true)
                     {
-                        fg.AppendItem(TaperDuration, "TaperDuration");
+                        sb.AppendItem(TaperDuration, "TaperDuration");
                     }
                     if (printMask?.SecondActorValueWeight ?? true)
                     {
-                        fg.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
+                        sb.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
                     }
                     if (printMask?.Archetype?.Overall ?? true)
                     {
-                        Archetype?.ToString(fg);
+                        Archetype?.ToString(sb);
                     }
                     if (printMask?.Projectile ?? true)
                     {
-                        fg.AppendItem(Projectile, "Projectile");
+                        sb.AppendItem(Projectile, "Projectile");
                     }
                     if (printMask?.Explosion ?? true)
                     {
-                        fg.AppendItem(Explosion, "Explosion");
+                        sb.AppendItem(Explosion, "Explosion");
                     }
                     if (printMask?.CastType ?? true)
                     {
-                        fg.AppendItem(CastType, "CastType");
+                        sb.AppendItem(CastType, "CastType");
                     }
                     if (printMask?.TargetType ?? true)
                     {
-                        fg.AppendItem(TargetType, "TargetType");
+                        sb.AppendItem(TargetType, "TargetType");
                     }
                     if (printMask?.SecondActorValue ?? true)
                     {
-                        fg.AppendItem(SecondActorValue, "SecondActorValue");
+                        sb.AppendItem(SecondActorValue, "SecondActorValue");
                     }
                     if (printMask?.CastingArt ?? true)
                     {
-                        fg.AppendItem(CastingArt, "CastingArt");
+                        sb.AppendItem(CastingArt, "CastingArt");
                     }
                     if (printMask?.HitEffectArt ?? true)
                     {
-                        fg.AppendItem(HitEffectArt, "HitEffectArt");
+                        sb.AppendItem(HitEffectArt, "HitEffectArt");
                     }
                     if (printMask?.ImpactData ?? true)
                     {
-                        fg.AppendItem(ImpactData, "ImpactData");
+                        sb.AppendItem(ImpactData, "ImpactData");
                     }
                     if (printMask?.SkillUsageMultiplier ?? true)
                     {
-                        fg.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
+                        sb.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
                     }
                     if (printMask?.DualCastArt ?? true)
                     {
-                        fg.AppendItem(DualCastArt, "DualCastArt");
+                        sb.AppendItem(DualCastArt, "DualCastArt");
                     }
                     if (printMask?.DualCastScale ?? true)
                     {
-                        fg.AppendItem(DualCastScale, "DualCastScale");
+                        sb.AppendItem(DualCastScale, "DualCastScale");
                     }
                     if (printMask?.EnchantArt ?? true)
                     {
-                        fg.AppendItem(EnchantArt, "EnchantArt");
+                        sb.AppendItem(EnchantArt, "EnchantArt");
                     }
                     if (printMask?.HitVisuals ?? true)
                     {
-                        fg.AppendItem(HitVisuals, "HitVisuals");
+                        sb.AppendItem(HitVisuals, "HitVisuals");
                     }
                     if (printMask?.EnchantVisuals ?? true)
                     {
-                        fg.AppendItem(EnchantVisuals, "EnchantVisuals");
+                        sb.AppendItem(EnchantVisuals, "EnchantVisuals");
                     }
                     if (printMask?.EquipAbility ?? true)
                     {
-                        fg.AppendItem(EquipAbility, "EquipAbility");
+                        sb.AppendItem(EquipAbility, "EquipAbility");
                     }
                     if (printMask?.ImageSpaceModifier ?? true)
                     {
-                        fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
                     }
                     if (printMask?.PerkToApply ?? true)
                     {
-                        fg.AppendItem(PerkToApply, "PerkToApply");
+                        sb.AppendItem(PerkToApply, "PerkToApply");
                     }
                     if (printMask?.CastingSoundLevel ?? true)
                     {
-                        fg.AppendItem(CastingSoundLevel, "CastingSoundLevel");
+                        sb.AppendItem(CastingSoundLevel, "CastingSoundLevel");
                     }
                     if (printMask?.ScriptEffectAIScore ?? true)
                     {
-                        fg.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
+                        sb.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
                     }
                     if (printMask?.ScriptEffectAIDelayTime ?? true)
                     {
-                        fg.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
+                        sb.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
                     }
                     if ((printMask?.CounterEffects?.Overall ?? true)
                         && CounterEffects is {} CounterEffectsItem)
                     {
-                        fg.AppendLine("CounterEffects =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CounterEffects =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(CounterEffectsItem.Overall);
+                            sb.AppendItem(CounterEffectsItem.Overall);
                             if (CounterEffectsItem.Specific != null)
                             {
                                 foreach (var subItem in CounterEffectsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
                         && Sounds is {} SoundsItem)
                     {
-                        fg.AppendLine("Sounds =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Sounds =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(SoundsItem.Overall);
+                            sb.AppendItem(SoundsItem.Overall);
                             if (SoundsItem.Specific != null)
                             {
                                 foreach (var subItem in SoundsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1858,163 +1863,245 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(BaseCost, "BaseCost");
-                fg.AppendItem(MagicSkill, "MagicSkill");
-                fg.AppendItem(ResistValue, "ResistValue");
-                fg.AppendItem(Unknown1, "Unknown1");
-                fg.AppendItem(CastingLight, "CastingLight");
-                fg.AppendItem(TaperWeight, "TaperWeight");
-                fg.AppendItem(HitShader, "HitShader");
-                fg.AppendItem(EnchantShader, "EnchantShader");
-                fg.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
-                fg.AppendItem(SpellmakingArea, "SpellmakingArea");
-                fg.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
-                fg.AppendItem(TaperCurve, "TaperCurve");
-                fg.AppendItem(TaperDuration, "TaperDuration");
-                fg.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
-                Archetype?.ToString(fg);
-                fg.AppendItem(Projectile, "Projectile");
-                fg.AppendItem(Explosion, "Explosion");
-                fg.AppendItem(CastType, "CastType");
-                fg.AppendItem(TargetType, "TargetType");
-                fg.AppendItem(SecondActorValue, "SecondActorValue");
-                fg.AppendItem(CastingArt, "CastingArt");
-                fg.AppendItem(HitEffectArt, "HitEffectArt");
-                fg.AppendItem(ImpactData, "ImpactData");
-                fg.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
-                fg.AppendItem(DualCastArt, "DualCastArt");
-                fg.AppendItem(DualCastScale, "DualCastScale");
-                fg.AppendItem(EnchantArt, "EnchantArt");
-                fg.AppendItem(HitVisuals, "HitVisuals");
-                fg.AppendItem(EnchantVisuals, "EnchantVisuals");
-                fg.AppendItem(EquipAbility, "EquipAbility");
-                fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
-                fg.AppendItem(PerkToApply, "PerkToApply");
-                fg.AppendItem(CastingSoundLevel, "CastingSoundLevel");
-                fg.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
-                fg.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(BaseCost, "BaseCost");
+                }
+                {
+                    sb.AppendItem(MagicSkill, "MagicSkill");
+                }
+                {
+                    sb.AppendItem(ResistValue, "ResistValue");
+                }
+                {
+                    sb.AppendItem(Unknown1, "Unknown1");
+                }
+                {
+                    sb.AppendItem(CastingLight, "CastingLight");
+                }
+                {
+                    sb.AppendItem(TaperWeight, "TaperWeight");
+                }
+                {
+                    sb.AppendItem(HitShader, "HitShader");
+                }
+                {
+                    sb.AppendItem(EnchantShader, "EnchantShader");
+                }
+                {
+                    sb.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
+                }
+                {
+                    sb.AppendItem(SpellmakingArea, "SpellmakingArea");
+                }
+                {
+                    sb.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
+                }
+                {
+                    sb.AppendItem(TaperCurve, "TaperCurve");
+                }
+                {
+                    sb.AppendItem(TaperDuration, "TaperDuration");
+                }
+                {
+                    sb.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
+                }
+                Archetype?.ToString(sb);
+                {
+                    sb.AppendItem(Projectile, "Projectile");
+                }
+                {
+                    sb.AppendItem(Explosion, "Explosion");
+                }
+                {
+                    sb.AppendItem(CastType, "CastType");
+                }
+                {
+                    sb.AppendItem(TargetType, "TargetType");
+                }
+                {
+                    sb.AppendItem(SecondActorValue, "SecondActorValue");
+                }
+                {
+                    sb.AppendItem(CastingArt, "CastingArt");
+                }
+                {
+                    sb.AppendItem(HitEffectArt, "HitEffectArt");
+                }
+                {
+                    sb.AppendItem(ImpactData, "ImpactData");
+                }
+                {
+                    sb.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
+                }
+                {
+                    sb.AppendItem(DualCastArt, "DualCastArt");
+                }
+                {
+                    sb.AppendItem(DualCastScale, "DualCastScale");
+                }
+                {
+                    sb.AppendItem(EnchantArt, "EnchantArt");
+                }
+                {
+                    sb.AppendItem(HitVisuals, "HitVisuals");
+                }
+                {
+                    sb.AppendItem(EnchantVisuals, "EnchantVisuals");
+                }
+                {
+                    sb.AppendItem(EquipAbility, "EquipAbility");
+                }
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(PerkToApply, "PerkToApply");
+                }
+                {
+                    sb.AppendItem(CastingSoundLevel, "CastingSoundLevel");
+                }
+                {
+                    sb.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
+                }
+                {
+                    sb.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
+                }
                 if (CounterEffects is {} CounterEffectsItem)
                 {
-                    fg.AppendLine("CounterEffects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CounterEffects =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(CounterEffectsItem.Overall);
+                        sb.AppendItem(CounterEffectsItem.Overall);
                         if (CounterEffectsItem.Specific != null)
                         {
                             foreach (var subItem in CounterEffectsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Sounds is {} SoundsItem)
                 {
-                    fg.AppendLine("Sounds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Sounds =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(SoundsItem.Overall);
+                        sb.AppendItem(SoundsItem.Overall);
                         if (SoundsItem.Specific != null)
                         {
                             foreach (var subItem in SoundsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Description, "Description");
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -2365,7 +2452,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -2568,13 +2655,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IMagicEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffect.Mask<bool>? printMask = null)
         {
             ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -3068,289 +3155,289 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             MagicEffect.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMagicEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffect.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MagicEffect =>");
+                sb.AppendLine($"MagicEffect =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MagicEffect) =>");
+                sb.AppendLine($"{name} (MagicEffect) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMagicEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MagicEffect.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.MenuDisplayObject ?? true)
             {
-                fg.AppendItem(item.MenuDisplayObject.FormKeyNullable, "MenuDisplayObject");
+                sb.AppendItem(item.MenuDisplayObject.FormKeyNullable, "MenuDisplayObject");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.BaseCost ?? true)
             {
-                fg.AppendItem(item.BaseCost, "BaseCost");
+                sb.AppendItem(item.BaseCost, "BaseCost");
             }
             if (printMask?.MagicSkill ?? true)
             {
-                fg.AppendItem(item.MagicSkill, "MagicSkill");
+                sb.AppendItem(item.MagicSkill, "MagicSkill");
             }
             if (printMask?.ResistValue ?? true)
             {
-                fg.AppendItem(item.ResistValue, "ResistValue");
+                sb.AppendItem(item.ResistValue, "ResistValue");
             }
             if (printMask?.Unknown1 ?? true)
             {
-                fg.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.Unknown1, "Unknown1");
             }
             if (printMask?.CastingLight ?? true)
             {
-                fg.AppendItem(item.CastingLight.FormKey, "CastingLight");
+                sb.AppendItem(item.CastingLight.FormKey, "CastingLight");
             }
             if (printMask?.TaperWeight ?? true)
             {
-                fg.AppendItem(item.TaperWeight, "TaperWeight");
+                sb.AppendItem(item.TaperWeight, "TaperWeight");
             }
             if (printMask?.HitShader ?? true)
             {
-                fg.AppendItem(item.HitShader.FormKey, "HitShader");
+                sb.AppendItem(item.HitShader.FormKey, "HitShader");
             }
             if (printMask?.EnchantShader ?? true)
             {
-                fg.AppendItem(item.EnchantShader.FormKey, "EnchantShader");
+                sb.AppendItem(item.EnchantShader.FormKey, "EnchantShader");
             }
             if (printMask?.MinimumSkillLevel ?? true)
             {
-                fg.AppendItem(item.MinimumSkillLevel, "MinimumSkillLevel");
+                sb.AppendItem(item.MinimumSkillLevel, "MinimumSkillLevel");
             }
             if (printMask?.SpellmakingArea ?? true)
             {
-                fg.AppendItem(item.SpellmakingArea, "SpellmakingArea");
+                sb.AppendItem(item.SpellmakingArea, "SpellmakingArea");
             }
             if (printMask?.SpellmakingCastingTime ?? true)
             {
-                fg.AppendItem(item.SpellmakingCastingTime, "SpellmakingCastingTime");
+                sb.AppendItem(item.SpellmakingCastingTime, "SpellmakingCastingTime");
             }
             if (printMask?.TaperCurve ?? true)
             {
-                fg.AppendItem(item.TaperCurve, "TaperCurve");
+                sb.AppendItem(item.TaperCurve, "TaperCurve");
             }
             if (printMask?.TaperDuration ?? true)
             {
-                fg.AppendItem(item.TaperDuration, "TaperDuration");
+                sb.AppendItem(item.TaperDuration, "TaperDuration");
             }
             if (printMask?.SecondActorValueWeight ?? true)
             {
-                fg.AppendItem(item.SecondActorValueWeight, "SecondActorValueWeight");
+                sb.AppendItem(item.SecondActorValueWeight, "SecondActorValueWeight");
             }
             if (printMask?.Archetype?.Overall ?? true)
             {
-                item.Archetype?.ToString(fg, "Archetype");
+                item.Archetype?.ToString(sb, "Archetype");
             }
             if (printMask?.Projectile ?? true)
             {
-                fg.AppendItem(item.Projectile.FormKey, "Projectile");
+                sb.AppendItem(item.Projectile.FormKey, "Projectile");
             }
             if (printMask?.Explosion ?? true)
             {
-                fg.AppendItem(item.Explosion.FormKey, "Explosion");
+                sb.AppendItem(item.Explosion.FormKey, "Explosion");
             }
             if (printMask?.CastType ?? true)
             {
-                fg.AppendItem(item.CastType, "CastType");
+                sb.AppendItem(item.CastType, "CastType");
             }
             if (printMask?.TargetType ?? true)
             {
-                fg.AppendItem(item.TargetType, "TargetType");
+                sb.AppendItem(item.TargetType, "TargetType");
             }
             if (printMask?.SecondActorValue ?? true)
             {
-                fg.AppendItem(item.SecondActorValue, "SecondActorValue");
+                sb.AppendItem(item.SecondActorValue, "SecondActorValue");
             }
             if (printMask?.CastingArt ?? true)
             {
-                fg.AppendItem(item.CastingArt.FormKey, "CastingArt");
+                sb.AppendItem(item.CastingArt.FormKey, "CastingArt");
             }
             if (printMask?.HitEffectArt ?? true)
             {
-                fg.AppendItem(item.HitEffectArt.FormKey, "HitEffectArt");
+                sb.AppendItem(item.HitEffectArt.FormKey, "HitEffectArt");
             }
             if (printMask?.ImpactData ?? true)
             {
-                fg.AppendItem(item.ImpactData.FormKey, "ImpactData");
+                sb.AppendItem(item.ImpactData.FormKey, "ImpactData");
             }
             if (printMask?.SkillUsageMultiplier ?? true)
             {
-                fg.AppendItem(item.SkillUsageMultiplier, "SkillUsageMultiplier");
+                sb.AppendItem(item.SkillUsageMultiplier, "SkillUsageMultiplier");
             }
             if (printMask?.DualCastArt ?? true)
             {
-                fg.AppendItem(item.DualCastArt.FormKey, "DualCastArt");
+                sb.AppendItem(item.DualCastArt.FormKey, "DualCastArt");
             }
             if (printMask?.DualCastScale ?? true)
             {
-                fg.AppendItem(item.DualCastScale, "DualCastScale");
+                sb.AppendItem(item.DualCastScale, "DualCastScale");
             }
             if (printMask?.EnchantArt ?? true)
             {
-                fg.AppendItem(item.EnchantArt.FormKey, "EnchantArt");
+                sb.AppendItem(item.EnchantArt.FormKey, "EnchantArt");
             }
             if (printMask?.HitVisuals ?? true)
             {
-                fg.AppendItem(item.HitVisuals.FormKey, "HitVisuals");
+                sb.AppendItem(item.HitVisuals.FormKey, "HitVisuals");
             }
             if (printMask?.EnchantVisuals ?? true)
             {
-                fg.AppendItem(item.EnchantVisuals.FormKey, "EnchantVisuals");
+                sb.AppendItem(item.EnchantVisuals.FormKey, "EnchantVisuals");
             }
             if (printMask?.EquipAbility ?? true)
             {
-                fg.AppendItem(item.EquipAbility.FormKey, "EquipAbility");
+                sb.AppendItem(item.EquipAbility.FormKey, "EquipAbility");
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(item.ImageSpaceModifier.FormKey, "ImageSpaceModifier");
+                sb.AppendItem(item.ImageSpaceModifier.FormKey, "ImageSpaceModifier");
             }
             if (printMask?.PerkToApply ?? true)
             {
-                fg.AppendItem(item.PerkToApply.FormKey, "PerkToApply");
+                sb.AppendItem(item.PerkToApply.FormKey, "PerkToApply");
             }
             if (printMask?.CastingSoundLevel ?? true)
             {
-                fg.AppendItem(item.CastingSoundLevel, "CastingSoundLevel");
+                sb.AppendItem(item.CastingSoundLevel, "CastingSoundLevel");
             }
             if (printMask?.ScriptEffectAIScore ?? true)
             {
-                fg.AppendItem(item.ScriptEffectAIScore, "ScriptEffectAIScore");
+                sb.AppendItem(item.ScriptEffectAIScore, "ScriptEffectAIScore");
             }
             if (printMask?.ScriptEffectAIDelayTime ?? true)
             {
-                fg.AppendItem(item.ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
+                sb.AppendItem(item.ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
             }
             if (printMask?.CounterEffects?.Overall ?? true)
             {
-                fg.AppendLine("CounterEffects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CounterEffects =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.CounterEffects)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Sounds?.Overall ?? true)
                 && item.Sounds is {} SoundsItem)
             {
-                fg.AppendLine("Sounds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Sounds =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in SoundsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -4804,7 +4891,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5208,11 +5295,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MagicEffectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

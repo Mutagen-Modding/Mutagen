@@ -76,11 +76,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CreatureAIDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -245,47 +246,47 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(CreatureAIData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CreatureAIData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CreatureAIData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CreatureAIData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CreatureAIData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Aggression ?? true)
                     {
-                        fg.AppendItem(Aggression, "Aggression");
+                        sb.AppendItem(Aggression, "Aggression");
                     }
                     if (printMask?.Confidence ?? true)
                     {
-                        fg.AppendItem(Confidence, "Confidence");
+                        sb.AppendItem(Confidence, "Confidence");
                     }
                     if (printMask?.EnergyLevel ?? true)
                     {
-                        fg.AppendItem(EnergyLevel, "EnergyLevel");
+                        sb.AppendItem(EnergyLevel, "EnergyLevel");
                     }
                     if (printMask?.Responsibility ?? true)
                     {
-                        fg.AppendItem(Responsibility, "Responsibility");
+                        sb.AppendItem(Responsibility, "Responsibility");
                     }
                     if (printMask?.BuySellServices ?? true)
                     {
-                        fg.AppendItem(BuySellServices, "BuySellServices");
+                        sb.AppendItem(BuySellServices, "BuySellServices");
                     }
                     if (printMask?.Teaches ?? true)
                     {
-                        fg.AppendItem(Teaches, "Teaches");
+                        sb.AppendItem(Teaches, "Teaches");
                     }
                     if (printMask?.MaximumTrainingLevel ?? true)
                     {
-                        fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                        sb.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -422,40 +423,54 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Aggression, "Aggression");
-                fg.AppendItem(Confidence, "Confidence");
-                fg.AppendItem(EnergyLevel, "EnergyLevel");
-                fg.AppendItem(Responsibility, "Responsibility");
-                fg.AppendItem(BuySellServices, "BuySellServices");
-                fg.AppendItem(Teaches, "Teaches");
-                fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                {
+                    sb.AppendItem(Aggression, "Aggression");
+                }
+                {
+                    sb.AppendItem(Confidence, "Confidence");
+                }
+                {
+                    sb.AppendItem(EnergyLevel, "EnergyLevel");
+                }
+                {
+                    sb.AppendItem(Responsibility, "Responsibility");
+                }
+                {
+                    sb.AppendItem(BuySellServices, "BuySellServices");
+                }
+                {
+                    sb.AppendItem(Teaches, "Teaches");
+                }
+                {
+                    sb.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                }
             }
             #endregion
 
@@ -591,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -676,13 +691,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ICreatureAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CreatureAIData.Mask<bool>? printMask = null)
         {
             ((CreatureAIDataCommon)((ICreatureAIDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -984,72 +999,72 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             CreatureAIData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICreatureAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CreatureAIData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CreatureAIData =>");
+                sb.AppendLine($"CreatureAIData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CreatureAIData) =>");
+                sb.AppendLine($"{name} (CreatureAIData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICreatureAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CreatureAIData.Mask<bool>? printMask = null)
         {
             if (printMask?.Aggression ?? true)
             {
-                fg.AppendItem(item.Aggression, "Aggression");
+                sb.AppendItem(item.Aggression, "Aggression");
             }
             if (printMask?.Confidence ?? true)
             {
-                fg.AppendItem(item.Confidence, "Confidence");
+                sb.AppendItem(item.Confidence, "Confidence");
             }
             if (printMask?.EnergyLevel ?? true)
             {
-                fg.AppendItem(item.EnergyLevel, "EnergyLevel");
+                sb.AppendItem(item.EnergyLevel, "EnergyLevel");
             }
             if (printMask?.Responsibility ?? true)
             {
-                fg.AppendItem(item.Responsibility, "Responsibility");
+                sb.AppendItem(item.Responsibility, "Responsibility");
             }
             if (printMask?.BuySellServices ?? true)
             {
-                fg.AppendItem(item.BuySellServices, "BuySellServices");
+                sb.AppendItem(item.BuySellServices, "BuySellServices");
             }
             if (printMask?.Teaches ?? true)
             {
-                fg.AppendItem(item.Teaches, "Teaches");
+                sb.AppendItem(item.Teaches, "Teaches");
             }
             if (printMask?.MaximumTrainingLevel ?? true)
             {
-                fg.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
+                sb.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
             }
         }
         
@@ -1372,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureAIDataBinaryWriteTranslation.Instance;
@@ -1443,11 +1458,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CreatureAIDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

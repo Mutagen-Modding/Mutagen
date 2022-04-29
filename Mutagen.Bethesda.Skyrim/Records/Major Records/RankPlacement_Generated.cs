@@ -80,11 +80,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RankPlacementMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -213,31 +214,31 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(RankPlacement.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, RankPlacement.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, RankPlacement.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(RankPlacement.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RankPlacement.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Faction ?? true)
                     {
-                        fg.AppendItem(Faction, "Faction");
+                        sb.AppendItem(Faction, "Faction");
                     }
                     if (printMask?.Rank ?? true)
                     {
-                        fg.AppendItem(Rank, "Rank");
+                        sb.AppendItem(Rank, "Rank");
                     }
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendItem(Fluff, "Fluff");
+                        sb.AppendItem(Fluff, "Fluff");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -334,36 +335,42 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Faction, "Faction");
-                fg.AppendItem(Rank, "Rank");
-                fg.AppendItem(Fluff, "Fluff");
+                {
+                    sb.AppendItem(Faction, "Faction");
+                }
+                {
+                    sb.AppendItem(Rank, "Rank");
+                }
+                {
+                    sb.AppendItem(Fluff, "Fluff");
+                }
             }
             #endregion
 
@@ -488,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -567,13 +574,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IRankPlacementGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RankPlacement.Mask<bool>? printMask = null)
         {
             ((RankPlacementCommon)((IRankPlacementGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -864,56 +871,56 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             RankPlacement.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRankPlacementGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RankPlacement.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RankPlacement =>");
+                sb.AppendLine($"RankPlacement =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RankPlacement) =>");
+                sb.AppendLine($"{name} (RankPlacement) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRankPlacementGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RankPlacement.Mask<bool>? printMask = null)
         {
             if (printMask?.Faction ?? true)
             {
-                fg.AppendItem(item.Faction.FormKey, "Faction");
+                sb.AppendItem(item.Faction.FormKey, "Faction");
             }
             if (printMask?.Rank ?? true)
             {
-                fg.AppendItem(item.Rank, "Rank");
+                sb.AppendItem(item.Rank, "Rank");
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                sb.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
         }
         
@@ -1185,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => RankPlacementCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1253,11 +1260,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RankPlacementMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

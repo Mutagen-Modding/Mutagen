@@ -152,11 +152,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavigationMeshDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -524,147 +525,149 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(NavigationMeshData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NavigationMeshData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NavigationMeshData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NavigationMeshData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavigationMeshData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.NavmeshVersion ?? true)
                     {
-                        fg.AppendItem(NavmeshVersion, "NavmeshVersion");
+                        sb.AppendItem(NavmeshVersion, "NavmeshVersion");
                     }
                     if (printMask?.Magic ?? true)
                     {
-                        fg.AppendItem(Magic, "Magic");
+                        sb.AppendItem(Magic, "Magic");
                     }
                     if (printMask?.Parent?.Overall ?? true)
                     {
-                        Parent?.ToString(fg);
+                        Parent?.ToString(sb);
                     }
                     if ((printMask?.Vertices?.Overall ?? true)
                         && Vertices is {} VerticesItem)
                     {
-                        fg.AppendLine("Vertices =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Vertices =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(VerticesItem.Overall);
+                            sb.AppendItem(VerticesItem.Overall);
                             if (VerticesItem.Specific != null)
                             {
                                 foreach (var subItem in VerticesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Triangles?.Overall ?? true)
                         && Triangles is {} TrianglesItem)
                     {
-                        fg.AppendLine("Triangles =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Triangles =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(TrianglesItem.Overall);
+                            sb.AppendItem(TrianglesItem.Overall);
                             if (TrianglesItem.Specific != null)
                             {
                                 foreach (var subItem in TrianglesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.EdgeLinks?.Overall ?? true)
                         && EdgeLinks is {} EdgeLinksItem)
                     {
-                        fg.AppendLine("EdgeLinks =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("EdgeLinks =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(EdgeLinksItem.Overall);
+                            sb.AppendItem(EdgeLinksItem.Overall);
                             if (EdgeLinksItem.Specific != null)
                             {
                                 foreach (var subItem in EdgeLinksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.DoorTriangles?.Overall ?? true)
                         && DoorTriangles is {} DoorTrianglesItem)
                     {
-                        fg.AppendLine("DoorTriangles =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("DoorTriangles =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(DoorTrianglesItem.Overall);
+                            sb.AppendItem(DoorTrianglesItem.Overall);
                             if (DoorTrianglesItem.Specific != null)
                             {
                                 foreach (var subItem in DoorTrianglesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.NavmeshGridDivisor ?? true)
                     {
-                        fg.AppendItem(NavmeshGridDivisor, "NavmeshGridDivisor");
+                        sb.AppendItem(NavmeshGridDivisor, "NavmeshGridDivisor");
                     }
                     if (printMask?.MaxDistanceX ?? true)
                     {
-                        fg.AppendItem(MaxDistanceX, "MaxDistanceX");
+                        sb.AppendItem(MaxDistanceX, "MaxDistanceX");
                     }
                     if (printMask?.MaxDistanceY ?? true)
                     {
-                        fg.AppendItem(MaxDistanceY, "MaxDistanceY");
+                        sb.AppendItem(MaxDistanceY, "MaxDistanceY");
                     }
                     if (printMask?.Min ?? true)
                     {
-                        fg.AppendItem(Min, "Min");
+                        sb.AppendItem(Min, "Min");
                     }
                     if (printMask?.Max ?? true)
                     {
-                        fg.AppendItem(Max, "Max");
+                        sb.AppendItem(Max, "Max");
                     }
                     if (printMask?.NavmeshGrid ?? true)
                     {
-                        fg.AppendItem(NavmeshGrid, "NavmeshGrid");
+                        sb.AppendItem(NavmeshGrid, "NavmeshGrid");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -861,130 +864,148 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(NavmeshVersion, "NavmeshVersion");
-                fg.AppendItem(Magic, "Magic");
-                Parent?.ToString(fg);
+                {
+                    sb.AppendItem(NavmeshVersion, "NavmeshVersion");
+                }
+                {
+                    sb.AppendItem(Magic, "Magic");
+                }
+                Parent?.ToString(sb);
                 if (Vertices is {} VerticesItem)
                 {
-                    fg.AppendLine("Vertices =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Vertices =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(VerticesItem.Overall);
+                        sb.AppendItem(VerticesItem.Overall);
                         if (VerticesItem.Specific != null)
                         {
                             foreach (var subItem in VerticesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Triangles is {} TrianglesItem)
                 {
-                    fg.AppendLine("Triangles =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Triangles =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(TrianglesItem.Overall);
+                        sb.AppendItem(TrianglesItem.Overall);
                         if (TrianglesItem.Specific != null)
                         {
                             foreach (var subItem in TrianglesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (EdgeLinks is {} EdgeLinksItem)
                 {
-                    fg.AppendLine("EdgeLinks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("EdgeLinks =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(EdgeLinksItem.Overall);
+                        sb.AppendItem(EdgeLinksItem.Overall);
                         if (EdgeLinksItem.Specific != null)
                         {
                             foreach (var subItem in EdgeLinksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (DoorTriangles is {} DoorTrianglesItem)
                 {
-                    fg.AppendLine("DoorTriangles =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("DoorTriangles =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(DoorTrianglesItem.Overall);
+                        sb.AppendItem(DoorTrianglesItem.Overall);
                         if (DoorTrianglesItem.Specific != null)
                         {
                             foreach (var subItem in DoorTrianglesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(NavmeshGridDivisor, "NavmeshGridDivisor");
-                fg.AppendItem(MaxDistanceX, "MaxDistanceX");
-                fg.AppendItem(MaxDistanceY, "MaxDistanceY");
-                fg.AppendItem(Min, "Min");
-                fg.AppendItem(Max, "Max");
-                fg.AppendItem(NavmeshGrid, "NavmeshGrid");
+                {
+                    sb.AppendItem(NavmeshGridDivisor, "NavmeshGridDivisor");
+                }
+                {
+                    sb.AppendItem(MaxDistanceX, "MaxDistanceX");
+                }
+                {
+                    sb.AppendItem(MaxDistanceY, "MaxDistanceY");
+                }
+                {
+                    sb.AppendItem(Min, "Min");
+                }
+                {
+                    sb.AppendItem(Max, "Max");
+                }
+                {
+                    sb.AppendItem(NavmeshGrid, "NavmeshGrid");
+                }
             }
             #endregion
 
@@ -1145,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1244,13 +1265,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this INavigationMeshDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationMeshData.Mask<bool>? printMask = null)
         {
             ((NavigationMeshDataCommon)((INavigationMeshDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1585,152 +1606,152 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             NavigationMeshData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INavigationMeshDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationMeshData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavigationMeshData =>");
+                sb.AppendLine($"NavigationMeshData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavigationMeshData) =>");
+                sb.AppendLine($"{name} (NavigationMeshData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavigationMeshDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavigationMeshData.Mask<bool>? printMask = null)
         {
             if (printMask?.NavmeshVersion ?? true)
             {
-                fg.AppendItem(item.NavmeshVersion, "NavmeshVersion");
+                sb.AppendItem(item.NavmeshVersion, "NavmeshVersion");
             }
             if (printMask?.Magic ?? true)
             {
-                fg.AppendItem(item.Magic, "Magic");
+                sb.AppendItem(item.Magic, "Magic");
             }
             if (printMask?.Parent?.Overall ?? true)
             {
-                item.Parent?.ToString(fg, "Parent");
+                item.Parent?.ToString(sb, "Parent");
             }
             if (printMask?.Vertices?.Overall ?? true)
             {
-                fg.AppendLine("Vertices =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Vertices =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Vertices)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Triangles?.Overall ?? true)
             {
-                fg.AppendLine("Triangles =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Triangles =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Triangles)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.EdgeLinks?.Overall ?? true)
             {
-                fg.AppendLine("EdgeLinks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("EdgeLinks =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.EdgeLinks)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.DoorTriangles?.Overall ?? true)
             {
-                fg.AppendLine("DoorTriangles =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("DoorTriangles =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.DoorTriangles)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.NavmeshGridDivisor ?? true)
             {
-                fg.AppendItem(item.NavmeshGridDivisor, "NavmeshGridDivisor");
+                sb.AppendItem(item.NavmeshGridDivisor, "NavmeshGridDivisor");
             }
             if (printMask?.MaxDistanceX ?? true)
             {
-                fg.AppendItem(item.MaxDistanceX, "MaxDistanceX");
+                sb.AppendItem(item.MaxDistanceX, "MaxDistanceX");
             }
             if (printMask?.MaxDistanceY ?? true)
             {
-                fg.AppendItem(item.MaxDistanceY, "MaxDistanceY");
+                sb.AppendItem(item.MaxDistanceY, "MaxDistanceY");
             }
             if (printMask?.Min ?? true)
             {
-                fg.AppendItem(item.Min, "Min");
+                sb.AppendItem(item.Min, "Min");
             }
             if (printMask?.Max ?? true)
             {
-                fg.AppendItem(item.Max, "Max");
+                sb.AppendItem(item.Max, "Max");
             }
             if (printMask?.NavmeshGrid ?? true)
             {
-                fg.AppendLine($"NavmeshGrid => {SpanExt.ToHexString(item.NavmeshGrid)}");
+                sb.AppendLine($"NavmeshGrid => {SpanExt.ToHexString(item.NavmeshGrid)}");
             }
         }
         
@@ -2343,7 +2364,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2439,11 +2460,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavigationMeshDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

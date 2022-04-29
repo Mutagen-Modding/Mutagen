@@ -26,7 +26,7 @@ public class NamedAspect : AspectFieldInterfaceDefinition
     {
         FieldActions = new()
         {
-            new(LoquiInterfaceType.Direct, "Name", (o, tg, fg) =>
+            new(LoquiInterfaceType.Direct, "Name", (o, tg, sb) =>
             {
                 if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
                 var isTransl = nameField.Translated.HasValue;
@@ -35,91 +35,91 @@ public class NamedAspect : AspectFieldInterfaceDefinition
                 {
                     if (nameField.Nullable)
                     {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("string? INamedGetter.Name => this.Name?.String;");
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine($"{nameof(ITranslatedStringGetter)}? {nameof(ITranslatedNamedGetter)}.Name => this.Name;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine("string? INamedGetter.Name => this.Name?.String;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"{nameof(ITranslatedStringGetter)}? {nameof(ITranslatedNamedGetter)}.Name => this.Name;");
                     }
                     else
                     {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? {nameof(TranslatedString)}.Empty;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? {nameof(TranslatedString)}.Empty;");
                     }
                 }
                 else if (nameField.Nullable)
                 {
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine("string INamedRequiredGetter.Name => this.Name ?? string.Empty;");
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequiredGetter.Name => this.Name ?? string.Empty;");
                 }
 
                 if (isTransl)
                 {
                     if (nameField.IsNullable)
                     {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? string.Empty;");
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine($"string? INamed.Name");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? string.Empty;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"string? INamed.Name");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine("get => this.Name?.String;");
-                            fg.AppendLine("set => this.Name = value;");
+                            sb.AppendLine("get => this.Name?.String;");
+                            sb.AppendLine("set => this.Name = value;");
                         }
                     }
                     else
                     {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
                     }
 
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine("string INamedRequired.Name");
-                    using (new BraceWrapper(fg))
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequired.Name");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine("get => this.Name?.String ?? string.Empty;");
-                        fg.AppendLine("set => this.Name = value;");
+                        sb.AppendLine("get => this.Name?.String ?? string.Empty;");
+                        sb.AppendLine("set => this.Name = value;");
                     }
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine($"{nameof(TranslatedString)} {nameof(ITranslatedNamedRequired)}.Name");
-                    using (new BraceWrapper(fg))
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine($"{nameof(TranslatedString)} {nameof(ITranslatedNamedRequired)}.Name");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine("get => this.Name ?? string.Empty;");
-                        fg.AppendLine("set => this.Name = value;");
+                        sb.AppendLine("get => this.Name ?? string.Empty;");
+                        sb.AppendLine("set => this.Name = value;");
                     }
                 }
                 else if (nameField.Nullable)
                 {
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine("string INamedRequired.Name");
-                    using (new BraceWrapper(fg))
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequired.Name");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine("get => this.Name ?? string.Empty;");
-                        fg.AppendLine("set => this.Name = value;");
+                        sb.AppendLine("get => this.Name ?? string.Empty;");
+                        sb.AppendLine("set => this.Name = value;");
                     }
                 }
             }),
-            new(LoquiInterfaceType.IGetter, "Name", (o, tg, fg) =>
+            new(LoquiInterfaceType.IGetter, "Name", (o, tg, sb) =>
             {
                 if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
                 var isTransl = nameField.Translated.HasValue;
                 if (isTransl)
                 {
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
                     if (nameField.Nullable)
                     {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("string? INamedGetter.Name => this.Name?.String;");
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? {nameof(TranslatedString)}.Empty;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine("string? INamedGetter.Name => this.Name?.String;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? {nameof(TranslatedString)}.Empty;");
                     }
                 }
                 else if (nameField.Nullable)
                 {
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine("string INamedRequiredGetter.Name => this.Name ?? string.Empty;");
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequiredGetter.Name => this.Name ?? string.Empty;");
                 }
             })
         };

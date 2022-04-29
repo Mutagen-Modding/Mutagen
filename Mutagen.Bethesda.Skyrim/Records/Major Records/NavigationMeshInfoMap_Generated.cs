@@ -101,11 +101,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavigationMeshInfoMapMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -291,54 +292,54 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(NavigationMeshInfoMap.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NavigationMeshInfoMap.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NavigationMeshInfoMap.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NavigationMeshInfoMap.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavigationMeshInfoMap.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.NavMeshVersion ?? true)
                     {
-                        fg.AppendItem(NavMeshVersion, "NavMeshVersion");
+                        sb.AppendItem(NavMeshVersion, "NavMeshVersion");
                     }
                     if ((printMask?.MapInfos?.Overall ?? true)
                         && MapInfos is {} MapInfosItem)
                     {
-                        fg.AppendLine("MapInfos =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MapInfos =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(MapInfosItem.Overall);
+                            sb.AppendItem(MapInfosItem.Overall);
                             if (MapInfosItem.Specific != null)
                             {
                                 foreach (var subItem in MapInfosItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.PreferredPathing?.Overall ?? true)
                     {
-                        PreferredPathing?.ToString(fg);
+                        PreferredPathing?.ToString(sb);
                     }
                     if (printMask?.NVSI ?? true)
                     {
-                        fg.AppendItem(NVSI, "NVSI");
+                        sb.AppendItem(NVSI, "NVSI");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -434,59 +435,63 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(NavMeshVersion, "NavMeshVersion");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(NavMeshVersion, "NavMeshVersion");
+                }
                 if (MapInfos is {} MapInfosItem)
                 {
-                    fg.AppendLine("MapInfos =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MapInfos =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(MapInfosItem.Overall);
+                        sb.AppendItem(MapInfosItem.Overall);
                         if (MapInfosItem.Specific != null)
                         {
                             foreach (var subItem in MapInfosItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                PreferredPathing?.ToString(fg);
-                fg.AppendItem(NVSI, "NVSI");
+                PreferredPathing?.ToString(sb);
+                {
+                    sb.AppendItem(NVSI, "NVSI");
+                }
             }
             #endregion
 
@@ -671,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -756,13 +761,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this INavigationMeshInfoMapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationMeshInfoMap.Mask<bool>? printMask = null)
         {
             ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1097,81 +1102,81 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             NavigationMeshInfoMap.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INavigationMeshInfoMapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationMeshInfoMap.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavigationMeshInfoMap =>");
+                sb.AppendLine($"NavigationMeshInfoMap =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavigationMeshInfoMap) =>");
+                sb.AppendLine($"{name} (NavigationMeshInfoMap) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavigationMeshInfoMapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavigationMeshInfoMap.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.NavMeshVersion ?? true)
                 && item.NavMeshVersion is {} NavMeshVersionItem)
             {
-                fg.AppendItem(NavMeshVersionItem, "NavMeshVersion");
+                sb.AppendItem(NavMeshVersionItem, "NavMeshVersion");
             }
             if (printMask?.MapInfos?.Overall ?? true)
             {
-                fg.AppendLine("MapInfos =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MapInfos =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.MapInfos)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.PreferredPathing?.Overall ?? true)
                 && item.PreferredPathing is {} PreferredPathingItem)
             {
-                PreferredPathingItem?.ToString(fg, "PreferredPathing");
+                PreferredPathingItem?.ToString(sb, "PreferredPathing");
             }
             if ((printMask?.NVSI ?? true)
                 && item.NVSI is {} NVSIItem)
             {
-                fg.AppendLine($"NVSI => {SpanExt.ToHexString(NVSIItem)}");
+                sb.AppendLine($"NVSI => {SpanExt.ToHexString(NVSIItem)}");
             }
         }
         
@@ -1803,7 +1808,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1941,11 +1946,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavigationMeshInfoMapMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

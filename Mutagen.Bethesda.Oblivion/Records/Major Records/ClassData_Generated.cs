@@ -101,11 +101,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClassDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -344,85 +345,89 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(ClassData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ClassData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ClassData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ClassData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ClassData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if ((printMask?.PrimaryAttributes?.Overall ?? true)
                         && PrimaryAttributes is {} PrimaryAttributesItem)
                     {
-                        fg.AppendLine("PrimaryAttributes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("PrimaryAttributes =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(PrimaryAttributesItem.Overall);
+                            sb.AppendItem(PrimaryAttributesItem.Overall);
                             if (PrimaryAttributesItem.Specific != null)
                             {
                                 foreach (var subItem in PrimaryAttributesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Specialization ?? true)
                     {
-                        fg.AppendItem(Specialization, "Specialization");
+                        sb.AppendItem(Specialization, "Specialization");
                     }
                     if ((printMask?.SecondaryAttributes?.Overall ?? true)
                         && SecondaryAttributes is {} SecondaryAttributesItem)
                     {
-                        fg.AppendLine("SecondaryAttributes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("SecondaryAttributes =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(SecondaryAttributesItem.Overall);
+                            sb.AppendItem(SecondaryAttributesItem.Overall);
                             if (SecondaryAttributesItem.Specific != null)
                             {
                                 foreach (var subItem in SecondaryAttributesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.ClassServices ?? true)
                     {
-                        fg.AppendItem(ClassServices, "ClassServices");
+                        sb.AppendItem(ClassServices, "ClassServices");
                     }
                     if (printMask?.Training?.Overall ?? true)
                     {
-                        Training?.ToString(fg);
+                        Training?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -559,82 +564,94 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
                 if (PrimaryAttributes is {} PrimaryAttributesItem)
                 {
-                    fg.AppendLine("PrimaryAttributes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("PrimaryAttributes =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(PrimaryAttributesItem.Overall);
+                        sb.AppendItem(PrimaryAttributesItem.Overall);
                         if (PrimaryAttributesItem.Specific != null)
                         {
                             foreach (var subItem in PrimaryAttributesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Specialization, "Specialization");
+                {
+                    sb.AppendItem(Specialization, "Specialization");
+                }
                 if (SecondaryAttributes is {} SecondaryAttributesItem)
                 {
-                    fg.AppendLine("SecondaryAttributes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("SecondaryAttributes =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(SecondaryAttributesItem.Overall);
+                        sb.AppendItem(SecondaryAttributesItem.Overall);
                         if (SecondaryAttributesItem.Specific != null)
                         {
                             foreach (var subItem in SecondaryAttributesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(ClassServices, "ClassServices");
-                Training?.ToString(fg);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(ClassServices, "ClassServices");
+                }
+                Training?.ToString(sb);
             }
             #endregion
 
@@ -777,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -862,13 +879,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IClassDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClassData.Mask<bool>? printMask = null)
         {
             ((ClassDataCommon)((IClassDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1178,100 +1195,100 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             ClassData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IClassDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClassData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ClassData =>");
+                sb.AppendLine($"ClassData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ClassData) =>");
+                sb.AppendLine($"{name} (ClassData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IClassDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ClassData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.PrimaryAttributes?.Overall ?? true)
             {
-                fg.AppendLine("PrimaryAttributes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("PrimaryAttributes =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.PrimaryAttributes)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Specialization ?? true)
             {
-                fg.AppendItem(item.Specialization, "Specialization");
+                sb.AppendItem(item.Specialization, "Specialization");
             }
             if (printMask?.SecondaryAttributes?.Overall ?? true)
             {
-                fg.AppendLine("SecondaryAttributes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("SecondaryAttributes =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.SecondaryAttributes)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.ClassServices ?? true)
             {
-                fg.AppendItem(item.ClassServices, "ClassServices");
+                sb.AppendItem(item.ClassServices, "ClassServices");
             }
             if (printMask?.Training?.Overall ?? true)
             {
-                item.Training?.ToString(fg, "Training");
+                item.Training?.ToString(sb, "Training");
             }
         }
         
@@ -1665,7 +1682,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ClassDataBinaryWriteTranslation.Instance;
@@ -1739,11 +1756,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ClassDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

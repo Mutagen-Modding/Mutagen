@@ -262,11 +262,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -634,115 +635,115 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(PlacedObject.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PlacedObject.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PlacedObject.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Base ?? true)
                     {
-                        fg.AppendItem(Base, "Base");
+                        sb.AppendItem(Base, "Base");
                     }
                     if (printMask?.XPCIFluff ?? true)
                     {
-                        fg.AppendItem(XPCIFluff, "XPCIFluff");
+                        sb.AppendItem(XPCIFluff, "XPCIFluff");
                     }
                     if (printMask?.FULLFluff ?? true)
                     {
-                        fg.AppendItem(FULLFluff, "FULLFluff");
+                        sb.AppendItem(FULLFluff, "FULLFluff");
                     }
                     if (printMask?.TeleportDestination?.Overall ?? true)
                     {
-                        TeleportDestination?.ToString(fg);
+                        TeleportDestination?.ToString(sb);
                     }
                     if (printMask?.Lock?.Overall ?? true)
                     {
-                        Lock?.ToString(fg);
+                        Lock?.ToString(sb);
                     }
                     if (printMask?.Owner ?? true)
                     {
-                        fg.AppendItem(Owner, "Owner");
+                        sb.AppendItem(Owner, "Owner");
                     }
                     if (printMask?.FactionRank ?? true)
                     {
-                        fg.AppendItem(FactionRank, "FactionRank");
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.GlobalVariable ?? true)
                     {
-                        fg.AppendItem(GlobalVariable, "GlobalVariable");
+                        sb.AppendItem(GlobalVariable, "GlobalVariable");
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
-                        EnableParent?.ToString(fg);
+                        EnableParent?.ToString(sb);
                     }
                     if (printMask?.Target ?? true)
                     {
-                        fg.AppendItem(Target, "Target");
+                        sb.AppendItem(Target, "Target");
                     }
                     if (printMask?.SpeedTreeSeed ?? true)
                     {
-                        fg.AppendItem(SpeedTreeSeed, "SpeedTreeSeed");
+                        sb.AppendItem(SpeedTreeSeed, "SpeedTreeSeed");
                     }
                     if (printMask?.DistantLODData?.Overall ?? true)
                     {
-                        DistantLODData?.ToString(fg);
+                        DistantLODData?.ToString(sb);
                     }
                     if (printMask?.Charge ?? true)
                     {
-                        fg.AppendItem(Charge, "Charge");
+                        sb.AppendItem(Charge, "Charge");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if (printMask?.LevelModifier ?? true)
                     {
-                        fg.AppendItem(LevelModifier, "LevelModifier");
+                        sb.AppendItem(LevelModifier, "LevelModifier");
                     }
                     if (printMask?.XRTM ?? true)
                     {
-                        fg.AppendItem(XRTM, "XRTM");
+                        sb.AppendItem(XRTM, "XRTM");
                     }
                     if (printMask?.ActionFlags ?? true)
                     {
-                        fg.AppendItem(ActionFlags, "ActionFlags");
+                        sb.AppendItem(ActionFlags, "ActionFlags");
                     }
                     if (printMask?.Count ?? true)
                     {
-                        fg.AppendItem(Count, "Count");
+                        sb.AppendItem(Count, "Count");
                     }
                     if (printMask?.MapMarker?.Overall ?? true)
                     {
-                        MapMarker?.ToString(fg);
+                        MapMarker?.ToString(sb);
                     }
                     if (printMask?.OpenByDefault ?? true)
                     {
-                        fg.AppendItem(OpenByDefault, "OpenByDefault");
+                        sb.AppendItem(OpenByDefault, "OpenByDefault");
                     }
                     if (printMask?.RagdollData ?? true)
                     {
-                        fg.AppendItem(RagdollData, "RagdollData");
+                        sb.AppendItem(RagdollData, "RagdollData");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.ContainedSoul ?? true)
                     {
-                        fg.AppendItem(ContainedSoul, "ContainedSoul");
+                        sb.AppendItem(ContainedSoul, "ContainedSoul");
                     }
                     if (printMask?.Location?.Overall ?? true)
                     {
-                        Location?.ToString(fg);
+                        Location?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1038,58 +1039,94 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Base, "Base");
-                fg.AppendItem(XPCIFluff, "XPCIFluff");
-                fg.AppendItem(FULLFluff, "FULLFluff");
-                TeleportDestination?.ToString(fg);
-                Lock?.ToString(fg);
-                fg.AppendItem(Owner, "Owner");
-                fg.AppendItem(FactionRank, "FactionRank");
-                fg.AppendItem(GlobalVariable, "GlobalVariable");
-                EnableParent?.ToString(fg);
-                fg.AppendItem(Target, "Target");
-                fg.AppendItem(SpeedTreeSeed, "SpeedTreeSeed");
-                DistantLODData?.ToString(fg);
-                fg.AppendItem(Charge, "Charge");
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(LevelModifier, "LevelModifier");
-                fg.AppendItem(XRTM, "XRTM");
-                fg.AppendItem(ActionFlags, "ActionFlags");
-                fg.AppendItem(Count, "Count");
-                MapMarker?.ToString(fg);
-                fg.AppendItem(OpenByDefault, "OpenByDefault");
-                fg.AppendItem(RagdollData, "RagdollData");
-                fg.AppendItem(Scale, "Scale");
-                fg.AppendItem(ContainedSoul, "ContainedSoul");
-                Location?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Base, "Base");
+                }
+                {
+                    sb.AppendItem(XPCIFluff, "XPCIFluff");
+                }
+                {
+                    sb.AppendItem(FULLFluff, "FULLFluff");
+                }
+                TeleportDestination?.ToString(sb);
+                Lock?.ToString(sb);
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                {
+                    sb.AppendItem(GlobalVariable, "GlobalVariable");
+                }
+                EnableParent?.ToString(sb);
+                {
+                    sb.AppendItem(Target, "Target");
+                }
+                {
+                    sb.AppendItem(SpeedTreeSeed, "SpeedTreeSeed");
+                }
+                DistantLODData?.ToString(sb);
+                {
+                    sb.AppendItem(Charge, "Charge");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(LevelModifier, "LevelModifier");
+                }
+                {
+                    sb.AppendItem(XRTM, "XRTM");
+                }
+                {
+                    sb.AppendItem(ActionFlags, "ActionFlags");
+                }
+                {
+                    sb.AppendItem(Count, "Count");
+                }
+                MapMarker?.ToString(sb);
+                {
+                    sb.AppendItem(OpenByDefault, "OpenByDefault");
+                }
+                {
+                    sb.AppendItem(RagdollData, "RagdollData");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                {
+                    sb.AppendItem(ContainedSoul, "ContainedSoul");
+                }
+                Location?.ToString(sb);
             }
             #endregion
 
@@ -1333,7 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1460,13 +1497,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IPlacedObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
             ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1904,161 +1941,161 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPlacedObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedObject =>");
+                sb.AppendLine($"PlacedObject =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedObject) =>");
+                sb.AppendLine($"{name} (PlacedObject) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedObject.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKeyNullable, "Base");
+                sb.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if ((printMask?.XPCIFluff ?? true)
                 && item.XPCIFluff is {} XPCIFluffItem)
             {
-                fg.AppendLine($"XPCIFluff => {SpanExt.ToHexString(XPCIFluffItem)}");
+                sb.AppendLine($"XPCIFluff => {SpanExt.ToHexString(XPCIFluffItem)}");
             }
             if ((printMask?.FULLFluff ?? true)
                 && item.FULLFluff is {} FULLFluffItem)
             {
-                fg.AppendLine($"FULLFluff => {SpanExt.ToHexString(FULLFluffItem)}");
+                sb.AppendLine($"FULLFluff => {SpanExt.ToHexString(FULLFluffItem)}");
             }
             if ((printMask?.TeleportDestination?.Overall ?? true)
                 && item.TeleportDestination is {} TeleportDestinationItem)
             {
-                TeleportDestinationItem?.ToString(fg, "TeleportDestination");
+                TeleportDestinationItem?.ToString(sb, "TeleportDestination");
             }
             if ((printMask?.Lock?.Overall ?? true)
                 && item.Lock is {} LockItem)
             {
-                LockItem?.ToString(fg, "Lock");
+                LockItem?.ToString(sb, "Lock");
             }
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank is {} FactionRankItem)
             {
-                fg.AppendItem(FactionRankItem, "FactionRank");
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if (printMask?.GlobalVariable ?? true)
             {
-                fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
+                sb.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
             {
-                EnableParentItem?.ToString(fg, "EnableParent");
+                EnableParentItem?.ToString(sb, "EnableParent");
             }
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target.FormKeyNullable, "Target");
+                sb.AppendItem(item.Target.FormKeyNullable, "Target");
             }
             if ((printMask?.SpeedTreeSeed ?? true)
                 && item.SpeedTreeSeed is {} SpeedTreeSeedItem)
             {
-                fg.AppendItem(SpeedTreeSeedItem, "SpeedTreeSeed");
+                sb.AppendItem(SpeedTreeSeedItem, "SpeedTreeSeed");
             }
             if ((printMask?.DistantLODData?.Overall ?? true)
                 && item.DistantLODData is {} DistantLODDataItem)
             {
-                DistantLODDataItem?.ToString(fg, "DistantLODData");
+                DistantLODDataItem?.ToString(sb, "DistantLODData");
             }
             if ((printMask?.Charge ?? true)
                 && item.Charge is {} ChargeItem)
             {
-                fg.AppendItem(ChargeItem, "Charge");
+                sb.AppendItem(ChargeItem, "Charge");
             }
             if ((printMask?.Health ?? true)
                 && item.Health is {} HealthItem)
             {
-                fg.AppendItem(HealthItem, "Health");
+                sb.AppendItem(HealthItem, "Health");
             }
             if ((printMask?.LevelModifier ?? true)
                 && item.LevelModifier is {} LevelModifierItem)
             {
-                fg.AppendItem(LevelModifierItem, "LevelModifier");
+                sb.AppendItem(LevelModifierItem, "LevelModifier");
             }
             if (printMask?.XRTM ?? true)
             {
-                fg.AppendItem(item.XRTM.FormKeyNullable, "XRTM");
+                sb.AppendItem(item.XRTM.FormKeyNullable, "XRTM");
             }
             if ((printMask?.ActionFlags ?? true)
                 && item.ActionFlags is {} ActionFlagsItem)
             {
-                fg.AppendItem(ActionFlagsItem, "ActionFlags");
+                sb.AppendItem(ActionFlagsItem, "ActionFlags");
             }
             if ((printMask?.Count ?? true)
                 && item.Count is {} CountItem)
             {
-                fg.AppendItem(CountItem, "Count");
+                sb.AppendItem(CountItem, "Count");
             }
             if ((printMask?.MapMarker?.Overall ?? true)
                 && item.MapMarker is {} MapMarkerItem)
             {
-                MapMarkerItem?.ToString(fg, "MapMarker");
+                MapMarkerItem?.ToString(sb, "MapMarker");
             }
             if (printMask?.OpenByDefault ?? true)
             {
-                fg.AppendItem(item.OpenByDefault, "OpenByDefault");
+                sb.AppendItem(item.OpenByDefault, "OpenByDefault");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData is {} RagdollDataItem)
             {
-                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
+                sb.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.Scale ?? true)
                 && item.Scale is {} ScaleItem)
             {
-                fg.AppendItem(ScaleItem, "Scale");
+                sb.AppendItem(ScaleItem, "Scale");
             }
             if (printMask?.ContainedSoul ?? true)
             {
-                fg.AppendItem(item.ContainedSoul.FormKeyNullable, "ContainedSoul");
+                sb.AppendItem(item.ContainedSoul.FormKeyNullable, "ContainedSoul");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location is {} LocationItem)
             {
-                LocationItem?.ToString(fg, "Location");
+                LocationItem?.ToString(sb, "Location");
             }
         }
         
@@ -3295,7 +3332,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3616,11 +3653,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedObjectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

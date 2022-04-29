@@ -126,11 +126,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ActorValuePerkNodeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -346,74 +347,76 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ActorValuePerkNode.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ActorValuePerkNode.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ActorValuePerkNode.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ActorValuePerkNode.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ActorValuePerkNode.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Perk ?? true)
                     {
-                        fg.AppendItem(Perk, "Perk");
+                        sb.AppendItem(Perk, "Perk");
                     }
                     if (printMask?.FNAM ?? true)
                     {
-                        fg.AppendItem(FNAM, "FNAM");
+                        sb.AppendItem(FNAM, "FNAM");
                     }
                     if (printMask?.PerkGridX ?? true)
                     {
-                        fg.AppendItem(PerkGridX, "PerkGridX");
+                        sb.AppendItem(PerkGridX, "PerkGridX");
                     }
                     if (printMask?.PerkGridY ?? true)
                     {
-                        fg.AppendItem(PerkGridY, "PerkGridY");
+                        sb.AppendItem(PerkGridY, "PerkGridY");
                     }
                     if (printMask?.HorizontalPosition ?? true)
                     {
-                        fg.AppendItem(HorizontalPosition, "HorizontalPosition");
+                        sb.AppendItem(HorizontalPosition, "HorizontalPosition");
                     }
                     if (printMask?.VerticalPosition ?? true)
                     {
-                        fg.AppendItem(VerticalPosition, "VerticalPosition");
+                        sb.AppendItem(VerticalPosition, "VerticalPosition");
                     }
                     if (printMask?.AssociatedSkill ?? true)
                     {
-                        fg.AppendItem(AssociatedSkill, "AssociatedSkill");
+                        sb.AppendItem(AssociatedSkill, "AssociatedSkill");
                     }
                     if ((printMask?.ConnectionLineToIndices?.Overall ?? true)
                         && ConnectionLineToIndices is {} ConnectionLineToIndicesItem)
                     {
-                        fg.AppendLine("ConnectionLineToIndices =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ConnectionLineToIndices =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConnectionLineToIndicesItem.Overall);
+                            sb.AppendItem(ConnectionLineToIndicesItem.Overall);
                             if (ConnectionLineToIndicesItem.Specific != null)
                             {
                                 foreach (var subItem in ConnectionLineToIndicesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -570,63 +573,81 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Perk, "Perk");
-                fg.AppendItem(FNAM, "FNAM");
-                fg.AppendItem(PerkGridX, "PerkGridX");
-                fg.AppendItem(PerkGridY, "PerkGridY");
-                fg.AppendItem(HorizontalPosition, "HorizontalPosition");
-                fg.AppendItem(VerticalPosition, "VerticalPosition");
-                fg.AppendItem(AssociatedSkill, "AssociatedSkill");
+                {
+                    sb.AppendItem(Perk, "Perk");
+                }
+                {
+                    sb.AppendItem(FNAM, "FNAM");
+                }
+                {
+                    sb.AppendItem(PerkGridX, "PerkGridX");
+                }
+                {
+                    sb.AppendItem(PerkGridY, "PerkGridY");
+                }
+                {
+                    sb.AppendItem(HorizontalPosition, "HorizontalPosition");
+                }
+                {
+                    sb.AppendItem(VerticalPosition, "VerticalPosition");
+                }
+                {
+                    sb.AppendItem(AssociatedSkill, "AssociatedSkill");
+                }
                 if (ConnectionLineToIndices is {} ConnectionLineToIndicesItem)
                 {
-                    fg.AppendLine("ConnectionLineToIndices =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ConnectionLineToIndices =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConnectionLineToIndicesItem.Overall);
+                        sb.AppendItem(ConnectionLineToIndicesItem.Overall);
                         if (ConnectionLineToIndicesItem.Specific != null)
                         {
                             foreach (var subItem in ConnectionLineToIndicesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Index, "Index");
+                {
+                    sb.AppendItem(Index, "Index");
+                }
             }
             #endregion
 
@@ -775,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -866,13 +887,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IActorValuePerkNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValuePerkNode.Mask<bool>? printMask = null)
         {
             ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1192,100 +1213,100 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ActorValuePerkNode.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IActorValuePerkNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValuePerkNode.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ActorValuePerkNode =>");
+                sb.AppendLine($"ActorValuePerkNode =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ActorValuePerkNode) =>");
+                sb.AppendLine($"{name} (ActorValuePerkNode) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IActorValuePerkNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ActorValuePerkNode.Mask<bool>? printMask = null)
         {
             if (printMask?.Perk ?? true)
             {
-                fg.AppendItem(item.Perk.FormKey, "Perk");
+                sb.AppendItem(item.Perk.FormKey, "Perk");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM is {} FNAMItem)
             {
-                fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.PerkGridX ?? true)
                 && item.PerkGridX is {} PerkGridXItem)
             {
-                fg.AppendItem(PerkGridXItem, "PerkGridX");
+                sb.AppendItem(PerkGridXItem, "PerkGridX");
             }
             if ((printMask?.PerkGridY ?? true)
                 && item.PerkGridY is {} PerkGridYItem)
             {
-                fg.AppendItem(PerkGridYItem, "PerkGridY");
+                sb.AppendItem(PerkGridYItem, "PerkGridY");
             }
             if ((printMask?.HorizontalPosition ?? true)
                 && item.HorizontalPosition is {} HorizontalPositionItem)
             {
-                fg.AppendItem(HorizontalPositionItem, "HorizontalPosition");
+                sb.AppendItem(HorizontalPositionItem, "HorizontalPosition");
             }
             if ((printMask?.VerticalPosition ?? true)
                 && item.VerticalPosition is {} VerticalPositionItem)
             {
-                fg.AppendItem(VerticalPositionItem, "VerticalPosition");
+                sb.AppendItem(VerticalPositionItem, "VerticalPosition");
             }
             if (printMask?.AssociatedSkill ?? true)
             {
-                fg.AppendItem(item.AssociatedSkill.FormKeyNullable, "AssociatedSkill");
+                sb.AppendItem(item.AssociatedSkill.FormKeyNullable, "AssociatedSkill");
             }
             if (printMask?.ConnectionLineToIndices?.Overall ?? true)
             {
-                fg.AppendLine("ConnectionLineToIndices =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ConnectionLineToIndices =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.ConnectionLineToIndices)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
         }
         
@@ -1750,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => ActorValuePerkNodeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1919,11 +1940,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ActorValuePerkNodeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

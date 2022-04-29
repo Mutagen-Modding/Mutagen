@@ -508,11 +508,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             Fallout4ModMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1549,239 +1550,239 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(Fallout4Mod.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Fallout4Mod.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Fallout4Mod.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Fallout4Mod.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Fallout4Mod.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ModHeader?.Overall ?? true)
                     {
-                        ModHeader?.ToString(fg);
+                        ModHeader?.ToString(sb);
                     }
                     if (printMask?.GameSettings?.Overall ?? true)
                     {
-                        GameSettings?.ToString(fg);
+                        GameSettings?.ToString(sb);
                     }
                     if (printMask?.Keywords?.Overall ?? true)
                     {
-                        Keywords?.ToString(fg);
+                        Keywords?.ToString(sb);
                     }
                     if (printMask?.LocationReferenceTypes?.Overall ?? true)
                     {
-                        LocationReferenceTypes?.ToString(fg);
+                        LocationReferenceTypes?.ToString(sb);
                     }
                     if (printMask?.Actions?.Overall ?? true)
                     {
-                        Actions?.ToString(fg);
+                        Actions?.ToString(sb);
                     }
                     if (printMask?.Transforms?.Overall ?? true)
                     {
-                        Transforms?.ToString(fg);
+                        Transforms?.ToString(sb);
                     }
                     if (printMask?.Components?.Overall ?? true)
                     {
-                        Components?.ToString(fg);
+                        Components?.ToString(sb);
                     }
                     if (printMask?.TextureSets?.Overall ?? true)
                     {
-                        TextureSets?.ToString(fg);
+                        TextureSets?.ToString(sb);
                     }
                     if (printMask?.Globals?.Overall ?? true)
                     {
-                        Globals?.ToString(fg);
+                        Globals?.ToString(sb);
                     }
                     if (printMask?.DamageTypes?.Overall ?? true)
                     {
-                        DamageTypes?.ToString(fg);
+                        DamageTypes?.ToString(sb);
                     }
                     if (printMask?.Classes?.Overall ?? true)
                     {
-                        Classes?.ToString(fg);
+                        Classes?.ToString(sb);
                     }
                     if (printMask?.Factions?.Overall ?? true)
                     {
-                        Factions?.ToString(fg);
+                        Factions?.ToString(sb);
                     }
                     if (printMask?.HeadParts?.Overall ?? true)
                     {
-                        HeadParts?.ToString(fg);
+                        HeadParts?.ToString(sb);
                     }
                     if (printMask?.Races?.Overall ?? true)
                     {
-                        Races?.ToString(fg);
+                        Races?.ToString(sb);
                     }
                     if (printMask?.SoundMarkers?.Overall ?? true)
                     {
-                        SoundMarkers?.ToString(fg);
+                        SoundMarkers?.ToString(sb);
                     }
                     if (printMask?.AcousticSpaces?.Overall ?? true)
                     {
-                        AcousticSpaces?.ToString(fg);
+                        AcousticSpaces?.ToString(sb);
                     }
                     if (printMask?.MagicEffects?.Overall ?? true)
                     {
-                        MagicEffects?.ToString(fg);
+                        MagicEffects?.ToString(sb);
                     }
                     if (printMask?.LandscapeTextures?.Overall ?? true)
                     {
-                        LandscapeTextures?.ToString(fg);
+                        LandscapeTextures?.ToString(sb);
                     }
                     if (printMask?.ObjectEffects?.Overall ?? true)
                     {
-                        ObjectEffects?.ToString(fg);
+                        ObjectEffects?.ToString(sb);
                     }
                     if (printMask?.Spells?.Overall ?? true)
                     {
-                        Spells?.ToString(fg);
+                        Spells?.ToString(sb);
                     }
                     if (printMask?.Activators?.Overall ?? true)
                     {
-                        Activators?.ToString(fg);
+                        Activators?.ToString(sb);
                     }
                     if (printMask?.TalkingActivators?.Overall ?? true)
                     {
-                        TalkingActivators?.ToString(fg);
+                        TalkingActivators?.ToString(sb);
                     }
                     if (printMask?.Armors?.Overall ?? true)
                     {
-                        Armors?.ToString(fg);
+                        Armors?.ToString(sb);
                     }
                     if (printMask?.Books?.Overall ?? true)
                     {
-                        Books?.ToString(fg);
+                        Books?.ToString(sb);
                     }
                     if (printMask?.Containers?.Overall ?? true)
                     {
-                        Containers?.ToString(fg);
+                        Containers?.ToString(sb);
                     }
                     if (printMask?.Doors?.Overall ?? true)
                     {
-                        Doors?.ToString(fg);
+                        Doors?.ToString(sb);
                     }
                     if (printMask?.Ingredients?.Overall ?? true)
                     {
-                        Ingredients?.ToString(fg);
+                        Ingredients?.ToString(sb);
                     }
                     if (printMask?.Lights?.Overall ?? true)
                     {
-                        Lights?.ToString(fg);
+                        Lights?.ToString(sb);
                     }
                     if (printMask?.MiscItems?.Overall ?? true)
                     {
-                        MiscItems?.ToString(fg);
+                        MiscItems?.ToString(sb);
                     }
                     if (printMask?.Statics?.Overall ?? true)
                     {
-                        Statics?.ToString(fg);
+                        Statics?.ToString(sb);
                     }
                     if (printMask?.StaticCollections?.Overall ?? true)
                     {
-                        StaticCollections?.ToString(fg);
+                        StaticCollections?.ToString(sb);
                     }
                     if (printMask?.MovableStatics?.Overall ?? true)
                     {
-                        MovableStatics?.ToString(fg);
+                        MovableStatics?.ToString(sb);
                     }
                     if (printMask?.Grasses?.Overall ?? true)
                     {
-                        Grasses?.ToString(fg);
+                        Grasses?.ToString(sb);
                     }
                     if (printMask?.Trees?.Overall ?? true)
                     {
-                        Trees?.ToString(fg);
+                        Trees?.ToString(sb);
                     }
                     if (printMask?.Florae?.Overall ?? true)
                     {
-                        Florae?.ToString(fg);
+                        Florae?.ToString(sb);
                     }
                     if (printMask?.Furniture?.Overall ?? true)
                     {
-                        Furniture?.ToString(fg);
+                        Furniture?.ToString(sb);
                     }
                     if (printMask?.Weapons?.Overall ?? true)
                     {
-                        Weapons?.ToString(fg);
+                        Weapons?.ToString(sb);
                     }
                     if (printMask?.Ammunitions?.Overall ?? true)
                     {
-                        Ammunitions?.ToString(fg);
+                        Ammunitions?.ToString(sb);
                     }
                     if (printMask?.Npcs?.Overall ?? true)
                     {
-                        Npcs?.ToString(fg);
+                        Npcs?.ToString(sb);
                     }
                     if (printMask?.LeveledNpcs?.Overall ?? true)
                     {
-                        LeveledNpcs?.ToString(fg);
+                        LeveledNpcs?.ToString(sb);
                     }
                     if (printMask?.Keys?.Overall ?? true)
                     {
-                        Keys?.ToString(fg);
+                        Keys?.ToString(sb);
                     }
                     if (printMask?.Ingestibles?.Overall ?? true)
                     {
-                        Ingestibles?.ToString(fg);
+                        Ingestibles?.ToString(sb);
                     }
                     if (printMask?.IdleMarkers?.Overall ?? true)
                     {
-                        IdleMarkers?.ToString(fg);
+                        IdleMarkers?.ToString(sb);
                     }
                     if (printMask?.Holotapes?.Overall ?? true)
                     {
-                        Holotapes?.ToString(fg);
+                        Holotapes?.ToString(sb);
                     }
                     if (printMask?.Projectiles?.Overall ?? true)
                     {
-                        Projectiles?.ToString(fg);
+                        Projectiles?.ToString(sb);
                     }
                     if (printMask?.Hazards?.Overall ?? true)
                     {
-                        Hazards?.ToString(fg);
+                        Hazards?.ToString(sb);
                     }
                     if (printMask?.BendableSplines?.Overall ?? true)
                     {
-                        BendableSplines?.ToString(fg);
+                        BendableSplines?.ToString(sb);
                     }
                     if (printMask?.Terminals?.Overall ?? true)
                     {
-                        Terminals?.ToString(fg);
+                        Terminals?.ToString(sb);
                     }
                     if (printMask?.LeveledItems?.Overall ?? true)
                     {
-                        LeveledItems?.ToString(fg);
+                        LeveledItems?.ToString(sb);
                     }
                     if (printMask?.Weather?.Overall ?? true)
                     {
-                        Weather?.ToString(fg);
+                        Weather?.ToString(sb);
                     }
                     if (printMask?.Climates?.Overall ?? true)
                     {
-                        Climates?.ToString(fg);
+                        Climates?.ToString(sb);
                     }
                     if (printMask?.ShaderParticleGeometries?.Overall ?? true)
                     {
-                        ShaderParticleGeometries?.ToString(fg);
+                        ShaderParticleGeometries?.ToString(sb);
                     }
                     if (printMask?.VisualEffects?.Overall ?? true)
                     {
-                        VisualEffects?.ToString(fg);
+                        VisualEffects?.ToString(sb);
                     }
                     if (printMask?.Regions?.Overall ?? true)
                     {
-                        Regions?.ToString(fg);
+                        Regions?.ToString(sb);
                     }
                     if (printMask?.NavigationMeshInfoMaps?.Overall ?? true)
                     {
-                        NavigationMeshInfoMaps?.ToString(fg);
+                        NavigationMeshInfoMaps?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -2398,88 +2399,88 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                ModHeader?.ToString(fg);
-                GameSettings?.ToString(fg);
-                Keywords?.ToString(fg);
-                LocationReferenceTypes?.ToString(fg);
-                Actions?.ToString(fg);
-                Transforms?.ToString(fg);
-                Components?.ToString(fg);
-                TextureSets?.ToString(fg);
-                Globals?.ToString(fg);
-                DamageTypes?.ToString(fg);
-                Classes?.ToString(fg);
-                Factions?.ToString(fg);
-                HeadParts?.ToString(fg);
-                Races?.ToString(fg);
-                SoundMarkers?.ToString(fg);
-                AcousticSpaces?.ToString(fg);
-                MagicEffects?.ToString(fg);
-                LandscapeTextures?.ToString(fg);
-                ObjectEffects?.ToString(fg);
-                Spells?.ToString(fg);
-                Activators?.ToString(fg);
-                TalkingActivators?.ToString(fg);
-                Armors?.ToString(fg);
-                Books?.ToString(fg);
-                Containers?.ToString(fg);
-                Doors?.ToString(fg);
-                Ingredients?.ToString(fg);
-                Lights?.ToString(fg);
-                MiscItems?.ToString(fg);
-                Statics?.ToString(fg);
-                StaticCollections?.ToString(fg);
-                MovableStatics?.ToString(fg);
-                Grasses?.ToString(fg);
-                Trees?.ToString(fg);
-                Florae?.ToString(fg);
-                Furniture?.ToString(fg);
-                Weapons?.ToString(fg);
-                Ammunitions?.ToString(fg);
-                Npcs?.ToString(fg);
-                LeveledNpcs?.ToString(fg);
-                Keys?.ToString(fg);
-                Ingestibles?.ToString(fg);
-                IdleMarkers?.ToString(fg);
-                Holotapes?.ToString(fg);
-                Projectiles?.ToString(fg);
-                Hazards?.ToString(fg);
-                BendableSplines?.ToString(fg);
-                Terminals?.ToString(fg);
-                LeveledItems?.ToString(fg);
-                Weather?.ToString(fg);
-                Climates?.ToString(fg);
-                ShaderParticleGeometries?.ToString(fg);
-                VisualEffects?.ToString(fg);
-                Regions?.ToString(fg);
-                NavigationMeshInfoMaps?.ToString(fg);
+                ModHeader?.ToString(sb);
+                GameSettings?.ToString(sb);
+                Keywords?.ToString(sb);
+                LocationReferenceTypes?.ToString(sb);
+                Actions?.ToString(sb);
+                Transforms?.ToString(sb);
+                Components?.ToString(sb);
+                TextureSets?.ToString(sb);
+                Globals?.ToString(sb);
+                DamageTypes?.ToString(sb);
+                Classes?.ToString(sb);
+                Factions?.ToString(sb);
+                HeadParts?.ToString(sb);
+                Races?.ToString(sb);
+                SoundMarkers?.ToString(sb);
+                AcousticSpaces?.ToString(sb);
+                MagicEffects?.ToString(sb);
+                LandscapeTextures?.ToString(sb);
+                ObjectEffects?.ToString(sb);
+                Spells?.ToString(sb);
+                Activators?.ToString(sb);
+                TalkingActivators?.ToString(sb);
+                Armors?.ToString(sb);
+                Books?.ToString(sb);
+                Containers?.ToString(sb);
+                Doors?.ToString(sb);
+                Ingredients?.ToString(sb);
+                Lights?.ToString(sb);
+                MiscItems?.ToString(sb);
+                Statics?.ToString(sb);
+                StaticCollections?.ToString(sb);
+                MovableStatics?.ToString(sb);
+                Grasses?.ToString(sb);
+                Trees?.ToString(sb);
+                Florae?.ToString(sb);
+                Furniture?.ToString(sb);
+                Weapons?.ToString(sb);
+                Ammunitions?.ToString(sb);
+                Npcs?.ToString(sb);
+                LeveledNpcs?.ToString(sb);
+                Keys?.ToString(sb);
+                Ingestibles?.ToString(sb);
+                IdleMarkers?.ToString(sb);
+                Holotapes?.ToString(sb);
+                Projectiles?.ToString(sb);
+                Hazards?.ToString(sb);
+                BendableSplines?.ToString(sb);
+                Terminals?.ToString(sb);
+                LeveledItems?.ToString(sb);
+                Weather?.ToString(sb);
+                Climates?.ToString(sb);
+                ShaderParticleGeometries?.ToString(sb);
+                VisualEffects?.ToString(sb);
+                Regions?.ToString(sb);
+                NavigationMeshInfoMaps?.ToString(sb);
             }
             #endregion
 
@@ -3305,7 +3306,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -3494,13 +3495,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IFallout4ModGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Fallout4Mod.Mask<bool>? printMask = null)
         {
             ((Fallout4ModCommon)((IFallout4ModGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -5120,264 +5121,264 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             Fallout4Mod.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IFallout4ModGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Fallout4Mod.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Fallout4Mod =>");
+                sb.AppendLine($"Fallout4Mod =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Fallout4Mod) =>");
+                sb.AppendLine($"{name} (Fallout4Mod) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFallout4ModGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Fallout4Mod.Mask<bool>? printMask = null)
         {
             if (printMask?.ModHeader?.Overall ?? true)
             {
-                item.ModHeader?.ToString(fg, "ModHeader");
+                item.ModHeader?.ToString(sb, "ModHeader");
             }
             if (printMask?.GameSettings?.Overall ?? true)
             {
-                item.GameSettings?.ToString(fg, "GameSettings");
+                item.GameSettings?.ToString(sb, "GameSettings");
             }
             if (printMask?.Keywords?.Overall ?? true)
             {
-                item.Keywords?.ToString(fg, "Keywords");
+                item.Keywords?.ToString(sb, "Keywords");
             }
             if (printMask?.LocationReferenceTypes?.Overall ?? true)
             {
-                item.LocationReferenceTypes?.ToString(fg, "LocationReferenceTypes");
+                item.LocationReferenceTypes?.ToString(sb, "LocationReferenceTypes");
             }
             if (printMask?.Actions?.Overall ?? true)
             {
-                item.Actions?.ToString(fg, "Actions");
+                item.Actions?.ToString(sb, "Actions");
             }
             if (printMask?.Transforms?.Overall ?? true)
             {
-                item.Transforms?.ToString(fg, "Transforms");
+                item.Transforms?.ToString(sb, "Transforms");
             }
             if (printMask?.Components?.Overall ?? true)
             {
-                item.Components?.ToString(fg, "Components");
+                item.Components?.ToString(sb, "Components");
             }
             if (printMask?.TextureSets?.Overall ?? true)
             {
-                item.TextureSets?.ToString(fg, "TextureSets");
+                item.TextureSets?.ToString(sb, "TextureSets");
             }
             if (printMask?.Globals?.Overall ?? true)
             {
-                item.Globals?.ToString(fg, "Globals");
+                item.Globals?.ToString(sb, "Globals");
             }
             if (printMask?.DamageTypes?.Overall ?? true)
             {
-                item.DamageTypes?.ToString(fg, "DamageTypes");
+                item.DamageTypes?.ToString(sb, "DamageTypes");
             }
             if (printMask?.Classes?.Overall ?? true)
             {
-                item.Classes?.ToString(fg, "Classes");
+                item.Classes?.ToString(sb, "Classes");
             }
             if (printMask?.Factions?.Overall ?? true)
             {
-                item.Factions?.ToString(fg, "Factions");
+                item.Factions?.ToString(sb, "Factions");
             }
             if (printMask?.HeadParts?.Overall ?? true)
             {
-                item.HeadParts?.ToString(fg, "HeadParts");
+                item.HeadParts?.ToString(sb, "HeadParts");
             }
             if (printMask?.Races?.Overall ?? true)
             {
-                item.Races?.ToString(fg, "Races");
+                item.Races?.ToString(sb, "Races");
             }
             if (printMask?.SoundMarkers?.Overall ?? true)
             {
-                item.SoundMarkers?.ToString(fg, "SoundMarkers");
+                item.SoundMarkers?.ToString(sb, "SoundMarkers");
             }
             if (printMask?.AcousticSpaces?.Overall ?? true)
             {
-                item.AcousticSpaces?.ToString(fg, "AcousticSpaces");
+                item.AcousticSpaces?.ToString(sb, "AcousticSpaces");
             }
             if (printMask?.MagicEffects?.Overall ?? true)
             {
-                item.MagicEffects?.ToString(fg, "MagicEffects");
+                item.MagicEffects?.ToString(sb, "MagicEffects");
             }
             if (printMask?.LandscapeTextures?.Overall ?? true)
             {
-                item.LandscapeTextures?.ToString(fg, "LandscapeTextures");
+                item.LandscapeTextures?.ToString(sb, "LandscapeTextures");
             }
             if (printMask?.ObjectEffects?.Overall ?? true)
             {
-                item.ObjectEffects?.ToString(fg, "ObjectEffects");
+                item.ObjectEffects?.ToString(sb, "ObjectEffects");
             }
             if (printMask?.Spells?.Overall ?? true)
             {
-                item.Spells?.ToString(fg, "Spells");
+                item.Spells?.ToString(sb, "Spells");
             }
             if (printMask?.Activators?.Overall ?? true)
             {
-                item.Activators?.ToString(fg, "Activators");
+                item.Activators?.ToString(sb, "Activators");
             }
             if (printMask?.TalkingActivators?.Overall ?? true)
             {
-                item.TalkingActivators?.ToString(fg, "TalkingActivators");
+                item.TalkingActivators?.ToString(sb, "TalkingActivators");
             }
             if (printMask?.Armors?.Overall ?? true)
             {
-                item.Armors?.ToString(fg, "Armors");
+                item.Armors?.ToString(sb, "Armors");
             }
             if (printMask?.Books?.Overall ?? true)
             {
-                item.Books?.ToString(fg, "Books");
+                item.Books?.ToString(sb, "Books");
             }
             if (printMask?.Containers?.Overall ?? true)
             {
-                item.Containers?.ToString(fg, "Containers");
+                item.Containers?.ToString(sb, "Containers");
             }
             if (printMask?.Doors?.Overall ?? true)
             {
-                item.Doors?.ToString(fg, "Doors");
+                item.Doors?.ToString(sb, "Doors");
             }
             if (printMask?.Ingredients?.Overall ?? true)
             {
-                item.Ingredients?.ToString(fg, "Ingredients");
+                item.Ingredients?.ToString(sb, "Ingredients");
             }
             if (printMask?.Lights?.Overall ?? true)
             {
-                item.Lights?.ToString(fg, "Lights");
+                item.Lights?.ToString(sb, "Lights");
             }
             if (printMask?.MiscItems?.Overall ?? true)
             {
-                item.MiscItems?.ToString(fg, "MiscItems");
+                item.MiscItems?.ToString(sb, "MiscItems");
             }
             if (printMask?.Statics?.Overall ?? true)
             {
-                item.Statics?.ToString(fg, "Statics");
+                item.Statics?.ToString(sb, "Statics");
             }
             if (printMask?.StaticCollections?.Overall ?? true)
             {
-                item.StaticCollections?.ToString(fg, "StaticCollections");
+                item.StaticCollections?.ToString(sb, "StaticCollections");
             }
             if (printMask?.MovableStatics?.Overall ?? true)
             {
-                item.MovableStatics?.ToString(fg, "MovableStatics");
+                item.MovableStatics?.ToString(sb, "MovableStatics");
             }
             if (printMask?.Grasses?.Overall ?? true)
             {
-                item.Grasses?.ToString(fg, "Grasses");
+                item.Grasses?.ToString(sb, "Grasses");
             }
             if (printMask?.Trees?.Overall ?? true)
             {
-                item.Trees?.ToString(fg, "Trees");
+                item.Trees?.ToString(sb, "Trees");
             }
             if (printMask?.Florae?.Overall ?? true)
             {
-                item.Florae?.ToString(fg, "Florae");
+                item.Florae?.ToString(sb, "Florae");
             }
             if (printMask?.Furniture?.Overall ?? true)
             {
-                item.Furniture?.ToString(fg, "Furniture");
+                item.Furniture?.ToString(sb, "Furniture");
             }
             if (printMask?.Weapons?.Overall ?? true)
             {
-                item.Weapons?.ToString(fg, "Weapons");
+                item.Weapons?.ToString(sb, "Weapons");
             }
             if (printMask?.Ammunitions?.Overall ?? true)
             {
-                item.Ammunitions?.ToString(fg, "Ammunitions");
+                item.Ammunitions?.ToString(sb, "Ammunitions");
             }
             if (printMask?.Npcs?.Overall ?? true)
             {
-                item.Npcs?.ToString(fg, "Npcs");
+                item.Npcs?.ToString(sb, "Npcs");
             }
             if (printMask?.LeveledNpcs?.Overall ?? true)
             {
-                item.LeveledNpcs?.ToString(fg, "LeveledNpcs");
+                item.LeveledNpcs?.ToString(sb, "LeveledNpcs");
             }
             if (printMask?.Keys?.Overall ?? true)
             {
-                item.Keys?.ToString(fg, "Keys");
+                item.Keys?.ToString(sb, "Keys");
             }
             if (printMask?.Ingestibles?.Overall ?? true)
             {
-                item.Ingestibles?.ToString(fg, "Ingestibles");
+                item.Ingestibles?.ToString(sb, "Ingestibles");
             }
             if (printMask?.IdleMarkers?.Overall ?? true)
             {
-                item.IdleMarkers?.ToString(fg, "IdleMarkers");
+                item.IdleMarkers?.ToString(sb, "IdleMarkers");
             }
             if (printMask?.Holotapes?.Overall ?? true)
             {
-                item.Holotapes?.ToString(fg, "Holotapes");
+                item.Holotapes?.ToString(sb, "Holotapes");
             }
             if (printMask?.Projectiles?.Overall ?? true)
             {
-                item.Projectiles?.ToString(fg, "Projectiles");
+                item.Projectiles?.ToString(sb, "Projectiles");
             }
             if (printMask?.Hazards?.Overall ?? true)
             {
-                item.Hazards?.ToString(fg, "Hazards");
+                item.Hazards?.ToString(sb, "Hazards");
             }
             if (printMask?.BendableSplines?.Overall ?? true)
             {
-                item.BendableSplines?.ToString(fg, "BendableSplines");
+                item.BendableSplines?.ToString(sb, "BendableSplines");
             }
             if (printMask?.Terminals?.Overall ?? true)
             {
-                item.Terminals?.ToString(fg, "Terminals");
+                item.Terminals?.ToString(sb, "Terminals");
             }
             if (printMask?.LeveledItems?.Overall ?? true)
             {
-                item.LeveledItems?.ToString(fg, "LeveledItems");
+                item.LeveledItems?.ToString(sb, "LeveledItems");
             }
             if (printMask?.Weather?.Overall ?? true)
             {
-                item.Weather?.ToString(fg, "Weather");
+                item.Weather?.ToString(sb, "Weather");
             }
             if (printMask?.Climates?.Overall ?? true)
             {
-                item.Climates?.ToString(fg, "Climates");
+                item.Climates?.ToString(sb, "Climates");
             }
             if (printMask?.ShaderParticleGeometries?.Overall ?? true)
             {
-                item.ShaderParticleGeometries?.ToString(fg, "ShaderParticleGeometries");
+                item.ShaderParticleGeometries?.ToString(sb, "ShaderParticleGeometries");
             }
             if (printMask?.VisualEffects?.Overall ?? true)
             {
-                item.VisualEffects?.ToString(fg, "VisualEffects");
+                item.VisualEffects?.ToString(sb, "VisualEffects");
             }
             if (printMask?.Regions?.Overall ?? true)
             {
-                item.Regions?.ToString(fg, "Regions");
+                item.Regions?.ToString(sb, "Regions");
             }
             if (printMask?.NavigationMeshInfoMaps?.Overall ?? true)
             {
-                item.NavigationMeshInfoMaps?.ToString(fg, "NavigationMeshInfoMaps");
+                item.NavigationMeshInfoMaps?.ToString(sb, "NavigationMeshInfoMaps");
             }
         }
         
@@ -11449,7 +11450,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public GameRelease GameRelease => GameRelease.Fallout4;
         IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
@@ -12179,11 +12180,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             Fallout4ModMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -31,7 +31,7 @@ public class VersioningModule : GenerationModule
         }
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var enumTypes = new List<string>();
         var breaks = 0;
@@ -44,11 +44,11 @@ public class VersioningModule : GenerationModule
         }
 
         if (enumTypes.Count <= 0) return;
-        fg.AppendLine("[Flags]");
-        fg.AppendLine($"public enum {VersioningEnumName}");
-        using (new BraceWrapper(fg))
+        sb.AppendLine("[Flags]");
+        sb.AppendLine($"public enum {VersioningEnumName}");
+        using (sb.CurlyBrace())
         {
-            using (var comma = new CommaWrapper(fg))
+            using (var comma = new CommaWrapper(sb))
             {
                 var term = 1;
                 for (int i = 0; i < enumTypes.Count; i++)
@@ -116,7 +116,7 @@ public class VersioningModule : GenerationModule
         }
     }
 
-    public static void AddVersionOffset(FileGeneration fg, TypeGeneration field, int expectedLen, TypeGeneration lastVersionedField, Accessor versionAccessor)
+    public static void AddVersionOffset(StructuredStringBuilder sb, TypeGeneration field, int expectedLen, TypeGeneration lastVersionedField, Accessor versionAccessor)
     {
         var data = field.GetFieldData();
         string offsetStr;
@@ -148,6 +148,6 @@ public class VersioningModule : GenerationModule
         {
             throw new NotImplementedException();
         }
-        fg.AppendLine($"int {field.Name}VersioningOffset => {(lastVersionedField == null ? null : $"{lastVersionedField.Name}VersioningOffset + (")}{offsetStr}{(lastVersionedField == null ? null : ")")};");
+        sb.AppendLine($"int {field.Name}VersioningOffset => {(lastVersionedField == null ? null : $"{lastVersionedField.Name}VersioningOffset + (")}{offsetStr}{(lastVersionedField == null ? null : ")")};");
     }
 }

@@ -135,11 +135,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CameraShotMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -379,75 +380,75 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CameraShot.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CameraShot.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CameraShot.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CameraShot.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CameraShot.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Action ?? true)
                     {
-                        fg.AppendItem(Action, "Action");
+                        sb.AppendItem(Action, "Action");
                     }
                     if (printMask?.Location ?? true)
                     {
-                        fg.AppendItem(Location, "Location");
+                        sb.AppendItem(Location, "Location");
                     }
                     if (printMask?.Target ?? true)
                     {
-                        fg.AppendItem(Target, "Target");
+                        sb.AppendItem(Target, "Target");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.TimeMultiplierPlayer ?? true)
                     {
-                        fg.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                        sb.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
                     }
                     if (printMask?.TimeMultiplierTarget ?? true)
                     {
-                        fg.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
+                        sb.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
                     }
                     if (printMask?.TimeMultiplierGlobal ?? true)
                     {
-                        fg.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                        sb.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
                     }
                     if (printMask?.MaxTime ?? true)
                     {
-                        fg.AppendItem(MaxTime, "MaxTime");
+                        sb.AppendItem(MaxTime, "MaxTime");
                     }
                     if (printMask?.MinTime ?? true)
                     {
-                        fg.AppendItem(MinTime, "MinTime");
+                        sb.AppendItem(MinTime, "MinTime");
                     }
                     if (printMask?.TargetPercentBetweenActors ?? true)
                     {
-                        fg.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
+                        sb.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
                     }
                     if (printMask?.NearTargetDistance ?? true)
                     {
-                        fg.AppendItem(NearTargetDistance, "NearTargetDistance");
+                        sb.AppendItem(NearTargetDistance, "NearTargetDistance");
                     }
                     if (printMask?.ImageSpaceModifier ?? true)
                     {
-                        fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -643,48 +644,74 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Model?.ToString(fg);
-                fg.AppendItem(Action, "Action");
-                fg.AppendItem(Location, "Location");
-                fg.AppendItem(Target, "Target");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
-                fg.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
-                fg.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
-                fg.AppendItem(MaxTime, "MaxTime");
-                fg.AppendItem(MinTime, "MinTime");
-                fg.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
-                fg.AppendItem(NearTargetDistance, "NearTargetDistance");
-                fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.ToString_FillInternal(sb);
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(Action, "Action");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(Target, "Target");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                }
+                {
+                    sb.AppendItem(MaxTime, "MaxTime");
+                }
+                {
+                    sb.AppendItem(MinTime, "MinTime");
+                }
+                {
+                    sb.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
+                }
+                {
+                    sb.AppendItem(NearTargetDistance, "NearTargetDistance");
+                }
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -915,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1030,13 +1057,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICameraShotGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CameraShot.Mask<bool>? printMask = null)
         {
             ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1397,105 +1424,105 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CameraShot.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICameraShotGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CameraShot.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CameraShot =>");
+                sb.AppendLine($"CameraShot =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CameraShot) =>");
+                sb.AppendLine($"{name} (CameraShot) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICameraShotGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CameraShot.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if (printMask?.Action ?? true)
             {
-                fg.AppendItem(item.Action, "Action");
+                sb.AppendItem(item.Action, "Action");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location, "Location");
+                sb.AppendItem(item.Location, "Location");
             }
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target, "Target");
+                sb.AppendItem(item.Target, "Target");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.TimeMultiplierPlayer ?? true)
             {
-                fg.AppendItem(item.TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                sb.AppendItem(item.TimeMultiplierPlayer, "TimeMultiplierPlayer");
             }
             if (printMask?.TimeMultiplierTarget ?? true)
             {
-                fg.AppendItem(item.TimeMultiplierTarget, "TimeMultiplierTarget");
+                sb.AppendItem(item.TimeMultiplierTarget, "TimeMultiplierTarget");
             }
             if (printMask?.TimeMultiplierGlobal ?? true)
             {
-                fg.AppendItem(item.TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                sb.AppendItem(item.TimeMultiplierGlobal, "TimeMultiplierGlobal");
             }
             if (printMask?.MaxTime ?? true)
             {
-                fg.AppendItem(item.MaxTime, "MaxTime");
+                sb.AppendItem(item.MaxTime, "MaxTime");
             }
             if (printMask?.MinTime ?? true)
             {
-                fg.AppendItem(item.MinTime, "MinTime");
+                sb.AppendItem(item.MinTime, "MinTime");
             }
             if (printMask?.TargetPercentBetweenActors ?? true)
             {
-                fg.AppendItem(item.TargetPercentBetweenActors, "TargetPercentBetweenActors");
+                sb.AppendItem(item.TargetPercentBetweenActors, "TargetPercentBetweenActors");
             }
             if (printMask?.NearTargetDistance ?? true)
             {
-                fg.AppendItem(item.NearTargetDistance, "NearTargetDistance");
+                sb.AppendItem(item.NearTargetDistance, "NearTargetDistance");
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+                sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2237,7 +2264,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CameraShotCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2418,11 +2445,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CameraShotMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -135,11 +135,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MovementTypeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -379,75 +380,75 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(MovementType.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MovementType.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MovementType.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MovementType.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MovementType.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.LeftWalk ?? true)
                     {
-                        fg.AppendItem(LeftWalk, "LeftWalk");
+                        sb.AppendItem(LeftWalk, "LeftWalk");
                     }
                     if (printMask?.LeftRun ?? true)
                     {
-                        fg.AppendItem(LeftRun, "LeftRun");
+                        sb.AppendItem(LeftRun, "LeftRun");
                     }
                     if (printMask?.RightWalk ?? true)
                     {
-                        fg.AppendItem(RightWalk, "RightWalk");
+                        sb.AppendItem(RightWalk, "RightWalk");
                     }
                     if (printMask?.RightRun ?? true)
                     {
-                        fg.AppendItem(RightRun, "RightRun");
+                        sb.AppendItem(RightRun, "RightRun");
                     }
                     if (printMask?.ForwardWalk ?? true)
                     {
-                        fg.AppendItem(ForwardWalk, "ForwardWalk");
+                        sb.AppendItem(ForwardWalk, "ForwardWalk");
                     }
                     if (printMask?.ForwardRun ?? true)
                     {
-                        fg.AppendItem(ForwardRun, "ForwardRun");
+                        sb.AppendItem(ForwardRun, "ForwardRun");
                     }
                     if (printMask?.BackWalk ?? true)
                     {
-                        fg.AppendItem(BackWalk, "BackWalk");
+                        sb.AppendItem(BackWalk, "BackWalk");
                     }
                     if (printMask?.BackRun ?? true)
                     {
-                        fg.AppendItem(BackRun, "BackRun");
+                        sb.AppendItem(BackRun, "BackRun");
                     }
                     if (printMask?.RotateInPlaceWalk ?? true)
                     {
-                        fg.AppendItem(RotateInPlaceWalk, "RotateInPlaceWalk");
+                        sb.AppendItem(RotateInPlaceWalk, "RotateInPlaceWalk");
                     }
                     if (printMask?.RotateInPlaceRun ?? true)
                     {
-                        fg.AppendItem(RotateInPlaceRun, "RotateInPlaceRun");
+                        sb.AppendItem(RotateInPlaceRun, "RotateInPlaceRun");
                     }
                     if (printMask?.RotateWhileMovingRun ?? true)
                     {
-                        fg.AppendItem(RotateWhileMovingRun, "RotateWhileMovingRun");
+                        sb.AppendItem(RotateWhileMovingRun, "RotateWhileMovingRun");
                     }
                     if (printMask?.AnimationChangeThresholds?.Overall ?? true)
                     {
-                        AnimationChangeThresholds?.ToString(fg);
+                        AnimationChangeThresholds?.ToString(sb);
                     }
                     if (printMask?.SPEDDataTypeState ?? true)
                     {
-                        fg.AppendItem(SPEDDataTypeState, "SPEDDataTypeState");
+                        sb.AppendItem(SPEDDataTypeState, "SPEDDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -643,48 +644,74 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(LeftWalk, "LeftWalk");
-                fg.AppendItem(LeftRun, "LeftRun");
-                fg.AppendItem(RightWalk, "RightWalk");
-                fg.AppendItem(RightRun, "RightRun");
-                fg.AppendItem(ForwardWalk, "ForwardWalk");
-                fg.AppendItem(ForwardRun, "ForwardRun");
-                fg.AppendItem(BackWalk, "BackWalk");
-                fg.AppendItem(BackRun, "BackRun");
-                fg.AppendItem(RotateInPlaceWalk, "RotateInPlaceWalk");
-                fg.AppendItem(RotateInPlaceRun, "RotateInPlaceRun");
-                fg.AppendItem(RotateWhileMovingRun, "RotateWhileMovingRun");
-                AnimationChangeThresholds?.ToString(fg);
-                fg.AppendItem(SPEDDataTypeState, "SPEDDataTypeState");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(LeftWalk, "LeftWalk");
+                }
+                {
+                    sb.AppendItem(LeftRun, "LeftRun");
+                }
+                {
+                    sb.AppendItem(RightWalk, "RightWalk");
+                }
+                {
+                    sb.AppendItem(RightRun, "RightRun");
+                }
+                {
+                    sb.AppendItem(ForwardWalk, "ForwardWalk");
+                }
+                {
+                    sb.AppendItem(ForwardRun, "ForwardRun");
+                }
+                {
+                    sb.AppendItem(BackWalk, "BackWalk");
+                }
+                {
+                    sb.AppendItem(BackRun, "BackRun");
+                }
+                {
+                    sb.AppendItem(RotateInPlaceWalk, "RotateInPlaceWalk");
+                }
+                {
+                    sb.AppendItem(RotateInPlaceRun, "RotateInPlaceRun");
+                }
+                {
+                    sb.AppendItem(RotateWhileMovingRun, "RotateWhileMovingRun");
+                }
+                AnimationChangeThresholds?.ToString(sb);
+                {
+                    sb.AppendItem(SPEDDataTypeState, "SPEDDataTypeState");
+                }
             }
             #endregion
 
@@ -913,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1028,13 +1055,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IMovementTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MovementType.Mask<bool>? printMask = null)
         {
             ((MovementTypeCommon)((IMovementTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1393,106 +1420,106 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             MovementType.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMovementTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MovementType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MovementType =>");
+                sb.AppendLine($"MovementType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MovementType) =>");
+                sb.AppendLine($"{name} (MovementType) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMovementTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MovementType.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.LeftWalk ?? true)
             {
-                fg.AppendItem(item.LeftWalk, "LeftWalk");
+                sb.AppendItem(item.LeftWalk, "LeftWalk");
             }
             if (printMask?.LeftRun ?? true)
             {
-                fg.AppendItem(item.LeftRun, "LeftRun");
+                sb.AppendItem(item.LeftRun, "LeftRun");
             }
             if (printMask?.RightWalk ?? true)
             {
-                fg.AppendItem(item.RightWalk, "RightWalk");
+                sb.AppendItem(item.RightWalk, "RightWalk");
             }
             if (printMask?.RightRun ?? true)
             {
-                fg.AppendItem(item.RightRun, "RightRun");
+                sb.AppendItem(item.RightRun, "RightRun");
             }
             if (printMask?.ForwardWalk ?? true)
             {
-                fg.AppendItem(item.ForwardWalk, "ForwardWalk");
+                sb.AppendItem(item.ForwardWalk, "ForwardWalk");
             }
             if (printMask?.ForwardRun ?? true)
             {
-                fg.AppendItem(item.ForwardRun, "ForwardRun");
+                sb.AppendItem(item.ForwardRun, "ForwardRun");
             }
             if (printMask?.BackWalk ?? true)
             {
-                fg.AppendItem(item.BackWalk, "BackWalk");
+                sb.AppendItem(item.BackWalk, "BackWalk");
             }
             if (printMask?.BackRun ?? true)
             {
-                fg.AppendItem(item.BackRun, "BackRun");
+                sb.AppendItem(item.BackRun, "BackRun");
             }
             if (printMask?.RotateInPlaceWalk ?? true)
             {
-                fg.AppendItem(item.RotateInPlaceWalk, "RotateInPlaceWalk");
+                sb.AppendItem(item.RotateInPlaceWalk, "RotateInPlaceWalk");
             }
             if (printMask?.RotateInPlaceRun ?? true)
             {
-                fg.AppendItem(item.RotateInPlaceRun, "RotateInPlaceRun");
+                sb.AppendItem(item.RotateInPlaceRun, "RotateInPlaceRun");
             }
             if (printMask?.RotateWhileMovingRun ?? true)
             {
-                fg.AppendItem(item.RotateWhileMovingRun, "RotateWhileMovingRun");
+                sb.AppendItem(item.RotateWhileMovingRun, "RotateWhileMovingRun");
             }
             if ((printMask?.AnimationChangeThresholds?.Overall ?? true)
                 && item.AnimationChangeThresholds is {} AnimationChangeThresholdsItem)
             {
-                AnimationChangeThresholdsItem?.ToString(fg, "AnimationChangeThresholds");
+                AnimationChangeThresholdsItem?.ToString(sb, "AnimationChangeThresholds");
             }
             if (printMask?.SPEDDataTypeState ?? true)
             {
-                fg.AppendItem(item.SPEDDataTypeState, "SPEDDataTypeState");
+                sb.AppendItem(item.SPEDDataTypeState, "SPEDDataTypeState");
             }
         }
         
@@ -2224,7 +2251,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MovementTypeBinaryWriteTranslation.Instance;
@@ -2408,11 +2435,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MovementTypeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -73,12 +73,12 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         }
     }
 
-    bool ReadFloat(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item)
+    bool ReadFloat(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item)
     {
         var floatType = typeGen as FloatType;
         if (floatType.IntegerType.HasValue)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{item} = {GetTranslatorInstance(typeGen, getter: true)}.Parse"))
             {
                 args.Add($"reader: {reader}");
@@ -93,13 +93,13 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         }
     }
 
-    bool WriteFloat(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writer, Accessor item)
+    bool WriteFloat(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writer, Accessor item)
     {
         var floatType = typeGen as FloatType;
         var data = floatType.GetFieldData();
         if (floatType.IntegerType.HasValue)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{GetTranslatorInstance(typeGen, getter: true)}.Write"))
             {
                 args.Add($"writer: {writer}");

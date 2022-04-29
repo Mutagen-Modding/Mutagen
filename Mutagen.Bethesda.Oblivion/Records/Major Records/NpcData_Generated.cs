@@ -145,11 +145,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -521,139 +522,139 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(NpcData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NpcData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NpcData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NpcData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Armorer ?? true)
                     {
-                        fg.AppendItem(Armorer, "Armorer");
+                        sb.AppendItem(Armorer, "Armorer");
                     }
                     if (printMask?.Athletics ?? true)
                     {
-                        fg.AppendItem(Athletics, "Athletics");
+                        sb.AppendItem(Athletics, "Athletics");
                     }
                     if (printMask?.Blade ?? true)
                     {
-                        fg.AppendItem(Blade, "Blade");
+                        sb.AppendItem(Blade, "Blade");
                     }
                     if (printMask?.Block ?? true)
                     {
-                        fg.AppendItem(Block, "Block");
+                        sb.AppendItem(Block, "Block");
                     }
                     if (printMask?.Blunt ?? true)
                     {
-                        fg.AppendItem(Blunt, "Blunt");
+                        sb.AppendItem(Blunt, "Blunt");
                     }
                     if (printMask?.HandToHand ?? true)
                     {
-                        fg.AppendItem(HandToHand, "HandToHand");
+                        sb.AppendItem(HandToHand, "HandToHand");
                     }
                     if (printMask?.HeavyArmor ?? true)
                     {
-                        fg.AppendItem(HeavyArmor, "HeavyArmor");
+                        sb.AppendItem(HeavyArmor, "HeavyArmor");
                     }
                     if (printMask?.Alchemy ?? true)
                     {
-                        fg.AppendItem(Alchemy, "Alchemy");
+                        sb.AppendItem(Alchemy, "Alchemy");
                     }
                     if (printMask?.Alteration ?? true)
                     {
-                        fg.AppendItem(Alteration, "Alteration");
+                        sb.AppendItem(Alteration, "Alteration");
                     }
                     if (printMask?.Conjuration ?? true)
                     {
-                        fg.AppendItem(Conjuration, "Conjuration");
+                        sb.AppendItem(Conjuration, "Conjuration");
                     }
                     if (printMask?.Destruction ?? true)
                     {
-                        fg.AppendItem(Destruction, "Destruction");
+                        sb.AppendItem(Destruction, "Destruction");
                     }
                     if (printMask?.Illusion ?? true)
                     {
-                        fg.AppendItem(Illusion, "Illusion");
+                        sb.AppendItem(Illusion, "Illusion");
                     }
                     if (printMask?.Mysticism ?? true)
                     {
-                        fg.AppendItem(Mysticism, "Mysticism");
+                        sb.AppendItem(Mysticism, "Mysticism");
                     }
                     if (printMask?.Restoration ?? true)
                     {
-                        fg.AppendItem(Restoration, "Restoration");
+                        sb.AppendItem(Restoration, "Restoration");
                     }
                     if (printMask?.Acrobatics ?? true)
                     {
-                        fg.AppendItem(Acrobatics, "Acrobatics");
+                        sb.AppendItem(Acrobatics, "Acrobatics");
                     }
                     if (printMask?.LightArmor ?? true)
                     {
-                        fg.AppendItem(LightArmor, "LightArmor");
+                        sb.AppendItem(LightArmor, "LightArmor");
                     }
                     if (printMask?.Marksman ?? true)
                     {
-                        fg.AppendItem(Marksman, "Marksman");
+                        sb.AppendItem(Marksman, "Marksman");
                     }
                     if (printMask?.Mercantile ?? true)
                     {
-                        fg.AppendItem(Mercantile, "Mercantile");
+                        sb.AppendItem(Mercantile, "Mercantile");
                     }
                     if (printMask?.Security ?? true)
                     {
-                        fg.AppendItem(Security, "Security");
+                        sb.AppendItem(Security, "Security");
                     }
                     if (printMask?.Sneak ?? true)
                     {
-                        fg.AppendItem(Sneak, "Sneak");
+                        sb.AppendItem(Sneak, "Sneak");
                     }
                     if (printMask?.Speechcraft ?? true)
                     {
-                        fg.AppendItem(Speechcraft, "Speechcraft");
+                        sb.AppendItem(Speechcraft, "Speechcraft");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if (printMask?.Strength ?? true)
                     {
-                        fg.AppendItem(Strength, "Strength");
+                        sb.AppendItem(Strength, "Strength");
                     }
                     if (printMask?.Intelligence ?? true)
                     {
-                        fg.AppendItem(Intelligence, "Intelligence");
+                        sb.AppendItem(Intelligence, "Intelligence");
                     }
                     if (printMask?.Willpower ?? true)
                     {
-                        fg.AppendItem(Willpower, "Willpower");
+                        sb.AppendItem(Willpower, "Willpower");
                     }
                     if (printMask?.Agility ?? true)
                     {
-                        fg.AppendItem(Agility, "Agility");
+                        sb.AppendItem(Agility, "Agility");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Endurance ?? true)
                     {
-                        fg.AppendItem(Endurance, "Endurance");
+                        sb.AppendItem(Endurance, "Endurance");
                     }
                     if (printMask?.Personality ?? true)
                     {
-                        fg.AppendItem(Personality, "Personality");
+                        sb.AppendItem(Personality, "Personality");
                     }
                     if (printMask?.Luck ?? true)
                     {
-                        fg.AppendItem(Luck, "Luck");
+                        sb.AppendItem(Luck, "Luck");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1020,63 +1021,123 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Armorer, "Armorer");
-                fg.AppendItem(Athletics, "Athletics");
-                fg.AppendItem(Blade, "Blade");
-                fg.AppendItem(Block, "Block");
-                fg.AppendItem(Blunt, "Blunt");
-                fg.AppendItem(HandToHand, "HandToHand");
-                fg.AppendItem(HeavyArmor, "HeavyArmor");
-                fg.AppendItem(Alchemy, "Alchemy");
-                fg.AppendItem(Alteration, "Alteration");
-                fg.AppendItem(Conjuration, "Conjuration");
-                fg.AppendItem(Destruction, "Destruction");
-                fg.AppendItem(Illusion, "Illusion");
-                fg.AppendItem(Mysticism, "Mysticism");
-                fg.AppendItem(Restoration, "Restoration");
-                fg.AppendItem(Acrobatics, "Acrobatics");
-                fg.AppendItem(LightArmor, "LightArmor");
-                fg.AppendItem(Marksman, "Marksman");
-                fg.AppendItem(Mercantile, "Mercantile");
-                fg.AppendItem(Security, "Security");
-                fg.AppendItem(Sneak, "Sneak");
-                fg.AppendItem(Speechcraft, "Speechcraft");
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(Strength, "Strength");
-                fg.AppendItem(Intelligence, "Intelligence");
-                fg.AppendItem(Willpower, "Willpower");
-                fg.AppendItem(Agility, "Agility");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Endurance, "Endurance");
-                fg.AppendItem(Personality, "Personality");
-                fg.AppendItem(Luck, "Luck");
+                {
+                    sb.AppendItem(Armorer, "Armorer");
+                }
+                {
+                    sb.AppendItem(Athletics, "Athletics");
+                }
+                {
+                    sb.AppendItem(Blade, "Blade");
+                }
+                {
+                    sb.AppendItem(Block, "Block");
+                }
+                {
+                    sb.AppendItem(Blunt, "Blunt");
+                }
+                {
+                    sb.AppendItem(HandToHand, "HandToHand");
+                }
+                {
+                    sb.AppendItem(HeavyArmor, "HeavyArmor");
+                }
+                {
+                    sb.AppendItem(Alchemy, "Alchemy");
+                }
+                {
+                    sb.AppendItem(Alteration, "Alteration");
+                }
+                {
+                    sb.AppendItem(Conjuration, "Conjuration");
+                }
+                {
+                    sb.AppendItem(Destruction, "Destruction");
+                }
+                {
+                    sb.AppendItem(Illusion, "Illusion");
+                }
+                {
+                    sb.AppendItem(Mysticism, "Mysticism");
+                }
+                {
+                    sb.AppendItem(Restoration, "Restoration");
+                }
+                {
+                    sb.AppendItem(Acrobatics, "Acrobatics");
+                }
+                {
+                    sb.AppendItem(LightArmor, "LightArmor");
+                }
+                {
+                    sb.AppendItem(Marksman, "Marksman");
+                }
+                {
+                    sb.AppendItem(Mercantile, "Mercantile");
+                }
+                {
+                    sb.AppendItem(Security, "Security");
+                }
+                {
+                    sb.AppendItem(Sneak, "Sneak");
+                }
+                {
+                    sb.AppendItem(Speechcraft, "Speechcraft");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(Strength, "Strength");
+                }
+                {
+                    sb.AppendItem(Intelligence, "Intelligence");
+                }
+                {
+                    sb.AppendItem(Willpower, "Willpower");
+                }
+                {
+                    sb.AppendItem(Agility, "Agility");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Endurance, "Endurance");
+                }
+                {
+                    sb.AppendItem(Personality, "Personality");
+                }
+                {
+                    sb.AppendItem(Luck, "Luck");
+                }
             }
             #endregion
 
@@ -1304,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1435,13 +1496,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this INpcDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcData.Mask<bool>? printMask = null)
         {
             ((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1812,164 +1873,164 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             NpcData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INpcDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcData =>");
+                sb.AppendLine($"NpcData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcData) =>");
+                sb.AppendLine($"{name} (NpcData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcData.Mask<bool>? printMask = null)
         {
             if (printMask?.Armorer ?? true)
             {
-                fg.AppendItem(item.Armorer, "Armorer");
+                sb.AppendItem(item.Armorer, "Armorer");
             }
             if (printMask?.Athletics ?? true)
             {
-                fg.AppendItem(item.Athletics, "Athletics");
+                sb.AppendItem(item.Athletics, "Athletics");
             }
             if (printMask?.Blade ?? true)
             {
-                fg.AppendItem(item.Blade, "Blade");
+                sb.AppendItem(item.Blade, "Blade");
             }
             if (printMask?.Block ?? true)
             {
-                fg.AppendItem(item.Block, "Block");
+                sb.AppendItem(item.Block, "Block");
             }
             if (printMask?.Blunt ?? true)
             {
-                fg.AppendItem(item.Blunt, "Blunt");
+                sb.AppendItem(item.Blunt, "Blunt");
             }
             if (printMask?.HandToHand ?? true)
             {
-                fg.AppendItem(item.HandToHand, "HandToHand");
+                sb.AppendItem(item.HandToHand, "HandToHand");
             }
             if (printMask?.HeavyArmor ?? true)
             {
-                fg.AppendItem(item.HeavyArmor, "HeavyArmor");
+                sb.AppendItem(item.HeavyArmor, "HeavyArmor");
             }
             if (printMask?.Alchemy ?? true)
             {
-                fg.AppendItem(item.Alchemy, "Alchemy");
+                sb.AppendItem(item.Alchemy, "Alchemy");
             }
             if (printMask?.Alteration ?? true)
             {
-                fg.AppendItem(item.Alteration, "Alteration");
+                sb.AppendItem(item.Alteration, "Alteration");
             }
             if (printMask?.Conjuration ?? true)
             {
-                fg.AppendItem(item.Conjuration, "Conjuration");
+                sb.AppendItem(item.Conjuration, "Conjuration");
             }
             if (printMask?.Destruction ?? true)
             {
-                fg.AppendItem(item.Destruction, "Destruction");
+                sb.AppendItem(item.Destruction, "Destruction");
             }
             if (printMask?.Illusion ?? true)
             {
-                fg.AppendItem(item.Illusion, "Illusion");
+                sb.AppendItem(item.Illusion, "Illusion");
             }
             if (printMask?.Mysticism ?? true)
             {
-                fg.AppendItem(item.Mysticism, "Mysticism");
+                sb.AppendItem(item.Mysticism, "Mysticism");
             }
             if (printMask?.Restoration ?? true)
             {
-                fg.AppendItem(item.Restoration, "Restoration");
+                sb.AppendItem(item.Restoration, "Restoration");
             }
             if (printMask?.Acrobatics ?? true)
             {
-                fg.AppendItem(item.Acrobatics, "Acrobatics");
+                sb.AppendItem(item.Acrobatics, "Acrobatics");
             }
             if (printMask?.LightArmor ?? true)
             {
-                fg.AppendItem(item.LightArmor, "LightArmor");
+                sb.AppendItem(item.LightArmor, "LightArmor");
             }
             if (printMask?.Marksman ?? true)
             {
-                fg.AppendItem(item.Marksman, "Marksman");
+                sb.AppendItem(item.Marksman, "Marksman");
             }
             if (printMask?.Mercantile ?? true)
             {
-                fg.AppendItem(item.Mercantile, "Mercantile");
+                sb.AppendItem(item.Mercantile, "Mercantile");
             }
             if (printMask?.Security ?? true)
             {
-                fg.AppendItem(item.Security, "Security");
+                sb.AppendItem(item.Security, "Security");
             }
             if (printMask?.Sneak ?? true)
             {
-                fg.AppendItem(item.Sneak, "Sneak");
+                sb.AppendItem(item.Sneak, "Sneak");
             }
             if (printMask?.Speechcraft ?? true)
             {
-                fg.AppendItem(item.Speechcraft, "Speechcraft");
+                sb.AppendItem(item.Speechcraft, "Speechcraft");
             }
             if (printMask?.Health ?? true)
             {
-                fg.AppendItem(item.Health, "Health");
+                sb.AppendItem(item.Health, "Health");
             }
             if (printMask?.Strength ?? true)
             {
-                fg.AppendItem(item.Strength, "Strength");
+                sb.AppendItem(item.Strength, "Strength");
             }
             if (printMask?.Intelligence ?? true)
             {
-                fg.AppendItem(item.Intelligence, "Intelligence");
+                sb.AppendItem(item.Intelligence, "Intelligence");
             }
             if (printMask?.Willpower ?? true)
             {
-                fg.AppendItem(item.Willpower, "Willpower");
+                sb.AppendItem(item.Willpower, "Willpower");
             }
             if (printMask?.Agility ?? true)
             {
-                fg.AppendItem(item.Agility, "Agility");
+                sb.AppendItem(item.Agility, "Agility");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Endurance ?? true)
             {
-                fg.AppendItem(item.Endurance, "Endurance");
+                sb.AppendItem(item.Endurance, "Endurance");
             }
             if (printMask?.Personality ?? true)
             {
-                fg.AppendItem(item.Personality, "Personality");
+                sb.AppendItem(item.Personality, "Personality");
             }
             if (printMask?.Luck ?? true)
             {
-                fg.AppendItem(item.Luck, "Luck");
+                sb.AppendItem(item.Luck, "Luck");
             }
         }
         
@@ -2533,7 +2594,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcDataBinaryWriteTranslation.Instance;
@@ -2627,11 +2688,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

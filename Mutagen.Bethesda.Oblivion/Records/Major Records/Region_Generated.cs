@@ -150,11 +150,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RegionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -415,74 +416,74 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Region.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Region.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Region.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendItem(Icon, "Icon");
+                        sb.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.MapColor ?? true)
                     {
-                        fg.AppendItem(MapColor, "MapColor");
+                        sb.AppendItem(MapColor, "MapColor");
                     }
                     if (printMask?.Worldspace ?? true)
                     {
-                        fg.AppendItem(Worldspace, "Worldspace");
+                        sb.AppendItem(Worldspace, "Worldspace");
                     }
                     if ((printMask?.Areas?.Overall ?? true)
                         && Areas is {} AreasItem)
                     {
-                        fg.AppendLine("Areas =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Areas =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(AreasItem.Overall);
+                            sb.AppendItem(AreasItem.Overall);
                             if (AreasItem.Specific != null)
                             {
                                 foreach (var subItem in AreasItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Objects?.Overall ?? true)
                     {
-                        Objects?.ToString(fg);
+                        Objects?.ToString(sb);
                     }
                     if (printMask?.Weather?.Overall ?? true)
                     {
-                        Weather?.ToString(fg);
+                        Weather?.ToString(sb);
                     }
                     if (printMask?.MapName?.Overall ?? true)
                     {
-                        MapName?.ToString(fg);
+                        MapName?.ToString(sb);
                     }
                     if (printMask?.Grasses?.Overall ?? true)
                     {
-                        Grasses?.ToString(fg);
+                        Grasses?.ToString(sb);
                     }
                     if (printMask?.Sounds?.Overall ?? true)
                     {
-                        Sounds?.ToString(fg);
+                        Sounds?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -628,64 +629,70 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Icon, "Icon");
-                fg.AppendItem(MapColor, "MapColor");
-                fg.AppendItem(Worldspace, "Worldspace");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Icon, "Icon");
+                }
+                {
+                    sb.AppendItem(MapColor, "MapColor");
+                }
+                {
+                    sb.AppendItem(Worldspace, "Worldspace");
+                }
                 if (Areas is {} AreasItem)
                 {
-                    fg.AppendLine("Areas =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Areas =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(AreasItem.Overall);
+                        sb.AppendItem(AreasItem.Overall);
                         if (AreasItem.Specific != null)
                         {
                             foreach (var subItem in AreasItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                Objects?.ToString(fg);
-                Weather?.ToString(fg);
-                MapName?.ToString(fg);
-                Grasses?.ToString(fg);
-                Sounds?.ToString(fg);
+                Objects?.ToString(sb);
+                Weather?.ToString(sb);
+                MapName?.ToString(sb);
+                Grasses?.ToString(sb);
+                Sounds?.ToString(sb);
             }
             #endregion
 
@@ -869,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -964,13 +971,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IRegionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
             ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1340,105 +1347,105 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRegionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Region =>");
+                sb.AppendLine($"Region =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Region) =>");
+                sb.AppendLine($"{name} (Region) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRegionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Region.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Icon ?? true)
                 && item.Icon is {} IconItem)
             {
-                fg.AppendItem(IconItem, "Icon");
+                sb.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.MapColor ?? true)
                 && item.MapColor is {} MapColorItem)
             {
-                fg.AppendItem(MapColorItem, "MapColor");
+                sb.AppendItem(MapColorItem, "MapColor");
             }
             if (printMask?.Worldspace ?? true)
             {
-                fg.AppendItem(item.Worldspace.FormKeyNullable, "Worldspace");
+                sb.AppendItem(item.Worldspace.FormKeyNullable, "Worldspace");
             }
             if (printMask?.Areas?.Overall ?? true)
             {
-                fg.AppendLine("Areas =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Areas =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Areas)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Objects?.Overall ?? true)
                 && item.Objects is {} ObjectsItem)
             {
-                ObjectsItem?.ToString(fg, "Objects");
+                ObjectsItem?.ToString(sb, "Objects");
             }
             if ((printMask?.Weather?.Overall ?? true)
                 && item.Weather is {} WeatherItem)
             {
-                WeatherItem?.ToString(fg, "Weather");
+                WeatherItem?.ToString(sb, "Weather");
             }
             if ((printMask?.MapName?.Overall ?? true)
                 && item.MapName is {} MapNameItem)
             {
-                MapNameItem?.ToString(fg, "MapName");
+                MapNameItem?.ToString(sb, "MapName");
             }
             if ((printMask?.Grasses?.Overall ?? true)
                 && item.Grasses is {} GrassesItem)
             {
-                GrassesItem?.ToString(fg, "Grasses");
+                GrassesItem?.ToString(sb, "Grasses");
             }
             if ((printMask?.Sounds?.Overall ?? true)
                 && item.Sounds is {} SoundsItem)
             {
-                SoundsItem?.ToString(fg, "Sounds");
+                SoundsItem?.ToString(sb, "Sounds");
             }
         }
         
@@ -2271,7 +2278,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2423,11 +2430,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RegionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

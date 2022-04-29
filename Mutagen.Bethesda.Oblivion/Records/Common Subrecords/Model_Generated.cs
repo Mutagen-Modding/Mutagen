@@ -72,11 +72,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ModelMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -205,31 +206,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Model.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Model.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Model.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Model.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Model.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.File ?? true)
                     {
-                        fg.AppendItem(File, "File");
+                        sb.AppendItem(File, "File");
                     }
                     if (printMask?.BoundRadius ?? true)
                     {
-                        fg.AppendItem(BoundRadius, "BoundRadius");
+                        sb.AppendItem(BoundRadius, "BoundRadius");
                     }
                     if (printMask?.Hashes ?? true)
                     {
-                        fg.AppendItem(Hashes, "Hashes");
+                        sb.AppendItem(Hashes, "Hashes");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -326,36 +327,42 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(File, "File");
-                fg.AppendItem(BoundRadius, "BoundRadius");
-                fg.AppendItem(Hashes, "Hashes");
+                {
+                    sb.AppendItem(File, "File");
+                }
+                {
+                    sb.AppendItem(BoundRadius, "BoundRadius");
+                }
+                {
+                    sb.AppendItem(Hashes, "Hashes");
+                }
             }
             #endregion
 
@@ -475,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -552,13 +559,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Model.Mask<bool>? printMask = null)
         {
             ((ModelCommon)((IModelGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -849,57 +856,57 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Model.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Model.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Model =>");
+                sb.AppendLine($"Model =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Model) =>");
+                sb.AppendLine($"{name} (Model) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Model.Mask<bool>? printMask = null)
         {
             if (printMask?.File ?? true)
             {
-                fg.AppendItem(item.File, "File");
+                sb.AppendItem(item.File, "File");
             }
             if (printMask?.BoundRadius ?? true)
             {
-                fg.AppendItem(item.BoundRadius, "BoundRadius");
+                sb.AppendItem(item.BoundRadius, "BoundRadius");
             }
             if ((printMask?.Hashes ?? true)
                 && item.Hashes is {} HashesItem)
             {
-                fg.AppendLine($"Hashes => {SpanExt.ToHexString(HashesItem)}");
+                sb.AppendLine($"Hashes => {SpanExt.ToHexString(HashesItem)}");
             }
         }
         
@@ -1216,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
@@ -1324,11 +1331,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ModelMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

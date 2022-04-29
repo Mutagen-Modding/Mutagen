@@ -76,11 +76,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             VendorValuesMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -245,47 +246,47 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(VendorValues.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, VendorValues.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, VendorValues.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(VendorValues.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(VendorValues.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.StartHour ?? true)
                     {
-                        fg.AppendItem(StartHour, "StartHour");
+                        sb.AppendItem(StartHour, "StartHour");
                     }
                     if (printMask?.EndHour ?? true)
                     {
-                        fg.AppendItem(EndHour, "EndHour");
+                        sb.AppendItem(EndHour, "EndHour");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.OnlyBuysStolenItems ?? true)
                     {
-                        fg.AppendItem(OnlyBuysStolenItems, "OnlyBuysStolenItems");
+                        sb.AppendItem(OnlyBuysStolenItems, "OnlyBuysStolenItems");
                     }
                     if (printMask?.NotSellBuy ?? true)
                     {
-                        fg.AppendItem(NotSellBuy, "NotSellBuy");
+                        sb.AppendItem(NotSellBuy, "NotSellBuy");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -422,40 +423,54 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(StartHour, "StartHour");
-                fg.AppendItem(EndHour, "EndHour");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(OnlyBuysStolenItems, "OnlyBuysStolenItems");
-                fg.AppendItem(NotSellBuy, "NotSellBuy");
-                fg.AppendItem(Unknown2, "Unknown2");
+                {
+                    sb.AppendItem(StartHour, "StartHour");
+                }
+                {
+                    sb.AppendItem(EndHour, "EndHour");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(OnlyBuysStolenItems, "OnlyBuysStolenItems");
+                }
+                {
+                    sb.AppendItem(NotSellBuy, "NotSellBuy");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
             }
             #endregion
 
@@ -591,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -676,13 +691,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IVendorValuesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
             ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -984,72 +999,72 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IVendorValuesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"VendorValues =>");
+                sb.AppendLine($"VendorValues =>");
             }
             else
             {
-                fg.AppendLine($"{name} (VendorValues) =>");
+                sb.AppendLine($"{name} (VendorValues) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IVendorValuesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             VendorValues.Mask<bool>? printMask = null)
         {
             if (printMask?.StartHour ?? true)
             {
-                fg.AppendItem(item.StartHour, "StartHour");
+                sb.AppendItem(item.StartHour, "StartHour");
             }
             if (printMask?.EndHour ?? true)
             {
-                fg.AppendItem(item.EndHour, "EndHour");
+                sb.AppendItem(item.EndHour, "EndHour");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendItem(item.Radius, "Radius");
+                sb.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.OnlyBuysStolenItems ?? true)
             {
-                fg.AppendItem(item.OnlyBuysStolenItems, "OnlyBuysStolenItems");
+                sb.AppendItem(item.OnlyBuysStolenItems, "OnlyBuysStolenItems");
             }
             if (printMask?.NotSellBuy ?? true)
             {
-                fg.AppendItem(item.NotSellBuy, "NotSellBuy");
+                sb.AppendItem(item.NotSellBuy, "NotSellBuy");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         
@@ -1360,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => VendorValuesBinaryWriteTranslation.Instance;
@@ -1431,11 +1446,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             VendorValuesMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -652,11 +652,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1594,372 +1595,376 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(Weapon.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Weapon.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Weapon.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Weapon.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Weapon.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.PreviewTransform ?? true)
                     {
-                        fg.AppendItem(PreviewTransform, "PreviewTransform");
+                        sb.AppendItem(PreviewTransform, "PreviewTransform");
                     }
                     if (printMask?.AnimationSound ?? true)
                     {
-                        fg.AppendItem(AnimationSound, "AnimationSound");
+                        sb.AppendItem(AnimationSound, "AnimationSound");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Icons?.Overall ?? true)
                     {
-                        Icons?.ToString(fg);
+                        Icons?.ToString(sb);
                     }
                     if (printMask?.ObjectEffect ?? true)
                     {
-                        fg.AppendItem(ObjectEffect, "ObjectEffect");
+                        sb.AppendItem(ObjectEffect, "ObjectEffect");
                     }
                     if (printMask?.EnchantmentAmount ?? true)
                     {
-                        fg.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                        sb.AppendItem(EnchantmentAmount, "EnchantmentAmount");
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(fg);
+                        Destructible?.ToString(sb);
                     }
                     if (printMask?.EquipmentType ?? true)
                     {
-                        fg.AppendItem(EquipmentType, "EquipmentType");
+                        sb.AppendItem(EquipmentType, "EquipmentType");
                     }
                     if (printMask?.BlockBashImpactDataSet ?? true)
                     {
-                        fg.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
+                        sb.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
                     }
                     if (printMask?.AlternateBlockMaterial ?? true)
                     {
-                        fg.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                        sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
                     }
                     if (printMask?.PickUpSound ?? true)
                     {
-                        fg.AppendItem(PickUpSound, "PickUpSound");
+                        sb.AppendItem(PickUpSound, "PickUpSound");
                     }
                     if (printMask?.PutDownSound ?? true)
                     {
-                        fg.AppendItem(PutDownSound, "PutDownSound");
+                        sb.AppendItem(PutDownSound, "PutDownSound");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if (printMask?.InstanceNaming ?? true)
                     {
-                        fg.AppendItem(InstanceNaming, "InstanceNaming");
+                        sb.AppendItem(InstanceNaming, "InstanceNaming");
                     }
                     if ((printMask?.AttachParentSlots?.Overall ?? true)
                         && AttachParentSlots is {} AttachParentSlotsItem)
                     {
-                        fg.AppendLine("AttachParentSlots =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("AttachParentSlots =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(AttachParentSlotsItem.Overall);
+                            sb.AppendItem(AttachParentSlotsItem.Overall);
                             if (AttachParentSlotsItem.Specific != null)
                             {
                                 foreach (var subItem in AttachParentSlotsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.ObjectTemplates?.Overall ?? true)
                         && ObjectTemplates is {} ObjectTemplatesItem)
                     {
-                        fg.AppendLine("ObjectTemplates =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ObjectTemplates =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ObjectTemplatesItem.Overall);
+                            sb.AppendItem(ObjectTemplatesItem.Overall);
                             if (ObjectTemplatesItem.Specific != null)
                             {
                                 foreach (var subItem in ObjectTemplatesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.EmbeddedWeaponMod ?? true)
                     {
-                        fg.AppendItem(EmbeddedWeaponMod, "EmbeddedWeaponMod");
+                        sb.AppendItem(EmbeddedWeaponMod, "EmbeddedWeaponMod");
                     }
                     if (printMask?.FirstPersonModel?.Overall ?? true)
                     {
-                        FirstPersonModel?.ToString(fg);
+                        FirstPersonModel?.ToString(sb);
                     }
                     if (printMask?.FirstPersonColorRemappingIndex ?? true)
                     {
-                        fg.AppendItem(FirstPersonColorRemappingIndex, "FirstPersonColorRemappingIndex");
+                        sb.AppendItem(FirstPersonColorRemappingIndex, "FirstPersonColorRemappingIndex");
                     }
                     if (printMask?.MO4F ?? true)
                     {
-                        fg.AppendItem(MO4F, "MO4F");
+                        sb.AppendItem(MO4F, "MO4F");
                     }
                     if (printMask?.Ammo ?? true)
                     {
-                        fg.AppendItem(Ammo, "Ammo");
+                        sb.AppendItem(Ammo, "Ammo");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.ReloadSpeed ?? true)
                     {
-                        fg.AppendItem(ReloadSpeed, "ReloadSpeed");
+                        sb.AppendItem(ReloadSpeed, "ReloadSpeed");
                     }
                     if (printMask?.Reach ?? true)
                     {
-                        fg.AppendItem(Reach, "Reach");
+                        sb.AppendItem(Reach, "Reach");
                     }
                     if (printMask?.MinRange ?? true)
                     {
-                        fg.AppendItem(MinRange, "MinRange");
+                        sb.AppendItem(MinRange, "MinRange");
                     }
                     if (printMask?.MaxRange ?? true)
                     {
-                        fg.AppendItem(MaxRange, "MaxRange");
+                        sb.AppendItem(MaxRange, "MaxRange");
                     }
                     if (printMask?.AttackDelay ?? true)
                     {
-                        fg.AppendItem(AttackDelay, "AttackDelay");
+                        sb.AppendItem(AttackDelay, "AttackDelay");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.DamageOutOfRangeMult ?? true)
                     {
-                        fg.AppendItem(DamageOutOfRangeMult, "DamageOutOfRangeMult");
+                        sb.AppendItem(DamageOutOfRangeMult, "DamageOutOfRangeMult");
                     }
                     if (printMask?.OnHit ?? true)
                     {
-                        fg.AppendItem(OnHit, "OnHit");
+                        sb.AppendItem(OnHit, "OnHit");
                     }
                     if (printMask?.Skill ?? true)
                     {
-                        fg.AppendItem(Skill, "Skill");
+                        sb.AppendItem(Skill, "Skill");
                     }
                     if (printMask?.Resist ?? true)
                     {
-                        fg.AppendItem(Resist, "Resist");
+                        sb.AppendItem(Resist, "Resist");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Capacity ?? true)
                     {
-                        fg.AppendItem(Capacity, "Capacity");
+                        sb.AppendItem(Capacity, "Capacity");
                     }
                     if (printMask?.AnimationType ?? true)
                     {
-                        fg.AppendItem(AnimationType, "AnimationType");
+                        sb.AppendItem(AnimationType, "AnimationType");
                     }
                     if (printMask?.SecondaryDamage ?? true)
                     {
-                        fg.AppendItem(SecondaryDamage, "SecondaryDamage");
+                        sb.AppendItem(SecondaryDamage, "SecondaryDamage");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.BaseDamage ?? true)
                     {
-                        fg.AppendItem(BaseDamage, "BaseDamage");
+                        sb.AppendItem(BaseDamage, "BaseDamage");
                     }
                     if (printMask?.SoundLevel ?? true)
                     {
-                        fg.AppendItem(SoundLevel, "SoundLevel");
+                        sb.AppendItem(SoundLevel, "SoundLevel");
                     }
                     if (printMask?.AttackSound ?? true)
                     {
-                        fg.AppendItem(AttackSound, "AttackSound");
+                        sb.AppendItem(AttackSound, "AttackSound");
                     }
                     if (printMask?.Attack2dSound ?? true)
                     {
-                        fg.AppendItem(Attack2dSound, "Attack2dSound");
+                        sb.AppendItem(Attack2dSound, "Attack2dSound");
                     }
                     if (printMask?.AttackLoopSound ?? true)
                     {
-                        fg.AppendItem(AttackLoopSound, "AttackLoopSound");
+                        sb.AppendItem(AttackLoopSound, "AttackLoopSound");
                     }
                     if (printMask?.AttackFailSound ?? true)
                     {
-                        fg.AppendItem(AttackFailSound, "AttackFailSound");
+                        sb.AppendItem(AttackFailSound, "AttackFailSound");
                     }
                     if (printMask?.IdleSound ?? true)
                     {
-                        fg.AppendItem(IdleSound, "IdleSound");
+                        sb.AppendItem(IdleSound, "IdleSound");
                     }
                     if (printMask?.EquipSound ?? true)
                     {
-                        fg.AppendItem(EquipSound, "EquipSound");
+                        sb.AppendItem(EquipSound, "EquipSound");
                     }
                     if (printMask?.UnequipSound ?? true)
                     {
-                        fg.AppendItem(UnequipSound, "UnequipSound");
+                        sb.AppendItem(UnequipSound, "UnequipSound");
                     }
                     if (printMask?.FastEquipSound ?? true)
                     {
-                        fg.AppendItem(FastEquipSound, "FastEquipSound");
+                        sb.AppendItem(FastEquipSound, "FastEquipSound");
                     }
                     if (printMask?.AccuracyBonus ?? true)
                     {
-                        fg.AppendItem(AccuracyBonus, "AccuracyBonus");
+                        sb.AppendItem(AccuracyBonus, "AccuracyBonus");
                     }
                     if (printMask?.AnimationAttackSeconds ?? true)
                     {
-                        fg.AppendItem(AnimationAttackSeconds, "AnimationAttackSeconds");
+                        sb.AppendItem(AnimationAttackSeconds, "AnimationAttackSeconds");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.ActionPointCost ?? true)
                     {
-                        fg.AppendItem(ActionPointCost, "ActionPointCost");
+                        sb.AppendItem(ActionPointCost, "ActionPointCost");
                     }
                     if (printMask?.FullPowerSeconds ?? true)
                     {
-                        fg.AppendItem(FullPowerSeconds, "FullPowerSeconds");
+                        sb.AppendItem(FullPowerSeconds, "FullPowerSeconds");
                     }
                     if (printMask?.MinPowerPerShot ?? true)
                     {
-                        fg.AppendItem(MinPowerPerShot, "MinPowerPerShot");
+                        sb.AppendItem(MinPowerPerShot, "MinPowerPerShot");
                     }
                     if (printMask?.Stagger ?? true)
                     {
-                        fg.AppendItem(Stagger, "Stagger");
+                        sb.AppendItem(Stagger, "Stagger");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                     if (printMask?.ExtraData?.Overall ?? true)
                     {
-                        ExtraData?.ToString(fg);
+                        ExtraData?.ToString(sb);
                     }
                     if (printMask?.CritDamageMult ?? true)
                     {
-                        fg.AppendItem(CritDamageMult, "CritDamageMult");
+                        sb.AppendItem(CritDamageMult, "CritDamageMult");
                     }
                     if (printMask?.CritChargeBonus ?? true)
                     {
-                        fg.AppendItem(CritChargeBonus, "CritChargeBonus");
+                        sb.AppendItem(CritChargeBonus, "CritChargeBonus");
                     }
                     if (printMask?.CritEffect ?? true)
                     {
-                        fg.AppendItem(CritEffect, "CritEffect");
+                        sb.AppendItem(CritEffect, "CritEffect");
                     }
                     if (printMask?.ImpactDataSet ?? true)
                     {
-                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
                     }
                     if (printMask?.NpcAddAmmoList ?? true)
                     {
-                        fg.AppendItem(NpcAddAmmoList, "NpcAddAmmoList");
+                        sb.AppendItem(NpcAddAmmoList, "NpcAddAmmoList");
                     }
                     if (printMask?.AimModel ?? true)
                     {
-                        fg.AppendItem(AimModel, "AimModel");
+                        sb.AppendItem(AimModel, "AimModel");
                     }
                     if (printMask?.Zoom ?? true)
                     {
-                        fg.AppendItem(Zoom, "Zoom");
+                        sb.AppendItem(Zoom, "Zoom");
                     }
                     if (printMask?.Template ?? true)
                     {
-                        fg.AppendItem(Template, "Template");
+                        sb.AppendItem(Template, "Template");
                     }
                     if (printMask?.DamageType?.Overall ?? true)
                     {
-                        DamageType?.ToString(fg);
+                        DamageType?.ToString(sb);
                     }
                     if (printMask?.Filter ?? true)
                     {
-                        fg.AppendItem(Filter, "Filter");
+                        sb.AppendItem(Filter, "Filter");
                     }
                     if (printMask?.MeleeSpeed ?? true)
                     {
-                        fg.AppendItem(MeleeSpeed, "MeleeSpeed");
+                        sb.AppendItem(MeleeSpeed, "MeleeSpeed");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                     if (printMask?.CRDTDataTypeState ?? true)
                     {
-                        fg.AppendItem(CRDTDataTypeState, "CRDTDataTypeState");
+                        sb.AppendItem(CRDTDataTypeState, "CRDTDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -2755,171 +2760,301 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(PreviewTransform, "PreviewTransform");
-                fg.AppendItem(AnimationSound, "AnimationSound");
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                Icons?.ToString(fg);
-                fg.AppendItem(ObjectEffect, "ObjectEffect");
-                fg.AppendItem(EnchantmentAmount, "EnchantmentAmount");
-                Destructible?.ToString(fg);
-                fg.AppendItem(EquipmentType, "EquipmentType");
-                fg.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
-                fg.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
-                fg.AppendItem(PickUpSound, "PickUpSound");
-                fg.AppendItem(PutDownSound, "PutDownSound");
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(PreviewTransform, "PreviewTransform");
+                }
+                {
+                    sb.AppendItem(AnimationSound, "AnimationSound");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.ToString(sb);
+                Icons?.ToString(sb);
+                {
+                    sb.AppendItem(ObjectEffect, "ObjectEffect");
+                }
+                {
+                    sb.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                }
+                Destructible?.ToString(sb);
+                {
+                    sb.AppendItem(EquipmentType, "EquipmentType");
+                }
+                {
+                    sb.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
+                }
+                {
+                    sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                }
+                {
+                    sb.AppendItem(PickUpSound, "PickUpSound");
+                }
+                {
+                    sb.AppendItem(PutDownSound, "PutDownSound");
+                }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Description, "Description");
-                fg.AppendItem(InstanceNaming, "InstanceNaming");
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(InstanceNaming, "InstanceNaming");
+                }
                 if (AttachParentSlots is {} AttachParentSlotsItem)
                 {
-                    fg.AppendLine("AttachParentSlots =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("AttachParentSlots =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(AttachParentSlotsItem.Overall);
+                        sb.AppendItem(AttachParentSlotsItem.Overall);
                         if (AttachParentSlotsItem.Specific != null)
                         {
                             foreach (var subItem in AttachParentSlotsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (ObjectTemplates is {} ObjectTemplatesItem)
                 {
-                    fg.AppendLine("ObjectTemplates =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ObjectTemplates =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ObjectTemplatesItem.Overall);
+                        sb.AppendItem(ObjectTemplatesItem.Overall);
                         if (ObjectTemplatesItem.Specific != null)
                         {
                             foreach (var subItem in ObjectTemplatesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(EmbeddedWeaponMod, "EmbeddedWeaponMod");
-                FirstPersonModel?.ToString(fg);
-                fg.AppendItem(FirstPersonColorRemappingIndex, "FirstPersonColorRemappingIndex");
-                fg.AppendItem(MO4F, "MO4F");
-                fg.AppendItem(Ammo, "Ammo");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(ReloadSpeed, "ReloadSpeed");
-                fg.AppendItem(Reach, "Reach");
-                fg.AppendItem(MinRange, "MinRange");
-                fg.AppendItem(MaxRange, "MaxRange");
-                fg.AppendItem(AttackDelay, "AttackDelay");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(DamageOutOfRangeMult, "DamageOutOfRangeMult");
-                fg.AppendItem(OnHit, "OnHit");
-                fg.AppendItem(Skill, "Skill");
-                fg.AppendItem(Resist, "Resist");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Capacity, "Capacity");
-                fg.AppendItem(AnimationType, "AnimationType");
-                fg.AppendItem(SecondaryDamage, "SecondaryDamage");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(BaseDamage, "BaseDamage");
-                fg.AppendItem(SoundLevel, "SoundLevel");
-                fg.AppendItem(AttackSound, "AttackSound");
-                fg.AppendItem(Attack2dSound, "Attack2dSound");
-                fg.AppendItem(AttackLoopSound, "AttackLoopSound");
-                fg.AppendItem(AttackFailSound, "AttackFailSound");
-                fg.AppendItem(IdleSound, "IdleSound");
-                fg.AppendItem(EquipSound, "EquipSound");
-                fg.AppendItem(UnequipSound, "UnequipSound");
-                fg.AppendItem(FastEquipSound, "FastEquipSound");
-                fg.AppendItem(AccuracyBonus, "AccuracyBonus");
-                fg.AppendItem(AnimationAttackSeconds, "AnimationAttackSeconds");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(ActionPointCost, "ActionPointCost");
-                fg.AppendItem(FullPowerSeconds, "FullPowerSeconds");
-                fg.AppendItem(MinPowerPerShot, "MinPowerPerShot");
-                fg.AppendItem(Stagger, "Stagger");
-                fg.AppendItem(Unknown3, "Unknown3");
-                ExtraData?.ToString(fg);
-                fg.AppendItem(CritDamageMult, "CritDamageMult");
-                fg.AppendItem(CritChargeBonus, "CritChargeBonus");
-                fg.AppendItem(CritEffect, "CritEffect");
-                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
-                fg.AppendItem(NpcAddAmmoList, "NpcAddAmmoList");
-                fg.AppendItem(AimModel, "AimModel");
-                fg.AppendItem(Zoom, "Zoom");
-                fg.AppendItem(Template, "Template");
-                DamageType?.ToString(fg);
-                fg.AppendItem(Filter, "Filter");
-                fg.AppendItem(MeleeSpeed, "MeleeSpeed");
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                fg.AppendItem(CRDTDataTypeState, "CRDTDataTypeState");
+                {
+                    sb.AppendItem(EmbeddedWeaponMod, "EmbeddedWeaponMod");
+                }
+                FirstPersonModel?.ToString(sb);
+                {
+                    sb.AppendItem(FirstPersonColorRemappingIndex, "FirstPersonColorRemappingIndex");
+                }
+                {
+                    sb.AppendItem(MO4F, "MO4F");
+                }
+                {
+                    sb.AppendItem(Ammo, "Ammo");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(ReloadSpeed, "ReloadSpeed");
+                }
+                {
+                    sb.AppendItem(Reach, "Reach");
+                }
+                {
+                    sb.AppendItem(MinRange, "MinRange");
+                }
+                {
+                    sb.AppendItem(MaxRange, "MaxRange");
+                }
+                {
+                    sb.AppendItem(AttackDelay, "AttackDelay");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(DamageOutOfRangeMult, "DamageOutOfRangeMult");
+                }
+                {
+                    sb.AppendItem(OnHit, "OnHit");
+                }
+                {
+                    sb.AppendItem(Skill, "Skill");
+                }
+                {
+                    sb.AppendItem(Resist, "Resist");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Capacity, "Capacity");
+                }
+                {
+                    sb.AppendItem(AnimationType, "AnimationType");
+                }
+                {
+                    sb.AppendItem(SecondaryDamage, "SecondaryDamage");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(BaseDamage, "BaseDamage");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                {
+                    sb.AppendItem(AttackSound, "AttackSound");
+                }
+                {
+                    sb.AppendItem(Attack2dSound, "Attack2dSound");
+                }
+                {
+                    sb.AppendItem(AttackLoopSound, "AttackLoopSound");
+                }
+                {
+                    sb.AppendItem(AttackFailSound, "AttackFailSound");
+                }
+                {
+                    sb.AppendItem(IdleSound, "IdleSound");
+                }
+                {
+                    sb.AppendItem(EquipSound, "EquipSound");
+                }
+                {
+                    sb.AppendItem(UnequipSound, "UnequipSound");
+                }
+                {
+                    sb.AppendItem(FastEquipSound, "FastEquipSound");
+                }
+                {
+                    sb.AppendItem(AccuracyBonus, "AccuracyBonus");
+                }
+                {
+                    sb.AppendItem(AnimationAttackSeconds, "AnimationAttackSeconds");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(ActionPointCost, "ActionPointCost");
+                }
+                {
+                    sb.AppendItem(FullPowerSeconds, "FullPowerSeconds");
+                }
+                {
+                    sb.AppendItem(MinPowerPerShot, "MinPowerPerShot");
+                }
+                {
+                    sb.AppendItem(Stagger, "Stagger");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                ExtraData?.ToString(sb);
+                {
+                    sb.AppendItem(CritDamageMult, "CritDamageMult");
+                }
+                {
+                    sb.AppendItem(CritChargeBonus, "CritChargeBonus");
+                }
+                {
+                    sb.AppendItem(CritEffect, "CritEffect");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(NpcAddAmmoList, "NpcAddAmmoList");
+                }
+                {
+                    sb.AppendItem(AimModel, "AimModel");
+                }
+                {
+                    sb.AppendItem(Zoom, "Zoom");
+                }
+                {
+                    sb.AppendItem(Template, "Template");
+                }
+                DamageType?.ToString(sb);
+                {
+                    sb.AppendItem(Filter, "Filter");
+                }
+                {
+                    sb.AppendItem(MeleeSpeed, "MeleeSpeed");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
+                {
+                    sb.AppendItem(CRDTDataTypeState, "CRDTDataTypeState");
+                }
             }
             #endregion
 
@@ -3383,7 +3518,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -3692,13 +3827,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IWeaponGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Weapon.Mask<bool>? printMask = null)
         {
             ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -4359,403 +4494,403 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             Weapon.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeaponGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Weapon.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Weapon =>");
+                sb.AppendLine($"Weapon =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Weapon) =>");
+                sb.AppendLine($"{name} (Weapon) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeaponGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Weapon.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if (printMask?.PreviewTransform ?? true)
             {
-                fg.AppendItem(item.PreviewTransform.FormKeyNullable, "PreviewTransform");
+                sb.AppendItem(item.PreviewTransform.FormKeyNullable, "PreviewTransform");
             }
             if (printMask?.AnimationSound ?? true)
             {
-                fg.AppendItem(item.AnimationSound.FormKeyNullable, "AnimationSound");
+                sb.AppendItem(item.AnimationSound.FormKeyNullable, "AnimationSound");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if ((printMask?.Icons?.Overall ?? true)
                 && item.Icons is {} IconsItem)
             {
-                IconsItem?.ToString(fg, "Icons");
+                IconsItem?.ToString(sb, "Icons");
             }
             if (printMask?.ObjectEffect ?? true)
             {
-                fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
+                sb.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if ((printMask?.EnchantmentAmount ?? true)
                 && item.EnchantmentAmount is {} EnchantmentAmountItem)
             {
-                fg.AppendItem(EnchantmentAmountItem, "EnchantmentAmount");
+                sb.AppendItem(EnchantmentAmountItem, "EnchantmentAmount");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(fg, "Destructible");
+                DestructibleItem?.ToString(sb, "Destructible");
             }
             if (printMask?.EquipmentType ?? true)
             {
-                fg.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
+                sb.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
             }
             if (printMask?.BlockBashImpactDataSet ?? true)
             {
-                fg.AppendItem(item.BlockBashImpactDataSet.FormKeyNullable, "BlockBashImpactDataSet");
+                sb.AppendItem(item.BlockBashImpactDataSet.FormKeyNullable, "BlockBashImpactDataSet");
             }
             if (printMask?.AlternateBlockMaterial ?? true)
             {
-                fg.AppendItem(item.AlternateBlockMaterial.FormKeyNullable, "AlternateBlockMaterial");
+                sb.AppendItem(item.AlternateBlockMaterial.FormKeyNullable, "AlternateBlockMaterial");
             }
             if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
+                sb.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
             }
             if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
+                sb.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.InstanceNaming ?? true)
             {
-                fg.AppendItem(item.InstanceNaming.FormKeyNullable, "InstanceNaming");
+                sb.AppendItem(item.InstanceNaming.FormKeyNullable, "InstanceNaming");
             }
             if ((printMask?.AttachParentSlots?.Overall ?? true)
                 && item.AttachParentSlots is {} AttachParentSlotsItem)
             {
-                fg.AppendLine("AttachParentSlots =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("AttachParentSlots =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in AttachParentSlotsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ObjectTemplates?.Overall ?? true)
                 && item.ObjectTemplates is {} ObjectTemplatesItem)
             {
-                fg.AppendLine("ObjectTemplates =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ObjectTemplates =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in ObjectTemplatesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.EmbeddedWeaponMod ?? true)
             {
-                fg.AppendItem(item.EmbeddedWeaponMod.FormKeyNullable, "EmbeddedWeaponMod");
+                sb.AppendItem(item.EmbeddedWeaponMod.FormKeyNullable, "EmbeddedWeaponMod");
             }
             if ((printMask?.FirstPersonModel?.Overall ?? true)
                 && item.FirstPersonModel is {} FirstPersonModelItem)
             {
-                FirstPersonModelItem?.ToString(fg, "FirstPersonModel");
+                FirstPersonModelItem?.ToString(sb, "FirstPersonModel");
             }
             if ((printMask?.FirstPersonColorRemappingIndex ?? true)
                 && item.FirstPersonColorRemappingIndex is {} FirstPersonColorRemappingIndexItem)
             {
-                fg.AppendItem(FirstPersonColorRemappingIndexItem, "FirstPersonColorRemappingIndex");
+                sb.AppendItem(FirstPersonColorRemappingIndexItem, "FirstPersonColorRemappingIndex");
             }
             if ((printMask?.MO4F ?? true)
                 && item.MO4F is {} MO4FItem)
             {
-                fg.AppendItem(MO4FItem, "MO4F");
+                sb.AppendItem(MO4FItem, "MO4F");
             }
             if (printMask?.Ammo ?? true)
             {
-                fg.AppendItem(item.Ammo.FormKey, "Ammo");
+                sb.AppendItem(item.Ammo.FormKey, "Ammo");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.ReloadSpeed ?? true)
             {
-                fg.AppendItem(item.ReloadSpeed, "ReloadSpeed");
+                sb.AppendItem(item.ReloadSpeed, "ReloadSpeed");
             }
             if (printMask?.Reach ?? true)
             {
-                fg.AppendItem(item.Reach, "Reach");
+                sb.AppendItem(item.Reach, "Reach");
             }
             if (printMask?.MinRange ?? true)
             {
-                fg.AppendItem(item.MinRange, "MinRange");
+                sb.AppendItem(item.MinRange, "MinRange");
             }
             if (printMask?.MaxRange ?? true)
             {
-                fg.AppendItem(item.MaxRange, "MaxRange");
+                sb.AppendItem(item.MaxRange, "MaxRange");
             }
             if (printMask?.AttackDelay ?? true)
             {
-                fg.AppendItem(item.AttackDelay, "AttackDelay");
+                sb.AppendItem(item.AttackDelay, "AttackDelay");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.DamageOutOfRangeMult ?? true)
             {
-                fg.AppendItem(item.DamageOutOfRangeMult, "DamageOutOfRangeMult");
+                sb.AppendItem(item.DamageOutOfRangeMult, "DamageOutOfRangeMult");
             }
             if (printMask?.OnHit ?? true)
             {
-                fg.AppendItem(item.OnHit, "OnHit");
+                sb.AppendItem(item.OnHit, "OnHit");
             }
             if (printMask?.Skill ?? true)
             {
-                fg.AppendItem(item.Skill.FormKey, "Skill");
+                sb.AppendItem(item.Skill.FormKey, "Skill");
             }
             if (printMask?.Resist ?? true)
             {
-                fg.AppendItem(item.Resist.FormKey, "Resist");
+                sb.AppendItem(item.Resist.FormKey, "Resist");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Capacity ?? true)
             {
-                fg.AppendItem(item.Capacity, "Capacity");
+                sb.AppendItem(item.Capacity, "Capacity");
             }
             if (printMask?.AnimationType ?? true)
             {
-                fg.AppendItem(item.AnimationType, "AnimationType");
+                sb.AppendItem(item.AnimationType, "AnimationType");
             }
             if (printMask?.SecondaryDamage ?? true)
             {
-                fg.AppendItem(item.SecondaryDamage, "SecondaryDamage");
+                sb.AppendItem(item.SecondaryDamage, "SecondaryDamage");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.BaseDamage ?? true)
             {
-                fg.AppendItem(item.BaseDamage, "BaseDamage");
+                sb.AppendItem(item.BaseDamage, "BaseDamage");
             }
             if (printMask?.SoundLevel ?? true)
             {
-                fg.AppendItem(item.SoundLevel, "SoundLevel");
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
             if (printMask?.AttackSound ?? true)
             {
-                fg.AppendItem(item.AttackSound.FormKey, "AttackSound");
+                sb.AppendItem(item.AttackSound.FormKey, "AttackSound");
             }
             if (printMask?.Attack2dSound ?? true)
             {
-                fg.AppendItem(item.Attack2dSound.FormKey, "Attack2dSound");
+                sb.AppendItem(item.Attack2dSound.FormKey, "Attack2dSound");
             }
             if (printMask?.AttackLoopSound ?? true)
             {
-                fg.AppendItem(item.AttackLoopSound.FormKey, "AttackLoopSound");
+                sb.AppendItem(item.AttackLoopSound.FormKey, "AttackLoopSound");
             }
             if (printMask?.AttackFailSound ?? true)
             {
-                fg.AppendItem(item.AttackFailSound.FormKey, "AttackFailSound");
+                sb.AppendItem(item.AttackFailSound.FormKey, "AttackFailSound");
             }
             if (printMask?.IdleSound ?? true)
             {
-                fg.AppendItem(item.IdleSound.FormKey, "IdleSound");
+                sb.AppendItem(item.IdleSound.FormKey, "IdleSound");
             }
             if (printMask?.EquipSound ?? true)
             {
-                fg.AppendItem(item.EquipSound.FormKey, "EquipSound");
+                sb.AppendItem(item.EquipSound.FormKey, "EquipSound");
             }
             if (printMask?.UnequipSound ?? true)
             {
-                fg.AppendItem(item.UnequipSound.FormKey, "UnequipSound");
+                sb.AppendItem(item.UnequipSound.FormKey, "UnequipSound");
             }
             if (printMask?.FastEquipSound ?? true)
             {
-                fg.AppendItem(item.FastEquipSound.FormKey, "FastEquipSound");
+                sb.AppendItem(item.FastEquipSound.FormKey, "FastEquipSound");
             }
             if (printMask?.AccuracyBonus ?? true)
             {
-                fg.AppendItem(item.AccuracyBonus, "AccuracyBonus");
+                sb.AppendItem(item.AccuracyBonus, "AccuracyBonus");
             }
             if (printMask?.AnimationAttackSeconds ?? true)
             {
-                fg.AppendItem(item.AnimationAttackSeconds, "AnimationAttackSeconds");
+                sb.AppendItem(item.AnimationAttackSeconds, "AnimationAttackSeconds");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.ActionPointCost ?? true)
             {
-                fg.AppendItem(item.ActionPointCost, "ActionPointCost");
+                sb.AppendItem(item.ActionPointCost, "ActionPointCost");
             }
             if (printMask?.FullPowerSeconds ?? true)
             {
-                fg.AppendItem(item.FullPowerSeconds, "FullPowerSeconds");
+                sb.AppendItem(item.FullPowerSeconds, "FullPowerSeconds");
             }
             if (printMask?.MinPowerPerShot ?? true)
             {
-                fg.AppendItem(item.MinPowerPerShot, "MinPowerPerShot");
+                sb.AppendItem(item.MinPowerPerShot, "MinPowerPerShot");
             }
             if (printMask?.Stagger ?? true)
             {
-                fg.AppendItem(item.Stagger, "Stagger");
+                sb.AppendItem(item.Stagger, "Stagger");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendItem(item.Unknown3, "Unknown3");
+                sb.AppendItem(item.Unknown3, "Unknown3");
             }
             if ((printMask?.ExtraData?.Overall ?? true)
                 && item.ExtraData is {} ExtraDataItem)
             {
-                ExtraDataItem?.ToString(fg, "ExtraData");
+                ExtraDataItem?.ToString(sb, "ExtraData");
             }
             if (printMask?.CritDamageMult ?? true)
             {
-                fg.AppendItem(item.CritDamageMult, "CritDamageMult");
+                sb.AppendItem(item.CritDamageMult, "CritDamageMult");
             }
             if (printMask?.CritChargeBonus ?? true)
             {
-                fg.AppendItem(item.CritChargeBonus, "CritChargeBonus");
+                sb.AppendItem(item.CritChargeBonus, "CritChargeBonus");
             }
             if (printMask?.CritEffect ?? true)
             {
-                fg.AppendItem(item.CritEffect.FormKey, "CritEffect");
+                sb.AppendItem(item.CritEffect.FormKey, "CritEffect");
             }
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet.FormKeyNullable, "ImpactDataSet");
+                sb.AppendItem(item.ImpactDataSet.FormKeyNullable, "ImpactDataSet");
             }
             if (printMask?.NpcAddAmmoList ?? true)
             {
-                fg.AppendItem(item.NpcAddAmmoList.FormKeyNullable, "NpcAddAmmoList");
+                sb.AppendItem(item.NpcAddAmmoList.FormKeyNullable, "NpcAddAmmoList");
             }
             if (printMask?.AimModel ?? true)
             {
-                fg.AppendItem(item.AimModel.FormKeyNullable, "AimModel");
+                sb.AppendItem(item.AimModel.FormKeyNullable, "AimModel");
             }
             if (printMask?.Zoom ?? true)
             {
-                fg.AppendItem(item.Zoom.FormKeyNullable, "Zoom");
+                sb.AppendItem(item.Zoom.FormKeyNullable, "Zoom");
             }
             if (printMask?.Template ?? true)
             {
-                fg.AppendItem(item.Template.FormKeyNullable, "Template");
+                sb.AppendItem(item.Template.FormKeyNullable, "Template");
             }
             if ((printMask?.DamageType?.Overall ?? true)
                 && item.DamageType is {} DamageTypeItem)
             {
-                DamageTypeItem?.ToString(fg, "DamageType");
+                DamageTypeItem?.ToString(sb, "DamageType");
             }
             if ((printMask?.Filter ?? true)
                 && item.Filter is {} FilterItem)
             {
-                fg.AppendItem(FilterItem, "Filter");
+                sb.AppendItem(FilterItem, "Filter");
             }
             if ((printMask?.MeleeSpeed ?? true)
                 && item.MeleeSpeed is {} MeleeSpeedItem)
             {
-                fg.AppendItem(MeleeSpeedItem, "MeleeSpeed");
+                sb.AppendItem(MeleeSpeedItem, "MeleeSpeed");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
             if (printMask?.CRDTDataTypeState ?? true)
             {
-                fg.AppendItem(item.CRDTDataTypeState, "CRDTDataTypeState");
+                sb.AppendItem(item.CRDTDataTypeState, "CRDTDataTypeState");
             }
         }
         
@@ -6947,7 +7082,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeaponCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -7581,11 +7716,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeaponMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

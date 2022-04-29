@@ -405,11 +405,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WaterMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1160,310 +1161,312 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Water.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Water.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Water.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if ((printMask?.UnusedNoisemaps?.Overall ?? true)
                         && UnusedNoisemaps is {} UnusedNoisemapsItem)
                     {
-                        fg.AppendLine("UnusedNoisemaps =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("UnusedNoisemaps =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(UnusedNoisemapsItem.Overall);
+                            sb.AppendItem(UnusedNoisemapsItem.Overall);
                             if (UnusedNoisemapsItem.Specific != null)
                             {
                                 foreach (var subItem in UnusedNoisemapsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Opacity ?? true)
                     {
-                        fg.AppendItem(Opacity, "Opacity");
+                        sb.AppendItem(Opacity, "Opacity");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.MNAM ?? true)
                     {
-                        fg.AppendItem(MNAM, "MNAM");
+                        sb.AppendItem(MNAM, "MNAM");
                     }
                     if (printMask?.Material ?? true)
                     {
-                        fg.AppendItem(Material, "Material");
+                        sb.AppendItem(Material, "Material");
                     }
                     if (printMask?.OpenSound ?? true)
                     {
-                        fg.AppendItem(OpenSound, "OpenSound");
+                        sb.AppendItem(OpenSound, "OpenSound");
                     }
                     if (printMask?.Spell ?? true)
                     {
-                        fg.AppendItem(Spell, "Spell");
+                        sb.AppendItem(Spell, "Spell");
                     }
                     if (printMask?.ImageSpace ?? true)
                     {
-                        fg.AppendItem(ImageSpace, "ImageSpace");
+                        sb.AppendItem(ImageSpace, "ImageSpace");
                     }
                     if (printMask?.DamagePerSecond ?? true)
                     {
-                        fg.AppendItem(DamagePerSecond, "DamagePerSecond");
+                        sb.AppendItem(DamagePerSecond, "DamagePerSecond");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.SpecularSunPower ?? true)
                     {
-                        fg.AppendItem(SpecularSunPower, "SpecularSunPower");
+                        sb.AppendItem(SpecularSunPower, "SpecularSunPower");
                     }
                     if (printMask?.WaterReflectivity ?? true)
                     {
-                        fg.AppendItem(WaterReflectivity, "WaterReflectivity");
+                        sb.AppendItem(WaterReflectivity, "WaterReflectivity");
                     }
                     if (printMask?.WaterFresnel ?? true)
                     {
-                        fg.AppendItem(WaterFresnel, "WaterFresnel");
+                        sb.AppendItem(WaterFresnel, "WaterFresnel");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.FogAboveWaterDistanceNearPlane ?? true)
                     {
-                        fg.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
+                        sb.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
                     }
                     if (printMask?.FogAboveWaterDistanceFarPlane ?? true)
                     {
-                        fg.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
+                        sb.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
                     }
                     if (printMask?.ShallowColor ?? true)
                     {
-                        fg.AppendItem(ShallowColor, "ShallowColor");
+                        sb.AppendItem(ShallowColor, "ShallowColor");
                     }
                     if (printMask?.DeepColor ?? true)
                     {
-                        fg.AppendItem(DeepColor, "DeepColor");
+                        sb.AppendItem(DeepColor, "DeepColor");
                     }
                     if (printMask?.ReflectionColor ?? true)
                     {
-                        fg.AppendItem(ReflectionColor, "ReflectionColor");
+                        sb.AppendItem(ReflectionColor, "ReflectionColor");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                     if (printMask?.DisplacementStartingSize ?? true)
                     {
-                        fg.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
+                        sb.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
                     }
                     if (printMask?.DisplacementFoce ?? true)
                     {
-                        fg.AppendItem(DisplacementFoce, "DisplacementFoce");
+                        sb.AppendItem(DisplacementFoce, "DisplacementFoce");
                     }
                     if (printMask?.DisplacementVelocity ?? true)
                     {
-                        fg.AppendItem(DisplacementVelocity, "DisplacementVelocity");
+                        sb.AppendItem(DisplacementVelocity, "DisplacementVelocity");
                     }
                     if (printMask?.DisplacementFalloff ?? true)
                     {
-                        fg.AppendItem(DisplacementFalloff, "DisplacementFalloff");
+                        sb.AppendItem(DisplacementFalloff, "DisplacementFalloff");
                     }
                     if (printMask?.DisplacementDampner ?? true)
                     {
-                        fg.AppendItem(DisplacementDampner, "DisplacementDampner");
+                        sb.AppendItem(DisplacementDampner, "DisplacementDampner");
                     }
                     if (printMask?.Unknown4 ?? true)
                     {
-                        fg.AppendItem(Unknown4, "Unknown4");
+                        sb.AppendItem(Unknown4, "Unknown4");
                     }
                     if (printMask?.NoiseFalloff ?? true)
                     {
-                        fg.AppendItem(NoiseFalloff, "NoiseFalloff");
+                        sb.AppendItem(NoiseFalloff, "NoiseFalloff");
                     }
                     if (printMask?.NoiseLayerOneWindDirection ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
+                        sb.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
                     }
                     if (printMask?.NoiseLayerTwoWindDirection ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
+                        sb.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
                     }
                     if (printMask?.NoiseLayerThreeWindDirection ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
+                        sb.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
                     }
                     if (printMask?.NoiseLayerOneWindSpeed ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
+                        sb.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
                     }
                     if (printMask?.NoiseLayerTwoWindSpeed ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
+                        sb.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
                     }
                     if (printMask?.NoiseLayerThreeWindSpeed ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
+                        sb.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
                     }
                     if (printMask?.Unknown5 ?? true)
                     {
-                        fg.AppendItem(Unknown5, "Unknown5");
+                        sb.AppendItem(Unknown5, "Unknown5");
                     }
                     if (printMask?.FogAboveWaterAmount ?? true)
                     {
-                        fg.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
+                        sb.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
                     }
                     if (printMask?.Unknown6 ?? true)
                     {
-                        fg.AppendItem(Unknown6, "Unknown6");
+                        sb.AppendItem(Unknown6, "Unknown6");
                     }
                     if (printMask?.FogUnderWaterAmount ?? true)
                     {
-                        fg.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
+                        sb.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
                     }
                     if (printMask?.FogUnderWaterDistanceNearPlane ?? true)
                     {
-                        fg.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
+                        sb.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
                     }
                     if (printMask?.FogUnderWaterDistanceFarPlane ?? true)
                     {
-                        fg.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
+                        sb.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
                     }
                     if (printMask?.WaterRefractionMagnitude ?? true)
                     {
-                        fg.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
+                        sb.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
                     }
                     if (printMask?.SpecularPower ?? true)
                     {
-                        fg.AppendItem(SpecularPower, "SpecularPower");
+                        sb.AppendItem(SpecularPower, "SpecularPower");
                     }
                     if (printMask?.Unknown7 ?? true)
                     {
-                        fg.AppendItem(Unknown7, "Unknown7");
+                        sb.AppendItem(Unknown7, "Unknown7");
                     }
                     if (printMask?.SpecularRadius ?? true)
                     {
-                        fg.AppendItem(SpecularRadius, "SpecularRadius");
+                        sb.AppendItem(SpecularRadius, "SpecularRadius");
                     }
                     if (printMask?.SpecularBrightness ?? true)
                     {
-                        fg.AppendItem(SpecularBrightness, "SpecularBrightness");
+                        sb.AppendItem(SpecularBrightness, "SpecularBrightness");
                     }
                     if (printMask?.NoiseLayerOneUvScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
+                        sb.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
                     }
                     if (printMask?.NoiseLayerTwoUvScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
+                        sb.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
                     }
                     if (printMask?.NoiseLayerThreeUvScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
+                        sb.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
                     }
                     if (printMask?.NoiseLayerOneAmplitudeScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                        sb.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
                     }
                     if (printMask?.NoiseLayerTwoAmplitudeScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                        sb.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
                     }
                     if (printMask?.NoiseLayerThreeAmplitudeScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                        sb.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
                     }
                     if (printMask?.WaterReflectionMagnitude ?? true)
                     {
-                        fg.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
+                        sb.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
                     }
                     if (printMask?.SpecularSunSparkleMagnitude ?? true)
                     {
-                        fg.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                        sb.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
                     }
                     if (printMask?.SpecularSunSpecularMagnitude ?? true)
                     {
-                        fg.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                        sb.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
                     }
                     if (printMask?.DepthReflections ?? true)
                     {
-                        fg.AppendItem(DepthReflections, "DepthReflections");
+                        sb.AppendItem(DepthReflections, "DepthReflections");
                     }
                     if (printMask?.DepthRefraction ?? true)
                     {
-                        fg.AppendItem(DepthRefraction, "DepthRefraction");
+                        sb.AppendItem(DepthRefraction, "DepthRefraction");
                     }
                     if (printMask?.DepthNormals ?? true)
                     {
-                        fg.AppendItem(DepthNormals, "DepthNormals");
+                        sb.AppendItem(DepthNormals, "DepthNormals");
                     }
                     if (printMask?.DepthSpecularLighting ?? true)
                     {
-                        fg.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
+                        sb.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
                     }
                     if (printMask?.SpecularSunSparklePower ?? true)
                     {
-                        fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                        sb.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
                     }
                     if (printMask?.NoiseFlowmapScale ?? true)
                     {
-                        fg.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
+                        sb.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
                     }
                     if (printMask?.GNAM ?? true)
                     {
-                        fg.AppendItem(GNAM, "GNAM");
+                        sb.AppendItem(GNAM, "GNAM");
                     }
                     if (printMask?.LinearVelocity ?? true)
                     {
-                        fg.AppendItem(LinearVelocity, "LinearVelocity");
+                        sb.AppendItem(LinearVelocity, "LinearVelocity");
                     }
                     if (printMask?.AngularVelocity ?? true)
                     {
-                        fg.AppendItem(AngularVelocity, "AngularVelocity");
+                        sb.AppendItem(AngularVelocity, "AngularVelocity");
                     }
                     if (printMask?.NoiseLayerOneTexture ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
+                        sb.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
                     }
                     if (printMask?.NoiseLayerTwoTexture ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
+                        sb.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
                     }
                     if (printMask?.NoiseLayerThreeTexture ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                        sb.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
                     }
                     if (printMask?.FlowNormalsNoiseTexture ?? true)
                     {
-                        fg.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
+                        sb.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -2199,123 +2202,259 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
                 if (UnusedNoisemaps is {} UnusedNoisemapsItem)
                 {
-                    fg.AppendLine("UnusedNoisemaps =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("UnusedNoisemaps =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(UnusedNoisemapsItem.Overall);
+                        sb.AppendItem(UnusedNoisemapsItem.Overall);
                         if (UnusedNoisemapsItem.Specific != null)
                         {
                             foreach (var subItem in UnusedNoisemapsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Opacity, "Opacity");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(MNAM, "MNAM");
-                fg.AppendItem(Material, "Material");
-                fg.AppendItem(OpenSound, "OpenSound");
-                fg.AppendItem(Spell, "Spell");
-                fg.AppendItem(ImageSpace, "ImageSpace");
-                fg.AppendItem(DamagePerSecond, "DamagePerSecond");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(SpecularSunPower, "SpecularSunPower");
-                fg.AppendItem(WaterReflectivity, "WaterReflectivity");
-                fg.AppendItem(WaterFresnel, "WaterFresnel");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
-                fg.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
-                fg.AppendItem(ShallowColor, "ShallowColor");
-                fg.AppendItem(DeepColor, "DeepColor");
-                fg.AppendItem(ReflectionColor, "ReflectionColor");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
-                fg.AppendItem(DisplacementFoce, "DisplacementFoce");
-                fg.AppendItem(DisplacementVelocity, "DisplacementVelocity");
-                fg.AppendItem(DisplacementFalloff, "DisplacementFalloff");
-                fg.AppendItem(DisplacementDampner, "DisplacementDampner");
-                fg.AppendItem(Unknown4, "Unknown4");
-                fg.AppendItem(NoiseFalloff, "NoiseFalloff");
-                fg.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
-                fg.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
-                fg.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
-                fg.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
-                fg.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
-                fg.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
-                fg.AppendItem(Unknown5, "Unknown5");
-                fg.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
-                fg.AppendItem(Unknown6, "Unknown6");
-                fg.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
-                fg.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
-                fg.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
-                fg.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
-                fg.AppendItem(SpecularPower, "SpecularPower");
-                fg.AppendItem(Unknown7, "Unknown7");
-                fg.AppendItem(SpecularRadius, "SpecularRadius");
-                fg.AppendItem(SpecularBrightness, "SpecularBrightness");
-                fg.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
-                fg.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
-                fg.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
-                fg.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
-                fg.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
-                fg.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
-                fg.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
-                fg.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
-                fg.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
-                fg.AppendItem(DepthReflections, "DepthReflections");
-                fg.AppendItem(DepthRefraction, "DepthRefraction");
-                fg.AppendItem(DepthNormals, "DepthNormals");
-                fg.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
-                fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
-                fg.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
-                fg.AppendItem(GNAM, "GNAM");
-                fg.AppendItem(LinearVelocity, "LinearVelocity");
-                fg.AppendItem(AngularVelocity, "AngularVelocity");
-                fg.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
-                fg.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
-                fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
-                fg.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                {
+                    sb.AppendItem(Opacity, "Opacity");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(MNAM, "MNAM");
+                }
+                {
+                    sb.AppendItem(Material, "Material");
+                }
+                {
+                    sb.AppendItem(OpenSound, "OpenSound");
+                }
+                {
+                    sb.AppendItem(Spell, "Spell");
+                }
+                {
+                    sb.AppendItem(ImageSpace, "ImageSpace");
+                }
+                {
+                    sb.AppendItem(DamagePerSecond, "DamagePerSecond");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(SpecularSunPower, "SpecularSunPower");
+                }
+                {
+                    sb.AppendItem(WaterReflectivity, "WaterReflectivity");
+                }
+                {
+                    sb.AppendItem(WaterFresnel, "WaterFresnel");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
+                }
+                {
+                    sb.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
+                }
+                {
+                    sb.AppendItem(ShallowColor, "ShallowColor");
+                }
+                {
+                    sb.AppendItem(DeepColor, "DeepColor");
+                }
+                {
+                    sb.AppendItem(ReflectionColor, "ReflectionColor");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
+                }
+                {
+                    sb.AppendItem(DisplacementFoce, "DisplacementFoce");
+                }
+                {
+                    sb.AppendItem(DisplacementVelocity, "DisplacementVelocity");
+                }
+                {
+                    sb.AppendItem(DisplacementFalloff, "DisplacementFalloff");
+                }
+                {
+                    sb.AppendItem(DisplacementDampner, "DisplacementDampner");
+                }
+                {
+                    sb.AppendItem(Unknown4, "Unknown4");
+                }
+                {
+                    sb.AppendItem(NoiseFalloff, "NoiseFalloff");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
+                }
+                {
+                    sb.AppendItem(Unknown5, "Unknown5");
+                }
+                {
+                    sb.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
+                }
+                {
+                    sb.AppendItem(Unknown6, "Unknown6");
+                }
+                {
+                    sb.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
+                }
+                {
+                    sb.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
+                }
+                {
+                    sb.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
+                }
+                {
+                    sb.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
+                }
+                {
+                    sb.AppendItem(SpecularPower, "SpecularPower");
+                }
+                {
+                    sb.AppendItem(Unknown7, "Unknown7");
+                }
+                {
+                    sb.AppendItem(SpecularRadius, "SpecularRadius");
+                }
+                {
+                    sb.AppendItem(SpecularBrightness, "SpecularBrightness");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                }
+                {
+                    sb.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
+                }
+                {
+                    sb.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                }
+                {
+                    sb.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                }
+                {
+                    sb.AppendItem(DepthReflections, "DepthReflections");
+                }
+                {
+                    sb.AppendItem(DepthRefraction, "DepthRefraction");
+                }
+                {
+                    sb.AppendItem(DepthNormals, "DepthNormals");
+                }
+                {
+                    sb.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
+                }
+                {
+                    sb.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                }
+                {
+                    sb.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
+                }
+                {
+                    sb.AppendItem(GNAM, "GNAM");
+                }
+                {
+                    sb.AppendItem(LinearVelocity, "LinearVelocity");
+                }
+                {
+                    sb.AppendItem(AngularVelocity, "AngularVelocity");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                }
+                {
+                    sb.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -2763,7 +2902,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -2992,13 +3131,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IWaterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
             ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -3537,345 +3676,345 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWaterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Water =>");
+                sb.AppendLine($"Water =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Water) =>");
+                sb.AppendLine($"{name} (Water) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWaterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Water.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.UnusedNoisemaps?.Overall ?? true)
             {
-                fg.AppendLine("UnusedNoisemaps =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("UnusedNoisemaps =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.UnusedNoisemaps)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Opacity ?? true)
             {
-                fg.AppendItem(item.Opacity, "Opacity");
+                sb.AppendItem(item.Opacity, "Opacity");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.MNAM ?? true)
                 && item.MNAM is {} MNAMItem)
             {
-                fg.AppendLine($"MNAM => {SpanExt.ToHexString(MNAMItem)}");
+                sb.AppendLine($"MNAM => {SpanExt.ToHexString(MNAMItem)}");
             }
             if (printMask?.Material ?? true)
             {
-                fg.AppendItem(item.Material.FormKeyNullable, "Material");
+                sb.AppendItem(item.Material.FormKeyNullable, "Material");
             }
             if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
+                sb.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell.FormKeyNullable, "Spell");
+                sb.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
             if (printMask?.ImageSpace ?? true)
             {
-                fg.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
+                sb.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
             }
             if ((printMask?.DamagePerSecond ?? true)
                 && item.DamagePerSecond is {} DamagePerSecondItem)
             {
-                fg.AppendItem(DamagePerSecondItem, "DamagePerSecond");
+                sb.AppendItem(DamagePerSecondItem, "DamagePerSecond");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
             if (printMask?.SpecularSunPower ?? true)
             {
-                fg.AppendItem(item.SpecularSunPower, "SpecularSunPower");
+                sb.AppendItem(item.SpecularSunPower, "SpecularSunPower");
             }
             if (printMask?.WaterReflectivity ?? true)
             {
-                fg.AppendItem(item.WaterReflectivity, "WaterReflectivity");
+                sb.AppendItem(item.WaterReflectivity, "WaterReflectivity");
             }
             if (printMask?.WaterFresnel ?? true)
             {
-                fg.AppendItem(item.WaterFresnel, "WaterFresnel");
+                sb.AppendItem(item.WaterFresnel, "WaterFresnel");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.FogAboveWaterDistanceNearPlane ?? true)
             {
-                fg.AppendItem(item.FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
+                sb.AppendItem(item.FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
             }
             if (printMask?.FogAboveWaterDistanceFarPlane ?? true)
             {
-                fg.AppendItem(item.FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
+                sb.AppendItem(item.FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
             }
             if (printMask?.ShallowColor ?? true)
             {
-                fg.AppendItem(item.ShallowColor, "ShallowColor");
+                sb.AppendItem(item.ShallowColor, "ShallowColor");
             }
             if (printMask?.DeepColor ?? true)
             {
-                fg.AppendItem(item.DeepColor, "DeepColor");
+                sb.AppendItem(item.DeepColor, "DeepColor");
             }
             if (printMask?.ReflectionColor ?? true)
             {
-                fg.AppendItem(item.ReflectionColor, "ReflectionColor");
+                sb.AppendItem(item.ReflectionColor, "ReflectionColor");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
+                sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
             if (printMask?.DisplacementStartingSize ?? true)
             {
-                fg.AppendItem(item.DisplacementStartingSize, "DisplacementStartingSize");
+                sb.AppendItem(item.DisplacementStartingSize, "DisplacementStartingSize");
             }
             if (printMask?.DisplacementFoce ?? true)
             {
-                fg.AppendItem(item.DisplacementFoce, "DisplacementFoce");
+                sb.AppendItem(item.DisplacementFoce, "DisplacementFoce");
             }
             if (printMask?.DisplacementVelocity ?? true)
             {
-                fg.AppendItem(item.DisplacementVelocity, "DisplacementVelocity");
+                sb.AppendItem(item.DisplacementVelocity, "DisplacementVelocity");
             }
             if (printMask?.DisplacementFalloff ?? true)
             {
-                fg.AppendItem(item.DisplacementFalloff, "DisplacementFalloff");
+                sb.AppendItem(item.DisplacementFalloff, "DisplacementFalloff");
             }
             if (printMask?.DisplacementDampner ?? true)
             {
-                fg.AppendItem(item.DisplacementDampner, "DisplacementDampner");
+                sb.AppendItem(item.DisplacementDampner, "DisplacementDampner");
             }
             if (printMask?.Unknown4 ?? true)
             {
-                fg.AppendItem(item.Unknown4, "Unknown4");
+                sb.AppendItem(item.Unknown4, "Unknown4");
             }
             if (printMask?.NoiseFalloff ?? true)
             {
-                fg.AppendItem(item.NoiseFalloff, "NoiseFalloff");
+                sb.AppendItem(item.NoiseFalloff, "NoiseFalloff");
             }
             if (printMask?.NoiseLayerOneWindDirection ?? true)
             {
-                fg.AppendItem(item.NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
+                sb.AppendItem(item.NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
             }
             if (printMask?.NoiseLayerTwoWindDirection ?? true)
             {
-                fg.AppendItem(item.NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
+                sb.AppendItem(item.NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
             }
             if (printMask?.NoiseLayerThreeWindDirection ?? true)
             {
-                fg.AppendItem(item.NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
+                sb.AppendItem(item.NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
             }
             if (printMask?.NoiseLayerOneWindSpeed ?? true)
             {
-                fg.AppendItem(item.NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
+                sb.AppendItem(item.NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
             }
             if (printMask?.NoiseLayerTwoWindSpeed ?? true)
             {
-                fg.AppendItem(item.NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
+                sb.AppendItem(item.NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
             }
             if (printMask?.NoiseLayerThreeWindSpeed ?? true)
             {
-                fg.AppendItem(item.NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
+                sb.AppendItem(item.NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
             }
             if (printMask?.Unknown5 ?? true)
             {
-                fg.AppendLine($"Unknown5 => {SpanExt.ToHexString(item.Unknown5)}");
+                sb.AppendLine($"Unknown5 => {SpanExt.ToHexString(item.Unknown5)}");
             }
             if (printMask?.FogAboveWaterAmount ?? true)
             {
-                fg.AppendItem(item.FogAboveWaterAmount, "FogAboveWaterAmount");
+                sb.AppendItem(item.FogAboveWaterAmount, "FogAboveWaterAmount");
             }
             if (printMask?.Unknown6 ?? true)
             {
-                fg.AppendItem(item.Unknown6, "Unknown6");
+                sb.AppendItem(item.Unknown6, "Unknown6");
             }
             if (printMask?.FogUnderWaterAmount ?? true)
             {
-                fg.AppendItem(item.FogUnderWaterAmount, "FogUnderWaterAmount");
+                sb.AppendItem(item.FogUnderWaterAmount, "FogUnderWaterAmount");
             }
             if (printMask?.FogUnderWaterDistanceNearPlane ?? true)
             {
-                fg.AppendItem(item.FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
+                sb.AppendItem(item.FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
             }
             if (printMask?.FogUnderWaterDistanceFarPlane ?? true)
             {
-                fg.AppendItem(item.FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
+                sb.AppendItem(item.FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
             }
             if (printMask?.WaterRefractionMagnitude ?? true)
             {
-                fg.AppendItem(item.WaterRefractionMagnitude, "WaterRefractionMagnitude");
+                sb.AppendItem(item.WaterRefractionMagnitude, "WaterRefractionMagnitude");
             }
             if (printMask?.SpecularPower ?? true)
             {
-                fg.AppendItem(item.SpecularPower, "SpecularPower");
+                sb.AppendItem(item.SpecularPower, "SpecularPower");
             }
             if (printMask?.Unknown7 ?? true)
             {
-                fg.AppendItem(item.Unknown7, "Unknown7");
+                sb.AppendItem(item.Unknown7, "Unknown7");
             }
             if (printMask?.SpecularRadius ?? true)
             {
-                fg.AppendItem(item.SpecularRadius, "SpecularRadius");
+                sb.AppendItem(item.SpecularRadius, "SpecularRadius");
             }
             if (printMask?.SpecularBrightness ?? true)
             {
-                fg.AppendItem(item.SpecularBrightness, "SpecularBrightness");
+                sb.AppendItem(item.SpecularBrightness, "SpecularBrightness");
             }
             if (printMask?.NoiseLayerOneUvScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
+                sb.AppendItem(item.NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
             }
             if (printMask?.NoiseLayerTwoUvScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
+                sb.AppendItem(item.NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
             }
             if (printMask?.NoiseLayerThreeUvScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
+                sb.AppendItem(item.NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
             }
             if (printMask?.NoiseLayerOneAmplitudeScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                sb.AppendItem(item.NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
             }
             if (printMask?.NoiseLayerTwoAmplitudeScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                sb.AppendItem(item.NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
             }
             if (printMask?.NoiseLayerThreeAmplitudeScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                sb.AppendItem(item.NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
             }
             if (printMask?.WaterReflectionMagnitude ?? true)
             {
-                fg.AppendItem(item.WaterReflectionMagnitude, "WaterReflectionMagnitude");
+                sb.AppendItem(item.WaterReflectionMagnitude, "WaterReflectionMagnitude");
             }
             if (printMask?.SpecularSunSparkleMagnitude ?? true)
             {
-                fg.AppendItem(item.SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                sb.AppendItem(item.SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
             }
             if (printMask?.SpecularSunSpecularMagnitude ?? true)
             {
-                fg.AppendItem(item.SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                sb.AppendItem(item.SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
             }
             if (printMask?.DepthReflections ?? true)
             {
-                fg.AppendItem(item.DepthReflections, "DepthReflections");
+                sb.AppendItem(item.DepthReflections, "DepthReflections");
             }
             if (printMask?.DepthRefraction ?? true)
             {
-                fg.AppendItem(item.DepthRefraction, "DepthRefraction");
+                sb.AppendItem(item.DepthRefraction, "DepthRefraction");
             }
             if (printMask?.DepthNormals ?? true)
             {
-                fg.AppendItem(item.DepthNormals, "DepthNormals");
+                sb.AppendItem(item.DepthNormals, "DepthNormals");
             }
             if (printMask?.DepthSpecularLighting ?? true)
             {
-                fg.AppendItem(item.DepthSpecularLighting, "DepthSpecularLighting");
+                sb.AppendItem(item.DepthSpecularLighting, "DepthSpecularLighting");
             }
             if (printMask?.SpecularSunSparklePower ?? true)
             {
-                fg.AppendItem(item.SpecularSunSparklePower, "SpecularSunSparklePower");
+                sb.AppendItem(item.SpecularSunSparklePower, "SpecularSunSparklePower");
             }
             if (printMask?.NoiseFlowmapScale ?? true)
             {
-                fg.AppendItem(item.NoiseFlowmapScale, "NoiseFlowmapScale");
+                sb.AppendItem(item.NoiseFlowmapScale, "NoiseFlowmapScale");
             }
             if ((printMask?.GNAM ?? true)
                 && item.GNAM is {} GNAMItem)
             {
-                fg.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
+                sb.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
             }
             if ((printMask?.LinearVelocity ?? true)
                 && item.LinearVelocity is {} LinearVelocityItem)
             {
-                fg.AppendItem(LinearVelocityItem, "LinearVelocity");
+                sb.AppendItem(LinearVelocityItem, "LinearVelocity");
             }
             if ((printMask?.AngularVelocity ?? true)
                 && item.AngularVelocity is {} AngularVelocityItem)
             {
-                fg.AppendItem(AngularVelocityItem, "AngularVelocity");
+                sb.AppendItem(AngularVelocityItem, "AngularVelocity");
             }
             if ((printMask?.NoiseLayerOneTexture ?? true)
                 && item.NoiseLayerOneTexture is {} NoiseLayerOneTextureItem)
             {
-                fg.AppendItem(NoiseLayerOneTextureItem, "NoiseLayerOneTexture");
+                sb.AppendItem(NoiseLayerOneTextureItem, "NoiseLayerOneTexture");
             }
             if ((printMask?.NoiseLayerTwoTexture ?? true)
                 && item.NoiseLayerTwoTexture is {} NoiseLayerTwoTextureItem)
             {
-                fg.AppendItem(NoiseLayerTwoTextureItem, "NoiseLayerTwoTexture");
+                sb.AppendItem(NoiseLayerTwoTextureItem, "NoiseLayerTwoTexture");
             }
             if ((printMask?.NoiseLayerThreeTexture ?? true)
                 && item.NoiseLayerThreeTexture is {} NoiseLayerThreeTextureItem)
             {
-                fg.AppendItem(NoiseLayerThreeTextureItem, "NoiseLayerThreeTexture");
+                sb.AppendItem(NoiseLayerThreeTextureItem, "NoiseLayerThreeTexture");
             }
             if ((printMask?.FlowNormalsNoiseTexture ?? true)
                 && item.FlowNormalsNoiseTexture is {} FlowNormalsNoiseTextureItem)
             {
-                fg.AppendItem(FlowNormalsNoiseTextureItem, "FlowNormalsNoiseTexture");
+                sb.AppendItem(FlowNormalsNoiseTextureItem, "FlowNormalsNoiseTexture");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -5445,7 +5584,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5970,11 +6109,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WaterMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

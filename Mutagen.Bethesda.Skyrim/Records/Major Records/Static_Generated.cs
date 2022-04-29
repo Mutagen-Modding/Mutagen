@@ -152,11 +152,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             StaticMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -358,51 +359,51 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Static.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Static.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Static.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Static.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Static.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.MaxAngle ?? true)
                     {
-                        fg.AppendItem(MaxAngle, "MaxAngle");
+                        sb.AppendItem(MaxAngle, "MaxAngle");
                     }
                     if (printMask?.Material ?? true)
                     {
-                        fg.AppendItem(Material, "Material");
+                        sb.AppendItem(Material, "Material");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Lod?.Overall ?? true)
                     {
-                        Lod?.ToString(fg);
+                        Lod?.ToString(sb);
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -538,42 +539,52 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                Model?.ToString(fg);
-                fg.AppendItem(MaxAngle, "MaxAngle");
-                fg.AppendItem(Material, "Material");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Unused, "Unused");
-                Lod?.ToString(fg);
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(MaxAngle, "MaxAngle");
+                }
+                {
+                    sb.AppendItem(Material, "Material");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                Lod?.ToString(sb);
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -783,7 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -908,13 +919,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IStaticGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Static.Mask<bool>? printMask = null)
         {
             ((StaticCommon)((IStaticGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1262,82 +1273,82 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Static.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IStaticGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Static.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Static =>");
+                sb.AppendLine($"Static =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Static) =>");
+                sb.AppendLine($"{name} (Static) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IStaticGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Static.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if (printMask?.MaxAngle ?? true)
             {
-                fg.AppendItem(item.MaxAngle, "MaxAngle");
+                sb.AppendItem(item.MaxAngle, "MaxAngle");
             }
             if (printMask?.Material ?? true)
             {
-                fg.AppendItem(item.Material.FormKey, "Material");
+                sb.AppendItem(item.Material.FormKey, "Material");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if ((printMask?.Lod?.Overall ?? true)
                 && item.Lod is {} LodItem)
             {
-                LodItem?.ToString(fg, "Lod");
+                LodItem?.ToString(sb, "Lod");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -2048,7 +2059,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => StaticCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2205,11 +2216,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             StaticMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

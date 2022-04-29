@@ -78,11 +78,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LayerHeaderMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -211,31 +212,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(LayerHeader.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, LayerHeader.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, LayerHeader.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LayerHeader.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LayerHeader.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Texture ?? true)
                     {
-                        fg.AppendItem(Texture, "Texture");
+                        sb.AppendItem(Texture, "Texture");
                     }
                     if (printMask?.Quadrant ?? true)
                     {
-                        fg.AppendItem(Quadrant, "Quadrant");
+                        sb.AppendItem(Quadrant, "Quadrant");
                     }
                     if (printMask?.LayerNumber ?? true)
                     {
-                        fg.AppendItem(LayerNumber, "LayerNumber");
+                        sb.AppendItem(LayerNumber, "LayerNumber");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -332,36 +333,42 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Texture, "Texture");
-                fg.AppendItem(Quadrant, "Quadrant");
-                fg.AppendItem(LayerNumber, "LayerNumber");
+                {
+                    sb.AppendItem(Texture, "Texture");
+                }
+                {
+                    sb.AppendItem(Quadrant, "Quadrant");
+                }
+                {
+                    sb.AppendItem(LayerNumber, "LayerNumber");
+                }
             }
             #endregion
 
@@ -486,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -571,13 +578,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ILayerHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
             ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -867,56 +874,56 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILayerHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LayerHeader =>");
+                sb.AppendLine($"LayerHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LayerHeader) =>");
+                sb.AppendLine($"{name} (LayerHeader) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILayerHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LayerHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Texture ?? true)
             {
-                fg.AppendItem(item.Texture.FormKey, "Texture");
+                sb.AppendItem(item.Texture.FormKey, "Texture");
             }
             if (printMask?.Quadrant ?? true)
             {
-                fg.AppendItem(item.Quadrant, "Quadrant");
+                sb.AppendItem(item.Quadrant, "Quadrant");
             }
             if (printMask?.LayerNumber ?? true)
             {
-                fg.AppendItem(item.LayerNumber, "LayerNumber");
+                sb.AppendItem(item.LayerNumber, "LayerNumber");
             }
         }
         
@@ -1206,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => LayerHeaderCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1274,11 +1281,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LayerHeaderMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

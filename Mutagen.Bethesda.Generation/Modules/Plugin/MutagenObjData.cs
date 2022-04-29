@@ -26,8 +26,8 @@ public class MutagenObjData
     public TaskCompletionSource WiringComplete = new();
     public TaskCompletionSource DataTypeModuleComplete = new();
     public RecordTypeConverter BaseRecordTypeConverter;
-    public Dictionary<GameRelease, RecordTypeConverter> GameReleaseConverters;
-    public Dictionary<byte, RecordTypeConverter> VersionConverters;
+    public Dictionary<GameRelease, RecordTypeConverter>? GameReleaseConverters;
+    public Dictionary<byte, RecordTypeConverter>? VersionConverters;
     public HashSet<GameRelease> GameReleaseOptions;
     public RecordType? EndMarkerType;
     public bool MajorRecordFlags;

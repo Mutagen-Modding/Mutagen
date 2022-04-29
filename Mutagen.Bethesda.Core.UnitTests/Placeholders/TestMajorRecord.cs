@@ -70,7 +70,7 @@ public class TestMajorRecord : ITestMajorRecord
         throw new NotImplementedException();
     }
 
-    public void ToString(FileGeneration fg, string? name = null)
+    public void ToString(StructuredStringBuilder sb, string? name = null)
     {
         throw new NotImplementedException();
     }

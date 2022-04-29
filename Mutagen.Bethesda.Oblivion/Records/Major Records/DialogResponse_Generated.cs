@@ -77,11 +77,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DialogResponseMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -218,31 +219,31 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(DialogResponse.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, DialogResponse.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, DialogResponse.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DialogResponse.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DialogResponse.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.ToString(sb);
                     }
                     if (printMask?.ResponseText ?? true)
                     {
-                        fg.AppendItem(ResponseText, "ResponseText");
+                        sb.AppendItem(ResponseText, "ResponseText");
                     }
                     if (printMask?.ActorNotes ?? true)
                     {
-                        fg.AppendItem(ActorNotes, "ActorNotes");
+                        sb.AppendItem(ActorNotes, "ActorNotes");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -339,36 +340,40 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                Data?.ToString(fg);
-                fg.AppendItem(ResponseText, "ResponseText");
-                fg.AppendItem(ActorNotes, "ActorNotes");
+                Data?.ToString(sb);
+                {
+                    sb.AppendItem(ResponseText, "ResponseText");
+                }
+                {
+                    sb.AppendItem(ActorNotes, "ActorNotes");
+                }
             }
             #endregion
 
@@ -487,7 +492,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -564,13 +569,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IDialogResponseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
             ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -863,59 +868,59 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDialogResponseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogResponse =>");
+                sb.AppendLine($"DialogResponse =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogResponse) =>");
+                sb.AppendLine($"{name} (DialogResponse) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDialogResponseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DialogResponse.Mask<bool>? printMask = null)
         {
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.ToString(sb, "Data");
             }
             if ((printMask?.ResponseText ?? true)
                 && item.ResponseText is {} ResponseTextItem)
             {
-                fg.AppendItem(ResponseTextItem, "ResponseText");
+                sb.AppendItem(ResponseTextItem, "ResponseText");
             }
             if ((printMask?.ActorNotes ?? true)
                 && item.ActorNotes is {} ActorNotesItem)
             {
-                fg.AppendItem(ActorNotesItem, "ActorNotes");
+                sb.AppendItem(ActorNotesItem, "ActorNotes");
             }
         }
         
@@ -1264,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
@@ -1374,11 +1379,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DialogResponseMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

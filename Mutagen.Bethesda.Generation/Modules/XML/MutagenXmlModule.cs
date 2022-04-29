@@ -12,9 +12,9 @@ public class MutagenXmlModule : XmlTranslationModule
     {
     }
 
-    public override void GenerateWriteToNode(ObjectGeneration obj, FileGeneration fg)
+    public override void GenerateWriteToNode(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public static void WriteToNode{ModuleNickname}{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
@@ -23,11 +23,11 @@ public class MutagenXmlModule : XmlTranslationModule
             args.Add($"ErrorMaskBuilder? errorMask");
             args.Add($"{nameof(TranslationCrystal)}? translationMask");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
             if (obj.HasLoquiBaseObject)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{this.TranslationWriteClass(obj.BaseClass)}.WriteToNode{ModuleNickname}"))
                 {
                     args.Add($"item: item");
@@ -52,7 +52,7 @@ public class MutagenXmlModule : XmlTranslationModule
                 }
                 if (conditions.Count > 0)
                 {
-                    using (var args = new IfWrapper(fg, ANDs: true))
+                    using (var args = new IfWrapper(sb, ANDs: true))
                     {
                         foreach (var item in conditions)
                         {
@@ -60,11 +60,11 @@ public class MutagenXmlModule : XmlTranslationModule
                         }
                     }
                 }
-                using (new BraceWrapper(fg, doIt: conditions.Count > 0))
+                using (sb.CurlyBrace(doIt: conditions.Count > 0))
                 {
                     var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                     generator.GenerateWrite(
-                        fg: fg,
+                        sb: sb,
                         objGen: obj,
                         typeGen: field,
                         writerAccessor: $"{XmlTranslationModule.XElementLine.GetParameterName(obj)}",
@@ -87,9 +87,9 @@ public class MutagenXmlModule : XmlTranslationModule
                 {
                     if (dataType.Nullable)
                     {
-                        fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
+                        sb.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
                     }
-                    using (new BraceWrapper(fg, doIt: dataType.Nullable))
+                    using (sb.CurlyBrace(doIt: dataType.Nullable))
                     {
                         bool isInRange = false;
                         int encounteredBreakIndex = 0;
@@ -104,36 +104,36 @@ public class MutagenXmlModule : XmlTranslationModule
                             if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
                             if (subField.BreakIndex != -1)
                             {
-                                fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
-                                fg.AppendLine("{");
-                                fg.Depth++;
+                                sb.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
+                                sb.AppendLine("{");
+                                sb.Depth++;
                                 encounteredBreakIndex++;
                             }
                             if (subField.Range != null && !isInRange)
                             {
                                 isInRange = true;
-                                fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
-                                fg.AppendLine("{");
-                                fg.Depth++;
+                                sb.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
+                                sb.AppendLine("{");
+                                sb.Depth++;
                             }
                             if (subField.Range == null && isInRange)
                             {
                                 isInRange = false;
-                                fg.Depth--;
-                                fg.AppendLine("}");
+                                sb.Depth--;
+                                sb.AppendLine("}");
                             }
                             generateNormal(subGenerator, subField.Field);
                         }
                         for (int i = 0; i < encounteredBreakIndex; i++)
                         {
-                            fg.Depth--;
-                            fg.AppendLine("}");
+                            sb.Depth--;
+                            sb.AppendLine("}");
                             if (i == encounteredBreakIndex - 1)
                             {
-                                fg.AppendLine("else");
-                                using (new BraceWrapper(fg))
+                                sb.AppendLine("else");
+                                using (sb.CurlyBrace())
                                 {
-                                    fg.AppendLine($"node.Add(new XElement(\"Has{dataType.EnumName}\"));");
+                                    sb.AppendLine($"node.Add(new XElement(\"Has{dataType.EnumName}\"));");
                                 }
                             }
                         }
@@ -145,23 +145,23 @@ public class MutagenXmlModule : XmlTranslationModule
                 }
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
     }
 
-    private void HandleDataTypeParsing(ObjectGeneration obj, FileGeneration fg, DataType set, DataType.DataTypeIteration subField, ref bool isInRange)
+    private void HandleDataTypeParsing(ObjectGeneration obj, StructuredStringBuilder sb, DataType set, DataType.DataTypeIteration subField, ref bool isInRange)
     {
         if (subField.FieldIndex == 0 && set.Nullable)
         {
-            fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
+            sb.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
         }
         if (subField.BreakIndex != -1)
         {
-            fg.AppendLine($"item.{set.StateName} &= ~{obj.Name}.{set.EnumName}.Break{subField.BreakIndex};");
+            sb.AppendLine($"item.{set.StateName} &= ~{obj.Name}.{set.EnumName}.Break{subField.BreakIndex};");
         }
         if (subField.Range != null && !isInRange)
         {
             isInRange = true;
-            fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Range{subField.RangeIndex};");
+            sb.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Range{subField.RangeIndex};");
         }
         if (subField.Range == null && isInRange)
         {
@@ -169,23 +169,23 @@ public class MutagenXmlModule : XmlTranslationModule
         }
     }
 
-    protected override async Task PreCreateLoop(ObjectGeneration obj, FileGeneration fg)
+    protected override async Task PreCreateLoop(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
         {
             if (!(field is DataType set)) continue;
             for (int i = 0; i < set.BreakIndices.Count; i++)
             {
-                fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Break{i};");
+                sb.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Break{i};");
             }
         }
     }
 
-    protected override void FillPrivateElement(ObjectGeneration obj, FileGeneration fg)
+    protected override void FillPrivateElement(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (obj.IterateFields(includeBaseClass: true).Any(f => f.ReadOnly))
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"protected static void FillPrivateElement{ModuleNickname}"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
@@ -194,10 +194,10 @@ public class MutagenXmlModule : XmlTranslationModule
                 args.Add($"ErrorMaskBuilder? errorMask");
                 args.Add($"{nameof(TranslationCrystal)}? translationMask");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine("switch (name)");
-                using (new BraceWrapper(fg))
+                sb.AppendLine("switch (name)");
+                using (sb.CurlyBrace())
                 {
                     bool isInRange = false;
                     foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
@@ -206,11 +206,11 @@ public class MutagenXmlModule : XmlTranslationModule
                         {
                             if (set.Nullable)
                             {
-                                fg.AppendLine($"case \"Has{set.EnumName}\":");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine($"case \"Has{set.EnumName}\":");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
-                                    fg.AppendLine("break;");
+                                    sb.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
+                                    sb.AppendLine("break;");
                                 }
                             }
                             foreach (var subField in set.IterateFieldsWithMeta())
@@ -222,13 +222,13 @@ public class MutagenXmlModule : XmlTranslationModule
                                 {
                                     throw new ArgumentException("Unsupported type generator: " + subField.Field);
                                 }
-                                fg.AppendLine($"case \"{subField.Field.Name}\":");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine($"case \"{subField.Field.Name}\":");
+                                using (new DepthWrapper(sb))
                                 {
                                     if (generator.ShouldGenerateCopyIn(subField.Field))
                                     {
                                         generator.GenerateCopyIn(
-                                            fg: fg,
+                                            sb: sb,
                                             objGen: obj,
                                             typeGen: subField.Field,
                                             nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
@@ -236,8 +236,8 @@ public class MutagenXmlModule : XmlTranslationModule
                                             translationMaskAccessor: "translationMask",
                                             errorMaskAccessor: $"errorMask");
                                     }
-                                    HandleDataTypeParsing(obj, fg, set, subField, ref isInRange);
-                                    fg.AppendLine("break;");
+                                    HandleDataTypeParsing(obj, sb, set, subField, ref isInRange);
+                                    sb.AppendLine("break;");
                                 }
                             }
                         }
@@ -250,13 +250,13 @@ public class MutagenXmlModule : XmlTranslationModule
                                 throw new ArgumentException("Unsupported type generator: " + field);
                             }
 
-                            fg.AppendLine($"case \"{field.Name}\":");
-                            using (new DepthWrapper(fg))
+                            sb.AppendLine($"case \"{field.Name}\":");
+                            using (new DepthWrapper(sb))
                             {
                                 if (generator.ShouldGenerateCopyIn(field))
                                 {
                                     generator.GenerateCopyIn(
-                                        fg: fg,
+                                        sb: sb,
                                         objGen: obj,
                                         typeGen: field,
                                         nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
@@ -264,17 +264,17 @@ public class MutagenXmlModule : XmlTranslationModule
                                         translationMaskAccessor: "translationMask",
                                         errorMaskAccessor: $"errorMask");
                                 }
-                                fg.AppendLine("break;");
+                                sb.AppendLine("break;");
                             }
                         }
                     }
 
-                    fg.AppendLine("default:");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("default:");
+                    using (new DepthWrapper(sb))
                     {
                         if (obj.HasLoquiBaseObject)
                         {
-                            using (var args = new ArgsWrapper(fg,
+                            using (var args = new ArgsWrapper(sb,
                                        $"{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.FillPrivateElement{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
                             {
                                 args.Add("item: item");
@@ -287,17 +287,17 @@ public class MutagenXmlModule : XmlTranslationModule
                                 }
                             }
                         }
-                        fg.AppendLine("break;");
+                        sb.AppendLine("break;");
                     }
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
         }
     }
 
-    protected override void FillPublicElement(ObjectGeneration obj, FileGeneration fg)
+    protected override void FillPublicElement(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public static void FillPublicElement{ModuleNickname}"))
         {
             args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
@@ -306,10 +306,10 @@ public class MutagenXmlModule : XmlTranslationModule
             args.Add($"ErrorMaskBuilder? errorMask");
             args.Add($"{nameof(TranslationCrystal)}? translationMask");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine("switch (name)");
-            using (new BraceWrapper(fg))
+            sb.AppendLine("switch (name)");
+            using (sb.CurlyBrace())
             {
                 bool isInRange = false;
                 foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
@@ -326,13 +326,13 @@ public class MutagenXmlModule : XmlTranslationModule
                                 throw new ArgumentException("Unsupported type generator: " + subField.Field);
                             }
 
-                            fg.AppendLine($"case \"{subField.Field.Name}\":");
-                            using (new DepthWrapper(fg))
+                            sb.AppendLine($"case \"{subField.Field.Name}\":");
+                            using (new DepthWrapper(sb))
                             {
                                 if (generator.ShouldGenerateCopyIn(subField.Field))
                                 {
                                     generator.GenerateCopyIn(
-                                        fg: fg,
+                                        sb: sb,
                                         objGen: obj,
                                         typeGen: subField.Field,
                                         nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
@@ -340,8 +340,8 @@ public class MutagenXmlModule : XmlTranslationModule
                                         translationMaskAccessor: "translationMask",
                                         errorMaskAccessor: $"errorMask");
                                 }
-                                HandleDataTypeParsing(obj, fg, set, subField, ref isInRange);
-                                fg.AppendLine("break;");
+                                HandleDataTypeParsing(obj, sb, set, subField, ref isInRange);
+                                sb.AppendLine("break;");
                             }
                         }
                     }
@@ -354,13 +354,13 @@ public class MutagenXmlModule : XmlTranslationModule
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
 
-                        fg.AppendLine($"case \"{field.Name}\":");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine($"case \"{field.Name}\":");
+                        using (new DepthWrapper(sb))
                         {
                             if (generator.ShouldGenerateCopyIn(field))
                             {
                                 generator.GenerateCopyIn(
-                                    fg: fg,
+                                    sb: sb,
                                     objGen: obj,
                                     typeGen: field,
                                     nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
@@ -368,17 +368,17 @@ public class MutagenXmlModule : XmlTranslationModule
                                     translationMaskAccessor: "translationMask",
                                     errorMaskAccessor: $"errorMask");
                             }
-                            fg.AppendLine("break;");
+                            sb.AppendLine("break;");
                         }
                     }
                 }
 
-                fg.AppendLine("default:");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("default:");
+                using (new DepthWrapper(sb))
                 {
                     if (obj.HasLoquiBaseObject)
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"{this.TranslationCreateClass(obj.BaseClass)}.FillPublicElement{ModuleNickname}"))
                         {
                             args.Add("item: item");
@@ -391,11 +391,11 @@ public class MutagenXmlModule : XmlTranslationModule
                             }
                         }
                     }
-                    fg.AppendLine("break;");
+                    sb.AppendLine("break;");
                 }
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
     }
 
     public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)

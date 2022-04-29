@@ -224,11 +224,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TreeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -546,99 +547,99 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(Tree.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Tree.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Tree.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Tree.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Tree.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.Ingredient ?? true)
                     {
-                        fg.AppendItem(Ingredient, "Ingredient");
+                        sb.AppendItem(Ingredient, "Ingredient");
                     }
                     if (printMask?.HarvestSound ?? true)
                     {
-                        fg.AppendItem(HarvestSound, "HarvestSound");
+                        sb.AppendItem(HarvestSound, "HarvestSound");
                     }
                     if (printMask?.Production?.Overall ?? true)
                     {
-                        Production?.ToString(fg);
+                        Production?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.TrunkFlexibility ?? true)
                     {
-                        fg.AppendItem(TrunkFlexibility, "TrunkFlexibility");
+                        sb.AppendItem(TrunkFlexibility, "TrunkFlexibility");
                     }
                     if (printMask?.BranchFlexibility ?? true)
                     {
-                        fg.AppendItem(BranchFlexibility, "BranchFlexibility");
+                        sb.AppendItem(BranchFlexibility, "BranchFlexibility");
                     }
                     if (printMask?.TrunkAmplitude ?? true)
                     {
-                        fg.AppendItem(TrunkAmplitude, "TrunkAmplitude");
+                        sb.AppendItem(TrunkAmplitude, "TrunkAmplitude");
                     }
                     if (printMask?.FrontAmplitude ?? true)
                     {
-                        fg.AppendItem(FrontAmplitude, "FrontAmplitude");
+                        sb.AppendItem(FrontAmplitude, "FrontAmplitude");
                     }
                     if (printMask?.BackAmplitude ?? true)
                     {
-                        fg.AppendItem(BackAmplitude, "BackAmplitude");
+                        sb.AppendItem(BackAmplitude, "BackAmplitude");
                     }
                     if (printMask?.SideAmplitude ?? true)
                     {
-                        fg.AppendItem(SideAmplitude, "SideAmplitude");
+                        sb.AppendItem(SideAmplitude, "SideAmplitude");
                     }
                     if (printMask?.FrontFrequency ?? true)
                     {
-                        fg.AppendItem(FrontFrequency, "FrontFrequency");
+                        sb.AppendItem(FrontFrequency, "FrontFrequency");
                     }
                     if (printMask?.BackFrequency ?? true)
                     {
-                        fg.AppendItem(BackFrequency, "BackFrequency");
+                        sb.AppendItem(BackFrequency, "BackFrequency");
                     }
                     if (printMask?.SideFrequency ?? true)
                     {
-                        fg.AppendItem(SideFrequency, "SideFrequency");
+                        sb.AppendItem(SideFrequency, "SideFrequency");
                     }
                     if (printMask?.LeafFlexibility ?? true)
                     {
-                        fg.AppendItem(LeafFlexibility, "LeafFlexibility");
+                        sb.AppendItem(LeafFlexibility, "LeafFlexibility");
                     }
                     if (printMask?.LeafAmplitude ?? true)
                     {
-                        fg.AppendItem(LeafAmplitude, "LeafAmplitude");
+                        sb.AppendItem(LeafAmplitude, "LeafAmplitude");
                     }
                     if (printMask?.LeafFrequency ?? true)
                     {
-                        fg.AppendItem(LeafFrequency, "LeafFrequency");
+                        sb.AppendItem(LeafFrequency, "LeafFrequency");
                     }
                     if (printMask?.CNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
+                        sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -894,54 +895,86 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                Model?.ToString(fg);
-                fg.AppendItem(Ingredient, "Ingredient");
-                fg.AppendItem(HarvestSound, "HarvestSound");
-                Production?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(TrunkFlexibility, "TrunkFlexibility");
-                fg.AppendItem(BranchFlexibility, "BranchFlexibility");
-                fg.AppendItem(TrunkAmplitude, "TrunkAmplitude");
-                fg.AppendItem(FrontAmplitude, "FrontAmplitude");
-                fg.AppendItem(BackAmplitude, "BackAmplitude");
-                fg.AppendItem(SideAmplitude, "SideAmplitude");
-                fg.AppendItem(FrontFrequency, "FrontFrequency");
-                fg.AppendItem(BackFrequency, "BackFrequency");
-                fg.AppendItem(SideFrequency, "SideFrequency");
-                fg.AppendItem(LeafFlexibility, "LeafFlexibility");
-                fg.AppendItem(LeafAmplitude, "LeafAmplitude");
-                fg.AppendItem(LeafFrequency, "LeafFrequency");
-                fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                ObjectBounds?.ToString(sb);
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(Ingredient, "Ingredient");
+                }
+                {
+                    sb.AppendItem(HarvestSound, "HarvestSound");
+                }
+                Production?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(TrunkFlexibility, "TrunkFlexibility");
+                }
+                {
+                    sb.AppendItem(BranchFlexibility, "BranchFlexibility");
+                }
+                {
+                    sb.AppendItem(TrunkAmplitude, "TrunkAmplitude");
+                }
+                {
+                    sb.AppendItem(FrontAmplitude, "FrontAmplitude");
+                }
+                {
+                    sb.AppendItem(BackAmplitude, "BackAmplitude");
+                }
+                {
+                    sb.AppendItem(SideAmplitude, "SideAmplitude");
+                }
+                {
+                    sb.AppendItem(FrontFrequency, "FrontFrequency");
+                }
+                {
+                    sb.AppendItem(BackFrequency, "BackFrequency");
+                }
+                {
+                    sb.AppendItem(SideFrequency, "SideFrequency");
+                }
+                {
+                    sb.AppendItem(LeafFlexibility, "LeafFlexibility");
+                }
+                {
+                    sb.AppendItem(LeafAmplitude, "LeafAmplitude");
+                }
+                {
+                    sb.AppendItem(LeafFrequency, "LeafFrequency");
+                }
+                {
+                    sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -1190,7 +1223,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1365,13 +1398,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this ITreeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
             ((TreeCommon)((ITreeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1765,132 +1798,132 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ITreeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Tree =>");
+                sb.AppendLine($"Tree =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Tree) =>");
+                sb.AppendLine($"{name} (Tree) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITreeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Tree.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if (printMask?.Ingredient ?? true)
             {
-                fg.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
+                sb.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
             }
             if (printMask?.HarvestSound ?? true)
             {
-                fg.AppendItem(item.HarvestSound.FormKeyNullable, "HarvestSound");
+                sb.AppendItem(item.HarvestSound.FormKeyNullable, "HarvestSound");
             }
             if ((printMask?.Production?.Overall ?? true)
                 && item.Production is {} ProductionItem)
             {
-                ProductionItem?.ToString(fg, "Production");
+                ProductionItem?.ToString(sb, "Production");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.TrunkFlexibility ?? true)
             {
-                fg.AppendItem(item.TrunkFlexibility, "TrunkFlexibility");
+                sb.AppendItem(item.TrunkFlexibility, "TrunkFlexibility");
             }
             if (printMask?.BranchFlexibility ?? true)
             {
-                fg.AppendItem(item.BranchFlexibility, "BranchFlexibility");
+                sb.AppendItem(item.BranchFlexibility, "BranchFlexibility");
             }
             if (printMask?.TrunkAmplitude ?? true)
             {
-                fg.AppendItem(item.TrunkAmplitude, "TrunkAmplitude");
+                sb.AppendItem(item.TrunkAmplitude, "TrunkAmplitude");
             }
             if (printMask?.FrontAmplitude ?? true)
             {
-                fg.AppendItem(item.FrontAmplitude, "FrontAmplitude");
+                sb.AppendItem(item.FrontAmplitude, "FrontAmplitude");
             }
             if (printMask?.BackAmplitude ?? true)
             {
-                fg.AppendItem(item.BackAmplitude, "BackAmplitude");
+                sb.AppendItem(item.BackAmplitude, "BackAmplitude");
             }
             if (printMask?.SideAmplitude ?? true)
             {
-                fg.AppendItem(item.SideAmplitude, "SideAmplitude");
+                sb.AppendItem(item.SideAmplitude, "SideAmplitude");
             }
             if (printMask?.FrontFrequency ?? true)
             {
-                fg.AppendItem(item.FrontFrequency, "FrontFrequency");
+                sb.AppendItem(item.FrontFrequency, "FrontFrequency");
             }
             if (printMask?.BackFrequency ?? true)
             {
-                fg.AppendItem(item.BackFrequency, "BackFrequency");
+                sb.AppendItem(item.BackFrequency, "BackFrequency");
             }
             if (printMask?.SideFrequency ?? true)
             {
-                fg.AppendItem(item.SideFrequency, "SideFrequency");
+                sb.AppendItem(item.SideFrequency, "SideFrequency");
             }
             if (printMask?.LeafFlexibility ?? true)
             {
-                fg.AppendItem(item.LeafFlexibility, "LeafFlexibility");
+                sb.AppendItem(item.LeafFlexibility, "LeafFlexibility");
             }
             if (printMask?.LeafAmplitude ?? true)
             {
-                fg.AppendItem(item.LeafAmplitude, "LeafAmplitude");
+                sb.AppendItem(item.LeafAmplitude, "LeafAmplitude");
             }
             if (printMask?.LeafFrequency ?? true)
             {
-                fg.AppendItem(item.LeafFrequency, "LeafFrequency");
+                sb.AppendItem(item.LeafFrequency, "LeafFrequency");
             }
             if (printMask?.CNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
+                sb.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
             }
         }
         
@@ -2823,7 +2856,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => TreeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3059,11 +3092,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             TreeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

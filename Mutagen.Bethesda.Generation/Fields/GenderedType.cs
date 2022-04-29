@@ -35,28 +35,28 @@ public class GenderedType : WrapperType
     public RecordType? FemaleMarker;
     public bool MarkerPerGender;
 
-    public override void GenerateClear(FileGeneration fg, Accessor accessorPrefix)
+    public override void GenerateClear(StructuredStringBuilder sb, Accessor accessorPrefix)
     {
         if (this.Nullable)
         {
-            fg.AppendLine($"{accessorPrefix} = null;");
+            sb.AppendLine($"{accessorPrefix} = null;");
         }
         else if (SubTypeGeneration is FormLinkType linkType)
         {
-            fg.AppendLine($"{accessorPrefix}.Male = {linkType.DirectTypeName(getter: false)}.Null;");
-            fg.AppendLine($"{accessorPrefix}.Female = {linkType.DirectTypeName(getter: false)}.Null;");
+            sb.AppendLine($"{accessorPrefix}.Male = {linkType.DirectTypeName(getter: false)}.Null;");
+            sb.AppendLine($"{accessorPrefix}.Female = {linkType.DirectTypeName(getter: false)}.Null;");
         }
         else
         {
-            SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Male");
-            SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Female");
+            SubTypeGeneration.GenerateClear(sb, $"{accessorPrefix}.Male");
+            SubTypeGeneration.GenerateClear(sb, $"{accessorPrefix}.Female");
         }
     }
 
-    public override async Task GenerateForClass(FileGeneration fg)
+    public override async Task GenerateForClass(StructuredStringBuilder sb)
     {
-        fg.AppendLine($"public IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}{(this.Nullable ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
-        fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
+        sb.AppendLine($"public IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}{(this.Nullable ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
+        sb.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
     }
 
     public override string GenerateACopy(string rhsAccessor)
@@ -64,7 +64,7 @@ public class GenderedType : WrapperType
         throw new NotImplementedException();
     }
 
-    public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
+    public override void GenerateForCopy(StructuredStringBuilder sb, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
     {
         if (!deepCopy)
         {
@@ -72,17 +72,17 @@ public class GenderedType : WrapperType
         }
         if (this.Nullable)
         {
-            fg.AppendLine($"if ({rhs} is not {{}} rhs{this.Name}item)");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"if ({rhs} is not {{}} rhs{this.Name}item)");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"{accessor} = null;");
+                sb.AppendLine($"{accessor} = null;");
             }
-            fg.AppendLine("else");
+            sb.AppendLine("else");
             rhs = $"rhs{this.Name}item";
         }
-        using (new BraceWrapper(fg, doIt: this.Nullable))
+        using (sb.CurlyBrace(doIt: this.Nullable))
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>"))
             {
                 if (this.isLoquiSingle)
@@ -118,22 +118,22 @@ public class GenderedType : WrapperType
         }
     }
 
-    public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, Accessor maskAccessor)
+    public override void GenerateForEquals(StructuredStringBuilder sb, Accessor accessor, Accessor rhsAccessor, Accessor maskAccessor)
     {
-        fg.AppendLine($"if ({this.GetTranslationIfAccessor(maskAccessor)})");
-        using (new BraceWrapper(fg))
+        sb.AppendLine($"if ({this.GetTranslationIfAccessor(maskAccessor)})");
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine($"if (!Equals({accessor}, {rhsAccessor})) return false;");
+            sb.AppendLine($"if (!Equals({accessor}, {rhsAccessor})) return false;");
         }
     }
 
-    public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
+    public override void GenerateForEqualsMask(StructuredStringBuilder sb, Accessor accessor, Accessor rhsAccessor, string retAccessor)
     {
         LoquiType loqui = this.SubTypeGeneration as LoquiType;
 
         if (this.Nullable || loqui != null)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"ret.{this.Name} = {nameof(GenderedItem)}.{nameof(GenderedItem.EqualityMaskHelper)}"))
             {
                 args.Add($"lhs: {accessor}");
@@ -158,7 +158,7 @@ public class GenderedType : WrapperType
         }
         else
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"ret.{this.Name} = new GenderedItem<bool>"))
             {
                 args.Add($"male: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Male", $"{rhsAccessor}.Male")}");
@@ -167,62 +167,62 @@ public class GenderedType : WrapperType
         }
     }
 
-    public override void GenerateForNullableCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
+    public override void GenerateForNullableCheck(StructuredStringBuilder sb, Accessor accessor, string checkMaskAccessor)
     {
         if (this.Nullable)
         {
-            fg.AppendLine($"if ({checkMaskAccessor}?.Overall ?? false) return false;");
+            sb.AppendLine($"if ({checkMaskAccessor}?.Overall ?? false) return false;");
         }
         else if (this.ItemNullable)
         {
-            fg.AppendLine($"throw new NotImplementedException();");
+            sb.AppendLine($"throw new NotImplementedException();");
         }
     }
 
-    public override void GenerateForHash(FileGeneration fg, Accessor accessor, string hashResultAccessor)
+    public override void GenerateForHash(StructuredStringBuilder sb, Accessor accessor, string hashResultAccessor)
     {
         if (this.Nullable)
         {
-            fg.AppendLine($"if ({accessor} is {{}} {this.Name}item)");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"if ({accessor} is {{}} {this.Name}item)");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({this.Name}item.Male, {this.Name}item.Female));");
+                sb.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({this.Name}item.Male, {this.Name}item.Female));");
             }
         }
         else
         {
-            fg.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({accessor}.Male, {accessor}.Female));");
+            sb.AppendLine($"{hashResultAccessor}.Add(HashCode.Combine({accessor}.Male, {accessor}.Female));");
         }
     }
 
-    public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
+    public override void GenerateForInterface(StructuredStringBuilder sb, bool getter, bool internalInterface)
     {
         if (getter)
         {
-            fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; }}");
+            sb.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; }}");
         }
         else
         {
-            fg.AppendLine($"new IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}");
+            sb.AppendLine($"new IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}");
         }
     }
 
-    public override void GenerateGetNth(FileGeneration fg, Accessor identifier)
+    public override void GenerateGetNth(StructuredStringBuilder sb, Accessor identifier)
     {
         throw new NotImplementedException();
     }
 
-    public override void GenerateSetNth(FileGeneration fg, Accessor accessor, Accessor rhs, bool internalUse)
+    public override void GenerateSetNth(StructuredStringBuilder sb, Accessor accessor, Accessor rhs, bool internalUse)
     {
         throw new NotImplementedException();
     }
 
-    public override void GenerateToString(FileGeneration fg, string name, Accessor accessor, string fgAccessor)
+    public override void GenerateToString(StructuredStringBuilder sb, string name, Accessor accessor, string sbAccessor)
     {
-        fg.AppendLine($"{accessor}{(this.Nullable ? "?" : null)}.ToString({fgAccessor}, \"{name}\");");
+        sb.AppendLine($"{accessor}{(this.Nullable ? "?" : null)}.ToString({sbAccessor}, \"{name}\");");
     }
 
-    public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier)
+    public override void GenerateUnsetNth(StructuredStringBuilder sb, Accessor identifier)
     {
         throw new NotImplementedException();
     }
@@ -272,10 +272,10 @@ public class GenderedType : WrapperType
         MaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("MaleTypeOverrides", LoquiGenerator.Namespace)));
     }
 
-    public override void GenerateInRegistration(FileGeneration fg)
+    public override void GenerateInRegistration(StructuredStringBuilder sb)
     {
-        base.GenerateInRegistration(fg);
-        RecordTypeConverterModule.GenerateConverterMember(fg, this.ObjectGen, this.FemaleConversions, $"{this.Name}Female");
-        RecordTypeConverterModule.GenerateConverterMember(fg, this.ObjectGen, this.MaleConversions, $"{this.Name}Male");
+        base.GenerateInRegistration(sb);
+        RecordTypeConverterModule.GenerateConverterMember(sb, this.ObjectGen, this.FemaleConversions, $"{this.Name}Female");
+        RecordTypeConverterModule.GenerateConverterMember(sb, this.ObjectGen, this.MaleConversions, $"{this.Name}Male");
     }
 }

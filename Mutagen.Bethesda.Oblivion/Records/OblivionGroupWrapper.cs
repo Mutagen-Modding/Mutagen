@@ -112,7 +112,7 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
             translationParams: translationParams);
     }
 
-    public void ToString(FileGeneration fg, string? name = null)
+    public void ToString(StructuredStringBuilder fg, string? name = null)
     {
         OblivionGroupMixIn.ToString(
             item: this,

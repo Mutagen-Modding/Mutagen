@@ -7,22 +7,22 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class DuplicateModule : GenerationModule
 {
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await base.GenerateInClass(obj, fg);
+        await base.GenerateInClass(obj, sb);
         if (!await obj.IsMajorRecord()) return;
     }
 
-    public override async Task GenerateInInterface(ObjectGeneration obj, FileGeneration fg, bool internalInterface, bool getter)
+    public override async Task GenerateInInterface(ObjectGeneration obj, StructuredStringBuilder sb, bool internalInterface, bool getter)
     {
-        await base.GenerateInInterface(obj, fg, internalInterface, getter);
+        await base.GenerateInInterface(obj, sb, internalInterface, getter);
     }
 
-    public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInCommonMixin(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        await base.GenerateInCommonMixin(obj, fg);
+        await base.GenerateInCommonMixin(obj, sb);
         if (!await obj.IsMajorRecord()) return;
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public static {obj.ObjectName} Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
         {
             args.Wheres.AddRange(obj.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
@@ -30,9 +30,9 @@ public class DuplicateModule : GenerationModule
             args.Add($"{nameof(FormKey)} formKey");
             args.Add($"{obj.Mask(MaskType.Translation)}? copyMask = null");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"return {obj.CommonClassInstance("item", LoquiInterfaceType.IGetter, CommonGenerics.Functions, MaskType.NormalGetter)}.Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter, MaskType.Translation)}"))
             {
                 args.AddPassArg("item");
@@ -40,17 +40,17 @@ public class DuplicateModule : GenerationModule
                 args.Add("copyMask: copyMask?.GetCrystal()");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
     }
 
-    public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
+    public override async Task GenerateInCommon(ObjectGeneration obj, StructuredStringBuilder sb, MaskTypeSet maskTypes)
     {
         if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class)) return;
-        await base.GenerateInCommon(obj, fg, maskTypes);
+        await base.GenerateInCommon(obj, sb, maskTypes);
         if (!await obj.IsMajorRecord()) return;
-        using (new RegionWrapper(fg, "Duplicate"))
+        using (new RegionWrapper(sb, "Duplicate"))
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public{obj.Virtual()}{obj.Name} Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
             {
                 args.Wheres.AddRange(obj.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
@@ -58,24 +58,24 @@ public class DuplicateModule : GenerationModule
                 args.Add($"{nameof(FormKey)} formKey");
                 args.Add($"TranslationCrystal? copyMask");
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
                 if (obj.Abstract)
                 {
-                    fg.AppendLine("throw new NotImplementedException();");
+                    sb.AppendLine("throw new NotImplementedException();");
                 }
                 else
                 {
-                    fg.AppendLine($"var newRec = new {obj.Name}(formKey{(obj.GetObjectData().HasMultipleReleases ? $", item.FormVersion" : null)});");
-                    fg.AppendLine($"newRec.DeepCopyIn(item, default({nameof(ErrorMaskBuilder)}?), copyMask);");
-                    fg.AppendLine("return newRec;");
+                    sb.AppendLine($"var newRec = new {obj.Name}(formKey{(obj.GetObjectData().HasMultipleReleases ? $", item.FormVersion" : null)});");
+                    sb.AppendLine($"newRec.DeepCopyIn(item, default({nameof(ErrorMaskBuilder)}?), copyMask);");
+                    sb.AppendLine("return newRec;");
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
 
             foreach (var baseClass in obj.BaseClassTrail())
             {
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public override {baseClass.Name} Duplicate{baseClass.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
                 {
                     args.Wheres.AddRange(baseClass.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
@@ -83,9 +83,9 @@ public class DuplicateModule : GenerationModule
                     args.Add($"{nameof(FormKey)} formKey");
                     args.Add($"TranslationCrystal? copyMask");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"return this.Duplicate"))
                     {
                         args.Add($"item: ({obj.Interface(getter: true)})item");
@@ -93,7 +93,7 @@ public class DuplicateModule : GenerationModule
                         args.AddPassArg("copyMask");
                     }
                 }
-                fg.AppendLine();
+                sb.AppendLine();
             }
         }
     }

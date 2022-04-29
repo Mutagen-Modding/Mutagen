@@ -70,11 +70,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleCloseRangeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -221,39 +222,39 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CombatStyleCloseRange.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CombatStyleCloseRange.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CombatStyleCloseRange.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CombatStyleCloseRange.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CombatStyleCloseRange.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.CircleMult ?? true)
                     {
-                        fg.AppendItem(CircleMult, "CircleMult");
+                        sb.AppendItem(CircleMult, "CircleMult");
                     }
                     if (printMask?.FallbackMult ?? true)
                     {
-                        fg.AppendItem(FallbackMult, "FallbackMult");
+                        sb.AppendItem(FallbackMult, "FallbackMult");
                     }
                     if (printMask?.FlankDistance ?? true)
                     {
-                        fg.AppendItem(FlankDistance, "FlankDistance");
+                        sb.AppendItem(FlankDistance, "FlankDistance");
                     }
                     if (printMask?.StalkTime ?? true)
                     {
-                        fg.AppendItem(StalkTime, "StalkTime");
+                        sb.AppendItem(StalkTime, "StalkTime");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -370,38 +371,48 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(CircleMult, "CircleMult");
-                fg.AppendItem(FallbackMult, "FallbackMult");
-                fg.AppendItem(FlankDistance, "FlankDistance");
-                fg.AppendItem(StalkTime, "StalkTime");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(CircleMult, "CircleMult");
+                }
+                {
+                    sb.AppendItem(FallbackMult, "FallbackMult");
+                }
+                {
+                    sb.AppendItem(FlankDistance, "FlankDistance");
+                }
+                {
+                    sb.AppendItem(StalkTime, "StalkTime");
+                }
             }
             #endregion
 
@@ -537,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -618,13 +629,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICombatStyleCloseRangeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleCloseRange.Mask<bool>? printMask = null)
         {
             ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -920,64 +931,64 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CombatStyleCloseRange.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICombatStyleCloseRangeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleCloseRange.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CombatStyleCloseRange =>");
+                sb.AppendLine($"CombatStyleCloseRange =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CombatStyleCloseRange) =>");
+                sb.AppendLine($"{name} (CombatStyleCloseRange) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICombatStyleCloseRangeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CombatStyleCloseRange.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.CircleMult ?? true)
             {
-                fg.AppendItem(item.CircleMult, "CircleMult");
+                sb.AppendItem(item.CircleMult, "CircleMult");
             }
             if (printMask?.FallbackMult ?? true)
             {
-                fg.AppendItem(item.FallbackMult, "FallbackMult");
+                sb.AppendItem(item.FallbackMult, "FallbackMult");
             }
             if (printMask?.FlankDistance ?? true)
             {
-                fg.AppendItem(item.FlankDistance, "FlankDistance");
+                sb.AppendItem(item.FlankDistance, "FlankDistance");
             }
             if (printMask?.StalkTime ?? true)
             {
-                fg.AppendItem(item.StalkTime, "StalkTime");
+                sb.AppendItem(item.StalkTime, "StalkTime");
             }
         }
         
@@ -1281,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleCloseRangeBinaryWriteTranslation.Instance;
@@ -1353,11 +1364,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CombatStyleCloseRangeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

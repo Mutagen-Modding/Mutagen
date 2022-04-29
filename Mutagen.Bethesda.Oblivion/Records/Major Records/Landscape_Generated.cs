@@ -132,11 +132,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LandscapeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -363,81 +364,83 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Landscape.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Landscape.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Landscape.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Landscape.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Landscape.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.DATA ?? true)
                     {
-                        fg.AppendItem(DATA, "DATA");
+                        sb.AppendItem(DATA, "DATA");
                     }
                     if (printMask?.VertexNormals ?? true)
                     {
-                        fg.AppendItem(VertexNormals, "VertexNormals");
+                        sb.AppendItem(VertexNormals, "VertexNormals");
                     }
                     if (printMask?.VertexHeightMap ?? true)
                     {
-                        fg.AppendItem(VertexHeightMap, "VertexHeightMap");
+                        sb.AppendItem(VertexHeightMap, "VertexHeightMap");
                     }
                     if (printMask?.VertexColors ?? true)
                     {
-                        fg.AppendItem(VertexColors, "VertexColors");
+                        sb.AppendItem(VertexColors, "VertexColors");
                     }
                     if ((printMask?.Layers?.Overall ?? true)
                         && Layers is {} LayersItem)
                     {
-                        fg.AppendLine("Layers =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Layers =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LayersItem.Overall);
+                            sb.AppendItem(LayersItem.Overall);
                             if (LayersItem.Specific != null)
                             {
                                 foreach (var subItem in LayersItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Textures?.Overall ?? true)
                         && Textures is {} TexturesItem)
                     {
-                        fg.AppendLine("Textures =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Textures =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(TexturesItem.Overall);
+                            sb.AppendItem(TexturesItem.Overall);
                             if (TexturesItem.Specific != null)
                             {
                                 foreach (var subItem in TexturesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -553,81 +556,91 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(DATA, "DATA");
-                fg.AppendItem(VertexNormals, "VertexNormals");
-                fg.AppendItem(VertexHeightMap, "VertexHeightMap");
-                fg.AppendItem(VertexColors, "VertexColors");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(DATA, "DATA");
+                }
+                {
+                    sb.AppendItem(VertexNormals, "VertexNormals");
+                }
+                {
+                    sb.AppendItem(VertexHeightMap, "VertexHeightMap");
+                }
+                {
+                    sb.AppendItem(VertexColors, "VertexColors");
+                }
                 if (Layers is {} LayersItem)
                 {
-                    fg.AppendLine("Layers =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Layers =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LayersItem.Overall);
+                        sb.AppendItem(LayersItem.Overall);
                         if (LayersItem.Specific != null)
                         {
                             foreach (var subItem in LayersItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Textures is {} TexturesItem)
                 {
-                    fg.AppendLine("Textures =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Textures =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(TexturesItem.Overall);
+                        sb.AppendItem(TexturesItem.Overall);
                         if (TexturesItem.Specific != null)
                         {
                             foreach (var subItem in TexturesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -805,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -896,13 +909,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ILandscapeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Landscape.Mask<bool>? printMask = null)
         {
             ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1244,105 +1257,105 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Landscape.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILandscapeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Landscape.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Landscape =>");
+                sb.AppendLine($"Landscape =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Landscape) =>");
+                sb.AppendLine($"{name} (Landscape) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILandscapeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Landscape.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.DATA ?? true)
                 && item.DATA is {} DATAItem)
             {
-                fg.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
+                sb.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
             }
             if ((printMask?.VertexNormals ?? true)
                 && item.VertexNormals is {} VertexNormalsItem)
             {
-                fg.AppendLine($"VertexNormals => {SpanExt.ToHexString(VertexNormalsItem)}");
+                sb.AppendLine($"VertexNormals => {SpanExt.ToHexString(VertexNormalsItem)}");
             }
             if ((printMask?.VertexHeightMap ?? true)
                 && item.VertexHeightMap is {} VertexHeightMapItem)
             {
-                fg.AppendLine($"VertexHeightMap => {SpanExt.ToHexString(VertexHeightMapItem)}");
+                sb.AppendLine($"VertexHeightMap => {SpanExt.ToHexString(VertexHeightMapItem)}");
             }
             if ((printMask?.VertexColors ?? true)
                 && item.VertexColors is {} VertexColorsItem)
             {
-                fg.AppendLine($"VertexColors => {SpanExt.ToHexString(VertexColorsItem)}");
+                sb.AppendLine($"VertexColors => {SpanExt.ToHexString(VertexColorsItem)}");
             }
             if (printMask?.Layers?.Overall ?? true)
             {
-                fg.AppendLine("Layers =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Layers =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Layers)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Textures?.Overall ?? true)
                 && item.Textures is {} TexturesItem)
             {
-                fg.AppendLine("Textures =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Textures =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in TexturesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -2059,7 +2072,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LandscapeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2226,11 +2239,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LandscapeMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

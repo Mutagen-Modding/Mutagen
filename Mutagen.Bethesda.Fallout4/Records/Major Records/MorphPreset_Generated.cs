@@ -125,11 +125,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MorphPresetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -276,39 +277,39 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(MorphPreset.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MorphPreset.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MorphPreset.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MorphPreset.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MorphPreset.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.UnknownMPPM ?? true)
                     {
-                        fg.AppendItem(UnknownMPPM, "UnknownMPPM");
+                        sb.AppendItem(UnknownMPPM, "UnknownMPPM");
                     }
                     if (printMask?.Texture ?? true)
                     {
-                        fg.AppendItem(Texture, "Texture");
+                        sb.AppendItem(Texture, "Texture");
                     }
                     if (printMask?.UnknownMPPF ?? true)
                     {
-                        fg.AppendItem(UnknownMPPF, "UnknownMPPF");
+                        sb.AppendItem(UnknownMPPF, "UnknownMPPF");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -425,38 +426,48 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(UnknownMPPM, "UnknownMPPM");
-                fg.AppendItem(Texture, "Texture");
-                fg.AppendItem(UnknownMPPF, "UnknownMPPF");
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(UnknownMPPM, "UnknownMPPM");
+                }
+                {
+                    sb.AppendItem(Texture, "Texture");
+                }
+                {
+                    sb.AppendItem(UnknownMPPF, "UnknownMPPF");
+                }
             }
             #endregion
 
@@ -589,7 +600,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -688,13 +699,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IMorphPresetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MorphPreset.Mask<bool>? printMask = null)
         {
             ((MorphPresetCommon)((IMorphPresetGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -992,68 +1003,68 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             MorphPreset.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMorphPresetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MorphPreset.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MorphPreset =>");
+                sb.AppendLine($"MorphPreset =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MorphPreset) =>");
+                sb.AppendLine($"{name} (MorphPreset) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMorphPresetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MorphPreset.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.UnknownMPPM ?? true)
                 && item.UnknownMPPM is {} UnknownMPPMItem)
             {
-                fg.AppendItem(UnknownMPPMItem, "UnknownMPPM");
+                sb.AppendItem(UnknownMPPMItem, "UnknownMPPM");
             }
             if (printMask?.Texture ?? true)
             {
-                fg.AppendItem(item.Texture.FormKeyNullable, "Texture");
+                sb.AppendItem(item.Texture.FormKeyNullable, "Texture");
             }
             if ((printMask?.UnknownMPPF ?? true)
                 && item.UnknownMPPF is {} UnknownMPPFItem)
             {
-                fg.AppendLine($"UnknownMPPF => {SpanExt.ToHexString(UnknownMPPFItem)}");
+                sb.AppendLine($"UnknownMPPF => {SpanExt.ToHexString(UnknownMPPFItem)}");
             }
         }
         
@@ -1430,7 +1441,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => MorphPresetCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1569,11 +1580,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MorphPresetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

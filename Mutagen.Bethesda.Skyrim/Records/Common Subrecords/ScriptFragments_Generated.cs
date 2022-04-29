@@ -87,11 +87,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScriptFragmentsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -245,35 +246,35 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ScriptFragments.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ScriptFragments.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ScriptFragments.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ScriptFragments.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ScriptFragments.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.FileName ?? true)
                     {
-                        fg.AppendItem(FileName, "FileName");
+                        sb.AppendItem(FileName, "FileName");
                     }
                     if (printMask?.OnBegin?.Overall ?? true)
                     {
-                        OnBegin?.ToString(fg);
+                        OnBegin?.ToString(sb);
                     }
                     if (printMask?.OnEnd?.Overall ?? true)
                     {
-                        OnEnd?.ToString(fg);
+                        OnEnd?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -380,37 +381,41 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(FileName, "FileName");
-                OnBegin?.ToString(fg);
-                OnEnd?.ToString(fg);
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(FileName, "FileName");
+                }
+                OnBegin?.ToString(sb);
+                OnEnd?.ToString(sb);
             }
             #endregion
 
@@ -532,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -617,13 +622,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IScriptFragmentsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptFragments.Mask<bool>? printMask = null)
         {
             ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -913,62 +918,62 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ScriptFragments.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IScriptFragmentsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptFragments.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScriptFragments =>");
+                sb.AppendLine($"ScriptFragments =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScriptFragments) =>");
+                sb.AppendLine($"{name} (ScriptFragments) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IScriptFragmentsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ScriptFragments.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.FileName ?? true)
             {
-                fg.AppendItem(item.FileName, "FileName");
+                sb.AppendItem(item.FileName, "FileName");
             }
             if ((printMask?.OnBegin?.Overall ?? true)
                 && item.OnBegin is {} OnBeginItem)
             {
-                OnBeginItem?.ToString(fg, "OnBegin");
+                OnBeginItem?.ToString(sb, "OnBegin");
             }
             if ((printMask?.OnEnd?.Overall ?? true)
                 && item.OnEnd is {} OnEndItem)
             {
-                OnEndItem?.ToString(fg, "OnEnd");
+                OnEndItem?.ToString(sb, "OnEnd");
             }
         }
         
@@ -1314,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
@@ -1384,11 +1389,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScriptFragmentsMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

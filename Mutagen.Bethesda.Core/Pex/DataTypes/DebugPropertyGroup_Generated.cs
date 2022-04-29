@@ -56,11 +56,12 @@ namespace Mutagen.Bethesda.Pex
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DebugPropertyGroupMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -222,50 +223,52 @@ namespace Mutagen.Bethesda.Pex
 
             public string ToString(DebugPropertyGroup.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, DebugPropertyGroup.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, DebugPropertyGroup.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DebugPropertyGroup.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DebugPropertyGroup.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectName ?? true)
                     {
-                        fg.AppendItem(ObjectName, "ObjectName");
+                        sb.AppendItem(ObjectName, "ObjectName");
                     }
                     if (printMask?.GroupName ?? true)
                     {
-                        fg.AppendItem(GroupName, "GroupName");
+                        sb.AppendItem(GroupName, "GroupName");
                     }
                     if ((printMask?.PropertyNames?.Overall ?? true)
                         && PropertyNames is {} PropertyNamesItem)
                     {
-                        fg.AppendLine("PropertyNames =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("PropertyNames =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(PropertyNamesItem.Overall);
+                            sb.AppendItem(PropertyNamesItem.Overall);
                             if (PropertyNamesItem.Specific != null)
                             {
                                 foreach (var subItem in PropertyNamesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -362,56 +365,62 @@ namespace Mutagen.Bethesda.Pex
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ObjectName, "ObjectName");
-                fg.AppendItem(GroupName, "GroupName");
+                {
+                    sb.AppendItem(ObjectName, "ObjectName");
+                }
+                {
+                    sb.AppendItem(GroupName, "GroupName");
+                }
                 if (PropertyNames is {} PropertyNamesItem)
                 {
-                    fg.AppendLine("PropertyNames =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("PropertyNames =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(PropertyNamesItem.Overall);
+                        sb.AppendItem(PropertyNamesItem.Overall);
                         if (PropertyNamesItem.Specific != null)
                         {
                             foreach (var subItem in PropertyNamesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -490,7 +499,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -566,13 +575,13 @@ namespace Mutagen.Bethesda.Pex
 
         public static void ToString(
             this IDebugPropertyGroupGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugPropertyGroup.Mask<bool>? printMask = null)
         {
             ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -817,70 +826,70 @@ namespace Mutagen.Bethesda.Pex
             string? name = null,
             DebugPropertyGroup.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDebugPropertyGroupGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugPropertyGroup.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DebugPropertyGroup =>");
+                sb.AppendLine($"DebugPropertyGroup =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DebugPropertyGroup) =>");
+                sb.AppendLine($"{name} (DebugPropertyGroup) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDebugPropertyGroupGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DebugPropertyGroup.Mask<bool>? printMask = null)
         {
             if (printMask?.ObjectName ?? true)
             {
-                fg.AppendItem(item.ObjectName, "ObjectName");
+                sb.AppendItem(item.ObjectName, "ObjectName");
             }
             if (printMask?.GroupName ?? true)
             {
-                fg.AppendItem(item.GroupName, "GroupName");
+                sb.AppendItem(item.GroupName, "GroupName");
             }
             if (printMask?.PropertyNames?.Overall ?? true)
             {
-                fg.AppendLine("PropertyNames =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("PropertyNames =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.PropertyNames)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         

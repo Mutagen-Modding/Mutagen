@@ -74,11 +74,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavmeshGridMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -233,39 +234,39 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(NavmeshGrid.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NavmeshGrid.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NavmeshGrid.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NavmeshGrid.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavmeshGrid.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Size ?? true)
                     {
-                        fg.AppendItem(Size, "Size");
+                        sb.AppendItem(Size, "Size");
                     }
                     if (printMask?.MaxDistance ?? true)
                     {
-                        fg.AppendItem(MaxDistance, "MaxDistance");
+                        sb.AppendItem(MaxDistance, "MaxDistance");
                     }
                     if (printMask?.Min ?? true)
                     {
-                        fg.AppendItem(Min, "Min");
+                        sb.AppendItem(Min, "Min");
                     }
                     if (printMask?.Max ?? true)
                     {
-                        fg.AppendItem(Max, "Max");
+                        sb.AppendItem(Max, "Max");
                     }
                     if (printMask?.GridArrays?.Overall ?? true)
                     {
-                        GridArrays?.ToString(fg);
+                        GridArrays?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -382,38 +383,46 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Size, "Size");
-                fg.AppendItem(MaxDistance, "MaxDistance");
-                fg.AppendItem(Min, "Min");
-                fg.AppendItem(Max, "Max");
-                GridArrays?.ToString(fg);
+                {
+                    sb.AppendItem(Size, "Size");
+                }
+                {
+                    sb.AppendItem(MaxDistance, "MaxDistance");
+                }
+                {
+                    sb.AppendItem(Min, "Min");
+                }
+                {
+                    sb.AppendItem(Max, "Max");
+                }
+                GridArrays?.ToString(sb);
             }
             #endregion
 
@@ -540,7 +549,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -621,13 +630,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this INavmeshGridGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshGrid.Mask<bool>? printMask = null)
         {
             ((NavmeshGridCommon)((INavmeshGridGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -912,64 +921,64 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             NavmeshGrid.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INavmeshGridGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshGrid.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavmeshGrid =>");
+                sb.AppendLine($"NavmeshGrid =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavmeshGrid) =>");
+                sb.AppendLine($"{name} (NavmeshGrid) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavmeshGridGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavmeshGrid.Mask<bool>? printMask = null)
         {
             if (printMask?.Size ?? true)
             {
-                fg.AppendItem(item.Size, "Size");
+                sb.AppendItem(item.Size, "Size");
             }
             if (printMask?.MaxDistance ?? true)
             {
-                fg.AppendItem(item.MaxDistance, "MaxDistance");
+                sb.AppendItem(item.MaxDistance, "MaxDistance");
             }
             if (printMask?.Min ?? true)
             {
-                fg.AppendItem(item.Min, "Min");
+                sb.AppendItem(item.Min, "Min");
             }
             if (printMask?.Max ?? true)
             {
-                fg.AppendItem(item.Max, "Max");
+                sb.AppendItem(item.Max, "Max");
             }
             if (printMask?.GridArrays?.Overall ?? true)
             {
-                item.GridArrays?.ToString(fg, "GridArrays");
+                item.GridArrays?.ToString(sb, "GridArrays");
             }
         }
         
@@ -1282,7 +1291,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshGridBinaryWriteTranslation.Instance;
@@ -1353,11 +1362,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NavmeshGridMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

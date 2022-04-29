@@ -28,7 +28,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor readerAccessor,
@@ -37,7 +37,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         Accessor translationMaskAccessor)
     {
         GenerateFill(
-            fg: fg,
+            sb: sb,
             objGen: objGen,
             field: typeGen,
             frameAccessor: readerAccessor,
@@ -46,7 +46,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -63,7 +63,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -73,14 +73,14 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         Accessor converterAccessor)
     {
         this.GenerateWrite(
-            fg: fg,
+            sb: sb,
             obj: objGen,
             field: typeGen,
             writerAccessor: writerAccessor);
     }
 
     public static void GenerateCreatePartialMethods(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration obj,
         TypeGeneration field,
         bool isAsync,
@@ -90,7 +90,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         var returningParseResult = useReturnValue && fieldData.HasTrigger;
         if (!isAsync)
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"public static partial {(returningParseResult ? nameof(ParseResult) : "void")} FillBinary{field.Name}Custom")
                    {
                        SemiColon = true
@@ -103,17 +103,17 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
                     args.Add($"{nameof(PreviousParse)} lastParsed");
                 }
             }
-            fg.AppendLine();
+            sb.AppendLine();
         }
     }
 
     public static void GenerateWritePartialMethods(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration obj,
         TypeGeneration field,
         bool isAsync)
     {
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public static partial void WriteBinary{field.Name}Custom{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
@@ -121,33 +121,33 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
             args.Add($"{nameof(MutagenWriter)} writer");
             args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
         }
-        fg.AppendLine();
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine();
+        using (var args = new FunctionWrapper(sb,
                    $"public static void WriteBinary{field.Name}{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
             args.Add($"{nameof(MutagenWriter)} writer");
             args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"WriteBinary{field.Name}Custom"))
             {
                 args.Add("writer: writer");
                 args.Add("item: item");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
     }
 
     public void GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration obj,
         TypeGeneration field,
         Accessor writerAccessor)
     {
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{this.Module.TranslationWriteClass(obj)}.WriteBinary{field.Name}"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -156,7 +156,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     }
 
     public void GenerateFill(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration field,
         Accessor frameAccessor,
@@ -165,7 +165,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     {
         var data = field.GetFieldData();
         var returningParseValue = useReturnValue && data.HasTrigger;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{(returningParseValue ? "return " : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationCreateClass(field.ObjectGen)}.FillBinary{field.Name}Custom"))
         {
             args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
@@ -178,7 +178,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     }
 
     public async Task GenerateForCustomFlagWrapperFields(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor dataAccessor,
@@ -191,7 +191,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         string loc;
         if (fieldData.HasTrigger)
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"partial void {typeGen.Name}CustomParse"))
             {
                 args.Add($"{nameof(OverlayStream)} stream");
@@ -200,20 +200,20 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
             }
             if (typeGen.Nullable && !typeGen.CanBeNullable(getter: true))
             {
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");
+                sb.AppendLine($"public bool {typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");
             }
             loc = $"_{typeGen.Name}Location.Value";
         }
         else if (dataType != null)
         {
             loc = $"_{typeGen.Name}Location";
-            DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLenAccessor);
+            DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLenAccessor);
         }
         else
         {
             loc = passedLenAccessor;
         }
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"public partial {typeGen.TypeName(getter: true)}{typeGen.NullChar} Get{typeGen.Name}Custom"))
         {
             if (!fieldData.HasTrigger && dataType == null)
@@ -221,7 +221,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
                 args.Add($"int location");
             }
         }
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => Get{typeGen.Name}Custom"))
         {
             if (!fieldData.HasTrigger && dataType == null)
@@ -236,7 +236,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrapperFields(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
         Accessor dataAccessor, 
@@ -248,9 +248,9 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         var returningParseValue = fieldData.HasTrigger;
         if (data != null)
         {
-            DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, data, objGen, typeGen, passedLengthAccessor);
+            DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, data, objGen, typeGen, passedLengthAccessor);
         }
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{(returningParseValue ? "public " : null)}partial {(returningParseValue ? nameof(ParseResult) : "void")} {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
         {
             args.Add($"{nameof(OverlayStream)} stream");
@@ -263,7 +263,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateWrapperRecordTypeParse(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen,  
         TypeGeneration typeGen, 
         Accessor locationAccessor, 
@@ -272,7 +272,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     {
         var fieldData = typeGen.GetFieldData();
         var returningParseValue = fieldData.HasTrigger;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{(returningParseValue ? "return " : null)}{(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
         {
             args.Add("stream");

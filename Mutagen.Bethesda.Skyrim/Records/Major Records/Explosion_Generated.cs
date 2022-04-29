@@ -291,11 +291,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ExplosionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -605,99 +606,99 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Explosion.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Explosion.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Explosion.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Explosion.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Explosion.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.ToString(sb);
                     }
                     if (printMask?.ObjectEffect ?? true)
                     {
-                        fg.AppendItem(ObjectEffect, "ObjectEffect");
+                        sb.AppendItem(ObjectEffect, "ObjectEffect");
                     }
                     if (printMask?.ImageSpaceModifier ?? true)
                     {
-                        fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
                     }
                     if (printMask?.Light ?? true)
                     {
-                        fg.AppendItem(Light, "Light");
+                        sb.AppendItem(Light, "Light");
                     }
                     if (printMask?.Sound1 ?? true)
                     {
-                        fg.AppendItem(Sound1, "Sound1");
+                        sb.AppendItem(Sound1, "Sound1");
                     }
                     if (printMask?.Sound2 ?? true)
                     {
-                        fg.AppendItem(Sound2, "Sound2");
+                        sb.AppendItem(Sound2, "Sound2");
                     }
                     if (printMask?.ImpactDataSet ?? true)
                     {
-                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
                     }
                     if (printMask?.PlacedObject ?? true)
                     {
-                        fg.AppendItem(PlacedObject, "PlacedObject");
+                        sb.AppendItem(PlacedObject, "PlacedObject");
                     }
                     if (printMask?.SpawnProjectile ?? true)
                     {
-                        fg.AppendItem(SpawnProjectile, "SpawnProjectile");
+                        sb.AppendItem(SpawnProjectile, "SpawnProjectile");
                     }
                     if (printMask?.Force ?? true)
                     {
-                        fg.AppendItem(Force, "Force");
+                        sb.AppendItem(Force, "Force");
                     }
                     if (printMask?.Damage ?? true)
                     {
-                        fg.AppendItem(Damage, "Damage");
+                        sb.AppendItem(Damage, "Damage");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.ISRadius ?? true)
                     {
-                        fg.AppendItem(ISRadius, "ISRadius");
+                        sb.AppendItem(ISRadius, "ISRadius");
                     }
                     if (printMask?.VerticalOffsetMult ?? true)
                     {
-                        fg.AppendItem(VerticalOffsetMult, "VerticalOffsetMult");
+                        sb.AppendItem(VerticalOffsetMult, "VerticalOffsetMult");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.SoundLevel ?? true)
                     {
-                        fg.AppendItem(SoundLevel, "SoundLevel");
+                        sb.AppendItem(SoundLevel, "SoundLevel");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -953,54 +954,88 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                fg.AppendItem(ObjectEffect, "ObjectEffect");
-                fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
-                fg.AppendItem(Light, "Light");
-                fg.AppendItem(Sound1, "Sound1");
-                fg.AppendItem(Sound2, "Sound2");
-                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
-                fg.AppendItem(PlacedObject, "PlacedObject");
-                fg.AppendItem(SpawnProjectile, "SpawnProjectile");
-                fg.AppendItem(Force, "Force");
-                fg.AppendItem(Damage, "Damage");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(ISRadius, "ISRadius");
-                fg.AppendItem(VerticalOffsetMult, "VerticalOffsetMult");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(SoundLevel, "SoundLevel");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.ToString(sb);
+                {
+                    sb.AppendItem(ObjectEffect, "ObjectEffect");
+                }
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(Sound1, "Sound1");
+                }
+                {
+                    sb.AppendItem(Sound2, "Sound2");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(PlacedObject, "PlacedObject");
+                }
+                {
+                    sb.AppendItem(SpawnProjectile, "SpawnProjectile");
+                }
+                {
+                    sb.AppendItem(Force, "Force");
+                }
+                {
+                    sb.AppendItem(Damage, "Damage");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(ISRadius, "ISRadius");
+                }
+                {
+                    sb.AppendItem(VerticalOffsetMult, "VerticalOffsetMult");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -1255,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1418,13 +1453,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IExplosionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Explosion.Mask<bool>? printMask = null)
         {
             ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1819,131 +1854,131 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Explosion.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IExplosionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Explosion.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Explosion =>");
+                sb.AppendLine($"Explosion =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Explosion) =>");
+                sb.AppendLine($"{name} (Explosion) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IExplosionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Explosion.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.ToString(sb, "Model");
             }
             if (printMask?.ObjectEffect ?? true)
             {
-                fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
+                sb.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+                sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendItem(item.Light.FormKey, "Light");
+                sb.AppendItem(item.Light.FormKey, "Light");
             }
             if (printMask?.Sound1 ?? true)
             {
-                fg.AppendItem(item.Sound1.FormKey, "Sound1");
+                sb.AppendItem(item.Sound1.FormKey, "Sound1");
             }
             if (printMask?.Sound2 ?? true)
             {
-                fg.AppendItem(item.Sound2.FormKey, "Sound2");
+                sb.AppendItem(item.Sound2.FormKey, "Sound2");
             }
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
             }
             if (printMask?.PlacedObject ?? true)
             {
-                fg.AppendItem(item.PlacedObject.FormKey, "PlacedObject");
+                sb.AppendItem(item.PlacedObject.FormKey, "PlacedObject");
             }
             if (printMask?.SpawnProjectile ?? true)
             {
-                fg.AppendItem(item.SpawnProjectile.FormKey, "SpawnProjectile");
+                sb.AppendItem(item.SpawnProjectile.FormKey, "SpawnProjectile");
             }
             if (printMask?.Force ?? true)
             {
-                fg.AppendItem(item.Force, "Force");
+                sb.AppendItem(item.Force, "Force");
             }
             if (printMask?.Damage ?? true)
             {
-                fg.AppendItem(item.Damage, "Damage");
+                sb.AppendItem(item.Damage, "Damage");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendItem(item.Radius, "Radius");
+                sb.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.ISRadius ?? true)
             {
-                fg.AppendItem(item.ISRadius, "ISRadius");
+                sb.AppendItem(item.ISRadius, "ISRadius");
             }
             if (printMask?.VerticalOffsetMult ?? true)
             {
-                fg.AppendItem(item.VerticalOffsetMult, "VerticalOffsetMult");
+                sb.AppendItem(item.VerticalOffsetMult, "VerticalOffsetMult");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.SoundLevel ?? true)
             {
-                fg.AppendItem(item.SoundLevel, "SoundLevel");
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2875,7 +2910,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ExplosionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3119,11 +3154,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ExplosionMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

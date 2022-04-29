@@ -42,7 +42,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -57,7 +57,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     {
         if (inline)
         {
-            fg.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse");
+            sb.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse");
             return;
         }
         if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
@@ -66,12 +66,12 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         if (data.RecordType.HasValue)
         {
             if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
-            fg.AppendLine("r.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
+            sb.AppendLine("r.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
         }
         switch (linkType.FormIDType)
         {
             case FormLinkType.FormIDTypeEnum.Normal:
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{retAccessor}{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                 {
                     args.Add(nodeAccessor.Access);
@@ -91,9 +91,9 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
                 }
                 break;
             case FormLinkType.FormIDTypeEnum.EDIDChars:
-                fg.AppendLine($"{errorMaskAccessor} = null;");
-                fg.AppendLine($"{outItemAccessor} = new {linkType.TypeName(getter: false)}(HeaderTranslation.ReadNextRecordType(r.Reader));");
-                fg.AppendLine($"return true;");
+                sb.AppendLine($"{errorMaskAccessor} = null;");
+                sb.AppendLine($"{outItemAccessor} = new {linkType.TypeName(getter: false)}(HeaderTranslation.ReadNextRecordType(r.Reader));");
+                sb.AppendLine($"return true;");
                 break;
             default:
                 throw new NotImplementedException();
@@ -101,7 +101,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor frameAccessor, 
@@ -113,10 +113,10 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         var data = typeGen.GetFieldData();
         if (data.RecordType.HasValue)
         {
-            fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{itemAccessor}.SetTo"))
         {
             args.Add(subFg =>
@@ -131,7 +131,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor writerAccessor,
@@ -147,11 +147,11 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
             case FormLinkType.FormIDTypeEnum.Normal:
                 if (CustomWrite != null)
                 {
-                    if (CustomWrite(fg, objGen, typeGen, writerAccessor, itemAccessor)) return;
+                    if (CustomWrite(sb, objGen, typeGen, writerAccessor, itemAccessor)) return;
                 }
                 if (data.HasTrigger || !PreferDirectTranslation)
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                     {
                         args.Add($"writer: {writerAccessor}");
@@ -173,11 +173,11 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
                 }
                 else
                 {
-                    fg.AppendLine($"{writerAccessor}.Write({itemAccessor});");
+                    sb.AppendLine($"{writerAccessor}.Write({itemAccessor});");
                 }
                 break;
             case FormLinkType.FormIDTypeEnum.EDIDChars:
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{this.NamespacePrefix}RecordTypeBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                 {
                     args.Add($"writer: {writerAccessor}");
@@ -219,7 +219,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     }
 
     public override async Task GenerateWrapperFields(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 
         Accessor dataAccessor,
@@ -236,7 +236,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
                 return;
             case BinaryGenerationType.Custom:
                 await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
-                    fg,
+                    sb,
                     objGen,
                     typeGen,
                     dataAccessor,
@@ -250,7 +250,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
 
         if (data.HasTrigger)
         {
-            fg.AppendLine($"private int? _{typeGen.Name}Location;");
+            sb.AppendLine($"private int? _{typeGen.Name}Location;");
         }
         FormLinkType linkType = typeGen as FormLinkType;
             
@@ -258,7 +258,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         {
             if (dataType != null) throw new ArgumentException();
             dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
+            sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
         }
         else
         {
@@ -268,12 +268,12 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
             }
             if (dataType == null)
             {
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
             }
             else
             {
-                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
             }
         }
     }

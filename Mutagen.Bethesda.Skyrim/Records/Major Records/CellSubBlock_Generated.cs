@@ -83,11 +83,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CellSubBlockMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -270,58 +271,58 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(CellSubBlock.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, CellSubBlock.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, CellSubBlock.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CellSubBlock.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CellSubBlock.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.BlockNumber ?? true)
                     {
-                        fg.AppendItem(BlockNumber, "BlockNumber");
+                        sb.AppendItem(BlockNumber, "BlockNumber");
                     }
                     if (printMask?.GroupType ?? true)
                     {
-                        fg.AppendItem(GroupType, "GroupType");
+                        sb.AppendItem(GroupType, "GroupType");
                     }
                     if (printMask?.LastModified ?? true)
                     {
-                        fg.AppendItem(LastModified, "LastModified");
+                        sb.AppendItem(LastModified, "LastModified");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Cells?.Overall ?? true)
                         && Cells is {} CellsItem)
                     {
-                        fg.AppendLine("Cells =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Cells =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(CellsItem.Overall);
+                            sb.AppendItem(CellsItem.Overall);
                             if (CellsItem.Specific != null)
                             {
                                 foreach (var subItem in CellsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -438,58 +439,66 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(BlockNumber, "BlockNumber");
-                fg.AppendItem(GroupType, "GroupType");
-                fg.AppendItem(LastModified, "LastModified");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(BlockNumber, "BlockNumber");
+                }
+                {
+                    sb.AppendItem(GroupType, "GroupType");
+                }
+                {
+                    sb.AppendItem(LastModified, "LastModified");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
                 if (Cells is {} CellsItem)
                 {
-                    fg.AppendLine("Cells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Cells =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(CellsItem.Overall);
+                        sb.AppendItem(CellsItem.Overall);
                         if (CellsItem.Specific != null)
                         {
                             foreach (var subItem in CellsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -657,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -742,13 +751,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this ICellSubBlockGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
             ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1455,78 +1464,78 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ICellSubBlockGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CellSubBlock =>");
+                sb.AppendLine($"CellSubBlock =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CellSubBlock) =>");
+                sb.AppendLine($"{name} (CellSubBlock) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICellSubBlockGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CellSubBlock.Mask<bool>? printMask = null)
         {
             if (printMask?.BlockNumber ?? true)
             {
-                fg.AppendItem(item.BlockNumber, "BlockNumber");
+                sb.AppendItem(item.BlockNumber, "BlockNumber");
             }
             if (printMask?.GroupType ?? true)
             {
-                fg.AppendItem(item.GroupType, "GroupType");
+                sb.AppendItem(item.GroupType, "GroupType");
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendItem(item.LastModified, "LastModified");
+                sb.AppendItem(item.LastModified, "LastModified");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Cells?.Overall ?? true)
             {
-                fg.AppendLine("Cells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Cells =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Cells)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -2057,7 +2066,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => CellSubBlockCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
@@ -2172,11 +2181,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             CellSubBlockMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

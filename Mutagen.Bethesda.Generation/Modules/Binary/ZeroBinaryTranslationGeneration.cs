@@ -12,7 +12,7 @@ public class ZeroBinaryTranslationGeneration : BinaryTranslationGeneration
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor readerAccessor,
@@ -21,11 +21,11 @@ public class ZeroBinaryTranslationGeneration : BinaryTranslationGeneration
         Accessor translationMaskAccessor)
     {
         ZeroType zero = typeGen as ZeroType;
-        fg.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");
+        sb.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration targetGen, 
         TypeGeneration typeGen,
@@ -41,11 +41,11 @@ public class ZeroBinaryTranslationGeneration : BinaryTranslationGeneration
         if (inline) throw new NotImplementedException();
         if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
         ZeroType zero = typeGen as ZeroType;
-        fg.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");
+        sb.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");
     }
 
     public override async Task GenerateWrite(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
         Accessor writerAccessor, 
@@ -55,7 +55,7 @@ public class ZeroBinaryTranslationGeneration : BinaryTranslationGeneration
         Accessor converterAccessor)
     {
         ZeroType zero = typeGen as ZeroType;
-        fg.AppendLine($"{writerAccessor}.WriteZeros({zero.Length});");
+        sb.AppendLine($"{writerAccessor}.WriteZeros({zero.Length});");
     }
 
     public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)

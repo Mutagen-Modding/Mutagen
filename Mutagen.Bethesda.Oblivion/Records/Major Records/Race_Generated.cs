@@ -212,11 +212,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RaceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -686,186 +687,192 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(Race.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Race.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Race.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Spells?.Overall ?? true)
                         && Spells is {} SpellsItem)
                     {
-                        fg.AppendLine("Spells =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Spells =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(SpellsItem.Overall);
+                            sb.AppendItem(SpellsItem.Overall);
                             if (SpellsItem.Specific != null)
                             {
                                 foreach (var subItem in SpellsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Relations?.Overall ?? true)
                         && Relations is {} RelationsItem)
                     {
-                        fg.AppendLine("Relations =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Relations =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(RelationsItem.Overall);
+                            sb.AppendItem(RelationsItem.Overall);
                             if (RelationsItem.Specific != null)
                             {
                                 foreach (var subItem in RelationsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.ToString(sb);
                     }
                     if (Voices != null
                         && (printMask?.Voices?.Overall ?? true))
                     {
-                        fg.AppendLine($"Voices => {Voices}");
+                        sb.AppendLine($"Voices => {Voices}");
                     }
                     if (DefaultHair != null
                         && (printMask?.DefaultHair?.Overall ?? true))
                     {
-                        fg.AppendLine($"DefaultHair => {DefaultHair}");
+                        sb.AppendLine($"DefaultHair => {DefaultHair}");
                     }
                     if (printMask?.DefaultHairColor ?? true)
                     {
-                        fg.AppendItem(DefaultHairColor, "DefaultHairColor");
+                        sb.AppendItem(DefaultHairColor, "DefaultHairColor");
                     }
                     if (printMask?.FaceGenMainClamp ?? true)
                     {
-                        fg.AppendItem(FaceGenMainClamp, "FaceGenMainClamp");
+                        sb.AppendItem(FaceGenMainClamp, "FaceGenMainClamp");
                     }
                     if (printMask?.FaceGenFaceClamp ?? true)
                     {
-                        fg.AppendItem(FaceGenFaceClamp, "FaceGenFaceClamp");
+                        sb.AppendItem(FaceGenFaceClamp, "FaceGenFaceClamp");
                     }
                     if (RaceStats != null
                         && (printMask?.RaceStats?.Overall ?? true))
                     {
-                        fg.AppendLine($"RaceStats => {RaceStats}");
+                        sb.AppendLine($"RaceStats => {RaceStats}");
                     }
                     if ((printMask?.FaceData?.Overall ?? true)
                         && FaceData is {} FaceDataItem)
                     {
-                        fg.AppendLine("FaceData =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("FaceData =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(FaceDataItem.Overall);
+                            sb.AppendItem(FaceDataItem.Overall);
                             if (FaceDataItem.Specific != null)
                             {
                                 foreach (var subItem in FaceDataItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (BodyData != null
                         && (printMask?.BodyData?.Overall ?? true))
                     {
-                        fg.AppendLine($"BodyData => {BodyData}");
+                        sb.AppendLine($"BodyData => {BodyData}");
                     }
                     if ((printMask?.Hairs?.Overall ?? true)
                         && Hairs is {} HairsItem)
                     {
-                        fg.AppendLine("Hairs =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Hairs =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(HairsItem.Overall);
+                            sb.AppendItem(HairsItem.Overall);
                             if (HairsItem.Specific != null)
                             {
                                 foreach (var subItem in HairsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if ((printMask?.Eyes?.Overall ?? true)
                         && Eyes is {} EyesItem)
                     {
-                        fg.AppendLine("Eyes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Eyes =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(EyesItem.Overall);
+                            sb.AppendItem(EyesItem.Overall);
                             if (EyesItem.Specific != null)
                             {
                                 foreach (var subItem in EyesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.FaceGenData?.Overall ?? true)
                     {
-                        FaceGenData?.ToString(fg);
+                        FaceGenData?.ToString(sb);
                     }
                     if (printMask?.SNAM ?? true)
                     {
-                        fg.AppendItem(SNAM, "SNAM");
+                        sb.AppendItem(SNAM, "SNAM");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1091,168 +1098,186 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Description, "Description");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (Spells is {} SpellsItem)
                 {
-                    fg.AppendLine("Spells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Spells =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(SpellsItem.Overall);
+                        sb.AppendItem(SpellsItem.Overall);
                         if (SpellsItem.Specific != null)
                         {
                             foreach (var subItem in SpellsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Relations is {} RelationsItem)
                 {
-                    fg.AppendLine("Relations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Relations =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(RelationsItem.Overall);
+                        sb.AppendItem(RelationsItem.Overall);
                         if (RelationsItem.Specific != null)
                         {
                             foreach (var subItem in RelationsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                Data?.ToString(fg);
+                Data?.ToString(sb);
                 if (Voices != null)
                 {
-                    fg.AppendLine($"Voices => {Voices}");
+                    sb.AppendLine($"Voices => {Voices}");
                 }
                 if (DefaultHair != null)
                 {
-                    fg.AppendLine($"DefaultHair => {DefaultHair}");
+                    sb.AppendLine($"DefaultHair => {DefaultHair}");
                 }
-                fg.AppendItem(DefaultHairColor, "DefaultHairColor");
-                fg.AppendItem(FaceGenMainClamp, "FaceGenMainClamp");
-                fg.AppendItem(FaceGenFaceClamp, "FaceGenFaceClamp");
+                {
+                    sb.AppendItem(DefaultHairColor, "DefaultHairColor");
+                }
+                {
+                    sb.AppendItem(FaceGenMainClamp, "FaceGenMainClamp");
+                }
+                {
+                    sb.AppendItem(FaceGenFaceClamp, "FaceGenFaceClamp");
+                }
                 if (RaceStats != null)
                 {
-                    fg.AppendLine($"RaceStats => {RaceStats}");
+                    sb.AppendLine($"RaceStats => {RaceStats}");
                 }
                 if (FaceData is {} FaceDataItem)
                 {
-                    fg.AppendLine("FaceData =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("FaceData =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(FaceDataItem.Overall);
+                        sb.AppendItem(FaceDataItem.Overall);
                         if (FaceDataItem.Specific != null)
                         {
                             foreach (var subItem in FaceDataItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (BodyData != null)
                 {
-                    fg.AppendLine($"BodyData => {BodyData}");
+                    sb.AppendLine($"BodyData => {BodyData}");
                 }
                 if (Hairs is {} HairsItem)
                 {
-                    fg.AppendLine("Hairs =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Hairs =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(HairsItem.Overall);
+                        sb.AppendItem(HairsItem.Overall);
                         if (HairsItem.Specific != null)
                         {
                             foreach (var subItem in HairsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
                 if (Eyes is {} EyesItem)
                 {
-                    fg.AppendLine("Eyes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Eyes =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(EyesItem.Overall);
+                        sb.AppendItem(EyesItem.Overall);
                         if (EyesItem.Specific != null)
                         {
                             foreach (var subItem in EyesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                FaceGenData?.ToString(fg);
-                fg.AppendItem(SNAM, "SNAM");
+                FaceGenData?.ToString(sb);
+                {
+                    sb.AppendItem(SNAM, "SNAM");
+                }
             }
             #endregion
 
@@ -1466,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1593,13 +1618,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IRaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
             ((RaceCommon)((IRaceGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2028,200 +2053,200 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IRaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Race =>");
+                sb.AppendLine($"Race =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Race) =>");
+                sb.AppendLine($"{name} (Race) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Race.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.Spells?.Overall ?? true)
             {
-                fg.AppendLine("Spells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Spells =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Spells)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Relations?.Overall ?? true)
             {
-                fg.AppendLine("Relations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Relations =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Relations)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.ToString(sb, "Data");
             }
             if ((printMask?.Voices?.Overall ?? true)
                 && item.Voices is {} VoicesItem)
             {
-                VoicesItem?.ToString(fg, "Voices");
+                VoicesItem?.ToString(sb, "Voices");
             }
             if ((printMask?.DefaultHair?.Overall ?? true)
                 && item.DefaultHair is {} DefaultHairItem)
             {
-                DefaultHairItem?.ToString(fg, "DefaultHair");
+                DefaultHairItem?.ToString(sb, "DefaultHair");
             }
             if ((printMask?.DefaultHairColor ?? true)
                 && item.DefaultHairColor is {} DefaultHairColorItem)
             {
-                fg.AppendItem(DefaultHairColorItem, "DefaultHairColor");
+                sb.AppendItem(DefaultHairColorItem, "DefaultHairColor");
             }
             if ((printMask?.FaceGenMainClamp ?? true)
                 && item.FaceGenMainClamp is {} FaceGenMainClampItem)
             {
-                fg.AppendItem(FaceGenMainClampItem, "FaceGenMainClamp");
+                sb.AppendItem(FaceGenMainClampItem, "FaceGenMainClamp");
             }
             if ((printMask?.FaceGenFaceClamp ?? true)
                 && item.FaceGenFaceClamp is {} FaceGenFaceClampItem)
             {
-                fg.AppendItem(FaceGenFaceClampItem, "FaceGenFaceClamp");
+                sb.AppendItem(FaceGenFaceClampItem, "FaceGenFaceClamp");
             }
             if ((printMask?.RaceStats?.Overall ?? true)
                 && item.RaceStats is {} RaceStatsItem)
             {
-                RaceStatsItem?.ToString(fg, "RaceStats");
+                RaceStatsItem?.ToString(sb, "RaceStats");
             }
             if (printMask?.FaceData?.Overall ?? true)
             {
-                fg.AppendLine("FaceData =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("FaceData =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.FaceData)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.BodyData?.Overall ?? true)
                 && item.BodyData is {} BodyDataItem)
             {
-                BodyDataItem?.ToString(fg, "BodyData");
+                BodyDataItem?.ToString(sb, "BodyData");
             }
             if ((printMask?.Hairs?.Overall ?? true)
                 && item.Hairs is {} HairsItem)
             {
-                fg.AppendLine("Hairs =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Hairs =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in HairsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.Eyes?.Overall ?? true)
                 && item.Eyes is {} EyesItem)
             {
-                fg.AppendLine("Eyes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Eyes =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in EyesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.FaceGenData?.Overall ?? true)
                 && item.FaceGenData is {} FaceGenDataItem)
             {
-                FaceGenDataItem?.ToString(fg, "FaceGenData");
+                FaceGenDataItem?.ToString(sb, "FaceGenData");
             }
             if ((printMask?.SNAM ?? true)
                 && item.SNAM is {} SNAMItem)
             {
-                fg.AppendItem(SNAMItem, "SNAM");
+                sb.AppendItem(SNAMItem, "SNAM");
             }
         }
         
@@ -3378,7 +3403,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3692,11 +3717,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             RaceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

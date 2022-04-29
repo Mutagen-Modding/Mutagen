@@ -187,11 +187,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -502,109 +503,109 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Perk.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Perk.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Perk.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Perk.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Perk.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if (printMask?.Icons?.Overall ?? true)
                     {
-                        Icons?.ToString(fg);
+                        Icons?.ToString(sb);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.Trait ?? true)
                     {
-                        fg.AppendItem(Trait, "Trait");
+                        sb.AppendItem(Trait, "Trait");
                     }
                     if (printMask?.Level ?? true)
                     {
-                        fg.AppendItem(Level, "Level");
+                        sb.AppendItem(Level, "Level");
                     }
                     if (printMask?.NumRanks ?? true)
                     {
-                        fg.AppendItem(NumRanks, "NumRanks");
+                        sb.AppendItem(NumRanks, "NumRanks");
                     }
                     if (printMask?.Playable ?? true)
                     {
-                        fg.AppendItem(Playable, "Playable");
+                        sb.AppendItem(Playable, "Playable");
                     }
                     if (printMask?.Hidden ?? true)
                     {
-                        fg.AppendItem(Hidden, "Hidden");
+                        sb.AppendItem(Hidden, "Hidden");
                     }
                     if (printMask?.NextPerk ?? true)
                     {
-                        fg.AppendItem(NextPerk, "NextPerk");
+                        sb.AppendItem(NextPerk, "NextPerk");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects is {} EffectsItem)
                     {
-                        fg.AppendLine("Effects =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Effects =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(EffectsItem.Overall);
+                            sb.AppendItem(EffectsItem.Overall);
                             if (EffectsItem.Specific != null)
                             {
                                 foreach (var subItem in EffectsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -790,89 +791,107 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Description, "Description");
-                Icons?.ToString(fg);
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                Icons?.ToString(sb);
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(Trait, "Trait");
-                fg.AppendItem(Level, "Level");
-                fg.AppendItem(NumRanks, "NumRanks");
-                fg.AppendItem(Playable, "Playable");
-                fg.AppendItem(Hidden, "Hidden");
-                fg.AppendItem(NextPerk, "NextPerk");
+                {
+                    sb.AppendItem(Trait, "Trait");
+                }
+                {
+                    sb.AppendItem(Level, "Level");
+                }
+                {
+                    sb.AppendItem(NumRanks, "NumRanks");
+                }
+                {
+                    sb.AppendItem(Playable, "Playable");
+                }
+                {
+                    sb.AppendItem(Hidden, "Hidden");
+                }
+                {
+                    sb.AppendItem(NextPerk, "NextPerk");
+                }
                 if (Effects is {} EffectsItem)
                 {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Effects =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(EffectsItem.Overall);
+                        sb.AppendItem(EffectsItem.Overall);
                         if (EffectsItem.Specific != null)
                         {
                             foreach (var subItem in EffectsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -1100,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1237,13 +1256,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IPerkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Perk.Mask<bool>? printMask = null)
         {
             ((PerkCommon)((IPerkGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1622,131 +1641,131 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Perk.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPerkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Perk.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Perk =>");
+                sb.AppendLine($"Perk =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Perk) =>");
+                sb.AppendLine($"{name} (Perk) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Perk.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.Description ?? true)
             {
-                fg.AppendItem(item.Description, "Description");
+                sb.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Icons?.Overall ?? true)
                 && item.Icons is {} IconsItem)
             {
-                IconsItem?.ToString(fg, "Icons");
+                IconsItem?.ToString(sb, "Icons");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.Trait ?? true)
             {
-                fg.AppendItem(item.Trait, "Trait");
+                sb.AppendItem(item.Trait, "Trait");
             }
             if (printMask?.Level ?? true)
             {
-                fg.AppendItem(item.Level, "Level");
+                sb.AppendItem(item.Level, "Level");
             }
             if (printMask?.NumRanks ?? true)
             {
-                fg.AppendItem(item.NumRanks, "NumRanks");
+                sb.AppendItem(item.NumRanks, "NumRanks");
             }
             if (printMask?.Playable ?? true)
             {
-                fg.AppendItem(item.Playable, "Playable");
+                sb.AppendItem(item.Playable, "Playable");
             }
             if (printMask?.Hidden ?? true)
             {
-                fg.AppendItem(item.Hidden, "Hidden");
+                sb.AppendItem(item.Hidden, "Hidden");
             }
             if (printMask?.NextPerk ?? true)
             {
-                fg.AppendItem(item.NextPerk.FormKeyNullable, "NextPerk");
+                sb.AppendItem(item.NextPerk.FormKeyNullable, "NextPerk");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
-                fg.AppendLine("Effects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Effects =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Effects)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2597,7 +2616,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2815,11 +2834,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

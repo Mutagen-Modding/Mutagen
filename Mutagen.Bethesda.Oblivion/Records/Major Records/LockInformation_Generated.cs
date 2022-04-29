@@ -83,11 +83,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LockInformationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -225,35 +226,35 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(LockInformation.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, LockInformation.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, LockInformation.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LockInformation.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LockInformation.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.LockLevel ?? true)
                     {
-                        fg.AppendItem(LockLevel, "LockLevel");
+                        sb.AppendItem(LockLevel, "LockLevel");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Key ?? true)
                     {
-                        fg.AppendItem(Key, "Key");
+                        sb.AppendItem(Key, "Key");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -360,37 +361,45 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(LockLevel, "LockLevel");
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendItem(Key, "Key");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(LockLevel, "LockLevel");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(Key, "Key");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -519,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -600,13 +609,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this ILockInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LockInformation.Mask<bool>? printMask = null)
         {
             ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -900,60 +909,60 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             LockInformation.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             ILockInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LockInformation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LockInformation =>");
+                sb.AppendLine($"LockInformation =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LockInformation) =>");
+                sb.AppendLine($"{name} (LockInformation) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILockInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LockInformation.Mask<bool>? printMask = null)
         {
             if (printMask?.LockLevel ?? true)
             {
-                fg.AppendItem(item.LockLevel, "LockLevel");
+                sb.AppendItem(item.LockLevel, "LockLevel");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if (printMask?.Key ?? true)
             {
-                fg.AppendItem(item.Key.FormKey, "Key");
+                sb.AppendItem(item.Key.FormKey, "Key");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1241,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => LockInformationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1310,11 +1319,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             LockInformationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

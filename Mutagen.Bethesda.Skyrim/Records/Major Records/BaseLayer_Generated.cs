@@ -71,11 +71,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             BaseLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -188,23 +189,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(BaseLayer.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, BaseLayer.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, BaseLayer.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(BaseLayer.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(BaseLayer.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Header?.Overall ?? true)
                     {
-                        Header?.ToString(fg);
+                        Header?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -281,34 +282,34 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                Header?.ToString(fg);
+                Header?.ToString(sb);
             }
             #endregion
 
@@ -424,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -505,13 +506,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IBaseLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BaseLayer.Mask<bool>? printMask = null)
         {
             ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -798,49 +799,49 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             BaseLayer.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IBaseLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BaseLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BaseLayer =>");
+                sb.AppendLine($"BaseLayer =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BaseLayer) =>");
+                sb.AppendLine($"{name} (BaseLayer) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBaseLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             BaseLayer.Mask<bool>? printMask = null)
         {
             if ((printMask?.Header?.Overall ?? true)
                 && item.Header is {} HeaderItem)
             {
-                HeaderItem?.ToString(fg, "Header");
+                HeaderItem?.ToString(sb, "Header");
             }
         }
         
@@ -1146,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => BaseLayerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1237,11 +1238,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public virtual void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             BaseLayerMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

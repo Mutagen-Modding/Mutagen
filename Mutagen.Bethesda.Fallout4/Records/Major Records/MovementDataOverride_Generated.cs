@@ -78,11 +78,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MovementDataOverrideMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -210,27 +211,27 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(MovementDataOverride.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MovementDataOverride.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MovementDataOverride.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MovementDataOverride.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MovementDataOverride.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.MovementType ?? true)
                     {
-                        fg.AppendItem(MovementType, "MovementType");
+                        sb.AppendItem(MovementType, "MovementType");
                     }
                     if (printMask?.MovementData?.Overall ?? true)
                     {
-                        MovementData?.ToString(fg);
+                        MovementData?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -317,35 +318,37 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(MovementType, "MovementType");
-                MovementData?.ToString(fg);
+                {
+                    sb.AppendItem(MovementType, "MovementType");
+                }
+                MovementData?.ToString(sb);
             }
             #endregion
 
@@ -465,7 +468,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -542,13 +545,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IMovementDataOverrideGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MovementDataOverride.Mask<bool>? printMask = null)
         {
             ((MovementDataOverrideCommon)((IMovementDataOverrideGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -838,53 +841,53 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             MovementDataOverride.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMovementDataOverrideGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MovementDataOverride.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MovementDataOverride =>");
+                sb.AppendLine($"MovementDataOverride =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MovementDataOverride) =>");
+                sb.AppendLine($"{name} (MovementDataOverride) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMovementDataOverrideGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MovementDataOverride.Mask<bool>? printMask = null)
         {
             if (printMask?.MovementType ?? true)
             {
-                fg.AppendItem(item.MovementType.FormKeyNullable, "MovementType");
+                sb.AppendItem(item.MovementType.FormKeyNullable, "MovementType");
             }
             if ((printMask?.MovementData?.Overall ?? true)
                 && item.MovementData is {} MovementDataItem)
             {
-                MovementDataItem?.ToString(fg, "MovementData");
+                MovementDataItem?.ToString(sb, "MovementData");
             }
         }
         
@@ -1209,7 +1212,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => MovementDataOverrideCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1311,11 +1314,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MovementDataOverrideMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

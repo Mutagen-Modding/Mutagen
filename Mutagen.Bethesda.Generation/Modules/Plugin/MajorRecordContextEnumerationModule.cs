@@ -23,29 +23,29 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, false) == Case.No) return;
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (obj.GetObjectType() != ObjectType.Mod) return;
-        GenerateClassImplementation(obj, fg);
+        GenerateClassImplementation(obj, sb);
     }
 
-    public static void GenerateClassImplementation(ObjectGeneration obj, FileGeneration fg, bool onlyGetter = false)
+    public static void GenerateClassImplementation(ObjectGeneration obj, StructuredStringBuilder sb, bool onlyGetter = false)
     {
         if (obj.GetObjectType() == ObjectType.Mod)
         {
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts<TSetter, TGetter>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(linkCache, throwIfUnknown: throwIfUnknown);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts<TSetter, TGetter>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(linkCache, throwIfUnknown: throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
                 
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<{typeof(IMajorRecordQueryableGetter)}, TMajor>());");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<{typeof(IMajorRecordQueryableGetter)}, TMajor>());");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
         }
     }
 
-    public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInCommonMixin(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (obj.GetObjectType() != ObjectType.Mod) return;
         var needsCatch = obj.GetObjectType() == ObjectType.Mod;
@@ -54,8 +54,8 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         var modGetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: true);
         var modSetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: false);
 
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, TSetter, TGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, new string[] { "TSetter", "TGetter" })}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
@@ -65,9 +65,9 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             args.Add($"{nameof(ILinkCache)} linkCache");
             args.Add($"bool throwIfUnknown = true");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new FunctionWrapper(fg,
+            using (var args = new FunctionWrapper(sb,
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
             {
                 args.AddPassArg("obj");
@@ -75,19 +75,19 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 args.Add("type: typeof(TGetter)");
                 args.AddPassArg("throwIfUnknown");
             }
-            using (new DepthWrapper(fg))
+            using (new DepthWrapper(sb))
             {
-                fg.AppendLine($".Select(m => m.AsType<{modSetter}, {modGetter}, {nameof(IMajorRecordQueryable)}, {nameof(IMajorRecordQueryableGetter)}, TSetter, TGetter>()){enderSemi}");
+                sb.AppendLine($".Select(m => m.AsType<{modSetter}, {modGetter}, {nameof(IMajorRecordQueryable)}, {nameof(IMajorRecordQueryableGetter)}, TSetter, TGetter>()){enderSemi}");
                 if (needsCatch)
                 {
-                    fg.AppendLine($"{catchLine};");
+                    sb.AppendLine($"{catchLine};");
                 }
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
@@ -96,9 +96,9 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             args.Add($"bool throwIfUnknown = true");
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
             {
                 args.AddPassArg("obj");
@@ -107,11 +107,11 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 args.AddPassArg("throwIfUnknown");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
     }
 
     private async Task LoquiTypeHandler(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration obj,
         Accessor loquiAccessor,
         LoquiType loquiType,
@@ -131,11 +131,11 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         {
             if (checkType)
             {
-                fg.AppendLine($"if (type.IsAssignableFrom({loquiAccessor}.GetType()))");
+                sb.AppendLine($"if (type.IsAssignableFrom({loquiAccessor}.GetType()))");
             }
-            using (new BraceWrapper(fg, doIt: checkType))
+            using (sb.CurlyBrace(doIt: checkType))
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false)}, {loquiType.Interface(getter: true)}>"))
                 {
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -154,11 +154,11 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         {
             if (checkType)
             {
-                fg.AppendLine($"if (type.IsAssignableFrom({loquiAccessor}.GetType()))");
+                sb.AppendLine($"if (type.IsAssignableFrom({loquiAccessor}.GetType()))");
             }
-            using (new BraceWrapper(fg, doIt: checkType))
+            using (sb.CurlyBrace(doIt: checkType))
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                 {
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -177,10 +177,10 @@ public class MajorRecordContextEnumerationModule : GenerationModule
 
         if (obj.IsTopLevelGroup())
         {
-            fg.AppendLine($"foreach (var item in {loquiAccessor}.EnumerateMajorRecords({(generic == null ? null : "type, throwIfUnknown: false")}))");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"foreach (var item in {loquiAccessor}.EnumerateMajorRecords({(generic == null ? null : "type, throwIfUnknown: false")}))");
+            using (sb.CurlyBrace())
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                 {
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -192,7 +192,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         }
         else
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"foreach (var item in {loquiType.TargetObjectGeneration.CommonClassInstance(loquiAccessor, LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts",
                        suffixLine: ")")
                    {
@@ -214,14 +214,14 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 addGetOrAddArg(args);
                 duplicateInArg(args);
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine("yield return item;");
+                sb.AppendLine("yield return item;");
             }
         }
     }
 
-    public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
+    public override async Task GenerateInCommon(ObjectGeneration obj, StructuredStringBuilder sb, MaskTypeSet maskTypes)
     {
         bool getter = maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class);
         if (!getter) return;
@@ -233,7 +233,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         var modGetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: true);
         var modSetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: false);
 
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts"))
         {
             args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
@@ -249,11 +249,11 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
             }
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
             if (obj.GetObjectType() == ObjectType.Record)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"var curContext = new ModContext<{modSetter}, {modGetter}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                 {
                     args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -263,9 +263,9 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     args.AddPassArg("parent");
                 }
             }
-            var fgCount = fg.Count;
+            var sbCount = sb.Count;
             var gameCategory = obj.GetObjectData().GameCategory;
-            Dictionary<object, FileGeneration> generationDict = new Dictionary<object, FileGeneration>();
+            Dictionary<object, StructuredStringBuilder> generationDict = new Dictionary<object, StructuredStringBuilder>();
 
             bool doAdditionlDeepLogic = !obj.Name.EndsWith("ListGroup");
             var typesWithDeepTargets = new List<TypeGeneration>();
@@ -280,7 +280,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
 
             foreach (var field in obj.IterateFields())
             {
-                FileGeneration fieldGen;
+                StructuredStringBuilder fieldGen;
                 if (field is LoquiType loqui)
                 {
                     var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
@@ -340,12 +340,12 @@ public class MajorRecordContextEnumerationModule : GenerationModule
 
             foreach (var kv in generationDict)
             {
-                fg.AppendLines(kv.Value);
+                sb.AppendLines(kv.Value);
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts"))
         {
             args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
@@ -363,11 +363,11 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
             }
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
             if (obj.GetObjectType() == ObjectType.Record)
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"var curContext = new ModContext<{modSetter}, {modGetter}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                 {
                     args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -377,22 +377,22 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     args.AddPassArg("parent");
                 }
             }
-            var fgCount = fg.Count;
-            fg.AppendLine("switch (type.Name)");
-            using (new BraceWrapper(fg))
+            var sbCount = sb.Count;
+            sb.AppendLine("switch (type.Name)");
+            using (sb.CurlyBrace())
             {
                 var gameCategory = obj.GetObjectData().GameCategory;
-                fg.AppendLine($"case \"{nameof(IMajorRecord)}\":");
-                fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
+                sb.AppendLine($"case \"{nameof(IMajorRecord)}\":");
+                sb.AppendLine($"case \"{nameof(MajorRecord)}\":");
                 if (gameCategory != null)
                 {
-                    fg.AppendLine($"case \"I{gameCategory}MajorRecord\":");
-                    fg.AppendLine($"case \"{gameCategory}MajorRecord\":");
+                    sb.AppendLine($"case \"I{gameCategory}MajorRecord\":");
+                    sb.AppendLine($"case \"{gameCategory}MajorRecord\":");
                 }
-                using (new DepthWrapper(fg))
+                using (new DepthWrapper(sb))
                 {
-                    fg.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
-                    using (var args = new ArgsWrapper(fg,
+                    sb.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
+                    using (var args = new ArgsWrapper(sb,
                                $"foreach (var item in this.EnumerateMajorRecordContexts",
                                suffixLine: ")")
                            {
@@ -412,20 +412,20 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                             args.AddPassArg("duplicateInto");
                         }
                     }
-                    using (new BraceWrapper(fg))
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine("yield return item;");
+                        sb.AppendLine("yield return item;");
                     }
-                    fg.AppendLine("yield break;");
+                    sb.AppendLine("yield break;");
                 }
-                fg.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
+                sb.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
                 if (gameCategory != null)
                 {
-                    fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
+                    sb.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
                 }
-                using (new DepthWrapper(fg))
+                using (new DepthWrapper(sb))
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                $"foreach (var item in this.EnumerateMajorRecordContexts",
                                suffixLine: ")")
                            {
@@ -445,17 +445,17 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                             args.AddPassArg("duplicateInto");
                         }
                     }
-                    using (new BraceWrapper(fg))
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine("yield return item;");
+                        sb.AppendLine("yield return item;");
                     }
-                    fg.AppendLine("yield break;");
+                    sb.AppendLine("yield break;");
                 }
 
-                Dictionary<object, FileGeneration> generationDict = new Dictionary<object, FileGeneration>();
+                Dictionary<object, StructuredStringBuilder> generationDict = new Dictionary<object, StructuredStringBuilder>();
                 foreach (var field in obj.IterateFields())
                 {
-                    FileGeneration fieldGen;
+                    StructuredStringBuilder fieldGen;
                     if (field is LoquiType loqui)
                     {
                         if (loqui.TargetObjectGeneration.IsListGroup()) continue;
@@ -520,7 +520,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     var deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
                     foreach (var deepRec in deepRecordMapping)
                     {
-                        FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
+                        StructuredStringBuilder deepFg = generationDict.GetOrAdd(deepRec.Key);
                         foreach (var field in deepRec.Value)
                         {
                             await ApplyIterationLines(
@@ -548,15 +548,15 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                                 }
                                 else
                                 {
-                                    fg.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
-                                    fg.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
+                                    sb.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
+                                    sb.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
                                     if (loqui.HasInternalGetInterface)
                                     {
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
+                                        sb.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
                                     }
                                     if (loqui.HasInternalSetInterface)
                                     {
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
+                                        sb.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
                                     }
                                     if (loqui.RefType == LoquiType.LoquiRefType.Interface)
                                     {
@@ -565,16 +565,16 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                                 }
                                 break;
                             case ObjectGeneration targetObj:
-                                fg.AppendLine($"case \"{targetObj.ObjectName}\":");
-                                fg.AppendLine($"case \"{targetObj.Interface(getter: true)}\":");
-                                fg.AppendLine($"case \"{targetObj.Interface(getter: false)}\":");
+                                sb.AppendLine($"case \"{targetObj.ObjectName}\":");
+                                sb.AppendLine($"case \"{targetObj.Interface(getter: true)}\":");
+                                sb.AppendLine($"case \"{targetObj.Interface(getter: false)}\":");
                                 if (targetObj.HasInternalGetInterface)
                                 {
-                                    fg.AppendLine($"case \"{targetObj.Interface(getter: true, internalInterface: true)}\":");
+                                    sb.AppendLine($"case \"{targetObj.Interface(getter: true, internalInterface: true)}\":");
                                 }
                                 if (targetObj.HasInternalSetInterface)
                                 {
-                                    fg.AppendLine($"case \"{targetObj.Interface(getter: false, internalInterface: true)}\":");
+                                    sb.AppendLine($"case \"{targetObj.Interface(getter: false, internalInterface: true)}\":");
                                 }
                                 break;
                             case string str:
@@ -586,22 +586,22 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                             default:
                                 throw new NotImplementedException();
                         }
-                        using (new DepthWrapper(fg))
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLines(kv.Value);
-                            fg.AppendLine("yield break;");
+                            sb.AppendLines(kv.Value);
+                            sb.AppendLine("yield break;");
                         }
                     }
                 }
 
-                fg.AppendLine("default:");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("default:");
+                using (new DepthWrapper(sb))
                 {
                     // Generate for major record marker interfaces 
                     if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _)
                         || AspectInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _))
                     {
-                        using (var args = new ArgsWrapper(fg,
+                        using (var args = new ArgsWrapper(sb,
                                    $"if ({nameof(InterfaceEnumerationHelper)}.TryEnumerateInterfaceContextsFor<{obj.Interface(getter: getter, internalInterface: true)}, I{obj.ProtoGen.Protocol.Namespace}Mod, I{obj.ProtoGen.Protocol.Namespace}ModGetter>",
                                    suffixLine: ")")
                                {
@@ -618,44 +618,44 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                             }
                             args.Add("out var linkInterfaces");
                         }
-                        using (new BraceWrapper(fg))
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine($"foreach (var item in linkInterfaces)");
-                            using (new BraceWrapper(fg))
+                            sb.AppendLine($"foreach (var item in linkInterfaces)");
+                            using (sb.CurlyBrace())
                             {
-                                fg.AppendLine("yield return item;");
+                                sb.AppendLine("yield return item;");
                             }
-                            fg.AppendLine("yield break;");
+                            sb.AppendLine("yield break;");
                         }
                     }
                     if (generationDict.TryGetValue("default:", out var gen))
                     {
-                        fg.AppendLines(gen);
-                        fg.AppendLine("yield break;");
+                        sb.AppendLines(gen);
+                        sb.AppendLine("yield break;");
                     }
                     else
                     {
-                        fg.AppendLine("if (throwIfUnknown)");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine("if (throwIfUnknown)");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine("throw new ArgumentException($\"Unknown major record type: {type}\");");
+                            sb.AppendLine("throw new ArgumentException($\"Unknown major record type: {type}\");");
                         }
-                        fg.AppendLine($"else");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine($"else");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine("yield break;");
+                            sb.AppendLine("yield break;");
                         }
                     }
                 }
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
     }
 
     async Task ApplyIterationLines(
         ObjectGeneration obj,
         TypeGeneration field,
-        FileGeneration fieldGen,
+        StructuredStringBuilder fieldGen,
         Accessor accessor,
         bool getter,
         bool includeType,
@@ -685,7 +685,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     args.Add($"groupGetter: (m) => m.{group.Name}");
                 }
 
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     fieldGen.AppendLine($"yield return item;");
                 }
@@ -693,7 +693,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             if (hasTarget)
             {
                 fieldGen.AppendLine($"foreach (var groupItem in obj.{field.Name})");
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     using (var args = new ArgsWrapper(fieldGen,
                                $"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts",
@@ -714,7 +714,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                         args.Add($"getOrAddAsOverride: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Resolve<{groupTargetGetter}>(r.FormKey))");
                         args.Add($"duplicateInto: (m, r, e) => m.{field.Name}.DuplicateInAsNewRecord(linkCache.Resolve<{groupTargetGetter}>(r.FormKey), e)");
                     }
-                    using (new BraceWrapper(fieldGen))
+                    using (fieldGen.CurlyBrace())
                     {
                         fieldGen.AppendLine("yield return item;");
                     }
@@ -743,13 +743,13 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                     args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
                 }
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     fieldGen.AppendLine("yield return item;");
                 }
                 return;
             }
-            var subFg = new FileGeneration();
+            var subFg = new StructuredStringBuilder();
             await LoquiTypeHandler(
                 subFg,
                 obj,
@@ -764,7 +764,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     args.Add(subFg =>
                     {
                         subFg.AppendLine($"getOrAddAsOverride: (m, r) =>");
-                        using (new BraceWrapper(subFg))
+                        using (subFg.CurlyBrace())
                         {
                             subFg.AppendLine($"var baseRec = getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
                             subFg.AppendLine($"if (baseRec.{loqui.Name} != null) return baseRec.{loqui.Name};");
@@ -779,7 +779,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     args.Add(subFg =>
                     {
                         subFg.AppendLine($"duplicateInto: (m, r, e) =>");
-                        using (new BraceWrapper(subFg))
+                        using (subFg.CurlyBrace())
                         {
                             subFg.AppendLine($"var baseRec = getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
                             subFg.AppendLine($"var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
@@ -796,10 +796,10 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             }
             else
             {
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     fieldGen.AppendLine($"if ({accessor}.{loqui.Name} is {{}} {fieldAccessor})");
-                    using (new BraceWrapper(fieldGen))
+                    using (fieldGen.CurlyBrace())
                     {
                         fieldGen.AppendLines(subFg);
                     }
@@ -812,7 +812,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
             {
                 fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     if (await contLoqui.TargetObjectGeneration.IsMajorRecord())
                     {
@@ -820,13 +820,13 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                         {
                             fieldGen.AppendLine($"if (type.IsAssignableFrom(typeof({contLoqui.GenericDef.Name})))");
                         }
-                        using (new BraceWrapper(fieldGen, doIt: includeType))
+                        using (fieldGen.CurlyBrace(doIt: includeType))
                         {
                             fieldGen.AppendLine($"yield return ({nameof(IMajorRecordGetter)})item;");
                         }
                     }
                     fieldGen.AppendLine($"foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
-                    using (new BraceWrapper(fieldGen))
+                    using (fieldGen.CurlyBrace())
                     {
                         fieldGen.AppendLine($"yield return subItem;");
                     }
@@ -856,7 +856,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     args.Add("worldspace: obj");
                     args.AddPassArg("getOrAddAsOverride");
                 }
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     fieldGen.AppendLine("yield return item;");
                 }
@@ -871,7 +871,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     {
                         case Case.Yes:
                             fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".EmptyIfNull()" : null)})");
-                            using (new BraceWrapper(fieldGen))
+                            using (fieldGen.CurlyBrace())
                             {
                                 await LoquiTypeHandler(
                                     fieldGen,
@@ -886,7 +886,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                                         args.Add(subFg =>
                                         {
                                             subFg.AppendLine($"getOrAddAsOverride: (m, r) =>");
-                                            using (new BraceWrapper(subFg))
+                                            using (subFg.CurlyBrace())
                                             {
                                                 subFg.AppendLine($"var parent = getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
                                                 subFg.AppendLine($"var ret = parent.{cont.Name}.FirstOrDefault(x => x.FormKey == r.FormKey);");
@@ -902,7 +902,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                                         args.Add(subFg =>
                                         {
                                             subFg.AppendLine($"duplicateInto: (m, r, e) =>");
-                                            using (new BraceWrapper(subFg))
+                                            using (subFg.CurlyBrace())
                                             {
                                                 subFg.AppendLine($"var dup = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).Duplicate(m.GetNextFormKey(e));");
                                                 subFg.AppendLine($"getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(dup);");

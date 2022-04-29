@@ -16,107 +16,107 @@ public class MajorRecordRemovalModule : GenerationModule
         public string Interf;
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, false) == Case.No) return;
-        GenerateClassImplementation(obj, fg);
+        GenerateClassImplementation(obj, sb);
     }
 
-    public static void GenerateClassImplementation(ObjectGeneration obj, FileGeneration fg, bool onlyGetter = false)
+    public static void GenerateClassImplementation(ObjectGeneration obj, StructuredStringBuilder sb, bool onlyGetter = false)
     {
         if (!onlyGetter)
         {
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove({nameof(FormKey)} formKey) => this.Remove(formKey);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(HashSet<{nameof(FormKey)}> formKeys) => this.Remove(formKeys);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(IEnumerable<{nameof(FormKey)}> formKeys) => this.Remove(formKeys);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove({nameof(FormKey)} formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(HashSet<{nameof(FormKey)}> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(IEnumerable<{nameof(FormKey)}> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>({nameof(FormKey)} formKey, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(formKey, throwIfUnknown);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>(HashSet<{nameof(FormKey)}> formKeys, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(formKeys, throwIfUnknown);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>(IEnumerable<{nameof(FormKey)}> formKeys, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(formKeys, throwIfUnknown);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(record, throwIfUnknown);");
-            fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(records, throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove({nameof(FormKey)} formKey) => this.Remove(formKey);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(HashSet<{nameof(FormKey)}> formKeys) => this.Remove(formKeys);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(IEnumerable<{nameof(FormKey)}> formKeys) => this.Remove(formKeys);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove({nameof(FormKey)} formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(HashSet<{nameof(FormKey)}> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(IEnumerable<{nameof(FormKey)}> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>({nameof(FormKey)} formKey, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(formKey, throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>(HashSet<{nameof(FormKey)}> formKeys, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(formKeys, throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>(IEnumerable<{nameof(FormKey)}> formKeys, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(formKeys, throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(record, throwIfUnknown);");
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(records, throwIfUnknown);");
         }
     }
 
-    public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInCommonMixin(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
             args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
             args.Add($"{nameof(FormKey)} key");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
-            fg.AppendLine("keys.Add(key);");
-            using (var args = new ArgsWrapper(fg,
+            sb.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
+            sb.AppendLine("keys.Add(key);");
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
                 args.AddPassArg("keys");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
             args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
             args.Add($"IEnumerable<{nameof(FormKey)}> keys");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
                 args.Add("keys: keys.ToHashSet()");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
             args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
             args.Add($"HashSet<{nameof(FormKey)}> keys");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
                 args.AddPassArg("keys");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -125,11 +125,11 @@ public class MajorRecordRemovalModule : GenerationModule
             args.Add($"{nameof(Type)} type");
             args.Add($"bool throwIfUnknown = true");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
-            fg.AppendLine("keys.Add(key);");
-            using (var args = new ArgsWrapper(fg,
+            sb.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
+            sb.AppendLine("keys.Add(key);");
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -138,11 +138,11 @@ public class MajorRecordRemovalModule : GenerationModule
                 args.AddPassArg("throwIfUnknown");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -151,9 +151,9 @@ public class MajorRecordRemovalModule : GenerationModule
             args.Add($"{nameof(Type)} type");
             args.Add($"bool throwIfUnknown = true");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -162,11 +162,11 @@ public class MajorRecordRemovalModule : GenerationModule
                 args.AddPassArg("throwIfUnknown");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -175,9 +175,9 @@ public class MajorRecordRemovalModule : GenerationModule
             args.Add($"{nameof(Type)} type");
             args.Add($"bool throwIfUnknown = true");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -186,10 +186,10 @@ public class MajorRecordRemovalModule : GenerationModule
                 args.AddPassArg("throwIfUnknown");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -198,11 +198,11 @@ public class MajorRecordRemovalModule : GenerationModule
             args.Add($"bool throwIfUnknown = true");
             args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
-            fg.AppendLine("keys.Add(record.FormKey);");
-            using (var args = new ArgsWrapper(fg,
+            sb.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
+            sb.AppendLine("keys.Add(record.FormKey);");
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -211,11 +211,11 @@ public class MajorRecordRemovalModule : GenerationModule
                 args.AddPassArg("throwIfUnknown");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -224,9 +224,9 @@ public class MajorRecordRemovalModule : GenerationModule
             args.Add($"bool throwIfUnknown = true");
             args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -235,10 +235,10 @@ public class MajorRecordRemovalModule : GenerationModule
                 args.AddPassArg("throwIfUnknown");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -247,11 +247,11 @@ public class MajorRecordRemovalModule : GenerationModule
             args.Add($"bool throwIfUnknown = true");
             args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            fg.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
-            fg.AppendLine("keys.Add(key);");
-            using (var args = new ArgsWrapper(fg,
+            sb.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
+            sb.AppendLine("keys.Add(key);");
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -260,11 +260,11 @@ public class MajorRecordRemovalModule : GenerationModule
                 args.AddPassArg("throwIfUnknown");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -273,9 +273,9 @@ public class MajorRecordRemovalModule : GenerationModule
             args.Add($"bool throwIfUnknown = true");
             args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -284,11 +284,11 @@ public class MajorRecordRemovalModule : GenerationModule
                 args.AddPassArg("throwIfUnknown");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
-        fg.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(fg,
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = new FunctionWrapper(sb,
                    $"public static void Remove{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -297,9 +297,9 @@ public class MajorRecordRemovalModule : GenerationModule
             args.Add($"bool throwIfUnknown = true");
             args.Wheres.Add($"where TMajor : {nameof(IMajorRecordGetter)}");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(fg,
+            using (var args = new ArgsWrapper(sb,
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -308,30 +308,30 @@ public class MajorRecordRemovalModule : GenerationModule
                 args.AddPassArg("throwIfUnknown");
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
     }
 
-    public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
+    public override async Task GenerateInCommon(ObjectGeneration obj, StructuredStringBuilder sb, MaskTypeSet maskTypes)
     {
         if (!maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class)) return;
         var accessor = new Accessor("obj");
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
         var overrideStr = await obj.FunctionOverride(async c => await MajorRecordModule.HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
 
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public{overrideStr}void Remove"))
         {
             args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
             args.Add($"HashSet<{nameof(FormKey)}> keys");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            var fgCount = fg.Count;
+            var sbCount = sb.Count;
             foreach (var baseClass in obj.BaseClassTrail())
             {
                 if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
                 {
-                    fg.AppendLine($"base.Remove(obj, keys);");
+                    sb.AppendLine($"base.Remove(obj, keys);");
                     break;
                 }
             }
@@ -347,22 +347,22 @@ public class MajorRecordRemovalModule : GenerationModule
                         continue;
                 }
 
-                FileGeneration fieldFg = new FileGeneration();
+                StructuredStringBuilder fieldFg = new StructuredStringBuilder();
 
                 if (field is LoquiType loqui)
                 {
                     var fieldAccessor = $"{accessor}.{loqui.Name}";
                     if (await MajorRecordModule.HasMajorRecords(loqui.TargetObjectGeneration, includeBaseClass: true, includeSelf: false) != Case.No)
                     {
-                        fg.AppendLine($"{fieldAccessor}{loqui.NullChar}.Remove(keys);");
+                        sb.AppendLine($"{fieldAccessor}{loqui.NullChar}.Remove(keys);");
                     }
                     var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
                     if (isMajorRecord)
                     {
-                        fg.AppendLine($"if ({(loqui.Nullable ? $"{fieldAccessor} != null && " : string.Empty)}keys.Contains({fieldAccessor}.FormKey))");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine($"if ({(loqui.Nullable ? $"{fieldAccessor} != null && " : string.Empty)}keys.Contains({fieldAccessor}.FormKey))");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine($"{fieldAccessor} = null;");
+                            sb.AppendLine($"{fieldAccessor} = null;");
                         }
                     }
                 }
@@ -372,15 +372,15 @@ public class MajorRecordRemovalModule : GenerationModule
                     var isMajorRecord = await contLoqui.IsMajorRecord();
                     if (isMajorRecord)
                     {
-                        fg.AppendLine($"{accessor}.{field.Name}.Remove(keys);");
+                        sb.AppendLine($"{accessor}.{field.Name}.Remove(keys);");
                     }
                     if (await MajorRecordModule.HasMajorRecords(contLoqui, includeBaseClass: true, includeSelf: false) != Case.No)
                     {
-                        fg.AppendLine($"{accessor}.{field.Name}.ForEach(i => i.Remove(keys));");
+                        sb.AppendLine($"{accessor}.{field.Name}.ForEach(i => i.Remove(keys));");
                     }
                     if (contLoqui.TargetObjectGeneration?.IsListGroup() ?? false)
                     {
-                        fg.AppendLine($"{accessor}.{field.Name}.RemoveWhere(i => i.{contLoqui.TargetObjectGeneration.Fields.FirstOrDefault(f => f is ContainerType).Name}.Count == 0);");
+                        sb.AppendLine($"{accessor}.{field.Name}.RemoveWhere(i => i.{contLoqui.TargetObjectGeneration.Fields.FirstOrDefault(f => f is ContainerType).Name}.Count == 0);");
                     }
                 }
                 else if (field is DictType dict)
@@ -395,7 +395,7 @@ public class MajorRecordRemovalModule : GenerationModule
                         {
                             case Case.Yes:
                             case Case.Maybe:
-                                fg.AppendLine($"{accessor}.{field.Name}.Remove(keys);");
+                                sb.AppendLine($"{accessor}.{field.Name}.Remove(keys);");
                                 break;
                             case Case.No:
                             default:
@@ -408,42 +408,42 @@ public class MajorRecordRemovalModule : GenerationModule
                 {
                     if (field.Nullable)
                     {
-                        fg.AppendLine($"if ({field.NullableAccessor(getter: true, Accessor.FromType(field, accessor.ToString()))})");
+                        sb.AppendLine($"if ({field.NullableAccessor(getter: true, Accessor.FromType(field, accessor.ToString()))})");
                     }
-                    using (new BraceWrapper(fg, doIt: field.Nullable))
+                    using (sb.CurlyBrace(doIt: field.Nullable))
                     {
-                        fg.AppendLines(fieldFg);
+                        sb.AppendLines(fieldFg);
                     }
                 }
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         // Generate base overrides  
         foreach (var baseClass in obj.BaseClassTrail())
         {
             if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
             {
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public override void Remove"))
                 {
                     args.Add($"{baseClass.Interface(getter: false)} obj");
                     args.Add($"HashSet<{nameof(FormKey)}> keys");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                "Remove"))
                     {
                         args.Add($"({obj.Interface(getter: false)})obj");
                         args.AddPassArg("keys");
                     }
                 }
-                fg.AppendLine();
+                sb.AppendLine();
             }
         }
 
-        using (var args = new FunctionWrapper(fg,
+        using (var args = new FunctionWrapper(sb,
                    $"public{overrideStr}void Remove"))
         {
             args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
@@ -451,46 +451,46 @@ public class MajorRecordRemovalModule : GenerationModule
             args.Add($"Type type");
             args.Add($"bool throwIfUnknown");
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            var fgCount = fg.Count;
+            var sbCount = sb.Count;
             foreach (var baseClass in obj.BaseClassTrail())
             {
                 if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
                 {
-                    fg.AppendLine("base.Remove(obj, type, keys);");
+                    sb.AppendLine("base.Remove(obj, type, keys);");
                     break;
                 }
             }
 
-            fg.AppendLine("switch (type.Name)");
-            using (new BraceWrapper(fg))
+            sb.AppendLine("switch (type.Name)");
+            using (sb.CurlyBrace())
             {
                 var gameCategory = obj.GetObjectData().GameCategory;
-                fg.AppendLine($"case \"{nameof(IMajorRecord)}\":");
-                fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
+                sb.AppendLine($"case \"{nameof(IMajorRecord)}\":");
+                sb.AppendLine($"case \"{nameof(MajorRecord)}\":");
                 if (gameCategory != null)
                 {
-                    fg.AppendLine($"case \"I{gameCategory}MajorRecord\":");
-                    fg.AppendLine($"case \"{gameCategory}MajorRecord\":");
+                    sb.AppendLine($"case \"I{gameCategory}MajorRecord\":");
+                    sb.AppendLine($"case \"{gameCategory}MajorRecord\":");
                 }
-                fg.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
+                sb.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
                 if (gameCategory != null)
                 {
-                    fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
+                    sb.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
                 }
-                using (new DepthWrapper(fg))
+                using (new DepthWrapper(sb))
                 {
-                    fg.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) return;");
-                    fg.AppendLine("this.Remove(obj, keys);");
-                    fg.AppendLine("break;");
+                    sb.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) return;");
+                    sb.AppendLine("this.Remove(obj, keys);");
+                    sb.AppendLine("break;");
                 }
 
-                Dictionary<object, FileGeneration> generationDict = new Dictionary<object, FileGeneration>();
+                Dictionary<object, StructuredStringBuilder> generationDict = new Dictionary<object, StructuredStringBuilder>();
                 foreach (var field in obj.IterateFields())
                 {
                     LoquiType targetLoqui;
-                    FileGeneration fieldGen;
+                    StructuredStringBuilder fieldGen;
                     if (field is LoquiType loqui)
                     {
                         if (loqui.TargetObjectGeneration.IsListGroup()) continue;
@@ -567,7 +567,7 @@ public class MajorRecordRemovalModule : GenerationModule
                     var deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
                     foreach (var deepRec in deepRecordMapping)
                     {
-                        FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
+                        StructuredStringBuilder deepFg = generationDict.GetOrAdd(deepRec.Key);
                         foreach (var field in deepRec.Value)
                         {
                             var remSelf = false;
@@ -605,7 +605,7 @@ public class MajorRecordRemovalModule : GenerationModule
                     // Generate for major record marker interfaces 
                     foreach (var interf in interfs.EmptyIfNull())
                     {
-                        FileGeneration subFg = new FileGeneration();
+                        StructuredStringBuilder subFg = new StructuredStringBuilder();
                         HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
                         HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
                         foreach (var subObj in interf.Value)
@@ -661,15 +661,15 @@ public class MajorRecordRemovalModule : GenerationModule
                             case LoquiType loqui:
                                 if (loqui.RefType == LoquiType.LoquiRefType.Direct)
                                 {
-                                    fg.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
-                                    fg.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
+                                    sb.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
+                                    sb.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
                                     if (loqui.HasInternalGetInterface)
                                     {
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
+                                        sb.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
                                     }
                                     if (loqui.HasInternalSetInterface)
                                     {
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
+                                        sb.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
                                     }
                                 }
                                 else
@@ -678,18 +678,18 @@ public class MajorRecordRemovalModule : GenerationModule
                                 }
                                 break;
                             case ObjectGeneration targetObj:
-                                targetObj.AppendSwitchCases(fg);
+                                targetObj.AppendSwitchCases(sb);
                                 if (targetObj.Abstract)
                                 {
                                     foreach (var subObj in await targetObj.InheritingObjects())
                                     {
-                                        subObj.AppendSwitchCases(fg);
+                                        subObj.AppendSwitchCases(sb);
                                     }
                                 }
                                 break;
                             case InterfInstr interf:
-                                fg.AppendLine($"case \"{interf.Interf}\":");
-                                fg.AppendLine($"case \"{interf.Interf}Getter\":");
+                                sb.AppendLine($"case \"{interf.Interf}\":");
+                                sb.AppendLine($"case \"{interf.Interf}Getter\":");
                                 break;
                             case string str:
                                 if (str != "default:")
@@ -700,46 +700,46 @@ public class MajorRecordRemovalModule : GenerationModule
                             default:
                                 throw new NotImplementedException();
                         }
-                        using (new DepthWrapper(fg))
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLines(kv.Value);
-                            fg.AppendLine("break;");
+                            sb.AppendLines(kv.Value);
+                            sb.AppendLine("break;");
                         }
                     }
                 }
 
-                fg.AppendLine("default:");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("default:");
+                using (new DepthWrapper(sb))
                 {
                     if (generationDict.TryGetValue("default:", out var gen))
                     {
-                        fg.AppendLines(gen);
-                        fg.AppendLine("break;");
+                        sb.AppendLines(gen);
+                        sb.AppendLine("break;");
                     }
                     else
                     {
-                        fg.AppendLine("if (throwIfUnknown)");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine("if (throwIfUnknown)");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine("throw new ArgumentException($\"Unknown major record type: {type}\");");
+                            sb.AppendLine("throw new ArgumentException($\"Unknown major record type: {type}\");");
                         }
-                        fg.AppendLine($"else");
-                        using (new BraceWrapper(fg))
+                        sb.AppendLine($"else");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine("break;");
+                            sb.AppendLine("break;");
                         }
                     }
                 }
             }
         }
-        fg.AppendLine();
+        sb.AppendLine();
 
         // Generate base overrides  
         foreach (var baseClass in obj.BaseClassTrail())
         {
             if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
             {
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public override void Remove"))
                 {
                     args.Add($"{baseClass.Interface(getter: false)} obj");
@@ -747,9 +747,9 @@ public class MajorRecordRemovalModule : GenerationModule
                     args.Add($"Type type");
                     args.Add($"bool throwIfUnknown");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    using (var args = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(sb,
                                "Remove"))
                     {
                         args.Add($"({obj.Interface(getter: false)})obj");
@@ -758,14 +758,14 @@ public class MajorRecordRemovalModule : GenerationModule
                         args.AddPassArg("throwIfUnknown");
                     }
                 }
-                fg.AppendLine();
+                sb.AppendLine();
             }
         }
     }
 
     async Task ApplyRemovalLines(
         TypeGeneration field,
-        FileGeneration fieldGen,
+        StructuredStringBuilder fieldGen,
         Accessor accessor,
         bool removeSelf,
         ObjectGeneration obj = null,
@@ -795,7 +795,7 @@ public class MajorRecordRemovalModule : GenerationModule
                 }
                 return;
             }
-            var subFg = new FileGeneration();
+            var subFg = new StructuredStringBuilder();
             subFg.AppendLine($"{fieldAccessor}.Remove(keys, type, throwIfUnknown);");
             if (loqui.Singleton
                 || !loqui.Nullable)
@@ -804,10 +804,10 @@ public class MajorRecordRemovalModule : GenerationModule
             }
             else
             {
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     fieldGen.AppendLine($"if ({accessor}.{loqui.Name} is {{}} {fieldAccessor})");
-                    using (new BraceWrapper(fieldGen))
+                    using (fieldGen.CurlyBrace())
                     {
                         fieldGen.AppendLines(subFg);
                     }
@@ -816,11 +816,11 @@ public class MajorRecordRemovalModule : GenerationModule
         }
         else if (field is ContainerType cont)
         {
-            if (!(cont.SubTypeGeneration is LoquiType contLoqui)) return;
+            if (cont.SubTypeGeneration is not LoquiType contLoqui) return;
             if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
             {
                 fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     fieldGen.AppendLine($"item.Remove(keys, type, throwIfUnknown: false);");
                 }
@@ -841,7 +841,7 @@ public class MajorRecordRemovalModule : GenerationModule
                         case Case.Yes:
                         case Case.Maybe:
                             fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".EmptyIfNull()" : null)})");
-                            using (new BraceWrapper(fieldGen))
+                            using (fieldGen.CurlyBrace())
                             {
                                 fieldGen.AppendLine("subItem.Remove(keys, type, throwIfUnknown: false);");
                             }
@@ -862,16 +862,16 @@ public class MajorRecordRemovalModule : GenerationModule
         else if (field is DictType dict)
         {
             if (dict.Mode != DictMode.KeyedValue) return;
-            if (!(dict.ValueTypeGen is LoquiType dictLoqui)) return;
+            if (dict.ValueTypeGen is not LoquiType dictLoqui) return;
             if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
             {
                 fieldGen.AppendLine($"if (type.IsAssignableFrom(typeof({dictLoqui.GenericDef.Name})))");
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     fieldGen.AppendLine($"obj.RecordCache.Remove(keys);");
                 }
                 fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.Items)");
-                using (new BraceWrapper(fieldGen))
+                using (fieldGen.CurlyBrace())
                 {
                     fieldGen.AppendLine($"item.Remove(keys, type, throwIfUnknown: false);");
                 }
@@ -886,14 +886,14 @@ public class MajorRecordRemovalModule : GenerationModule
                     {
                         case Case.Yes:
                             fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}.Items)");
-                            using (new BraceWrapper(fieldGen))
+                            using (fieldGen.CurlyBrace())
                             {
                                 throw new NotImplementedException();
                             }
                             break;
                         case Case.Maybe:
                             fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: false)}, {nameof(IMajorRecordEnumerable)}>())");
-                            using (new BraceWrapper(fieldGen))
+                            using (fieldGen.CurlyBrace())
                             {
                                 throw new NotImplementedException();
                             }

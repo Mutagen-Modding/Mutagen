@@ -227,11 +227,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             EffectShaderDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -846,247 +847,247 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(EffectShaderData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, EffectShaderData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, EffectShaderData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(EffectShaderData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(EffectShaderData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.MembraneShaderSourceBlendMode ?? true)
                     {
-                        fg.AppendItem(MembraneShaderSourceBlendMode, "MembraneShaderSourceBlendMode");
+                        sb.AppendItem(MembraneShaderSourceBlendMode, "MembraneShaderSourceBlendMode");
                     }
                     if (printMask?.MembraneShaderBlendOperation ?? true)
                     {
-                        fg.AppendItem(MembraneShaderBlendOperation, "MembraneShaderBlendOperation");
+                        sb.AppendItem(MembraneShaderBlendOperation, "MembraneShaderBlendOperation");
                     }
                     if (printMask?.MembraneShaderZTestFunction ?? true)
                     {
-                        fg.AppendItem(MembraneShaderZTestFunction, "MembraneShaderZTestFunction");
+                        sb.AppendItem(MembraneShaderZTestFunction, "MembraneShaderZTestFunction");
                     }
                     if (printMask?.FillTextureEffectColor ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectColor, "FillTextureEffectColor");
+                        sb.AppendItem(FillTextureEffectColor, "FillTextureEffectColor");
                     }
                     if (printMask?.FillTextureEffectAlphaFadeInTime ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectAlphaFadeInTime, "FillTextureEffectAlphaFadeInTime");
+                        sb.AppendItem(FillTextureEffectAlphaFadeInTime, "FillTextureEffectAlphaFadeInTime");
                     }
                     if (printMask?.FillTextureEffectFullAlphaTime ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectFullAlphaTime, "FillTextureEffectFullAlphaTime");
+                        sb.AppendItem(FillTextureEffectFullAlphaTime, "FillTextureEffectFullAlphaTime");
                     }
                     if (printMask?.FillTextureEffectAlphaFadeOutTime ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectAlphaFadeOutTime, "FillTextureEffectAlphaFadeOutTime");
+                        sb.AppendItem(FillTextureEffectAlphaFadeOutTime, "FillTextureEffectAlphaFadeOutTime");
                     }
                     if (printMask?.FillTextureEffectPersistentAlphaRatio ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectPersistentAlphaRatio, "FillTextureEffectPersistentAlphaRatio");
+                        sb.AppendItem(FillTextureEffectPersistentAlphaRatio, "FillTextureEffectPersistentAlphaRatio");
                     }
                     if (printMask?.FillTextureEffectAlphaPulseAmplitude ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectAlphaPulseAmplitude, "FillTextureEffectAlphaPulseAmplitude");
+                        sb.AppendItem(FillTextureEffectAlphaPulseAmplitude, "FillTextureEffectAlphaPulseAmplitude");
                     }
                     if (printMask?.FillTextureEffectAlphaPulseFrequency ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectAlphaPulseFrequency, "FillTextureEffectAlphaPulseFrequency");
+                        sb.AppendItem(FillTextureEffectAlphaPulseFrequency, "FillTextureEffectAlphaPulseFrequency");
                     }
                     if (printMask?.FillTextureEffectTextureAnimationSpeedU ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectTextureAnimationSpeedU, "FillTextureEffectTextureAnimationSpeedU");
+                        sb.AppendItem(FillTextureEffectTextureAnimationSpeedU, "FillTextureEffectTextureAnimationSpeedU");
                     }
                     if (printMask?.FillTextureEffectTextureAnimationSpeedV ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectTextureAnimationSpeedV, "FillTextureEffectTextureAnimationSpeedV");
+                        sb.AppendItem(FillTextureEffectTextureAnimationSpeedV, "FillTextureEffectTextureAnimationSpeedV");
                     }
                     if (printMask?.EdgeEffectFallOff ?? true)
                     {
-                        fg.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
+                        sb.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
                     }
                     if (printMask?.EdgeEffectColor ?? true)
                     {
-                        fg.AppendItem(EdgeEffectColor, "EdgeEffectColor");
+                        sb.AppendItem(EdgeEffectColor, "EdgeEffectColor");
                     }
                     if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
                     {
-                        fg.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
+                        sb.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
                     }
                     if (printMask?.EdgeEffectFullAlphaTime ?? true)
                     {
-                        fg.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
+                        sb.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
                     }
                     if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
                     {
-                        fg.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
+                        sb.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
                     }
                     if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
                     {
-                        fg.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
+                        sb.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
                     }
                     if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
                     {
-                        fg.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
+                        sb.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
                     }
                     if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
                     {
-                        fg.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
+                        sb.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
                     }
                     if (printMask?.FillTextureEffectFullAlphaRatio ?? true)
                     {
-                        fg.AppendItem(FillTextureEffectFullAlphaRatio, "FillTextureEffectFullAlphaRatio");
+                        sb.AppendItem(FillTextureEffectFullAlphaRatio, "FillTextureEffectFullAlphaRatio");
                     }
                     if (printMask?.EdgeEffectFullAlphaRatio ?? true)
                     {
-                        fg.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
+                        sb.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
                     }
                     if (printMask?.MembraneShaderDestBlendMode ?? true)
                     {
-                        fg.AppendItem(MembraneShaderDestBlendMode, "MembraneShaderDestBlendMode");
+                        sb.AppendItem(MembraneShaderDestBlendMode, "MembraneShaderDestBlendMode");
                     }
                     if (printMask?.ParticleShaderSourceBlendMode ?? true)
                     {
-                        fg.AppendItem(ParticleShaderSourceBlendMode, "ParticleShaderSourceBlendMode");
+                        sb.AppendItem(ParticleShaderSourceBlendMode, "ParticleShaderSourceBlendMode");
                     }
                     if (printMask?.ParticleShaderBlendOperation ?? true)
                     {
-                        fg.AppendItem(ParticleShaderBlendOperation, "ParticleShaderBlendOperation");
+                        sb.AppendItem(ParticleShaderBlendOperation, "ParticleShaderBlendOperation");
                     }
                     if (printMask?.ParticleShaderZTestFunction ?? true)
                     {
-                        fg.AppendItem(ParticleShaderZTestFunction, "ParticleShaderZTestFunction");
+                        sb.AppendItem(ParticleShaderZTestFunction, "ParticleShaderZTestFunction");
                     }
                     if (printMask?.ParticleShaderDestBlendMode ?? true)
                     {
-                        fg.AppendItem(ParticleShaderDestBlendMode, "ParticleShaderDestBlendMode");
+                        sb.AppendItem(ParticleShaderDestBlendMode, "ParticleShaderDestBlendMode");
                     }
                     if (printMask?.ParticleShaderParticleBirthRampUpTime ?? true)
                     {
-                        fg.AppendItem(ParticleShaderParticleBirthRampUpTime, "ParticleShaderParticleBirthRampUpTime");
+                        sb.AppendItem(ParticleShaderParticleBirthRampUpTime, "ParticleShaderParticleBirthRampUpTime");
                     }
                     if (printMask?.ParticleShaderFullParticleBirthTime ?? true)
                     {
-                        fg.AppendItem(ParticleShaderFullParticleBirthTime, "ParticleShaderFullParticleBirthTime");
+                        sb.AppendItem(ParticleShaderFullParticleBirthTime, "ParticleShaderFullParticleBirthTime");
                     }
                     if (printMask?.ParticleShaderParticleBirthRampDownTime ?? true)
                     {
-                        fg.AppendItem(ParticleShaderParticleBirthRampDownTime, "ParticleShaderParticleBirthRampDownTime");
+                        sb.AppendItem(ParticleShaderParticleBirthRampDownTime, "ParticleShaderParticleBirthRampDownTime");
                     }
                     if (printMask?.ParticleShaderFullParticleBirthRatio ?? true)
                     {
-                        fg.AppendItem(ParticleShaderFullParticleBirthRatio, "ParticleShaderFullParticleBirthRatio");
+                        sb.AppendItem(ParticleShaderFullParticleBirthRatio, "ParticleShaderFullParticleBirthRatio");
                     }
                     if (printMask?.ParticleShaderPersistentParticleBirthRatio ?? true)
                     {
-                        fg.AppendItem(ParticleShaderPersistentParticleBirthRatio, "ParticleShaderPersistentParticleBirthRatio");
+                        sb.AppendItem(ParticleShaderPersistentParticleBirthRatio, "ParticleShaderPersistentParticleBirthRatio");
                     }
                     if (printMask?.ParticleShaderParticleLifetime ?? true)
                     {
-                        fg.AppendItem(ParticleShaderParticleLifetime, "ParticleShaderParticleLifetime");
+                        sb.AppendItem(ParticleShaderParticleLifetime, "ParticleShaderParticleLifetime");
                     }
                     if (printMask?.ParticleShaderParticleLifetimePlusMinus ?? true)
                     {
-                        fg.AppendItem(ParticleShaderParticleLifetimePlusMinus, "ParticleShaderParticleLifetimePlusMinus");
+                        sb.AppendItem(ParticleShaderParticleLifetimePlusMinus, "ParticleShaderParticleLifetimePlusMinus");
                     }
                     if (printMask?.ParticleShaderInitialSpeedAlongNormal ?? true)
                     {
-                        fg.AppendItem(ParticleShaderInitialSpeedAlongNormal, "ParticleShaderInitialSpeedAlongNormal");
+                        sb.AppendItem(ParticleShaderInitialSpeedAlongNormal, "ParticleShaderInitialSpeedAlongNormal");
                     }
                     if (printMask?.ParticleShaderAccelerationAlongNormal ?? true)
                     {
-                        fg.AppendItem(ParticleShaderAccelerationAlongNormal, "ParticleShaderAccelerationAlongNormal");
+                        sb.AppendItem(ParticleShaderAccelerationAlongNormal, "ParticleShaderAccelerationAlongNormal");
                     }
                     if (printMask?.ParticleShaderInitialVelocity1 ?? true)
                     {
-                        fg.AppendItem(ParticleShaderInitialVelocity1, "ParticleShaderInitialVelocity1");
+                        sb.AppendItem(ParticleShaderInitialVelocity1, "ParticleShaderInitialVelocity1");
                     }
                     if (printMask?.ParticleShaderInitialVelocity2 ?? true)
                     {
-                        fg.AppendItem(ParticleShaderInitialVelocity2, "ParticleShaderInitialVelocity2");
+                        sb.AppendItem(ParticleShaderInitialVelocity2, "ParticleShaderInitialVelocity2");
                     }
                     if (printMask?.ParticleShaderInitialVelocity3 ?? true)
                     {
-                        fg.AppendItem(ParticleShaderInitialVelocity3, "ParticleShaderInitialVelocity3");
+                        sb.AppendItem(ParticleShaderInitialVelocity3, "ParticleShaderInitialVelocity3");
                     }
                     if (printMask?.ParticleShaderAcceleration1 ?? true)
                     {
-                        fg.AppendItem(ParticleShaderAcceleration1, "ParticleShaderAcceleration1");
+                        sb.AppendItem(ParticleShaderAcceleration1, "ParticleShaderAcceleration1");
                     }
                     if (printMask?.ParticleShaderAcceleration2 ?? true)
                     {
-                        fg.AppendItem(ParticleShaderAcceleration2, "ParticleShaderAcceleration2");
+                        sb.AppendItem(ParticleShaderAcceleration2, "ParticleShaderAcceleration2");
                     }
                     if (printMask?.ParticleShaderAcceleration3 ?? true)
                     {
-                        fg.AppendItem(ParticleShaderAcceleration3, "ParticleShaderAcceleration3");
+                        sb.AppendItem(ParticleShaderAcceleration3, "ParticleShaderAcceleration3");
                     }
                     if (printMask?.ParticleShaderScaleKey1 ?? true)
                     {
-                        fg.AppendItem(ParticleShaderScaleKey1, "ParticleShaderScaleKey1");
+                        sb.AppendItem(ParticleShaderScaleKey1, "ParticleShaderScaleKey1");
                     }
                     if (printMask?.ParticleShaderScaleKey2 ?? true)
                     {
-                        fg.AppendItem(ParticleShaderScaleKey2, "ParticleShaderScaleKey2");
+                        sb.AppendItem(ParticleShaderScaleKey2, "ParticleShaderScaleKey2");
                     }
                     if (printMask?.ParticleShaderScaleKey1Time ?? true)
                     {
-                        fg.AppendItem(ParticleShaderScaleKey1Time, "ParticleShaderScaleKey1Time");
+                        sb.AppendItem(ParticleShaderScaleKey1Time, "ParticleShaderScaleKey1Time");
                     }
                     if (printMask?.ParticleShaderScaleKey2Time ?? true)
                     {
-                        fg.AppendItem(ParticleShaderScaleKey2Time, "ParticleShaderScaleKey2Time");
+                        sb.AppendItem(ParticleShaderScaleKey2Time, "ParticleShaderScaleKey2Time");
                     }
                     if (printMask?.ColorKey1Color ?? true)
                     {
-                        fg.AppendItem(ColorKey1Color, "ColorKey1Color");
+                        sb.AppendItem(ColorKey1Color, "ColorKey1Color");
                     }
                     if (printMask?.ColorKey2Color ?? true)
                     {
-                        fg.AppendItem(ColorKey2Color, "ColorKey2Color");
+                        sb.AppendItem(ColorKey2Color, "ColorKey2Color");
                     }
                     if (printMask?.ColorKey3Color ?? true)
                     {
-                        fg.AppendItem(ColorKey3Color, "ColorKey3Color");
+                        sb.AppendItem(ColorKey3Color, "ColorKey3Color");
                     }
                     if (printMask?.ColorKey1ColorAlpha ?? true)
                     {
-                        fg.AppendItem(ColorKey1ColorAlpha, "ColorKey1ColorAlpha");
+                        sb.AppendItem(ColorKey1ColorAlpha, "ColorKey1ColorAlpha");
                     }
                     if (printMask?.ColorKey2ColorAlpha ?? true)
                     {
-                        fg.AppendItem(ColorKey2ColorAlpha, "ColorKey2ColorAlpha");
+                        sb.AppendItem(ColorKey2ColorAlpha, "ColorKey2ColorAlpha");
                     }
                     if (printMask?.ColorKey3ColorAlpha ?? true)
                     {
-                        fg.AppendItem(ColorKey3ColorAlpha, "ColorKey3ColorAlpha");
+                        sb.AppendItem(ColorKey3ColorAlpha, "ColorKey3ColorAlpha");
                     }
                     if (printMask?.ColorKey1ColorKeyTime ?? true)
                     {
-                        fg.AppendItem(ColorKey1ColorKeyTime, "ColorKey1ColorKeyTime");
+                        sb.AppendItem(ColorKey1ColorKeyTime, "ColorKey1ColorKeyTime");
                     }
                     if (printMask?.ColorKey2ColorKeyTime ?? true)
                     {
-                        fg.AppendItem(ColorKey2ColorKeyTime, "ColorKey2ColorKeyTime");
+                        sb.AppendItem(ColorKey2ColorKeyTime, "ColorKey2ColorKeyTime");
                     }
                     if (printMask?.ColorKey3ColorKeyTime ?? true)
                     {
-                        fg.AppendItem(ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
+                        sb.AppendItem(ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1723,90 +1724,204 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(MembraneShaderSourceBlendMode, "MembraneShaderSourceBlendMode");
-                fg.AppendItem(MembraneShaderBlendOperation, "MembraneShaderBlendOperation");
-                fg.AppendItem(MembraneShaderZTestFunction, "MembraneShaderZTestFunction");
-                fg.AppendItem(FillTextureEffectColor, "FillTextureEffectColor");
-                fg.AppendItem(FillTextureEffectAlphaFadeInTime, "FillTextureEffectAlphaFadeInTime");
-                fg.AppendItem(FillTextureEffectFullAlphaTime, "FillTextureEffectFullAlphaTime");
-                fg.AppendItem(FillTextureEffectAlphaFadeOutTime, "FillTextureEffectAlphaFadeOutTime");
-                fg.AppendItem(FillTextureEffectPersistentAlphaRatio, "FillTextureEffectPersistentAlphaRatio");
-                fg.AppendItem(FillTextureEffectAlphaPulseAmplitude, "FillTextureEffectAlphaPulseAmplitude");
-                fg.AppendItem(FillTextureEffectAlphaPulseFrequency, "FillTextureEffectAlphaPulseFrequency");
-                fg.AppendItem(FillTextureEffectTextureAnimationSpeedU, "FillTextureEffectTextureAnimationSpeedU");
-                fg.AppendItem(FillTextureEffectTextureAnimationSpeedV, "FillTextureEffectTextureAnimationSpeedV");
-                fg.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
-                fg.AppendItem(EdgeEffectColor, "EdgeEffectColor");
-                fg.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
-                fg.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
-                fg.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
-                fg.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
-                fg.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
-                fg.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
-                fg.AppendItem(FillTextureEffectFullAlphaRatio, "FillTextureEffectFullAlphaRatio");
-                fg.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
-                fg.AppendItem(MembraneShaderDestBlendMode, "MembraneShaderDestBlendMode");
-                fg.AppendItem(ParticleShaderSourceBlendMode, "ParticleShaderSourceBlendMode");
-                fg.AppendItem(ParticleShaderBlendOperation, "ParticleShaderBlendOperation");
-                fg.AppendItem(ParticleShaderZTestFunction, "ParticleShaderZTestFunction");
-                fg.AppendItem(ParticleShaderDestBlendMode, "ParticleShaderDestBlendMode");
-                fg.AppendItem(ParticleShaderParticleBirthRampUpTime, "ParticleShaderParticleBirthRampUpTime");
-                fg.AppendItem(ParticleShaderFullParticleBirthTime, "ParticleShaderFullParticleBirthTime");
-                fg.AppendItem(ParticleShaderParticleBirthRampDownTime, "ParticleShaderParticleBirthRampDownTime");
-                fg.AppendItem(ParticleShaderFullParticleBirthRatio, "ParticleShaderFullParticleBirthRatio");
-                fg.AppendItem(ParticleShaderPersistentParticleBirthRatio, "ParticleShaderPersistentParticleBirthRatio");
-                fg.AppendItem(ParticleShaderParticleLifetime, "ParticleShaderParticleLifetime");
-                fg.AppendItem(ParticleShaderParticleLifetimePlusMinus, "ParticleShaderParticleLifetimePlusMinus");
-                fg.AppendItem(ParticleShaderInitialSpeedAlongNormal, "ParticleShaderInitialSpeedAlongNormal");
-                fg.AppendItem(ParticleShaderAccelerationAlongNormal, "ParticleShaderAccelerationAlongNormal");
-                fg.AppendItem(ParticleShaderInitialVelocity1, "ParticleShaderInitialVelocity1");
-                fg.AppendItem(ParticleShaderInitialVelocity2, "ParticleShaderInitialVelocity2");
-                fg.AppendItem(ParticleShaderInitialVelocity3, "ParticleShaderInitialVelocity3");
-                fg.AppendItem(ParticleShaderAcceleration1, "ParticleShaderAcceleration1");
-                fg.AppendItem(ParticleShaderAcceleration2, "ParticleShaderAcceleration2");
-                fg.AppendItem(ParticleShaderAcceleration3, "ParticleShaderAcceleration3");
-                fg.AppendItem(ParticleShaderScaleKey1, "ParticleShaderScaleKey1");
-                fg.AppendItem(ParticleShaderScaleKey2, "ParticleShaderScaleKey2");
-                fg.AppendItem(ParticleShaderScaleKey1Time, "ParticleShaderScaleKey1Time");
-                fg.AppendItem(ParticleShaderScaleKey2Time, "ParticleShaderScaleKey2Time");
-                fg.AppendItem(ColorKey1Color, "ColorKey1Color");
-                fg.AppendItem(ColorKey2Color, "ColorKey2Color");
-                fg.AppendItem(ColorKey3Color, "ColorKey3Color");
-                fg.AppendItem(ColorKey1ColorAlpha, "ColorKey1ColorAlpha");
-                fg.AppendItem(ColorKey2ColorAlpha, "ColorKey2ColorAlpha");
-                fg.AppendItem(ColorKey3ColorAlpha, "ColorKey3ColorAlpha");
-                fg.AppendItem(ColorKey1ColorKeyTime, "ColorKey1ColorKeyTime");
-                fg.AppendItem(ColorKey2ColorKeyTime, "ColorKey2ColorKeyTime");
-                fg.AppendItem(ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(MembraneShaderSourceBlendMode, "MembraneShaderSourceBlendMode");
+                }
+                {
+                    sb.AppendItem(MembraneShaderBlendOperation, "MembraneShaderBlendOperation");
+                }
+                {
+                    sb.AppendItem(MembraneShaderZTestFunction, "MembraneShaderZTestFunction");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectColor, "FillTextureEffectColor");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectAlphaFadeInTime, "FillTextureEffectAlphaFadeInTime");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectFullAlphaTime, "FillTextureEffectFullAlphaTime");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectAlphaFadeOutTime, "FillTextureEffectAlphaFadeOutTime");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectPersistentAlphaRatio, "FillTextureEffectPersistentAlphaRatio");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectAlphaPulseAmplitude, "FillTextureEffectAlphaPulseAmplitude");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectAlphaPulseFrequency, "FillTextureEffectAlphaPulseFrequency");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectTextureAnimationSpeedU, "FillTextureEffectTextureAnimationSpeedU");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectTextureAnimationSpeedV, "FillTextureEffectTextureAnimationSpeedV");
+                }
+                {
+                    sb.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
+                }
+                {
+                    sb.AppendItem(EdgeEffectColor, "EdgeEffectColor");
+                }
+                {
+                    sb.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
+                }
+                {
+                    sb.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
+                }
+                {
+                    sb.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
+                }
+                {
+                    sb.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
+                }
+                {
+                    sb.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
+                }
+                {
+                    sb.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
+                }
+                {
+                    sb.AppendItem(FillTextureEffectFullAlphaRatio, "FillTextureEffectFullAlphaRatio");
+                }
+                {
+                    sb.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
+                }
+                {
+                    sb.AppendItem(MembraneShaderDestBlendMode, "MembraneShaderDestBlendMode");
+                }
+                {
+                    sb.AppendItem(ParticleShaderSourceBlendMode, "ParticleShaderSourceBlendMode");
+                }
+                {
+                    sb.AppendItem(ParticleShaderBlendOperation, "ParticleShaderBlendOperation");
+                }
+                {
+                    sb.AppendItem(ParticleShaderZTestFunction, "ParticleShaderZTestFunction");
+                }
+                {
+                    sb.AppendItem(ParticleShaderDestBlendMode, "ParticleShaderDestBlendMode");
+                }
+                {
+                    sb.AppendItem(ParticleShaderParticleBirthRampUpTime, "ParticleShaderParticleBirthRampUpTime");
+                }
+                {
+                    sb.AppendItem(ParticleShaderFullParticleBirthTime, "ParticleShaderFullParticleBirthTime");
+                }
+                {
+                    sb.AppendItem(ParticleShaderParticleBirthRampDownTime, "ParticleShaderParticleBirthRampDownTime");
+                }
+                {
+                    sb.AppendItem(ParticleShaderFullParticleBirthRatio, "ParticleShaderFullParticleBirthRatio");
+                }
+                {
+                    sb.AppendItem(ParticleShaderPersistentParticleBirthRatio, "ParticleShaderPersistentParticleBirthRatio");
+                }
+                {
+                    sb.AppendItem(ParticleShaderParticleLifetime, "ParticleShaderParticleLifetime");
+                }
+                {
+                    sb.AppendItem(ParticleShaderParticleLifetimePlusMinus, "ParticleShaderParticleLifetimePlusMinus");
+                }
+                {
+                    sb.AppendItem(ParticleShaderInitialSpeedAlongNormal, "ParticleShaderInitialSpeedAlongNormal");
+                }
+                {
+                    sb.AppendItem(ParticleShaderAccelerationAlongNormal, "ParticleShaderAccelerationAlongNormal");
+                }
+                {
+                    sb.AppendItem(ParticleShaderInitialVelocity1, "ParticleShaderInitialVelocity1");
+                }
+                {
+                    sb.AppendItem(ParticleShaderInitialVelocity2, "ParticleShaderInitialVelocity2");
+                }
+                {
+                    sb.AppendItem(ParticleShaderInitialVelocity3, "ParticleShaderInitialVelocity3");
+                }
+                {
+                    sb.AppendItem(ParticleShaderAcceleration1, "ParticleShaderAcceleration1");
+                }
+                {
+                    sb.AppendItem(ParticleShaderAcceleration2, "ParticleShaderAcceleration2");
+                }
+                {
+                    sb.AppendItem(ParticleShaderAcceleration3, "ParticleShaderAcceleration3");
+                }
+                {
+                    sb.AppendItem(ParticleShaderScaleKey1, "ParticleShaderScaleKey1");
+                }
+                {
+                    sb.AppendItem(ParticleShaderScaleKey2, "ParticleShaderScaleKey2");
+                }
+                {
+                    sb.AppendItem(ParticleShaderScaleKey1Time, "ParticleShaderScaleKey1Time");
+                }
+                {
+                    sb.AppendItem(ParticleShaderScaleKey2Time, "ParticleShaderScaleKey2Time");
+                }
+                {
+                    sb.AppendItem(ColorKey1Color, "ColorKey1Color");
+                }
+                {
+                    sb.AppendItem(ColorKey2Color, "ColorKey2Color");
+                }
+                {
+                    sb.AppendItem(ColorKey3Color, "ColorKey3Color");
+                }
+                {
+                    sb.AppendItem(ColorKey1ColorAlpha, "ColorKey1ColorAlpha");
+                }
+                {
+                    sb.AppendItem(ColorKey2ColorAlpha, "ColorKey2ColorAlpha");
+                }
+                {
+                    sb.AppendItem(ColorKey3ColorAlpha, "ColorKey3ColorAlpha");
+                }
+                {
+                    sb.AppendItem(ColorKey1ColorKeyTime, "ColorKey1ColorKeyTime");
+                }
+                {
+                    sb.AppendItem(ColorKey2ColorKeyTime, "ColorKey2ColorKeyTime");
+                }
+                {
+                    sb.AppendItem(ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
+                }
             }
             #endregion
 
@@ -2150,7 +2265,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -2335,13 +2450,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IEffectShaderDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EffectShaderData.Mask<bool>? printMask = null)
         {
             ((EffectShaderDataCommon)((IEffectShaderDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2793,272 +2908,272 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             EffectShaderData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IEffectShaderDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EffectShaderData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EffectShaderData =>");
+                sb.AppendLine($"EffectShaderData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EffectShaderData) =>");
+                sb.AppendLine($"{name} (EffectShaderData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IEffectShaderDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             EffectShaderData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.MembraneShaderSourceBlendMode ?? true)
             {
-                fg.AppendItem(item.MembraneShaderSourceBlendMode, "MembraneShaderSourceBlendMode");
+                sb.AppendItem(item.MembraneShaderSourceBlendMode, "MembraneShaderSourceBlendMode");
             }
             if (printMask?.MembraneShaderBlendOperation ?? true)
             {
-                fg.AppendItem(item.MembraneShaderBlendOperation, "MembraneShaderBlendOperation");
+                sb.AppendItem(item.MembraneShaderBlendOperation, "MembraneShaderBlendOperation");
             }
             if (printMask?.MembraneShaderZTestFunction ?? true)
             {
-                fg.AppendItem(item.MembraneShaderZTestFunction, "MembraneShaderZTestFunction");
+                sb.AppendItem(item.MembraneShaderZTestFunction, "MembraneShaderZTestFunction");
             }
             if (printMask?.FillTextureEffectColor ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectColor, "FillTextureEffectColor");
+                sb.AppendItem(item.FillTextureEffectColor, "FillTextureEffectColor");
             }
             if (printMask?.FillTextureEffectAlphaFadeInTime ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectAlphaFadeInTime, "FillTextureEffectAlphaFadeInTime");
+                sb.AppendItem(item.FillTextureEffectAlphaFadeInTime, "FillTextureEffectAlphaFadeInTime");
             }
             if (printMask?.FillTextureEffectFullAlphaTime ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectFullAlphaTime, "FillTextureEffectFullAlphaTime");
+                sb.AppendItem(item.FillTextureEffectFullAlphaTime, "FillTextureEffectFullAlphaTime");
             }
             if (printMask?.FillTextureEffectAlphaFadeOutTime ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectAlphaFadeOutTime, "FillTextureEffectAlphaFadeOutTime");
+                sb.AppendItem(item.FillTextureEffectAlphaFadeOutTime, "FillTextureEffectAlphaFadeOutTime");
             }
             if (printMask?.FillTextureEffectPersistentAlphaRatio ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectPersistentAlphaRatio, "FillTextureEffectPersistentAlphaRatio");
+                sb.AppendItem(item.FillTextureEffectPersistentAlphaRatio, "FillTextureEffectPersistentAlphaRatio");
             }
             if (printMask?.FillTextureEffectAlphaPulseAmplitude ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectAlphaPulseAmplitude, "FillTextureEffectAlphaPulseAmplitude");
+                sb.AppendItem(item.FillTextureEffectAlphaPulseAmplitude, "FillTextureEffectAlphaPulseAmplitude");
             }
             if (printMask?.FillTextureEffectAlphaPulseFrequency ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectAlphaPulseFrequency, "FillTextureEffectAlphaPulseFrequency");
+                sb.AppendItem(item.FillTextureEffectAlphaPulseFrequency, "FillTextureEffectAlphaPulseFrequency");
             }
             if (printMask?.FillTextureEffectTextureAnimationSpeedU ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectTextureAnimationSpeedU, "FillTextureEffectTextureAnimationSpeedU");
+                sb.AppendItem(item.FillTextureEffectTextureAnimationSpeedU, "FillTextureEffectTextureAnimationSpeedU");
             }
             if (printMask?.FillTextureEffectTextureAnimationSpeedV ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectTextureAnimationSpeedV, "FillTextureEffectTextureAnimationSpeedV");
+                sb.AppendItem(item.FillTextureEffectTextureAnimationSpeedV, "FillTextureEffectTextureAnimationSpeedV");
             }
             if (printMask?.EdgeEffectFallOff ?? true)
             {
-                fg.AppendItem(item.EdgeEffectFallOff, "EdgeEffectFallOff");
+                sb.AppendItem(item.EdgeEffectFallOff, "EdgeEffectFallOff");
             }
             if (printMask?.EdgeEffectColor ?? true)
             {
-                fg.AppendItem(item.EdgeEffectColor, "EdgeEffectColor");
+                sb.AppendItem(item.EdgeEffectColor, "EdgeEffectColor");
             }
             if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
             {
-                fg.AppendItem(item.EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
+                sb.AppendItem(item.EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
             }
             if (printMask?.EdgeEffectFullAlphaTime ?? true)
             {
-                fg.AppendItem(item.EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
+                sb.AppendItem(item.EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
             }
             if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
             {
-                fg.AppendItem(item.EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
+                sb.AppendItem(item.EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
             }
             if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
             {
-                fg.AppendItem(item.EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
+                sb.AppendItem(item.EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
             }
             if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
             {
-                fg.AppendItem(item.EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
+                sb.AppendItem(item.EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
             }
             if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
             {
-                fg.AppendItem(item.EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
+                sb.AppendItem(item.EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
             }
             if (printMask?.FillTextureEffectFullAlphaRatio ?? true)
             {
-                fg.AppendItem(item.FillTextureEffectFullAlphaRatio, "FillTextureEffectFullAlphaRatio");
+                sb.AppendItem(item.FillTextureEffectFullAlphaRatio, "FillTextureEffectFullAlphaRatio");
             }
             if (printMask?.EdgeEffectFullAlphaRatio ?? true)
             {
-                fg.AppendItem(item.EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
+                sb.AppendItem(item.EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
             }
             if (printMask?.MembraneShaderDestBlendMode ?? true)
             {
-                fg.AppendItem(item.MembraneShaderDestBlendMode, "MembraneShaderDestBlendMode");
+                sb.AppendItem(item.MembraneShaderDestBlendMode, "MembraneShaderDestBlendMode");
             }
             if (printMask?.ParticleShaderSourceBlendMode ?? true)
             {
-                fg.AppendItem(item.ParticleShaderSourceBlendMode, "ParticleShaderSourceBlendMode");
+                sb.AppendItem(item.ParticleShaderSourceBlendMode, "ParticleShaderSourceBlendMode");
             }
             if (printMask?.ParticleShaderBlendOperation ?? true)
             {
-                fg.AppendItem(item.ParticleShaderBlendOperation, "ParticleShaderBlendOperation");
+                sb.AppendItem(item.ParticleShaderBlendOperation, "ParticleShaderBlendOperation");
             }
             if (printMask?.ParticleShaderZTestFunction ?? true)
             {
-                fg.AppendItem(item.ParticleShaderZTestFunction, "ParticleShaderZTestFunction");
+                sb.AppendItem(item.ParticleShaderZTestFunction, "ParticleShaderZTestFunction");
             }
             if (printMask?.ParticleShaderDestBlendMode ?? true)
             {
-                fg.AppendItem(item.ParticleShaderDestBlendMode, "ParticleShaderDestBlendMode");
+                sb.AppendItem(item.ParticleShaderDestBlendMode, "ParticleShaderDestBlendMode");
             }
             if (printMask?.ParticleShaderParticleBirthRampUpTime ?? true)
             {
-                fg.AppendItem(item.ParticleShaderParticleBirthRampUpTime, "ParticleShaderParticleBirthRampUpTime");
+                sb.AppendItem(item.ParticleShaderParticleBirthRampUpTime, "ParticleShaderParticleBirthRampUpTime");
             }
             if (printMask?.ParticleShaderFullParticleBirthTime ?? true)
             {
-                fg.AppendItem(item.ParticleShaderFullParticleBirthTime, "ParticleShaderFullParticleBirthTime");
+                sb.AppendItem(item.ParticleShaderFullParticleBirthTime, "ParticleShaderFullParticleBirthTime");
             }
             if (printMask?.ParticleShaderParticleBirthRampDownTime ?? true)
             {
-                fg.AppendItem(item.ParticleShaderParticleBirthRampDownTime, "ParticleShaderParticleBirthRampDownTime");
+                sb.AppendItem(item.ParticleShaderParticleBirthRampDownTime, "ParticleShaderParticleBirthRampDownTime");
             }
             if (printMask?.ParticleShaderFullParticleBirthRatio ?? true)
             {
-                fg.AppendItem(item.ParticleShaderFullParticleBirthRatio, "ParticleShaderFullParticleBirthRatio");
+                sb.AppendItem(item.ParticleShaderFullParticleBirthRatio, "ParticleShaderFullParticleBirthRatio");
             }
             if (printMask?.ParticleShaderPersistentParticleBirthRatio ?? true)
             {
-                fg.AppendItem(item.ParticleShaderPersistentParticleBirthRatio, "ParticleShaderPersistentParticleBirthRatio");
+                sb.AppendItem(item.ParticleShaderPersistentParticleBirthRatio, "ParticleShaderPersistentParticleBirthRatio");
             }
             if (printMask?.ParticleShaderParticleLifetime ?? true)
             {
-                fg.AppendItem(item.ParticleShaderParticleLifetime, "ParticleShaderParticleLifetime");
+                sb.AppendItem(item.ParticleShaderParticleLifetime, "ParticleShaderParticleLifetime");
             }
             if (printMask?.ParticleShaderParticleLifetimePlusMinus ?? true)
             {
-                fg.AppendItem(item.ParticleShaderParticleLifetimePlusMinus, "ParticleShaderParticleLifetimePlusMinus");
+                sb.AppendItem(item.ParticleShaderParticleLifetimePlusMinus, "ParticleShaderParticleLifetimePlusMinus");
             }
             if (printMask?.ParticleShaderInitialSpeedAlongNormal ?? true)
             {
-                fg.AppendItem(item.ParticleShaderInitialSpeedAlongNormal, "ParticleShaderInitialSpeedAlongNormal");
+                sb.AppendItem(item.ParticleShaderInitialSpeedAlongNormal, "ParticleShaderInitialSpeedAlongNormal");
             }
             if (printMask?.ParticleShaderAccelerationAlongNormal ?? true)
             {
-                fg.AppendItem(item.ParticleShaderAccelerationAlongNormal, "ParticleShaderAccelerationAlongNormal");
+                sb.AppendItem(item.ParticleShaderAccelerationAlongNormal, "ParticleShaderAccelerationAlongNormal");
             }
             if (printMask?.ParticleShaderInitialVelocity1 ?? true)
             {
-                fg.AppendItem(item.ParticleShaderInitialVelocity1, "ParticleShaderInitialVelocity1");
+                sb.AppendItem(item.ParticleShaderInitialVelocity1, "ParticleShaderInitialVelocity1");
             }
             if (printMask?.ParticleShaderInitialVelocity2 ?? true)
             {
-                fg.AppendItem(item.ParticleShaderInitialVelocity2, "ParticleShaderInitialVelocity2");
+                sb.AppendItem(item.ParticleShaderInitialVelocity2, "ParticleShaderInitialVelocity2");
             }
             if (printMask?.ParticleShaderInitialVelocity3 ?? true)
             {
-                fg.AppendItem(item.ParticleShaderInitialVelocity3, "ParticleShaderInitialVelocity3");
+                sb.AppendItem(item.ParticleShaderInitialVelocity3, "ParticleShaderInitialVelocity3");
             }
             if (printMask?.ParticleShaderAcceleration1 ?? true)
             {
-                fg.AppendItem(item.ParticleShaderAcceleration1, "ParticleShaderAcceleration1");
+                sb.AppendItem(item.ParticleShaderAcceleration1, "ParticleShaderAcceleration1");
             }
             if (printMask?.ParticleShaderAcceleration2 ?? true)
             {
-                fg.AppendItem(item.ParticleShaderAcceleration2, "ParticleShaderAcceleration2");
+                sb.AppendItem(item.ParticleShaderAcceleration2, "ParticleShaderAcceleration2");
             }
             if (printMask?.ParticleShaderAcceleration3 ?? true)
             {
-                fg.AppendItem(item.ParticleShaderAcceleration3, "ParticleShaderAcceleration3");
+                sb.AppendItem(item.ParticleShaderAcceleration3, "ParticleShaderAcceleration3");
             }
             if (printMask?.ParticleShaderScaleKey1 ?? true)
             {
-                fg.AppendItem(item.ParticleShaderScaleKey1, "ParticleShaderScaleKey1");
+                sb.AppendItem(item.ParticleShaderScaleKey1, "ParticleShaderScaleKey1");
             }
             if (printMask?.ParticleShaderScaleKey2 ?? true)
             {
-                fg.AppendItem(item.ParticleShaderScaleKey2, "ParticleShaderScaleKey2");
+                sb.AppendItem(item.ParticleShaderScaleKey2, "ParticleShaderScaleKey2");
             }
             if (printMask?.ParticleShaderScaleKey1Time ?? true)
             {
-                fg.AppendItem(item.ParticleShaderScaleKey1Time, "ParticleShaderScaleKey1Time");
+                sb.AppendItem(item.ParticleShaderScaleKey1Time, "ParticleShaderScaleKey1Time");
             }
             if (printMask?.ParticleShaderScaleKey2Time ?? true)
             {
-                fg.AppendItem(item.ParticleShaderScaleKey2Time, "ParticleShaderScaleKey2Time");
+                sb.AppendItem(item.ParticleShaderScaleKey2Time, "ParticleShaderScaleKey2Time");
             }
             if (printMask?.ColorKey1Color ?? true)
             {
-                fg.AppendItem(item.ColorKey1Color, "ColorKey1Color");
+                sb.AppendItem(item.ColorKey1Color, "ColorKey1Color");
             }
             if (printMask?.ColorKey2Color ?? true)
             {
-                fg.AppendItem(item.ColorKey2Color, "ColorKey2Color");
+                sb.AppendItem(item.ColorKey2Color, "ColorKey2Color");
             }
             if (printMask?.ColorKey3Color ?? true)
             {
-                fg.AppendItem(item.ColorKey3Color, "ColorKey3Color");
+                sb.AppendItem(item.ColorKey3Color, "ColorKey3Color");
             }
             if (printMask?.ColorKey1ColorAlpha ?? true)
             {
-                fg.AppendItem(item.ColorKey1ColorAlpha, "ColorKey1ColorAlpha");
+                sb.AppendItem(item.ColorKey1ColorAlpha, "ColorKey1ColorAlpha");
             }
             if (printMask?.ColorKey2ColorAlpha ?? true)
             {
-                fg.AppendItem(item.ColorKey2ColorAlpha, "ColorKey2ColorAlpha");
+                sb.AppendItem(item.ColorKey2ColorAlpha, "ColorKey2ColorAlpha");
             }
             if (printMask?.ColorKey3ColorAlpha ?? true)
             {
-                fg.AppendItem(item.ColorKey3ColorAlpha, "ColorKey3ColorAlpha");
+                sb.AppendItem(item.ColorKey3ColorAlpha, "ColorKey3ColorAlpha");
             }
             if (printMask?.ColorKey1ColorKeyTime ?? true)
             {
-                fg.AppendItem(item.ColorKey1ColorKeyTime, "ColorKey1ColorKeyTime");
+                sb.AppendItem(item.ColorKey1ColorKeyTime, "ColorKey1ColorKeyTime");
             }
             if (printMask?.ColorKey2ColorKeyTime ?? true)
             {
-                fg.AppendItem(item.ColorKey2ColorKeyTime, "ColorKey2ColorKeyTime");
+                sb.AppendItem(item.ColorKey2ColorKeyTime, "ColorKey2ColorKeyTime");
             }
             if (printMask?.ColorKey3ColorKeyTime ?? true)
             {
-                fg.AppendItem(item.ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
+                sb.AppendItem(item.ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
             }
         }
         
@@ -4065,7 +4180,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EffectShaderDataBinaryWriteTranslation.Instance;
@@ -4189,11 +4304,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             EffectShaderDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

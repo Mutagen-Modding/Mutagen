@@ -80,11 +80,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScriptFragmentsIndexedMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -257,50 +258,50 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(ScriptFragmentsIndexed.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ScriptFragmentsIndexed.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ScriptFragmentsIndexed.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ScriptFragmentsIndexed.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ScriptFragmentsIndexed.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ExtraBindDataVersion ?? true)
                     {
-                        fg.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
+                        sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                     }
                     if (printMask?.Script?.Overall ?? true)
                     {
-                        Script?.ToString(fg);
+                        Script?.ToString(sb);
                     }
                     if ((printMask?.Fragments?.Overall ?? true)
                         && Fragments is {} FragmentsItem)
                     {
-                        fg.AppendLine("Fragments =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Fragments =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(FragmentsItem.Overall);
+                            sb.AppendItem(FragmentsItem.Overall);
                             if (FragmentsItem.Specific != null)
                             {
                                 foreach (var subItem in FragmentsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -397,56 +398,58 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
-                Script?.ToString(fg);
+                {
+                    sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
+                }
+                Script?.ToString(sb);
                 if (Fragments is {} FragmentsItem)
                 {
-                    fg.AppendLine("Fragments =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Fragments =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(FragmentsItem.Overall);
+                        sb.AppendItem(FragmentsItem.Overall);
                         if (FragmentsItem.Specific != null)
                         {
                             foreach (var subItem in FragmentsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -570,7 +573,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -649,13 +652,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IScriptFragmentsIndexedGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptFragmentsIndexed.Mask<bool>? printMask = null)
         {
             ((ScriptFragmentsIndexedCommon)((IScriptFragmentsIndexedGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -938,70 +941,70 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             ScriptFragmentsIndexed.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IScriptFragmentsIndexedGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptFragmentsIndexed.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScriptFragmentsIndexed =>");
+                sb.AppendLine($"ScriptFragmentsIndexed =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScriptFragmentsIndexed) =>");
+                sb.AppendLine($"{name} (ScriptFragmentsIndexed) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IScriptFragmentsIndexedGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ScriptFragmentsIndexed.Mask<bool>? printMask = null)
         {
             if (printMask?.ExtraBindDataVersion ?? true)
             {
-                fg.AppendItem(item.ExtraBindDataVersion, "ExtraBindDataVersion");
+                sb.AppendItem(item.ExtraBindDataVersion, "ExtraBindDataVersion");
             }
             if (printMask?.Script?.Overall ?? true)
             {
-                item.Script?.ToString(fg, "Script");
+                item.Script?.ToString(sb, "Script");
             }
             if (printMask?.Fragments?.Overall ?? true)
             {
-                fg.AppendLine("Fragments =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Fragments =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Fragments)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
         }
         
@@ -1304,7 +1307,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptFragmentsIndexedCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1367,11 +1370,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScriptFragmentsIndexedMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

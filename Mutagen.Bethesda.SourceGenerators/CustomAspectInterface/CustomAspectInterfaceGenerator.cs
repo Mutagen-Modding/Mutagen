@@ -78,7 +78,7 @@ public class CustomAspectInterfaceGenerator : ISourceGenerator
             foreach (var namespaceGroup in targets)
             {
                 if (context.CancellationToken.IsCancellationRequested) return;
-                var fg = new FileGeneration();
+                var fg = new StructuredStringBuilder();
 
                 foreach (var use in requiredUsings)
                 {
@@ -100,7 +100,7 @@ public class CustomAspectInterfaceGenerator : ISourceGenerator
                                 {
                                     c.Interfaces.Add(decl.Symbol.Name);
                                 }
-                                using (new BraceWrapper(fg))
+                                using (fg.CurlyBrace())
                                 {
                                     fg.AppendLine($"private readonly {t.Syntax.Type} _wrapped;");
                                     foreach (var member in decl.Symbol.GetMembers())
@@ -109,7 +109,7 @@ public class CustomAspectInterfaceGenerator : ISourceGenerator
                                         {
                                             case IPropertySymbol prop:
                                                 fg.AppendLine($"public {prop.Type} {prop.Name}");
-                                                using (new BraceWrapper(fg))
+                                                using (fg.CurlyBrace())
                                                 {
                                                     if (!prop.IsWriteOnly)
                                                     {
@@ -131,7 +131,7 @@ public class CustomAspectInterfaceGenerator : ISourceGenerator
                                     {
                                         args.Add($"{t.Syntax.Type} rhs");
                                     }
-                                    using (new BraceWrapper(fg))
+                                    using (fg.CurlyBrace())
                                     {
                                         fg.AppendLine("_wrapped = rhs;");
                                     }
@@ -149,7 +149,7 @@ public class CustomAspectInterfaceGenerator : ISourceGenerator
                         {
                             c.Static = true;
                         }
-                        using (new BraceWrapper(fg))
+                        using (fg.CurlyBrace())
                         {
                             foreach (var decl in namespaceGroup.Value.UsedInterfaces)
                             {
@@ -161,7 +161,7 @@ public class CustomAspectInterfaceGenerator : ISourceGenerator
                                     {
                                         args.Add($"this {t.Syntax.Type} rhs");
                                     }
-                                    using (new BraceWrapper(fg))
+                                    using (fg.CurlyBrace())
                                     {
                                         fg.AppendLine($"return new {t.Syntax.Type}Wrapper(rhs);");
                                     }

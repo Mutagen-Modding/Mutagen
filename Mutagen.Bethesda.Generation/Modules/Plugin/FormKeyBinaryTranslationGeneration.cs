@@ -19,7 +19,7 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
     }
 
     public override async Task GenerateWrapperFields(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
         Accessor dataAccessor,
@@ -35,11 +35,11 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
             throw new NotImplementedException();
         }
         var posStr = dataType == null ? $"{passedLengthAccessor}" : $"_{dataType.GetFieldData().RecordType}Location + {passedLengthAccessor}";
-        fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({dataAccessor}.Span.Slice({posStr}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!);");
+        sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({dataAccessor}.Span.Slice({posStr}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!);");
     }
 
     public override void GenerateCopyInRet(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration targetGen,
         TypeGeneration typeGen,
@@ -57,9 +57,9 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         var data = typeGen.GetFieldData();
         if (data.RecordType.HasValue)
         {
-            fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
+            sb.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
         }
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{retAccessor}{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
         {
             args.Add(nodeAccessor.Access);

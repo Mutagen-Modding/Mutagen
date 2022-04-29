@@ -68,11 +68,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkEntryPointAddLeveledItemMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -203,23 +204,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(PerkEntryPointAddLeveledItem.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PerkEntryPointAddLeveledItem.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PerkEntryPointAddLeveledItem.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PerkEntryPointAddLeveledItem.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PerkEntryPointAddLeveledItem.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Item ?? true)
                     {
-                        fg.AppendItem(Item, "Item");
+                        sb.AppendItem(Item, "Item");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -285,35 +286,37 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Item, "Item");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Item, "Item");
+                }
             }
             #endregion
 
@@ -418,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -488,13 +491,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IPerkEntryPointAddLeveledItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkEntryPointAddLeveledItem.Mask<bool>? printMask = null)
         {
             ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -792,52 +795,52 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             PerkEntryPointAddLeveledItem.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPerkEntryPointAddLeveledItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkEntryPointAddLeveledItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkEntryPointAddLeveledItem =>");
+                sb.AppendLine($"PerkEntryPointAddLeveledItem =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkEntryPointAddLeveledItem) =>");
+                sb.AppendLine($"{name} (PerkEntryPointAddLeveledItem) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkEntryPointAddLeveledItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PerkEntryPointAddLeveledItem.Mask<bool>? printMask = null)
         {
             APerkEntryPointEffectCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Item ?? true)
             {
-                fg.AppendItem(item.Item.FormKey, "Item");
+                sb.AppendItem(item.Item.FormKey, "Item");
             }
         }
         
@@ -1203,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkEntryPointAddLeveledItemCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1267,11 +1270,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PerkEntryPointAddLeveledItemMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

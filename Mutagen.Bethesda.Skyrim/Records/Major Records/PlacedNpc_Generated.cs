@@ -316,11 +316,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedNpcMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -803,169 +804,171 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(PlacedNpc.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, PlacedNpc.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, PlacedNpc.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PlacedNpc.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedNpc.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.ToString(sb);
                     }
                     if (printMask?.Base ?? true)
                     {
-                        fg.AppendItem(Base, "Base");
+                        sb.AppendItem(Base, "Base");
                     }
                     if (printMask?.EncounterZone ?? true)
                     {
-                        fg.AppendItem(EncounterZone, "EncounterZone");
+                        sb.AppendItem(EncounterZone, "EncounterZone");
                     }
                     if (printMask?.RagdollData ?? true)
                     {
-                        fg.AppendItem(RagdollData, "RagdollData");
+                        sb.AppendItem(RagdollData, "RagdollData");
                     }
                     if (printMask?.RagdollBipedData ?? true)
                     {
-                        fg.AppendItem(RagdollBipedData, "RagdollBipedData");
+                        sb.AppendItem(RagdollBipedData, "RagdollBipedData");
                     }
                     if (printMask?.Patrol?.Overall ?? true)
                     {
-                        Patrol?.ToString(fg);
+                        Patrol?.ToString(sb);
                     }
                     if (printMask?.LevelModifier ?? true)
                     {
-                        fg.AppendItem(LevelModifier, "LevelModifier");
+                        sb.AppendItem(LevelModifier, "LevelModifier");
                     }
                     if (printMask?.MerchantContainer ?? true)
                     {
-                        fg.AppendItem(MerchantContainer, "MerchantContainer");
+                        sb.AppendItem(MerchantContainer, "MerchantContainer");
                     }
                     if (printMask?.Count ?? true)
                     {
-                        fg.AppendItem(Count, "Count");
+                        sb.AppendItem(Count, "Count");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if ((printMask?.LinkedReferences?.Overall ?? true)
                         && LinkedReferences is {} LinkedReferencesItem)
                     {
-                        fg.AppendLine("LinkedReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LinkedReferences =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LinkedReferencesItem.Overall);
+                            sb.AppendItem(LinkedReferencesItem.Overall);
                             if (LinkedReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in LinkedReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.ActivateParents?.Overall ?? true)
                     {
-                        ActivateParents?.ToString(fg);
+                        ActivateParents?.ToString(sb);
                     }
                     if (printMask?.LinkedReferenceColor?.Overall ?? true)
                     {
-                        LinkedReferenceColor?.ToString(fg);
+                        LinkedReferenceColor?.ToString(sb);
                     }
                     if (printMask?.PersistentLocation ?? true)
                     {
-                        fg.AppendItem(PersistentLocation, "PersistentLocation");
+                        sb.AppendItem(PersistentLocation, "PersistentLocation");
                     }
                     if (printMask?.LocationReference ?? true)
                     {
-                        fg.AppendItem(LocationReference, "LocationReference");
+                        sb.AppendItem(LocationReference, "LocationReference");
                     }
                     if (printMask?.IgnoredBySandbox ?? true)
                     {
-                        fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                        sb.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
                     }
                     if ((printMask?.LocationRefTypes?.Overall ?? true)
                         && LocationRefTypes is {} LocationRefTypesItem)
                     {
-                        fg.AppendLine("LocationRefTypes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationRefTypes =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(LocationRefTypesItem.Overall);
+                            sb.AppendItem(LocationRefTypesItem.Overall);
                             if (LocationRefTypesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationRefTypesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.HeadTrackingWeight ?? true)
                     {
-                        fg.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                        sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
                     }
                     if (printMask?.Horse ?? true)
                     {
-                        fg.AppendItem(Horse, "Horse");
+                        sb.AppendItem(Horse, "Horse");
                     }
                     if (printMask?.FavorCost ?? true)
                     {
-                        fg.AppendItem(FavorCost, "FavorCost");
+                        sb.AppendItem(FavorCost, "FavorCost");
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
-                        EnableParent?.ToString(fg);
+                        EnableParent?.ToString(sb);
                     }
                     if (printMask?.Ownership?.Overall ?? true)
                     {
-                        Ownership?.ToString(fg);
+                        Ownership?.ToString(sb);
                     }
                     if (printMask?.Emittance ?? true)
                     {
-                        fg.AppendItem(Emittance, "Emittance");
+                        sb.AppendItem(Emittance, "Emittance");
                     }
                     if (printMask?.MultiboundReference ?? true)
                     {
-                        fg.AppendItem(MultiboundReference, "MultiboundReference");
+                        sb.AppendItem(MultiboundReference, "MultiboundReference");
                     }
                     if (printMask?.IgnoredBySandbox2 ?? true)
                     {
-                        fg.AppendItem(IgnoredBySandbox2, "IgnoredBySandbox2");
+                        sb.AppendItem(IgnoredBySandbox2, "IgnoredBySandbox2");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.Placement?.Overall ?? true)
                     {
-                        Placement?.ToString(fg);
+                        Placement?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -1301,104 +1304,144 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                fg.AppendItem(Base, "Base");
-                fg.AppendItem(EncounterZone, "EncounterZone");
-                fg.AppendItem(RagdollData, "RagdollData");
-                fg.AppendItem(RagdollBipedData, "RagdollBipedData");
-                Patrol?.ToString(fg);
-                fg.AppendItem(LevelModifier, "LevelModifier");
-                fg.AppendItem(MerchantContainer, "MerchantContainer");
-                fg.AppendItem(Count, "Count");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(Health, "Health");
+                base.ToString_FillInternal(sb);
+                VirtualMachineAdapter?.ToString(sb);
+                {
+                    sb.AppendItem(Base, "Base");
+                }
+                {
+                    sb.AppendItem(EncounterZone, "EncounterZone");
+                }
+                {
+                    sb.AppendItem(RagdollData, "RagdollData");
+                }
+                {
+                    sb.AppendItem(RagdollBipedData, "RagdollBipedData");
+                }
+                Patrol?.ToString(sb);
+                {
+                    sb.AppendItem(LevelModifier, "LevelModifier");
+                }
+                {
+                    sb.AppendItem(MerchantContainer, "MerchantContainer");
+                }
+                {
+                    sb.AppendItem(Count, "Count");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
                 if (LinkedReferences is {} LinkedReferencesItem)
                 {
-                    fg.AppendLine("LinkedReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LinkedReferences =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LinkedReferencesItem.Overall);
+                        sb.AppendItem(LinkedReferencesItem.Overall);
                         if (LinkedReferencesItem.Specific != null)
                         {
                             foreach (var subItem in LinkedReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                ActivateParents?.ToString(fg);
-                LinkedReferenceColor?.ToString(fg);
-                fg.AppendItem(PersistentLocation, "PersistentLocation");
-                fg.AppendItem(LocationReference, "LocationReference");
-                fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                ActivateParents?.ToString(sb);
+                LinkedReferenceColor?.ToString(sb);
+                {
+                    sb.AppendItem(PersistentLocation, "PersistentLocation");
+                }
+                {
+                    sb.AppendItem(LocationReference, "LocationReference");
+                }
+                {
+                    sb.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                }
                 if (LocationRefTypes is {} LocationRefTypesItem)
                 {
-                    fg.AppendLine("LocationRefTypes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationRefTypes =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(LocationRefTypesItem.Overall);
+                        sb.AppendItem(LocationRefTypesItem.Overall);
                         if (LocationRefTypesItem.Specific != null)
                         {
                             foreach (var subItem in LocationRefTypesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
-                fg.AppendItem(Horse, "Horse");
-                fg.AppendItem(FavorCost, "FavorCost");
-                EnableParent?.ToString(fg);
-                Ownership?.ToString(fg);
-                fg.AppendItem(Emittance, "Emittance");
-                fg.AppendItem(MultiboundReference, "MultiboundReference");
-                fg.AppendItem(IgnoredBySandbox2, "IgnoredBySandbox2");
-                fg.AppendItem(Scale, "Scale");
-                Placement?.ToString(fg);
+                {
+                    sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                }
+                {
+                    sb.AppendItem(Horse, "Horse");
+                }
+                {
+                    sb.AppendItem(FavorCost, "FavorCost");
+                }
+                EnableParent?.ToString(sb);
+                Ownership?.ToString(sb);
+                {
+                    sb.AppendItem(Emittance, "Emittance");
+                }
+                {
+                    sb.AppendItem(MultiboundReference, "MultiboundReference");
+                }
+                {
+                    sb.AppendItem(IgnoredBySandbox2, "IgnoredBySandbox2");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                Placement?.ToString(sb);
             }
             #endregion
 
@@ -1678,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1841,13 +1884,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IPlacedNpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
             ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2319,205 +2362,205 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IPlacedNpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedNpc =>");
+                sb.AppendLine($"PlacedNpc =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedNpc) =>");
+                sb.AppendLine($"{name} (PlacedNpc) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedNpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedNpc.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
             }
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKeyNullable, "Base");
+                sb.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if (printMask?.EncounterZone ?? true)
             {
-                fg.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
+                sb.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData is {} RagdollDataItem)
             {
-                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
+                sb.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.RagdollBipedData ?? true)
                 && item.RagdollBipedData is {} RagdollBipedDataItem)
             {
-                fg.AppendLine($"RagdollBipedData => {SpanExt.ToHexString(RagdollBipedDataItem)}");
+                sb.AppendLine($"RagdollBipedData => {SpanExt.ToHexString(RagdollBipedDataItem)}");
             }
             if ((printMask?.Patrol?.Overall ?? true)
                 && item.Patrol is {} PatrolItem)
             {
-                PatrolItem?.ToString(fg, "Patrol");
+                PatrolItem?.ToString(sb, "Patrol");
             }
             if ((printMask?.LevelModifier ?? true)
                 && item.LevelModifier is {} LevelModifierItem)
             {
-                fg.AppendItem(LevelModifierItem, "LevelModifier");
+                sb.AppendItem(LevelModifierItem, "LevelModifier");
             }
             if (printMask?.MerchantContainer ?? true)
             {
-                fg.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
+                sb.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
             }
             if ((printMask?.Count ?? true)
                 && item.Count is {} CountItem)
             {
-                fg.AppendItem(CountItem, "Count");
+                sb.AppendItem(CountItem, "Count");
             }
             if ((printMask?.Radius ?? true)
                 && item.Radius is {} RadiusItem)
             {
-                fg.AppendItem(RadiusItem, "Radius");
+                sb.AppendItem(RadiusItem, "Radius");
             }
             if ((printMask?.Health ?? true)
                 && item.Health is {} HealthItem)
             {
-                fg.AppendItem(HealthItem, "Health");
+                sb.AppendItem(HealthItem, "Health");
             }
             if (printMask?.LinkedReferences?.Overall ?? true)
             {
-                fg.AppendLine("LinkedReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LinkedReferences =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.LinkedReferences)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.ActivateParents?.Overall ?? true)
                 && item.ActivateParents is {} ActivateParentsItem)
             {
-                ActivateParentsItem?.ToString(fg, "ActivateParents");
+                ActivateParentsItem?.ToString(sb, "ActivateParents");
             }
             if ((printMask?.LinkedReferenceColor?.Overall ?? true)
                 && item.LinkedReferenceColor is {} LinkedReferenceColorItem)
             {
-                LinkedReferenceColorItem?.ToString(fg, "LinkedReferenceColor");
+                LinkedReferenceColorItem?.ToString(sb, "LinkedReferenceColor");
             }
             if (printMask?.PersistentLocation ?? true)
             {
-                fg.AppendItem(item.PersistentLocation.FormKeyNullable, "PersistentLocation");
+                sb.AppendItem(item.PersistentLocation.FormKeyNullable, "PersistentLocation");
             }
             if (printMask?.LocationReference ?? true)
             {
-                fg.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
+                sb.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
             }
             if (printMask?.IgnoredBySandbox ?? true)
             {
-                fg.AppendItem(item.IgnoredBySandbox, "IgnoredBySandbox");
+                sb.AppendItem(item.IgnoredBySandbox, "IgnoredBySandbox");
             }
             if ((printMask?.LocationRefTypes?.Overall ?? true)
                 && item.LocationRefTypes is {} LocationRefTypesItem)
             {
-                fg.AppendLine("LocationRefTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationRefTypes =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in LocationRefTypesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if ((printMask?.HeadTrackingWeight ?? true)
                 && item.HeadTrackingWeight is {} HeadTrackingWeightItem)
             {
-                fg.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
+                sb.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
             }
             if (printMask?.Horse ?? true)
             {
-                fg.AppendItem(item.Horse.FormKeyNullable, "Horse");
+                sb.AppendItem(item.Horse.FormKeyNullable, "Horse");
             }
             if ((printMask?.FavorCost ?? true)
                 && item.FavorCost is {} FavorCostItem)
             {
-                fg.AppendItem(FavorCostItem, "FavorCost");
+                sb.AppendItem(FavorCostItem, "FavorCost");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
             {
-                EnableParentItem?.ToString(fg, "EnableParent");
+                EnableParentItem?.ToString(sb, "EnableParent");
             }
             if ((printMask?.Ownership?.Overall ?? true)
                 && item.Ownership is {} OwnershipItem)
             {
-                OwnershipItem?.ToString(fg, "Ownership");
+                OwnershipItem?.ToString(sb, "Ownership");
             }
             if (printMask?.Emittance ?? true)
             {
-                fg.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
+                sb.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
             }
             if (printMask?.MultiboundReference ?? true)
             {
-                fg.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
+                sb.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
             }
             if (printMask?.IgnoredBySandbox2 ?? true)
             {
-                fg.AppendItem(item.IgnoredBySandbox2, "IgnoredBySandbox2");
+                sb.AppendItem(item.IgnoredBySandbox2, "IgnoredBySandbox2");
             }
             if ((printMask?.Scale ?? true)
                 && item.Scale is {} ScaleItem)
             {
-                fg.AppendItem(ScaleItem, "Scale");
+                sb.AppendItem(ScaleItem, "Scale");
             }
             if ((printMask?.Placement?.Overall ?? true)
                 && item.Placement is {} PlacementItem)
             {
-                PlacementItem?.ToString(fg, "Placement");
+                PlacementItem?.ToString(sb, "Placement");
             }
         }
         
@@ -3927,7 +3970,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4287,11 +4330,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             PlacedNpcMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

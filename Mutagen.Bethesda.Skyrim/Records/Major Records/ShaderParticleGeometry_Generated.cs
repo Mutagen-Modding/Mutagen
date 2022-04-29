@@ -123,11 +123,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ShaderParticleGeometryMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -359,75 +360,75 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ShaderParticleGeometry.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ShaderParticleGeometry.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ShaderParticleGeometry.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ShaderParticleGeometry.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ShaderParticleGeometry.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.GravityVelocity ?? true)
                     {
-                        fg.AppendItem(GravityVelocity, "GravityVelocity");
+                        sb.AppendItem(GravityVelocity, "GravityVelocity");
                     }
                     if (printMask?.RotationVelocity ?? true)
                     {
-                        fg.AppendItem(RotationVelocity, "RotationVelocity");
+                        sb.AppendItem(RotationVelocity, "RotationVelocity");
                     }
                     if (printMask?.ParticleSizeX ?? true)
                     {
-                        fg.AppendItem(ParticleSizeX, "ParticleSizeX");
+                        sb.AppendItem(ParticleSizeX, "ParticleSizeX");
                     }
                     if (printMask?.ParticleSizeY ?? true)
                     {
-                        fg.AppendItem(ParticleSizeY, "ParticleSizeY");
+                        sb.AppendItem(ParticleSizeY, "ParticleSizeY");
                     }
                     if (printMask?.CenterOffsetMin ?? true)
                     {
-                        fg.AppendItem(CenterOffsetMin, "CenterOffsetMin");
+                        sb.AppendItem(CenterOffsetMin, "CenterOffsetMin");
                     }
                     if (printMask?.CenterOffsetMax ?? true)
                     {
-                        fg.AppendItem(CenterOffsetMax, "CenterOffsetMax");
+                        sb.AppendItem(CenterOffsetMax, "CenterOffsetMax");
                     }
                     if (printMask?.InitialRotationRange ?? true)
                     {
-                        fg.AppendItem(InitialRotationRange, "InitialRotationRange");
+                        sb.AppendItem(InitialRotationRange, "InitialRotationRange");
                     }
                     if (printMask?.NumSubtexturesX ?? true)
                     {
-                        fg.AppendItem(NumSubtexturesX, "NumSubtexturesX");
+                        sb.AppendItem(NumSubtexturesX, "NumSubtexturesX");
                     }
                     if (printMask?.NumSubtexturesY ?? true)
                     {
-                        fg.AppendItem(NumSubtexturesY, "NumSubtexturesY");
+                        sb.AppendItem(NumSubtexturesY, "NumSubtexturesY");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.BoxSize ?? true)
                     {
-                        fg.AppendItem(BoxSize, "BoxSize");
+                        sb.AppendItem(BoxSize, "BoxSize");
                     }
                     if (printMask?.ParticleDensity ?? true)
                     {
-                        fg.AppendItem(ParticleDensity, "ParticleDensity");
+                        sb.AppendItem(ParticleDensity, "ParticleDensity");
                     }
                     if (printMask?.ParticleTexture ?? true)
                     {
-                        fg.AppendItem(ParticleTexture, "ParticleTexture");
+                        sb.AppendItem(ParticleTexture, "ParticleTexture");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -623,48 +624,76 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(GravityVelocity, "GravityVelocity");
-                fg.AppendItem(RotationVelocity, "RotationVelocity");
-                fg.AppendItem(ParticleSizeX, "ParticleSizeX");
-                fg.AppendItem(ParticleSizeY, "ParticleSizeY");
-                fg.AppendItem(CenterOffsetMin, "CenterOffsetMin");
-                fg.AppendItem(CenterOffsetMax, "CenterOffsetMax");
-                fg.AppendItem(InitialRotationRange, "InitialRotationRange");
-                fg.AppendItem(NumSubtexturesX, "NumSubtexturesX");
-                fg.AppendItem(NumSubtexturesY, "NumSubtexturesY");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(BoxSize, "BoxSize");
-                fg.AppendItem(ParticleDensity, "ParticleDensity");
-                fg.AppendItem(ParticleTexture, "ParticleTexture");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(GravityVelocity, "GravityVelocity");
+                }
+                {
+                    sb.AppendItem(RotationVelocity, "RotationVelocity");
+                }
+                {
+                    sb.AppendItem(ParticleSizeX, "ParticleSizeX");
+                }
+                {
+                    sb.AppendItem(ParticleSizeY, "ParticleSizeY");
+                }
+                {
+                    sb.AppendItem(CenterOffsetMin, "CenterOffsetMin");
+                }
+                {
+                    sb.AppendItem(CenterOffsetMax, "CenterOffsetMax");
+                }
+                {
+                    sb.AppendItem(InitialRotationRange, "InitialRotationRange");
+                }
+                {
+                    sb.AppendItem(NumSubtexturesX, "NumSubtexturesX");
+                }
+                {
+                    sb.AppendItem(NumSubtexturesY, "NumSubtexturesY");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(BoxSize, "BoxSize");
+                }
+                {
+                    sb.AppendItem(ParticleDensity, "ParticleDensity");
+                }
+                {
+                    sb.AppendItem(ParticleTexture, "ParticleTexture");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -894,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -997,13 +1026,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IShaderParticleGeometryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ShaderParticleGeometry.Mask<bool>? printMask = null)
         {
             ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1357,105 +1386,105 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ShaderParticleGeometry.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IShaderParticleGeometryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ShaderParticleGeometry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ShaderParticleGeometry =>");
+                sb.AppendLine($"ShaderParticleGeometry =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ShaderParticleGeometry) =>");
+                sb.AppendLine($"{name} (ShaderParticleGeometry) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IShaderParticleGeometryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ShaderParticleGeometry.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.GravityVelocity ?? true)
             {
-                fg.AppendItem(item.GravityVelocity, "GravityVelocity");
+                sb.AppendItem(item.GravityVelocity, "GravityVelocity");
             }
             if (printMask?.RotationVelocity ?? true)
             {
-                fg.AppendItem(item.RotationVelocity, "RotationVelocity");
+                sb.AppendItem(item.RotationVelocity, "RotationVelocity");
             }
             if (printMask?.ParticleSizeX ?? true)
             {
-                fg.AppendItem(item.ParticleSizeX, "ParticleSizeX");
+                sb.AppendItem(item.ParticleSizeX, "ParticleSizeX");
             }
             if (printMask?.ParticleSizeY ?? true)
             {
-                fg.AppendItem(item.ParticleSizeY, "ParticleSizeY");
+                sb.AppendItem(item.ParticleSizeY, "ParticleSizeY");
             }
             if (printMask?.CenterOffsetMin ?? true)
             {
-                fg.AppendItem(item.CenterOffsetMin, "CenterOffsetMin");
+                sb.AppendItem(item.CenterOffsetMin, "CenterOffsetMin");
             }
             if (printMask?.CenterOffsetMax ?? true)
             {
-                fg.AppendItem(item.CenterOffsetMax, "CenterOffsetMax");
+                sb.AppendItem(item.CenterOffsetMax, "CenterOffsetMax");
             }
             if (printMask?.InitialRotationRange ?? true)
             {
-                fg.AppendItem(item.InitialRotationRange, "InitialRotationRange");
+                sb.AppendItem(item.InitialRotationRange, "InitialRotationRange");
             }
             if (printMask?.NumSubtexturesX ?? true)
             {
-                fg.AppendItem(item.NumSubtexturesX, "NumSubtexturesX");
+                sb.AppendItem(item.NumSubtexturesX, "NumSubtexturesX");
             }
             if (printMask?.NumSubtexturesY ?? true)
             {
-                fg.AppendItem(item.NumSubtexturesY, "NumSubtexturesY");
+                sb.AppendItem(item.NumSubtexturesY, "NumSubtexturesY");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.BoxSize ?? true)
             {
-                fg.AppendItem(item.BoxSize, "BoxSize");
+                sb.AppendItem(item.BoxSize, "BoxSize");
             }
             if (printMask?.ParticleDensity ?? true)
             {
-                fg.AppendItem(item.ParticleDensity, "ParticleDensity");
+                sb.AppendItem(item.ParticleDensity, "ParticleDensity");
             }
             if ((printMask?.ParticleTexture ?? true)
                 && item.ParticleTexture is {} ParticleTextureItem)
             {
-                fg.AppendItem(ParticleTextureItem, "ParticleTexture");
+                sb.AppendItem(ParticleTextureItem, "ParticleTexture");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2138,7 +2167,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ShaderParticleGeometryBinaryWriteTranslation.Instance;
@@ -2314,11 +2343,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ShaderParticleGeometryMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

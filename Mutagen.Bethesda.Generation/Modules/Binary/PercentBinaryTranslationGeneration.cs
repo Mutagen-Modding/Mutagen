@@ -43,10 +43,10 @@ public class PercentBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         return $"{nameof(PercentBinaryTranslation)}.GetPercent({dataAccessor}, {nameof(FloatIntegerType)}.{percType.IntegerType})";
     }
 
-    bool ReadPercent(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item)
+    bool ReadPercent(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item)
     {
         var percType = typeGen as PercentType;
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{item} = {nameof(PercentBinaryTranslation)}.Parse"))
         {
             args.Add($"reader: {reader}");
@@ -55,11 +55,11 @@ public class PercentBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         return true;
     }
 
-    bool WritePercent(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writer, Accessor item)
+    bool WritePercent(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writer, Accessor item)
     {
         var percType = typeGen as PercentType;
         var data = percType.GetFieldData();
-        using (var args = new ArgsWrapper(fg,
+        using (var args = new ArgsWrapper(sb,
                    $"{nameof(PercentBinaryTranslation)}.Write"))
         {
             args.Add($"writer: {writer}");

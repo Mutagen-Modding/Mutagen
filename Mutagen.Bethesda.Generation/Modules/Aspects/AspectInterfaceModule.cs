@@ -45,9 +45,9 @@ public class AspectInterfaceModule : GenerationModule
         }
     }
 
-    public override async Task GenerateInField(ObjectGeneration obj, TypeGeneration tg, FileGeneration fg, LoquiInterfaceType type)
+    public override async Task GenerateInField(ObjectGeneration obj, TypeGeneration tg, StructuredStringBuilder sb, LoquiInterfaceType type)
     {
-        using (new RegionWrapper(fg, "Aspects")
+        using (new RegionWrapper(sb, "Aspects")
                {
                    AppendExtraLine = false,
                    SkipIfOnlyOneLine = true,
@@ -59,7 +59,7 @@ public class AspectInterfaceModule : GenerationModule
                 if (!def.Test(obj, allFields)) continue;
                 def.FieldActions
                     .Where(x => x.Type == type && tg.Name == x.Name)
-                    .ForEach(x => x.Actions(obj, tg, fg));
+                    .ForEach(x => x.Actions(obj, tg, sb));
             }
         }
     }
@@ -139,7 +139,7 @@ public class AspectInterfaceModule : GenerationModule
     {
         foreach (var item in aspects)
         {
-            FileGeneration summary = (item.Key switch
+            StructuredStringBuilder summary = (item.Key switch
             {
                 LoquiInterfaceDefinitionType.IGetter => (comments.GetterInterface ??= new(null!)).Summary,
                 LoquiInterfaceDefinitionType.ISetter => (comments.SetterInterface ??= new(null!)).Summary,
@@ -162,7 +162,7 @@ public class AspectInterfaceModule : GenerationModule
     private static void GenerateAspectInterfaceMapping(ProtocolGeneration proto, Dictionary<AspectInterfaceDefinition, Dictionary<IAspectSubInterfaceDefinition, List<ObjectGeneration>>> mappings)
     {
         // Generate interface to major record mapping registry
-        FileGeneration mappingGen = new FileGeneration();
+        StructuredStringBuilder mappingGen = new StructuredStringBuilder();
         ObjectGeneration.AddAutogenerationComment(mappingGen);
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
@@ -178,7 +178,7 @@ public class AspectInterfaceModule : GenerationModule
                 c.Interfaces.Add(nameof(IInterfaceMapping));
             }
             
-            using (new BraceWrapper(mappingGen))
+            using (mappingGen.CurlyBrace())
             {
                 mappingGen.AppendLine(
                     $"public IReadOnlyDictionary<Type, {nameof(InterfaceMappingResult)}> InterfaceToObjectTypes {{ get; }}");
@@ -188,7 +188,7 @@ public class AspectInterfaceModule : GenerationModule
                 mappingGen.AppendLine();
 
                 mappingGen.AppendLine($"public {proto.Protocol.Namespace}AspectInterfaceMapping()");
-                using (new BraceWrapper(mappingGen))
+                using (mappingGen.CurlyBrace())
                 {
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     List<(string Name, Action ToDo)> toDo = new();
@@ -205,7 +205,7 @@ public class AspectInterfaceModule : GenerationModule
                                     {
                                         first = reg;
                                         mappingGen.AppendLine($"dict[typeof({first.Value.Name})] = new {nameof(InterfaceMappingResult)}({first.Value.Setter.ToString().ToLower()}, new {nameof(ILoquiRegistration)}[]");
-                                        using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
+                                        using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
                                         {
                                             foreach (var obj in subDef.Value.OrderBy(x => x.Name))
                                             {
@@ -236,7 +236,7 @@ public class AspectInterfaceModule : GenerationModule
                         toDo.Add((loose.Key, () =>
                         {
                             mappingGen.AppendLine($"dict[typeof({loose.Key})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
-                            using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
+                            using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
                             {
                                 foreach (var obj in loose.Value)
                                 {

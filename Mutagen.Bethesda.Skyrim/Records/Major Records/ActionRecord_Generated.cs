@@ -65,11 +65,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ActionRecordMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -184,23 +185,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ActionRecord.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ActionRecord.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ActionRecord.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ActionRecord.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ActionRecord.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -266,35 +267,37 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Color, "Color");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Color, "Color");
+                }
             }
             #endregion
 
@@ -467,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -546,13 +549,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IActionRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActionRecord.Mask<bool>? printMask = null)
         {
             ((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -866,53 +869,53 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ActionRecord.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IActionRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActionRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ActionRecord =>");
+                sb.AppendLine($"ActionRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ActionRecord) =>");
+                sb.AppendLine($"{name} (ActionRecord) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IActionRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ActionRecord.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Color ?? true)
                 && item.Color is {} ColorItem)
             {
-                fg.AppendItem(ColorItem, "Color");
+                sb.AppendItem(ColorItem, "Color");
             }
         }
         
@@ -1404,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActionRecordBinaryWriteTranslation.Instance;
@@ -1508,11 +1511,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ActionRecordMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

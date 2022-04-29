@@ -89,11 +89,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DecalMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -294,63 +295,63 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(Decal.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, Decal.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, Decal.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Decal.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Decal.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.MinWidth ?? true)
                     {
-                        fg.AppendItem(MinWidth, "MinWidth");
+                        sb.AppendItem(MinWidth, "MinWidth");
                     }
                     if (printMask?.MaxWidth ?? true)
                     {
-                        fg.AppendItem(MaxWidth, "MaxWidth");
+                        sb.AppendItem(MaxWidth, "MaxWidth");
                     }
                     if (printMask?.MinHeight ?? true)
                     {
-                        fg.AppendItem(MinHeight, "MinHeight");
+                        sb.AppendItem(MinHeight, "MinHeight");
                     }
                     if (printMask?.MaxHeight ?? true)
                     {
-                        fg.AppendItem(MaxHeight, "MaxHeight");
+                        sb.AppendItem(MaxHeight, "MaxHeight");
                     }
                     if (printMask?.Depth ?? true)
                     {
-                        fg.AppendItem(Depth, "Depth");
+                        sb.AppendItem(Depth, "Depth");
                     }
                     if (printMask?.Shininess ?? true)
                     {
-                        fg.AppendItem(Shininess, "Shininess");
+                        sb.AppendItem(Shininess, "Shininess");
                     }
                     if (printMask?.ParallaxScale ?? true)
                     {
-                        fg.AppendItem(ParallaxScale, "ParallaxScale");
+                        sb.AppendItem(ParallaxScale, "ParallaxScale");
                     }
                     if (printMask?.ParallaxPasses ?? true)
                     {
-                        fg.AppendItem(ParallaxPasses, "ParallaxPasses");
+                        sb.AppendItem(ParallaxPasses, "ParallaxPasses");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -527,44 +528,66 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(MinWidth, "MinWidth");
-                fg.AppendItem(MaxWidth, "MaxWidth");
-                fg.AppendItem(MinHeight, "MinHeight");
-                fg.AppendItem(MaxHeight, "MaxHeight");
-                fg.AppendItem(Depth, "Depth");
-                fg.AppendItem(Shininess, "Shininess");
-                fg.AppendItem(ParallaxScale, "ParallaxScale");
-                fg.AppendItem(ParallaxPasses, "ParallaxPasses");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Color, "Color");
+                {
+                    sb.AppendItem(MinWidth, "MinWidth");
+                }
+                {
+                    sb.AppendItem(MaxWidth, "MaxWidth");
+                }
+                {
+                    sb.AppendItem(MinHeight, "MinHeight");
+                }
+                {
+                    sb.AppendItem(MaxHeight, "MaxHeight");
+                }
+                {
+                    sb.AppendItem(Depth, "Depth");
+                }
+                {
+                    sb.AppendItem(Shininess, "Shininess");
+                }
+                {
+                    sb.AppendItem(ParallaxScale, "ParallaxScale");
+                }
+                {
+                    sb.AppendItem(ParallaxPasses, "ParallaxPasses");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
             }
             #endregion
 
@@ -716,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -809,13 +832,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IDecalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Decal.Mask<bool>? printMask = null)
         {
             ((DecalCommon)((IDecalGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1129,88 +1152,88 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             Decal.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IDecalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Decal.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Decal =>");
+                sb.AppendLine($"Decal =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Decal) =>");
+                sb.AppendLine($"{name} (Decal) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDecalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Decal.Mask<bool>? printMask = null)
         {
             if (printMask?.MinWidth ?? true)
             {
-                fg.AppendItem(item.MinWidth, "MinWidth");
+                sb.AppendItem(item.MinWidth, "MinWidth");
             }
             if (printMask?.MaxWidth ?? true)
             {
-                fg.AppendItem(item.MaxWidth, "MaxWidth");
+                sb.AppendItem(item.MaxWidth, "MaxWidth");
             }
             if (printMask?.MinHeight ?? true)
             {
-                fg.AppendItem(item.MinHeight, "MinHeight");
+                sb.AppendItem(item.MinHeight, "MinHeight");
             }
             if (printMask?.MaxHeight ?? true)
             {
-                fg.AppendItem(item.MaxHeight, "MaxHeight");
+                sb.AppendItem(item.MaxHeight, "MaxHeight");
             }
             if (printMask?.Depth ?? true)
             {
-                fg.AppendItem(item.Depth, "Depth");
+                sb.AppendItem(item.Depth, "Depth");
             }
             if (printMask?.Shininess ?? true)
             {
-                fg.AppendItem(item.Shininess, "Shininess");
+                sb.AppendItem(item.Shininess, "Shininess");
             }
             if (printMask?.ParallaxScale ?? true)
             {
-                fg.AppendItem(item.ParallaxScale, "ParallaxScale");
+                sb.AppendItem(item.ParallaxScale, "ParallaxScale");
             }
             if (printMask?.ParallaxPasses ?? true)
             {
-                fg.AppendItem(item.ParallaxPasses, "ParallaxPasses");
+                sb.AppendItem(item.ParallaxPasses, "ParallaxPasses");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color, "Color");
+                sb.AppendItem(item.Color, "Color");
             }
         }
         
@@ -1586,7 +1609,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DecalBinaryWriteTranslation.Instance;
@@ -1661,11 +1684,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             DecalMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

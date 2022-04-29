@@ -12,15 +12,15 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
     public ByteBinaryTranslationGeneration() 
         : base(expectedLen: 1)
     {
-        CustomRead = (fg, o, t, reader, item) =>
+        CustomRead = (sb, o, t, reader, item) =>
         {
-            fg.AppendLine($"{item} = {reader}.ReadUInt8();");
+            sb.AppendLine($"{item} = {reader}.ReadUInt8();");
             return true;
         };
     }
 
     public override async Task GenerateWrapperFields(
-        FileGeneration fg, 
+        StructuredStringBuilder sb, 
         ObjectGeneration objGen, 
         TypeGeneration typeGen,
         Accessor dataAccessor, 
@@ -37,7 +37,7 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
                 return;
             case BinaryGenerationType.Custom:
                 await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
-                    fg,
+                    sb,
                     objGen,
                     typeGen,
                     dataAccessor,
@@ -50,30 +50,30 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
         }
         if (data.HasTrigger)
         {
-            fg.AppendLine($"private int? _{typeGen.Name}Location;");
+            sb.AppendLine($"private int? _{typeGen.Name}Location;");
             if (typeGen.CanBeNullable(getter: true))
             {
                 dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
             }
             else
             {
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+                sb.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
                 if (dataType != null) throw new ArgumentException();
                 dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
             }
         }
         else
         {
             if (dataType == null)
             {
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");
             }
             else
             {
-                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span[_{typeGen.Name}Location] : default;");
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span[_{typeGen.Name}Location] : default;");
             }
         }
     }

@@ -96,11 +96,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherAmbientColorSetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -338,51 +339,51 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(WeatherAmbientColorSet.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, WeatherAmbientColorSet.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, WeatherAmbientColorSet.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WeatherAmbientColorSet.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeatherAmbientColorSet.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Sunrise?.Overall ?? true)
                     {
-                        Sunrise?.ToString(fg);
+                        Sunrise?.ToString(sb);
                     }
                     if (printMask?.Day?.Overall ?? true)
                     {
-                        Day?.ToString(fg);
+                        Day?.ToString(sb);
                     }
                     if (printMask?.Sunset?.Overall ?? true)
                     {
-                        Sunset?.ToString(fg);
+                        Sunset?.ToString(sb);
                     }
                     if (printMask?.Night?.Overall ?? true)
                     {
-                        Night?.ToString(fg);
+                        Night?.ToString(sb);
                     }
                     if (printMask?.EarlySunrise?.Overall ?? true)
                     {
-                        EarlySunrise?.ToString(fg);
+                        EarlySunrise?.ToString(sb);
                     }
                     if (printMask?.LateSunrise?.Overall ?? true)
                     {
-                        LateSunrise?.ToString(fg);
+                        LateSunrise?.ToString(sb);
                     }
                     if (printMask?.EarlySunset?.Overall ?? true)
                     {
-                        EarlySunset?.ToString(fg);
+                        EarlySunset?.ToString(sb);
                     }
                     if (printMask?.LateSunset?.Overall ?? true)
                     {
-                        LateSunset?.ToString(fg);
+                        LateSunset?.ToString(sb);
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -529,41 +530,41 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                Sunrise?.ToString(fg);
-                Day?.ToString(fg);
-                Sunset?.ToString(fg);
-                Night?.ToString(fg);
-                EarlySunrise?.ToString(fg);
-                LateSunrise?.ToString(fg);
-                EarlySunset?.ToString(fg);
-                LateSunset?.ToString(fg);
+                Sunrise?.ToString(sb);
+                Day?.ToString(sb);
+                Sunset?.ToString(sb);
+                Night?.ToString(sb);
+                EarlySunrise?.ToString(sb);
+                LateSunrise?.ToString(sb);
+                EarlySunset?.ToString(sb);
+                LateSunset?.ToString(sb);
             }
             #endregion
 
@@ -695,7 +696,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -782,13 +783,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IWeatherAmbientColorSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
             ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1082,76 +1083,76 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeatherAmbientColorSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherAmbientColorSet =>");
+                sb.AppendLine($"WeatherAmbientColorSet =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherAmbientColorSet) =>");
+                sb.AppendLine($"{name} (WeatherAmbientColorSet) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherAmbientColorSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
             if (printMask?.Sunrise?.Overall ?? true)
             {
-                item.Sunrise?.ToString(fg, "Sunrise");
+                item.Sunrise?.ToString(sb, "Sunrise");
             }
             if (printMask?.Day?.Overall ?? true)
             {
-                item.Day?.ToString(fg, "Day");
+                item.Day?.ToString(sb, "Day");
             }
             if (printMask?.Sunset?.Overall ?? true)
             {
-                item.Sunset?.ToString(fg, "Sunset");
+                item.Sunset?.ToString(sb, "Sunset");
             }
             if (printMask?.Night?.Overall ?? true)
             {
-                item.Night?.ToString(fg, "Night");
+                item.Night?.ToString(sb, "Night");
             }
             if (printMask?.EarlySunrise?.Overall ?? true)
             {
-                item.EarlySunrise?.ToString(fg, "EarlySunrise");
+                item.EarlySunrise?.ToString(sb, "EarlySunrise");
             }
             if (printMask?.LateSunrise?.Overall ?? true)
             {
-                item.LateSunrise?.ToString(fg, "LateSunrise");
+                item.LateSunrise?.ToString(sb, "LateSunrise");
             }
             if (printMask?.EarlySunset?.Overall ?? true)
             {
-                item.EarlySunset?.ToString(fg, "EarlySunset");
+                item.EarlySunset?.ToString(sb, "EarlySunset");
             }
             if (printMask?.LateSunset?.Overall ?? true)
             {
-                item.LateSunset?.ToString(fg, "LateSunset");
+                item.LateSunset?.ToString(sb, "LateSunset");
             }
         }
         
@@ -1626,7 +1627,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherAmbientColorSetBinaryWriteTranslation.Instance;
@@ -1688,11 +1689,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherAmbientColorSetMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

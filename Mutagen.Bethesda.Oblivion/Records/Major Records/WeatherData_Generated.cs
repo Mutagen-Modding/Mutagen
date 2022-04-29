@@ -95,11 +95,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -318,71 +319,71 @@ namespace Mutagen.Bethesda.Oblivion
 
             public string ToString(WeatherData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, WeatherData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, WeatherData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WeatherData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeatherData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.WindSpeed ?? true)
                     {
-                        fg.AppendItem(WindSpeed, "WindSpeed");
+                        sb.AppendItem(WindSpeed, "WindSpeed");
                     }
                     if (printMask?.CloudSpeedLower ?? true)
                     {
-                        fg.AppendItem(CloudSpeedLower, "CloudSpeedLower");
+                        sb.AppendItem(CloudSpeedLower, "CloudSpeedLower");
                     }
                     if (printMask?.CloudSpeedUpper ?? true)
                     {
-                        fg.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
+                        sb.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
                     }
                     if (printMask?.TransDelta ?? true)
                     {
-                        fg.AppendItem(TransDelta, "TransDelta");
+                        sb.AppendItem(TransDelta, "TransDelta");
                     }
                     if (printMask?.SunGlare ?? true)
                     {
-                        fg.AppendItem(SunGlare, "SunGlare");
+                        sb.AppendItem(SunGlare, "SunGlare");
                     }
                     if (printMask?.SunDamage ?? true)
                     {
-                        fg.AppendItem(SunDamage, "SunDamage");
+                        sb.AppendItem(SunDamage, "SunDamage");
                     }
                     if (printMask?.PrecipitationBeginFadeIn ?? true)
                     {
-                        fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                        sb.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
                     }
                     if (printMask?.PrecipitationEndFadeOut ?? true)
                     {
-                        fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                        sb.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
                     }
                     if (printMask?.ThunderLightningBeginFadeIn ?? true)
                     {
-                        fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                        sb.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
                     }
                     if (printMask?.ThunderLightningEndFadeOut ?? true)
                     {
-                        fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                        sb.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
                     }
                     if (printMask?.ThunderLightningFrequency ?? true)
                     {
-                        fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
+                        sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
                     }
                     if (printMask?.Classification ?? true)
                     {
-                        fg.AppendItem(Classification, "Classification");
+                        sb.AppendItem(Classification, "Classification");
                     }
                     if (printMask?.LightningColor ?? true)
                     {
-                        fg.AppendItem(LightningColor, "LightningColor");
+                        sb.AppendItem(LightningColor, "LightningColor");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -579,46 +580,72 @@ namespace Mutagen.Bethesda.Oblivion
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(WindSpeed, "WindSpeed");
-                fg.AppendItem(CloudSpeedLower, "CloudSpeedLower");
-                fg.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
-                fg.AppendItem(TransDelta, "TransDelta");
-                fg.AppendItem(SunGlare, "SunGlare");
-                fg.AppendItem(SunDamage, "SunDamage");
-                fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
-                fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
-                fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
-                fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
-                fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
-                fg.AppendItem(Classification, "Classification");
-                fg.AppendItem(LightningColor, "LightningColor");
+                {
+                    sb.AppendItem(WindSpeed, "WindSpeed");
+                }
+                {
+                    sb.AppendItem(CloudSpeedLower, "CloudSpeedLower");
+                }
+                {
+                    sb.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
+                }
+                {
+                    sb.AppendItem(TransDelta, "TransDelta");
+                }
+                {
+                    sb.AppendItem(SunGlare, "SunGlare");
+                }
+                {
+                    sb.AppendItem(SunDamage, "SunDamage");
+                }
+                {
+                    sb.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                }
+                {
+                    sb.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                }
+                {
+                    sb.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                }
+                {
+                    sb.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                }
+                {
+                    sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
+                }
+                {
+                    sb.AppendItem(Classification, "Classification");
+                }
+                {
+                    sb.AppendItem(LightningColor, "LightningColor");
+                }
             }
             #endregion
 
@@ -778,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -875,13 +902,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void ToString(
             this IWeatherDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherData.Mask<bool>? printMask = null)
         {
             ((WeatherDataCommon)((IWeatherDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1201,96 +1228,96 @@ namespace Mutagen.Bethesda.Oblivion
             string? name = null,
             WeatherData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IWeatherDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherData =>");
+                sb.AppendLine($"WeatherData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherData) =>");
+                sb.AppendLine($"{name} (WeatherData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeatherData.Mask<bool>? printMask = null)
         {
             if (printMask?.WindSpeed ?? true)
             {
-                fg.AppendItem(item.WindSpeed, "WindSpeed");
+                sb.AppendItem(item.WindSpeed, "WindSpeed");
             }
             if (printMask?.CloudSpeedLower ?? true)
             {
-                fg.AppendItem(item.CloudSpeedLower, "CloudSpeedLower");
+                sb.AppendItem(item.CloudSpeedLower, "CloudSpeedLower");
             }
             if (printMask?.CloudSpeedUpper ?? true)
             {
-                fg.AppendItem(item.CloudSpeedUpper, "CloudSpeedUpper");
+                sb.AppendItem(item.CloudSpeedUpper, "CloudSpeedUpper");
             }
             if (printMask?.TransDelta ?? true)
             {
-                fg.AppendItem(item.TransDelta, "TransDelta");
+                sb.AppendItem(item.TransDelta, "TransDelta");
             }
             if (printMask?.SunGlare ?? true)
             {
-                fg.AppendItem(item.SunGlare, "SunGlare");
+                sb.AppendItem(item.SunGlare, "SunGlare");
             }
             if (printMask?.SunDamage ?? true)
             {
-                fg.AppendItem(item.SunDamage, "SunDamage");
+                sb.AppendItem(item.SunDamage, "SunDamage");
             }
             if (printMask?.PrecipitationBeginFadeIn ?? true)
             {
-                fg.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                sb.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
             }
             if (printMask?.PrecipitationEndFadeOut ?? true)
             {
-                fg.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                sb.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
             }
             if (printMask?.ThunderLightningBeginFadeIn ?? true)
             {
-                fg.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                sb.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
             }
             if (printMask?.ThunderLightningEndFadeOut ?? true)
             {
-                fg.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                sb.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
             }
             if (printMask?.ThunderLightningFrequency ?? true)
             {
-                fg.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
+                sb.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
             }
             if (printMask?.Classification ?? true)
             {
-                fg.AppendItem(item.Classification, "Classification");
+                sb.AppendItem(item.Classification, "Classification");
             }
             if (printMask?.LightningColor ?? true)
             {
-                fg.AppendItem(item.LightningColor, "LightningColor");
+                sb.AppendItem(item.LightningColor, "LightningColor");
             }
         }
         
@@ -1675,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherDataBinaryWriteTranslation.Instance;
@@ -1752,11 +1779,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             WeatherDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

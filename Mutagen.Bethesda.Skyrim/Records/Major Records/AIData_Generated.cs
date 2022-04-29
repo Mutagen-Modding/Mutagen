@@ -88,11 +88,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AIDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -293,63 +294,63 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(AIData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, AIData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, AIData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(AIData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AIData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Aggression ?? true)
                     {
-                        fg.AppendItem(Aggression, "Aggression");
+                        sb.AppendItem(Aggression, "Aggression");
                     }
                     if (printMask?.Confidence ?? true)
                     {
-                        fg.AppendItem(Confidence, "Confidence");
+                        sb.AppendItem(Confidence, "Confidence");
                     }
                     if (printMask?.EnergyLevel ?? true)
                     {
-                        fg.AppendItem(EnergyLevel, "EnergyLevel");
+                        sb.AppendItem(EnergyLevel, "EnergyLevel");
                     }
                     if (printMask?.Responsibility ?? true)
                     {
-                        fg.AppendItem(Responsibility, "Responsibility");
+                        sb.AppendItem(Responsibility, "Responsibility");
                     }
                     if (printMask?.Mood ?? true)
                     {
-                        fg.AppendItem(Mood, "Mood");
+                        sb.AppendItem(Mood, "Mood");
                     }
                     if (printMask?.Assistance ?? true)
                     {
-                        fg.AppendItem(Assistance, "Assistance");
+                        sb.AppendItem(Assistance, "Assistance");
                     }
                     if (printMask?.AggroRadiusBehavior ?? true)
                     {
-                        fg.AppendItem(AggroRadiusBehavior, "AggroRadiusBehavior");
+                        sb.AppendItem(AggroRadiusBehavior, "AggroRadiusBehavior");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Warn ?? true)
                     {
-                        fg.AppendItem(Warn, "Warn");
+                        sb.AppendItem(Warn, "Warn");
                     }
                     if (printMask?.WarnOrAttack ?? true)
                     {
-                        fg.AppendItem(WarnOrAttack, "WarnOrAttack");
+                        sb.AppendItem(WarnOrAttack, "WarnOrAttack");
                     }
                     if (printMask?.Attack ?? true)
                     {
-                        fg.AppendItem(Attack, "Attack");
+                        sb.AppendItem(Attack, "Attack");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -526,44 +527,66 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Aggression, "Aggression");
-                fg.AppendItem(Confidence, "Confidence");
-                fg.AppendItem(EnergyLevel, "EnergyLevel");
-                fg.AppendItem(Responsibility, "Responsibility");
-                fg.AppendItem(Mood, "Mood");
-                fg.AppendItem(Assistance, "Assistance");
-                fg.AppendItem(AggroRadiusBehavior, "AggroRadiusBehavior");
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendItem(Warn, "Warn");
-                fg.AppendItem(WarnOrAttack, "WarnOrAttack");
-                fg.AppendItem(Attack, "Attack");
+                {
+                    sb.AppendItem(Aggression, "Aggression");
+                }
+                {
+                    sb.AppendItem(Confidence, "Confidence");
+                }
+                {
+                    sb.AppendItem(EnergyLevel, "EnergyLevel");
+                }
+                {
+                    sb.AppendItem(Responsibility, "Responsibility");
+                }
+                {
+                    sb.AppendItem(Mood, "Mood");
+                }
+                {
+                    sb.AppendItem(Assistance, "Assistance");
+                }
+                {
+                    sb.AppendItem(AggroRadiusBehavior, "AggroRadiusBehavior");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(Warn, "Warn");
+                }
+                {
+                    sb.AppendItem(WarnOrAttack, "WarnOrAttack");
+                }
+                {
+                    sb.AppendItem(Attack, "Attack");
+                }
             }
             #endregion
 
@@ -715,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -808,13 +831,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIData.Mask<bool>? printMask = null)
         {
             ((AIDataCommon)((IAIDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1128,88 +1151,88 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             AIData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AIData =>");
+                sb.AppendLine($"AIData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AIData) =>");
+                sb.AppendLine($"{name} (AIData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AIData.Mask<bool>? printMask = null)
         {
             if (printMask?.Aggression ?? true)
             {
-                fg.AppendItem(item.Aggression, "Aggression");
+                sb.AppendItem(item.Aggression, "Aggression");
             }
             if (printMask?.Confidence ?? true)
             {
-                fg.AppendItem(item.Confidence, "Confidence");
+                sb.AppendItem(item.Confidence, "Confidence");
             }
             if (printMask?.EnergyLevel ?? true)
             {
-                fg.AppendItem(item.EnergyLevel, "EnergyLevel");
+                sb.AppendItem(item.EnergyLevel, "EnergyLevel");
             }
             if (printMask?.Responsibility ?? true)
             {
-                fg.AppendItem(item.Responsibility, "Responsibility");
+                sb.AppendItem(item.Responsibility, "Responsibility");
             }
             if (printMask?.Mood ?? true)
             {
-                fg.AppendItem(item.Mood, "Mood");
+                sb.AppendItem(item.Mood, "Mood");
             }
             if (printMask?.Assistance ?? true)
             {
-                fg.AppendItem(item.Assistance, "Assistance");
+                sb.AppendItem(item.Assistance, "Assistance");
             }
             if (printMask?.AggroRadiusBehavior ?? true)
             {
-                fg.AppendItem(item.AggroRadiusBehavior, "AggroRadiusBehavior");
+                sb.AppendItem(item.AggroRadiusBehavior, "AggroRadiusBehavior");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendItem(item.Unused, "Unused");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.Warn ?? true)
             {
-                fg.AppendItem(item.Warn, "Warn");
+                sb.AppendItem(item.Warn, "Warn");
             }
             if (printMask?.WarnOrAttack ?? true)
             {
-                fg.AppendItem(item.WarnOrAttack, "WarnOrAttack");
+                sb.AppendItem(item.WarnOrAttack, "WarnOrAttack");
             }
             if (printMask?.Attack ?? true)
             {
-                fg.AppendItem(item.Attack, "Attack");
+                sb.AppendItem(item.Attack, "Attack");
             }
         }
         
@@ -1589,7 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIDataBinaryWriteTranslation.Instance;
@@ -1664,11 +1687,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             AIDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

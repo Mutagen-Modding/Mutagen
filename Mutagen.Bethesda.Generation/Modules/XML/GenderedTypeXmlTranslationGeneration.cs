@@ -7,15 +7,15 @@ namespace Mutagen.Bethesda.Generation;
 
 public class GenderedTypeXmlTranslationGeneration : XmlTranslationGeneration
 {
-    public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor nodeAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationMaskAccessor)
+    public override void GenerateCopyIn(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor nodeAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationMaskAccessor)
     {
         GenderedType gendered = typeGen as GenderedType;
         var gen = this.XmlMod.GetTypeGeneration(gendered.SubTypeGeneration.GetType());
         MaskGenerationUtility.WrapErrorFieldIndexPush(
-            fg,
+            sb,
             () =>
             {
-                using (var args = new ArgsWrapper(fg,
+                using (var args = new ArgsWrapper(sb,
                            $"{itemAccessor} = new {typeGen.TypeName(getter: false)}"))
                 {
                     args.Add(subFg =>
@@ -42,17 +42,17 @@ public class GenderedTypeXmlTranslationGeneration : XmlTranslationGeneration
         throw new NotImplementedException();
     }
 
-    public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor nameAccessor, Accessor translationMaskAccessor)
+    public override void GenerateWrite(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor nameAccessor, Accessor translationMaskAccessor)
     {
         GenderedType gendered = typeGen as GenderedType;
         var gen = this.XmlMod.GetTypeGeneration(gendered.SubTypeGeneration.GetType());
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Male", errorMaskAccessor, nameAccessor, translationMaskAccessor);
+            gen.GenerateWrite(sb, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Male", errorMaskAccessor, nameAccessor, translationMaskAccessor);
         }
-        using (new BraceWrapper(fg))
+        using (sb.CurlyBrace())
         {
-            gen.GenerateWrite(fg, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Female", errorMaskAccessor, nameAccessor, translationMaskAccessor);
+            gen.GenerateWrite(sb, objGen, gendered.SubTypeGeneration, writerAccessor, $"{itemAccessor}.Female", errorMaskAccessor, nameAccessor, translationMaskAccessor);
         }
     }
 

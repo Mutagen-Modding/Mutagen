@@ -86,11 +86,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcConfigurationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -299,63 +300,63 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(NpcConfiguration.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, NpcConfiguration.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, NpcConfiguration.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NpcConfiguration.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcConfiguration.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.MagickaOffset ?? true)
                     {
-                        fg.AppendItem(MagickaOffset, "MagickaOffset");
+                        sb.AppendItem(MagickaOffset, "MagickaOffset");
                     }
                     if (printMask?.StaminaOffset ?? true)
                     {
-                        fg.AppendItem(StaminaOffset, "StaminaOffset");
+                        sb.AppendItem(StaminaOffset, "StaminaOffset");
                     }
                     if (printMask?.Level?.Overall ?? true)
                     {
-                        Level?.ToString(fg);
+                        Level?.ToString(sb);
                     }
                     if (printMask?.CalcMinLevel ?? true)
                     {
-                        fg.AppendItem(CalcMinLevel, "CalcMinLevel");
+                        sb.AppendItem(CalcMinLevel, "CalcMinLevel");
                     }
                     if (printMask?.CalcMaxLevel ?? true)
                     {
-                        fg.AppendItem(CalcMaxLevel, "CalcMaxLevel");
+                        sb.AppendItem(CalcMaxLevel, "CalcMaxLevel");
                     }
                     if (printMask?.SpeedMultiplier ?? true)
                     {
-                        fg.AppendItem(SpeedMultiplier, "SpeedMultiplier");
+                        sb.AppendItem(SpeedMultiplier, "SpeedMultiplier");
                     }
                     if (printMask?.DispositionBase ?? true)
                     {
-                        fg.AppendItem(DispositionBase, "DispositionBase");
+                        sb.AppendItem(DispositionBase, "DispositionBase");
                     }
                     if (printMask?.TemplateFlags ?? true)
                     {
-                        fg.AppendItem(TemplateFlags, "TemplateFlags");
+                        sb.AppendItem(TemplateFlags, "TemplateFlags");
                     }
                     if (printMask?.HealthOffset ?? true)
                     {
-                        fg.AppendItem(HealthOffset, "HealthOffset");
+                        sb.AppendItem(HealthOffset, "HealthOffset");
                     }
                     if (printMask?.BleedoutOverride ?? true)
                     {
-                        fg.AppendItem(BleedoutOverride, "BleedoutOverride");
+                        sb.AppendItem(BleedoutOverride, "BleedoutOverride");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -532,44 +533,64 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(MagickaOffset, "MagickaOffset");
-                fg.AppendItem(StaminaOffset, "StaminaOffset");
-                Level?.ToString(fg);
-                fg.AppendItem(CalcMinLevel, "CalcMinLevel");
-                fg.AppendItem(CalcMaxLevel, "CalcMaxLevel");
-                fg.AppendItem(SpeedMultiplier, "SpeedMultiplier");
-                fg.AppendItem(DispositionBase, "DispositionBase");
-                fg.AppendItem(TemplateFlags, "TemplateFlags");
-                fg.AppendItem(HealthOffset, "HealthOffset");
-                fg.AppendItem(BleedoutOverride, "BleedoutOverride");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(MagickaOffset, "MagickaOffset");
+                }
+                {
+                    sb.AppendItem(StaminaOffset, "StaminaOffset");
+                }
+                Level?.ToString(sb);
+                {
+                    sb.AppendItem(CalcMinLevel, "CalcMinLevel");
+                }
+                {
+                    sb.AppendItem(CalcMaxLevel, "CalcMaxLevel");
+                }
+                {
+                    sb.AppendItem(SpeedMultiplier, "SpeedMultiplier");
+                }
+                {
+                    sb.AppendItem(DispositionBase, "DispositionBase");
+                }
+                {
+                    sb.AppendItem(TemplateFlags, "TemplateFlags");
+                }
+                {
+                    sb.AppendItem(HealthOffset, "HealthOffset");
+                }
+                {
+                    sb.AppendItem(BleedoutOverride, "BleedoutOverride");
+                }
             }
             #endregion
 
@@ -720,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -813,13 +834,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this INpcConfigurationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
             ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1133,88 +1154,88 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             INpcConfigurationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcConfiguration =>");
+                sb.AppendLine($"NpcConfiguration =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcConfiguration) =>");
+                sb.AppendLine($"{name} (NpcConfiguration) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcConfigurationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.MagickaOffset ?? true)
             {
-                fg.AppendItem(item.MagickaOffset, "MagickaOffset");
+                sb.AppendItem(item.MagickaOffset, "MagickaOffset");
             }
             if (printMask?.StaminaOffset ?? true)
             {
-                fg.AppendItem(item.StaminaOffset, "StaminaOffset");
+                sb.AppendItem(item.StaminaOffset, "StaminaOffset");
             }
             if (printMask?.Level?.Overall ?? true)
             {
-                item.Level?.ToString(fg, "Level");
+                item.Level?.ToString(sb, "Level");
             }
             if (printMask?.CalcMinLevel ?? true)
             {
-                fg.AppendItem(item.CalcMinLevel, "CalcMinLevel");
+                sb.AppendItem(item.CalcMinLevel, "CalcMinLevel");
             }
             if (printMask?.CalcMaxLevel ?? true)
             {
-                fg.AppendItem(item.CalcMaxLevel, "CalcMaxLevel");
+                sb.AppendItem(item.CalcMaxLevel, "CalcMaxLevel");
             }
             if (printMask?.SpeedMultiplier ?? true)
             {
-                fg.AppendItem(item.SpeedMultiplier, "SpeedMultiplier");
+                sb.AppendItem(item.SpeedMultiplier, "SpeedMultiplier");
             }
             if (printMask?.DispositionBase ?? true)
             {
-                fg.AppendItem(item.DispositionBase, "DispositionBase");
+                sb.AppendItem(item.DispositionBase, "DispositionBase");
             }
             if (printMask?.TemplateFlags ?? true)
             {
-                fg.AppendItem(item.TemplateFlags, "TemplateFlags");
+                sb.AppendItem(item.TemplateFlags, "TemplateFlags");
             }
             if (printMask?.HealthOffset ?? true)
             {
-                fg.AppendItem(item.HealthOffset, "HealthOffset");
+                sb.AppendItem(item.HealthOffset, "HealthOffset");
             }
             if (printMask?.BleedoutOverride ?? true)
             {
-                fg.AppendItem(item.BleedoutOverride, "BleedoutOverride");
+                sb.AppendItem(item.BleedoutOverride, "BleedoutOverride");
             }
         }
         
@@ -1638,7 +1659,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcConfigurationBinaryWriteTranslation.Instance;
@@ -1719,11 +1740,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             NpcConfigurationMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

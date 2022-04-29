@@ -60,11 +60,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MasterReferenceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -184,27 +185,27 @@ namespace Mutagen.Bethesda.Plugins.Records
 
             public string ToString(MasterReference.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, MasterReference.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, MasterReference.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MasterReference.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MasterReference.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Master ?? true)
                     {
-                        fg.AppendItem(Master, "Master");
+                        sb.AppendItem(Master, "Master");
                     }
                     if (printMask?.FileSize ?? true)
                     {
-                        fg.AppendItem(FileSize, "FileSize");
+                        sb.AppendItem(FileSize, "FileSize");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -291,35 +292,39 @@ namespace Mutagen.Bethesda.Plugins.Records
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Master, "Master");
-                fg.AppendItem(FileSize, "FileSize");
+                {
+                    sb.AppendItem(Master, "Master");
+                }
+                {
+                    sb.AppendItem(FileSize, "FileSize");
+                }
             }
             #endregion
 
@@ -435,7 +440,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -510,13 +515,13 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         public static void ToString(
             this IMasterReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MasterReference.Mask<bool>? printMask = null)
         {
             ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -803,52 +808,52 @@ namespace Mutagen.Bethesda.Plugins.Records
             string? name = null,
             MasterReference.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IMasterReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MasterReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MasterReference =>");
+                sb.AppendLine($"MasterReference =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MasterReference) =>");
+                sb.AppendLine($"{name} (MasterReference) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMasterReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MasterReference.Mask<bool>? printMask = null)
         {
             if (printMask?.Master ?? true)
             {
-                fg.AppendItem(item.Master, "Master");
+                sb.AppendItem(item.Master, "Master");
             }
             if (printMask?.FileSize ?? true)
             {
-                fg.AppendItem(item.FileSize, "FileSize");
+                sb.AppendItem(item.FileSize, "FileSize");
             }
         }
         
@@ -1133,7 +1138,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
@@ -1232,11 +1237,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             MasterReferenceMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

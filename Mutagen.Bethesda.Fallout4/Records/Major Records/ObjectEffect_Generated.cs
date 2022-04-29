@@ -176,11 +176,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ObjectEffectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -447,90 +448,90 @@ namespace Mutagen.Bethesda.Fallout4
 
             public string ToString(ObjectEffect.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ObjectEffect.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ObjectEffect.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ObjectEffect.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ObjectEffect.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.ToString(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.EnchantmentCost ?? true)
                     {
-                        fg.AppendItem(EnchantmentCost, "EnchantmentCost");
+                        sb.AppendItem(EnchantmentCost, "EnchantmentCost");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.CastType ?? true)
                     {
-                        fg.AppendItem(CastType, "CastType");
+                        sb.AppendItem(CastType, "CastType");
                     }
                     if (printMask?.EnchantmentAmount ?? true)
                     {
-                        fg.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                        sb.AppendItem(EnchantmentAmount, "EnchantmentAmount");
                     }
                     if (printMask?.TargetType ?? true)
                     {
-                        fg.AppendItem(TargetType, "TargetType");
+                        sb.AppendItem(TargetType, "TargetType");
                     }
                     if (printMask?.EnchantType ?? true)
                     {
-                        fg.AppendItem(EnchantType, "EnchantType");
+                        sb.AppendItem(EnchantType, "EnchantType");
                     }
                     if (printMask?.ChargeTime ?? true)
                     {
-                        fg.AppendItem(ChargeTime, "ChargeTime");
+                        sb.AppendItem(ChargeTime, "ChargeTime");
                     }
                     if (printMask?.BaseEnchantment ?? true)
                     {
-                        fg.AppendItem(BaseEnchantment, "BaseEnchantment");
+                        sb.AppendItem(BaseEnchantment, "BaseEnchantment");
                     }
                     if (printMask?.WornRestrictions ?? true)
                     {
-                        fg.AppendItem(WornRestrictions, "WornRestrictions");
+                        sb.AppendItem(WornRestrictions, "WornRestrictions");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects is {} EffectsItem)
                     {
-                        fg.AppendLine("Effects =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Effects =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendItem(EffectsItem.Overall);
+                            sb.AppendItem(EffectsItem.Overall);
                             if (EffectsItem.Specific != null)
                             {
                                 foreach (var subItem in EffectsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    sb.AppendLine("[");
+                                    using (new DepthWrapper(sb))
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.ToString(sb);
                                     }
-                                    fg.AppendLine("]");
+                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                     if (printMask?.ENITDataTypeState ?? true)
                     {
-                        fg.AppendItem(ENITDataTypeState, "ENITDataTypeState");
+                        sb.AppendItem(ENITDataTypeState, "ENITDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -716,68 +717,90 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(EnchantmentCost, "EnchantmentCost");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(CastType, "CastType");
-                fg.AppendItem(EnchantmentAmount, "EnchantmentAmount");
-                fg.AppendItem(TargetType, "TargetType");
-                fg.AppendItem(EnchantType, "EnchantType");
-                fg.AppendItem(ChargeTime, "ChargeTime");
-                fg.AppendItem(BaseEnchantment, "BaseEnchantment");
-                fg.AppendItem(WornRestrictions, "WornRestrictions");
+                base.ToString_FillInternal(sb);
+                ObjectBounds?.ToString(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(EnchantmentCost, "EnchantmentCost");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(CastType, "CastType");
+                }
+                {
+                    sb.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                }
+                {
+                    sb.AppendItem(TargetType, "TargetType");
+                }
+                {
+                    sb.AppendItem(EnchantType, "EnchantType");
+                }
+                {
+                    sb.AppendItem(ChargeTime, "ChargeTime");
+                }
+                {
+                    sb.AppendItem(BaseEnchantment, "BaseEnchantment");
+                }
+                {
+                    sb.AppendItem(WornRestrictions, "WornRestrictions");
+                }
                 if (Effects is {} EffectsItem)
                 {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Effects =>");
+                    sb.AppendLine("[");
+                    using (new DepthWrapper(sb))
                     {
-                        fg.AppendItem(EffectsItem.Overall);
+                        sb.AppendItem(EffectsItem.Overall);
                         if (EffectsItem.Specific != null)
                         {
                             foreach (var subItem in EffectsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine("[");
+                                using (new DepthWrapper(sb))
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.ToString(sb);
                                 }
-                                fg.AppendLine("]");
+                                sb.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                    sb.AppendLine("]");
                 }
-                fg.AppendItem(ENITDataTypeState, "ENITDataTypeState");
+                {
+                    sb.AppendItem(ENITDataTypeState, "ENITDataTypeState");
+                }
             }
             #endregion
 
@@ -996,7 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -1127,13 +1150,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void ToString(
             this IObjectEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ObjectEffect.Mask<bool>? printMask = null)
         {
             ((ObjectEffectCommon)((IObjectEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1496,115 +1519,115 @@ namespace Mutagen.Bethesda.Fallout4
             string? name = null,
             ObjectEffect.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IObjectEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ObjectEffect.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ObjectEffect =>");
+                sb.AppendLine($"ObjectEffect =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ObjectEffect) =>");
+                sb.AppendLine($"{name} (ObjectEffect) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IObjectEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ObjectEffect.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.EnchantmentCost ?? true)
             {
-                fg.AppendItem(item.EnchantmentCost, "EnchantmentCost");
+                sb.AppendItem(item.EnchantmentCost, "EnchantmentCost");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.CastType ?? true)
             {
-                fg.AppendItem(item.CastType, "CastType");
+                sb.AppendItem(item.CastType, "CastType");
             }
             if (printMask?.EnchantmentAmount ?? true)
             {
-                fg.AppendItem(item.EnchantmentAmount, "EnchantmentAmount");
+                sb.AppendItem(item.EnchantmentAmount, "EnchantmentAmount");
             }
             if (printMask?.TargetType ?? true)
             {
-                fg.AppendItem(item.TargetType, "TargetType");
+                sb.AppendItem(item.TargetType, "TargetType");
             }
             if (printMask?.EnchantType ?? true)
             {
-                fg.AppendItem(item.EnchantType, "EnchantType");
+                sb.AppendItem(item.EnchantType, "EnchantType");
             }
             if (printMask?.ChargeTime ?? true)
             {
-                fg.AppendItem(item.ChargeTime, "ChargeTime");
+                sb.AppendItem(item.ChargeTime, "ChargeTime");
             }
             if (printMask?.BaseEnchantment ?? true)
             {
-                fg.AppendItem(item.BaseEnchantment.FormKey, "BaseEnchantment");
+                sb.AppendItem(item.BaseEnchantment.FormKey, "BaseEnchantment");
             }
             if (printMask?.WornRestrictions ?? true)
             {
-                fg.AppendItem(item.WornRestrictions.FormKey, "WornRestrictions");
+                sb.AppendItem(item.WornRestrictions.FormKey, "WornRestrictions");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
-                fg.AppendLine("Effects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Effects =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     foreach (var subItem in item.Effects)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.ToString(sb, "Item");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             if (printMask?.ENITDataTypeState ?? true)
             {
-                fg.AppendItem(item.ENITDataTypeState, "ENITDataTypeState");
+                sb.AppendItem(item.ENITDataTypeState, "ENITDataTypeState");
             }
         }
         
@@ -2360,7 +2383,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ObjectEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2552,11 +2575,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ObjectEffectMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

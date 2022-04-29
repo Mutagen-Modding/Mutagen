@@ -110,11 +110,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScenePhaseUnusedDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -261,39 +262,39 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(ScenePhaseUnusedData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, ScenePhaseUnusedData.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, ScenePhaseUnusedData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ScenePhaseUnusedData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ScenePhaseUnusedData.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.SCHR ?? true)
                     {
-                        fg.AppendItem(SCHR, "SCHR");
+                        sb.AppendItem(SCHR, "SCHR");
                     }
                     if (printMask?.SCDA ?? true)
                     {
-                        fg.AppendItem(SCDA, "SCDA");
+                        sb.AppendItem(SCDA, "SCDA");
                     }
                     if (printMask?.SCTX ?? true)
                     {
-                        fg.AppendItem(SCTX, "SCTX");
+                        sb.AppendItem(SCTX, "SCTX");
                     }
                     if (printMask?.QNAM ?? true)
                     {
-                        fg.AppendItem(QNAM, "QNAM");
+                        sb.AppendItem(QNAM, "QNAM");
                     }
                     if (printMask?.SCRO ?? true)
                     {
-                        fg.AppendItem(SCRO, "SCRO");
+                        sb.AppendItem(SCRO, "SCRO");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -410,38 +411,48 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(SCHR, "SCHR");
-                fg.AppendItem(SCDA, "SCDA");
-                fg.AppendItem(SCTX, "SCTX");
-                fg.AppendItem(QNAM, "QNAM");
-                fg.AppendItem(SCRO, "SCRO");
+                {
+                    sb.AppendItem(SCHR, "SCHR");
+                }
+                {
+                    sb.AppendItem(SCDA, "SCDA");
+                }
+                {
+                    sb.AppendItem(SCTX, "SCTX");
+                }
+                {
+                    sb.AppendItem(QNAM, "QNAM");
+                }
+                {
+                    sb.AppendItem(SCRO, "SCRO");
+                }
             }
             #endregion
 
@@ -569,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -650,13 +661,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IScenePhaseUnusedDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScenePhaseUnusedData.Mask<bool>? printMask = null)
         {
             ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -953,69 +964,69 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             ScenePhaseUnusedData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IScenePhaseUnusedDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScenePhaseUnusedData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScenePhaseUnusedData =>");
+                sb.AppendLine($"ScenePhaseUnusedData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScenePhaseUnusedData) =>");
+                sb.AppendLine($"{name} (ScenePhaseUnusedData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IScenePhaseUnusedDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ScenePhaseUnusedData.Mask<bool>? printMask = null)
         {
             if ((printMask?.SCHR ?? true)
                 && item.SCHR is {} SCHRItem)
             {
-                fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
+                sb.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
             if ((printMask?.SCDA ?? true)
                 && item.SCDA is {} SCDAItem)
             {
-                fg.AppendLine($"SCDA => {SpanExt.ToHexString(SCDAItem)}");
+                sb.AppendLine($"SCDA => {SpanExt.ToHexString(SCDAItem)}");
             }
             if ((printMask?.SCTX ?? true)
                 && item.SCTX is {} SCTXItem)
             {
-                fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
+                sb.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }
             if ((printMask?.QNAM ?? true)
                 && item.QNAM is {} QNAMItem)
             {
-                fg.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
+                sb.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
             }
             if ((printMask?.SCRO ?? true)
                 && item.SCRO is {} SCROItem)
             {
-                fg.AppendLine($"SCRO => {SpanExt.ToHexString(SCROItem)}");
+                sb.AppendLine($"SCRO => {SpanExt.ToHexString(SCROItem)}");
             }
         }
         
@@ -1411,7 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScenePhaseUnusedDataBinaryWriteTranslation.Instance;
@@ -1541,11 +1552,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             ScenePhaseUnusedDataMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

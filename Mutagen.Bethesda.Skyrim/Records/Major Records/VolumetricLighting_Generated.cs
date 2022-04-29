@@ -123,11 +123,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             VolumetricLightingMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -341,67 +342,67 @@ namespace Mutagen.Bethesda.Skyrim
 
             public string ToString(VolumetricLighting.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, printMask);
+                return sb.ToString();
             }
 
-            public void ToString(FileGeneration fg, VolumetricLighting.Mask<bool>? printMask = null)
+            public void ToString(StructuredStringBuilder sb, VolumetricLighting.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(VolumetricLighting.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(VolumetricLighting.Mask<TItem>)} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (printMask?.Intensity ?? true)
                     {
-                        fg.AppendItem(Intensity, "Intensity");
+                        sb.AppendItem(Intensity, "Intensity");
                     }
                     if (printMask?.CustomColorContribution ?? true)
                     {
-                        fg.AppendItem(CustomColorContribution, "CustomColorContribution");
+                        sb.AppendItem(CustomColorContribution, "CustomColorContribution");
                     }
                     if (printMask?.ColorR ?? true)
                     {
-                        fg.AppendItem(ColorR, "ColorR");
+                        sb.AppendItem(ColorR, "ColorR");
                     }
                     if (printMask?.ColorG ?? true)
                     {
-                        fg.AppendItem(ColorG, "ColorG");
+                        sb.AppendItem(ColorG, "ColorG");
                     }
                     if (printMask?.ColorB ?? true)
                     {
-                        fg.AppendItem(ColorB, "ColorB");
+                        sb.AppendItem(ColorB, "ColorB");
                     }
                     if (printMask?.DensityContribution ?? true)
                     {
-                        fg.AppendItem(DensityContribution, "DensityContribution");
+                        sb.AppendItem(DensityContribution, "DensityContribution");
                     }
                     if (printMask?.DensitySize ?? true)
                     {
-                        fg.AppendItem(DensitySize, "DensitySize");
+                        sb.AppendItem(DensitySize, "DensitySize");
                     }
                     if (printMask?.DensityWindSpeed ?? true)
                     {
-                        fg.AppendItem(DensityWindSpeed, "DensityWindSpeed");
+                        sb.AppendItem(DensityWindSpeed, "DensityWindSpeed");
                     }
                     if (printMask?.DensityFallingSpeed ?? true)
                     {
-                        fg.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
+                        sb.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
                     }
                     if (printMask?.PhaseFunctionContribution ?? true)
                     {
-                        fg.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
+                        sb.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
                     }
                     if (printMask?.PhaseFunctionScattering ?? true)
                     {
-                        fg.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
+                        sb.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
                     }
                     if (printMask?.SamplingRepartitionRangeFactor ?? true)
                     {
-                        fg.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
+                        sb.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
             #endregion
 
@@ -577,46 +578,70 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString()
             {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
+                var sb = new StructuredStringBuilder();
+                ToString(sb, null);
+                return sb.ToString();
             }
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                sb.AppendLine("[");
+                using (new DepthWrapper(sb))
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        sb.AppendLine("[");
+                        using (new DepthWrapper(sb))
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
+                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    ToString_FillInternal(sb);
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Intensity, "Intensity");
-                fg.AppendItem(CustomColorContribution, "CustomColorContribution");
-                fg.AppendItem(ColorR, "ColorR");
-                fg.AppendItem(ColorG, "ColorG");
-                fg.AppendItem(ColorB, "ColorB");
-                fg.AppendItem(DensityContribution, "DensityContribution");
-                fg.AppendItem(DensitySize, "DensitySize");
-                fg.AppendItem(DensityWindSpeed, "DensityWindSpeed");
-                fg.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
-                fg.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
-                fg.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
-                fg.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
+                base.ToString_FillInternal(sb);
+                {
+                    sb.AppendItem(Intensity, "Intensity");
+                }
+                {
+                    sb.AppendItem(CustomColorContribution, "CustomColorContribution");
+                }
+                {
+                    sb.AppendItem(ColorR, "ColorR");
+                }
+                {
+                    sb.AppendItem(ColorG, "ColorG");
+                }
+                {
+                    sb.AppendItem(ColorB, "ColorB");
+                }
+                {
+                    sb.AppendItem(DensityContribution, "DensityContribution");
+                }
+                {
+                    sb.AppendItem(DensitySize, "DensitySize");
+                }
+                {
+                    sb.AppendItem(DensityWindSpeed, "DensityWindSpeed");
+                }
+                {
+                    sb.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
+                }
+                {
+                    sb.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
+                }
+                {
+                    sb.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
+                }
+                {
+                    sb.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
+                }
             }
             #endregion
 
@@ -833,7 +858,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         void IClearable.Clear()
         {
@@ -932,13 +957,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void ToString(
             this IVolumetricLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VolumetricLighting.Mask<bool>? printMask = null)
         {
             ((VolumetricLightingCommon)((IVolumetricLightingGetter)item).CommonInstance()!).ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1296,108 +1321,108 @@ namespace Mutagen.Bethesda.Skyrim
             string? name = null,
             VolumetricLighting.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             ToString(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
         public void ToString(
             IVolumetricLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VolumetricLighting.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"VolumetricLighting =>");
+                sb.AppendLine($"VolumetricLighting =>");
             }
             else
             {
-                fg.AppendLine($"{name} (VolumetricLighting) =>");
+                sb.AppendLine($"{name} (VolumetricLighting) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            sb.AppendLine("[");
+            using (new DepthWrapper(sb))
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
+            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IVolumetricLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             VolumetricLighting.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Intensity ?? true)
                 && item.Intensity is {} IntensityItem)
             {
-                fg.AppendItem(IntensityItem, "Intensity");
+                sb.AppendItem(IntensityItem, "Intensity");
             }
             if ((printMask?.CustomColorContribution ?? true)
                 && item.CustomColorContribution is {} CustomColorContributionItem)
             {
-                fg.AppendItem(CustomColorContributionItem, "CustomColorContribution");
+                sb.AppendItem(CustomColorContributionItem, "CustomColorContribution");
             }
             if ((printMask?.ColorR ?? true)
                 && item.ColorR is {} ColorRItem)
             {
-                fg.AppendItem(ColorRItem, "ColorR");
+                sb.AppendItem(ColorRItem, "ColorR");
             }
             if ((printMask?.ColorG ?? true)
                 && item.ColorG is {} ColorGItem)
             {
-                fg.AppendItem(ColorGItem, "ColorG");
+                sb.AppendItem(ColorGItem, "ColorG");
             }
             if ((printMask?.ColorB ?? true)
                 && item.ColorB is {} ColorBItem)
             {
-                fg.AppendItem(ColorBItem, "ColorB");
+                sb.AppendItem(ColorBItem, "ColorB");
             }
             if ((printMask?.DensityContribution ?? true)
                 && item.DensityContribution is {} DensityContributionItem)
             {
-                fg.AppendItem(DensityContributionItem, "DensityContribution");
+                sb.AppendItem(DensityContributionItem, "DensityContribution");
             }
             if ((printMask?.DensitySize ?? true)
                 && item.DensitySize is {} DensitySizeItem)
             {
-                fg.AppendItem(DensitySizeItem, "DensitySize");
+                sb.AppendItem(DensitySizeItem, "DensitySize");
             }
             if ((printMask?.DensityWindSpeed ?? true)
                 && item.DensityWindSpeed is {} DensityWindSpeedItem)
             {
-                fg.AppendItem(DensityWindSpeedItem, "DensityWindSpeed");
+                sb.AppendItem(DensityWindSpeedItem, "DensityWindSpeed");
             }
             if ((printMask?.DensityFallingSpeed ?? true)
                 && item.DensityFallingSpeed is {} DensityFallingSpeedItem)
             {
-                fg.AppendItem(DensityFallingSpeedItem, "DensityFallingSpeed");
+                sb.AppendItem(DensityFallingSpeedItem, "DensityFallingSpeed");
             }
             if ((printMask?.PhaseFunctionContribution ?? true)
                 && item.PhaseFunctionContribution is {} PhaseFunctionContributionItem)
             {
-                fg.AppendItem(PhaseFunctionContributionItem, "PhaseFunctionContribution");
+                sb.AppendItem(PhaseFunctionContributionItem, "PhaseFunctionContribution");
             }
             if ((printMask?.PhaseFunctionScattering ?? true)
                 && item.PhaseFunctionScattering is {} PhaseFunctionScatteringItem)
             {
-                fg.AppendItem(PhaseFunctionScatteringItem, "PhaseFunctionScattering");
+                sb.AppendItem(PhaseFunctionScatteringItem, "PhaseFunctionScattering");
             }
             if ((printMask?.SamplingRepartitionRangeFactor ?? true)
                 && item.SamplingRepartitionRangeFactor is {} SamplingRepartitionRangeFactorItem)
             {
-                fg.AppendItem(SamplingRepartitionRangeFactorItem, "SamplingRepartitionRangeFactor");
+                sb.AppendItem(SamplingRepartitionRangeFactorItem, "SamplingRepartitionRangeFactor");
             }
         }
         
@@ -2131,7 +2156,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => VolumetricLightingBinaryWriteTranslation.Instance;
@@ -2334,11 +2359,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region To String
 
         public override void ToString(
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null)
         {
             VolumetricLightingMixIn.ToString(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

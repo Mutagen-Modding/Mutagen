@@ -10,25 +10,25 @@ public class LinkCacheExtensionsModule : GenerationModule
     {
         if (proto.Protocol.Namespace.Equals("All")
             || proto.Protocol.Namespace.Equals("Bethesda")) return;
-        FileGeneration fg = new FileGeneration();
+        StructuredStringBuilder sb = new StructuredStringBuilder();
 
-        fg.AppendLine("using System.Collections.Generic;");
-        fg.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
-        fg.AppendLine("using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;");
+        sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
+        sb.AppendLine("using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;");
 
-        fg.AppendLine();
-        using (new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))
+        sb.AppendLine();
+        using (new NamespaceWrapper(sb, proto.DefaultNamespace, fileScoped: false))
         {
             var setterName = $"I{proto.Protocol.Namespace}Mod";
             var getterName = $"I{proto.Protocol.Namespace}ModGetter";
             var generic = $"<{setterName}, {getterName}>";
-            using (var c = new ClassWrapper(fg, "LinkCacheMixIns"))
+            using (var c = new ClassWrapper(sb, "LinkCacheMixIns"))
             {
                 c.Static = true;
             }
-            using (new BraceWrapper(fg))
+            using (sb.CurlyBrace())
             {
-                using (var comment = new CommentWrapper(fg))
+                using (var comment = new CommentWrapper(sb))
                 {
                     comment.Summary.AppendLine($"Creates a Link Cache using a single mod as its link target. <br/>");
                     comment.Summary.AppendLine($"Modification of the target Mod is not safe.  Internal caches can become incorrect if ");
@@ -36,18 +36,18 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Parameters.GetOrAdd("mod").AppendLine("Mod to construct the package relative to");
                     comment.Return.AppendLine($"LinkPackage attached to given mod");
                 }
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static ImmutableModLinkCache{generic} ToImmutableLinkCache"))
                 {
                     args.Add($"this {getterName} mod");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return mod.ToImmutableLinkCache{generic}();");
+                    sb.AppendLine($"return mod.ToImmutableLinkCache{generic}();");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
-                using (var comment = new CommentWrapper(fg))
+                using (var comment = new CommentWrapper(sb))
                 {
                     comment.Summary.AppendLine($"Creates a Link Cache using a single mod as its link target.  Mod is allowed to be modified afterwards, but");
                     comment.Summary.AppendLine($"this comes at a performance cost of not allowing much caching to be done.  If the mod is not expected to");
@@ -55,18 +55,18 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Parameters.GetOrAdd("mod").AppendLine("Mod to construct the package relative to");
                     comment.Return.AppendLine($"LinkPackage attached to given mod");
                 }
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static MutableModLinkCache{generic} ToMutableLinkCache"))
                 {
                     args.Add($"this {getterName} mod");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return mod.ToMutableLinkCache{generic}();");
+                    sb.AppendLine($"return mod.ToMutableLinkCache{generic}();");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
-                using (var comment = new CommentWrapper(fg))
+                using (var comment = new CommentWrapper(sb))
                 {
                     comment.Summary.AppendLine($"Creates a new linking package relative to a load order.<br/>");
                     comment.Summary.AppendLine($"Will resolve links to the highest overriding mod containing the record being sought. <br/>");
@@ -75,18 +75,18 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Parameters.GetOrAdd("loadOrder").AppendLine("LoadOrder to construct the package relative to");
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static ImmutableLoadOrderLinkCache{generic} ToImmutableLinkCache"))
                 {
                     args.Add($"this ILoadOrderGetter<{getterName}> loadOrder");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return loadOrder.ToImmutableLinkCache{generic}();");
+                    sb.AppendLine($"return loadOrder.ToImmutableLinkCache{generic}();");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
-                using (var comment = new CommentWrapper(fg))
+                using (var comment = new CommentWrapper(sb))
                 {
                     comment.Summary.AppendLine($"Creates a new linking package relative to a load order.<br/>");
                     comment.Summary.AppendLine($"Will resolve links to the highest overriding mod containing the record being sought. <br/>");
@@ -95,18 +95,18 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Parameters.GetOrAdd("loadOrder").AppendLine("LoadOrder to construct the package relative to");
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static ImmutableLoadOrderLinkCache{generic} ToImmutableLinkCache"))
                 {
                     args.Add($"this ILoadOrderGetter<IModListingGetter<{getterName}>> loadOrder");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return loadOrder.ToImmutableLinkCache{generic}();");
+                    sb.AppendLine($"return loadOrder.ToImmutableLinkCache{generic}();");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
-                using (var comment = new CommentWrapper(fg))
+                using (var comment = new CommentWrapper(sb))
                 {
                     comment.Summary.AppendLine($"Creates a new linking package relative to a load order.<br/>");
                     comment.Summary.AppendLine($"Will resolve links to the highest overriding mod containing the record being sought. <br/>");
@@ -115,18 +115,18 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Parameters.GetOrAdd("loadOrder").AppendLine("LoadOrder to construct the package relative to");
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static ImmutableLoadOrderLinkCache{generic} ToImmutableLinkCache"))
                 {
                     args.Add($"this IEnumerable<IModListingGetter<{getterName}>> loadOrder");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return loadOrder.ToImmutableLinkCache{generic}();");
+                    sb.AppendLine($"return loadOrder.ToImmutableLinkCache{generic}();");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
-                using (var comment = new CommentWrapper(fg))
+                using (var comment = new CommentWrapper(sb))
                 {
                     comment.Summary.AppendLine($"Creates a new linking package relative to a load order.<br/>");
                     comment.Summary.AppendLine($"Will resolve links to the highest overriding mod containing the record being sought. <br/>");
@@ -135,18 +135,18 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Parameters.GetOrAdd("loadOrder").AppendLine("LoadOrder to construct the package relative to");
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static ImmutableLoadOrderLinkCache{generic} ToImmutableLinkCache"))
                 {
                     args.Add($"this IEnumerable<{getterName}> loadOrder");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return loadOrder.ToImmutableLinkCache{generic}();");
+                    sb.AppendLine($"return loadOrder.ToImmutableLinkCache{generic}();");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
-                using (var comment = new CommentWrapper(fg))
+                using (var comment = new CommentWrapper(sb))
                 {
                     comment.Summary.AppendLine($"Creates a mutable load order link cache by combining an existing immutable load order cache,");
                     comment.Summary.AppendLine($"plus a set of mods to be put at the end of the load order and allow to be mutable.");
@@ -154,19 +154,19 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Parameters.GetOrAdd("mutableMods").AppendLine("Set of mods to place at the end of the load order, which are allowed to be modified afterwards");
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static MutableLoadOrderLinkCache{generic} ToMutableLinkCache"))
                 {
                     args.Add($"this ILoadOrderGetter<{getterName}> immutableBaseCache");
                     args.Add($"params {setterName}[] mutableMods");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return immutableBaseCache.ToMutableLinkCache{generic}(mutableMods);");
+                    sb.AppendLine($"return immutableBaseCache.ToMutableLinkCache{generic}(mutableMods);");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
-                using (var comment = new CommentWrapper(fg))
+                using (var comment = new CommentWrapper(sb))
                 {
                     comment.Summary.AppendLine($"Creates a mutable load order link cache by combining an existing immutable load order cache,");
                     comment.Summary.AppendLine($"plus a set of mods to be put at the end of the load order and allow to be mutable.");
@@ -174,19 +174,19 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Parameters.GetOrAdd("mutableMods").AppendLine("Set of mods to place at the end of the load order, which are allowed to be modified afterwards");
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static MutableLoadOrderLinkCache{generic} ToMutableLinkCache"))
                 {
                     args.Add($"this ILoadOrderGetter<IModListingGetter<{getterName}>> immutableBaseCache");
                     args.Add($"params {setterName}[] mutableMods");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return immutableBaseCache.ToMutableLinkCache{generic}(mutableMods);");
+                    sb.AppendLine($"return immutableBaseCache.ToMutableLinkCache{generic}(mutableMods);");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
-                using (var comment = new CommentWrapper(fg))
+                using (var comment = new CommentWrapper(sb))
                 {
                     comment.Summary.AppendLine($"Creates a mutable load order link cache by combining an existing immutable load order cache,");
                     comment.Summary.AppendLine($"plus a set of mods to be put at the end of the load order and allow to be mutable.");
@@ -194,22 +194,22 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Parameters.GetOrAdd("mutableMods").AppendLine("Set of mods to place at the end of the load order, which are allowed to be modified afterwards");
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
-                using (var args = new FunctionWrapper(fg,
+                using (var args = new FunctionWrapper(sb,
                            $"public static MutableLoadOrderLinkCache{generic} ToMutableLinkCache"))
                 {
                     args.Add($"this IEnumerable<{getterName}> immutableBaseCache");
                     args.Add($"params {setterName}[] mutableMods");
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    fg.AppendLine($"return immutableBaseCache.ToMutableLinkCache{generic}(mutableMods);");
+                    sb.AppendLine($"return immutableBaseCache.ToMutableLinkCache{generic}(mutableMods);");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
             }
         }
 
         var path = Path.Combine(proto.DefFileLocation.FullName, $"LinkCacheMixIns{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
-        fg.Generate(path);
+        sb.Generate(path);
         proto.GeneratedFiles.Add(path, ProjItemType.Compile);
     }
 }
