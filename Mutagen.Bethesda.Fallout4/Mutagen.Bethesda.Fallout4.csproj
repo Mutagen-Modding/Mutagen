@@ -1032,9 +1032,6 @@
     <Compile Include="Records\Major Records\MorphValue_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Weapon_Generated.cs">
-      <DependentUpon>Weapon.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ADamageType_Generated.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
@@ -1047,20 +1044,8 @@
     <Compile Include="Records\Major Records\Ammunition_Generated.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\IdleMarker_Generated.cs">
-      <DependentUpon>IdleMarker.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Key_Generated.cs">
-      <DependentUpon>Key.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ObjectModification_Generated.cs">
-      <DependentUpon>ObjectModification.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\APlacedTrap_Generated.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Projectile_Generated.cs">
-      <DependentUpon>Projectile.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptVariableProperty_Generated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
