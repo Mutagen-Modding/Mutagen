@@ -25,12 +25,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Noggog.WPF" Version="2.43.0" />
+    <PackageReference Include="Noggog.WPF" Version="2.43.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI.Fody" Version="18.0.4" />
+    <PackageReference Include="ReactiveUI.Fody" Version="18.0.10" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.3.0" />
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
   </ItemGroup>

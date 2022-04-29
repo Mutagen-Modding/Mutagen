@@ -36,7 +36,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Noggog.CSharpExt" Version="2.43.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.43.0.1-dev" />
   </ItemGroup>
 
 </Project>
