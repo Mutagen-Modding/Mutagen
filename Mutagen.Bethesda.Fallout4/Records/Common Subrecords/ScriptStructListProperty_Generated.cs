@@ -245,14 +245,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(ScriptStructListProperty.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.Structs?.Overall ?? true)
                         && Structs is {} StructsItem)
                     {
                         sb.AppendLine("Structs =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(StructsItem.Overall);
                             if (StructsItem.Specific != null)
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in StructsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -346,13 +346,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Structs =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(StructsItem.Overall);
                         if (StructsItem.Specific != null)
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in StructsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (ScriptStructListProperty) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -880,12 +880,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Structs =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Structs)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

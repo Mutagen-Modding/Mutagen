@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(Spell.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Keywords =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Effects =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(EffectsItem.Overall);
                             if (EffectsItem.Specific != null)
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in EffectsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -877,13 +877,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Keywords =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in KeywordsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Effects =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(EffectsItem.Overall);
                         if (EffectsItem.Specific != null)
@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in EffectsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1774,7 +1774,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (Spell) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1807,12 +1807,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Keywords =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1869,12 +1869,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Effects =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Effects)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

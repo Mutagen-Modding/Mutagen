@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Regions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(RegionsItem.Overall);
                             if (RegionsItem.Specific != null)
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in RegionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("NavigationMeshes =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(NavigationMeshesItem.Overall);
                             if (NavigationMeshesItem.Specific != null)
@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in NavigationMeshesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Persistent =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PersistentItem.Overall);
                             if (PersistentItem.Specific != null)
@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in PersistentItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Temporary =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TemporaryItem.Overall);
                             if (TemporaryItem.Specific != null)
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in TemporaryItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1629,13 +1629,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -1676,7 +1676,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Regions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(RegionsItem.Overall);
                         if (RegionsItem.Specific != null)
@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in RegionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("NavigationMeshes =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(NavigationMeshesItem.Overall);
                         if (NavigationMeshesItem.Specific != null)
@@ -1744,7 +1744,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in NavigationMeshesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Persistent =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PersistentItem.Overall);
                         if (PersistentItem.Specific != null)
@@ -1778,7 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in PersistentItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Temporary =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TemporaryItem.Overall);
                         if (TemporaryItem.Specific != null)
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in TemporaryItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -3229,7 +3229,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (Cell) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -3301,12 +3301,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Regions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in RegionsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -3381,12 +3381,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("NavigationMeshes =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.NavigationMeshes)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3415,12 +3415,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Persistent =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Persistent)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3441,12 +3441,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Temporary =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Temporary)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

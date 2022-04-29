@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(MagicEffectEnhanceWeaponArchetype.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                 }
                 sb.AppendLine("]");
@@ -241,13 +241,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (MagicEffectEnhanceWeaponArchetype) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,

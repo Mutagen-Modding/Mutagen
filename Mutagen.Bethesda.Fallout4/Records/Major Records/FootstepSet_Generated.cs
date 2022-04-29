@@ -460,14 +460,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(FootstepSet.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.WalkForwardFootsteps?.Overall ?? true)
                         && WalkForwardFootsteps is {} WalkForwardFootstepsItem)
                     {
                         sb.AppendLine("WalkForwardFootsteps =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(WalkForwardFootstepsItem.Overall);
                             if (WalkForwardFootstepsItem.Specific != null)
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in WalkForwardFootstepsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("RunForwardFootsteps =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(RunForwardFootstepsItem.Overall);
                             if (RunForwardFootstepsItem.Specific != null)
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in RunForwardFootstepsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("WalkForwardAlternateFootsteps =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(WalkForwardAlternateFootstepsItem.Overall);
                             if (WalkForwardAlternateFootstepsItem.Specific != null)
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in WalkForwardAlternateFootstepsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("RunForwardAlternateFootsteps =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(RunForwardAlternateFootstepsItem.Overall);
                             if (RunForwardAlternateFootstepsItem.Specific != null)
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in RunForwardAlternateFootstepsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("WalkForwardAlternateFootsteps2 =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(WalkForwardAlternateFootsteps2Item.Overall);
                             if (WalkForwardAlternateFootsteps2Item.Specific != null)
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in WalkForwardAlternateFootsteps2Item.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -703,13 +703,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("WalkForwardFootsteps =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(WalkForwardFootstepsItem.Overall);
                         if (WalkForwardFootstepsItem.Specific != null)
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in WalkForwardFootstepsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("RunForwardFootsteps =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(RunForwardFootstepsItem.Overall);
                         if (RunForwardFootstepsItem.Specific != null)
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in RunForwardFootstepsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("WalkForwardAlternateFootsteps =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(WalkForwardAlternateFootstepsItem.Overall);
                         if (WalkForwardAlternateFootstepsItem.Specific != null)
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in WalkForwardAlternateFootstepsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("RunForwardAlternateFootsteps =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(RunForwardAlternateFootstepsItem.Overall);
                         if (RunForwardAlternateFootstepsItem.Specific != null)
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in RunForwardAlternateFootstepsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("WalkForwardAlternateFootsteps2 =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(WalkForwardAlternateFootsteps2Item.Overall);
                         if (WalkForwardAlternateFootsteps2Item.Specific != null)
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in WalkForwardAlternateFootsteps2Item.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1488,7 +1488,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (FootstepSet) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1511,12 +1511,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("WalkForwardFootsteps =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.WalkForwardFootsteps)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1529,12 +1529,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("RunForwardFootsteps =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.RunForwardFootsteps)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1547,12 +1547,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("WalkForwardAlternateFootsteps =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.WalkForwardAlternateFootsteps)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1565,12 +1565,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("RunForwardAlternateFootsteps =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.RunForwardAlternateFootsteps)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1583,12 +1583,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("WalkForwardAlternateFootsteps2 =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.WalkForwardAlternateFootsteps2)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

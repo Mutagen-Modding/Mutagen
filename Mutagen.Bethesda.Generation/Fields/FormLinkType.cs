@@ -137,7 +137,7 @@ public class FormLinkType : ClassType
         {
             if (this.Nullable)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{identifier}.Unset"))
                 {
                 }

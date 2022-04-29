@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(NavigationMapInfo.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.NavigationMesh ?? true)
                     {
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("MergedTo =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(MergedToItem.Overall);
                             if (MergedToItem.Specific != null)
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in MergedToItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("PreferredMerges =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PreferredMergesItem.Overall);
                             if (PreferredMergesItem.Specific != null)
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in PreferredMergesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("LinkedDoors =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LinkedDoorsItem.Overall);
                             if (LinkedDoorsItem.Specific != null)
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in LinkedDoorsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -797,13 +797,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("MergedTo =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(MergedToItem.Overall);
                         if (MergedToItem.Specific != null)
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in MergedToItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("PreferredMerges =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PreferredMergesItem.Overall);
                         if (PreferredMergesItem.Specific != null)
@@ -863,7 +863,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in PreferredMergesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("LinkedDoors =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LinkedDoorsItem.Overall);
                         if (LinkedDoorsItem.Specific != null)
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in LinkedDoorsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1531,7 +1531,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (NavigationMapInfo) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1566,12 +1566,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("MergedTo =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.MergedTo)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1584,12 +1584,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("PreferredMerges =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.PreferredMerges)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1602,12 +1602,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("LinkedDoors =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.LinkedDoors)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

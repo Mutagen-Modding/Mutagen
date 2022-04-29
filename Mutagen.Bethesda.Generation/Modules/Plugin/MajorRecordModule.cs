@@ -27,7 +27,7 @@ public class MajorRecordModule : GenerationModule
     {
         await base.GenerateInClass(obj, sb);
         if (!await obj.IsMajorRecord()) return;
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public {obj.Name}"))
         {
             args.Add($"{nameof(FormKey)} formKey");
@@ -48,7 +48,7 @@ public class MajorRecordModule : GenerationModule
         sb.AppendLine();
 
         // Used for reflection based construction
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"private {obj.Name}"))
         {
             args.Add($"{nameof(FormKey)} formKey");
@@ -67,7 +67,7 @@ public class MajorRecordModule : GenerationModule
 
         if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"internal {obj.Name}"))
             {
                 args.Add($"{nameof(FormKey)} formKey");
@@ -83,9 +83,9 @@ public class MajorRecordModule : GenerationModule
         }
 
         sb.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod)");
-        using (new DepthWrapper(sb))
+        using (sb.IncreaseDepth())
         {
-            using (var args = new FunctionWrapper(sb, ": this"))
+            using (var args = sb.Function(": this"))
             {
                 args.Add($"mod.{nameof(IMod.GetNextFormKey)}()");
                 if (obj.GetObjectData().HasMultipleReleases)
@@ -100,9 +100,9 @@ public class MajorRecordModule : GenerationModule
         sb.AppendLine();
 
         sb.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod, string editorID)");
-        using (new DepthWrapper(sb))
+        using (sb.IncreaseDepth())
         {
-            using (var args = new FunctionWrapper(sb, ": this"))
+            using (var args = sb.Function(": this"))
             {
                 args.Add($"mod.{nameof(IMod.GetNextFormKey)}(editorID)");
                 if (obj.GetObjectData().HasMultipleReleases)

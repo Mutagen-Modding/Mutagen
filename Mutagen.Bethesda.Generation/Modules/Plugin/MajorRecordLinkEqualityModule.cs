@@ -20,7 +20,7 @@ public class MajorRecordLinkEqualityModule : GenerationModule
     public static async Task Generate(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (!(await obj.IsMajorRecord())) return;
-        using (new RegionWrapper(sb, "Equals and Hash"))
+        using (sb.Region("Equals and Hash"))
         {
             sb.AppendLine("public override bool Equals(object? obj)");
             using (sb.CurlyBrace())

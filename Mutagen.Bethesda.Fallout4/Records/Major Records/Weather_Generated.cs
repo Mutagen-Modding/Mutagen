@@ -1869,14 +1869,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(Weather.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.CloudTextures?.Overall ?? true)
                         && CloudTextures is {} CloudTexturesItem)
                     {
                         sb.AppendLine("CloudTextures =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(CloudTexturesItem.Overall);
                             if (CloudTexturesItem.Specific != null)
@@ -1884,7 +1884,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in CloudTexturesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Clouds =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(CloudsItem.Overall);
                             if (CloudsItem.Specific != null)
@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in CloudsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("NAM4 =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(NAM4Item.Overall);
                             if (NAM4Item.Specific != null)
@@ -2024,7 +2024,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in NAM4Item.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -2181,7 +2181,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Sounds =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(SoundsItem.Overall);
                             if (SoundsItem.Specific != null)
@@ -2189,7 +2189,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in SoundsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -2204,7 +2204,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("SkyStatics =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(SkyStaticsItem.Overall);
                             if (SkyStaticsItem.Specific != null)
@@ -2212,7 +2212,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in SkyStaticsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -3186,13 +3186,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -3209,7 +3209,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("CloudTextures =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(CloudTexturesItem.Overall);
                         if (CloudTexturesItem.Specific != null)
@@ -3217,7 +3217,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in CloudTexturesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -3245,7 +3245,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Clouds =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(CloudsItem.Overall);
                         if (CloudsItem.Specific != null)
@@ -3253,7 +3253,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in CloudsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -3286,7 +3286,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("NAM4 =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(NAM4Item.Overall);
                         if (NAM4Item.Specific != null)
@@ -3294,7 +3294,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in NAM4Item.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -3415,7 +3415,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Sounds =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(SoundsItem.Overall);
                         if (SoundsItem.Specific != null)
@@ -3423,7 +3423,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in SoundsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -3437,7 +3437,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("SkyStatics =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(SkyStaticsItem.Overall);
                         if (SkyStaticsItem.Specific != null)
@@ -3445,7 +3445,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in SkyStaticsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -4894,7 +4894,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (Weather) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -4917,12 +4917,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("CloudTextures =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.CloudTextures)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }
@@ -4953,12 +4953,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Clouds =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Clouds)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -5048,12 +5048,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("NAM4 =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in NAM4Item)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }
@@ -5206,12 +5206,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Sounds =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Sounds)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -5224,12 +5224,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("SkyStatics =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.SkyStatics)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

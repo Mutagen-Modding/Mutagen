@@ -352,7 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(Faction.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Relations =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(RelationsItem.Overall);
                             if (RelationsItem.Specific != null)
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in RelationsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Ranks =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(RanksItem.Overall);
                             if (RanksItem.Specific != null)
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in RanksItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -528,13 +528,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Relations =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(RelationsItem.Overall);
                         if (RelationsItem.Specific != null)
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in RelationsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Ranks =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(RanksItem.Overall);
                         if (RanksItem.Specific != null)
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in RanksItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (Faction) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1269,12 +1269,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Relations =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Relations)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1297,12 +1297,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Ranks =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Ranks)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

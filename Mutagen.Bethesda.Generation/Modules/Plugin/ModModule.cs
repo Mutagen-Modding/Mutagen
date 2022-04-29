@@ -104,7 +104,7 @@ public class ModModule : GenerationModule
         sb.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
         sb.AppendLine($"uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;");
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public {obj.Name}"))
         {
             args.Add($"{nameof(ModKey)} modKey");
@@ -113,7 +113,7 @@ public class ModModule : GenerationModule
                 args.Add($"{ReleaseEnumName(obj)} release");
             }
         }
-        using (new DepthWrapper(sb))
+        using (sb.IncreaseDepth())
         {
             sb.AppendLine(": base(modKey)");
         }
@@ -128,7 +128,7 @@ public class ModModule : GenerationModule
             sb.AppendLine($"CustomCtor();");
         }
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    "public void AddRecords"))
         {
             args.Add($"{obj.Name} rhsMod");
@@ -160,7 +160,7 @@ public class ModModule : GenerationModule
         }
         sb.AppendLine();
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    "public override void SyncRecordCount"))
         {
         }
@@ -170,7 +170,7 @@ public class ModModule : GenerationModule
         }
         sb.AppendLine();
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    "public uint GetRecordCount"))
         {
         }
@@ -220,7 +220,7 @@ public class ModModule : GenerationModule
     public override async Task GenerateInVoid(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         if (obj.GetObjectType() != ObjectType.Mod) return;
-        using (new NamespaceWrapper(sb, obj.Namespace, fileScoped: false))
+        using (sb.Namespace(obj.Namespace, fileScoped: false))
         {
             var objData = obj.GetObjectData();
             sb.AppendLine("public class GroupMask");
@@ -261,14 +261,14 @@ public class ModModule : GenerationModule
 
             if (objData.GameReleaseOptions != null)
             {
-                using (var comment = new CommentWrapper(sb))
+                using (var comment = sb.Comment())
                 {
                     comment.Summary.AppendLine($"Different game release versions a {ModName(obj)} mod can have");
                 }
                 sb.AppendLine($"public enum {ReleaseEnumName(obj)}");
                 using (sb.CurlyBrace())
                 {
-                    using (var comma = new CommaWrapper(sb))
+                    using (var comma = sb.CommaCollection())
                     {
                         foreach (var opt in objData.GameReleaseOptions)
                         {
@@ -278,13 +278,13 @@ public class ModModule : GenerationModule
                 }
                 sb.AppendLine();
 
-                using (var c = new ClassWrapper(sb, $"{ReleaseEnumName(obj)}Ext"))
+                using (var c = sb.Class($"{ReleaseEnumName(obj)}Ext"))
                 {
                     c.Static = true;
                 }
                 using (sb.CurlyBrace())
                 {
-                    using (var args = new FunctionWrapper(sb,
+                    using (var args = sb.Function(
                                $"public static {nameof(GameRelease)} ToGameRelease"))
                     {
                         args.Add($"this {ReleaseEnumName(obj)} release");
@@ -294,7 +294,7 @@ public class ModModule : GenerationModule
                         sb.AppendLine("return release switch");
                         using (sb.CurlyBrace(appendSemiColon: true))
                         {
-                            using (var comma = new CommaWrapper(sb))
+                            using (var comma = sb.CommaCollection())
                             {
                                 foreach (var item in objData.GameReleaseOptions)
                                 {
@@ -306,7 +306,7 @@ public class ModModule : GenerationModule
                     }
                     sb.AppendLine();
 
-                    using (var args = new FunctionWrapper(sb,
+                    using (var args = sb.Function(
                                $"public static {ReleaseEnumName(obj)} To{ReleaseEnumName(obj)}"))
                     {
                         args.Add($"this {nameof(GameRelease)} release");
@@ -316,7 +316,7 @@ public class ModModule : GenerationModule
                         sb.AppendLine("return release switch");
                         using (sb.CurlyBrace(appendSemiColon: true))
                         {
-                            using (var comma = new CommaWrapper(sb))
+                            using (var comma = sb.CommaCollection())
                             {
                                 foreach (var item in objData.GameReleaseOptions)
                                 {
@@ -335,9 +335,9 @@ public class ModModule : GenerationModule
 
     public void GenerateModGameCategoryRegistration(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        using (var ns = new NamespaceWrapper(sb, obj.ProtoGen.DefaultNamespace, fileScoped: false))
+        using (var ns = sb.Namespace(obj.ProtoGen.DefaultNamespace, fileScoped: false))
         {
-            using (var c = new ClassWrapper(sb, $"{obj.Name}_Registration"))
+            using (var c = sb.Class($"{obj.Name}_Registration"))
             {
                 c.Public = PermissionLevel.@internal;
                 c.Partial = true;
@@ -367,7 +367,7 @@ public class ModModule : GenerationModule
         }
 
         if (obj.GetObjectType() != ObjectType.Mod) return;
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IGroupGetter<T> {nameof(IModGetter.GetTopLevelGroup)}<T>"))
         {
             args.Wheres.Add($"where T : {nameof(IMajorRecordGetter)}");
@@ -375,7 +375,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return (IGroupGetter<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
@@ -384,7 +384,7 @@ public class ModModule : GenerationModule
         }
         sb.AppendLine();
             
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IGroupGetter {nameof(IModGetter.GetTopLevelGroup)}"))
         {
             args.Add($"this {obj.Interface(getter: true)} obj");
@@ -392,7 +392,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return (IGroupGetter){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
@@ -401,7 +401,7 @@ public class ModModule : GenerationModule
         }
         sb.AppendLine();
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IGroup<T> {nameof(IMod.GetTopLevelGroup)}<T>"))
         {
             args.Wheres.Add($"where T : {nameof(IMajorRecord)}");
@@ -409,7 +409,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return (IGroup<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
@@ -418,7 +418,7 @@ public class ModModule : GenerationModule
         }
         sb.AppendLine();
             
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IGroup {nameof(IModGetter.GetTopLevelGroup)}"))
         {
             args.Add($"this {obj.Interface(getter: false)} obj");
@@ -426,7 +426,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return (IGroup){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
@@ -435,7 +435,7 @@ public class ModModule : GenerationModule
         }
         sb.AppendLine();
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static void WriteToBinaryParallel"))
         {
             args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
@@ -445,7 +445,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
             {
                 args.AddPassArg("item");
@@ -457,7 +457,7 @@ public class ModModule : GenerationModule
         }
         sb.AppendLine();
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static void WriteToBinaryParallel"))
         {
             args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
@@ -470,7 +470,7 @@ public class ModModule : GenerationModule
         {
             sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
             sb.AppendLine($"parallelParam ??= {nameof(ParallelWriteParameters)}.{nameof(ParallelWriteParameters.Default)};");
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
             {
                 args.Add("mod: item");
@@ -484,7 +484,7 @@ public class ModModule : GenerationModule
             sb.AppendLine("using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))");
             using (sb.CurlyBrace())
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
                 {
                     args.AddPassArg("item");
@@ -518,7 +518,7 @@ public class ModModule : GenerationModule
 
     private void GenerateGetGroup(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    "public object GetGroup"))
         {
             args.Add($"{obj.Interface(getter: true)} obj");
@@ -548,7 +548,7 @@ public class ModModule : GenerationModule
                     {
                         sb.AppendLine($"case \"{subObj.Interface(getter: false, internalInterface: true)}\":");
                     }
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                         {
@@ -561,7 +561,7 @@ public class ModModule : GenerationModule
                     }
                 }
                 sb.AppendLine("default:");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     sb.AppendLine("throw new ArgumentException($\"Unknown major record type: {type}\");");
                 }
@@ -575,7 +575,7 @@ public class ModModule : GenerationModule
         LoquiType groupInstance = null;
         LoquiType listGroupInstance = null;
         var objData = obj.GetObjectData();
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    "public static void WriteParallel"))
         {
             args.Add($"{obj.Interface(getter: true, internalInterface: false)} item");
@@ -604,7 +604,7 @@ public class ModModule : GenerationModule
             }
 
             sb.AppendLine($"var writer = new MutagenWriter(stream, bundle);");
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
             {
                 args.AddPassArg("param");
@@ -647,7 +647,7 @@ public class ModModule : GenerationModule
                 i++;
             }
             sb.AppendLine("Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());");
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.CompileStreamsInto)}"))
             {
                 args.Add("outputStreams.NotNull()");
@@ -658,7 +658,7 @@ public class ModModule : GenerationModule
 
         if (groupInstance != null)
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public static void WriteGroupParallel<T>"))
             {
                 args.Add($"I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T> group");

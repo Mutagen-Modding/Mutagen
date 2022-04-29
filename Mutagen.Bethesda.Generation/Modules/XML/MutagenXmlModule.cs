@@ -14,7 +14,7 @@ public class MutagenXmlModule : XmlTranslationModule
 
     public override void GenerateWriteToNode(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static void WriteToNode{ModuleNickname}{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
@@ -27,7 +27,7 @@ public class MutagenXmlModule : XmlTranslationModule
         {
             if (obj.HasLoquiBaseObject)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{this.TranslationWriteClass(obj.BaseClass)}.WriteToNode{ModuleNickname}"))
                 {
                     args.Add($"item: item");
@@ -52,7 +52,7 @@ public class MutagenXmlModule : XmlTranslationModule
                 }
                 if (conditions.Count > 0)
                 {
-                    using (var args = new IfWrapper(sb, ANDs: true))
+                    using (var args = sb.If(ANDs: true))
                     {
                         foreach (var item in conditions)
                         {
@@ -185,7 +185,7 @@ public class MutagenXmlModule : XmlTranslationModule
     {
         if (obj.IterateFields(includeBaseClass: true).Any(f => f.ReadOnly))
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"protected static void FillPrivateElement{ModuleNickname}"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
@@ -207,7 +207,7 @@ public class MutagenXmlModule : XmlTranslationModule
                             if (set.Nullable)
                             {
                                 sb.AppendLine($"case \"Has{set.EnumName}\":");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     sb.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
                                     sb.AppendLine("break;");
@@ -223,7 +223,7 @@ public class MutagenXmlModule : XmlTranslationModule
                                     throw new ArgumentException("Unsupported type generator: " + subField.Field);
                                 }
                                 sb.AppendLine($"case \"{subField.Field.Name}\":");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     if (generator.ShouldGenerateCopyIn(subField.Field))
                                     {
@@ -251,7 +251,7 @@ public class MutagenXmlModule : XmlTranslationModule
                             }
 
                             sb.AppendLine($"case \"{field.Name}\":");
-                            using (new DepthWrapper(sb))
+                            using (sb.IncreaseDepth())
                             {
                                 if (generator.ShouldGenerateCopyIn(field))
                                 {
@@ -270,11 +270,11 @@ public class MutagenXmlModule : XmlTranslationModule
                     }
 
                     sb.AppendLine("default:");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         if (obj.HasLoquiBaseObject)
                         {
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.FillPrivateElement{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
                             {
                                 args.Add("item: item");
@@ -297,7 +297,7 @@ public class MutagenXmlModule : XmlTranslationModule
 
     protected override void FillPublicElement(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static void FillPublicElement{ModuleNickname}"))
         {
             args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
@@ -327,7 +327,7 @@ public class MutagenXmlModule : XmlTranslationModule
                             }
 
                             sb.AppendLine($"case \"{subField.Field.Name}\":");
-                            using (new DepthWrapper(sb))
+                            using (sb.IncreaseDepth())
                             {
                                 if (generator.ShouldGenerateCopyIn(subField.Field))
                                 {
@@ -355,7 +355,7 @@ public class MutagenXmlModule : XmlTranslationModule
                         }
 
                         sb.AppendLine($"case \"{field.Name}\":");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             if (generator.ShouldGenerateCopyIn(field))
                             {
@@ -374,11 +374,11 @@ public class MutagenXmlModule : XmlTranslationModule
                 }
 
                 sb.AppendLine("default:");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (obj.HasLoquiBaseObject)
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"{this.TranslationCreateClass(obj.BaseClass)}.FillPublicElement{ModuleNickname}"))
                         {
                             args.Add("item: item");

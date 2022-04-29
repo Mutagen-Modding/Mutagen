@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine($"{nameof(PexFile.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.MajorVersion ?? true)
                     {
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Pex
                     {
                         sb.AppendLine("Objects =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ObjectsItem.Overall);
                             if (ObjectsItem.Specific != null)
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Pex
                                 foreach (var subItem in ObjectsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Pex
                     {
                         sb.AppendLine("UserFlags =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(UserFlagsItem.Overall);
                             if (UserFlagsItem.Specific != null)
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Pex
                                 foreach (var subItem in UserFlagsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -639,13 +639,13 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Pex
                 {
                     sb.AppendLine("Objects =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ObjectsItem.Overall);
                         if (ObjectsItem.Specific != null)
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Pex
                             foreach (var subItem in ObjectsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Pex
                 {
                     sb.AppendLine("UserFlags =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(UserFlagsItem.Overall);
                         if (UserFlagsItem.Specific != null)
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Pex
                             foreach (var subItem in UserFlagsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Pex
                 sb.AppendLine($"{name} (PexFile) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1274,12 +1274,12 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine("Objects =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Objects)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1292,12 +1292,12 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine("UserFlags =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.UserFlags)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

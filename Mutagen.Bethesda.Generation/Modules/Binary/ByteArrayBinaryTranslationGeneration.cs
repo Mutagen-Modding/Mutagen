@@ -30,7 +30,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -114,7 +114,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             return;
         }
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Parse",
                    suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
         {
@@ -145,7 +145,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         Accessor dataAccessor,
         int? currentPosition,
         string passedLengthAccessor,
-        DataType dataType = null)
+        DataType? dataType = null)
     {
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
         switch (data.BinaryOverlayFallback)
@@ -177,7 +177,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             if (data.OverflowRecordType.HasValue)
             {
                 sb.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.ReadByteArrayWithOverflow)}"))
                 {
                     args.Add(dataAccessor.ToString());

@@ -239,14 +239,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(RegionGrasses.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.Grasses?.Overall ?? true)
                         && Grasses is {} GrassesItem)
                     {
                         sb.AppendLine("Grasses =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(GrassesItem.Overall);
                             if (GrassesItem.Specific != null)
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in GrassesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -342,13 +342,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Grasses =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(GrassesItem.Overall);
                         if (GrassesItem.Specific != null)
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in GrassesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (RegionGrasses) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -896,12 +896,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Grasses =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in GrassesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

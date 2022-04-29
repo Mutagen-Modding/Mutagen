@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(StaticPart.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Static ?? true)
                     {
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Placements =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PlacementsItem.Overall);
                             if (PlacementsItem.Specific != null)
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in PlacementsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -377,13 +377,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Placements =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PlacementsItem.Overall);
                         if (PlacementsItem.Specific != null)
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in PlacementsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (StaticPart) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -959,12 +959,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Placements =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in PlacementsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

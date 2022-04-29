@@ -245,14 +245,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(Model.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.AlternateTextures?.Overall ?? true)
                         && AlternateTextures is {} AlternateTexturesItem)
                     {
                         sb.AppendLine("AlternateTextures =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(AlternateTexturesItem.Overall);
                             if (AlternateTexturesItem.Specific != null)
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in AlternateTexturesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -346,13 +346,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("AlternateTextures =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(AlternateTexturesItem.Overall);
                         if (AlternateTexturesItem.Specific != null)
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in AlternateTexturesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (Model) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -898,12 +898,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("AlternateTextures =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in AlternateTexturesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

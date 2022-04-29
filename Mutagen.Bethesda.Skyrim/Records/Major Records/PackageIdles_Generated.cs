@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(PackageIdles.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Type ?? true)
                     {
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Animations =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(AnimationsItem.Overall);
                             if (AnimationsItem.Specific != null)
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in AnimationsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -394,13 +394,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Animations =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(AnimationsItem.Overall);
                         if (AnimationsItem.Specific != null)
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in AnimationsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -971,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (PackageIdles) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -998,12 +998,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Animations =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Animations)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

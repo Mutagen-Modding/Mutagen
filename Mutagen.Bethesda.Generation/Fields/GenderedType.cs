@@ -82,7 +82,7 @@ public class GenderedType : WrapperType
         }
         using (sb.CurlyBrace(doIt: this.Nullable))
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>"))
             {
                 if (this.isLoquiSingle)
@@ -133,7 +133,7 @@ public class GenderedType : WrapperType
 
         if (this.Nullable || loqui != null)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"ret.{this.Name} = {nameof(GenderedItem)}.{nameof(GenderedItem.EqualityMaskHelper)}"))
             {
                 args.Add($"lhs: {accessor}");
@@ -158,7 +158,7 @@ public class GenderedType : WrapperType
         }
         else
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"ret.{this.Name} = new GenderedItem<bool>"))
             {
                 args.Add($"male: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Male", $"{rhsAccessor}.Male")}");

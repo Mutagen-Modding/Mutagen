@@ -221,14 +221,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(NavmeshGridArray.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.GridCell?.Overall ?? true)
                         && GridCell is {} GridCellItem)
                     {
                         sb.AppendLine("GridCell =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(GridCellItem.Overall);
                             if (GridCellItem.Specific != null)
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in GridCellItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -335,13 +335,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("GridCell =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(GridCellItem.Overall);
                         if (GridCellItem.Specific != null)
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in GridCellItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (NavmeshGridArray) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -886,12 +886,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("GridCell =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.GridCell)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

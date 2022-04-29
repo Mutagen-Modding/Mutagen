@@ -18,7 +18,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
         Accessor translationMaskAccessor)
     {
         var data = typeGen.GetFieldData();
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"SpecialParse_{typeGen.Name}"))
         {
             args.AddPassArg("item");
@@ -54,7 +54,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{objGen.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.SpecialWrite_{typeGen.Name}_Internal"))
         {
             args.AddPassArg("item");
@@ -79,7 +79,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
         Accessor packageAccessor, 
         Accessor converterAccessor)
     {
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{typeGen.Name}SpecialParse"))
         {
             args.AddPassArg("stream");

@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             {
                 sb.AppendLine($"{nameof(MasterReference.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Master ?? true)
                     {
@@ -301,13 +301,13 @@ namespace Mutagen.Bethesda.Plugins.Records
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 sb.AppendLine($"{name} (MasterReference) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,

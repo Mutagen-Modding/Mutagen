@@ -78,7 +78,7 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         var floatType = typeGen as FloatType;
         if (floatType.IntegerType.HasValue)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{item} = {GetTranslatorInstance(typeGen, getter: true)}.Parse"))
             {
                 args.Add($"reader: {reader}");
@@ -99,7 +99,7 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         var data = floatType.GetFieldData();
         if (floatType.IntegerType.HasValue)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{GetTranslatorInstance(typeGen, getter: true)}.Write"))
             {
                 args.Add($"writer: {writer}");

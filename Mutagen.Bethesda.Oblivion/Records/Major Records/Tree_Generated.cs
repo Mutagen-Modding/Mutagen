@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(Tree.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("SpeedTreeSeeds =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(SpeedTreeSeedsItem.Overall);
                             if (SpeedTreeSeedsItem.Specific != null)
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in SpeedTreeSeedsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -498,13 +498,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("SpeedTreeSeeds =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(SpeedTreeSeedsItem.Overall);
                         if (SpeedTreeSeedsItem.Specific != null)
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in SpeedTreeSeedsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (Tree) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1218,12 +1218,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("SpeedTreeSeeds =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in SpeedTreeSeedsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

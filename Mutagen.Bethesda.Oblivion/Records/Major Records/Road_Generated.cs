@@ -236,14 +236,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(Road.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.Points?.Overall ?? true)
                         && Points is {} PointsItem)
                     {
                         sb.AppendLine("Points =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PointsItem.Overall);
                             if (PointsItem.Specific != null)
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in PointsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -337,13 +337,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Points =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PointsItem.Overall);
                         if (PointsItem.Specific != null)
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in PointsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (Road) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -979,12 +979,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Points =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in PointsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

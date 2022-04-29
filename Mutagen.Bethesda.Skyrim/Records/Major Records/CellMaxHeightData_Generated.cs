@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(CellMaxHeightData.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Offset ?? true)
                     {
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("HeightMap =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(HeightMapItem.Overall);
                             if (HeightMapItem.Specific != null)
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in HeightMapItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -367,13 +367,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("HeightMap =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(HeightMapItem.Overall);
                         if (HeightMapItem.Specific != null)
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in HeightMapItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (CellMaxHeightData) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -945,12 +945,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("HeightMap =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.HeightMap)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

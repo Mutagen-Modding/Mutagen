@@ -298,7 +298,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             gameReleaseStr = $"item.{ModModule.ReleaseEnumName(obj)}.ToGameRelease()";
         }
         sb.AppendLine("var modKey = item.ModKey;");
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"using (var writer = new MutagenWriter",
                    suffixLine: ")",
                    semiColon: false))
@@ -358,7 +358,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
 
         sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
         {
             args.Add("mod: item");
@@ -370,7 +370,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             sb.AppendLine("bool disposeStrings = param.StringsWriter != null;");
         }
         sb.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
-        using (var prop = new PropertyCtorWrapper(sb))
+        using (var prop = sb.PropertyCtor())
         {
             if (objData.UsesStringFiles)
             {
@@ -380,12 +380,10 @@ public class PluginTranslationModule : BinaryTranslationModule
             prop.Add($"{nameof(WritingBundle.TargetLanguageOverride)} = param.{nameof(BinaryWriteParameters.TargetLanguageOverride)}");
         }
         sb.AppendLine("using var memStream = new MemoryTributary();");
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"using (var writer = new MutagenWriter",
-                   suffixLine: ")")
-               {
-                   SemiColon = false
-               })
+                   suffixLine: ")",
+                   semiColon: false))
         {
             args.Add("memStream");
             args.Add("bundle");
@@ -470,7 +468,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         if (obj.GetObjectType() != ObjectType.Mod) return;
         var objData = obj.GetObjectData();
             
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
         {
             args.Add($"{nameof(ModPath)} path");
@@ -486,7 +484,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
             {
                 args.AddPassArg("path");
@@ -503,7 +501,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         sb.AppendLine();
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
         {
             args.Add($"{nameof(Stream)} stream");
@@ -515,7 +513,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
             {
                 string gameReleaseStr;
@@ -545,7 +543,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
         if (obj.GetObjectType() == ObjectType.Mod)
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public{obj.NewOverride()}static {await this.ObjectReturn(obj, maskReturn: false)} {CreateFromPrefix}{TranslationTerm}"))
             {
                 foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(obj,
@@ -562,7 +560,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 using (sb.CurlyBrace())
                 {
                     await GenerateNewSnippet(obj, sb);
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"{Loqui.Generation.Utility.Await(await AsyncImport(obj))}{obj.CommonClassInstance("ret", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.{CopyInFromPrefix}{TranslationTerm}"))
                     {
                         args.Add("item: ret");
@@ -665,7 +663,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
         {
             var async = HasAsyncStructs(obj, self: true);
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
@@ -675,7 +673,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"{Loqui.Generation.Utility.Await(async)}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}Structs"))
                     {
                         args.AddPassArg("item");
@@ -722,7 +720,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
         if (HasRecordTypeFields(obj))
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public static {Loqui.Generation.Utility.TaskWrap(nameof(ParseResult), HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
@@ -861,7 +859,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                 throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
                                             }
                                             sb.AppendLine($"case {count++}:");
-                                            using (new DepthWrapper(sb))
+                                            using (sb.IncreaseDepth())
                                             {
                                                 await GenerateLastParsedShortCircuit(
                                                     obj: obj,
@@ -893,7 +891,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             }
                                         }
                                         sb.AppendLine($"default:");
-                                        using (new DepthWrapper(sb))
+                                        using (sb.IncreaseDepth())
                                         {
                                             sb.AppendLine($"throw new NotImplementedException();");
                                         }
@@ -916,7 +914,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                     }
                     sb.AppendLine($"default:");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         bool first = true;
                         // Generic options 
@@ -934,7 +932,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                             if (generator.ShouldGenerateCopyIn(field.Field))
                             {
-                                using (var args = new IfWrapper(sb, ANDs: true, first: first))
+                                using (var args = sb.If(ANDs: true, first: first))
                                 {
                                     foreach (var trigger in fieldData.TriggeringRecordAccessors)
                                     {
@@ -953,7 +951,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         // Default case 
                         if (obj.GetObjectData().CustomRecordFallback)
                         {
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"return CustomRecordFallback"))
                             {
                                 args.AddPassArg($"item");
@@ -971,7 +969,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                         {
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}RecordTypes"))
                             {
                                 args.AddPassArg("item");
@@ -1036,7 +1034,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             if (field.GetFieldData().CustomVersion != null)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"static partial void {field.Name}CustomVersionParse"))
                 {
                     foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(
@@ -1183,7 +1181,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     nextRecAccessor: "nextRecordType",
                     toDo: async () =>
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"{field.Name}CustomVersionParse"))
                         {
                             args.AddPassArg($"item");
@@ -1227,7 +1225,7 @@ public class PluginTranslationModule : BinaryTranslationModule
     public override async Task GenerateInVoid(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         await base.GenerateInVoid(obj, sb);
-        using (new NamespaceWrapper(sb, obj.Namespace, fileScoped: false))
+        using (sb.Namespace(obj.Namespace, fileScoped: false))
         {
             await GenerateImportWrapper(obj, sb);
         }
@@ -1324,7 +1322,7 @@ public class PluginTranslationModule : BinaryTranslationModule
     {
         if (HasRecordTypeFields(obj))
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}{nameof(ParseResult)} FillRecordType"))
             {
                 args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? nameof(IBinaryReadStream) : nameof(OverlayStream))} stream");
@@ -1439,13 +1437,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             if (obj.GetObjectType() == ObjectType.Mod
                                                 && field.Field.Name == "ModHeader")
                                             {
-                                                using (var args = new ArgsWrapper(sb,
+                                                using (var args = sb.Args(
                                                            $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo"))
                                                 {
                                                     args.Add(subFg =>
                                                     {
                                                         subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
-                                                        using (new DepthWrapper(subFg))
+                                                        using (subFg.IncreaseDepth())
                                                         {
                                                             subFg.AppendLine($"master => new {nameof(MasterReference)}()");
                                                             using (subFg.CurlyBrace(appendParenthesis: true))
@@ -1473,7 +1471,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             }
                                             var doublesFieldData = doublesField.Field.GetFieldData();
                                             sb.AppendLine($"case {count++}:");
-                                            using (new DepthWrapper(sb))
+                                            using (sb.IncreaseDepth())
                                             {
                                                 await GenerateLastParsedShortCircuit(
                                                     obj: obj,
@@ -1500,13 +1498,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                         if (obj.GetObjectType() == ObjectType.Mod
                                                             && doublesField.Field.Name == "ModHeader")
                                                         {
-                                                            using (var args = new ArgsWrapper(sb,
+                                                            using (var args = sb.Args(
                                                                        $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo"))
                                                             {
                                                                 args.Add(subFg =>
                                                                 {
                                                                     subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
-                                                                    using (new DepthWrapper(subFg))
+                                                                    using (subFg.IncreaseDepth())
                                                                     {
                                                                         subFg.AppendLine($"master => new {nameof(MasterReference)}()");
                                                                         using (subFg.CurlyBrace(appendParenthesis: true))
@@ -1522,7 +1520,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             }
                                         }
                                         sb.AppendLine($"default:");
-                                        using (new DepthWrapper(sb))
+                                        using (sb.IncreaseDepth())
                                         {
                                             sb.AppendLine($"throw new NotImplementedException();");
                                         }
@@ -1546,11 +1544,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                     }
                     sb.AppendLine("default:");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         if (obj.GetObjectData().CustomRecordFallback)
                         {
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"return CustomRecordFallback"))
                             {
                                 args.AddPassArg("stream");
@@ -1566,7 +1564,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b)))
                         {
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        "return base.FillRecordType"))
                             {
                                 args.AddPassArg("stream");
@@ -1613,7 +1611,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         if (await obj.IsMajorRecord())
         {
             bool async = this.HasAsync(obj, self: true);
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{nameof(PluginUtilityTranslation)}.MajorRecordParse<{obj.Interface(getter: false, internalInterface: true)}>"))
             {
                 args.Add($"record: {accessor}");
@@ -1624,7 +1622,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (data.CustomBinaryEnd != CustomEnd.Off)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImport{(await this.AsyncImport(obj) ? null : "Public")}"))
                 {
                     args.AddPassArg(ReaderMemberName);
@@ -1650,7 +1648,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             }
                             else
                             {
-                                using (var args = new ArgsWrapper(sb,
+                                using (var args = sb.Args(
                                            $"{ReaderMemberName} = {ReaderMemberName}.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseSubrecord",
                                            suffixLine: ")"))
                                 {
@@ -1666,7 +1664,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         break;
                     case ObjectType.Record:
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"{ReaderMemberName} = {ReaderMemberName}.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseRecord",
                                    suffixLine: ")"))
                         {
@@ -1690,7 +1688,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             switch (objType)
             {
                 case ObjectType.Subrecord:
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"{utilityTranslation}.SubrecordParse",
                                suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                     {
@@ -1706,7 +1704,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     break;
                 case ObjectType.Record:
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"{utilityTranslation}.RecordParse",
                                suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                     {
@@ -1722,7 +1720,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     break;
                 case ObjectType.Group:
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"{utilityTranslation}.GroupParse",
                                suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                     {
@@ -1738,7 +1736,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     break;
                 case ObjectType.Mod:
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"{utilityTranslation}.ModParse",
                                suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                     {
@@ -1758,7 +1756,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             GenerateStructStateSubscriptions(obj, sb);
             if (data.CustomBinaryEnd != CustomEnd.Off)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImportPublic"))
                 {
                     args.AddPassArg(ReaderMemberName);
@@ -1805,7 +1803,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             sb.AppendLine("[DebuggerDisplay(\"{GameRelease} {ModKey.ToString()}\")]");
         }
-        using (var args = new ClassWrapper(sb, $"{BinaryOverlayClass(obj)}"))
+        using (var args = sb.Class($"{BinaryOverlayClass(obj)}"))
         {
             args.Public = PermissionLevel.@internal;
             args.Abstract = obj.Abstract;
@@ -1934,11 +1932,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     if (!lengths.Field.IntegrateField) continue;
                     throw new NotImplementedException();
                 }
-                using (new RegionWrapper(sb, lengths.Field.Name)
-                       {
-                           AppendExtraLine = false,
-                           SkipIfOnlyOneLine = true
-                       })
+                using (sb.Region(lengths.Field.Name, appendExtraLine: false, skipIfOnlyOneLine: true))
                 {
                     var data = lengths.Field.GetFieldData();
                     switch (data.BinaryOverlayFallback)
@@ -1981,7 +1975,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
             if (obj.GetObjectType() != ObjectType.Mod)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"partial void CustomFactoryEnd"))
                 {
                     args.Add($"{nameof(OverlayStream)} stream");
@@ -1990,7 +1984,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 if (objData.CustomBinaryEnd != CustomEnd.Off)
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"partial void CustomEnd"))
                     {
                         args.Add($"{nameof(OverlayStream)} stream");
@@ -1999,13 +1993,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                 }
                 sb.AppendLine();
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"partial void CustomCtor"))
                 {
                 }
             }
 
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"protected {BinaryOverlayClassName(obj)}"))
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
@@ -2026,9 +2020,9 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (obj.GetObjectType() != ObjectType.Mod)
             {
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
-                    using (var args = new FunctionWrapper(sb,
+                    using (var args = sb.Function(
                                ": base"))
                     {
                         args.AddPassArg("bytes");
@@ -2046,7 +2040,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         sb.AppendLine($"this.{ModModule.ReleaseEnumName(obj)} = release;");
                     }
                     sb.AppendLine("this._data = stream;");
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"this._package = new {nameof(BinaryOverlayFactoryPackage)}"))
                     {
                         args.Add($"stream.{nameof(IMutagenReadStream.MetaData)}");
@@ -2065,7 +2059,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 if (obj.GetObjectType() != ObjectType.Mod)
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"this.CustomCtor"))
                     {
                     }
@@ -2087,7 +2081,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         gameReleaseStr = "release.ToGameRelease()";
                     }
 
-                    using (var args = new FunctionWrapper(sb,
+                    using (var args = sb.Function(
                                $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                     {
                         args.Add($"{nameof(ModPath)} path");
@@ -2108,7 +2102,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             sb.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
                         }
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"var stream = new {nameof(MutagenBinaryReadStream)}"))
                         {
                             args.Add($"path: path.{nameof(ModPath.Path)}");
@@ -2134,7 +2128,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
 
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"return {obj.Name}Factory"))
                             {
                                 args.AddPassArg("stream");
@@ -2158,7 +2152,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                 if (obj.IsTopLevelGroup())
                 {
-                    using (var args = new FunctionWrapper(sb,
+                    using (var args = sb.Function(
                                $"public static {obj.Interface(getter: true)} {obj.Name}Factory"))
                     {
                         args.Add($"{nameof(IBinaryReadStream)} stream");
@@ -2167,14 +2161,14 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     using (sb.CurlyBrace())
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"var subGroups = locs.Select(x => {obj.ProtoGen.Protocol.Namespace}GroupFactory",
                                    suffixLine: ").ToArray()"))
                         {
                             args.Add("new OverlayStream(LockExtractMemory(stream, x.Min, x.Max), package)");
                             args.Add("package");
                         }
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"return new {obj.ProtoGen.Protocol.Namespace}GroupWrapper<T>"))
                         {
                             args.Add($"new GroupMergeGetter<I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T>, T>(subGroups)");
@@ -2183,7 +2177,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     sb.AppendLine();
                 }
 
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
@@ -2227,9 +2221,9 @@ public class PluginTranslationModule : BinaryTranslationModule
                             {
                                 sb.AppendLine($"case {item.TypeInt}: // {item.Type}");
                             }
-                            using (new DepthWrapper(sb))
+                            using (sb.IncreaseDepth())
                             {
-                                using (var args = new ArgsWrapper(sb,
+                                using (var args = sb.Args(
                                            "return CustomRecordTypeTrigger"))
                                 {
                                     args.AddPassArg($"stream");
@@ -2239,13 +2233,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
                             sb.AppendLine("default:");
-                            using (new DepthWrapper(sb))
+                            using (sb.IncreaseDepth())
                             {
                                 sb.AppendLine("break;");
                             }
                         }
                     }
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"var ret = new {BinaryOverlayClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
                     {
                         if (obj.IsTypelessStruct())
@@ -2417,7 +2411,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         throw new NotImplementedException();
                                 }
                             }
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"ret.CustomFactoryEnd"))
                             {
                                 args.AddPassArg($"stream");
@@ -2457,7 +2451,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             default:
                                 throw new NotImplementedException();
                         }
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"{call}"))
                         {
                             if (await obj.IsMajorRecord())
@@ -2561,7 +2555,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 sb.AppendLine($"stream.Position += 0x{totalPassedLength.Value:X}{headerAddition};");
                             }
                         }
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"ret.CustomFactoryEnd"))
                         {
                             args.AddPassArg($"stream");
@@ -2596,7 +2590,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                     if (objData.CustomBinaryEnd != CustomEnd.Off)
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    "ret.CustomEnd"))
                         {
                             if (obj.GetObjectType() == ObjectType.Record)
@@ -2617,7 +2611,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                 if (obj.GetObjectType() != ObjectType.Mod)
                 {
-                    using (var args = new FunctionWrapper(sb,
+                    using (var args = sb.Function(
                                $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                     {
                         args.Add($"ReadOnlyMemorySlice<byte> slice");
@@ -2626,7 +2620,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     using (sb.CurlyBrace())
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"return {obj.Name}Factory"))
                         {
                             args.Add($"stream: new {nameof(OverlayStream)}(slice, package)");
@@ -2684,7 +2678,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             if (obj.GetObjectType() == ObjectType.Subrecord)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"using ({nameof(HeaderExport)}.Subrecord",
                            ")",
                            semiColon: false))
@@ -2699,7 +2693,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             else
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"using ({nameof(HeaderExport)}.{obj.GetObjectType()}",
                            ")",
                            semiColon: false))
@@ -2717,7 +2711,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             if (obj.GetObjectType() == ObjectType.Mod)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
                 {
                     args.AddPassArg("param");
@@ -2731,7 +2725,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 if (HasEmbeddedFields(obj))
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"WriteEmbedded"))
                     {
                         args.AddPassArg($"item");
@@ -2743,7 +2737,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
                     if (firstBase != null)
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"{this.TranslationWriteClass(firstBase)}.WriteEmbedded"))
                         {
                             args.AddPassArg($"item");
@@ -2757,7 +2751,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         sb.AppendLine($"{writerNameToUse}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
                     }
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"WriteRecordTypes"))
                     {
                         args.AddPassArg($"item");
@@ -2781,7 +2775,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasRecordTypeFields(b));
                     if (firstBase != null)
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                         {
                             args.AddPassArg($"item");
@@ -2802,7 +2796,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         if (data.CustomBinaryEnd != CustomEnd.Off)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"CustomBinaryEndExportInternal"))
             {
                 args.AddPassArg(WriterMemberName);
@@ -2816,7 +2810,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         var data = obj.GetObjectData();
         if (HasEmbeddedFields(obj))
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public static void WriteEmbedded{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
@@ -2830,7 +2824,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
                     if (firstBase != null)
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"{TranslationWriteClass(firstBase)}.WriteEmbedded"))
                         {
                             args.AddPassArg("item");
@@ -2855,7 +2849,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     List<string> conditions = new List<string>();
                     if (conditions.Count > 0)
                     {
-                        using (var args = new IfWrapper(sb, ANDs: true))
+                        using (var args = sb.If(ANDs: true))
                         {
                             foreach (var item in conditions)
                             {
@@ -2909,7 +2903,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
         if (HasRecordTypeFields(obj))
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public static void WriteRecordTypes{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
@@ -2928,7 +2922,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     var firstBase = obj.BaseClassTrail().FirstOrDefault((f) => HasRecordTypeFields(f));
                     if (firstBase != null)
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                         {
                             args.AddPassArg($"item");
@@ -3011,7 +3005,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             case BinaryGenerationType.NoGeneration:
                                                 continue;
                                             case BinaryGenerationType.Custom:
-                                                using (var args = new ArgsWrapper(sb,
+                                                using (var args = sb.Args(
                                                            $"{TranslationWriteClass(obj)}.WriteBinary{subField.Field.Name}"))
                                                 {
                                                     args.AddPassArg(WriterMemberName);
@@ -3121,7 +3115,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         sb.AppendLine($"if (item.FormVersion <= {fieldData.CustomVersion})");
                         using (sb.CurlyBrace())
                         {
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"{field.Name}CustomVersionWrite"))
                             {
                                 args.AddPassArg($"item");
@@ -3150,7 +3144,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             var fieldData = field.GetFieldData();
             if (fieldData.CustomVersion != null)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"static partial void {field.Name}CustomVersionWrite"))
                 {
                     args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");

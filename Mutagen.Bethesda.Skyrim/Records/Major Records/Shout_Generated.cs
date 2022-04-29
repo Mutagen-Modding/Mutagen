@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(Shout.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("WordsOfPower =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(WordsOfPowerItem.Overall);
                             if (WordsOfPowerItem.Specific != null)
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in WordsOfPowerItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -462,13 +462,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("WordsOfPower =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(WordsOfPowerItem.Overall);
                         if (WordsOfPowerItem.Specific != null)
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in WordsOfPowerItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (Shout) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1213,12 +1213,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("WordsOfPower =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.WordsOfPower)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

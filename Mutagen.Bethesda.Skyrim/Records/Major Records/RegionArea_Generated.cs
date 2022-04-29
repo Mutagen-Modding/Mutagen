@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(RegionArea.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.EdgeFallOff ?? true)
                     {
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("RegionPointListData =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(RegionPointListDataItem.Overall);
                             if (RegionPointListDataItem.Specific != null)
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in RegionPointListDataItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -369,13 +369,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("RegionPointListData =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(RegionPointListDataItem.Overall);
                         if (RegionPointListDataItem.Specific != null)
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in RegionPointListDataItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (RegionArea) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -947,12 +947,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("RegionPointListData =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in RegionPointListDataItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

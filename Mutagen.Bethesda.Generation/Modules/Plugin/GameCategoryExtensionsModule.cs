@@ -17,16 +17,16 @@ public class GameCategoryExtensionsModule : GenerationModule
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Records;");
         sb.AppendLine();
 
-        using (new NamespaceWrapper(sb, "Mutagen.Bethesda", fileScoped: false))
+        using (sb.Namespace("Mutagen.Bethesda", fileScoped: false))
         {
-            using (var cl = new ClassWrapper(sb, "GameCategoryHelper"))
+            using (var cl = sb.Class("GameCategoryHelper"))
             {
                 cl.Partial = true;
                 cl.Static = true;
             }
             using (sb.CurlyBrace())
             {
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public static {nameof(GameCategory)} FromModType<TMod>"))
                 {
                     args.Wheres.Add($"where TMod : {nameof(IModGetter)}");
@@ -37,7 +37,7 @@ public class GameCategoryExtensionsModule : GenerationModule
                 }
                 sb.AppendLine();
                     
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public static {nameof(GameCategory)}? TryFromModType<TMod>"))
                 {
                     args.Wheres.Add($"where TMod : {nameof(IModGetter)}");
@@ -51,7 +51,7 @@ public class GameCategoryExtensionsModule : GenerationModule
                         {
                             sb.AppendLine($"case \"I{cat}Mod\":");
                             sb.AppendLine($"case \"I{cat}ModGetter\":");
-                            using (new DepthWrapper(sb))
+                            using (sb.IncreaseDepth())
                             {
                                 sb.AppendLine($"return {nameof(GameCategory)}.{cat};");
                             }

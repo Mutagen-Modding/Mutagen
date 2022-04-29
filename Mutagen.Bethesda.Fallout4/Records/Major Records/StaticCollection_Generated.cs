@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(StaticCollection.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Parts =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PartsItem.Overall);
                             if (PartsItem.Specific != null)
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in PartsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -611,13 +611,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Parts =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PartsItem.Overall);
                         if (PartsItem.Specific != null)
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in PartsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1385,7 +1385,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (StaticCollection) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1436,12 +1436,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Parts =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Parts)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

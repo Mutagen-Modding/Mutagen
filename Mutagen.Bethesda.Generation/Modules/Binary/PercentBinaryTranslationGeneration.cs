@@ -46,7 +46,7 @@ public class PercentBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
     bool ReadPercent(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item)
     {
         var percType = typeGen as PercentType;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{item} = {nameof(PercentBinaryTranslation)}.Parse"))
         {
             args.Add($"reader: {reader}");
@@ -59,7 +59,7 @@ public class PercentBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
     {
         var percType = typeGen as PercentType;
         var data = percType.GetFieldData();
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{nameof(PercentBinaryTranslation)}.Write"))
         {
             args.Add($"writer: {writer}");

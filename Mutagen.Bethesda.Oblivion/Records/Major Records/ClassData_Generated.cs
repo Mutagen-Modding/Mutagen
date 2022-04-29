@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(ClassData.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Versioning ?? true)
                     {
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("PrimaryAttributes =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PrimaryAttributesItem.Overall);
                             if (PrimaryAttributesItem.Specific != null)
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in PrimaryAttributesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("SecondaryAttributes =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(SecondaryAttributesItem.Overall);
                             if (SecondaryAttributesItem.Specific != null)
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in SecondaryAttributesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -573,13 +573,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("PrimaryAttributes =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PrimaryAttributesItem.Overall);
                         if (PrimaryAttributesItem.Specific != null)
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in PrimaryAttributesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("SecondaryAttributes =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(SecondaryAttributesItem.Overall);
                         if (SecondaryAttributesItem.Specific != null)
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in SecondaryAttributesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (ClassData) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1242,12 +1242,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("PrimaryAttributes =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.PrimaryAttributes)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }
@@ -1264,12 +1264,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("SecondaryAttributes =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.SecondaryAttributes)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

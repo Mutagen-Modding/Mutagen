@@ -395,14 +395,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(IdleAnimation.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
                         sb.AppendLine("Conditions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("RelatedIdles =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(RelatedIdlesItem.Overall);
                             if (RelatedIdlesItem.Specific != null)
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in RelatedIdlesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -643,13 +643,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Conditions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ConditionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("RelatedIdles =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(RelatedIdlesItem.Overall);
                         if (RelatedIdlesItem.Specific != null)
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in RelatedIdlesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (IdleAnimation) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1452,12 +1452,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Conditions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Conditions)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1480,12 +1480,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("RelatedIdles =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.RelatedIdles)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

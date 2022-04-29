@@ -22,7 +22,7 @@ public class DuplicateModule : GenerationModule
     {
         await base.GenerateInCommonMixin(obj, sb);
         if (!await obj.IsMajorRecord()) return;
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static {obj.ObjectName} Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
         {
             args.Wheres.AddRange(obj.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
@@ -32,7 +32,7 @@ public class DuplicateModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return {obj.CommonClassInstance("item", LoquiInterfaceType.IGetter, CommonGenerics.Functions, MaskType.NormalGetter)}.Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter, MaskType.Translation)}"))
             {
                 args.AddPassArg("item");
@@ -48,9 +48,9 @@ public class DuplicateModule : GenerationModule
         if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class)) return;
         await base.GenerateInCommon(obj, sb, maskTypes);
         if (!await obj.IsMajorRecord()) return;
-        using (new RegionWrapper(sb, "Duplicate"))
+        using (sb.Region("Duplicate"))
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public{obj.Virtual()}{obj.Name} Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
             {
                 args.Wheres.AddRange(obj.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
@@ -75,7 +75,7 @@ public class DuplicateModule : GenerationModule
 
             foreach (var baseClass in obj.BaseClassTrail())
             {
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public override {baseClass.Name} Duplicate{baseClass.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
                 {
                     args.Wheres.AddRange(baseClass.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
@@ -85,7 +85,7 @@ public class DuplicateModule : GenerationModule
                 }
                 using (sb.CurlyBrace())
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"return this.Duplicate"))
                     {
                         args.Add($"item: ({obj.Interface(getter: true)})item");

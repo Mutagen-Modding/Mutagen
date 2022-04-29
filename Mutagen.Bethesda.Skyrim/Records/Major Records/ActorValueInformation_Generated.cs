@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("PerkTree =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PerkTreeItem.Overall);
                             if (PerkTreeItem.Specific != null)
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in PerkTreeItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -533,13 +533,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("PerkTree =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PerkTreeItem.Overall);
                         if (PerkTreeItem.Specific != null)
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in PerkTreeItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (ActorValueInformation) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1311,12 +1311,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("PerkTree =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.PerkTree)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

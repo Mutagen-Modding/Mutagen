@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(TintAssets.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Index ?? true)
                     {
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Presets =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PresetsItem.Overall);
                             if (PresetsItem.Specific != null)
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in PresetsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -461,13 +461,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Presets =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PresetsItem.Overall);
                         if (PresetsItem.Specific != null)
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in PresetsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (TintAssets) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1099,12 +1099,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Presets =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Presets)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

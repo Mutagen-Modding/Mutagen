@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(ScenePhase.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("StartConditions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(StartConditionsItem.Overall);
                             if (StartConditionsItem.Specific != null)
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in StartConditionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("CompletionConditions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(CompletionConditionsItem.Overall);
                             if (CompletionConditionsItem.Specific != null)
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in CompletionConditionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -590,13 +590,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("StartConditions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(StartConditionsItem.Overall);
                         if (StartConditionsItem.Specific != null)
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in StartConditionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("CompletionConditions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(CompletionConditionsItem.Overall);
                         if (CompletionConditionsItem.Specific != null)
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in CompletionConditionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (ScenePhase) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1268,12 +1268,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("StartConditions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.StartConditions)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1286,12 +1286,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("CompletionConditions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.CompletionConditions)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

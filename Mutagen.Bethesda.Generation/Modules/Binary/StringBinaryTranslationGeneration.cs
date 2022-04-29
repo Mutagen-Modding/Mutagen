@@ -51,7 +51,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     { 
         var stringType = typeGen as StringType; 
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData; 
-        using (var args = new ArgsWrapper(sb, 
+        using (var args = sb.Args( 
                    $"{this.NamespacePrefix}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}")) 
         { 
             args.Add($"writer: {writerAccessor}"); 
@@ -152,7 +152,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         if (asyncMode != AsyncMode.Off) throw new NotImplementedException(); 
         var stringType = typeGen as StringType; 
         var data = typeGen.GetFieldData(); 
-        using (var args = new ArgsWrapper(sb, 
+        using (var args = sb.Args( 
                    $"{retAccessor}{this.NamespacePrefix}StringBinaryTranslation.Instance.Parse")) 
         { 
             args.Add(nodeAccessor.Access); 

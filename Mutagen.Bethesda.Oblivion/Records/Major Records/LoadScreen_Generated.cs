@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(LoadScreen.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Icon ?? true)
                     {
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Locations =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocationsItem.Overall);
                             if (LocationsItem.Specific != null)
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in LocationsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -394,13 +394,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Locations =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocationsItem.Overall);
                         if (LocationsItem.Specific != null)
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in LocationsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (LoadScreen) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1076,12 +1076,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Locations =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Locations)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

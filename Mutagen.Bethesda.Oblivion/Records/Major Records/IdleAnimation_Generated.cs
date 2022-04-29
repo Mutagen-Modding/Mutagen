@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(IdleAnimation.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Conditions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("RelatedIdleAnimations =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(RelatedIdleAnimationsItem.Overall);
                             if (RelatedIdleAnimationsItem.Specific != null)
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in RelatedIdleAnimationsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -507,13 +507,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Conditions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in ConditionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("RelatedIdleAnimations =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(RelatedIdleAnimationsItem.Overall);
                         if (RelatedIdleAnimationsItem.Specific != null)
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in RelatedIdleAnimationsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (IdleAnimation) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1233,12 +1233,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Conditions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Conditions)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1257,12 +1257,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("RelatedIdleAnimations =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in RelatedIdleAnimationsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

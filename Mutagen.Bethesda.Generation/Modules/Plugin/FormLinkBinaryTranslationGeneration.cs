@@ -71,7 +71,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         switch (linkType.FormIDType)
         {
             case FormLinkType.FormIDTypeEnum.Normal:
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{retAccessor}{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                 {
                     args.Add(nodeAccessor.Access);
@@ -116,12 +116,12 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
             sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{itemAccessor}.SetTo"))
         {
             args.Add(subFg =>
             {
-                using (var args2 = new FunctionWrapper(subFg,
+                using (var args2 = subFg.Function(
                            $"{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                 {
                     args2.Add("reader: frame");
@@ -151,7 +151,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
                 }
                 if (data.HasTrigger || !PreferDirectTranslation)
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                     {
                         args.Add($"writer: {writerAccessor}");
@@ -177,7 +177,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
                 }
                 break;
             case FormLinkType.FormIDTypeEnum.EDIDChars:
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{this.NamespacePrefix}RecordTypeBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                 {
                     args.Add($"writer: {writerAccessor}");

@@ -400,14 +400,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(Climate.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.WeatherTypes?.Overall ?? true)
                         && WeatherTypes is {} WeatherTypesItem)
                     {
                         sb.AppendLine("WeatherTypes =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(WeatherTypesItem.Overall);
                             if (WeatherTypesItem.Specific != null)
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in WeatherTypesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -655,13 +655,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("WeatherTypes =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(WeatherTypesItem.Overall);
                         if (WeatherTypesItem.Specific != null)
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in WeatherTypesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (Climate) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1472,12 +1472,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("WeatherTypes =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in WeatherTypesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

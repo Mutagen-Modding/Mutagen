@@ -363,13 +363,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(PlayerSkills.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.SkillValues?.Overall ?? true)
                     {
                         sb.AppendLine("SkillValues =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             if (SkillValues != null)
                             {
@@ -382,10 +382,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     foreach (var subItem in SkillValues.Specific)
                                     {
                                         sb.AppendLine("[");
-                                        using (new DepthWrapper(sb))
+                                        using (sb.IncreaseDepth())
                                         {
                                             sb.AppendLine("Key => [");
-                                            using (new DepthWrapper(sb))
+                                            using (sb.IncreaseDepth())
                                             {
                                                 {
                                                     sb.AppendItem(subItem.Key);
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Skyrim
                                             }
                                             sb.AppendLine("]");
                                             sb.AppendLine("Value => [");
-                                            using (new DepthWrapper(sb))
+                                            using (sb.IncreaseDepth())
                                             {
                                                 {
                                                     sb.AppendItem(subItem.Value);
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("SkillOffsets =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             if (SkillOffsets != null)
                             {
@@ -425,10 +425,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     foreach (var subItem in SkillOffsets.Specific)
                                     {
                                         sb.AppendLine("[");
-                                        using (new DepthWrapper(sb))
+                                        using (sb.IncreaseDepth())
                                         {
                                             sb.AppendLine("Key => [");
-                                            using (new DepthWrapper(sb))
+                                            using (sb.IncreaseDepth())
                                             {
                                                 {
                                                     sb.AppendItem(subItem.Key);
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
                                             }
                                             sb.AppendLine("]");
                                             sb.AppendLine("Value => [");
-                                            using (new DepthWrapper(sb))
+                                            using (sb.IncreaseDepth())
                                             {
                                                 {
                                                     sb.AppendItem(subItem.Value);
@@ -646,13 +646,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("SkillValues =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         if (SkillValues != null)
                         {
@@ -680,10 +680,10 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in SkillValues.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         sb.AppendLine("Key => [");
-                                        using (new DepthWrapper(sb))
+                                        using (sb.IncreaseDepth())
                                         {
                                             {
                                                 sb.AppendItem(subItem.Key);
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                         sb.AppendLine("]");
                                         sb.AppendLine("Value => [");
-                                        using (new DepthWrapper(sb))
+                                        using (sb.IncreaseDepth())
                                         {
                                             {
                                                 sb.AppendItem(subItem.Value);
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("SkillOffsets =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         if (SkillOffsets != null)
                         {
@@ -722,10 +722,10 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in SkillOffsets.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         sb.AppendLine("Key => [");
-                                        using (new DepthWrapper(sb))
+                                        using (sb.IncreaseDepth())
                                         {
                                             {
                                                 sb.AppendItem(subItem.Key);
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                         sb.AppendLine("]");
                                         sb.AppendLine("Value => [");
-                                        using (new DepthWrapper(sb))
+                                        using (sb.IncreaseDepth())
                                         {
                                             {
                                                 sb.AppendItem(subItem.Value);
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (PlayerSkills) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1364,12 +1364,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("SkillValues =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.SkillValues)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.Key);
                             sb.AppendItem(subItem.Value);
@@ -1383,12 +1383,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("SkillOffsets =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.SkillOffsets)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.Key);
                             sb.AppendItem(subItem.Value);

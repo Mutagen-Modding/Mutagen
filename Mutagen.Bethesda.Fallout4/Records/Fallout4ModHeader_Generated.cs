@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(Fallout4ModHeader.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Flags ?? true)
                     {
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("MasterReferences =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(MasterReferencesItem.Overall);
                             if (MasterReferencesItem.Specific != null)
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in MasterReferencesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("OverriddenForms =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(OverriddenFormsItem.Overall);
                             if (OverriddenFormsItem.Specific != null)
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in OverriddenFormsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("TransientTypes =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TransientTypesItem.Overall);
                             if (TransientTypesItem.Specific != null)
@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in TransientTypesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -913,13 +913,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("MasterReferences =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(MasterReferencesItem.Overall);
                         if (MasterReferencesItem.Specific != null)
@@ -971,7 +971,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in MasterReferencesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("OverriddenForms =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(OverriddenFormsItem.Overall);
                         if (OverriddenFormsItem.Specific != null)
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in OverriddenFormsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1012,7 +1012,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("TransientTypes =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TransientTypesItem.Overall);
                         if (TransientTypesItem.Specific != null)
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in TransientTypesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1700,7 +1700,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (Fallout4ModHeader) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1763,12 +1763,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("MasterReferences =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.MasterReferences)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1782,12 +1782,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("OverriddenForms =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in OverriddenFormsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1805,12 +1805,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("TransientTypes =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.TransientTypes)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

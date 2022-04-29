@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(LeveledSpell.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.ChanceNone ?? true)
                     {
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Entries =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(EntriesItem.Overall);
                             if (EntriesItem.Specific != null)
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in EntriesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -394,13 +394,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Entries =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(EntriesItem.Overall);
                         if (EntriesItem.Specific != null)
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in EntriesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (LeveledSpell) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1078,12 +1078,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Entries =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Entries)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

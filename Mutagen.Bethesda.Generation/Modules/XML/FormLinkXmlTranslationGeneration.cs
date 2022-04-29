@@ -50,7 +50,7 @@ public class FormLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneratio
             {
                 if (itemAccessor.IsAssignment)
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"{itemAccessor} = {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType")}XmlTranslation.Instance.Parse"))
                     {
                         args.AddPassArg("node");
@@ -59,12 +59,12 @@ public class FormLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneratio
                 }
                 else
                 {
-                    using (var args = new FunctionWrapper(sb,
+                    using (var args = sb.Function(
                                itemAccessor.Assign($"new {linkType.DirectTypeName(getter: false)}")))
                     {
                         args.Add(subFg =>
                         {
-                            using (var subArgs = new FunctionWrapper(subFg,
+                            using (var subArgs = subFg.Function(
                                        $"FormKeyXmlTranslation.Instance.Parse"))
                             {
                                 subArgs.AddPassArg("node");

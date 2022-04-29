@@ -54,7 +54,7 @@ public class DataTypeModule : GenerationModule
             sb.AppendLine($"public enum {dataType.EnumName}");
             using (sb.CurlyBrace())
             {
-                using (var comma = new CommaWrapper(sb))
+                using (var comma = sb.CommaCollection())
                 {
                     var term = 1;
                     for (int i = 0; i < enumTypes.Count; i++)

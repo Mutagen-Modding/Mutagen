@@ -59,7 +59,7 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         {
             sb.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
         }
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{retAccessor}{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
         {
             args.Add(nodeAccessor.Access);

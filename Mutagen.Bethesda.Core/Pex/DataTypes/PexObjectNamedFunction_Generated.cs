@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine($"{nameof(PexObjectNamedFunction.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.FunctionName ?? true)
                     {
@@ -296,13 +296,13 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Pex
                 sb.AppendLine($"{name} (PexObjectNamedFunction) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,

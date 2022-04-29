@@ -47,11 +47,7 @@ public class AspectInterfaceModule : GenerationModule
 
     public override async Task GenerateInField(ObjectGeneration obj, TypeGeneration tg, StructuredStringBuilder sb, LoquiInterfaceType type)
     {
-        using (new RegionWrapper(sb, "Aspects")
-               {
-                   AppendExtraLine = false,
-                   SkipIfOnlyOneLine = true,
-               })
+        using (sb.Region("Aspects", appendExtraLine: false, skipIfOnlyOneLine: true))
         {
             var allFields = obj.IterateFields(includeBaseClass: true).ToDictionary(x => x.Name);
             foreach (var def in Definitions.OfType<AspectFieldInterfaceDefinition>())
@@ -170,9 +166,9 @@ public class AspectInterfaceModule : GenerationModule
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Aspects;");
         mappingGen.AppendLine($"using Loqui;");
         mappingGen.AppendLine();
-        using (new NamespaceWrapper(mappingGen, proto.DefaultNamespace, fileScoped: false))
+        using (mappingGen.Namespace(proto.DefaultNamespace, fileScoped: false))
         {
-            using (var c = new ClassWrapper(mappingGen, $"{proto.Protocol.Namespace}AspectInterfaceMapping"))
+            using (var c = mappingGen.Class($"{proto.Protocol.Namespace}AspectInterfaceMapping"))
             {
                 c.Public = PermissionLevel.@internal;
                 c.Interfaces.Add(nameof(IInterfaceMapping));

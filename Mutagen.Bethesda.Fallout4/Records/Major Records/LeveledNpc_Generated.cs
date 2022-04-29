@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(LeveledNpc.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Entries =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(EntriesItem.Overall);
                             if (EntriesItem.Specific != null)
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in EntriesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("FilterKeywordChances =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(FilterKeywordChancesItem.Overall);
                             if (FilterKeywordChancesItem.Specific != null)
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in FilterKeywordChancesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -644,13 +644,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Entries =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(EntriesItem.Overall);
                         if (EntriesItem.Specific != null)
@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in EntriesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("FilterKeywordChances =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(FilterKeywordChancesItem.Overall);
                         if (FilterKeywordChancesItem.Specific != null)
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in FilterKeywordChancesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1415,7 +1415,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (LeveledNpc) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1459,12 +1459,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Entries =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in EntriesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1478,12 +1478,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("FilterKeywordChances =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in FilterKeywordChancesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

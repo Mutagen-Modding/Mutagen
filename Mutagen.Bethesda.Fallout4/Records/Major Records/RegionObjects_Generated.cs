@@ -274,14 +274,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(RegionObjects.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.Objects?.Overall ?? true)
                         && Objects is {} ObjectsItem)
                     {
                         sb.AppendLine("Objects =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ObjectsItem.Overall);
                             if (ObjectsItem.Specific != null)
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in ObjectsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -403,13 +403,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Objects =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ObjectsItem.Overall);
                         if (ObjectsItem.Specific != null)
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in ObjectsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (RegionObjects) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -987,12 +987,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Objects =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ObjectsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

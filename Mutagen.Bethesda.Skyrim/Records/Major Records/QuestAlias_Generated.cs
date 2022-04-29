@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(QuestAlias.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.ID ?? true)
                     {
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Conditions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Keywords =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Items =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ItemsItem.Overall);
                             if (ItemsItem.Specific != null)
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ItemsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Spells =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(SpellsItem.Overall);
                             if (SpellsItem.Specific != null)
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in SpellsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Factions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(FactionsItem.Overall);
                             if (FactionsItem.Specific != null)
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in FactionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("PackageData =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PackageDataItem.Overall);
                             if (PackageDataItem.Specific != null)
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in PackageDataItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1464,13 +1464,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Conditions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ConditionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Keywords =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in KeywordsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Items =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ItemsItem.Overall);
                         if (ItemsItem.Specific != null)
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ItemsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Spells =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(SpellsItem.Overall);
                         if (SpellsItem.Specific != null)
@@ -1606,7 +1606,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in SpellsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Factions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(FactionsItem.Overall);
                         if (FactionsItem.Specific != null)
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in FactionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("PackageData =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PackageDataItem.Overall);
                         if (PackageDataItem.Specific != null)
@@ -1654,7 +1654,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in PackageDataItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2496,7 +2496,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (QuestAlias) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -2575,12 +2575,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Conditions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Conditions)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -2594,12 +2594,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Keywords =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -2613,12 +2613,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Items =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ItemsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -2651,12 +2651,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Spells =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Spells)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -2669,12 +2669,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Factions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Factions)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -2687,12 +2687,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("PackageData =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.PackageData)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

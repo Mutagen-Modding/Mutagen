@@ -56,7 +56,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         string catchLine = needsCatch ? ".Catch(e => throw RecordException.Enrich(e, obj.ModKey))" : string.Empty;
         string enderSemi = needsCatch ? string.Empty : ";";
         sb.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IEnumerable<{nameof(IMajorRecordGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
@@ -64,7 +64,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecords",
                        suffixLine: catchLine))
             {
@@ -74,7 +74,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         sb.AppendLine();
 
         sb.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IEnumerable<TMajor> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
@@ -84,14 +84,14 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
             {
                 args.AddPassArg("obj");
                 args.Add("type: typeof(TMajor)");
                 args.AddPassArg("throwIfUnknown");
             }
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 sb.AppendLine($".Select(m => (TMajor)m){enderSemi}");
                 if (needsCatch)
@@ -103,7 +103,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         sb.AppendLine();
 
         sb.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IEnumerable<{nameof(IMajorRecordGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
@@ -113,14 +113,14 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
             {
                 args.AddPassArg("obj");
                 args.AddPassArg("type");
                 args.AddPassArg("throwIfUnknown");
             }
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 sb.AppendLine($".Select(m => ({nameof(IMajorRecordGetter)})m){enderSemi}");
                 if (needsCatch)
@@ -132,7 +132,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         sb.AppendLine();
 
         sb.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IEnumerable<{nameof(IMajorRecord)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -140,7 +140,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords",
                        suffixLine: catchLine))
             {
@@ -150,7 +150,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         sb.AppendLine();
 
         sb.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IEnumerable<TMajor> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
@@ -159,14 +159,14 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
             {
                 args.AddPassArg("obj");
                 args.Add("type: typeof(TMajor)");
                 args.Add("throwIfUnknown: true");
             }
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 sb.AppendLine($".Select(m => (TMajor)m){enderSemi}");
                 if (needsCatch)
@@ -178,7 +178,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         sb.AppendLine();
 
         sb.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IEnumerable<{nameof(IMajorRecord)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
@@ -188,14 +188,14 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumeratePotentiallyTypedMajorRecords"))
             {
                 args.AddPassArg("obj");
                 args.AddPassArg("type");
                 args.AddPassArg("throwIfUnknown");
             }
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 sb.AppendLine($".Select(m => ({nameof(IMajorRecord)})m){enderSemi}");
                 if (needsCatch)
@@ -263,7 +263,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
         var overrideStr = await obj.FunctionOverride(async c => await MajorRecordModule.HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public{overrideStr}IEnumerable<{nameof(IMajorRecord)}{(getter ? "Getter" : null)}> EnumerateMajorRecords"))
         {
             args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
@@ -417,14 +417,14 @@ public class MajorRecordEnumerationModule : GenerationModule
         {
             if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
             {
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public override IEnumerable<{nameof(IMajorRecord)}{(getter ? "Getter" : null)}> EnumerateMajorRecords"))
                 {
                     args.Add($"{baseClass.Interface(getter: getter)} obj");
                 }
                 using (sb.CurlyBrace())
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                "EnumerateMajorRecords"))
                     {
                         args.Add($"({obj.Interface(getter: getter)})obj");
@@ -434,7 +434,7 @@ public class MajorRecordEnumerationModule : GenerationModule
             }
         }
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public{overrideStr}IEnumerable<{nameof(IMajorRecordGetter)}> EnumeratePotentiallyTypedMajorRecords"))
         {
             args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
@@ -448,7 +448,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         sb.AppendLine();
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public{overrideStr}IEnumerable<{nameof(IMajorRecordGetter)}> EnumerateMajorRecords"))
         {
             args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
@@ -493,7 +493,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                         sb.AppendLine($"case \"I{gameCategory}MajorRecord\":");
                         sb.AppendLine($"case \"{gameCategory}MajorRecord\":");
                     }
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
                         sb.AppendLine("foreach (var item in this.EnumerateMajorRecords(obj))");
@@ -508,7 +508,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                     {
                         sb.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
                     }
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendLine("foreach (var item in this.EnumerateMajorRecords(obj))");
                         using (sb.CurlyBrace())
@@ -629,7 +629,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                                 default:
                                     throw new NotImplementedException();
                             }
-                            using (new DepthWrapper(sb))
+                            using (sb.IncreaseDepth())
                             {
                                 sb.AppendLines(kv.Value);
                                 sb.AppendLine("yield break;");
@@ -638,7 +638,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                     }
 
                     sb.AppendLine("default:");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         // Generate for major record marker interfaces 
                         if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _)
@@ -684,7 +684,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         {
             if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
             {
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public override IEnumerable<TMajor> EnumerateMajorRecords<TMajor>"))
                 {
                     args.Add($"{baseClass.Interface(getter: getter)} obj");
@@ -692,7 +692,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                 }
                 using (sb.CurlyBrace())
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                "EnumerateMajorRecords<TMajor>"))
                     {
                         args.Add($"({obj.Interface(getter: getter)})obj");

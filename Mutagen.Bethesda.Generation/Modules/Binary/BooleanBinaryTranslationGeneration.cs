@@ -109,7 +109,7 @@ public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         else
         {
             var data = typeGen.GetFieldData();
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.WriteAsMarker"))
             {
                 args.Add($"writer: {writerAccessor}");

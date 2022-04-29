@@ -25,9 +25,9 @@ public class GameEnvironmentStateModule : GenerationModule
         sb.AppendLine($"using Mutagen.Bethesda.Plugins.Cache;");
         sb.AppendLine();
 
-        using (new NamespaceWrapper(sb, "Mutagen.Bethesda", fileScoped: false))
+        using (sb.Namespace("Mutagen.Bethesda", fileScoped: false))
         {
-            using (var c = new ClassWrapper(sb, "GameEnvironmentMixIn"))
+            using (var c = sb.Class("GameEnvironmentMixIn"))
             {
                 c.Static = true;
             }
@@ -35,7 +35,7 @@ public class GameEnvironmentStateModule : GenerationModule
             {
                 var hasMultipleReleases = modObj.GetObjectData().HasMultipleReleases;
                 var retType = $"IGameEnvironmentState<I{modObj.Name}, I{modObj.Name}Getter>";
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public static {retType} {modObj.ProtoGen.Protocol.Namespace}"))
                 {
                     args.Add($"this {nameof(GameEnvironment)} env");

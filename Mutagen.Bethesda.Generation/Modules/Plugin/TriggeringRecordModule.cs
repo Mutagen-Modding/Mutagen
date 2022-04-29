@@ -283,7 +283,7 @@ public class TriggeringRecordModule : GenerationModule
         {
             if (same)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                     "var all = RecordCollection.Factory"))
                 {
                     foreach (var trigger in all)
@@ -295,7 +295,7 @@ public class TriggeringRecordModule : GenerationModule
             }
             else
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                     "var triggers = RecordCollection.Factory"))
                 {
                     foreach (var trigger in trigRecordTypes)
@@ -303,7 +303,7 @@ public class TriggeringRecordModule : GenerationModule
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
                 }
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                     "var all = RecordCollection.Factory"))
                 {
                     foreach (var trigger in all)
@@ -820,9 +820,9 @@ public class TriggeringRecordModule : GenerationModule
         sb.AppendLine("using Mutagen.Bethesda.Plugins;");
         sb.AppendLine();
 
-        using (var n = new NamespaceWrapper(sb, $"{proto.DefaultNamespace}.Internals"))
+        using (var n = sb.Namespace($"{proto.DefaultNamespace}.Internals"))
         {
-            using (var c = new ClassWrapper(sb, "RecordTypes"))
+            using (var c = sb.Class("RecordTypes"))
             {
                 c.Partial = true;
             }
@@ -838,9 +838,9 @@ public class TriggeringRecordModule : GenerationModule
         sb.Generate(path);
         proto.GeneratedFiles.Add(path, ProjItemType.Compile);
         sb = new StructuredStringBuilder();
-        using (var n = new NamespaceWrapper(sb, $"{proto.DefaultNamespace}.Internals"))
+        using (var n = sb.Namespace($"{proto.DefaultNamespace}.Internals"))
         {
-            using (var c = new ClassWrapper(sb, "RecordTypeInts"))
+            using (var c = sb.Class("RecordTypeInts"))
             {
                 c.Partial = true;
             }

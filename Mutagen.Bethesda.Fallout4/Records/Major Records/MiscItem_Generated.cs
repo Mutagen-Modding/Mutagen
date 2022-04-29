@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(MiscItem.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Keywords =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Components =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ComponentsItem.Overall);
                             if (ComponentsItem.Specific != null)
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in ComponentsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("ComponentDisplayIndices =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ComponentDisplayIndicesItem.Overall);
                             if (ComponentDisplayIndicesItem.Specific != null)
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in ComponentDisplayIndicesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1040,13 +1040,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Keywords =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in KeywordsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Components =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ComponentsItem.Overall);
                         if (ComponentsItem.Specific != null)
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in ComponentsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("ComponentDisplayIndices =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ComponentDisplayIndicesItem.Overall);
                         if (ComponentDisplayIndicesItem.Specific != null)
@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in ComponentDisplayIndicesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2023,7 +2023,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (MiscItem) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -2088,12 +2088,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Keywords =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -2119,12 +2119,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Components =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ComponentsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -2138,12 +2138,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("ComponentDisplayIndices =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ComponentDisplayIndicesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

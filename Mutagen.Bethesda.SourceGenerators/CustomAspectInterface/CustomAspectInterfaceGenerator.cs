@@ -78,17 +78,17 @@ public class CustomAspectInterfaceGenerator : ISourceGenerator
             foreach (var namespaceGroup in targets)
             {
                 if (context.CancellationToken.IsCancellationRequested) return;
-                var fg = new StructuredStringBuilder();
+                var sb = new StructuredStringBuilder();
 
                 foreach (var use in requiredUsings)
                 {
-                    fg.AppendLine($"using {use};");
+                    sb.AppendLine($"using {use};");
                 }
-                fg.AppendLine();
+                sb.AppendLine();
 
-                using (new NamespaceWrapper(fg, namespaceGroup.Key, fileScoped: false))
+                using (sb.Namespace(namespaceGroup.Key, fileScoped: false))
                 {
-                    using (new RegionWrapper(fg, "Wrappers"))
+                    using (sb.Region("Wrappers"))
                     {
                         foreach (var decl in namespaceGroup.Value.UsedInterfaces)
                         {
@@ -96,82 +96,82 @@ public class CustomAspectInterfaceGenerator : ISourceGenerator
                             foreach (var t in decl.Types)
                             {
                                 var className = $"{t.Syntax.Type}Wrapper";
-                                using (var c = new ClassWrapper(fg, className))
+                                using (var c = sb.Class(className))
                                 {
                                     c.Interfaces.Add(decl.Symbol.Name);
                                 }
-                                using (fg.CurlyBrace())
+                                using (sb.CurlyBrace())
                                 {
-                                    fg.AppendLine($"private readonly {t.Syntax.Type} _wrapped;");
+                                    sb.AppendLine($"private readonly {t.Syntax.Type} _wrapped;");
                                     foreach (var member in decl.Symbol.GetMembers())
                                     {
                                         switch (member)
                                         {
                                             case IPropertySymbol prop:
-                                                fg.AppendLine($"public {prop.Type} {prop.Name}");
-                                                using (fg.CurlyBrace())
+                                                sb.AppendLine($"public {prop.Type} {prop.Name}");
+                                                using (sb.CurlyBrace())
                                                 {
                                                     if (!prop.IsWriteOnly)
                                                     {
-                                                        fg.AppendLine($"get => _wrapped.{member.Name};");
+                                                        sb.AppendLine($"get => _wrapped.{member.Name};");
                                                     }
                                                     if (!prop.IsReadOnly)
                                                     {
-                                                        fg.AppendLine($"set => _wrapped.{member.Name} = value;");
+                                                        sb.AppendLine($"set => _wrapped.{member.Name} = value;");
                                                     }
                                                 }
                                                 break;
                                             default:
                                                 continue;
                                         }
-                                        fg.AppendLine();
+                                        sb.AppendLine();
                                     }
 
-                                    using (var args = new FunctionWrapper(fg, $"public {className}"))
+                                    using (var args = sb.Function($"public {className}"))
                                     {
                                         args.Add($"{t.Syntax.Type} rhs");
                                     }
-                                    using (fg.CurlyBrace())
+                                    using (sb.CurlyBrace())
                                     {
-                                        fg.AppendLine("_wrapped = rhs;");
+                                        sb.AppendLine("_wrapped = rhs;");
                                     }
                                 }
-                                fg.AppendLine();
+                                sb.AppendLine();
                             }
                         }
-                        fg.AppendLine();
+                        sb.AppendLine();
                     }
 
                     if (context.CancellationToken.IsCancellationRequested) return;
-                    using (new RegionWrapper(fg, "Mix Ins"))
+                    using (sb.Region("Mix Ins"))
                     {
-                        using (var c = new ClassWrapper(fg, "WrapperMixIns"))
+                        using (var c = sb.Class("WrapperMixIns"))
                         {
                             c.Static = true;
                         }
-                        using (fg.CurlyBrace())
+                        using (sb.CurlyBrace())
                         {
                             foreach (var decl in namespaceGroup.Value.UsedInterfaces)
                             {
                                 if (context.CancellationToken.IsCancellationRequested) return;
                                 foreach (var t in decl.Types)
                                 {
-                                    using (var args = new FunctionWrapper(fg,
+                                    using (var args = sb.Function(
                                                $"public static {t.Syntax.Type}Wrapper As{decl.Symbol.Name}"))
                                     {
                                         args.Add($"this {t.Syntax.Type} rhs");
                                     }
-                                    using (fg.CurlyBrace())
+                                    using (sb.CurlyBrace())
                                     {
-                                        fg.AppendLine($"return new {t.Syntax.Type}Wrapper(rhs);");
+                                        sb.AppendLine($"return new {t.Syntax.Type}Wrapper(rhs);");
                                     }
-                                    fg.AppendLine();
+                                    sb.AppendLine();
                                 }
                             }
                         }
                     }
                 }
-                context.AddSource($"CustomAspectInterfaces.g.cs", fg.ToString());
+                context.AddSource($"CustomAspectInterfaces.g.cs", sb.ToString());
             }
         }
         catch (Exception ex)

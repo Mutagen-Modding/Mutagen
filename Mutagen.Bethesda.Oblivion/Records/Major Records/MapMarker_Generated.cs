@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(MapMarker.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Flags ?? true)
                     {
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Types =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TypesItem.Overall);
                             if (TypesItem.Specific != null)
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in TypesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Types =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TypesItem.Overall);
                         if (TypesItem.Specific != null)
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in TypesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (MapMarker) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1019,12 +1019,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Types =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in TypesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

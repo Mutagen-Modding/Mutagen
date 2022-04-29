@@ -222,14 +222,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(NavmeshSet.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.Navmeshes?.Overall ?? true)
                         && Navmeshes is {} NavmeshesItem)
                     {
                         sb.AppendLine("Navmeshes =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(NavmeshesItem.Overall);
                             if (NavmeshesItem.Specific != null)
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in NavmeshesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -336,13 +336,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Navmeshes =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(NavmeshesItem.Overall);
                         if (NavmeshesItem.Specific != null)
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in NavmeshesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (NavmeshSet) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -895,12 +895,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Navmeshes =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Navmeshes)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

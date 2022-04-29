@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(MagicEffect.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("CounterEffects =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(CounterEffectsItem.Overall);
                             if (CounterEffectsItem.Specific != null)
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in CounterEffectsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -526,13 +526,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("CounterEffects =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(CounterEffectsItem.Overall);
                         if (CounterEffectsItem.Specific != null)
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in CounterEffectsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (MagicEffect) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1290,12 +1290,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("CounterEffects =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in CounterEffectsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.EDID);
                         }

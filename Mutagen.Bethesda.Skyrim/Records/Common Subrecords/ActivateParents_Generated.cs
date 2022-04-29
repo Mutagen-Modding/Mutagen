@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(ActivateParents.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Flags ?? true)
                     {
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Parents =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ParentsItem.Overall);
                             if (ParentsItem.Specific != null)
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ParentsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -370,13 +370,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Parents =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ParentsItem.Overall);
                         if (ParentsItem.Specific != null)
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ParentsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (ActivateParents) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -953,12 +953,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Parents =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Parents)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             {
                 sb.AppendLine($"{name} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     var male = item.Male;
                     if (male is IPrintable mp)

@@ -105,7 +105,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
             || binaryType == DictBinaryType.EnumMap)
         {
             var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{this.NamespacePrefix}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
@@ -177,7 +177,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
 
         var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
 
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{Loqui.Generation.Utility.Await(isAsync)}{this.NamespacePrefix}{term}{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse{(binaryType == DictBinaryType.EnumMap ? $"<{dict.KeyTypeGen.TypeName(false)}>" : null)}",
                    suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
         {
@@ -222,7 +222,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
                                 }
                                 LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
                                 LoquiType specificLoqui = item.Value as LoquiType;
-                                using (new DepthWrapper(gen))
+                                using (gen.IncreaseDepth())
                                 {
                                     subGen.GenerateCopyInRet(
                                         sb: gen,
@@ -240,7 +240,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
                                 }
                             }
                             gen.AppendLine("default:");
-                            using (new DepthWrapper(gen))
+                            using (gen.IncreaseDepth())
                             {
                                 gen.AppendLine("throw new NotImplementedException();");
                             }
@@ -315,7 +315,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
             DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, data, objGen, typeGen, passedLengthAccessor);
         }
 
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"public IReadOnlyDictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}> {typeGen.Name} => DictBinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse<{dict.KeyTypeGen.TypeName(false)}>"))
         {
             args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({dataAccessor}{(posStr == null ? null : $".Slice({posStr})")}, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}))");

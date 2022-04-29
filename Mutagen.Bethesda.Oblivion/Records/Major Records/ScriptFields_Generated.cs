@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(ScriptFields.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.MetadataSummary?.Overall ?? true)
                     {
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("LocalVariables =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocalVariablesItem.Overall);
                             if (LocalVariablesItem.Specific != null)
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in LocalVariablesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("References =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ReferencesItem.Overall);
                             if (ReferencesItem.Specific != null)
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in ReferencesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -525,13 +525,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("LocalVariables =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocalVariablesItem.Overall);
                         if (LocalVariablesItem.Specific != null)
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in LocalVariablesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("References =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ReferencesItem.Overall);
                         if (ReferencesItem.Specific != null)
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in ReferencesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (ScriptFields) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1178,12 +1178,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("LocalVariables =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.LocalVariables)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1196,12 +1196,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("References =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.References)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

@@ -88,7 +88,7 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
             case BinaryGenerationType.NoGeneration:
                 return;
             case BinaryGenerationType.Custom:
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{typeGen.Name}CustomParse"))
                 {
                     args.AddPassArg($"stream");

@@ -375,14 +375,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(PathGrid.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.PointToPointConnections?.Overall ?? true)
                         && PointToPointConnections is {} PointToPointConnectionsItem)
                     {
                         sb.AppendLine("PointToPointConnections =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PointToPointConnectionsItem.Overall);
                             if (PointToPointConnectionsItem.Specific != null)
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in PointToPointConnectionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("InterCellConnections =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(InterCellConnectionsItem.Overall);
                             if (InterCellConnectionsItem.Specific != null)
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in InterCellConnectionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("PointToReferenceMappings =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PointToReferenceMappingsItem.Overall);
                             if (PointToReferenceMappingsItem.Specific != null)
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in PointToReferenceMappingsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -556,13 +556,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("PointToPointConnections =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PointToPointConnectionsItem.Overall);
                         if (PointToPointConnectionsItem.Specific != null)
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in PointToPointConnectionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("InterCellConnections =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(InterCellConnectionsItem.Overall);
                         if (InterCellConnectionsItem.Specific != null)
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in InterCellConnectionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("PointToReferenceMappings =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PointToReferenceMappingsItem.Overall);
                         if (PointToReferenceMappingsItem.Specific != null)
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in PointToReferenceMappingsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (PathGrid) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1284,12 +1284,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("PointToPointConnections =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in PointToPointConnectionsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1308,12 +1308,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("InterCellConnections =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in InterCellConnectionsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1326,12 +1326,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("PointToReferenceMappings =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.PointToReferenceMappings)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

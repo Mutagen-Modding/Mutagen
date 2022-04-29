@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(Subgraph.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.BehaviorGraph ?? true)
                     {
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("ActorKeywords =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ActorKeywordsItem.Overall);
                             if (ActorKeywordsItem.Specific != null)
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in ActorKeywordsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("TargetKeywords =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TargetKeywordsItem.Overall);
                             if (TargetKeywordsItem.Specific != null)
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in TargetKeywordsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("AnimationPaths =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(AnimationPathsItem.Overall);
                             if (AnimationPathsItem.Specific != null)
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in AnimationPathsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -604,13 +604,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("ActorKeywords =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ActorKeywordsItem.Overall);
                         if (ActorKeywordsItem.Specific != null)
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in ActorKeywordsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("TargetKeywords =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TargetKeywordsItem.Overall);
                         if (TargetKeywordsItem.Specific != null)
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in TargetKeywordsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("AnimationPaths =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(AnimationPathsItem.Overall);
                         if (AnimationPathsItem.Specific != null)
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in AnimationPathsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (Subgraph) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1289,12 +1289,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("ActorKeywords =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.ActorKeywords)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1307,12 +1307,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("TargetKeywords =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.TargetKeywords)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1325,12 +1325,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("AnimationPaths =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.AnimationPaths)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

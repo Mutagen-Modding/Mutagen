@@ -20,15 +20,15 @@ public class ImplicitsModule : GenerationModule
         sb.AppendLine($"using Mutagen.Bethesda.Plugins.Implicit;");
         sb.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
         sb.AppendLine();
-        using (var n = new NamespaceWrapper(sb, "Mutagen.Bethesda", fileScoped: false))
+        using (var n = sb.Namespace("Mutagen.Bethesda", fileScoped: false))
         {
-            using (var c = new ClassWrapper(sb, "ImplicitsMixIn"))
+            using (var c = sb.Class("ImplicitsMixIn"))
             {
                 c.Static = true;
             }
             using (sb.CurlyBrace())
             {
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
                 {
                     args.Add($"this ImplicitBaseMasters _");
@@ -43,7 +43,7 @@ public class ImplicitsModule : GenerationModule
                 }
                 sb.AppendLine();
 
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
                 {
                     args.Add($"this ImplicitListings _");
@@ -58,7 +58,7 @@ public class ImplicitsModule : GenerationModule
                 }
                 sb.AppendLine();
 
-                using (var args = new FunctionWrapper(sb,
+                using (var args = sb.Function(
                            $"public static IReadOnlyCollection<FormKey> {proto.Protocol.Namespace}"))
                 {
                     args.Add($"this ImplicitRecordFormKeys _");

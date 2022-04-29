@@ -42,7 +42,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         var eType = typeGen as EnumType;
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
         var nullable = typeGen.Nullable && eType.NullableFallbackInt == null;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write{(nullable ? "Nullable" : null)}"))
         {
             args.Add(writerAccessor.Access);
@@ -123,7 +123,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         else
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{retAccessor}{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Parse"))
             {
                 args.Add($"reader: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");

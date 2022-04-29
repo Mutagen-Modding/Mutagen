@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(LandscapeTexture.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.TextureSet ?? true)
                     {
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Grasses =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(GrassesItem.Overall);
                             if (GrassesItem.Specific != null)
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in GrassesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -537,13 +537,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Grasses =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(GrassesItem.Overall);
                         if (GrassesItem.Specific != null)
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in GrassesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (LandscapeTexture) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1321,12 +1321,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Grasses =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Grasses)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

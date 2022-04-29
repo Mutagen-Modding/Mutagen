@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(PointToReferenceMapping.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Reference ?? true)
                     {
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Points =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PointsItem.Overall);
                             if (PointsItem.Specific != null)
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in PointsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -375,13 +375,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Points =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PointsItem.Overall);
                         if (PointsItem.Specific != null)
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in PointsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (PointToReferenceMapping) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -961,12 +961,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Points =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Points)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }

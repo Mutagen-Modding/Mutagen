@@ -111,7 +111,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                     {
                         line = $"(({this.Module.TranslationWriteInterface})(({Module.TranslationItemInterface}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
                     }
-                    using (var args = new ArgsWrapper(sb, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
+                    using (var args = sb.Args( $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
                     {
                         args.Add($"item: {itemAccessor}");
                         args.Add($"writer: {writerAccessor}");
@@ -183,7 +183,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             if (loqui.SetterInterfaceType == LoquiInterfaceType.IGetter) return;
             if (loqui.Singleton)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor}.{this.Module.CopyInFromPrefix}{TranslationTerm}"))
                 {
                     args.Add($"frame: {frameAccessor}");
@@ -196,7 +196,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 {
                     sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
                 }
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{itemAccessor} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                 {
                     args.Add($"frame: {frameAccessor}");
@@ -335,7 +335,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 if (loqui is GroupType)
                 {
                     sb.AppendLine($"private List<{GetLocationObjectString(objGen)}>? _{typeGen.Name}Locations;");
-                    using (new LineWrapper(sb))
+                    using (sb.Line())
                     {
                         if (loqui.IsNullable)
                         {
@@ -396,7 +396,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                         sb.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
                     }
                     sb.AppendLine($"private {GetLocationObjectString(objGen)}? _{typeGen.Name}Location;");
-                    using (new LineWrapper(sb))
+                    using (sb.Line())
                     {
                         if (loqui.IsNullable)
                         {
@@ -444,8 +444,8 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                                         {
                                             sb.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
                                         }
-                                        using (new DepthWrapper(sb))
-                                        using (new LineWrapper(sb))
+                                        using (sb.IncreaseDepth())
+                                        using (sb.Line())
                                         {
                                             sb.Append($"return {this.Module.BinaryOverlayClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({DataAccessor(dataAccessor, $"_{subLoq.Name}Location!.Value.Min", $"_{subLoq.Name}Location!.Value.Max")}, _package), _package");
                                             if (!loqui.Singleton)
@@ -456,7 +456,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                                         }
                                     }
                                     sb.AppendLine("default:");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         sb.AppendLine("throw new ArgumentException();");
                                     }
@@ -564,7 +564,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             case BinaryGenerationType.NoGeneration:
                 return;
             case BinaryGenerationType.Custom:
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{typeGen.Name}CustomParse"))
                 {
                     args.Add("stream");
@@ -625,7 +625,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             {
                 sb.AppendLine($"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength;");
             }
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"this.{accessor} = {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory"))
             {
                 args.Add($"stream: stream");

@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(MusicTrack.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Type ?? true)
                     {
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("CuePoints =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(CuePointsItem.Overall);
                             if (CuePointsItem.Specific != null)
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in CuePointsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Conditions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Tracks =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TracksItem.Overall);
                             if (TracksItem.Specific != null)
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in TracksItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -702,13 +702,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("CuePoints =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(CuePointsItem.Overall);
                         if (CuePointsItem.Specific != null)
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in CuePointsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Conditions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ConditionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Tracks =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TracksItem.Overall);
                         if (TracksItem.Specific != null)
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in TracksItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (MusicTrack) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1553,12 +1553,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("CuePoints =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in CuePointsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }
@@ -1572,12 +1572,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Conditions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ConditionsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1591,12 +1591,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Tracks =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in TracksItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

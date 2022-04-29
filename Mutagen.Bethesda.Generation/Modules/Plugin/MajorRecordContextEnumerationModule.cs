@@ -55,7 +55,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         var modSetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: false);
 
         sb.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, TSetter, TGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, new string[] { "TSetter", "TGetter" })}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
@@ -67,7 +67,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
             {
                 args.AddPassArg("obj");
@@ -75,7 +75,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 args.Add("type: typeof(TGetter)");
                 args.AddPassArg("throwIfUnknown");
             }
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 sb.AppendLine($".Select(m => m.AsType<{modSetter}, {modGetter}, {nameof(IMajorRecordQueryable)}, {nameof(IMajorRecordQueryableGetter)}, TSetter, TGetter>()){enderSemi}");
                 if (needsCatch)
@@ -87,7 +87,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         sb.AppendLine();
 
         sb.AppendLine("[DebuggerStepThrough]");
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
@@ -98,7 +98,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
             {
                 args.AddPassArg("obj");
@@ -115,8 +115,8 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         ObjectGeneration obj,
         Accessor loquiAccessor,
         LoquiType loquiType,
-        Action<ArgsWrapper> addGetOrAddArg,
-        Action<ArgsWrapper> duplicateInArg,
+        Action<Args> addGetOrAddArg,
+        Action<Args> duplicateInArg,
         string generic,
         bool includeType,
         bool checkType,
@@ -135,7 +135,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             }
             using (sb.CurlyBrace(doIt: checkType))
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false)}, {loquiType.Interface(getter: true)}>"))
                 {
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -158,7 +158,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             }
             using (sb.CurlyBrace(doIt: checkType))
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                 {
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -180,7 +180,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             sb.AppendLine($"foreach (var item in {loquiAccessor}.EnumerateMajorRecords({(generic == null ? null : "type, throwIfUnknown: false")}))");
             using (sb.CurlyBrace())
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                 {
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -192,12 +192,10 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         }
         else
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"foreach (var item in {loquiType.TargetObjectGeneration.CommonClassInstance(loquiAccessor, LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts",
-                       suffixLine: ")")
-                   {
-                       SemiColon = false
-                   })
+                       suffixLine: ")",
+                       semiColon: false))
             {
                 args.Add($"obj: {loquiAccessor}");
                 args.AddPassArg("linkCache");
@@ -233,7 +231,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         var modGetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: true);
         var modSetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: false);
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts"))
         {
             args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
@@ -253,7 +251,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         {
             if (obj.GetObjectType() == ObjectType.Record)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"var curContext = new ModContext<{modSetter}, {modGetter}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                 {
                     args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -345,7 +343,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         }
         sb.AppendLine();
 
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts"))
         {
             args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
@@ -367,7 +365,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         {
             if (obj.GetObjectType() == ObjectType.Record)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"var curContext = new ModContext<{modSetter}, {modGetter}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                 {
                     args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -389,15 +387,13 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     sb.AppendLine($"case \"I{gameCategory}MajorRecord\":");
                     sb.AppendLine($"case \"{gameCategory}MajorRecord\":");
                 }
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     sb.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"foreach (var item in this.EnumerateMajorRecordContexts",
-                               suffixLine: ")")
-                           {
-                               SemiColon = false
-                           })
+                               suffixLine: ")",
+                               semiColon: false))
                     {
                         args.Add("obj");
                         args.AddPassArg("linkCache");
@@ -423,14 +419,12 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 {
                     sb.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
                 }
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"foreach (var item in this.EnumerateMajorRecordContexts",
-                               suffixLine: ")")
-                           {
-                               SemiColon = false
-                           })
+                               suffixLine: ")",
+                               semiColon: false))
                     {
                         args.Add("obj");
                         args.AddPassArg("linkCache");
@@ -586,7 +580,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                             default:
                                 throw new NotImplementedException();
                         }
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLines(kv.Value);
                             sb.AppendLine("yield break;");
@@ -595,18 +589,16 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 }
 
                 sb.AppendLine("default:");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     // Generate for major record marker interfaces 
                     if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _)
                         || AspectInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _))
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"if ({nameof(InterfaceEnumerationHelper)}.TryEnumerateInterfaceContextsFor<{obj.Interface(getter: getter, internalInterface: true)}, I{obj.ProtoGen.Protocol.Namespace}Mod, I{obj.ProtoGen.Protocol.Namespace}ModGetter>",
-                                   suffixLine: ")")
-                               {
-                                   SemiColon = false
-                               })
+                                   suffixLine: ")",
+                                   semiColon: false))
                         {
                             args.Add($"GameCategory.{obj.ProtoGen.Protocol.Namespace}");
                             args.Add($"{accessor}");
@@ -671,12 +663,10 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             var groupTargetSetter = group.GetGroupTarget().GetTypeName(LoquiInterfaceType.Direct);
             if (includeSelf)
             {
-                using (var args = new ArgsWrapper(fieldGen,
+                using (var args = fieldGen.Args(
                            $"foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<{obj.GetModName(getter: false)}, {obj.GetModName(getter: true)}, {groupTargetSetter}, {groupTargetGetter}>",
-                           suffixLine: ")")
-                       {
-                           SemiColon = false
-                       })
+                           suffixLine: ")",
+                           semiColon: false))
                 {
                     args.Add($"srcGroup: obj.{field.Name}");
                     args.Add($"type: {(includeType ? "type" : $"typeof({group.GetGroupTarget().Interface(getter: true)})")}");
@@ -695,12 +685,10 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 fieldGen.AppendLine($"foreach (var groupItem in obj.{field.Name})");
                 using (fieldGen.CurlyBrace())
                 {
-                    using (var args = new ArgsWrapper(fieldGen,
+                    using (var args = fieldGen.Args(
                                $"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts",
-                               suffixLine: ")")
-                           {
-                               SemiColon = false
-                           })
+                               suffixLine: ")",
+                               semiColon: false))
                     {
                         args.Add("groupItem");
                         args.AddPassArg("linkCache");
@@ -727,12 +715,10 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             var fieldAccessor = loqui.Nullable ? $"{obj.ObjectName}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
             if (loqui.TargetObjectGeneration.IsListGroup())
             { // List groups 
-                using (var args = new ArgsWrapper(fieldGen,
+                using (var args = fieldGen.Args(
                            $"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts",
-                           suffixLine: ")")
-                       {
-                           SemiColon = false
-                       })
+                           suffixLine: ")",
+                           semiColon: false))
                 {
                     args.AddPassArg("linkCache");
                     if (includeType)
@@ -834,12 +820,10 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             }
             else if (contLoqui.TargetObjectGeneration?.IsListGroup() ?? false)
             {
-                using (var args = new ArgsWrapper(fieldGen,
+                using (var args = fieldGen.Args(
                            $"foreach (var item in {accessor}.{field.Name}.EnumerateMajorRecordContexts",
-                           suffixLine: ")")
-                       {
-                           SemiColon = false
-                       })
+                           suffixLine: ")",
+                           semiColon: false))
                 {
                     if (includeType)
                     {

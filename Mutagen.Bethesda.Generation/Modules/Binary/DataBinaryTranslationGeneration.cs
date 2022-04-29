@@ -95,11 +95,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             if (!field.Field.Enabled) continue;
             if (!this.Module.TryGetTypeGeneration(field.Field.GetType(), out var subTypeGen)) continue;
-            using (new RegionWrapper(sb, field.Field.Name)
-                   {
-                       AppendExtraLine = false,
-                       SkipIfOnlyOneLine = true
-                   })
+            using (sb.Region(field.Field.Name, appendExtraLine: false, skipIfOnlyOneLine: true))
             {
                 var fieldData = field.Field.GetFieldData();
                 var length = lengths.FirstOrDefault(l => l.Field == field.Field);

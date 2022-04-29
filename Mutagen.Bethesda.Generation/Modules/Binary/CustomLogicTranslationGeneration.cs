@@ -90,11 +90,9 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         var returningParseResult = useReturnValue && fieldData.HasTrigger;
         if (!isAsync)
         {
-            using (var args = new FunctionWrapper(sb,
-                       $"public static partial {(returningParseResult ? nameof(ParseResult) : "void")} FillBinary{field.Name}Custom")
-                   {
-                       SemiColon = true
-                   })
+            using (var args = sb.Function(
+                       $"public static partial {(returningParseResult ? nameof(ParseResult) : "void")} FillBinary{field.Name}Custom",
+                       semiColon: true))
             {
                 args.Add($"{nameof(MutagenFrame)} frame");
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
@@ -113,7 +111,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         TypeGeneration field,
         bool isAsync)
     {
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static partial void WriteBinary{field.Name}Custom{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
@@ -122,7 +120,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
             args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
         }
         sb.AppendLine();
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static void WriteBinary{field.Name}{obj.GetGenericTypes(MaskType.Normal)}"))
         {
             args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
@@ -131,7 +129,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"WriteBinary{field.Name}Custom"))
             {
                 args.Add("writer: writer");
@@ -147,7 +145,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         TypeGeneration field,
         Accessor writerAccessor)
     {
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{this.Module.TranslationWriteClass(obj)}.WriteBinary{field.Name}"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -165,7 +163,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     {
         var data = field.GetFieldData();
         var returningParseValue = useReturnValue && data.HasTrigger;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{(returningParseValue ? "return " : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationCreateClass(field.ObjectGen)}.FillBinary{field.Name}Custom"))
         {
             args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
@@ -191,7 +189,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         string loc;
         if (fieldData.HasTrigger)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"partial void {typeGen.Name}CustomParse"))
             {
                 args.Add($"{nameof(OverlayStream)} stream");
@@ -213,7 +211,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             loc = passedLenAccessor;
         }
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"public partial {typeGen.TypeName(getter: true)}{typeGen.NullChar} Get{typeGen.Name}Custom"))
         {
             if (!fieldData.HasTrigger && dataType == null)
@@ -221,7 +219,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
                 args.Add($"int location");
             }
         }
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => Get{typeGen.Name}Custom"))
         {
             if (!fieldData.HasTrigger && dataType == null)
@@ -250,7 +248,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, data, objGen, typeGen, passedLengthAccessor);
         }
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{(returningParseValue ? "public " : null)}partial {(returningParseValue ? nameof(ParseResult) : "void")} {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
         {
             args.Add($"{nameof(OverlayStream)} stream");
@@ -272,7 +270,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     {
         var fieldData = typeGen.GetFieldData();
         var returningParseValue = fieldData.HasTrigger;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{(returningParseValue ? "return " : null)}{(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
         {
             args.Add("stream");

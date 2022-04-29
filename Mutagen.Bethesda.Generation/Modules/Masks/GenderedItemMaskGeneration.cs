@@ -50,7 +50,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         var isLoqui = gendered.SubTypeGeneration is LoquiType;
         if (field.Nullable || isLoqui)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"if (!{nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AllMask) : nameof(GenderedItem.All))}",
                        suffixLine: ") return false"))
             {
@@ -71,7 +71,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         var isLoqui = gendered.SubTypeGeneration is LoquiType;
         if (field.Nullable || isLoqui)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"if ({nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AnyMask) : nameof(GenderedItem.Any))}",
                        suffixLine: ") return true"))
             {
@@ -92,7 +92,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         var loqui = gendered.SubTypeGeneration as LoquiType;
         if (field.Nullable || loqui != null)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{retAccessor} = GenderedItem.TranslateHelper"))
             {
                 args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}");
@@ -105,7 +105,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         }
         else
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{retAccessor} = new GenderedItem<{SubMaskString(field, "R")}>"))
             {
                 if (loqui != null)
@@ -140,7 +140,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
     {
         if (!field.IntegrateField) return;
         bool doIf;
-        using (var args = new IfWrapper(sb, ANDs: true))
+        using (var args = sb.If(ANDs: true))
         {
             if (field.Nullable)
             {

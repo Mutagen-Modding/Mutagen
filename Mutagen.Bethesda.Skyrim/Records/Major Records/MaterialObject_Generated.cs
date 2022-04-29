@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(MaterialObject.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("DNAMs =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(DNAMsItem.Overall);
                             if (DNAMsItem.Specific != null)
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in DNAMsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -694,13 +694,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("DNAMs =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(DNAMsItem.Overall);
                         if (DNAMsItem.Specific != null)
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in DNAMsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (MaterialObject) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1518,12 +1518,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("DNAMs =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.DNAMs)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"Item => {SpanExt.ToHexString(subItem)}");
                         }

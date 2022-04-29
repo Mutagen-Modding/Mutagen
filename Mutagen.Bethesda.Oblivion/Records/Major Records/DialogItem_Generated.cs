@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(DialogItem.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Topics =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TopicsItem.Overall);
                             if (TopicsItem.Specific != null)
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in TopicsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Responses =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ResponsesItem.Overall);
                             if (ResponsesItem.Specific != null)
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in ResponsesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Conditions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Choices =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ChoicesItem.Overall);
                             if (ChoicesItem.Specific != null)
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in ChoicesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("LinkFrom =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LinkFromItem.Overall);
                             if (LinkFromItem.Specific != null)
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in LinkFromItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -849,13 +849,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Topics =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TopicsItem.Overall);
                         if (TopicsItem.Specific != null)
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in TopicsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Responses =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ResponsesItem.Overall);
                         if (ResponsesItem.Specific != null)
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in ResponsesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -925,7 +925,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Conditions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in ConditionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Choices =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ChoicesItem.Overall);
                         if (ChoicesItem.Specific != null)
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in ChoicesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -971,7 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("LinkFrom =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LinkFromItem.Overall);
                         if (LinkFromItem.Specific != null)
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in LinkFromItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1676,7 +1676,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (DialogItem) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1712,12 +1712,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Topics =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Topics)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1730,12 +1730,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Responses =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Responses)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1748,12 +1748,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Conditions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Conditions)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1766,12 +1766,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Choices =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Choices)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1784,12 +1784,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("LinkFrom =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.LinkFrom)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

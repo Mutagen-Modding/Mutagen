@@ -23,7 +23,7 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         Accessor converterAccessor)
     {
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{this.NamespacePrefix}FilePathBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -85,7 +85,7 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     {
         if (inline) throw new NotImplementedException();
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.NamespacePrefix}FilePathBinaryTranslation.Instance.Parse",
                    suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
         {

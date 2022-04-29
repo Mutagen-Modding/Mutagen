@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine($"{nameof(PexObjectFunction.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.ReturnTypeName ?? true)
                     {
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Pex
                     {
                         sb.AppendLine("Parameters =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ParametersItem.Overall);
                             if (ParametersItem.Specific != null)
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Pex
                                 foreach (var subItem in ParametersItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Pex
                     {
                         sb.AppendLine("Locals =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocalsItem.Overall);
                             if (LocalsItem.Specific != null)
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Pex
                                 foreach (var subItem in LocalsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Pex
                     {
                         sb.AppendLine("Instructions =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(InstructionsItem.Overall);
                             if (InstructionsItem.Specific != null)
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Pex
                                 foreach (var subItem in InstructionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -616,13 +616,13 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Pex
                 {
                     sb.AppendLine("Parameters =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ParametersItem.Overall);
                         if (ParametersItem.Specific != null)
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Pex
                             foreach (var subItem in ParametersItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Pex
                 {
                     sb.AppendLine("Locals =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocalsItem.Overall);
                         if (LocalsItem.Specific != null)
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Pex
                             foreach (var subItem in LocalsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Pex
                 {
                     sb.AppendLine("Instructions =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(InstructionsItem.Overall);
                         if (InstructionsItem.Specific != null)
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Pex
                             foreach (var subItem in InstructionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Pex
                 sb.AppendLine($"{name} (PexObjectFunction) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1214,12 +1214,12 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine("Parameters =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Parameters)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1232,12 +1232,12 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine("Locals =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Locals)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1250,12 +1250,12 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine("Instructions =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Instructions)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

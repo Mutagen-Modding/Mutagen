@@ -89,7 +89,7 @@ public class DataTypeXmlTranslationGeneration : XmlTranslationGeneration
             }
             if (conditions.Count > 0)
             {
-                using (var args = new IfWrapper(sb, ANDs: true))
+                using (var args = sb.If(ANDs: true))
                 {
                     foreach (var item in conditions)
                     {

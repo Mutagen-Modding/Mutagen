@@ -63,7 +63,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         }
         if (data.HasTrigger || !PreferDirectTranslation)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Write{(typeGen.Nullable ? "Nullable" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
@@ -186,7 +186,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                 }
                 sb.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
             }
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{outItemAccessor} = {this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Parse"))
             {
                 args.Add(nodeAccessor.Access);

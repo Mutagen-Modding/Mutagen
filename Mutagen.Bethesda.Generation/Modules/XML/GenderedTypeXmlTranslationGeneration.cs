@@ -15,7 +15,7 @@ public class GenderedTypeXmlTranslationGeneration : XmlTranslationGeneration
             sb,
             () =>
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{itemAccessor} = new {typeGen.TypeName(getter: false)}"))
                 {
                     args.Add(subFg =>

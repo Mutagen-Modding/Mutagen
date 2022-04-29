@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(DialogView.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Quest ?? true)
                     {
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Branches =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(BranchesItem.Overall);
                             if (BranchesItem.Specific != null)
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in BranchesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("TNAMs =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TNAMsItem.Overall);
                             if (TNAMsItem.Specific != null)
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in TNAMsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -531,13 +531,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Branches =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(BranchesItem.Overall);
                         if (BranchesItem.Specific != null)
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in BranchesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("TNAMs =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TNAMsItem.Overall);
                         if (TNAMsItem.Specific != null)
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in TNAMsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (DialogView) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1279,12 +1279,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Branches =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Branches)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -1297,12 +1297,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("TNAMs =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.TNAMs)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"Item => {SpanExt.ToHexString(subItem)}");
                         }

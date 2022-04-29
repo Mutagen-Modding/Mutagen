@@ -65,9 +65,9 @@ public class AbstractInterfaceModule : GenerationModule
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Mapping;");
         mappingGen.AppendLine($"using Loqui;");
         mappingGen.AppendLine();
-        using (new NamespaceWrapper(mappingGen, proto.DefaultNamespace))
+        using (mappingGen.Namespace(proto.DefaultNamespace))
         {
-            using (var c = new ClassWrapper(mappingGen, $"{proto.Protocol.Namespace}IsolatedAbstractInterfaceMapping"))
+            using (var c = mappingGen.Class($"{proto.Protocol.Namespace}IsolatedAbstractInterfaceMapping"))
             {
                 c.Public = PermissionLevel.@internal;
                 c.Interfaces.Add(nameof(IInterfaceMapping));
@@ -139,9 +139,9 @@ public class AbstractInterfaceModule : GenerationModule
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Mapping;");
         mappingGen.AppendLine($"using Loqui;");
         mappingGen.AppendLine();
-        using (new NamespaceWrapper(mappingGen, proto.DefaultNamespace))
+        using (mappingGen.Namespace(proto.DefaultNamespace))
         {
-            using (var c = new ClassWrapper(mappingGen, $"{proto.Protocol.Namespace}InheritingInterfaceMapping"))
+            using (var c = mappingGen.Class($"{proto.Protocol.Namespace}InheritingInterfaceMapping"))
             {
                 c.Public = PermissionLevel.@internal;
                 c.Interfaces.Add(nameof(IInterfaceMapping));

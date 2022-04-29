@@ -21,7 +21,7 @@ public class MoreDataException : Exception, IPrintable
     public void ToString(StructuredStringBuilder sb, string name)
     {
         sb.AppendLine(Path);
-        using (new DepthWrapper(sb))
+        using (sb.IncreaseDepth())
         {
             sb.AppendLine($"had more data past position 0x{Position:X}");
         }

@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(QuestAdapter.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Versioning ?? true)
                     {
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Fragments =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(FragmentsItem.Overall);
                             if (FragmentsItem.Specific != null)
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in FragmentsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Aliases =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(AliasesItem.Overall);
                             if (AliasesItem.Specific != null)
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in AliasesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -518,13 +518,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Fragments =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(FragmentsItem.Overall);
                         if (FragmentsItem.Specific != null)
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in FragmentsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Aliases =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(AliasesItem.Overall);
                         if (AliasesItem.Specific != null)
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in AliasesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (QuestAdapter) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1156,12 +1156,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Fragments =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Fragments)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1174,12 +1174,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Aliases =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Aliases)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

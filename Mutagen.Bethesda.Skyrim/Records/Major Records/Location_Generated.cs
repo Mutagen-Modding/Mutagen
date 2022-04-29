@@ -1343,14 +1343,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
                         && ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
                     {
                         sb.AppendLine("ActorCellPersistentReferences =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ActorCellPersistentReferencesItem.Overall);
                             if (ActorCellPersistentReferencesItem.Specific != null)
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1373,7 +1373,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LocationCellPersistentReferences =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocationCellPersistentReferencesItem.Overall);
                             if (LocationCellPersistentReferencesItem.Specific != null)
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("ReferenceCellPersistentReferences =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
                             if (ReferenceCellPersistentReferencesItem.Specific != null)
@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("ActorCellUniques =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ActorCellUniquesItem.Overall);
                             if (ActorCellUniquesItem.Specific != null)
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ActorCellUniquesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LocationCellUniques =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocationCellUniquesItem.Overall);
                             if (LocationCellUniquesItem.Specific != null)
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LocationCellUniquesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("ReferenceCellUnique =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ReferenceCellUniqueItem.Overall);
                             if (ReferenceCellUniqueItem.Specific != null)
@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ReferenceCellUniqueItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1492,7 +1492,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("ActorCellStaticReferences =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ActorCellStaticReferencesItem.Overall);
                             if (ActorCellStaticReferencesItem.Specific != null)
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ActorCellStaticReferencesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LocationCellStaticReferences =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocationCellStaticReferencesItem.Overall);
                             if (LocationCellStaticReferencesItem.Specific != null)
@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LocationCellStaticReferencesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("ReferenceCellStaticReferences =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ReferenceCellStaticReferencesItem.Overall);
                             if (ReferenceCellStaticReferencesItem.Specific != null)
@@ -1546,7 +1546,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("ActorCellEncounterCell =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ActorCellEncounterCellItem.Overall);
                             if (ActorCellEncounterCellItem.Specific != null)
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ActorCellEncounterCellItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1586,7 +1586,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LocationCellEncounterCell =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocationCellEncounterCellItem.Overall);
                             if (LocationCellEncounterCellItem.Specific != null)
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LocationCellEncounterCellItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1609,7 +1609,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("ReferenceCellEncounterCell =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ReferenceCellEncounterCellItem.Overall);
                             if (ReferenceCellEncounterCellItem.Specific != null)
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("ActorCellMarkerReference =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ActorCellMarkerReferenceItem.Overall);
                             if (ActorCellMarkerReferenceItem.Specific != null)
@@ -1640,7 +1640,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1657,7 +1657,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LocationCellMarkerReference =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocationCellMarkerReferenceItem.Overall);
                             if (LocationCellMarkerReferenceItem.Specific != null)
@@ -1665,7 +1665,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("ActorCellEnablePoint =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ActorCellEnablePointItem.Overall);
                             if (ActorCellEnablePointItem.Specific != null)
@@ -1690,7 +1690,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ActorCellEnablePointItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LocationCellEnablePoint =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocationCellEnablePointItem.Overall);
                             if (LocationCellEnablePointItem.Specific != null)
@@ -1713,7 +1713,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LocationCellEnablePointItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1732,7 +1732,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Keywords =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
@@ -1740,7 +1740,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -2096,13 +2096,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ActorCellPersistentReferences =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ActorCellPersistentReferencesItem.Overall);
                         if (ActorCellPersistentReferencesItem.Specific != null)
@@ -2127,7 +2127,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2141,7 +2141,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LocationCellPersistentReferences =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocationCellPersistentReferencesItem.Overall);
                         if (LocationCellPersistentReferencesItem.Specific != null)
@@ -2149,7 +2149,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2163,7 +2163,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ReferenceCellPersistentReferences =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
                         if (ReferenceCellPersistentReferencesItem.Specific != null)
@@ -2171,7 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2187,7 +2187,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ActorCellUniques =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ActorCellUniquesItem.Overall);
                         if (ActorCellUniquesItem.Specific != null)
@@ -2195,7 +2195,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ActorCellUniquesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2209,7 +2209,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LocationCellUniques =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocationCellUniquesItem.Overall);
                         if (LocationCellUniquesItem.Specific != null)
@@ -2217,7 +2217,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LocationCellUniquesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2231,7 +2231,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ReferenceCellUnique =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ReferenceCellUniqueItem.Overall);
                         if (ReferenceCellUniqueItem.Specific != null)
@@ -2239,7 +2239,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ReferenceCellUniqueItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2255,7 +2255,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ActorCellStaticReferences =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ActorCellStaticReferencesItem.Overall);
                         if (ActorCellStaticReferencesItem.Specific != null)
@@ -2263,7 +2263,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ActorCellStaticReferencesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2277,7 +2277,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LocationCellStaticReferences =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocationCellStaticReferencesItem.Overall);
                         if (LocationCellStaticReferencesItem.Specific != null)
@@ -2285,7 +2285,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LocationCellStaticReferencesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2299,7 +2299,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ReferenceCellStaticReferences =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ReferenceCellStaticReferencesItem.Overall);
                         if (ReferenceCellStaticReferencesItem.Specific != null)
@@ -2307,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2323,7 +2323,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ActorCellEncounterCell =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ActorCellEncounterCellItem.Overall);
                         if (ActorCellEncounterCellItem.Specific != null)
@@ -2331,7 +2331,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ActorCellEncounterCellItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2345,7 +2345,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LocationCellEncounterCell =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocationCellEncounterCellItem.Overall);
                         if (LocationCellEncounterCellItem.Specific != null)
@@ -2353,7 +2353,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LocationCellEncounterCellItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2367,7 +2367,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ReferenceCellEncounterCell =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ReferenceCellEncounterCellItem.Overall);
                         if (ReferenceCellEncounterCellItem.Specific != null)
@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2389,7 +2389,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ActorCellMarkerReference =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ActorCellMarkerReferenceItem.Overall);
                         if (ActorCellMarkerReferenceItem.Specific != null)
@@ -2397,7 +2397,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2413,7 +2413,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LocationCellMarkerReference =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocationCellMarkerReferenceItem.Overall);
                         if (LocationCellMarkerReferenceItem.Specific != null)
@@ -2421,7 +2421,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2437,7 +2437,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("ActorCellEnablePoint =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ActorCellEnablePointItem.Overall);
                         if (ActorCellEnablePointItem.Specific != null)
@@ -2445,7 +2445,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ActorCellEnablePointItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2459,7 +2459,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LocationCellEnablePoint =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocationCellEnablePointItem.Overall);
                         if (LocationCellEnablePointItem.Specific != null)
@@ -2467,7 +2467,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LocationCellEnablePointItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2484,7 +2484,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Keywords =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
@@ -2492,7 +2492,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in KeywordsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -3453,7 +3453,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (Location) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -3477,12 +3477,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ActorCellPersistentReferences =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ActorCellPersistentReferencesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3496,12 +3496,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LocationCellPersistentReferences =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in LocationCellPersistentReferencesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3515,12 +3515,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ReferenceCellPersistentReferences =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ReferenceCellPersistentReferencesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -3534,12 +3534,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ActorCellUniques =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ActorCellUniquesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3553,12 +3553,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LocationCellUniques =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in LocationCellUniquesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3572,12 +3572,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ReferenceCellUnique =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ReferenceCellUniqueItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -3591,12 +3591,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ActorCellStaticReferences =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ActorCellStaticReferencesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3610,12 +3610,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LocationCellStaticReferences =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in LocationCellStaticReferencesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3629,12 +3629,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ReferenceCellStaticReferences =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ReferenceCellStaticReferencesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -3647,12 +3647,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ActorCellEncounterCell =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.ActorCellEncounterCell)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3665,12 +3665,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LocationCellEncounterCell =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.LocationCellEncounterCell)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3683,12 +3683,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ReferenceCellEncounterCell =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.ReferenceCellEncounterCell)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3702,12 +3702,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ActorCellMarkerReference =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ActorCellMarkerReferenceItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -3721,12 +3721,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LocationCellMarkerReference =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in LocationCellMarkerReferenceItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -3740,12 +3740,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("ActorCellEnablePoint =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in ActorCellEnablePointItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3759,12 +3759,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LocationCellEnablePoint =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in LocationCellEnablePointItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -3783,12 +3783,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Keywords =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

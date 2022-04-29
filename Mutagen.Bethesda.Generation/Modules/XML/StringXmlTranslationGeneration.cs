@@ -19,7 +19,7 @@ public class StringXmlTranslationGeneration : Loqui.Generation.PrimitiveXmlTrans
         StringType str = typeGen as StringType;
         if (str.Translated.HasValue)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write"))
             {
                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {writerAccessor}");
@@ -34,7 +34,7 @@ public class StringXmlTranslationGeneration : Loqui.Generation.PrimitiveXmlTrans
         }
         else
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{this.TypeName(typeGen)}XmlTranslation.Instance.Write"))
             {
                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {writerAccessor}");

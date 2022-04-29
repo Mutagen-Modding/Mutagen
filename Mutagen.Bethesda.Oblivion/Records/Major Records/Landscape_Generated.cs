@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(Landscape.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.DATA ?? true)
                     {
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Layers =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LayersItem.Overall);
                             if (LayersItem.Specific != null)
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in LayersItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("Textures =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TexturesItem.Overall);
                             if (TexturesItem.Specific != null)
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in TexturesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -565,13 +565,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Layers =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LayersItem.Overall);
                         if (LayersItem.Specific != null)
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in LayersItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("Textures =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TexturesItem.Overall);
                         if (TexturesItem.Specific != null)
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in TexturesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (Landscape) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1324,12 +1324,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Layers =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Layers)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1343,12 +1343,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("Textures =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in TexturesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

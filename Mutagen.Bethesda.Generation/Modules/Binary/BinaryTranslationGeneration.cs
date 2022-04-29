@@ -115,7 +115,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
                 sb.AppendLine($"_{typeGen.Name}Location = {locationAccessor};");
                 break;
             case BinaryGenerationType.Custom:
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{typeGen.Name}CustomParse"))
                 {
                     args.AddPassArg($"stream");

@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(Landscape.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Flags ?? true)
                     {
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("VertexNormals =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(VertexNormalsItem.Overall);
                             if (VertexNormalsItem.Specific != null)
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in VertexNormalsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("VertexColors =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(VertexColorsItem.Overall);
                             if (VertexColorsItem.Specific != null)
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in VertexColorsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Layers =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LayersItem.Overall);
                             if (LayersItem.Specific != null)
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LayersItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Textures =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TexturesItem.Overall);
                             if (TexturesItem.Specific != null)
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in TexturesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -683,13 +683,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("VertexNormals =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(VertexNormalsItem.Overall);
                         if (VertexNormalsItem.Specific != null)
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in VertexNormalsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("VertexColors =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(VertexColorsItem.Overall);
                         if (VertexColorsItem.Specific != null)
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in VertexColorsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Layers =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LayersItem.Overall);
                         if (LayersItem.Specific != null)
@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LayersItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Textures =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TexturesItem.Overall);
                         if (TexturesItem.Specific != null)
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in TexturesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (Landscape) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1493,12 +1493,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("VertexNormals =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in VertexNormalsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }
@@ -1517,12 +1517,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("VertexColors =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in VertexColorsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }
@@ -1535,12 +1535,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Layers =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Layers)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1554,12 +1554,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Textures =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in TexturesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }

@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(QuestStage.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Stage ?? true)
                     {
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("LogEntries =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LogEntriesItem.Overall);
                             if (LogEntriesItem.Specific != null)
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in LogEntriesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -370,13 +370,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("LogEntries =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LogEntriesItem.Overall);
                         if (LogEntriesItem.Specific != null)
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
                             foreach (var subItem in LogEntriesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (QuestStage) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -958,12 +958,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("LogEntries =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.LogEntries)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

@@ -45,15 +45,15 @@ public class DidNotMatchException : Exception, IPrintable
     //    return BinaryStringUtility.ToZString(bytes);
     //}
 
-    public void ToString(StructuredStringBuilder fg, string name)
+    public void ToString(StructuredStringBuilder sb, string name)
     {
-        fg.AppendLine($"{Path} Bytes did not match at positions:");
-        using (new DepthWrapper(fg))
+        sb.AppendLine($"{Path} Bytes did not match at positions:");
+        using (sb.IncreaseDepth())
         {
             for (int i = 0; i < Errors.Length; i++)
             {
                 var err = Errors[i];
-                fg.AppendLine($"{err.ToString("X")}");
+                sb.AppendLine($"{err.ToString("X")}");
                 //using (new DepthWrapper(fg))
                 //{
                 //    var bytes = this.ErrorBytes[i];

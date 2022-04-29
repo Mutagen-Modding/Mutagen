@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(QuestObjective.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Index ?? true)
                     {
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Targets =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(TargetsItem.Overall);
                             if (TargetsItem.Specific != null)
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in TargetsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -427,13 +427,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Targets =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(TargetsItem.Overall);
                         if (TargetsItem.Specific != null)
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in TargetsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (QuestObjective) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1049,12 +1049,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Targets =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Targets)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

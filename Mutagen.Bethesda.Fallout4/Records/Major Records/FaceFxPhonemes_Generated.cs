@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{nameof(FaceFxPhonemes.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.ForceNames ?? true)
                     {
@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine("Unknowns =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(UnknownsItem.Overall);
                             if (UnknownsItem.Specific != null)
@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 foreach (var subItem in UnknownsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1041,13 +1041,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -1082,7 +1082,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine("Unknowns =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(UnknownsItem.Overall);
                         if (UnknownsItem.Specific != null)
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Fallout4
                             foreach (var subItem in UnknownsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1790,7 +1790,7 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{name} (FaceFxPhonemes) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1893,12 +1893,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine("Unknowns =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Unknowns)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

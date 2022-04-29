@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(Destructible.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Stages =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(StagesItem.Overall);
                             if (StagesItem.Specific != null)
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in StagesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -386,13 +386,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Stages =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(StagesItem.Overall);
                         if (StagesItem.Specific != null)
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in StagesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (Destructible) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -977,12 +977,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Stages =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Stages)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

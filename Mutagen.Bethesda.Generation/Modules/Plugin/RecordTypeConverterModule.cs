@@ -87,7 +87,7 @@ public class RecordTypeConverterModule : GenerationModule
             {
                 GenerateConverterMember(sb, obj, kv.Value, kv.Key.ToString());
             }
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public static {nameof(RecordTypeConverter)}? Get"))
             {
                 args.Add($"{nameof(GameRelease)} release");
@@ -97,7 +97,7 @@ public class RecordTypeConverterModule : GenerationModule
                 sb.AppendLine($"return release switch");
                 using (sb.CurlyBrace(appendSemiColon: true))
                 {
-                    using (var comma = new CommaWrapper(sb))
+                    using (var comma = sb.CommaCollection())
                     {
                         foreach (var kv in objData.GameReleaseConverters)
                         {
@@ -114,7 +114,7 @@ public class RecordTypeConverterModule : GenerationModule
             {
                 GenerateConverterMember(sb, obj, kv.Value, $"Version{kv.Key}");
             }
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public static {nameof(RecordTypeConverter)}? Get"))
             {
                 args.Add($"int? version");
@@ -141,14 +141,14 @@ public class RecordTypeConverterModule : GenerationModule
     public static void GenerateConverterMember(StructuredStringBuilder sb, ObjectGeneration objGen, RecordTypeConverter recordTypeConverter, string nickName)
     {
         if (recordTypeConverter == null || recordTypeConverter.FromConversions.Count == 0) return;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"public static RecordTypeConverter {nickName}Converter = new RecordTypeConverter"))
         {
             foreach (var conv in recordTypeConverter.FromConversions)
             {
                 args.Add((gen) =>
                 {
-                    using (var args2 = new FunctionWrapper(gen,
+                    using (var args2 = gen.Function(
                                "new KeyValuePair<RecordType, RecordType>"))
                     {
                         args2.Add($"RecordTypes.{conv.Key.Type}");

@@ -291,14 +291,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(PreferredPathing.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.NavmeshSets?.Overall ?? true)
                         && NavmeshSets is {} NavmeshSetsItem)
                     {
                         sb.AppendLine("NavmeshSets =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(NavmeshSetsItem.Overall);
                             if (NavmeshSetsItem.Specific != null)
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in NavmeshSetsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("NavmeshTree =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(NavmeshTreeItem.Overall);
                             if (NavmeshTreeItem.Specific != null)
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in NavmeshTreeItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -436,13 +436,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("NavmeshSets =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(NavmeshSetsItem.Overall);
                         if (NavmeshSetsItem.Specific != null)
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in NavmeshSetsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("NavmeshTree =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(NavmeshTreeItem.Overall);
                         if (NavmeshTreeItem.Specific != null)
@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in NavmeshTreeItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (PreferredPathing) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -1037,12 +1037,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("NavmeshSets =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.NavmeshSets)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -1055,12 +1055,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("NavmeshTree =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.NavmeshTree)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

@@ -59,14 +59,14 @@ public class LinkInterfaceModule : GenerationModule
             }
             AddObjs(interf.Key);
 
-            using (new NamespaceWrapper(sb, proto.DefaultNamespace, fileScoped: false))
+            using (sb.Namespace(proto.DefaultNamespace, fileScoped: false))
             {
                 sb.AppendLine("/// <summary>");
                 sb.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName))}]");
                 sb.AppendLine("/// </summary>");
-                using (var c = new ClassWrapper(sb, interf.Key))
+                using (var c = sb.Class(interf.Key))
                 {
-                    c.Type = ClassWrapper.ObjectType.@interface;
+                    c.Type = Class.ObjectType.@interface;
                     c.Interfaces.Add($"I{proto.Protocol.Namespace}MajorRecordInternal");
                     c.Interfaces.Add($"{interf.Key}Getter");
                     if (interfaceInheritenceMappings.TryGetValue(interf.Key, out var impls))
@@ -83,9 +83,9 @@ public class LinkInterfaceModule : GenerationModule
                 sb.AppendLine("/// <summary>");
                 sb.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName))}]");
                 sb.AppendLine("/// </summary>");
-                using (var c = new ClassWrapper(sb, $"{interf.Key}Getter"))
+                using (var c = sb.Class($"{interf.Key}Getter"))
                 {
-                    c.Type = ClassWrapper.ObjectType.@interface;
+                    c.Type = Class.ObjectType.@interface;
                     c.Interfaces.Add($"I{proto.Protocol.Namespace}MajorRecordGetter");
                     if (interfaceInheritenceMappings.TryGetValue(interf.Key, out var impls))
                     {
@@ -116,9 +116,9 @@ public class LinkInterfaceModule : GenerationModule
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Mapping;");
         mappingGen.AppendLine($"using Loqui;");
         mappingGen.AppendLine();
-        using (new NamespaceWrapper(mappingGen, proto.DefaultNamespace))
+        using (mappingGen.Namespace(proto.DefaultNamespace))
         {
-            using (var c = new ClassWrapper(mappingGen, $"{proto.Protocol.Namespace}LinkInterfaceMapping"))
+            using (var c = mappingGen.Class($"{proto.Protocol.Namespace}LinkInterfaceMapping"))
             {
                 c.Public = PermissionLevel.@internal;
                 c.Interfaces.Add(nameof(IInterfaceMapping));

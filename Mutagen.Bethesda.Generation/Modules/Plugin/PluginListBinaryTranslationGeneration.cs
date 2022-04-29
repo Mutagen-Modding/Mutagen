@@ -133,7 +133,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 break;
         }
 
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{this.NamespacePrefix}ListBinaryTranslation<{typeName}>.Instance.Write{suffix}{(listOfRecords ? "PerItem" : null)}"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -303,12 +303,10 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
 
         WrapSet(sb, itemAccessor, list, (wrapFg) =>
         {
-            using (var args = new ArgsWrapper(wrapFg,
+            using (var args = wrapFg.Args(
                        $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.NamespacePrefix}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>.Instance.Parse{(recordPerItem ? "PerItem" : null)}",
-                       suffixLine: $"{Loqui.Generation.Utility.ConfigAwait(isAsync)}{(isAsync ? ")" : null)}")
-                   {
-                       SemiColon = false,
-                   })
+                       suffixLine: $"{Loqui.Generation.Utility.ConfigAwait(isAsync)}{(isAsync ? ")" : null)}",
+                       semiColon: false))
             {
                 if (list is ArrayType arr
                     && arr.FixedSize.HasValue)
@@ -536,7 +534,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                         }
                                     }
                                     gen.AppendLine("default:");
-                                    using (new DepthWrapper(gen))
+                                    using (gen.IncreaseDepth())
                                     {
                                         gen.AppendLine("throw new NotImplementedException();");
                                     }
@@ -569,7 +567,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
             case BinaryGenerationType.Custom:
                 if (typeGen.GetFieldData().HasTrigger)
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"partial void {typeGen.Name}CustomParse"))
                     {
                         args.Add($"{nameof(OverlayStream)} stream");
@@ -666,7 +664,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
             case BinaryGenerationType.NoGeneration:
                 return;
             case BinaryGenerationType.Custom:
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{typeGen.Name}CustomParse"))
                 {
                     args.AddPassArg($"stream");
@@ -706,7 +704,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 {
                     if (loqui.TargetObjectGeneration.IsTypelessStruct())
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"this.{typeGen.Name} = this.{nameof(PluginBinaryOverlay.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
                         {
                             args.AddPassArg("stream");
@@ -732,14 +730,14 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                                 {
                                                     subFg.AppendLine($"case RecordTypeInts.{trigger.Type}:");
                                                 }
-                                                using (new DepthWrapper(subFg))
+                                                using (subFg.IncreaseDepth())
                                                 {
                                                     LoquiType specificLoqui = item.Value as LoquiType;
                                                     subFg.AppendLine($"return {this.Module.BinaryOverlayClassName(specificLoqui.TargetObjectGeneration)}.{specificLoqui.TargetObjectGeneration.Name}Factory(s, p);");
                                                 }
                                             }
                                             subFg.AppendLine("default:");
-                                            using (new DepthWrapper(subFg))
+                                            using (subFg.IncreaseDepth())
                                             {
                                                 subFg.AppendLine("throw new NotImplementedException();");
                                             }
@@ -757,7 +755,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                     }
                     else
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"this.{typeGen.Name} = BinaryOverlayList.FactoryByArray<{typeName}>"))
                         {
                             args.Add($"mem: stream.RemainingMemory");
@@ -766,7 +764,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                             args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                             args.Add(subFg =>
                             {
-                                using (var subArgs = new FunctionWrapper(subFg,
+                                using (var subArgs = subFg.Function(
                                            $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
@@ -794,7 +792,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 }
                 else if (expectedLen.HasValue)
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"this.{typeGen.Name} = BinaryOverlayList.FactoryByArray<{typeName}>"))
                     {
                         args.Add($"mem: stream.RemainingMemory");
@@ -802,7 +800,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
                         args.Add(subFg =>
                         {
-                            using (var subArgs = new FunctionWrapper(subFg,
+                            using (var subArgs = subFg.Function(
                                        $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                             {
                                 subArgs.AddPassArg("stream");
@@ -816,7 +814,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 }
                 else
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"this.{typeGen.Name} = BinaryOverlayList.FactoryByArray<{typeName}>"))
                     {
                         args.Add($"mem: stream.RemainingMemory");
@@ -824,7 +822,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, $"p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubrecordFrame(s).Content", "p")}");
                         args.Add(subFg =>
                         {
-                            using (var subArgs = new FunctionWrapper(subFg,
+                            using (var subArgs = subFg.Function(
                                        $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                             {
                                 subArgs.AddPassArg("stream");
@@ -842,7 +840,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 sb.AppendLine("var subLen = finalPos - stream.Position;");
                 if (expectedLen.HasValue)
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"this.{typeGen.Name} = BinaryOverlayList.FactoryByStartIndex<{typeName}>"))
                     {
                         args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
@@ -868,14 +866,14 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                             {
                                                 subFg.AppendLine($"case RecordTypeInts.{trigger.Type}:");
                                             }
-                                            using (new DepthWrapper(subFg))
+                                            using (subFg.IncreaseDepth())
                                             {
                                                 LoquiType specificLoqui = item.Value as LoquiType;
                                                 subFg.AppendLine($"return {subGen.GenerateForTypicalWrapper(objGen, specificLoqui, "s", "p")}");
                                             }
                                         }
                                         subFg.AppendLine("default:");
-                                        using (new DepthWrapper(subFg))
+                                        using (subFg.IncreaseDepth())
                                         {
                                             subFg.AppendLine("throw new NotImplementedException();");
                                         }
@@ -887,7 +885,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 }
                 else
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"this.{typeGen.Name} = BinaryOverlayList.FactoryByLazyParse<{typeName}>"))
                     {
                         args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
@@ -909,7 +907,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 if (expectedLen.HasValue)
                 {
                     var nullIfEmpty = list.CustomData.TryGetValue(NullIfCounterZero, out var nullIf) && (bool)nullIf;
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"this.{typeGen.Name} = BinaryOverlayList.FactoryByCount{(subData.HasTrigger ? "PerItem" : null)}{(nullIfEmpty ? "NullIfZero" : null)}<{typeName}>"))
                     {
                         args.AddPassArg($"stream");
@@ -945,14 +943,14 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                             {
                                                 subFg.AppendLine($"case RecordTypeInts.{trigger.Type}:");
                                             }
-                                            using (new DepthWrapper(subFg))
+                                            using (subFg.IncreaseDepth())
                                             {
                                                 LoquiType specificLoqui = item.Value as LoquiType;
                                                 subFg.AppendLine($"return {subGen.GenerateForTypicalWrapper(objGen, specificLoqui, "s", "p")};");
                                             }
                                         }
                                         subFg.AppendLine("default:");
-                                        using (new DepthWrapper(subFg))
+                                        using (subFg.IncreaseDepth())
                                         {
                                             subFg.AppendLine("throw new NotImplementedException();");
                                         }
@@ -968,7 +966,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 }
                 else
                 {
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"this.{typeGen.Name} = BinaryOverlayList.FactoryByCountPerItem<{typeName}>"))
                     {
                         args.AddPassArg($"stream");
@@ -1002,7 +1000,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                     default:
                         throw new NotImplementedException();
                 }
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"this.{typeGen.Name} = BinaryOverlayList.FactoryByCount<{typeName}>"))
                 {
                     args.AddPassArg($"stream");
@@ -1032,14 +1030,14 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                         {
                                             subFg.AppendLine($"case RecordTypeInts.{trigger.Type}:");
                                         }
-                                        using (new DepthWrapper(subFg))
+                                        using (subFg.IncreaseDepth())
                                         {
                                             LoquiType specificLoqui = item.Value as LoquiType;
                                             subFg.AppendLine($"return {subGen.GenerateForTypicalWrapper(objGen, specificLoqui, "s", "p")};");
                                         }
                                     }
                                     subFg.AppendLine("default:");
-                                    using (new DepthWrapper(subFg))
+                                    using (subFg.IncreaseDepth())
                                     {
                                         subFg.AppendLine("throw new NotImplementedException();");
                                     }
@@ -1120,7 +1118,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         if (list.Nullable)
         {
             sb.AppendLine($"{accessor} = ");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 a(sb);
                 if (list.CustomData.TryGetValue(NullIfCounterZero, out var val)
@@ -1137,7 +1135,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         }
         else
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"{accessor}.SetTo"))
             {
                 args.Add(subFg => a(subFg));

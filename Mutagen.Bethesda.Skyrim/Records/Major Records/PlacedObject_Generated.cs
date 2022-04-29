@@ -1595,7 +1595,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
@@ -1626,7 +1626,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Portals =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PortalsItem.Overall);
                             if (PortalsItem.Specific != null)
@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in PortalsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1665,7 +1665,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LinkedRooms =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LinkedRoomsItem.Overall);
                             if (LinkedRoomsItem.Specific != null)
@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LinkedRoomsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("Reflections =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(ReflectionsItem.Overall);
                             if (ReflectionsItem.Specific != null)
@@ -1714,7 +1714,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in ReflectionsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LitWater =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LitWaterItem.Overall);
                             if (LitWaterItem.Specific != null)
@@ -1737,7 +1737,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LitWaterItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LocationRefTypes =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LocationRefTypesItem.Overall);
                             if (LocationRefTypesItem.Specific != null)
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LocationRefTypesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("LinkedReferences =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(LinkedReferencesItem.Overall);
                             if (LinkedReferencesItem.Specific != null)
@@ -1903,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in LinkedReferencesItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -2595,13 +2595,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -2630,7 +2630,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Portals =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PortalsItem.Overall);
                         if (PortalsItem.Specific != null)
@@ -2638,7 +2638,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in PortalsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2662,7 +2662,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LinkedRooms =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LinkedRoomsItem.Overall);
                         if (LinkedRoomsItem.Specific != null)
@@ -2670,7 +2670,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LinkedRoomsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2698,7 +2698,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("Reflections =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(ReflectionsItem.Overall);
                         if (ReflectionsItem.Specific != null)
@@ -2706,7 +2706,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in ReflectionsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -2720,7 +2720,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LitWater =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LitWaterItem.Overall);
                         if (LitWaterItem.Specific != null)
@@ -2728,7 +2728,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LitWaterItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2799,7 +2799,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LocationRefTypes =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LocationRefTypesItem.Overall);
                         if (LocationRefTypesItem.Specific != null)
@@ -2807,7 +2807,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LocationRefTypesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -2837,7 +2837,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("LinkedReferences =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(LinkedReferencesItem.Overall);
                         if (LinkedReferencesItem.Specific != null)
@@ -2845,7 +2845,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in LinkedReferencesItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -4157,7 +4157,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (PlacedObject) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -4210,12 +4210,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Portals =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in PortalsItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -4245,12 +4245,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LinkedRooms =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.LinkedRooms)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -4282,12 +4282,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("Reflections =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.Reflections)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }
@@ -4300,12 +4300,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LitWater =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.LitWater)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -4425,12 +4425,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LocationRefTypes =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in LocationRefTypesItem)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
@@ -4471,12 +4471,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("LinkedReferences =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.LinkedReferences)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

@@ -52,7 +52,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         }
 
         bool notNull = gender.ItemNullable && !gender.SubTypeGeneration.IsNullable;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{itemAccessor} = {this.NamespacePrefix}GenderedItemBinaryTranslation.Parse{(gender.MarkerPerGender ? "MarkerPerItem" : null)}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
         {
             args.AddPassArg($"frame");
@@ -181,7 +181,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         {
             typeName = loqui.TypeNameInternal(getter: true, internalInterface: true);
         }
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"GenderedItemBinaryTranslation.Write{(gendered.MarkerPerGender ? "MarkerPerItem" : null)}"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -298,7 +298,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                     var subTypeDefault = gendered.SubTypeGeneration.GetDefault(getter: true);
                     sb.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {(typeGen.Nullable ? "default" : $"new GenderedItem<{typeName}>({subTypeDefault}, {subTypeDefault})")};");
                     sb.AppendLine($"var data = HeaderTranslation.ExtractSubrecordMemory(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                     {
                         args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
@@ -331,7 +331,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                                 sb.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault(getter: true)};");
                             }
                             sb.AppendLine($"var data = {dataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                             {
                                 args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
@@ -352,7 +352,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                     {
                         sb.AppendLine($"if (!_{typeGen.Name}_IsSet) return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>({gendered.SubTypeGeneration.GetDefault(getter: true)}, {gendered.SubTypeGeneration.GetDefault(getter: true)});");
                         sb.AppendLine($"var data = {dataAccessor}.Slice(_{typeGen.Name}Location);");
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                         {
                             args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
@@ -402,7 +402,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         callName = "Factory";
                     }
                     bool notNull = gendered.ItemNullable && !gendered.SubTypeGeneration.IsNullable;
-                    using (var args = new ArgsWrapper(sb,
+                    using (var args = sb.Args(
                                $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{callName}<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                     {
                         args.Add("package: _package");

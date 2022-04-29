@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{name} (OblivionGroup<{typeof(T).Name}>) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -960,12 +960,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine("RecordCache =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.RecordCache)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem.Value?.ToString(sb, "Item");
                         }
@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{nameof(OblivionGroup.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Type ?? true)
                     {
@@ -1733,7 +1733,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendLine("RecordCache =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             if (RecordCache != null)
                             {
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     foreach (var subItem in RecordCache.Specific)
                                     {
                                         sb.AppendLine("[");
-                                        using (new DepthWrapper(sb))
+                                        using (sb.IncreaseDepth())
                                         {
                                             {
                                                 sb.AppendItem(subItem);
@@ -1867,13 +1867,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendLine("RecordCache =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         if (RecordCache != null)
                         {
@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 foreach (var subItem in RecordCache.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);

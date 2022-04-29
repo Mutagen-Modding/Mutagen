@@ -222,7 +222,7 @@ public class LinkModule : GenerationModule
                                         break;
                                     case Case.Maybe:
                                         subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
-                                        using (new DepthWrapper(subFg))
+                                        using (subFg.IncreaseDepth())
                                         {
                                             subFg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
                                         }
@@ -270,7 +270,7 @@ public class LinkModule : GenerationModule
                                     break;
                                 case Case.Maybe:
                                     sb.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         sb.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
                                     }

@@ -98,7 +98,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         await base.GenerateInClass(obj, sb);
         if (WantsTryCreateFromBinary(obj))
         {
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        "public static bool TryCreateFromBinary"))
             {
                 foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(
@@ -115,7 +115,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             using (sb.CurlyBrace())
             {
                 sb.AppendLine($"var startPos = {ReaderMemberName}.Position;");
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"item = CreateFromBinary"))
                 {
                     args.Add(this.MainAPI.PassArgs(obj, TranslationDirection.Reader));
@@ -237,13 +237,13 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
     {
         var data = obj.GetObjectData();
         if (data.CustomBinaryEnd == CustomEnd.Off) return;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"public static partial void CustomBinaryEndExport"))
         {
             args.Add($"{WriterClass} {WriterMemberName}");
             args.Add($"{obj.Interface(internalInterface: true, getter: true)} obj");
         }
-        using (var args = new FunctionWrapper(sb,
+        using (var args = sb.Function(
                    $"public static void CustomBinaryEndExportInternal"))
         {
             args.Add($"{WriterClass} {WriterMemberName}");
@@ -251,7 +251,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         }
         using (sb.CurlyBrace())
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"CustomBinaryEndExport"))
             {
                 args.AddPassArg(WriterMemberName);
@@ -266,13 +266,13 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         if (data.CustomBinaryEnd == CustomEnd.Off) return;
         if (data.CustomBinaryEnd == CustomEnd.Normal)
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"public static partial void CustomBinaryEndImport"))
             {
                 args.Add($"{ReaderClass} {ReaderMemberName}");
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
             }
-            using (var args = new FunctionWrapper(sb,
+            using (var args = sb.Function(
                        $"public static void CustomBinaryEndImportPublic"))
             {
                 args.Add($"{ReaderClass} {ReaderMemberName}");
@@ -280,7 +280,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             }
             using (sb.CurlyBrace())
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"CustomBinaryEndImport"))
                 {
                     args.AddPassArg(ReaderMemberName);
@@ -306,7 +306,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         {
             if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"var nextRecord = HeaderTranslation.GetNext{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "Record")}Type"))
                 {
                     args.Add($"reader: {ReaderMemberName}.Reader");
@@ -320,9 +320,9 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                     {
                         sb.AppendLine($"case {item.TypeInt}: // {item.Type}");
                     }
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
-                        using (var args = new ArgsWrapper(sb,
+                        using (var args = sb.Args(
                                    "return CustomRecordTypeTrigger"))
                         {
                             args.Add($"{ReaderMemberName}: {ReaderMemberName}.SpawnWithLength(customLen + {ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)})");
@@ -331,13 +331,13 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                         }
                     }
                     sb.AppendLine("default:");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendLine("break;");
                     }
                 }
             }
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
@@ -374,7 +374,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
     {
         if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
         {
-            using (var args = new ArgsWrapper(sb,
+            using (var args = sb.Args(
                        $"base.{CopyInFromPrefix}{ModuleNickname}"))
             {
                 args.AddPassArg("item");
@@ -438,7 +438,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             var firstBase = obj.BaseClassTrail().FirstOrDefault();
             if (firstBase != null)
             {
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{TranslationWriteClass(firstBase)}.Instance.Write"))
                 {
                     args.AddPassArg($"item");

@@ -40,7 +40,7 @@ public class MutagenLoquiType : LoquiType
         switch (this.RefType)
         {
             case LoquiRefType.Direct:
-                using (var args = new ArgsWrapper(sb,
+                using (var args = sb.Args(
                            $"{retAccessor}({this.TargetObjectGeneration.ObjectName}){rhsAccessor}.{(deepCopy ? "Deep" : null)}Copy"))
                 {
                     if (this.RefType == LoquiRefType.Direct)

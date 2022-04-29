@@ -60,7 +60,7 @@ public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
         Accessor converterAccessor)
     {
         BufferType zero = typeGen as BufferType;
-        using (var args = new ArgsWrapper(sb,
+        using (var args = sb.Args(
                    $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write"))
         {
             args.Add($"writer: {writerAccessor}");

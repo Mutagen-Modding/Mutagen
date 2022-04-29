@@ -248,14 +248,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(SceneScriptFragments.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if ((printMask?.PhaseFragments?.Overall ?? true)
                         && PhaseFragments is {} PhaseFragmentsItem)
                     {
                         sb.AppendLine("PhaseFragments =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(PhaseFragmentsItem.Overall);
                             if (PhaseFragmentsItem.Specific != null)
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in PhaseFragmentsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         subItem?.ToString(sb);
                                     }
@@ -349,13 +349,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("PhaseFragments =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(PhaseFragmentsItem.Overall);
                         if (PhaseFragmentsItem.Specific != null)
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in PhaseFragmentsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     subItem?.ToString(sb);
                                 }
@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (SceneScriptFragments) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -882,12 +882,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("PhaseFragments =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.PhaseFragments)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             subItem?.ToString(sb, "Item");
                         }

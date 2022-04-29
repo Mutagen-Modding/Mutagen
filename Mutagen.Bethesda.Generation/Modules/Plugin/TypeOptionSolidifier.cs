@@ -29,15 +29,15 @@ public class TypeOptionSolidifier : GenerationModule
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Order.Internals;");
         sb.AppendLine();
-        using (var n = new NamespaceWrapper(sb, proto.DefaultNamespace, fileScoped: false))
+        using (var n = sb.Namespace(proto.DefaultNamespace, fileScoped: false))
         {
-            using (var c = new ClassWrapper(sb, "TypeOptionSolidifierMixIns"))
+            using (var c = sb.Class("TypeOptionSolidifierMixIns"))
             {
                 c.Static = true;
             }
             using (sb.CurlyBrace())
             {
-                using (new RegionWrapper(sb, "Normal"))
+                using (sb.Region("Normal"))
                 {
                     foreach (var obj in proto.ObjectGenerationsByName
                                  .OrderBy(x => x.Key)
@@ -54,20 +54,20 @@ public class TypeOptionSolidifier : GenerationModule
                         });
                         var topLevelStr = topLevel ? "TopLevel" : string.Empty;
 
-                        using (var comment = new CommentWrapper(sb))
+                        using (var comment = sb.Comment())
                         {
                             comment.Summary.AppendLine($"Scope a load order query to {obj.Name}");
                             comment.Parameters.GetOrAdd("listings").AppendLine("ModListings to query");
                             comment.Return.AppendLine($"A typed object to do further queries on {obj.Name}");
                         }
-                        using (var args = new FunctionWrapper(sb,
+                        using (var args = sb.Function(
                                    $"public static {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
                         {
                             args.Add($"this IEnumerable<IModListingGetter<I{proto.Protocol.Namespace}ModGetter>> listings");
                         }
                         using (sb.CurlyBrace())
                         {
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                             {
                                 args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
@@ -76,20 +76,20 @@ public class TypeOptionSolidifier : GenerationModule
                         }
                         sb.AppendLine();
 
-                        using (var comment = new CommentWrapper(sb))
+                        using (var comment = sb.Comment())
                         {
                             comment.Summary.AppendLine($"Scope a load order query to {obj.Name}");
                             comment.Parameters.GetOrAdd("mods").AppendLine("Mods to query");
                             comment.Return.AppendLine($"A typed object to do further queries on {obj.Name}");
                         }
-                        using (var args = new FunctionWrapper(sb,
+                        using (var args = sb.Function(
                                    $"public static {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
                         {
                             args.Add($"this IEnumerable<I{proto.Protocol.Namespace}ModGetter> mods");
                         }
                         using (sb.CurlyBrace())
                         {
-                            using (var args = new ArgsWrapper(sb,
+                            using (var args = sb.Args(
                                        $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                             {
                                 args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
@@ -101,27 +101,27 @@ public class TypeOptionSolidifier : GenerationModule
                     }
                 }
 
-                using (new RegionWrapper(sb, "Link Interfaces"))
+                using (sb.Region("Link Interfaces"))
                 {
                     if (LinkInterfaceModule.ObjectMappings.TryGetValue(proto.Protocol, out var interfs))
                     {
                         foreach (var interf in interfs)
                         {
                             var getter = $"{interf.Key}Getter";
-                            using (var comment = new CommentWrapper(sb))
+                            using (var comment = sb.Comment())
                             {
                                 comment.Summary.AppendLine($"Scope a load order query to {interf.Key}");
                                 comment.Parameters.GetOrAdd("listings").AppendLine("ModListings to query");
                                 comment.Return.AppendLine($"A typed object to do further queries on {interf.Key}");
                             }
-                            using (var args = new FunctionWrapper(sb,
+                            using (var args = sb.Function(
                                        $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}> {interf.Key}"))
                             {
                                 args.Add($"this IEnumerable<IModListingGetter<I{proto.Protocol.Namespace}ModGetter>> listings");
                             }
                             using (sb.CurlyBrace())
                             {
-                                using (var args = new ArgsWrapper(sb,
+                                using (var args = sb.Args(
                                            $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
@@ -130,20 +130,20 @@ public class TypeOptionSolidifier : GenerationModule
                             }
                             sb.AppendLine();
 
-                            using (var comment = new CommentWrapper(sb))
+                            using (var comment = sb.Comment())
                             {
                                 comment.Summary.AppendLine($"Scope a load order query to {interf.Key}");
                                 comment.Parameters.GetOrAdd("mods").AppendLine("Mods to query");
                                 comment.Return.AppendLine($"A typed object to do further queries on {interf.Key}");
                             }
-                            using (var args = new FunctionWrapper(sb,
+                            using (var args = sb.Function(
                                        $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}> {interf.Key}"))
                             {
                                 args.Add($"this IEnumerable<I{proto.Protocol.Namespace}ModGetter> mods");
                             }
                             using (sb.CurlyBrace())
                             {
-                                using (var args = new ArgsWrapper(sb,
+                                using (var args = sb.Args(
                                            $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");

@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine("UnusedNoisemaps =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(UnusedNoisemapsItem.Overall);
                             if (UnusedNoisemapsItem.Specific != null)
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 foreach (var subItem in UnusedNoisemapsItem.Specific)
                                 {
                                     sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.IncreaseDepth())
                                     {
                                         {
                                             sb.AppendItem(subItem);
@@ -2211,13 +2211,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
@@ -2237,7 +2237,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendLine("UnusedNoisemaps =>");
                     sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.IncreaseDepth())
                     {
                         sb.AppendItem(UnusedNoisemapsItem.Overall);
                         if (UnusedNoisemapsItem.Specific != null)
@@ -2245,7 +2245,7 @@ namespace Mutagen.Bethesda.Skyrim
                             foreach (var subItem in UnusedNoisemapsItem.Specific)
                             {
                                 sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.IncreaseDepth())
                                 {
                                     {
                                         sb.AppendItem(subItem);
@@ -3700,7 +3700,7 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{name} (Water) =>");
             }
             sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.IncreaseDepth())
             {
                 ToStringFields(
                     item: item,
@@ -3728,12 +3728,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine("UnusedNoisemaps =>");
                 sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.IncreaseDepth())
                 {
                     foreach (var subItem in item.UnusedNoisemaps)
                     {
                         sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.IncreaseDepth())
                         {
                             sb.AppendItem(subItem);
                         }
