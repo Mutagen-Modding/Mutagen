@@ -762,6 +762,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IObjectBounded,
         IObjectId,
+        IPlaceableObject,
         IRegionTarget,
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
@@ -807,6 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequiredGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IPlaceableObjectGetter,
         IRegionTargetGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

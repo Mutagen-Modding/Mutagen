@@ -15,5 +15,6 @@
       <Enum name="Flags" enumName="TextureSet.Flag" byteLength="2" recordType="DNAM" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

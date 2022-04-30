@@ -9,5 +9,6 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>ISound</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

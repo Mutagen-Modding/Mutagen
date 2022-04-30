@@ -2106,6 +2106,7 @@
     <Compile Include="Records\Major Records\DoorTriangle_Generated.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IPlaceableObject_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

@@ -14,5 +14,6 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>ILocationTargetable</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

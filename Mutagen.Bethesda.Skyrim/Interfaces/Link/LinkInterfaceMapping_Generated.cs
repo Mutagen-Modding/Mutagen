@@ -19,6 +19,36 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
     public SkyrimLinkInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IPlaceableObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AcousticSpace_Registration.Instance,
+            Activator_Registration.Instance,
+            AlchemicalApparatus_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
+            Container_Registration.Instance,
+            Door_Registration.Instance,
+            Flora_Registration.Instance,
+            Furniture_Registration.Instance,
+            IdleMarker_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            Key_Registration.Instance,
+            Light_Registration.Instance,
+            MiscItem_Registration.Instance,
+            MoveableStatic_Registration.Instance,
+            Scroll_Registration.Instance,
+            SoulGem_Registration.Instance,
+            SoundMarker_Registration.Instance,
+            Spell_Registration.Instance,
+            Static_Registration.Instance,
+            TalkingActivator_Registration.Instance,
+            TextureSet_Registration.Instance,
+            Tree_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IPlaceableObjectGetter)] = dict[typeof(IPlaceableObject)] with { Setter = false };
         dict[typeof(IIdleRelation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ActionRecord_Registration.Instance,

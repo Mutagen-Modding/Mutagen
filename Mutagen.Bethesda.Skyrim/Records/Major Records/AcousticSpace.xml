@@ -7,5 +7,6 @@
       <FormLink name="UseSoundFromRegion" refName="Region" recordType="RDAT" />
       <FormLink name="EnvironmentType" refName="ReverbParameters" recordType="BNAM" />
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

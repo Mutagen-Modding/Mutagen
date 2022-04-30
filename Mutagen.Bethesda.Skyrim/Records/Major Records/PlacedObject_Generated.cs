@@ -76,14 +76,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Base
-        private readonly IFormLinkNullable<ISkyrimMajorRecordGetter> _Base = new FormLinkNullable<ISkyrimMajorRecordGetter>();
-        public IFormLinkNullable<ISkyrimMajorRecordGetter> Base
+        private readonly IFormLinkNullable<IPlaceableObjectGetter> _Base = new FormLinkNullable<IPlaceableObjectGetter>();
+        public IFormLinkNullable<IPlaceableObjectGetter> Base
         {
             get => _Base;
             set => _Base.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IPlacedObjectGetter.Base => this.Base;
+        IFormLinkNullableGetter<IPlaceableObjectGetter> IPlacedObjectGetter.Base => this.Base;
         #endregion
         #region BoundHalfExtents
         public P3Float? BoundHalfExtents { get; set; }
@@ -3292,7 +3292,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new IFormLinkNullable<ISkyrimMajorRecordGetter> Base { get; set; }
+        new IFormLinkNullable<IPlaceableObjectGetter> Base { get; set; }
         new P3Float? BoundHalfExtents { get; set; }
         new PlacedPrimitive? Primitive { get; set; }
         new MemorySlice<Byte>? XORD { get; set; }
@@ -3380,7 +3380,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
-        IFormLinkNullableGetter<ISkyrimMajorRecordGetter> Base { get; }
+        IFormLinkNullableGetter<IPlaceableObjectGetter> Base { get; }
         P3Float? BoundHalfExtents { get; }
         IPlacedPrimitiveGetter? Primitive { get; }
         ReadOnlyMemorySlice<Byte>? XORD { get; }
@@ -7060,7 +7060,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Base
         private int? _BaseLocation;
-        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IPlaceableObjectGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<IPlaceableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlaceableObjectGetter>.Null;
         #endregion
         #region BoundHalfExtents
         private int? _BoundHalfExtentsLocation;

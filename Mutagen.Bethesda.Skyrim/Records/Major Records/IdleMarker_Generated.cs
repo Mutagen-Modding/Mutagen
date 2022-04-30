@@ -763,6 +763,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         IObjectId,
+        IPlaceableObject,
         ISkyrimMajorRecordInternal
     {
         /// <summary>
@@ -798,7 +799,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IIdleMarkerGetter>,
         IModeledGetter,
         IObjectBoundedGetter,
-        IObjectIdGetter
+        IObjectIdGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => IdleMarker_Registration.Instance;
         #region ObjectBounds

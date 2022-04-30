@@ -28,5 +28,6 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IEffectRecord</LinkInterface>
     <LinkInterface>ISpellRecord</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

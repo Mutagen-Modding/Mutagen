@@ -19,5 +19,6 @@
       <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

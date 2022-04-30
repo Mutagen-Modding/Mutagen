@@ -636,6 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISoundMarkerInternal>,
         IObjectBounded,
         IObjectId,
+        IPlaceableObject,
         ISkyrimMajorRecordInternal,
         ISound,
         ISoundMarkerGetter
@@ -665,6 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ISoundMarkerGetter>,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IPlaceableObjectGetter,
         ISoundGetter
     {
         static new ILoquiRegistration StaticRegistration => SoundMarker_Registration.Instance;

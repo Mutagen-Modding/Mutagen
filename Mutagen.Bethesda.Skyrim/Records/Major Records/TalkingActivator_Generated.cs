@@ -1017,6 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         INamedRequired,
         IObjectBounded,
+        IPlaceableObject,
         IScripted,
         ISkyrimMajorRecordInternal,
         ITalkingActivatorGetter,
@@ -1073,6 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,
+        IPlaceableObjectGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

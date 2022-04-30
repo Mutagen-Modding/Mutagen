@@ -1094,6 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         INamedRequired,
         IObjectBounded,
+        IPlaceableObject,
         IRegionTarget,
         IScripted,
         ISkyrimMajorRecordInternal,
@@ -1146,6 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,
+        IPlaceableObjectGetter,
         IRegionTargetGetter,
         IScriptedGetter,
         ITranslatedNamedRequiredGetter

@@ -3300,6 +3300,30 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Link Interfaces
         /// <summary>
+        /// Scope a load order query to IPlaceableObject
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IPlaceableObject</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlaceableObject, IPlaceableObjectGetter> IPlaceableObject(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlaceableObject, IPlaceableObjectGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IPlaceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IPlaceableObject, IPlaceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IPlaceableObject
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IPlaceableObject</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlaceableObject, IPlaceableObjectGetter> IPlaceableObject(this IEnumerable<ISkyrimModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlaceableObject, IPlaceableObjectGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IPlaceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IPlaceableObject, IPlaceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to IIdleRelation
         /// </summary>
         /// <param name="listings">ModListings to query</param>
