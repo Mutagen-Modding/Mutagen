@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -506,6 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ITeleportDestination :
         IFormLinkContainer,
         ILoquiObjectSetter<ITeleportDestination>,
+        IPositionRotation,
         ITeleportDestinationGetter
     {
         new IFormLink<IPlacedGetter> Destination { get; set; }
@@ -517,7 +519,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ITeleportDestinationGetter>
+        ILoquiObject<ITeleportDestinationGetter>,
+        IPositionRotationGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

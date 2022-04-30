@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -633,7 +634,8 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface INpcFaceMorph :
         ILoquiObjectSetter<INpcFaceMorph>,
-        INpcFaceMorphGetter
+        INpcFaceMorphGetter,
+        IPositionRotation
     {
         new UInt32? Index { get; set; }
         new P3Float Position { get; set; }
@@ -647,7 +649,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface INpcFaceMorphGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<INpcFaceMorphGetter>
+        ILoquiObject<INpcFaceMorphGetter>,
+        IPositionRotationGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -23,6 +23,9 @@ public class AspectInterfaceModule : GenerationModule
         Definitions.Add(new FieldsAspect("IWeightValue",
             ("Value", "UInt32"),
             ("Weight", "Single")));
+        Definitions.Add(new FieldsAspect("IPositionRotation",
+            ("Position", "P3Float"),
+            ("Rotation", "P3Float")));
     }
 
     public override async Task LoadWrapup(ObjectGeneration obj)

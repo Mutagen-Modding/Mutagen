@@ -182,6 +182,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TextureSet
 - Tree
 - Weapon
+### IPositionRotation
+- NpcFaceMorph
+- Placement
+- Transform
 ### IScripted
 - Activator
 - Armor
@@ -383,6 +387,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### NpcFaceMorph
+- IPositionRotation
 ### ObjectEffect
 - INamed
 - IObjectBounded
@@ -391,6 +397,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Phoneme
 - INamed
+### Placement
+- IPositionRotation
 ### Projectile
 - IModeled
 - INamed
@@ -484,6 +492,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### TintTemplateOption
 - INamed
+### Transform
+- IPositionRotation
 ### Tree
 - IModeled
 - INamed

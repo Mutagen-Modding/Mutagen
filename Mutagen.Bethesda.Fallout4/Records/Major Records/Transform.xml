@@ -13,6 +13,5 @@
         </Fields>
       </Data>
     </Fields>
-    <Interface>IPositionRotation</Interface>
   </Object>
 </Loqui>

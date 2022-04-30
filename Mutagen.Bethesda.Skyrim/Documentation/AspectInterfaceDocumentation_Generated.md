@@ -203,6 +203,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TextureSet
 - Tree
 - Weapon
+### IPositionRotation
+- Placement
+- TeleportDestination
 ### IScripted
 - Activator
 - AlchemicalApparatus
@@ -491,6 +494,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IScripted
 ### PlacedTrap
 - IScripted
+### Placement
+- IPositionRotation
 ### Projectile
 - IModeled
 - INamed
@@ -578,6 +583,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### TeleportDestination
+- IPositionRotation
 ### TextureSet
 - IObjectBounded
 ### Tree

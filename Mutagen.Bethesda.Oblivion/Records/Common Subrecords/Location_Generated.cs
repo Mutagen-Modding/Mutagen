@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -459,7 +460,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILocation :
         ILocationGetter,
-        ILoquiObjectSetter<ILocation>
+        ILoquiObjectSetter<ILocation>,
+        IPositionRotation
     {
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
@@ -468,7 +470,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILocationGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ILocationGetter>
+        ILoquiObject<ILocationGetter>,
+        IPositionRotationGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

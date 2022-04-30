@@ -126,7 +126,6 @@
     </Fields>
   </Object>
   <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL" GUID="b67ff340-7a4a-4aa1-b4cb-076b5ddc5c78" ID="305">
-    <Interface>IPositionRotation</Interface>
     <Fields>
       <FormLink name="Door" refName="PlacedObject" />
       <P3Float name="Position" />

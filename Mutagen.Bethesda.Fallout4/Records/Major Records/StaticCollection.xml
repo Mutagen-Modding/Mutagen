@@ -25,6 +25,5 @@
       <P3Float name="Rotation" />
       <Float name="Scale" />
 	</Fields>
-    <Interface>IPositionRotation</Interface>
   </Object>
 </Loqui>

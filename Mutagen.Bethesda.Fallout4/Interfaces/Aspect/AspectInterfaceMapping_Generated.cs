@@ -367,6 +367,7 @@ namespace Mutagen.Bethesda.Fallout4
             dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
             dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                NpcFaceMorph_Registration.Instance,
                 Placement_Registration.Instance,
                 Transform_Registration.Instance,
             });

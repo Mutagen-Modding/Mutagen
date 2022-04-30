@@ -137,6 +137,12 @@ namespace Mutagen.Bethesda.Oblivion
                 Worldspace_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
+            dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Location_Registration.Instance,
+                TeleportDestination_Registration.Instance,
+            });
+            dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };
             dict[typeof(IWeightValue)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AlchemicalApparatusData_Registration.Instance,

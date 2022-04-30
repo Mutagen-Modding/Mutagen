@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Placement" objType="Subrecord" recordType="DATA" GUID="4b94975c-9eee-4f58-a4da-edda94e7e252" ID="479">
-    <Interface>IPositionRotation</Interface>
     <Fields>
       <P3Float name="Position" />
       <P3Float name="Rotation" />
