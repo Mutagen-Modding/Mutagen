@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh;
         #endregion
-        #region NavMeshTriangleIndex
-        public Int16 NavMeshTriangleIndex { get; set; } = default;
+        #region TeleportMarkerTriangle
+        public Int16 TeleportMarkerTriangle { get; set; } = default;
         #endregion
         #region Unused
         public Int16 Unused { get; set; } = default;
@@ -108,17 +108,17 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.NavMesh = initialValue;
-                this.NavMeshTriangleIndex = initialValue;
+                this.TeleportMarkerTriangle = initialValue;
                 this.Unused = initialValue;
             }
 
             public Mask(
                 TItem NavMesh,
-                TItem NavMeshTriangleIndex,
+                TItem TeleportMarkerTriangle,
                 TItem Unused)
             {
                 this.NavMesh = NavMesh;
-                this.NavMeshTriangleIndex = NavMeshTriangleIndex;
+                this.TeleportMarkerTriangle = TeleportMarkerTriangle;
                 this.Unused = Unused;
             }
 
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem NavMesh;
-            public TItem NavMeshTriangleIndex;
+            public TItem TeleportMarkerTriangle;
             public TItem Unused;
             #endregion
 
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.NavMesh, rhs.NavMesh)) return false;
-                if (!object.Equals(this.NavMeshTriangleIndex, rhs.NavMeshTriangleIndex)) return false;
+                if (!object.Equals(this.TeleportMarkerTriangle, rhs.TeleportMarkerTriangle)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 return true;
             }
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.NavMesh);
-                hash.Add(this.NavMeshTriangleIndex);
+                hash.Add(this.TeleportMarkerTriangle);
                 hash.Add(this.Unused);
                 return hash.ToHashCode();
             }
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.NavMesh)) return false;
-                if (!eval(this.NavMeshTriangleIndex)) return false;
+                if (!eval(this.TeleportMarkerTriangle)) return false;
                 if (!eval(this.Unused)) return false;
                 return true;
             }
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.NavMesh)) return true;
-                if (eval(this.NavMeshTriangleIndex)) return true;
+                if (eval(this.TeleportMarkerTriangle)) return true;
                 if (eval(this.Unused)) return true;
                 return false;
             }
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.NavMesh = eval(this.NavMesh);
-                obj.NavMeshTriangleIndex = eval(this.NavMeshTriangleIndex);
+                obj.TeleportMarkerTriangle = eval(this.TeleportMarkerTriangle);
                 obj.Unused = eval(this.Unused);
             }
             #endregion
@@ -221,9 +221,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(NavMesh, "NavMesh");
                     }
-                    if (printMask?.NavMeshTriangleIndex ?? true)
+                    if (printMask?.TeleportMarkerTriangle ?? true)
                     {
-                        sb.AppendItem(NavMeshTriangleIndex, "NavMeshTriangleIndex");
+                        sb.AppendItem(TeleportMarkerTriangle, "TeleportMarkerTriangle");
                     }
                     if (printMask?.Unused ?? true)
                     {
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? NavMesh;
-            public Exception? NavMeshTriangleIndex;
+            public Exception? TeleportMarkerTriangle;
             public Exception? Unused;
             #endregion
 
@@ -267,8 +267,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case NavigationDoorLink_FieldIndex.NavMesh:
                         return NavMesh;
-                    case NavigationDoorLink_FieldIndex.NavMeshTriangleIndex:
-                        return NavMeshTriangleIndex;
+                    case NavigationDoorLink_FieldIndex.TeleportMarkerTriangle:
+                        return TeleportMarkerTriangle;
                     case NavigationDoorLink_FieldIndex.Unused:
                         return Unused;
                     default:
@@ -284,8 +284,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationDoorLink_FieldIndex.NavMesh:
                         this.NavMesh = ex;
                         break;
-                    case NavigationDoorLink_FieldIndex.NavMeshTriangleIndex:
-                        this.NavMeshTriangleIndex = ex;
+                    case NavigationDoorLink_FieldIndex.TeleportMarkerTriangle:
+                        this.TeleportMarkerTriangle = ex;
                         break;
                     case NavigationDoorLink_FieldIndex.Unused:
                         this.Unused = ex;
@@ -303,8 +303,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationDoorLink_FieldIndex.NavMesh:
                         this.NavMesh = (Exception?)obj;
                         break;
-                    case NavigationDoorLink_FieldIndex.NavMeshTriangleIndex:
-                        this.NavMeshTriangleIndex = (Exception?)obj;
+                    case NavigationDoorLink_FieldIndex.TeleportMarkerTriangle:
+                        this.TeleportMarkerTriangle = (Exception?)obj;
                         break;
                     case NavigationDoorLink_FieldIndex.Unused:
                         this.Unused = (Exception?)obj;
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (NavMesh != null) return true;
-                if (NavMeshTriangleIndex != null) return true;
+                if (TeleportMarkerTriangle != null) return true;
                 if (Unused != null) return true;
                 return false;
             }
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(NavMesh, "NavMesh");
                 }
                 {
-                    sb.AppendItem(NavMeshTriangleIndex, "NavMeshTriangleIndex");
+                    sb.AppendItem(TeleportMarkerTriangle, "TeleportMarkerTriangle");
                 }
                 {
                     sb.AppendItem(Unused, "Unused");
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.NavMesh = this.NavMesh.Combine(rhs.NavMesh);
-                ret.NavMeshTriangleIndex = this.NavMeshTriangleIndex.Combine(rhs.NavMeshTriangleIndex);
+                ret.TeleportMarkerTriangle = this.TeleportMarkerTriangle.Combine(rhs.TeleportMarkerTriangle);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
                 return ret;
             }
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool NavMesh;
-            public bool NavMeshTriangleIndex;
+            public bool TeleportMarkerTriangle;
             public bool Unused;
             #endregion
 
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.NavMesh = defaultOn;
-                this.NavMeshTriangleIndex = defaultOn;
+                this.TeleportMarkerTriangle = defaultOn;
                 this.Unused = defaultOn;
             }
 
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((NavMesh, null));
-                ret.Add((NavMeshTriangleIndex, null));
+                ret.Add((TeleportMarkerTriangle, null));
                 ret.Add((Unused, null));
             }
 
@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
         INavigationDoorLinkGetter
     {
         new IFormLink<INavigationMeshGetter> NavMesh { get; set; }
-        new Int16 NavMeshTriangleIndex { get; set; }
+        new Int16 TeleportMarkerTriangle { get; set; }
         new Int16 Unused { get; set; }
     }
 
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavigationDoorLink_Registration.Instance;
         IFormLinkGetter<INavigationMeshGetter> NavMesh { get; }
-        Int16 NavMeshTriangleIndex { get; }
+        Int16 TeleportMarkerTriangle { get; }
         Int16 Unused { get; }
 
     }
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
     internal enum NavigationDoorLink_FieldIndex
     {
         NavMesh = 0,
-        NavMeshTriangleIndex = 1,
+        TeleportMarkerTriangle = 1,
         Unused = 2,
     }
     #endregion
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.NavMesh.Clear();
-            item.NavMeshTriangleIndex = default;
+            item.TeleportMarkerTriangle = default;
             item.Unused = default;
         }
         
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (rhs == null) return;
             ret.NavMesh = item.NavMesh.Equals(rhs.NavMesh);
-            ret.NavMeshTriangleIndex = item.NavMeshTriangleIndex == rhs.NavMeshTriangleIndex;
+            ret.TeleportMarkerTriangle = item.TeleportMarkerTriangle == rhs.TeleportMarkerTriangle;
             ret.Unused = item.Unused == rhs.Unused;
         }
         
@@ -906,9 +906,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.NavMesh.FormKey, "NavMesh");
             }
-            if (printMask?.NavMeshTriangleIndex ?? true)
+            if (printMask?.TeleportMarkerTriangle ?? true)
             {
-                sb.AppendItem(item.NavMeshTriangleIndex, "NavMeshTriangleIndex");
+                sb.AppendItem(item.TeleportMarkerTriangle, "TeleportMarkerTriangle");
             }
             if (printMask?.Unused ?? true)
             {
@@ -927,9 +927,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMeshTriangleIndex) ?? true))
+            if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.TeleportMarkerTriangle) ?? true))
             {
-                if (lhs.NavMeshTriangleIndex != rhs.NavMeshTriangleIndex) return false;
+                if (lhs.TeleportMarkerTriangle != rhs.TeleportMarkerTriangle) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.Unused) ?? true))
             {
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.NavMesh);
-            hash.Add(item.NavMeshTriangleIndex);
+            hash.Add(item.TeleportMarkerTriangle);
             hash.Add(item.Unused);
             return hash.ToHashCode();
         }
@@ -981,9 +981,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.NavMesh.SetTo(rhs.NavMesh.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMeshTriangleIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.TeleportMarkerTriangle) ?? true))
             {
-                item.NavMeshTriangleIndex = rhs.NavMeshTriangleIndex;
+                item.TeleportMarkerTriangle = rhs.TeleportMarkerTriangle;
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.Unused) ?? true))
             {
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NavMesh);
-            writer.Write(item.NavMeshTriangleIndex);
+            writer.Write(item.TeleportMarkerTriangle);
             writer.Write(item.Unused);
         }
 
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame)
         {
             item.NavMesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.NavMeshTriangleIndex = frame.ReadInt16();
+            item.TeleportMarkerTriangle = frame.ReadInt16();
             item.Unused = frame.ReadInt16();
         }
 
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public IFormLinkGetter<INavigationMeshGetter> NavMesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Int16 NavMeshTriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x4, 0x2));
+        public Int16 TeleportMarkerTriangle => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x4, 0x2));
         public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,

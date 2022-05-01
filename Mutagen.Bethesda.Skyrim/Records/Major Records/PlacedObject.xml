@@ -19,7 +19,7 @@
       <List name="LinkedRooms" binary="NoGeneration">
         <FormLink recordType="XLRM" refName="PlacedObject" />
       </List>
-      <Bool name="MultiBoundPrimitive" boolAsMarker="XMBP" />
+      <Bool name="IsMultiBoundPrimitive" boolAsMarker="XMBP" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <ByteArray name="RagdollBipedData" recordType="XRGB" />
       <Float name="Radius" recordType="XRDS" />
@@ -50,7 +50,6 @@
       <FormLink name="LeveledItemBaseObject" refName="LeveledItem" recordType="XLIB" />
       <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
       <FormLink name="PersistentLocation" refName="Location" recordType="XLCN" />
-      <!-- ToDo: Upgrade to a FormLink? -->
       <UInt32 name="CollisionLayer" recordType="XTRI" />
       <RefDirect name="Lock" refName="LockData" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
@@ -58,7 +57,7 @@
       <List name="LocationRefTypes" recordType="XLRT">
         <FormLink refName="LocationReferenceType" />
       </List>
-      <Bool name="IgnoredBySandbox" boolAsMarker="XIS2" />
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
       <RefDirect name="Ownership" refName="Ownership" />
       <Int32 name="ItemCount" recordType="XCNT" />
       <Float name="Charge" recordType="XCHG" />
@@ -71,7 +70,7 @@
       <Enum name="Action" enumName="PlacedObject.ActionFlag" recordType="XACT" byteLength="4" />
       <Float name="HeadTrackingWeight" recordType="XHTW" />
       <Float name="FavorCost" recordType="XFVC" />
-      <Bool name="OpenByDefault" boolAsMarker="ONAM" />
+      <Bool name="IsOpenByDefault" boolAsMarker="ONAM" />
       <RefDirect name="MapMarker" refName="MapMarker" markerType="XMRK" />
       <FormLink name="AttachRef" recordType="XATR">
         <Interface>IPlacedThing</Interface>
@@ -155,8 +154,7 @@
   <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP" GUID="3dfc5897-6afc-4b57-9d2a-1946257205ed" ID="310">
     <Fields>
       <FormLink name="NavMesh" refName="NavigationMesh" />
-      <!-- ToDo:  Add a linking accessor to get triangle directly through formlink? -->
-      <Int16 name="NavMeshTriangleIndex" />
+      <Int16 name="TeleportMarkerTriangle" />
       <Int16 name="Unused" />
     </Fields>
   </Object>

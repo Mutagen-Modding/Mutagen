@@ -185,8 +185,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region MultiBoundPrimitive
-        public Boolean MultiBoundPrimitive { get; set; } = default;
+        #region IsMultiBoundPrimitive
+        public Boolean IsMultiBoundPrimitive { get; set; } = default;
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -483,8 +483,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region IgnoredBySandbox
-        public Boolean IgnoredBySandbox { get; set; } = default;
+        #region IsIgnoredBySandbox
+        public Boolean IsIgnoredBySandbox { get; set; } = default;
         #endregion
         #region Ownership
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -568,8 +568,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedObjectGetter.FavorCost => this.FavorCost;
         #endregion
-        #region OpenByDefault
-        public Boolean OpenByDefault { get; set; } = default;
+        #region IsOpenByDefault
+        public Boolean IsOpenByDefault { get; set; } = default;
         #endregion
         #region MapMarker
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LightingTemplate = initialValue;
                 this.ImageSpace = initialValue;
                 this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MultiBoundPrimitive = initialValue;
+                this.IsMultiBoundPrimitive = initialValue;
                 this.RagdollData = initialValue;
                 this.RagdollBipedData = initialValue;
                 this.Radius = initialValue;
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EncounterZone = initialValue;
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(initialValue, new NavigationDoorLink.Mask<TItem>(initialValue));
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.IgnoredBySandbox = initialValue;
+                this.IsIgnoredBySandbox = initialValue;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
                 this.ItemCount = initialValue;
                 this.Charge = initialValue;
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Action = initialValue;
                 this.HeadTrackingWeight = initialValue;
                 this.FavorCost = initialValue;
-                this.OpenByDefault = initialValue;
+                this.IsOpenByDefault = initialValue;
                 this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(initialValue, new MapMarker.Mask<TItem>(initialValue));
                 this.AttachRef = initialValue;
                 this.DistantLodData = initialValue;
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem LightingTemplate,
                 TItem ImageSpace,
                 TItem LinkedRooms,
-                TItem MultiBoundPrimitive,
+                TItem IsMultiBoundPrimitive,
                 TItem RagdollData,
                 TItem RagdollBipedData,
                 TItem Radius,
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EncounterZone,
                 TItem NavigationDoorLink,
                 TItem LocationRefTypes,
-                TItem IgnoredBySandbox,
+                TItem IsIgnoredBySandbox,
                 TItem Ownership,
                 TItem ItemCount,
                 TItem Charge,
@@ -759,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Action,
                 TItem HeadTrackingWeight,
                 TItem FavorCost,
-                TItem OpenByDefault,
+                TItem IsOpenByDefault,
                 TItem MapMarker,
                 TItem AttachRef,
                 TItem DistantLodData,
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LightingTemplate = LightingTemplate;
                 this.ImageSpace = ImageSpace;
                 this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkedRooms, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MultiBoundPrimitive = MultiBoundPrimitive;
+                this.IsMultiBoundPrimitive = IsMultiBoundPrimitive;
                 this.RagdollData = RagdollData;
                 this.RagdollBipedData = RagdollBipedData;
                 this.Radius = Radius;
@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EncounterZone = EncounterZone;
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(NavigationDoorLink, new NavigationDoorLink.Mask<TItem>(NavigationDoorLink));
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
-                this.IgnoredBySandbox = IgnoredBySandbox;
+                this.IsIgnoredBySandbox = IsIgnoredBySandbox;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
                 this.ItemCount = ItemCount;
                 this.Charge = Charge;
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Action = Action;
                 this.HeadTrackingWeight = HeadTrackingWeight;
                 this.FavorCost = FavorCost;
-                this.OpenByDefault = OpenByDefault;
+                this.IsOpenByDefault = IsOpenByDefault;
                 this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(MapMarker, new MapMarker.Mask<TItem>(MapMarker));
                 this.AttachRef = AttachRef;
                 this.DistantLodData = DistantLodData;
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem LightingTemplate;
             public TItem ImageSpace;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LinkedRooms;
-            public TItem MultiBoundPrimitive;
+            public TItem IsMultiBoundPrimitive;
             public TItem RagdollData;
             public TItem RagdollBipedData;
             public TItem Radius;
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem EncounterZone;
             public MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>? NavigationDoorLink { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypes;
-            public TItem IgnoredBySandbox;
+            public TItem IsIgnoredBySandbox;
             public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
             public TItem ItemCount;
             public TItem Charge;
@@ -894,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Action;
             public TItem HeadTrackingWeight;
             public TItem FavorCost;
-            public TItem OpenByDefault;
+            public TItem IsOpenByDefault;
             public MaskItem<TItem, MapMarker.Mask<TItem>?>? MapMarker { get; set; }
             public TItem AttachRef;
             public TItem DistantLodData;
@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.LightingTemplate, rhs.LightingTemplate)) return false;
                 if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
                 if (!object.Equals(this.LinkedRooms, rhs.LinkedRooms)) return false;
-                if (!object.Equals(this.MultiBoundPrimitive, rhs.MultiBoundPrimitive)) return false;
+                if (!object.Equals(this.IsMultiBoundPrimitive, rhs.IsMultiBoundPrimitive)) return false;
                 if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
                 if (!object.Equals(this.RagdollBipedData, rhs.RagdollBipedData)) return false;
                 if (!object.Equals(this.Radius, rhs.Radius)) return false;
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
                 if (!object.Equals(this.NavigationDoorLink, rhs.NavigationDoorLink)) return false;
                 if (!object.Equals(this.LocationRefTypes, rhs.LocationRefTypes)) return false;
-                if (!object.Equals(this.IgnoredBySandbox, rhs.IgnoredBySandbox)) return false;
+                if (!object.Equals(this.IsIgnoredBySandbox, rhs.IsIgnoredBySandbox)) return false;
                 if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
                 if (!object.Equals(this.ItemCount, rhs.ItemCount)) return false;
                 if (!object.Equals(this.Charge, rhs.Charge)) return false;
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Action, rhs.Action)) return false;
                 if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
                 if (!object.Equals(this.FavorCost, rhs.FavorCost)) return false;
-                if (!object.Equals(this.OpenByDefault, rhs.OpenByDefault)) return false;
+                if (!object.Equals(this.IsOpenByDefault, rhs.IsOpenByDefault)) return false;
                 if (!object.Equals(this.MapMarker, rhs.MapMarker)) return false;
                 if (!object.Equals(this.AttachRef, rhs.AttachRef)) return false;
                 if (!object.Equals(this.DistantLodData, rhs.DistantLodData)) return false;
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.LightingTemplate);
                 hash.Add(this.ImageSpace);
                 hash.Add(this.LinkedRooms);
-                hash.Add(this.MultiBoundPrimitive);
+                hash.Add(this.IsMultiBoundPrimitive);
                 hash.Add(this.RagdollData);
                 hash.Add(this.RagdollBipedData);
                 hash.Add(this.Radius);
@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.EncounterZone);
                 hash.Add(this.NavigationDoorLink);
                 hash.Add(this.LocationRefTypes);
-                hash.Add(this.IgnoredBySandbox);
+                hash.Add(this.IsIgnoredBySandbox);
                 hash.Add(this.Ownership);
                 hash.Add(this.ItemCount);
                 hash.Add(this.Charge);
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Action);
                 hash.Add(this.HeadTrackingWeight);
                 hash.Add(this.FavorCost);
-                hash.Add(this.OpenByDefault);
+                hash.Add(this.IsOpenByDefault);
                 hash.Add(this.MapMarker);
                 hash.Add(this.AttachRef);
                 hash.Add(this.DistantLodData);
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.MultiBoundPrimitive)) return false;
+                if (!eval(this.IsMultiBoundPrimitive)) return false;
                 if (!eval(this.RagdollData)) return false;
                 if (!eval(this.RagdollBipedData)) return false;
                 if (!eval(this.Radius)) return false;
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.IgnoredBySandbox)) return false;
+                if (!eval(this.IsIgnoredBySandbox)) return false;
                 if (Ownership != null)
                 {
                     if (!eval(this.Ownership.Overall)) return false;
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Action)) return false;
                 if (!eval(this.HeadTrackingWeight)) return false;
                 if (!eval(this.FavorCost)) return false;
-                if (!eval(this.OpenByDefault)) return false;
+                if (!eval(this.IsOpenByDefault)) return false;
                 if (MapMarker != null)
                 {
                     if (!eval(this.MapMarker.Overall)) return false;
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.MultiBoundPrimitive)) return true;
+                if (eval(this.IsMultiBoundPrimitive)) return true;
                 if (eval(this.RagdollData)) return true;
                 if (eval(this.RagdollBipedData)) return true;
                 if (eval(this.Radius)) return true;
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.IgnoredBySandbox)) return true;
+                if (eval(this.IsIgnoredBySandbox)) return true;
                 if (Ownership != null)
                 {
                     if (eval(this.Ownership.Overall)) return true;
@@ -1408,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Action)) return true;
                 if (eval(this.HeadTrackingWeight)) return true;
                 if (eval(this.FavorCost)) return true;
-                if (eval(this.OpenByDefault)) return true;
+                if (eval(this.IsOpenByDefault)) return true;
                 if (MapMarker != null)
                 {
                     if (eval(this.MapMarker.Overall)) return true;
@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.MultiBoundPrimitive = eval(this.MultiBoundPrimitive);
+                obj.IsMultiBoundPrimitive = eval(this.IsMultiBoundPrimitive);
                 obj.RagdollData = eval(this.RagdollData);
                 obj.RagdollBipedData = eval(this.RagdollBipedData);
                 obj.Radius = eval(this.Radius);
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.IgnoredBySandbox = eval(this.IgnoredBySandbox);
+                obj.IsIgnoredBySandbox = eval(this.IsIgnoredBySandbox);
                 obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
                 obj.ItemCount = eval(this.ItemCount);
                 obj.Charge = eval(this.Charge);
@@ -1570,7 +1570,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Action = eval(this.Action);
                 obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
                 obj.FavorCost = eval(this.FavorCost);
-                obj.OpenByDefault = eval(this.OpenByDefault);
+                obj.IsOpenByDefault = eval(this.IsOpenByDefault);
                 obj.MapMarker = this.MapMarker == null ? null : new MaskItem<R, MapMarker.Mask<R>?>(eval(this.MapMarker.Overall), this.MapMarker.Specific?.Translate(eval));
                 obj.AttachRef = eval(this.AttachRef);
                 obj.DistantLodData = eval(this.DistantLodData);
@@ -1685,9 +1685,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         sb.AppendLine("]");
                     }
-                    if (printMask?.MultiBoundPrimitive ?? true)
+                    if (printMask?.IsMultiBoundPrimitive ?? true)
                     {
-                        sb.AppendItem(MultiBoundPrimitive, "MultiBoundPrimitive");
+                        sb.AppendItem(IsMultiBoundPrimitive, "IsMultiBoundPrimitive");
                     }
                     if (printMask?.RagdollData ?? true)
                     {
@@ -1866,9 +1866,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         sb.AppendLine("]");
                     }
-                    if (printMask?.IgnoredBySandbox ?? true)
+                    if (printMask?.IsIgnoredBySandbox ?? true)
                     {
-                        sb.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                        sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
                     }
                     if (printMask?.Ownership?.Overall ?? true)
                     {
@@ -1929,9 +1929,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(FavorCost, "FavorCost");
                     }
-                    if (printMask?.OpenByDefault ?? true)
+                    if (printMask?.IsOpenByDefault ?? true)
                     {
-                        sb.AppendItem(OpenByDefault, "OpenByDefault");
+                        sb.AppendItem(IsOpenByDefault, "IsOpenByDefault");
                     }
                     if (printMask?.MapMarker?.Overall ?? true)
                     {
@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? LightingTemplate;
             public Exception? ImageSpace;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LinkedRooms;
-            public Exception? MultiBoundPrimitive;
+            public Exception? IsMultiBoundPrimitive;
             public Exception? RagdollData;
             public Exception? RagdollBipedData;
             public Exception? Radius;
@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? EncounterZone;
             public MaskItem<Exception?, NavigationDoorLink.ErrorMask?>? NavigationDoorLink;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypes;
-            public Exception? IgnoredBySandbox;
+            public Exception? IsIgnoredBySandbox;
             public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
             public Exception? ItemCount;
             public Exception? Charge;
@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Action;
             public Exception? HeadTrackingWeight;
             public Exception? FavorCost;
-            public Exception? OpenByDefault;
+            public Exception? IsOpenByDefault;
             public MaskItem<Exception?, MapMarker.ErrorMask?>? MapMarker;
             public Exception? AttachRef;
             public Exception? DistantLodData;
@@ -2051,8 +2051,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return ImageSpace;
                     case PlacedObject_FieldIndex.LinkedRooms:
                         return LinkedRooms;
-                    case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                        return MultiBoundPrimitive;
+                    case PlacedObject_FieldIndex.IsMultiBoundPrimitive:
+                        return IsMultiBoundPrimitive;
                     case PlacedObject_FieldIndex.RagdollData:
                         return RagdollData;
                     case PlacedObject_FieldIndex.RagdollBipedData:
@@ -2111,8 +2111,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return NavigationDoorLink;
                     case PlacedObject_FieldIndex.LocationRefTypes:
                         return LocationRefTypes;
-                    case PlacedObject_FieldIndex.IgnoredBySandbox:
-                        return IgnoredBySandbox;
+                    case PlacedObject_FieldIndex.IsIgnoredBySandbox:
+                        return IsIgnoredBySandbox;
                     case PlacedObject_FieldIndex.Ownership:
                         return Ownership;
                     case PlacedObject_FieldIndex.ItemCount:
@@ -2133,8 +2133,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return HeadTrackingWeight;
                     case PlacedObject_FieldIndex.FavorCost:
                         return FavorCost;
-                    case PlacedObject_FieldIndex.OpenByDefault:
-                        return OpenByDefault;
+                    case PlacedObject_FieldIndex.IsOpenByDefault:
+                        return IsOpenByDefault;
                     case PlacedObject_FieldIndex.MapMarker:
                         return MapMarker;
                     case PlacedObject_FieldIndex.AttachRef:
@@ -2189,8 +2189,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.LinkedRooms:
                         this.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                        this.MultiBoundPrimitive = ex;
+                    case PlacedObject_FieldIndex.IsMultiBoundPrimitive:
+                        this.IsMultiBoundPrimitive = ex;
                         break;
                     case PlacedObject_FieldIndex.RagdollData:
                         this.RagdollData = ex;
@@ -2279,8 +2279,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.LocationRefTypes:
                         this.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case PlacedObject_FieldIndex.IgnoredBySandbox:
-                        this.IgnoredBySandbox = ex;
+                    case PlacedObject_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = ex;
                         break;
                     case PlacedObject_FieldIndex.Ownership:
                         this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
@@ -2312,8 +2312,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.FavorCost:
                         this.FavorCost = ex;
                         break;
-                    case PlacedObject_FieldIndex.OpenByDefault:
-                        this.OpenByDefault = ex;
+                    case PlacedObject_FieldIndex.IsOpenByDefault:
+                        this.IsOpenByDefault = ex;
                         break;
                     case PlacedObject_FieldIndex.MapMarker:
                         this.MapMarker = new MaskItem<Exception?, MapMarker.ErrorMask?>(ex, null);
@@ -2374,8 +2374,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.LinkedRooms:
                         this.LinkedRooms = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                        this.MultiBoundPrimitive = (Exception?)obj;
+                    case PlacedObject_FieldIndex.IsMultiBoundPrimitive:
+                        this.IsMultiBoundPrimitive = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.RagdollData:
                         this.RagdollData = (Exception?)obj;
@@ -2464,8 +2464,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.LocationRefTypes:
                         this.LocationRefTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case PlacedObject_FieldIndex.IgnoredBySandbox:
-                        this.IgnoredBySandbox = (Exception?)obj;
+                    case PlacedObject_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.Ownership:
                         this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
@@ -2497,8 +2497,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.FavorCost:
                         this.FavorCost = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.OpenByDefault:
-                        this.OpenByDefault = (Exception?)obj;
+                    case PlacedObject_FieldIndex.IsOpenByDefault:
+                        this.IsOpenByDefault = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.MapMarker:
                         this.MapMarker = (MaskItem<Exception?, MapMarker.ErrorMask?>?)obj;
@@ -2533,7 +2533,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (LightingTemplate != null) return true;
                 if (ImageSpace != null) return true;
                 if (LinkedRooms != null) return true;
-                if (MultiBoundPrimitive != null) return true;
+                if (IsMultiBoundPrimitive != null) return true;
                 if (RagdollData != null) return true;
                 if (RagdollBipedData != null) return true;
                 if (Radius != null) return true;
@@ -2563,7 +2563,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (EncounterZone != null) return true;
                 if (NavigationDoorLink != null) return true;
                 if (LocationRefTypes != null) return true;
-                if (IgnoredBySandbox != null) return true;
+                if (IsIgnoredBySandbox != null) return true;
                 if (Ownership != null) return true;
                 if (ItemCount != null) return true;
                 if (Charge != null) return true;
@@ -2574,7 +2574,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Action != null) return true;
                 if (HeadTrackingWeight != null) return true;
                 if (FavorCost != null) return true;
-                if (OpenByDefault != null) return true;
+                if (IsOpenByDefault != null) return true;
                 if (MapMarker != null) return true;
                 if (AttachRef != null) return true;
                 if (DistantLodData != null) return true;
@@ -2683,7 +2683,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendLine("]");
                 }
                 {
-                    sb.AppendItem(MultiBoundPrimitive, "MultiBoundPrimitive");
+                    sb.AppendItem(IsMultiBoundPrimitive, "IsMultiBoundPrimitive");
                 }
                 {
                     sb.AppendItem(RagdollData, "RagdollData");
@@ -2820,7 +2820,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendLine("]");
                 }
                 {
-                    sb.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                    sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
                 }
                 Ownership?.ToString(sb);
                 {
@@ -2866,7 +2866,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(FavorCost, "FavorCost");
                 }
                 {
-                    sb.AppendItem(OpenByDefault, "OpenByDefault");
+                    sb.AppendItem(IsOpenByDefault, "IsOpenByDefault");
                 }
                 MapMarker?.ToString(sb);
                 {
@@ -2896,7 +2896,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
                 ret.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LinkedRooms?.Overall, rhs.LinkedRooms?.Overall), ExceptionExt.Combine(this.LinkedRooms?.Specific, rhs.LinkedRooms?.Specific));
-                ret.MultiBoundPrimitive = this.MultiBoundPrimitive.Combine(rhs.MultiBoundPrimitive);
+                ret.IsMultiBoundPrimitive = this.IsMultiBoundPrimitive.Combine(rhs.IsMultiBoundPrimitive);
                 ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
                 ret.RagdollBipedData = this.RagdollBipedData.Combine(rhs.RagdollBipedData);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
@@ -2926,7 +2926,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
                 ret.NavigationDoorLink = this.NavigationDoorLink.Combine(rhs.NavigationDoorLink, (l, r) => l.Combine(r));
                 ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
-                ret.IgnoredBySandbox = this.IgnoredBySandbox.Combine(rhs.IgnoredBySandbox);
+                ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
                 ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
                 ret.ItemCount = this.ItemCount.Combine(rhs.ItemCount);
                 ret.Charge = this.Charge.Combine(rhs.Charge);
@@ -2937,7 +2937,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Action = this.Action.Combine(rhs.Action);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
-                ret.OpenByDefault = this.OpenByDefault.Combine(rhs.OpenByDefault);
+                ret.IsOpenByDefault = this.IsOpenByDefault.Combine(rhs.IsOpenByDefault);
                 ret.MapMarker = this.MapMarker.Combine(rhs.MapMarker, (l, r) => l.Combine(r));
                 ret.AttachRef = this.AttachRef.Combine(rhs.AttachRef);
                 ret.DistantLodData = this.DistantLodData.Combine(rhs.DistantLodData);
@@ -2976,7 +2976,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool LightingTemplate;
             public bool ImageSpace;
             public bool LinkedRooms;
-            public bool MultiBoundPrimitive;
+            public bool IsMultiBoundPrimitive;
             public bool RagdollData;
             public bool RagdollBipedData;
             public bool Radius;
@@ -3006,7 +3006,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool EncounterZone;
             public NavigationDoorLink.TranslationMask? NavigationDoorLink;
             public bool LocationRefTypes;
-            public bool IgnoredBySandbox;
+            public bool IsIgnoredBySandbox;
             public Ownership.TranslationMask? Ownership;
             public bool ItemCount;
             public bool Charge;
@@ -3017,7 +3017,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Action;
             public bool HeadTrackingWeight;
             public bool FavorCost;
-            public bool OpenByDefault;
+            public bool IsOpenByDefault;
             public MapMarker.TranslationMask? MapMarker;
             public bool AttachRef;
             public bool DistantLodData;
@@ -3037,7 +3037,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LightingTemplate = defaultOn;
                 this.ImageSpace = defaultOn;
                 this.LinkedRooms = defaultOn;
-                this.MultiBoundPrimitive = defaultOn;
+                this.IsMultiBoundPrimitive = defaultOn;
                 this.RagdollData = defaultOn;
                 this.RagdollBipedData = defaultOn;
                 this.Radius = defaultOn;
@@ -3059,14 +3059,14 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CollisionLayer = defaultOn;
                 this.EncounterZone = defaultOn;
                 this.LocationRefTypes = defaultOn;
-                this.IgnoredBySandbox = defaultOn;
+                this.IsIgnoredBySandbox = defaultOn;
                 this.ItemCount = defaultOn;
                 this.Charge = defaultOn;
                 this.LocationReference = defaultOn;
                 this.Action = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
                 this.FavorCost = defaultOn;
-                this.OpenByDefault = defaultOn;
+                this.IsOpenByDefault = defaultOn;
                 this.AttachRef = defaultOn;
                 this.DistantLodData = defaultOn;
             }
@@ -3088,7 +3088,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LightingTemplate, null));
                 ret.Add((ImageSpace, null));
                 ret.Add((LinkedRooms, null));
-                ret.Add((MultiBoundPrimitive, null));
+                ret.Add((IsMultiBoundPrimitive, null));
                 ret.Add((RagdollData, null));
                 ret.Add((RagdollBipedData, null));
                 ret.Add((Radius, null));
@@ -3118,7 +3118,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EncounterZone, null));
                 ret.Add((NavigationDoorLink != null ? NavigationDoorLink.OnOverall : DefaultOn, NavigationDoorLink?.GetCrystal()));
                 ret.Add((LocationRefTypes, null));
-                ret.Add((IgnoredBySandbox, null));
+                ret.Add((IsIgnoredBySandbox, null));
                 ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((ItemCount, null));
                 ret.Add((Charge, null));
@@ -3129,7 +3129,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Action, null));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((FavorCost, null));
-                ret.Add((OpenByDefault, null));
+                ret.Add((IsOpenByDefault, null));
                 ret.Add((MapMarker != null ? MapMarker.OnOverall : DefaultOn, MapMarker?.GetCrystal()));
                 ret.Add((AttachRef, null));
                 ret.Add((DistantLodData, null));
@@ -3303,7 +3303,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<ILightGetter> LightingTemplate { get; set; }
         new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
-        new Boolean MultiBoundPrimitive { get; set; }
+        new Boolean IsMultiBoundPrimitive { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new MemorySlice<Byte>? RagdollBipedData { get; set; }
         new Single? Radius { get; set; }
@@ -3333,7 +3333,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
-        new Boolean IgnoredBySandbox { get; set; }
+        new Boolean IsIgnoredBySandbox { get; set; }
         new Ownership? Ownership { get; set; }
         new Int32? ItemCount { get; set; }
         new Single? Charge { get; set; }
@@ -3344,7 +3344,7 @@ namespace Mutagen.Bethesda.Skyrim
         new PlacedObject.ActionFlag? Action { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new Single? FavorCost { get; set; }
-        new Boolean OpenByDefault { get; set; }
+        new Boolean IsOpenByDefault { get; set; }
         new MapMarker? MapMarker { get; set; }
         new IFormLinkNullable<IPlacedThingGetter> AttachRef { get; set; }
         new MemorySlice<Byte>? DistantLodData { get; set; }
@@ -3391,7 +3391,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ILightGetter> LightingTemplate { get; }
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
-        Boolean MultiBoundPrimitive { get; }
+        Boolean IsMultiBoundPrimitive { get; }
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }
         ReadOnlyMemorySlice<Byte>? RagdollBipedData { get; }
         Single? Radius { get; }
@@ -3421,7 +3421,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         INavigationDoorLinkGetter? NavigationDoorLink { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
-        Boolean IgnoredBySandbox { get; }
+        Boolean IsIgnoredBySandbox { get; }
         IOwnershipGetter? Ownership { get; }
         Int32? ItemCount { get; }
         Single? Charge { get; }
@@ -3432,7 +3432,7 @@ namespace Mutagen.Bethesda.Skyrim
         PlacedObject.ActionFlag? Action { get; }
         Single? HeadTrackingWeight { get; }
         Single? FavorCost { get; }
-        Boolean OpenByDefault { get; }
+        Boolean IsOpenByDefault { get; }
         IMapMarkerGetter? MapMarker { get; }
         IFormLinkNullableGetter<IPlacedThingGetter> AttachRef { get; }
         ReadOnlyMemorySlice<Byte>? DistantLodData { get; }
@@ -3613,7 +3613,7 @@ namespace Mutagen.Bethesda.Skyrim
         LightingTemplate = 15,
         ImageSpace = 16,
         LinkedRooms = 17,
-        MultiBoundPrimitive = 18,
+        IsMultiBoundPrimitive = 18,
         RagdollData = 19,
         RagdollBipedData = 20,
         Radius = 21,
@@ -3643,7 +3643,7 @@ namespace Mutagen.Bethesda.Skyrim
         EncounterZone = 45,
         NavigationDoorLink = 46,
         LocationRefTypes = 47,
-        IgnoredBySandbox = 48,
+        IsIgnoredBySandbox = 48,
         Ownership = 49,
         ItemCount = 50,
         Charge = 51,
@@ -3654,7 +3654,7 @@ namespace Mutagen.Bethesda.Skyrim
         Action = 56,
         HeadTrackingWeight = 57,
         FavorCost = 58,
-        OpenByDefault = 59,
+        IsOpenByDefault = 59,
         MapMarker = 60,
         AttachRef = 61,
         DistantLodData = 62,
@@ -3826,7 +3826,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.LightingTemplate.Clear();
             item.ImageSpace.Clear();
             item.LinkedRooms.Clear();
-            item.MultiBoundPrimitive = default;
+            item.IsMultiBoundPrimitive = default;
             item.RagdollData = default;
             item.RagdollBipedData = default;
             item.Radius = default;
@@ -3856,7 +3856,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.EncounterZone.Clear();
             item.NavigationDoorLink = null;
             item.LocationRefTypes = null;
-            item.IgnoredBySandbox = default;
+            item.IsIgnoredBySandbox = default;
             item.Ownership = null;
             item.ItemCount = default;
             item.Charge = default;
@@ -3867,7 +3867,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Action = default;
             item.HeadTrackingWeight = default;
             item.FavorCost = default;
-            item.OpenByDefault = default;
+            item.IsOpenByDefault = default;
             item.MapMarker = null;
             item.AttachRef.Clear();
             item.DistantLodData = default;
@@ -4019,7 +4019,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.LinkedRooms,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.MultiBoundPrimitive = item.MultiBoundPrimitive == rhs.MultiBoundPrimitive;
+            ret.IsMultiBoundPrimitive = item.IsMultiBoundPrimitive == rhs.IsMultiBoundPrimitive;
             ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
             ret.RagdollBipedData = MemorySliceExt.Equal(item.RagdollBipedData, rhs.RagdollBipedData);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
@@ -4086,7 +4086,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.LocationRefTypes,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.IgnoredBySandbox = item.IgnoredBySandbox == rhs.IgnoredBySandbox;
+            ret.IsIgnoredBySandbox = item.IsIgnoredBySandbox == rhs.IsIgnoredBySandbox;
             ret.Ownership = EqualsMaskHelper.EqualsHelper(
                 item.Ownership,
                 rhs.Ownership,
@@ -4112,7 +4112,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Action = item.Action == rhs.Action;
             ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
             ret.FavorCost = item.FavorCost.EqualsWithin(rhs.FavorCost);
-            ret.OpenByDefault = item.OpenByDefault == rhs.OpenByDefault;
+            ret.IsOpenByDefault = item.IsOpenByDefault == rhs.IsOpenByDefault;
             ret.MapMarker = EqualsMaskHelper.EqualsHelper(
                 item.MapMarker,
                 rhs.MapMarker,
@@ -4259,9 +4259,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 sb.AppendLine("]");
             }
-            if (printMask?.MultiBoundPrimitive ?? true)
+            if (printMask?.IsMultiBoundPrimitive ?? true)
             {
-                sb.AppendItem(item.MultiBoundPrimitive, "MultiBoundPrimitive");
+                sb.AppendItem(item.IsMultiBoundPrimitive, "IsMultiBoundPrimitive");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData is {} RagdollDataItem)
@@ -4439,9 +4439,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 sb.AppendLine("]");
             }
-            if (printMask?.IgnoredBySandbox ?? true)
+            if (printMask?.IsIgnoredBySandbox ?? true)
             {
-                sb.AppendItem(item.IgnoredBySandbox, "IgnoredBySandbox");
+                sb.AppendItem(item.IsIgnoredBySandbox, "IsIgnoredBySandbox");
             }
             if ((printMask?.Ownership?.Overall ?? true)
                 && item.Ownership is {} OwnershipItem)
@@ -4505,9 +4505,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(FavorCostItem, "FavorCost");
             }
-            if (printMask?.OpenByDefault ?? true)
+            if (printMask?.IsOpenByDefault ?? true)
             {
-                sb.AppendItem(item.OpenByDefault, "OpenByDefault");
+                sb.AppendItem(item.IsOpenByDefault, "IsOpenByDefault");
             }
             if ((printMask?.MapMarker?.Overall ?? true)
                 && item.MapMarker is {} MapMarkerItem)
@@ -4640,9 +4640,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.LinkedRooms.SequenceEqualNullable(rhs.LinkedRooms)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiBoundPrimitive) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsMultiBoundPrimitive) ?? true))
             {
-                if (lhs.MultiBoundPrimitive != rhs.MultiBoundPrimitive) return false;
+                if (lhs.IsMultiBoundPrimitive != rhs.IsMultiBoundPrimitive) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
             {
@@ -4788,9 +4788,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.IgnoredBySandbox) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsIgnoredBySandbox) ?? true))
             {
-                if (lhs.IgnoredBySandbox != rhs.IgnoredBySandbox) return false;
+                if (lhs.IsIgnoredBySandbox != rhs.IsIgnoredBySandbox) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
             {
@@ -4844,9 +4844,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsOpenByDefault) ?? true))
             {
-                if (lhs.OpenByDefault != rhs.OpenByDefault) return false;
+                if (lhs.IsOpenByDefault != rhs.IsOpenByDefault) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
             {
@@ -4930,7 +4930,7 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.LightingTemplate);
             hash.Add(item.ImageSpace);
             hash.Add(item.LinkedRooms);
-            hash.Add(item.MultiBoundPrimitive);
+            hash.Add(item.IsMultiBoundPrimitive);
             if (item.RagdollData is {} RagdollDataItem)
             {
                 hash.Add(RagdollDataItem);
@@ -5011,7 +5011,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(NavigationDoorLinkitem);
             }
             hash.Add(item.LocationRefTypes);
-            hash.Add(item.IgnoredBySandbox);
+            hash.Add(item.IsIgnoredBySandbox);
             if (item.Ownership is {} Ownershipitem)
             {
                 hash.Add(Ownershipitem);
@@ -5046,7 +5046,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(FavorCostitem);
             }
-            hash.Add(item.OpenByDefault);
+            hash.Add(item.IsOpenByDefault);
             if (item.MapMarker is {} MapMarkeritem)
             {
                 hash.Add(MapMarkeritem);
@@ -5491,9 +5491,9 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiBoundPrimitive) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsMultiBoundPrimitive) ?? true))
             {
-                item.MultiBoundPrimitive = rhs.MultiBoundPrimitive;
+                item.IsMultiBoundPrimitive = rhs.IsMultiBoundPrimitive;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
             {
@@ -5865,9 +5865,9 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IgnoredBySandbox) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsIgnoredBySandbox) ?? true))
             {
-                item.IgnoredBySandbox = rhs.IgnoredBySandbox;
+                item.IsIgnoredBySandbox = rhs.IsIgnoredBySandbox;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
             {
@@ -5995,9 +5995,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.FavorCost = rhs.FavorCost;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsOpenByDefault) ?? true))
             {
-                item.OpenByDefault = rhs.OpenByDefault;
+                item.IsOpenByDefault = rhs.IsOpenByDefault;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
             {
@@ -6295,7 +6295,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item);
             BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.MultiBoundPrimitive,
+                item: item.IsMultiBoundPrimitive,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBP));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -6456,7 +6456,7 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.IgnoredBySandbox,
+                item: item.IsIgnoredBySandbox,
                 header: translationParams.ConvertToCustom(RecordTypes.XIS2));
             if (item.Ownership is {} OwnershipItem)
             {
@@ -6517,7 +6517,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.XFVC));
             BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.OpenByDefault,
+                item: item.IsOpenByDefault,
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM));
             if (item.MapMarker is {} MapMarkerItem)
             {
@@ -6704,8 +6704,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XMBP:
                 {
-                    item.MultiBoundPrimitive = true;
-                    return (int)PlacedObject_FieldIndex.MultiBoundPrimitive;
+                    item.IsMultiBoundPrimitive = true;
+                    return (int)PlacedObject_FieldIndex.IsMultiBoundPrimitive;
                 }
                 case RecordTypeInts.XRGD:
                 {
@@ -6891,8 +6891,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XIS2:
                 {
-                    item.IgnoredBySandbox = true;
-                    return (int)PlacedObject_FieldIndex.IgnoredBySandbox;
+                    item.IsIgnoredBySandbox = true;
+                    return (int)PlacedObject_FieldIndex.IsIgnoredBySandbox;
                 }
                 case RecordTypeInts.XOWN:
                 case RecordTypeInts.XRNK:
@@ -6964,8 +6964,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    item.OpenByDefault = true;
-                    return (int)PlacedObject_FieldIndex.OpenByDefault;
+                    item.IsOpenByDefault = true;
+                    return (int)PlacedObject_FieldIndex.IsOpenByDefault;
                 }
                 case RecordTypeInts.XMRK:
                 {
@@ -7082,9 +7082,9 @@ namespace Mutagen.Bethesda.Skyrim
             OverlayStream stream,
             int offset);
         #endregion
-        #region MultiBoundPrimitive
-        private int? _MultiBoundPrimitiveLocation;
-        public Boolean MultiBoundPrimitive => _MultiBoundPrimitiveLocation.HasValue ? true : default;
+        #region IsMultiBoundPrimitive
+        private int? _IsMultiBoundPrimitiveLocation;
+        public Boolean IsMultiBoundPrimitive => _IsMultiBoundPrimitiveLocation.HasValue ? true : default;
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
@@ -7190,9 +7190,9 @@ namespace Mutagen.Bethesda.Skyrim
         public INavigationDoorLinkGetter? NavigationDoorLink => _NavigationDoorLinkLocation.HasValue ? NavigationDoorLinkBinaryOverlay.NavigationDoorLinkFactory(new OverlayStream(_data.Slice(_NavigationDoorLinkLocation!.Value.Min), _package), _package) : default;
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
-        #region IgnoredBySandbox
-        private int? _IgnoredBySandboxLocation;
-        public Boolean IgnoredBySandbox => _IgnoredBySandboxLocation.HasValue ? true : default;
+        #region IsIgnoredBySandbox
+        private int? _IsIgnoredBySandboxLocation;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
         #endregion
         public IOwnershipGetter? Ownership { get; private set; }
         #region ItemCount
@@ -7225,9 +7225,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FavorCostLocation;
         public Single? FavorCost => _FavorCostLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FavorCostLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region OpenByDefault
-        private int? _OpenByDefaultLocation;
-        public Boolean OpenByDefault => _OpenByDefaultLocation.HasValue ? true : default;
+        #region IsOpenByDefault
+        private int? _IsOpenByDefaultLocation;
+        public Boolean IsOpenByDefault => _IsOpenByDefaultLocation.HasValue ? true : default;
         #endregion
         public IMapMarkerGetter? MapMarker { get; private set; }
         #region AttachRef
@@ -7371,8 +7371,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XMBP:
                 {
-                    _MultiBoundPrimitiveLocation = (stream.Position - offset);
-                    return (int)PlacedObject_FieldIndex.MultiBoundPrimitive;
+                    _IsMultiBoundPrimitiveLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.IsMultiBoundPrimitive;
                 }
                 case RecordTypeInts.XRGD:
                 {
@@ -7549,8 +7549,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XIS2:
                 {
-                    _IgnoredBySandboxLocation = (stream.Position - offset);
-                    return (int)PlacedObject_FieldIndex.IgnoredBySandbox;
+                    _IsIgnoredBySandboxLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.IsIgnoredBySandbox;
                 }
                 case RecordTypeInts.XOWN:
                 case RecordTypeInts.XRNK:
@@ -7620,8 +7620,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _OpenByDefaultLocation = (stream.Position - offset);
-                    return (int)PlacedObject_FieldIndex.OpenByDefault;
+                    _IsOpenByDefaultLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.IsOpenByDefault;
                 }
                 case RecordTypeInts.XMRK:
                 {
