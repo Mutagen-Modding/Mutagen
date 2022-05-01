@@ -137,6 +137,11 @@ public class TestMod : ITestMod, IDisposable
         throw new NotImplementedException();
     }
 
+    public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts()
+    {
+        throw new NotImplementedException();
+    }
+
     public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping)
     {
         throw new NotImplementedException();

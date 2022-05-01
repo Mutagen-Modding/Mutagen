@@ -5,6 +5,12 @@ namespace Mutagen.Bethesda.Plugins.Records;
 public interface IMajorRecordSimpleContextEnumerable
 {
     /// <summary>  
+    /// Enumerates all contained Major Record Getters of the specified type  
+    /// </summary>  
+    /// <returns>Enumerable of all major records</returns>  
+    IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts();
+
+    /// <summary>  
     /// Enumerates all contained Major Record Getters of the specified generic type  
     /// </summary>
     /// <param name="throwIfUnknown">Whether to throw an exception if type is unknown</param> 

@@ -37,7 +37,9 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             sb.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts<TSetter, TGetter>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(linkCache, throwIfUnknown: throwIfUnknown);");
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
-                
+
+            sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts() => this.EnumerateMajorRecordContexts();");
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<{typeof(IMajorRecordQueryableGetter)}, TMajor>());");
             sb.AppendLine("[DebuggerStepThrough]");
@@ -82,6 +84,24 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 {
                     sb.AppendLine($"{catchLine};");
                 }
+            }
+        }
+        sb.AppendLine();
+
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = sb.Function(
+                   $"public static IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordContexts"))
+        {
+            args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
+            args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
+        }
+        using (sb.CurlyBrace())
+        {
+            using (var args = sb.Args(
+                       $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
+            {
+                args.AddPassArg("obj");
+                args.Add("linkCache: null!");
             }
         }
         sb.AppendLine();
