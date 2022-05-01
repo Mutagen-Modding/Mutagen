@@ -66,10 +66,10 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecord("EDID", out var edidFrame)) return;
+        if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
         if ((char)edidFrame.Content[0] != 'f') return;
 
-        if (!majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec)) return;
+        if (!majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec)) return;
         ProcessZeroFloat(dataRec, fileOffset);
     }
 
@@ -80,11 +80,11 @@ public class SkyrimProcessor : Processor
         // Find and store marker data
         var data = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
         var indices = new List<int>();
-        if (!majorFrame.TryLocateSubrecord(RecordTypes.ENAM, out var rec)) return;
+        if (!majorFrame.TryFindSubrecord(RecordTypes.ENAM, out var rec)) return;
         var pos = rec.Location - majorFrame.HeaderLength;
         while (pos < majorFrame.Content.Length)
         {
-            var positions = RecordSpanExtensions.FindNextSubrecords(
+            var positions = RecordSpanExtensions.TryFindNextSubrecords(
                 majorFrame.Content.Slice(pos),
                 majorFrame.Meta,
                 out var lenParsed,
@@ -120,7 +120,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecord(RecordTypes.QNAM, out var qnamFrame))
+        if (majorFrame.TryFindSubrecord(RecordTypes.QNAM, out var qnamFrame))
         {
             // Standardize float rounding errors
             var r = IBinaryStreamExt.GetColorByte(qnamFrame.Content.Slice(0, 4).Float());
@@ -134,7 +134,7 @@ public class SkyrimProcessor : Processor
             _instructions.SetSubstitution(fileOffset + qnamFrame.Location + qnamFrame.HeaderLength, bytes);
         }
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.NAM9, out var nam9Frame))
+        if (majorFrame.TryFindSubrecord(RecordTypes.NAM9, out var nam9Frame))
         {
             var nam9Loc = nam9Frame.Location;
             nam9Loc += nam9Frame.HeaderLength;
@@ -150,7 +150,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var rdat = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT);
+        var rdat = RecordSpanExtensions.TryFindSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT);
         if (rdat == null) return;
 
         // Order RDATs by index
@@ -159,7 +159,7 @@ public class SkyrimProcessor : Processor
         while (rdat != null)
         {
             var index = BinaryPrimitives.ReadUInt32LittleEndian(rdat.Value.Content);
-            var nextRdat = RecordSpanExtensions.FindFirstSubrecord(
+            var nextRdat = RecordSpanExtensions.TryFindSubrecord(
                 majorFrame.Content,
                 majorFrame.Meta,
                 RecordTypes.RDAT,
@@ -195,14 +195,14 @@ public class SkyrimProcessor : Processor
             fileOffset,
             numSubGroups: 2);
         
-        if (majorFrame.TryLocateSubrecord(RecordTypes.MHDT, out var pin))
+        if (majorFrame.TryFindSubrecord(RecordTypes.MHDT, out var pin))
         {
             ProcessZeroFloat(pin, offsetLoc: fileOffset);
         }
 
         // Process odd length changing flags
         var sizeChange = 0;
-        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec))
         {
             if (dataRec.ContentLength == 1)
             {
@@ -234,7 +234,7 @@ public class SkyrimProcessor : Processor
             fileOffset);
 
         // Reset misnumbered counter
-        if (majorFrame.TryLocateSubrecord(RecordTypes.TIFC, out var tifcRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.TIFC, out var tifcRec))
         {
             var count = tifcRec.AsUInt32();
 
@@ -266,7 +266,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecord(RecordTypes.ANAM, out var anamRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.ANAM, out var anamRec))
         {
             var next = anamRec.AsUInt32();
             var targets = new RecordType[]
@@ -361,7 +361,7 @@ public class SkyrimProcessor : Processor
         out ushort objectFormat,
         out int processed)
     {
-        vmad = RecordSpanExtensions.FindFirstSubrecord(frame.Content, Meta, RecordTypes.VMAD);
+        vmad = RecordSpanExtensions.TryFindSubrecord(frame.Content, Meta, RecordTypes.VMAD);
         if (vmad == null)
         {
             processed = 0;
@@ -467,18 +467,18 @@ public class SkyrimProcessor : Processor
     {
         var sizeChange = 0;
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec))
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.XTEL, out var xtelRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.XTEL, out var xtelRec))
         {
             var offset = 4;
             ProcessZeroFloats(xtelRec, fileOffset, ref offset, 6);
         }
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.XPRM, out var xprmRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.XPRM, out var xprmRec))
         {
             int offset = 0;
             ProcessZeroFloats(xprmRec, fileOffset, ref offset, 3);
@@ -486,7 +486,7 @@ public class SkyrimProcessor : Processor
             ProcessZeroFloat(xprmRec, fileOffset, ref offset);
         }
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.XRMR, out var xrmrRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRMR, out var xrmrRec))
         {
             if (xrmrRec.AsInt32() == 0)
             {
@@ -508,7 +508,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecord(RecordTypes.NVNM, out var nvnmRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.NVNM, out var nvnmRec))
         {
             var nvnmIndex = nvnmRec.Location;
             nvnmIndex += nvnmRec.HeaderLength + 16;
@@ -529,13 +529,13 @@ public class SkyrimProcessor : Processor
 
         // Reorder data values
         var xnamPos =
-            RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM)?.Location;
+            RecordSpanExtensions.TryFindSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM)?.Location;
         if (xnamPos == null)
         {
             throw new ArgumentException();
         }
 
-        if (!majorFrame.TryLocateSubrecord(RecordTypes.PKCU, out var pkcuRec))
+        if (!majorFrame.TryFindSubrecord(RecordTypes.PKCU, out var pkcuRec))
         {
             throw new ArgumentException();
         }
@@ -545,7 +545,7 @@ public class SkyrimProcessor : Processor
         if (count == 0) return;
 
         var anamPos =
-            RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM)?.Location;
+            RecordSpanExtensions.TryFindSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM)?.Location;
         RecordType pldt = new RecordType("PLDT");
         RecordType ptda = new RecordType("PTDA");
         RecordType pdto = new RecordType("PDTO");
@@ -562,7 +562,7 @@ public class SkyrimProcessor : Processor
             while (anamPos.HasValue && anamPos.Value < xnamPos.Value)
             {
                 var anamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value));
-                var recs = RecordSpanExtensions.FindNextSubrecords(
+                var recs = RecordSpanExtensions.TryFindNextSubrecords(
                     majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength),
                     majorFrame.Meta,
                     out var _,
@@ -668,7 +668,7 @@ public class SkyrimProcessor : Processor
 
         // Reorder inputs
         var unamPos =
-            RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam)?.Location;
+            RecordSpanExtensions.TryFindSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam)?.Location;
         if (!unamPos.HasValue) return;
         unamPos += xnamPos.Value;
         var writeLoc = fileOffset + majorFrame.HeaderLength + unamPos.Value;
@@ -676,7 +676,7 @@ public class SkyrimProcessor : Processor
         while (unamPos.HasValue)
         {
             var unamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(unamPos.Value));
-            var recs = RecordSpanExtensions.FindNextSubrecords(
+            var recs = RecordSpanExtensions.TryFindNextSubrecords(
                 majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength),
                 majorFrame.Meta,
                 out var _,
@@ -726,7 +726,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec))
         {
             var index = 20;
             ProcessZeroFloats(dataRec, fileOffset, ref index, 9);
@@ -753,7 +753,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec))
         {
             int offset = 0;
             ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
@@ -783,7 +783,7 @@ public class SkyrimProcessor : Processor
             }
         }
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec))
         {
             int offset = 0;
             ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
@@ -795,7 +795,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecord(RecordTypes.XNAM, out var xnamRec))
+        if (majorFrame.TryFindSubrecord(RecordTypes.XNAM, out var xnamRec))
         {
             ProcessZeroFloats(xnamRec, fileOffset, 3);
         }
@@ -871,9 +871,9 @@ public class SkyrimProcessor : Processor
     {
         stream.Position -= major.HeaderLength;
         var majorRec = stream.GetMajorRecord();
-        if (!majorRec.TryLocateSubrecord("EDID", out var edidRec)) throw new ArgumentException();
+        if (!majorRec.TryFindSubrecord("EDID", out var edidRec)) throw new ArgumentException();
         if (edidRec.Content[0] != (byte)'s') return;
-        if (!majorRec.TryLocateSubrecord("DATA", out var dataRec)) throw new ArgumentException();
+        if (!majorRec.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
         stream.Position += dataRec.Location;
         AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
     }

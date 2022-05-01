@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 
@@ -63,10 +63,10 @@ public static class RecordSpanExtensions
     /// <param name="meta">Metadata to use in subrecord parsing</param>
     /// <param name="recordTypes">Record types to locate</param>
     /// <returns>SubrecordPinFrames of located records relative to given span</returns>
-    public static SubrecordPinFrame?[] FindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta,
+    public static SubrecordPinFrame?[] TryFindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta,
         params RecordType[] recordTypes)
     {
-        return FindFirstSubrecords(data, meta, out _, recordTypes);
+        return TryFindFirstSubrecords(data, meta, out _, recordTypes);
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public static class RecordSpanExtensions
     /// <param name="lenParsed">Amount parsed after processing</param>
     /// <param name="recordTypes">Record types to locate</param>
     /// <returns>SubrecordPinFrames of located records relative to given span</returns>
-    public static SubrecordPinFrame?[] FindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
+    public static SubrecordPinFrame?[] TryFindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
         params RecordType[] recordTypes)
     {
         lenParsed = 0;
@@ -134,10 +134,10 @@ public static class RecordSpanExtensions
     /// <param name="meta">Metadata to use in subrecord parsing</param>
     /// <param name="lenParsed">Amount of data contained in located records</param>
     /// <returns>SubrecordPinFrames of located records relative to given span</returns>
-    public static SubrecordPinFrame?[] FindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
+    public static SubrecordPinFrame?[] TryFindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
         params RecordType[] recordTypes)
     {
-        return FindNextSubrecords(
+        return TryFindNextSubrecords(
             data: data,
             meta: meta,
             lenParsed: out lenParsed,
@@ -159,7 +159,7 @@ public static class RecordSpanExtensions
     /// <param name="lenParsed">Amount of data contained in located records</param>
     /// <param name="stopOnAlreadyEncounteredRecord">Whether to stop looking if encountering a record type that has already been seen</param>
     /// <returns>SubrecordPinFrames of located records relative to given span</returns>
-    public static SubrecordPinFrame?[] FindNextSubrecords(
+    public static SubrecordPinFrame?[] TryFindNextSubrecords(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
         out int lenParsed,
@@ -218,7 +218,7 @@ public static class RecordSpanExtensions
         return ret;
     }
 
-    public static SubrecordPinFrame? FindFirstSubrecord(
+    public static SubrecordPinFrame? TryFindSubrecord(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
         RecordType recordType,
@@ -239,7 +239,7 @@ public static class RecordSpanExtensions
         return null;
     }
 
-    public static SubrecordPinFrame? FindFirstSubrecord(
+    public static SubrecordPinFrame? TryFindSubrecord(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
         ICollectionGetter<RecordType> recordTypes,

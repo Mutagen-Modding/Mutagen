@@ -215,7 +215,7 @@ public abstract class Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecord("EDID", out var edidFrame)) return;
+        if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
         var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
         ProcessStringTermination(
             edidFrame,
@@ -881,17 +881,17 @@ public abstract class Processor
         ICollection<RecordType> locationsToMove,
         bool enforcePast = false)
     {
-        var offender = RecordSpanExtensions.FindFirstSubrecord(
+        var offender = RecordSpanExtensions.TryFindSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
             recordTypes: offendingIndices.ToGetter())?.Location;
         if (offender == null) return false;
-        var limit = RecordSpanExtensions.FindFirstSubrecord(
+        var limit = RecordSpanExtensions.TryFindSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
             recordTypes: offendingLimits.ToGetter())?.Location;
         if (limit == null) return false;
-        long? locToMove = RecordSpanExtensions.FindFirstSubrecord(
+        long? locToMove = RecordSpanExtensions.TryFindSubrecord(
             majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
             majorFrame.Meta,
             recordTypes: locationsToMove.ToGetter())?.Location;

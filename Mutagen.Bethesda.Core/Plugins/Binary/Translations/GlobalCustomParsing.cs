@@ -29,7 +29,7 @@ internal static class GlobalCustomParsing
     /// <exception cref="ArgumentException">If FNAM not present or malformed</exception>
     public static char? GetGlobalChar(MajorRecordFrame frame)
     {
-        if (!frame.TryLocateSubrecord(FNAM, out var fnamMeta)) return null;
+        if (!frame.TryFindSubrecord(FNAM, out var fnamMeta)) return null;
         if (fnamMeta.Content.Length != 1)
         {
             throw new ArgumentException($"FNAM had non 1 length: {fnamMeta.Content.Length}");
@@ -61,7 +61,7 @@ internal static class GlobalCustomParsing
         frame.Reader.Position = initialPos + frame.MetaData.Constants.MajorConstants.TypeAndLengthLength;
 
         // Read data
-        var fltv = majorMeta.LocateSubrecord(FLTV);
+        var fltv = majorMeta.FindSubrecord(FLTV);
         g.RawFloat = fltv.AsFloat();
 
         // Skip to end

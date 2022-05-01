@@ -141,7 +141,7 @@ partial class FurnitureBinaryCreateTranslation
         while (!stream.Complete)
         {
             // Find next set of records that make up a marker record
-            var next = RecordSpanExtensions.FindNextSubrecords(
+            var next = RecordSpanExtensions.TryFindNextSubrecords(
                 stream.RemainingMemory,
                 stream.MetaData.Constants,
                 out var lenParsed,

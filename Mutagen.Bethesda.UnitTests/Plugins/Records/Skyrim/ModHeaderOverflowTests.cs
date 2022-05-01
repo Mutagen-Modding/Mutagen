@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Loqui.Generation;
+using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;

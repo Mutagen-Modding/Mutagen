@@ -81,7 +81,7 @@ public class UtilityTranslationTests
     public void FindFirstSubrecords_Empty()
     {
         var b = new byte[0];
-        var ret = RecordSpanExtensions.FindFirstSubrecords(b, GameConstants.Oblivion, FirstTypicalType, SecondTypicalType);
+        var ret = RecordSpanExtensions.TryFindFirstSubrecords(b, GameConstants.Oblivion, FirstTypicalType, SecondTypicalType);
         Assert.Equal(2, ret.Length);
         Assert.Null(ret[0]);
         Assert.Null(ret[1]);
@@ -90,7 +90,7 @@ public class UtilityTranslationTests
     [Fact]
     public void FindFirstSubrecords_Typical()
     {
-        var ret = RecordSpanExtensions.FindFirstSubrecords(GetTypical(), GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
+        var ret = RecordSpanExtensions.TryFindFirstSubrecords(GetTypical(), GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
         Assert.Equal(2, ret.Length);
         Assert.Equal(SecondTypicalLocation, ret[0]?.Location);
         Assert.Equal(FirstTypicalLocation, ret[1]?.Location);
@@ -99,7 +99,7 @@ public class UtilityTranslationTests
     [Fact]
     public void FindFirstSubrecords_Single()
     {
-        var ret = RecordSpanExtensions.FindFirstSubrecords(GetTypical(), GameConstants.Oblivion, SecondTypicalType);
+        var ret = RecordSpanExtensions.TryFindFirstSubrecords(GetTypical(), GameConstants.Oblivion, SecondTypicalType);
         Assert.Single(ret);
         Assert.Equal(SecondTypicalLocation, ret[0]?.Location);
     }
@@ -107,7 +107,7 @@ public class UtilityTranslationTests
     [Fact]
     public void FindFirstSubrecords_Duplicate()
     {
-        var ret = RecordSpanExtensions.FindFirstSubrecords(GetDuplicate(), GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
+        var ret = RecordSpanExtensions.TryFindFirstSubrecords(GetDuplicate(), GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
         Assert.Equal(2, ret.Length);
         Assert.Equal(SecondTypicalLocation, ret[0]?.Location);
         Assert.Equal(FirstTypicalLocation, ret[1]?.Location);
@@ -119,19 +119,19 @@ public class UtilityTranslationTests
     public void FindFirstSubrecord_Empty()
     {
         var b = new byte[0];
-        Assert.Null(RecordSpanExtensions.FindFirstSubrecord(b, GameConstants.Oblivion, SecondTypicalType));
+        Assert.Null(RecordSpanExtensions.TryFindSubrecord(b, GameConstants.Oblivion, SecondTypicalType));
     }
 
     [Fact]
     public void FindFirstSubrecord_Typical()
     {
-        Assert.Equal(SecondTypicalLocation, RecordSpanExtensions.FindFirstSubrecord(GetTypical(), GameConstants.Oblivion, SecondTypicalType)?.Location);
+        Assert.Equal(SecondTypicalLocation, RecordSpanExtensions.TryFindSubrecord(GetTypical(), GameConstants.Oblivion, SecondTypicalType)?.Location);
     }
 
     [Fact]
     public void FindFirstSubrecord_Duplicate()
     {
-        Assert.Equal(FirstTypicalLocation, RecordSpanExtensions.FindFirstSubrecord(GetTypical(), GameConstants.Oblivion, FirstTypicalType)?.Location);
+        Assert.Equal(FirstTypicalLocation, RecordSpanExtensions.TryFindSubrecord(GetTypical(), GameConstants.Oblivion, FirstTypicalType)?.Location);
     }
     #endregion
 }
