@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Records;
@@ -137,7 +137,7 @@ internal class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : IImmutab
 
                 void AddRecords(IModGetter mod, Type type, bool throwIfUnknown)
                 {
-                    foreach (var record in mod.EnumerateMajorRecordSimpleContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var record in mod.EnumerateMajorRecordSimpleContexts(type, throwIfUnknown: throwIfUnknown))
                     {
                         var key = _keyGetter(record.Record);
                         if (key.Failed) continue;
@@ -222,7 +222,7 @@ internal class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : IImmutab
 
                     void AddRecords(IModGetter mod, Type type, bool throwIfUnknown)
                     {
-                        foreach (var item in mod.EnumerateMajorRecordSimpleContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
+                        foreach (var item in mod.EnumerateMajorRecordSimpleContexts(type, throwIfUnknown: throwIfUnknown))
                         {
                             var iterKey = _keyGetter(item.Record);
                             if (iterKey.Failed) continue;

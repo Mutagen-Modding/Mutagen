@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using Loqui;
@@ -126,13 +126,13 @@ public class TestMod : ITestMod, IDisposable
         return EnumerateMajorRecords(type, throwIfUnknown);
     }
 
-    public IEnumerable<IModContext<TMajor>> EnumerateMajorRecordSimpleContexts<TMajor>(ILinkCache linkCache, bool throwIfUnknown = true) 
+    public IEnumerable<IModContext<TMajor>> EnumerateMajorRecordSimpleContexts<TMajor>(bool throwIfUnknown = true) 
         where TMajor : class, IMajorRecordQueryableGetter
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type t, bool throwIfUnknown = true)
+    public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts(Type t, bool throwIfUnknown = true)
     {
         throw new NotImplementedException();
     }

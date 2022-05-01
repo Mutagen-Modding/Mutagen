@@ -339,7 +339,7 @@ public class MutableModLinkCache : ILinkCache
             
         // ToDo
         // Upgrade to call EnumerateGroups(), which will perform much better
-        foreach (var item in _sourceMod.EnumerateMajorRecordSimpleContexts<IMajorRecordGetter>(this)
+        foreach (var item in _sourceMod.EnumerateMajorRecordSimpleContexts<IMajorRecordGetter>()
                      // ToDo
                      // Capture and expose errors optionally via TryResolve /w out param
                      .Catch((Exception ex) => { }))
@@ -368,7 +368,7 @@ public class MutableModLinkCache : ILinkCache
             
         // ToDo
         // Upgrade to call EnumerateGroups(), which will perform much better
-        foreach (var item in _sourceMod.EnumerateMajorRecordSimpleContexts<IMajorRecordGetter>(this)
+        foreach (var item in _sourceMod.EnumerateMajorRecordSimpleContexts<IMajorRecordGetter>()
                      // ToDo
                      // Capture and expose errors optionally via TryResolve /w out param
                      .Catch((Exception ex) => { }))
@@ -404,7 +404,7 @@ public class MutableModLinkCache : ILinkCache
             
         // ToDo
         // Upgrade to EnumerateGroups<TMajor>()
-        foreach (var context in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>(this)
+        foreach (var context in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>()
                      // ToDo
                      // Capture and expose errors optionally via TryResolve /w out param
                      .Catch((Exception ex) => { }))
@@ -434,7 +434,7 @@ public class MutableModLinkCache : ILinkCache
             
         // ToDo
         // Upgrade to EnumerateGroups<TMajor>()
-        foreach (var context in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>(this)
+        foreach (var context in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>()
                      // ToDo
                      // Capture and expose errors optionally via TryResolve /w out param
                      .Catch((Exception ex) => { }))
@@ -470,7 +470,7 @@ public class MutableModLinkCache : ILinkCache
             
         // ToDo
         // Upgrade to EnumerateGroups<TMajor>()
-        foreach (var major in _sourceMod.EnumerateMajorRecordSimpleContexts(this, type)
+        foreach (var major in _sourceMod.EnumerateMajorRecordSimpleContexts(type)
                      // ToDo
                      // Capture and expose errors optionally via TryResolve /w out param
                      .Catch((Exception ex) => { }))
@@ -498,7 +498,7 @@ public class MutableModLinkCache : ILinkCache
         }
         // ToDo
         // Upgrade to EnumerateGroups<TMajor>()
-        foreach (var major in _sourceMod.EnumerateMajorRecordSimpleContexts(this, type)
+        foreach (var major in _sourceMod.EnumerateMajorRecordSimpleContexts(type)
                      // ToDo
                      // Capture and expose errors optionally via TryResolve /w out param
                      .Catch((Exception ex) => { }))
@@ -1453,7 +1453,7 @@ public class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter
             
         // ToDo
         // Upgrade to EnumerateGroups<TMajor>()
-        foreach (var context in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>(this)
+        foreach (var context in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>()
                      // ToDo
                      // Capture and expose errors optionally via TryResolve /w out param
                      .Catch((Exception ex) => { }))
@@ -1483,7 +1483,7 @@ public class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter
             
         // ToDo
         // Upgrade to EnumerateGroups<TMajor>()
-        foreach (var context in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>(this)
+        foreach (var context in _sourceMod.EnumerateMajorRecordSimpleContexts<TMajor>()
                      // ToDo
                      // Capture and expose errors optionally via TryResolve /w out param
                      .Catch((Exception ex) => { }))

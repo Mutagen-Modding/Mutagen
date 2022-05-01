@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -54,7 +54,7 @@ internal class ImmutableModLinkCacheSimpleContextCategory<TKey> : IImmutableModL
     private IReadOnlyCache<IModContext<IMajorRecordGetter>, TKey> ConstructUntypedContextCache()
     {
         var majorRecords = new Cache<IModContext<IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
-        foreach (var majorRec in _contextEnumerable.EnumerateMajorRecordSimpleContexts<IMajorRecordGetter>(_linkCache))
+        foreach (var majorRec in _contextEnumerable.EnumerateMajorRecordSimpleContexts<IMajorRecordGetter>())
         {
             var key = _keyGetter(majorRec.Record);
             if (key.Failed) continue;
@@ -160,7 +160,7 @@ internal class ImmutableModLinkCacheSimpleContextCategory<TKey> : IImmutableModL
         var cache = new Cache<IModContext<IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
         // ToDo
         // Upgrade to call EnumerateGroups(), which will perform much better
-        foreach (var majorRec in _contextEnumerable.EnumerateMajorRecordSimpleContexts(_linkCache, type))
+        foreach (var majorRec in _contextEnumerable.EnumerateMajorRecordSimpleContexts(type))
         {
             var key = _keyGetter(majorRec.Record);
             if (key.Failed) continue;
