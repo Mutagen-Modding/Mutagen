@@ -6,7 +6,7 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda;
 
-public static class ILinkCacheExt
+public static class LinkCacheConstructionMixIn
 {
     /// <summary>
     /// Creates a Link Cache using a single mod as its link target. <br/>
