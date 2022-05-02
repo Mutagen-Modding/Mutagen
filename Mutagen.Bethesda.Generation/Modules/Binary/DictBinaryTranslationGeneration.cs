@@ -5,6 +5,8 @@ using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
 
@@ -105,7 +107,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
             || binaryType == DictBinaryType.EnumMap)
         {
             var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{this.NamespacePrefix}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
@@ -177,7 +179,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
 
         var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
 
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{Loqui.Generation.Utility.Await(isAsync)}{this.NamespacePrefix}{term}{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse{(binaryType == DictBinaryType.EnumMap ? $"<{dict.KeyTypeGen.TypeName(false)}>" : null)}",
                    suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
         {
@@ -315,7 +317,7 @@ public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
             DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, data, objGen, typeGen, passedLengthAccessor);
         }
 
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"public IReadOnlyDictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}> {typeGen.Name} => DictBinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse<{dict.KeyTypeGen.TypeName(false)}>"))
         {
             args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({dataAccessor}{(posStr == null ? null : $".Slice({posStr})")}, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}))");

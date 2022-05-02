@@ -3,6 +3,8 @@ using Loqui.Generation;
 using Noggog;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -66,7 +68,7 @@ public class LinkInterfaceModule : GenerationModule
                 sb.AppendLine("/// </summary>");
                 using (var c = sb.Class(interf.Key))
                 {
-                    c.Type = Class.ObjectType.@interface;
+                    c.Type = ObjectType.Interface;
                     c.Interfaces.Add($"I{proto.Protocol.Namespace}MajorRecordInternal");
                     c.Interfaces.Add($"{interf.Key}Getter");
                     if (interfaceInheritenceMappings.TryGetValue(interf.Key, out var impls))
@@ -85,7 +87,7 @@ public class LinkInterfaceModule : GenerationModule
                 sb.AppendLine("/// </summary>");
                 using (var c = sb.Class($"{interf.Key}Getter"))
                 {
-                    c.Type = Class.ObjectType.@interface;
+                    c.Type = ObjectType.Interface;
                     c.Interfaces.Add($"I{proto.Protocol.Namespace}MajorRecordGetter");
                     if (interfaceInheritenceMappings.TryGetValue(interf.Key, out var impls))
                     {
@@ -120,7 +122,7 @@ public class LinkInterfaceModule : GenerationModule
         {
             using (var c = mappingGen.Class($"{proto.Protocol.Namespace}LinkInterfaceMapping"))
             {
-                c.Public = PermissionLevel.@internal;
+                c.AccessModifier = AccessModifier.Internal;
                 c.Interfaces.Add(nameof(IInterfaceMapping));
             }
 

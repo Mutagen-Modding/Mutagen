@@ -4,6 +4,8 @@ using Loqui.Generation;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -141,7 +143,7 @@ public class RecordTypeConverterModule : GenerationModule
     public static void GenerateConverterMember(StructuredStringBuilder sb, ObjectGeneration objGen, RecordTypeConverter recordTypeConverter, string nickName)
     {
         if (recordTypeConverter == null || recordTypeConverter.FromConversions.Count == 0) return;
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"public static RecordTypeConverter {nickName}Converter = new RecordTypeConverter"))
         {
             foreach (var conv in recordTypeConverter.FromConversions)

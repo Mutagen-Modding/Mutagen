@@ -2,6 +2,8 @@ using Loqui;
 using Loqui.Generation;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation;
 
@@ -15,7 +17,7 @@ public class GenderedTypeXmlTranslationGeneration : XmlTranslationGeneration
             sb,
             () =>
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{itemAccessor} = new {typeGen.TypeName(getter: false)}"))
                 {
                     args.Add(subFg =>

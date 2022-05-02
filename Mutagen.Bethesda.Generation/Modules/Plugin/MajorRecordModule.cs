@@ -1,4 +1,3 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
@@ -6,6 +5,8 @@ using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;

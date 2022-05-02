@@ -1,11 +1,12 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
-using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -66,7 +67,7 @@ public class MajorRecordRemovalModule : GenerationModule
         {
             sb.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
             sb.AppendLine("keys.Add(key);");
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -86,7 +87,7 @@ public class MajorRecordRemovalModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -106,7 +107,7 @@ public class MajorRecordRemovalModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -129,7 +130,7 @@ public class MajorRecordRemovalModule : GenerationModule
         {
             sb.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
             sb.AppendLine("keys.Add(key);");
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -153,7 +154,7 @@ public class MajorRecordRemovalModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -177,7 +178,7 @@ public class MajorRecordRemovalModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -202,7 +203,7 @@ public class MajorRecordRemovalModule : GenerationModule
         {
             sb.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
             sb.AppendLine("keys.Add(record.FormKey);");
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -226,7 +227,7 @@ public class MajorRecordRemovalModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -251,7 +252,7 @@ public class MajorRecordRemovalModule : GenerationModule
         {
             sb.AppendLine($"var keys = new HashSet<{nameof(FormKey)}>();");
             sb.AppendLine("keys.Add(key);");
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -275,7 +276,7 @@ public class MajorRecordRemovalModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -299,7 +300,7 @@ public class MajorRecordRemovalModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Remove"))
             {
                 args.AddPassArg("obj");
@@ -432,7 +433,7 @@ public class MajorRecordRemovalModule : GenerationModule
                 }
                 using (sb.CurlyBrace())
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                "Remove"))
                     {
                         args.Add($"({obj.Interface(getter: false)})obj");
@@ -749,7 +750,7 @@ public class MajorRecordRemovalModule : GenerationModule
                 }
                 using (sb.CurlyBrace())
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                "Remove"))
                     {
                         args.Add($"({obj.Interface(getter: false)})obj");
@@ -774,7 +775,7 @@ public class MajorRecordRemovalModule : GenerationModule
         if (field is GroupType group)
         {
             if (blackList?.Contains(group.GetGroupTarget()) ?? false) return;
-            using (var args = fieldGen.Args(
+            using (var args = fieldGen.Call(
                        $"obj.{field.Name}.Remove"))
             {
                 args.AddPassArg("type");
@@ -787,7 +788,7 @@ public class MajorRecordRemovalModule : GenerationModule
             var fieldAccessor = loqui.Nullable ? $"{obj?.ObjectName}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
             if (loqui.TargetObjectGeneration.IsListGroup())
             { // List groups
-                using (var args = fieldGen.Args(
+                using (var args = fieldGen.Call(
                            $"obj.{field.Name}.Remove"))
                 {
                     args.AddPassArg("type");

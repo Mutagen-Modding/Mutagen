@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Collections;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 

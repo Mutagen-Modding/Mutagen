@@ -1,5 +1,5 @@
-﻿using Loqui;
-using Loqui.Generation;
+﻿using Loqui.Generation;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 

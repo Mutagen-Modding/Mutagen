@@ -1,4 +1,3 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -7,6 +6,9 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -111,7 +113,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                     {
                         line = $"(({this.Module.TranslationWriteInterface})(({Module.TranslationItemInterface}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
                     }
-                    using (var args = sb.Args( $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
+                    using (var args = sb.Call( $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
                     {
                         args.Add($"item: {itemAccessor}");
                         args.Add($"writer: {writerAccessor}");
@@ -183,7 +185,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             if (loqui.SetterInterfaceType == LoquiInterfaceType.IGetter) return;
             if (loqui.Singleton)
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor}.{this.Module.CopyInFromPrefix}{TranslationTerm}"))
                 {
                     args.Add($"frame: {frameAccessor}");
@@ -196,7 +198,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 {
                     sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
                 }
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{itemAccessor} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                 {
                     args.Add($"frame: {frameAccessor}");
@@ -564,7 +566,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             case BinaryGenerationType.NoGeneration:
                 return;
             case BinaryGenerationType.Custom:
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{typeGen.Name}CustomParse"))
                 {
                     args.Add("stream");
@@ -625,7 +627,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             {
                 sb.AppendLine($"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength;");
             }
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"this.{accessor} = {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory"))
             {
                 args.Add($"stream: stream");

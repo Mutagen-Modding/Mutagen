@@ -3,6 +3,9 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Fields;
 
@@ -40,7 +43,7 @@ public class MutagenLoquiType : LoquiType
         switch (this.RefType)
         {
             case LoquiRefType.Direct:
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{retAccessor}({this.TargetObjectGeneration.ObjectName}){rhsAccessor}.{(deepCopy ? "Deep" : null)}Copy"))
                 {
                     if (this.RefType == LoquiRefType.Direct)

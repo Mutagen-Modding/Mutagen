@@ -2,6 +2,8 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -69,7 +71,7 @@ public class AbstractInterfaceModule : GenerationModule
         {
             using (var c = mappingGen.Class($"{proto.Protocol.Namespace}IsolatedAbstractInterfaceMapping"))
             {
-                c.Public = PermissionLevel.@internal;
+                c.AccessModifier = AccessModifier.Internal;
                 c.Interfaces.Add(nameof(IInterfaceMapping));
             }
         
@@ -143,7 +145,7 @@ public class AbstractInterfaceModule : GenerationModule
         {
             using (var c = mappingGen.Class($"{proto.Protocol.Namespace}InheritingInterfaceMapping"))
             {
-                c.Public = PermissionLevel.@internal;
+                c.AccessModifier = AccessModifier.Internal;
                 c.Interfaces.Add(nameof(IInterfaceMapping));
             }
 

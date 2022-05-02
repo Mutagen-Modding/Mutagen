@@ -1,5 +1,6 @@
-﻿using Loqui;
-using Loqui.Generation;
+﻿using Loqui.Generation;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
 namespace Mutagen.Bethesda.Generation;
@@ -19,7 +20,7 @@ public class StringXmlTranslationGeneration : Loqui.Generation.PrimitiveXmlTrans
         StringType str = typeGen as StringType;
         if (str.Translated.HasValue)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write"))
             {
                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {writerAccessor}");
@@ -34,7 +35,7 @@ public class StringXmlTranslationGeneration : Loqui.Generation.PrimitiveXmlTrans
         }
         else
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{this.TypeName(typeGen)}XmlTranslation.Instance.Write"))
             {
                 args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {writerAccessor}");

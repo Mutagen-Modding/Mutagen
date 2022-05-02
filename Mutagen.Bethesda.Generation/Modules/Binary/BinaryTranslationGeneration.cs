@@ -1,7 +1,8 @@
-using Loqui;
 using Loqui.Generation;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -115,7 +116,7 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
                 sb.AppendLine($"_{typeGen.Name}Location = {locationAccessor};");
                 break;
             case BinaryGenerationType.Custom:
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{typeGen.Name}CustomParse"))
                 {
                     args.AddPassArg($"stream");

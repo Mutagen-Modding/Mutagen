@@ -1,9 +1,9 @@
 using System.Xml.Linq;
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Strings;
 using Noggog;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Generation.Fields;
 

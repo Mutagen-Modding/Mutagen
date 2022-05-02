@@ -30,21 +30,18 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
 using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
-using System;
 using System.Buffers.Binary;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 #endregion
 

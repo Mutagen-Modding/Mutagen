@@ -25,19 +25,16 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
 using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
-using System;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable

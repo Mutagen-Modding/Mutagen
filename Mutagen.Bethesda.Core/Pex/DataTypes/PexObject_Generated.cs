@@ -8,12 +8,9 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Pex;
 using Noggog;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 #endregion
 
 #nullable enable

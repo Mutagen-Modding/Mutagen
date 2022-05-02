@@ -1,7 +1,8 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using PercentType = Mutagen.Bethesda.Generation.Fields.PercentType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
@@ -46,7 +47,7 @@ public class PercentBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
     bool ReadPercent(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item)
     {
         var percType = typeGen as PercentType;
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{item} = {nameof(PercentBinaryTranslation)}.Parse"))
         {
             args.Add($"reader: {reader}");
@@ -59,7 +60,7 @@ public class PercentBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
     {
         var percType = typeGen as PercentType;
         var data = percType.GetFieldData();
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{nameof(PercentBinaryTranslation)}.Write"))
         {
             args.Add($"writer: {writer}");

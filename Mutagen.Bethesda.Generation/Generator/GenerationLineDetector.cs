@@ -1,7 +1,7 @@
-using Loqui;
 using System.Reactive.Linq;
 using DynamicData;
 using Noggog;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Generation.Generator;
 

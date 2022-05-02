@@ -1,12 +1,13 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Generation.Modules.Aspects;
-using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -64,7 +65,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecords",
                        suffixLine: catchLine))
             {
@@ -140,7 +141,7 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords",
                        suffixLine: catchLine))
             {
@@ -424,7 +425,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                 }
                 using (sb.CurlyBrace())
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                "EnumerateMajorRecords"))
                     {
                         args.Add($"({obj.Interface(getter: getter)})obj");
@@ -692,7 +693,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                 }
                 using (sb.CurlyBrace())
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                "EnumerateMajorRecords<TMajor>"))
                     {
                         args.Add($"({obj.Interface(getter: getter)})obj");

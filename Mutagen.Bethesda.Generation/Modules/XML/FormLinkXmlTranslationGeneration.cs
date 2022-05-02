@@ -1,7 +1,8 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation;
 
@@ -50,7 +51,7 @@ public class FormLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneratio
             {
                 if (itemAccessor.IsAssignment)
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                $"{itemAccessor} = {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType")}XmlTranslation.Instance.Parse"))
                     {
                         args.AddPassArg("node");

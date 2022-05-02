@@ -1,4 +1,3 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Noggog;
@@ -7,6 +6,8 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -30,7 +31,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -114,7 +115,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             return;
         }
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Parse",
                    suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
         {
@@ -177,7 +178,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             if (data.OverflowRecordType.HasValue)
             {
                 sb.AppendLine($"private int? _{typeGen.Name}LengthOverride;");
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.ReadByteArrayWithOverflow)}"))
                 {
                     args.Add(dataAccessor.ToString());

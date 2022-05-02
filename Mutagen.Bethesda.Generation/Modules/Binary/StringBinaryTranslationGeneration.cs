@@ -6,7 +6,9 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations; 
 using Mutagen.Bethesda.Plugins.Meta; 
 using Mutagen.Bethesda.Strings;
-using Mutagen.Bethesda.Generation.Fields; 
+using Mutagen.Bethesda.Generation.Fields;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using StringType = Mutagen.Bethesda.Generation.Fields.StringType; 
  
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
@@ -51,7 +53,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     { 
         var stringType = typeGen as StringType; 
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData; 
-        using (var args = sb.Args( 
+        using (var args = sb.Call( 
                    $"{this.NamespacePrefix}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}")) 
         { 
             args.Add($"writer: {writerAccessor}"); 
@@ -152,7 +154,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         if (asyncMode != AsyncMode.Off) throw new NotImplementedException(); 
         var stringType = typeGen as StringType; 
         var data = typeGen.GetFieldData(); 
-        using (var args = sb.Args( 
+        using (var args = sb.Call( 
                    $"{retAccessor}{this.NamespacePrefix}StringBinaryTranslation.Instance.Parse")) 
         { 
             args.Add(nodeAccessor.Access); 

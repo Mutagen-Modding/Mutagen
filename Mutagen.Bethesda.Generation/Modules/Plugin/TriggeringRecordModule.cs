@@ -1,4 +1,3 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins;
@@ -9,7 +8,9 @@ using Mutagen.Bethesda.Generation.Fields;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
 using Mutagen.Bethesda.Plugins.Internals;
-using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -283,7 +284,7 @@ public class TriggeringRecordModule : GenerationModule
         {
             if (same)
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                     "var all = RecordCollection.Factory"))
                 {
                     foreach (var trigger in all)
@@ -295,7 +296,7 @@ public class TriggeringRecordModule : GenerationModule
             }
             else
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                     "var triggers = RecordCollection.Factory"))
                 {
                     foreach (var trigger in trigRecordTypes)
@@ -303,7 +304,7 @@ public class TriggeringRecordModule : GenerationModule
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
                 }
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                     "var all = RecordCollection.Factory"))
                 {
                     foreach (var trigger in all)

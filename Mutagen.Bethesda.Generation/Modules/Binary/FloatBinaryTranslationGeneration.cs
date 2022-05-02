@@ -1,7 +1,8 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using FloatType = Mutagen.Bethesda.Generation.Fields.FloatType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
@@ -78,7 +79,7 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         var floatType = typeGen as FloatType;
         if (floatType.IntegerType.HasValue)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{item} = {GetTranslatorInstance(typeGen, getter: true)}.Parse"))
             {
                 args.Add($"reader: {reader}");
@@ -99,7 +100,7 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         var data = floatType.GetFieldData();
         if (floatType.IntegerType.HasValue)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{GetTranslatorInstance(typeGen, getter: true)}.Write"))
             {
                 args.Add($"writer: {writer}");

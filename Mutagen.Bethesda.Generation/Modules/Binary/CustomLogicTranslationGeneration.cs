@@ -1,10 +1,12 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -129,7 +131,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"WriteBinary{field.Name}Custom"))
             {
                 args.Add("writer: writer");
@@ -145,7 +147,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         TypeGeneration field,
         Accessor writerAccessor)
     {
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{this.Module.TranslationWriteClass(obj)}.WriteBinary{field.Name}"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -163,7 +165,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     {
         var data = field.GetFieldData();
         var returningParseValue = useReturnValue && data.HasTrigger;
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{(returningParseValue ? "return " : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationCreateClass(field.ObjectGen)}.FillBinary{field.Name}Custom"))
         {
             args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
@@ -189,7 +191,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         string loc;
         if (fieldData.HasTrigger)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"partial void {typeGen.Name}CustomParse"))
             {
                 args.Add($"{nameof(OverlayStream)} stream");
@@ -211,7 +213,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             loc = passedLenAccessor;
         }
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"public partial {typeGen.TypeName(getter: true)}{typeGen.NullChar} Get{typeGen.Name}Custom"))
         {
             if (!fieldData.HasTrigger && dataType == null)
@@ -219,7 +221,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
                 args.Add($"int location");
             }
         }
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => Get{typeGen.Name}Custom"))
         {
             if (!fieldData.HasTrigger && dataType == null)
@@ -248,7 +250,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, data, objGen, typeGen, passedLengthAccessor);
         }
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{(returningParseValue ? "public " : null)}partial {(returningParseValue ? nameof(ParseResult) : "void")} {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
         {
             args.Add($"{nameof(OverlayStream)} stream");
@@ -270,7 +272,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     {
         var fieldData = typeGen.GetFieldData();
         var returningParseValue = fieldData.HasTrigger;
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{(returningParseValue ? "return " : null)}{(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
         {
             args.Add("stream");

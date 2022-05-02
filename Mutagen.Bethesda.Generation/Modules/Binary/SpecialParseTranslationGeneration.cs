@@ -1,5 +1,6 @@
-using Loqui;
 using Loqui.Generation;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -18,7 +19,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
         Accessor translationMaskAccessor)
     {
         var data = typeGen.GetFieldData();
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"SpecialParse_{typeGen.Name}"))
         {
             args.AddPassArg("item");
@@ -54,7 +55,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{objGen.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.SpecialWrite_{typeGen.Name}_Internal"))
         {
             args.AddPassArg("item");
@@ -79,7 +80,7 @@ public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
         Accessor packageAccessor, 
         Accessor converterAccessor)
     {
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{typeGen.Name}SpecialParse"))
         {
             args.AddPassArg("stream");

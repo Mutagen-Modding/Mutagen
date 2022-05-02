@@ -1,7 +1,8 @@
-using Loqui;
 using Loqui.Generation;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation;
 
@@ -89,7 +90,7 @@ public class DataTypeXmlTranslationGeneration : XmlTranslationGeneration
             }
             if (conditions.Count > 0)
             {
-                using (var args = sb.If(ANDs: true))
+                using (var args = sb.If(ands: true))
                 {
                     foreach (var item in conditions)
                     {

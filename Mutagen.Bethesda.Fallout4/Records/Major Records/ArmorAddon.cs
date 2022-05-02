@@ -1,12 +1,10 @@
-using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Fallout4;
 

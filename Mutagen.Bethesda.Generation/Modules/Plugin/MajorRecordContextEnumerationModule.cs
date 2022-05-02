@@ -1,4 +1,3 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Generation.Modules.Aspects;
@@ -8,7 +7,10 @@ using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -97,7 +99,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
             {
                 args.AddPassArg("obj");
@@ -118,7 +120,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
             {
                 args.AddPassArg("obj");
@@ -135,8 +137,8 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         ObjectGeneration obj,
         Accessor loquiAccessor,
         LoquiType loquiType,
-        Action<Args> addGetOrAddArg,
-        Action<Args> duplicateInArg,
+        Action<Call> addGetOrAddArg,
+        Action<Call> duplicateInArg,
         string generic,
         bool includeType,
         bool checkType,
@@ -155,7 +157,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             }
             using (sb.CurlyBrace(doIt: checkType))
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false)}, {loquiType.Interface(getter: true)}>"))
                 {
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -178,7 +180,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             }
             using (sb.CurlyBrace(doIt: checkType))
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                 {
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -200,7 +202,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             sb.AppendLine($"foreach (var item in {loquiAccessor}.EnumerateMajorRecords({(generic == null ? null : "type, throwIfUnknown: false")}))");
             using (sb.CurlyBrace())
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                 {
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -212,7 +214,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         }
         else
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"foreach (var item in {loquiType.TargetObjectGeneration.CommonClassInstance(loquiAccessor, LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts",
                        suffixLine: ")",
                        semiColon: false))
@@ -271,7 +273,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         {
             if (obj.GetObjectType() == ObjectType.Record)
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"var curContext = new ModContext<{modSetter}, {modGetter}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                 {
                     args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -385,7 +387,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         {
             if (obj.GetObjectType() == ObjectType.Record)
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"var curContext = new ModContext<{modSetter}, {modGetter}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                 {
                     args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
@@ -410,7 +412,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 using (sb.IncreaseDepth())
                 {
                     sb.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                $"foreach (var item in this.EnumerateMajorRecordContexts",
                                suffixLine: ")",
                                semiColon: false))
@@ -441,7 +443,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 }
                 using (sb.IncreaseDepth())
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                $"foreach (var item in this.EnumerateMajorRecordContexts",
                                suffixLine: ")",
                                semiColon: false))
@@ -615,7 +617,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _)
                         || AspectInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _))
                     {
-                        using (var args = sb.Args(
+                        using (var args = sb.Call(
                                    $"if ({nameof(InterfaceEnumerationHelper)}.TryEnumerateInterfaceContextsFor<{obj.Interface(getter: getter, internalInterface: true)}, I{obj.ProtoGen.Protocol.Namespace}Mod, I{obj.ProtoGen.Protocol.Namespace}ModGetter>",
                                    suffixLine: ")",
                                    semiColon: false))
@@ -683,7 +685,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             var groupTargetSetter = group.GetGroupTarget().GetTypeName(LoquiInterfaceType.Direct);
             if (includeSelf)
             {
-                using (var args = fieldGen.Args(
+                using (var args = fieldGen.Call(
                            $"foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<{obj.GetModName(getter: false)}, {obj.GetModName(getter: true)}, {groupTargetSetter}, {groupTargetGetter}>",
                            suffixLine: ")",
                            semiColon: false))
@@ -705,7 +707,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                 fieldGen.AppendLine($"foreach (var groupItem in obj.{field.Name})");
                 using (fieldGen.CurlyBrace())
                 {
-                    using (var args = fieldGen.Args(
+                    using (var args = fieldGen.Call(
                                $"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts",
                                suffixLine: ")",
                                semiColon: false))
@@ -735,7 +737,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             var fieldAccessor = loqui.Nullable ? $"{obj.ObjectName}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
             if (loqui.TargetObjectGeneration.IsListGroup())
             { // List groups 
-                using (var args = fieldGen.Args(
+                using (var args = fieldGen.Call(
                            $"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts",
                            suffixLine: ")",
                            semiColon: false))
@@ -840,7 +842,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
             }
             else if (contLoqui.TargetObjectGeneration?.IsListGroup() ?? false)
             {
-                using (var args = fieldGen.Args(
+                using (var args = fieldGen.Call(
                            $"foreach (var item in {accessor}.{field.Name}.EnumerateMajorRecordContexts",
                            suffixLine: ")",
                            semiColon: false))

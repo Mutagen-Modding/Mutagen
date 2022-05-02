@@ -3,6 +3,8 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Fields;
 
@@ -69,7 +71,7 @@ public class FormLinkType : ClassType
         this.NullableProperty.Subscribe(i => _rawFormID.NullableProperty.OnNext(i));
         this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
         this.Singleton = true;
-        this.SetPermission = PermissionLevel.@private;
+        this.SetPermission = AccessModifier.Private;
     }
 
     public override string GenerateEqualsSnippet(Accessor accessor, Accessor rhsAccessor, bool negate = false)
@@ -137,7 +139,7 @@ public class FormLinkType : ClassType
         {
             if (this.Nullable)
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{identifier}.Unset"))
                 {
                 }

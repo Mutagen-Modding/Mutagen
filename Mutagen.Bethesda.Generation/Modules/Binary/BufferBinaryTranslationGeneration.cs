@@ -1,6 +1,7 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -60,7 +61,7 @@ public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
         Accessor converterAccessor)
     {
         BufferType zero = typeGen as BufferType;
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write"))
         {
             args.Add($"writer: {writerAccessor}");

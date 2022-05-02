@@ -1,9 +1,10 @@
-using Loqui;
 using Loqui.Generation;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
-using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules;
 
@@ -50,7 +51,7 @@ public class FolderExportModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        "return CreateFromXmlFolder"))
             {
                 args.Add("dir: dir");
@@ -69,7 +70,7 @@ public class FolderExportModule : GenerationModule
         using (sb.CurlyBrace())
         {
             sb.AppendLine("ErrorMaskBuilder? errorMaskBuilder = new ErrorMaskBuilder();");
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        "var ret = await CreateFromXmlFolder"))
             {
                 args.Add("dir: dir");
@@ -96,7 +97,7 @@ public class FolderExportModule : GenerationModule
             {
                 if (field.GetFieldData().CustomFolder)
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                $"tasks.Add(Task.Run(() => item.CreateFromXmlFolder{field.Name}",
                                suffixLine: "))"))
                     {
@@ -114,7 +115,7 @@ public class FolderExportModule : GenerationModule
                 switch (loqui.TargetObjectGeneration.GetObjectType())
                 {
                     case ObjectType.Record:
-                        using (var args = sb.Args(
+                        using (var args = sb.Call(
                                    $"item.{field.Name}.CopyInFromXml"))
                         {
                             args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
@@ -124,7 +125,7 @@ public class FolderExportModule : GenerationModule
                         break;
                     case ObjectType.Group:
                         if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
-                        using (var args = sb.Args(
+                        using (var args = sb.Call(
                                    $"tasks.Add(Task.Run(() => item.{field.Name}.CreateFromXmlFolder<{subObj.Name}>",
                                    suffixLine: "))"))
                         {
@@ -165,7 +166,7 @@ public class FolderExportModule : GenerationModule
                     }
                     if (field.GetFieldData().CustomFolder)
                     {
-                        using (var args = sb.Args(
+                        using (var args = sb.Call(
                                    $"tasks.Add(Task.Run(() => WriteToXmlFolder{field.Name}",
                                    suffixLine: "))"))
                         {
@@ -179,7 +180,7 @@ public class FolderExportModule : GenerationModule
                     switch (loqui.TargetObjectGeneration.GetObjectType())
                     {
                         case ObjectType.Record:
-                            using (var args = sb.Args(
+                            using (var args = sb.Call(
                                        $"tasks.Add(Task.Run(() => this.{field.Name}.WriteToXml",
                                        suffixLine: "))"))
                             {
@@ -193,7 +194,7 @@ public class FolderExportModule : GenerationModule
                             if (field is GroupType group)
                             {
                                 if (!group.TryGetSpecificationAsObject("T", out subObj)) continue;
-                                using (var args = sb.Args(
+                                using (var args = sb.Call(
                                            $"tasks.Add(Task.Run(() => {field.Name}.WriteToXmlFolder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>",
                                            suffixLine: "))"))
                                 {
@@ -205,7 +206,7 @@ public class FolderExportModule : GenerationModule
                             }
                             else
                             {
-                                using (var args = sb.Args(
+                                using (var args = sb.Call(
                                            $"tasks.Add(Task.Run(() => {field.Name}.WriteToXmlFolder",
                                            suffixLine: "))"))
                                 {
@@ -241,7 +242,7 @@ public class FolderExportModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        "this.WriteToXml"))
             {
                 args.Add("node: node");

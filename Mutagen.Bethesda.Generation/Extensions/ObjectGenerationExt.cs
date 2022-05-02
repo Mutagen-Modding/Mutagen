@@ -4,8 +4,8 @@ using Mutagen.Bethesda.Plugins;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
-using Loqui;
 using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Generation;
 

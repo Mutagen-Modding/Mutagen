@@ -1,7 +1,8 @@
-using Loqui;
 using Loqui.Generation;
 using Loqui.Internal;
 using Mutagen.Bethesda.Generation.Fields;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation;
 
@@ -27,7 +28,7 @@ public class MutagenXmlModule : XmlTranslationModule
         {
             if (obj.HasLoquiBaseObject)
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{this.TranslationWriteClass(obj.BaseClass)}.WriteToNode{ModuleNickname}"))
                 {
                     args.Add($"item: item");
@@ -52,7 +53,7 @@ public class MutagenXmlModule : XmlTranslationModule
                 }
                 if (conditions.Count > 0)
                 {
-                    using (var args = sb.If(ANDs: true))
+                    using (var args = sb.If(ands: true))
                     {
                         foreach (var item in conditions)
                         {
@@ -274,7 +275,7 @@ public class MutagenXmlModule : XmlTranslationModule
                     {
                         if (obj.HasLoquiBaseObject)
                         {
-                            using (var args = sb.Args(
+                            using (var args = sb.Call(
                                        $"{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.FillPrivateElement{ModuleNickname}{obj.GetBaseMask_GenericTypes(MaskType.Error)}"))
                             {
                                 args.Add("item: item");
@@ -378,7 +379,7 @@ public class MutagenXmlModule : XmlTranslationModule
                 {
                     if (obj.HasLoquiBaseObject)
                     {
-                        using (var args = sb.Args(
+                        using (var args = sb.Call(
                                    $"{this.TranslationCreateClass(obj.BaseClass)}.FillPublicElement{ModuleNickname}"))
                         {
                             args.Add("item: item");

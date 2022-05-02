@@ -1,7 +1,8 @@
-using Loqui;
 using Loqui.Generation;
 using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -32,7 +33,7 @@ public class DuplicateModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"return {obj.CommonClassInstance("item", LoquiInterfaceType.IGetter, CommonGenerics.Functions, MaskType.NormalGetter)}.Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter, MaskType.Translation)}"))
             {
                 args.AddPassArg("item");
@@ -85,7 +86,7 @@ public class DuplicateModule : GenerationModule
                 }
                 using (sb.CurlyBrace())
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                $"return this.Duplicate"))
                     {
                         args.Add($"item: ({obj.Interface(getter: true)})item");

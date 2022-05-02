@@ -6,6 +6,8 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -43,7 +45,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         bool needsMasters = arr2d.SubTypeGeneration is FormLinkType || arr2d.SubTypeGeneration is LoquiType;
         
-        using (var args = sb.Args(
+        using (var args = sb.Call(
             $"{this.NamespacePrefix}Array2dBinaryTranslation<{typeName}>.Instance.Write"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -128,7 +130,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
 
         WrapSet(sb, itemAccessor, arr2d, (wrapFg) =>
         {
-            using (var args = wrapFg.Args(
+            using (var args = wrapFg.Call(
                 $"{this.NamespacePrefix}Array2dBinaryTranslation<{arr2d.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>.Instance.Parse",
                 semiColon: false))
             {
@@ -283,7 +285,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         else
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{accessor}.SetTo"))
             {
                 args.Add(subFg => a(subFg));
@@ -313,7 +315,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
             case BinaryGenerationType.Custom:
                 if (typeGen.GetFieldData().HasTrigger)
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                         $"partial void {typeGen.Name}CustomParse"))
                     {
                         args.Add($"{nameof(OverlayStream)} stream");
@@ -353,7 +355,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
             }
             else
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"public {arr2d.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayArray2d.Factory<{typeName}>"))
                 {
                     args.Add($"mem: {dataAccessor}.Slice({passedLength})");
@@ -398,7 +400,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
             dataAccess = "stream.RemainingMemory";
         }
         
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"this.{typeGen.Name} = BinaryOverlayArray2d.Factory<{typeName}>"))
         {
             args.Add($"mem: {dataAccess}");

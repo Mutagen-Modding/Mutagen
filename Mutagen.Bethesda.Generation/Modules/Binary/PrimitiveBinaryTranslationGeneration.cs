@@ -1,4 +1,3 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -7,6 +6,8 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -63,7 +64,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         }
         if (data.HasTrigger || !PreferDirectTranslation)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Write{(typeGen.Nullable ? "Nullable" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
@@ -186,7 +187,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                 }
                 sb.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
             }
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{outItemAccessor} = {this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Parse"))
             {
                 args.Add(nodeAccessor.Access);

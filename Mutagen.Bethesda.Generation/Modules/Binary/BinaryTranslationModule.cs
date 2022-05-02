@@ -1,10 +1,12 @@
 using Loqui.Generation;
-using Loqui;
 using Mutagen.Bethesda.Generation.Fields;
 using Noggog;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -115,7 +117,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             using (sb.CurlyBrace())
             {
                 sb.AppendLine($"var startPos = {ReaderMemberName}.Position;");
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"item = CreateFromBinary"))
                 {
                     args.Add(this.MainAPI.PassArgs(obj, TranslationDirection.Reader));
@@ -237,7 +239,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
     {
         var data = obj.GetObjectData();
         if (data.CustomBinaryEnd == CustomEnd.Off) return;
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"public static partial void CustomBinaryEndExport"))
         {
             args.Add($"{WriterClass} {WriterMemberName}");
@@ -251,7 +253,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"CustomBinaryEndExport"))
             {
                 args.AddPassArg(WriterMemberName);
@@ -266,7 +268,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         if (data.CustomBinaryEnd == CustomEnd.Off) return;
         if (data.CustomBinaryEnd == CustomEnd.Normal)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"public static partial void CustomBinaryEndImport"))
             {
                 args.Add($"{ReaderClass} {ReaderMemberName}");
@@ -280,7 +282,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             }
             using (sb.CurlyBrace())
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"CustomBinaryEndImport"))
                 {
                     args.AddPassArg(ReaderMemberName);
@@ -306,7 +308,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         {
             if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"var nextRecord = HeaderTranslation.GetNext{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "Record")}Type"))
                 {
                     args.Add($"reader: {ReaderMemberName}.Reader");
@@ -322,7 +324,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                     }
                     using (sb.IncreaseDepth())
                     {
-                        using (var args = sb.Args(
+                        using (var args = sb.Call(
                                    "return CustomRecordTypeTrigger"))
                         {
                             args.Add($"{ReaderMemberName}: {ReaderMemberName}.SpawnWithLength(customLen + {ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)})");
@@ -337,7 +339,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                     }
                 }
             }
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
@@ -374,7 +376,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
     {
         if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"base.{CopyInFromPrefix}{ModuleNickname}"))
             {
                 args.AddPassArg("item");
@@ -438,7 +440,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             var firstBase = obj.BaseClassTrail().FirstOrDefault();
             if (firstBase != null)
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{TranslationWriteClass(firstBase)}.Instance.Write"))
                 {
                     args.AddPassArg($"item");

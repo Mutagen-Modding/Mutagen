@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
@@ -10,6 +8,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Fallout4.Records;
 

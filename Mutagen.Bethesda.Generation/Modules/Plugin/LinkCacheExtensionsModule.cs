@@ -1,6 +1,7 @@
-using Loqui;
 using Loqui.Generation;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 

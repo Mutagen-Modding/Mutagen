@@ -1,7 +1,8 @@
-using Loqui;
 using Loqui.Generation;
 using Noggog;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -23,7 +24,7 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         Accessor converterAccessor)
     {
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{this.NamespacePrefix}FilePathBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
         {
             args.Add($"writer: {writerAccessor}");
@@ -85,7 +86,7 @@ public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
     {
         if (inline) throw new NotImplementedException();
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.NamespacePrefix}FilePathBinaryTranslation.Instance.Parse",
                    suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
         {

@@ -1,9 +1,10 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Cache;
-using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -67,7 +68,7 @@ public class TypeOptionSolidifier : GenerationModule
                         }
                         using (sb.CurlyBrace())
                         {
-                            using (var args = sb.Args(
+                            using (var args = sb.Call(
                                        $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                             {
                                 args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
@@ -89,7 +90,7 @@ public class TypeOptionSolidifier : GenerationModule
                         }
                         using (sb.CurlyBrace())
                         {
-                            using (var args = sb.Args(
+                            using (var args = sb.Call(
                                        $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                             {
                                 args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
@@ -121,7 +122,7 @@ public class TypeOptionSolidifier : GenerationModule
                             }
                             using (sb.CurlyBrace())
                             {
-                                using (var args = sb.Args(
+                                using (var args = sb.Call(
                                            $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
@@ -143,7 +144,7 @@ public class TypeOptionSolidifier : GenerationModule
                             }
                             using (sb.CurlyBrace())
                             {
-                                using (var args = sb.Args(
+                                using (var args = sb.Call(
                                            $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");

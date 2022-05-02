@@ -5,6 +5,8 @@ using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -59,7 +61,7 @@ public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         {
             sb.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
         }
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{retAccessor}{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
         {
             args.Add(nodeAccessor.Access);

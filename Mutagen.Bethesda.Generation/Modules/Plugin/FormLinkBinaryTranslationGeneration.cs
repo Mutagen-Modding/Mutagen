@@ -7,6 +7,8 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -71,7 +73,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         switch (linkType.FormIDType)
         {
             case FormLinkType.FormIDTypeEnum.Normal:
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{retAccessor}{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                 {
                     args.Add(nodeAccessor.Access);
@@ -116,7 +118,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
             sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
-        using (var args = sb.Args(
+        using (var args = sb.Call(
                    $"{itemAccessor}.SetTo"))
         {
             args.Add(subFg =>
@@ -151,7 +153,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
                 }
                 if (data.HasTrigger || !PreferDirectTranslation)
                 {
-                    using (var args = sb.Args(
+                    using (var args = sb.Call(
                                $"{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                     {
                         args.Add($"writer: {writerAccessor}");
@@ -177,7 +179,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
                 }
                 break;
             case FormLinkType.FormIDTypeEnum.EDIDChars:
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{this.NamespacePrefix}RecordTypeBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                 {
                     args.Add($"writer: {writerAccessor}");

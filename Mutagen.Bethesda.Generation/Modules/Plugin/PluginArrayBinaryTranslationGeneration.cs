@@ -5,6 +5,8 @@ using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
@@ -88,7 +90,7 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
             case BinaryGenerationType.NoGeneration:
                 return;
             case BinaryGenerationType.Custom:
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{typeGen.Name}CustomParse"))
                 {
                     args.AddPassArg($"stream");

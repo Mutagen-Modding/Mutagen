@@ -31,7 +31,7 @@
   </Object>
   <Object name="RegionDataHeader" objType="Subrecord" recordType="RDAT" GUID="cdb4d0b8-01c9-46d2-9dba-131b6ecf19cd" ID="261">
     <Fields>
-      <Enum name="DataType" enumName="RegionData.RegionDataType" byteLength="4" setPermission="protected" internalSetInterface="true" />
+      <Enum name="DataType" enumName="RegionData.RegionDataType" byteLength="4" setPermission="Protected" internalSetInterface="true" />
       <Enum name="Flags" enumName="RegionData.RegionDataFlag" byteLength="1" />
       <UInt8 name="Priority" />
       <Zero byteLength="2" />

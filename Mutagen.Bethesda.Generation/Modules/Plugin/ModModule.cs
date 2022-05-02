@@ -11,6 +11,9 @@ using System.IO.Abstractions;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Strings.DI;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -179,7 +182,7 @@ public class ModModule : GenerationModule
             sb.AppendLine("uint count = (uint)this.EnumerateMajorRecords().Count();");
             foreach (var field in obj.IterateFields())
             {
-                if (!(field is LoquiType loqui)) continue;
+                if (field is not LoquiType loqui) continue;
                 if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
                 if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
                 {
@@ -339,7 +342,7 @@ public class ModModule : GenerationModule
         {
             using (var c = sb.Class($"{obj.Name}_Registration"))
             {
-                c.Public = PermissionLevel.@internal;
+                c.AccessModifier = AccessModifier.Internal;
                 c.Partial = true;
                 c.Interfaces.Add(nameof(IModRegistration));
             }
@@ -375,7 +378,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"return (IGroupGetter<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
@@ -392,7 +395,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"return (IGroupGetter){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
@@ -409,7 +412,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"return (IGroup<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
@@ -426,7 +429,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"return (IGroup){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
@@ -445,7 +448,7 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
             {
                 args.AddPassArg("item");
@@ -470,7 +473,7 @@ public class ModModule : GenerationModule
         {
             sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
             sb.AppendLine($"parallelParam ??= {nameof(ParallelWriteParameters)}.{nameof(ParallelWriteParameters.Default)};");
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
             {
                 args.Add("mod: item");
@@ -484,7 +487,7 @@ public class ModModule : GenerationModule
             sb.AppendLine("using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))");
             using (sb.CurlyBrace())
             {
-                using (var args = sb.Args(
+                using (var args = sb.Call(
                            $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
                 {
                     args.AddPassArg("item");
@@ -604,7 +607,7 @@ public class ModModule : GenerationModule
             }
 
             sb.AppendLine($"var writer = new MutagenWriter(stream, bundle);");
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
             {
                 args.AddPassArg("param");
@@ -647,7 +650,7 @@ public class ModModule : GenerationModule
                 i++;
             }
             sb.AppendLine("Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());");
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.CompileStreamsInto)}"))
             {
                 args.Add("outputStreams.NotNull()");

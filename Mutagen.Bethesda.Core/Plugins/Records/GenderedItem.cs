@@ -1,6 +1,7 @@
 using Loqui;
 using System.Collections;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Noggog.StructuredStrings;
 using static Loqui.EqualsMaskHelper;
 
 namespace Mutagen.Bethesda.Plugins.Records

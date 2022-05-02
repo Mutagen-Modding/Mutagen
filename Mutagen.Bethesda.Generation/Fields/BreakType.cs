@@ -1,6 +1,6 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Generation.Fields;
 

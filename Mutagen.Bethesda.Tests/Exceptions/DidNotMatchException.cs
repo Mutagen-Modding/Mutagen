@@ -1,5 +1,5 @@
-using Loqui;
 using Noggog;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Tests;
 

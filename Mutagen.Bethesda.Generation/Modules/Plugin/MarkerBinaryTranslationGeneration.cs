@@ -1,6 +1,6 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 

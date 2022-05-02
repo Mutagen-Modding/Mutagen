@@ -2,6 +2,7 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Noggog.StructuredStrings;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;

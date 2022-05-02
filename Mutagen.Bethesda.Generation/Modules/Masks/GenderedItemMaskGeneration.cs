@@ -1,7 +1,8 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Generation.Fields;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation;
 
@@ -50,7 +51,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         var isLoqui = gendered.SubTypeGeneration is LoquiType;
         if (field.Nullable || isLoqui)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"if (!{nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AllMask) : nameof(GenderedItem.All))}",
                        suffixLine: ") return false"))
             {
@@ -71,7 +72,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         var isLoqui = gendered.SubTypeGeneration is LoquiType;
         if (field.Nullable || isLoqui)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"if ({nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AnyMask) : nameof(GenderedItem.Any))}",
                        suffixLine: ") return true"))
             {
@@ -92,7 +93,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         var loqui = gendered.SubTypeGeneration as LoquiType;
         if (field.Nullable || loqui != null)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{retAccessor} = GenderedItem.TranslateHelper"))
             {
                 args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}");
@@ -105,7 +106,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
         }
         else
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{retAccessor} = new GenderedItem<{SubMaskString(field, "R")}>"))
             {
                 if (loqui != null)
@@ -140,7 +141,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
     {
         if (!field.IntegrateField) return;
         bool doIf;
-        using (var args = sb.If(ANDs: true))
+        using (var args = sb.If(ands: true))
         {
             if (field.Nullable)
             {

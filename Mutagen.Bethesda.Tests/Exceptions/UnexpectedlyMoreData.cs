@@ -1,4 +1,4 @@
-using Loqui;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Tests;
 

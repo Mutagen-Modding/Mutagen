@@ -1,11 +1,12 @@
 using System.Xml.Linq;
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Fields;
 
@@ -82,7 +83,7 @@ public class GenderedType : WrapperType
         }
         using (sb.CurlyBrace(doIt: this.Nullable))
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>"))
             {
                 if (this.isLoquiSingle)
@@ -133,7 +134,7 @@ public class GenderedType : WrapperType
 
         if (this.Nullable || loqui != null)
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"ret.{this.Name} = {nameof(GenderedItem)}.{nameof(GenderedItem.EqualityMaskHelper)}"))
             {
                 args.Add($"lhs: {accessor}");
@@ -158,7 +159,7 @@ public class GenderedType : WrapperType
         }
         else
         {
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"ret.{this.Name} = new GenderedItem<bool>"))
             {
                 args.Add($"male: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Male", $"{rhsAccessor}.Male")}");

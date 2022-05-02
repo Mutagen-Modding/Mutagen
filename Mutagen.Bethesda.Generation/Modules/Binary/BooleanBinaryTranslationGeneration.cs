@@ -1,6 +1,7 @@
-using Loqui;
 using Loqui.Generation;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
@@ -109,7 +110,7 @@ public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         else
         {
             var data = typeGen.GetFieldData();
-            using (var args = sb.Args(
+            using (var args = sb.Call(
                        $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.WriteAsMarker"))
             {
                 args.Add($"writer: {writerAccessor}");

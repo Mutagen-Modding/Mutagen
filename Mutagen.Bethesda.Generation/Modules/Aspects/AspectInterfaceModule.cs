@@ -3,6 +3,8 @@ using Loqui.Generation;
 using Noggog;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 
@@ -173,7 +175,7 @@ public class AspectInterfaceModule : GenerationModule
         {
             using (var c = mappingGen.Class($"{proto.Protocol.Namespace}AspectInterfaceMapping"))
             {
-                c.Public = PermissionLevel.@internal;
+                c.AccessModifier = AccessModifier.Internal;
                 c.Interfaces.Add(nameof(IInterfaceMapping));
             }
             

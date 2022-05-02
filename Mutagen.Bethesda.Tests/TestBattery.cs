@@ -1,6 +1,6 @@
-using Loqui;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Tests;
 
