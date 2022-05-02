@@ -92,6 +92,25 @@ public interface ILinkCache : IIdentifierLinkCache
     /// <returns>True if a matching record was found</returns>
     bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner);
 
+
+    /// <summary>
+    /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="majorRec">Out parameter containing the record if successful</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>True if a matching record was found</returns>
+    bool TryResolve(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner);
+
     /// <summary>
     /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
     /// <br/>
@@ -249,6 +268,25 @@ public interface ILinkCache : IIdentifierLinkCache
     /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
     /// </exception>
     IMajorRecordGetter Resolve(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
+    /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given type, it will be seen as not a match.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>Matching record</returns>
+    /// <exception cref="MissingRecordException">
+    /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+    /// </exception>
+    IMajorRecordGetter Resolve(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -437,6 +475,22 @@ public interface ILinkCache : IIdentifierLinkCache
     /// <summary>
     /// Iterates all records that match the FormKey relative to the source the package was attached to.<br />
     /// If attached to a single mod, at most a single record can be found.<br />
+    /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected TMajor type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
+    IEnumerable<IMajorRecordGetter> ResolveAll(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
+    /// Iterates all records that match the FormKey relative to the source the package was attached to.<br />
+    /// If attached to a single mod, at most a single record can be found.<br />
     /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.<br />
     /// <br/>
     /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
@@ -530,6 +584,24 @@ public interface ILinkCache : IIdentifierLinkCache
     bool TryResolveSimpleContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
+    /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected TMajor type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>True if a matching record was found</returns>
+    bool TryResolveSimpleContext(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
     /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
     /// <br/>
     /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
@@ -601,6 +673,25 @@ public interface ILinkCache : IIdentifierLinkCache
     /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
     /// </exception>
     IModContext<IMajorRecordGetter> ResolveSimpleContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
+    /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given type, it will be seen as not a match.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected TMajor type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>Matching record with context</returns>
+    /// <exception cref="MissingRecordException">
+    /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+    /// </exception>
+    IModContext<IMajorRecordGetter> ResolveSimpleContext(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -696,6 +787,22 @@ public interface ILinkCache : IIdentifierLinkCache
     /// </exception>
     /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
     IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
+    /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
+    /// If attached to a single mod, at most a single record can be found.<br />
+    /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected TMajor type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
+    IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
@@ -834,6 +941,24 @@ public interface ILinkCache<TMod, TModGetter> : ILinkCache
     bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
+    /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected TMajor type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>True if a matching record was found</returns>
+    bool TryResolveContext(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
     /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
     /// <br/>
     /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
@@ -905,6 +1030,25 @@ public interface ILinkCache<TMod, TModGetter> : ILinkCache
     /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
     /// </exception>
     IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
+    /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given type, it will be seen as not a match.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected TMajor type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>Matching record with context</returns>
+    /// <exception cref="MissingRecordException">
+    /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+    /// </exception>
+    IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -1006,6 +1150,22 @@ public interface ILinkCache<TMod, TModGetter> : ILinkCache
     /// </exception>
     /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
     IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
+    /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
+    /// If attached to a single mod, at most a single record can be found.<br />
+    /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected TMajor type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
+    IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />

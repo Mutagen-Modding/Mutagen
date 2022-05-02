@@ -56,6 +56,24 @@ public interface IIdentifierLinkCache : IDisposable
     bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
+    /// Retrieves the winning EditorID that matches the FormKey relative to the source the package was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>True if a matching record was found</returns>
+    bool TryResolveIdentifier(IFormLinkGetter formLink, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
     /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
     /// <br/>
     /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
