@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Installs;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order;
@@ -152,6 +153,7 @@ public class GameEnvironmentState :
         DirectoryPath gameFolder,
         LinkCachePreferences? linkCachePrefs = null)
     {
+        Warmup.Init();
         var dataDirectory = new DataDirectoryInjection(Path.Combine(gameFolder, "Data"));
         var gameReleaseInjection = new GameReleaseInjection(release);
         var pluginRawListingsReader = new PluginRawListingsReader(
@@ -264,6 +266,7 @@ public class GameEnvironmentState<TMod> :
         DirectoryPath gameFolder,
         LinkCachePreferences? linkCachePrefs = null)
     {
+        Warmup.Init();
         var dataDirectory = new DataDirectoryInjection(Path.Combine(gameFolder, "Data"));
         var gameReleaseInjection = new GameReleaseInjection(release);
         var pluginRawListingsReader = new PluginRawListingsReader(
@@ -385,6 +388,7 @@ public class GameEnvironmentState<TModSetter, TModGetter> :
         DirectoryPath gameFolder,
         LinkCachePreferences? linkCachePrefs = null)
     {
+        Warmup.Init();
         var dataDirectory = new DataDirectoryInjection(Path.Combine(gameFolder, "Data"));
         var gameReleaseInjection = new GameReleaseInjection(release);
         var pluginRawListingsReader = new PluginRawListingsReader(
