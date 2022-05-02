@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DoorTriangleCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DoorTriangleCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorTriangleSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDoorTriangleGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDoorTriangleGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Door);
             yield break;
@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DoorTriangleCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DoorTriangleCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DoorTriangleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

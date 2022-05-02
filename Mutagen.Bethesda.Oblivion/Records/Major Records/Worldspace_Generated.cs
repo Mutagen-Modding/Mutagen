@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(FormKey formKey)
         {
@@ -2456,9 +2456,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -2476,12 +2476,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (obj.TopCell is {} TopCellItems)
             {
-                foreach (var item in TopCellItems.ContainedFormLinks)
+                foreach (var item in TopCellItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.SubCells.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.SubCells.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3968,7 +3968,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

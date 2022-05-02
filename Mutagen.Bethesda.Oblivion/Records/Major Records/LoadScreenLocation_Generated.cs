@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenLocationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LoadScreenLocationCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILoadScreenLocationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILoadScreenLocationGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Direct);
             yield return FormLinkInformation.Factory(obj.Indirect);
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenLocationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LoadScreenLocationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LoadScreenLocationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

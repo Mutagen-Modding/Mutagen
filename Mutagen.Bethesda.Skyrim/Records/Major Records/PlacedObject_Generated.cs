@@ -3143,7 +3143,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(
             FormKey formKey,
@@ -5080,15 +5080,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedObjectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5099,7 +5099,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.Portals is {} PortalsItem)
             {
-                foreach (var item in PortalsItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in PortalsItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -5116,7 +5116,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Reflections.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Reflections.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -5130,7 +5130,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.TeleportDestination is {} TeleportDestinationItems)
             {
-                foreach (var item in TeleportDestinationItems.ContainedFormLinks)
+                foreach (var item in TeleportDestinationItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5157,7 +5157,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.ActivateParents is {} ActivateParentsItems)
             {
-                foreach (var item in ActivateParentsItems.ContainedFormLinks)
+                foreach (var item in ActivateParentsItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5172,7 +5172,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.Lock is {} LockItems)
             {
-                foreach (var item in LockItems.ContainedFormLinks)
+                foreach (var item in LockItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5183,7 +5183,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.NavigationDoorLink is {} NavigationDoorLinkItems)
             {
-                foreach (var item in NavigationDoorLinkItems.ContainedFormLinks)
+                foreach (var item in NavigationDoorLinkItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5197,7 +5197,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.Ownership is {} OwnershipItems)
             {
-                foreach (var item in OwnershipItems.ContainedFormLinks)
+                foreach (var item in OwnershipItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5208,18 +5208,18 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
-                foreach (var item in EnableParentItems.ContainedFormLinks)
+                foreach (var item in EnableParentItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.LinkedReferences.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.Patrol is {} PatrolItems)
             {
-                foreach (var item in PatrolItems.ContainedFormLinks)
+                foreach (var item in PatrolItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -7036,7 +7036,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceParentCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceParentCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceParentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceParentGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceParentGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Worldspace);
             yield break;
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceParentCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceParentCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceParentBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

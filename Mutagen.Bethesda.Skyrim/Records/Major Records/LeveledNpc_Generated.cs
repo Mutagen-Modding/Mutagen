@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledNpc_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledNpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcSetterCommon.Instance.RemapLinks(this, mapping);
         public LeveledNpc(
             FormKey formKey,
@@ -1452,9 +1452,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILeveledNpcGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledNpcGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1465,14 +1465,14 @@ namespace Mutagen.Bethesda.Skyrim
             if (obj.Entries is {} EntriesItem)
             {
                 foreach (var item in EntriesItem.WhereCastable<ILeveledNpcEntryGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.ContainedFormLinks))
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledNpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

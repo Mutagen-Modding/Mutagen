@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISimpleModelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISimpleModelGetter obj)
         {
             yield break;
         }
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => SimpleModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

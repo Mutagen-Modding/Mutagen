@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => AHolotapeDataCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AHolotapeDataCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AHolotapeDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAHolotapeDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAHolotapeDataGetter obj)
         {
             yield break;
         }
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => AHolotapeDataCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AHolotapeDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AHolotapeDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

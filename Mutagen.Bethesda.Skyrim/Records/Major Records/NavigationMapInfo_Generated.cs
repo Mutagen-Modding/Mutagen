@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMapInfoCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavigationMapInfoGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavigationMapInfoGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.NavigationMesh);
             foreach (var item in obj.MergedTo)
@@ -1739,7 +1739,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LinkedDoors.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.LinkedDoors.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2182,7 +2182,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMapInfoCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationMapInfoBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

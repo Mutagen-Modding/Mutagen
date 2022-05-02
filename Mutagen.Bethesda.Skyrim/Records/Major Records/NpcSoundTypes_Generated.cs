@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcSoundTypesCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcSoundTypesCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -953,13 +953,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcSoundTypesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcSoundTypesGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Types.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Types.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcSoundTypesCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcSoundTypesCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcSoundTypesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

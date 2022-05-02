@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedArrow_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedArrowCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedArrowCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedArrowSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedArrow(
             FormKey formKey,
@@ -1163,9 +1163,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedArrowGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedArrowGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1564,7 +1564,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedArrowCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedArrowCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedArrowBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

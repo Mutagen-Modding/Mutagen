@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Scene_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SceneCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SceneCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneSetterCommon.Instance.RemapLinks(this, mapping);
         public Scene(
             FormKey formKey,
@@ -2030,25 +2030,25 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISceneGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISceneGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.Phases.WhereCastable<IScenePhaseGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Actions.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Actions.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2057,7 +2057,7 @@ namespace Mutagen.Bethesda.Skyrim
                 yield return QuestInfo;
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2796,7 +2796,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SceneCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SceneCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SceneBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 
-public class ContainedFormLinkEnumerationTests
+public class EnumerateFormLinksTests
 {
     [Fact]
     public void KeyValueDictionaryRetrieval()
@@ -23,6 +23,6 @@ public class ContainedFormLinkEnumerationTests
                 }
             }
         };
-        package.ContainedFormLinks.Select(x => x.FormKey).Should().Contain(key);
+        package.EnumerateFormLinks().Select(x => x.FormKey).Should().Contain(key);
     }
 }

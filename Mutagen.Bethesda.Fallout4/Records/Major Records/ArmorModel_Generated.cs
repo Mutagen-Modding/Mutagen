@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorModelCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorModelCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorModelSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -984,11 +984,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IArmorModelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorModelGetter obj)
         {
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1293,7 +1293,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorModelCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorModelCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ArmorModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

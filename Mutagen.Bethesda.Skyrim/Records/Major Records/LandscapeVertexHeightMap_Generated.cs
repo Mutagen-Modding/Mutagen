@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILandscapeVertexHeightMapGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILandscapeVertexHeightMapGetter obj)
         {
             yield break;
         }

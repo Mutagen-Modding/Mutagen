@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Clothing_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ClothingCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClothingCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClothingSetterCommon.Instance.RemapLinks(this, mapping);
         public Clothing(FormKey formKey)
         {
@@ -1777,9 +1777,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IClothingGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IClothingGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -2485,7 +2485,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ClothingCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClothingCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

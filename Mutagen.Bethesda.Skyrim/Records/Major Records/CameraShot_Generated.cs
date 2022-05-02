@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CameraShot_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CameraShotCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CameraShotCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraShotSetterCommon.Instance.RemapLinks(this, mapping);
         public CameraShot(
             FormKey formKey,
@@ -1697,15 +1697,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICameraShotGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICameraShotGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2263,7 +2263,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CameraShotCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CameraShotCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CameraShotBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

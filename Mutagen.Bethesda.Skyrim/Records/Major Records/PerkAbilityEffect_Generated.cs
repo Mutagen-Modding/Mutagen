@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkAbilityEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkAbilityEffectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAbilityEffectSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -884,9 +884,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkAbilityEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkAbilityEffectGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkAbilityEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkAbilityEffectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkAbilityEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

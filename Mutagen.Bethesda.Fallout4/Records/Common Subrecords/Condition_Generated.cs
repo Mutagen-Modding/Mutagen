@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConditionCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IConditionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConditionGetter obj)
         {
             yield break;
         }
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConditionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

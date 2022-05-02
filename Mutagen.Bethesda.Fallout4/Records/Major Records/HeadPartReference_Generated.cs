@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => HeadPartReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadPartReferenceCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHeadPartReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHeadPartReferenceGetter obj)
         {
             if (FormLinkInformation.TryFactory(obj.Head, out var HeadInfo))
             {
@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => HeadPartReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadPartReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadPartReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

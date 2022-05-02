@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMesh_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshSetterCommon.Instance.RemapLinks(this, mapping);
         public NavigationMesh(
             FormKey formKey,
@@ -1237,15 +1237,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavigationMeshGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavigationMeshGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Data is IFormLinkContainerGetter DatalinkCont)
             {
-                foreach (var item in DatalinkCont.ContainedFormLinks)
+                foreach (var item in DatalinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

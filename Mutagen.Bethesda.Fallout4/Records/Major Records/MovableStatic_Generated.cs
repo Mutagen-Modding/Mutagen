@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MovableStatic_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MovableStaticCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MovableStaticCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MovableStaticSetterCommon.Instance.RemapLinks(this, mapping);
         public MovableStatic(FormKey formKey)
         {
@@ -1910,15 +1910,15 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMovableStaticGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMovableStaticGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1929,14 +1929,14 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.ContainedFormLinks)
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Properties is {} PropertiesItem)
             {
-                foreach (var item in PropertiesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2645,7 +2645,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MovableStaticCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MovableStaticCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MovableStaticBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

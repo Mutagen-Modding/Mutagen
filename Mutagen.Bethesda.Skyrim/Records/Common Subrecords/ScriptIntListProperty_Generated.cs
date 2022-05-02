@@ -956,9 +956,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptIntListPropertyGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptIntListPropertyGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }

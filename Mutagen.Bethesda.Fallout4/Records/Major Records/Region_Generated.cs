@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSetterCommon.Instance.RemapLinks(this, mapping);
         public Region(FormKey formKey)
         {
@@ -1672,9 +1672,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1684,28 +1684,28 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Objects is {} ObjectsItems)
             {
-                foreach (var item in ObjectsItems.ContainedFormLinks)
+                foreach (var item in ObjectsItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Weather is {} WeatherItems)
             {
-                foreach (var item in WeatherItems.ContainedFormLinks)
+                foreach (var item in WeatherItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Grasses is {} GrassesItems)
             {
-                foreach (var item in GrassesItems.ContainedFormLinks)
+                foreach (var item in GrassesItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Sounds is {} SoundsItems)
             {
-                foreach (var item in SoundsItems.ContainedFormLinks)
+                foreach (var item in SoundsItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2330,7 +2330,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

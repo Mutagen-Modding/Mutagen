@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Ingestible_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => IngestibleCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IngestibleCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleSetterCommon.Instance.RemapLinks(this, mapping);
         public Ingestible(FormKey formKey)
         {
@@ -2498,9 +2498,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IIngestibleGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIngestibleGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -2517,7 +2517,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2540,14 +2540,14 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.ContainedFormLinks)
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             yield return FormLinkInformation.Factory(obj.Addiction);
             yield return FormLinkInformation.Factory(obj.ConsumeSound);
-            foreach (var item in obj.Effects.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Effects.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3376,7 +3376,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => IngestibleCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IngestibleCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IngestibleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

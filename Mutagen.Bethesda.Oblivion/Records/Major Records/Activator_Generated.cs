@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Activator_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ActivatorCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActivatorCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivatorSetterCommon.Instance.RemapLinks(this, mapping);
         public Activator(FormKey formKey)
         {
@@ -1229,9 +1229,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IActivatorGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActivatorGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1693,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ActivatorCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActivatorCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActivatorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

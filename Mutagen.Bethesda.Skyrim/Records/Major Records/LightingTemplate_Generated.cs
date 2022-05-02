@@ -1904,9 +1904,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILightingTemplateGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILightingTemplateGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }

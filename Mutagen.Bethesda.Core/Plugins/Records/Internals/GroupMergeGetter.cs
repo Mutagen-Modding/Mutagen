@@ -38,7 +38,7 @@ internal class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnl
     public IReadOnlyCache<TMajor, FormKey> RecordCache => this;
     IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => this;
 
-    public IEnumerable<IFormLinkGetter> ContainedFormLinks => SubGroups.SelectMany(x => x.ContainedFormLinks);
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SubGroups.SelectMany(x => x.EnumerateFormLinks());
 
     private TMajor Get(FormKey key)
     {

@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScenePhaseCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScenePhaseCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScenePhaseSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1389,15 +1389,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScenePhaseGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScenePhaseGetter obj)
         {
             foreach (var item in obj.StartConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.CompletionConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1857,7 +1857,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScenePhaseCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScenePhaseCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScenePhaseBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

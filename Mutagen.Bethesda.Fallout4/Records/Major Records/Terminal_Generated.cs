@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Terminal_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => TerminalCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TerminalCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TerminalSetterCommon.Instance.RemapLinks(this, mapping);
         public Terminal(FormKey formKey)
         {
@@ -2774,15 +2774,15 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITerminalGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITerminalGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2793,7 +2793,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2807,7 +2807,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Properties is {} PropertiesItem)
             {
-                foreach (var item in PropertiesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2818,14 +2818,14 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Holotapes is {} HolotapesItem)
             {
-                foreach (var item in HolotapesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in HolotapesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.MarkerParameters is {} MarkerParametersItem)
             {
-                foreach (var item in MarkerParametersItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in MarkerParametersItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2833,14 +2833,14 @@ namespace Mutagen.Bethesda.Fallout4
             if (obj.BodyTexts is {} BodyTextsItem)
             {
                 foreach (var item in BodyTextsItem.WhereCastable<ITerminalBodyTextGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.ContainedFormLinks))
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.MenuItems is {} MenuItemsItem)
             {
-                foreach (var item in MenuItemsItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in MenuItemsItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3878,7 +3878,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => TerminalCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TerminalCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TerminalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

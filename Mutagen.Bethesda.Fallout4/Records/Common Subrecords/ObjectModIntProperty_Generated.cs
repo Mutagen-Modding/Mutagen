@@ -645,9 +645,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IObjectModIntPropertyGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectModIntPropertyGetter<T> obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }

@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISimpleModelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISimpleModelGetter obj)
         {
             if (FormLinkInformation.TryFactory(obj.MaterialSwap, out var MaterialSwapInfo))
             {
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => SimpleModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

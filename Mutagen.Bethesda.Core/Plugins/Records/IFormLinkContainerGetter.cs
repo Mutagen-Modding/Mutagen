@@ -17,7 +17,7 @@ public interface IFormLinkContainer : IFormLinkContainerGetter
 public interface IFormLinkContainerGetter
 {
     /// <summary>
-    /// Enumerable of all contained FormKeys
+    /// Enumerate of all contained FormKeys within object and subobjects
     /// </summary>
-    IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
+    IEnumerable<IFormLinkGetter> EnumerateFormLinks();
 }

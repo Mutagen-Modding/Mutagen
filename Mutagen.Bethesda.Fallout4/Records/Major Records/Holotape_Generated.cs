@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Holotape_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => HolotapeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HolotapeCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HolotapeSetterCommon.Instance.RemapLinks(this, mapping);
         public Holotape(FormKey formKey)
         {
@@ -1810,15 +1810,15 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHolotapeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHolotapeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1829,7 +1829,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1844,7 +1844,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Data is IFormLinkContainerGetter DatalinkCont)
             {
-                foreach (var item in DatalinkCont.ContainedFormLinks)
+                foreach (var item in DatalinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2543,7 +2543,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => HolotapeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HolotapeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HolotapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -2383,7 +2383,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSetterCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(FormKey formKey)
         {
@@ -3839,15 +3839,15 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -3868,7 +3868,7 @@ namespace Mutagen.Bethesda.Fallout4
             yield return FormLinkInformation.Factory(obj.CastingLight);
             yield return FormLinkInformation.Factory(obj.HitShader);
             yield return FormLinkInformation.Factory(obj.EnchantShader);
-            foreach (var item in obj.Archetype.ContainedFormLinks)
+            foreach (var item in obj.Archetype.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -3891,13 +3891,13 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Sounds is {} SoundsItem)
             {
-                foreach (var item in SoundsItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in SoundsItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4933,7 +4933,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

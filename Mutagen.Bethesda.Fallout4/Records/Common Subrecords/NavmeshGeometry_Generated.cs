@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavmeshGeometryCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavmeshGeometryCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshGeometrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1911,20 +1911,20 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavmeshGeometryGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavmeshGeometryGetter obj)
         {
             if (obj.Parent is IFormLinkContainerGetter ParentlinkCont)
             {
-                foreach (var item in ParentlinkCont.ContainedFormLinks)
+                foreach (var item in ParentlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.EdgeLinks.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.EdgeLinks.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.DoorTriangles.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.DoorTriangles.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2421,7 +2421,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavmeshGeometryCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavmeshGeometryCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshGeometryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

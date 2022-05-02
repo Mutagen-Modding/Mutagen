@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             Break0 = 1
         }
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RadioReceiverCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RadioReceiverCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RadioReceiverSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRadioReceiverGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRadioReceiverGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.SoundModel);
             yield break;
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RadioReceiverCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RadioReceiverCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RadioReceiverBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

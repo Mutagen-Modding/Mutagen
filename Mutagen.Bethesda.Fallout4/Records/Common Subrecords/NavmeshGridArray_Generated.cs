@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavmeshGridArrayGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavmeshGridArrayGetter obj)
         {
             yield break;
         }

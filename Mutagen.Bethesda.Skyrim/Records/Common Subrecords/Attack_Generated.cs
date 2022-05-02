@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => AttackCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AttackCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -929,11 +929,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAttackGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAttackGetter obj)
         {
             if (obj.AttackData is {} AttackDataItems)
             {
-                foreach (var item in AttackDataItems.ContainedFormLinks)
+                foreach (var item in AttackDataItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => AttackCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AttackCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AttackBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

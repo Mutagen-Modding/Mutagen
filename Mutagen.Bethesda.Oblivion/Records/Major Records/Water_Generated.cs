@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterSetterCommon.Instance.RemapLinks(this, mapping);
         public Water(FormKey formKey)
         {
@@ -1366,9 +1366,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWaterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (obj.RelatedWaters is {} RelatedWatersItems)
             {
-                foreach (var item in RelatedWatersItems.ContainedFormLinks)
+                foreach (var item in RelatedWatersItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

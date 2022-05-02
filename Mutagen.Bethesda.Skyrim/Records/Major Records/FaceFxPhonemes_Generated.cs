@@ -1985,7 +1985,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFaceFxPhonemesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceFxPhonemesGetter obj)
         {
             yield break;
         }

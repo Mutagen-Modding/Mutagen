@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponseCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum TRDTDataType
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogResponseGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDialogResponseGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Sound);
             if (FormLinkInformation.TryFactory(obj.SpeakerIdleAnimation, out var SpeakerIdleAnimationInfo))
@@ -1908,7 +1908,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponseCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

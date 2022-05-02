@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1846,20 +1846,20 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavigationMeshDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavigationMeshDataGetter obj)
         {
             if (obj.Parent is IFormLinkContainerGetter ParentlinkCont)
             {
-                foreach (var item in ParentlinkCont.ContainedFormLinks)
+                foreach (var item in ParentlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.EdgeLinks.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.EdgeLinks.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.DoorTriangles.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.DoorTriangles.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2363,7 +2363,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationMeshDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

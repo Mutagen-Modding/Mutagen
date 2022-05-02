@@ -889,7 +889,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMasterReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMasterReferenceGetter obj)
         {
             yield break;
         }

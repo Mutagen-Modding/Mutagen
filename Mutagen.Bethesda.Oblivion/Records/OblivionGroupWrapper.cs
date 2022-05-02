@@ -24,7 +24,7 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
 
     #region IGroupGetter Forwarding
 
-    public IEnumerable<IFormLinkGetter> ContainedFormLinks => _groupMerge.ContainedFormLinks;
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => _groupMerge.EnumerateFormLinks();
 
     public IMod SourceMod => _groupMerge.SourceMod;
     

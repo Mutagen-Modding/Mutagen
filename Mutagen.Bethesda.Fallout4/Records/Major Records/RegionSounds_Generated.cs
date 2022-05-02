@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionSoundsCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionSoundsCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1143,9 +1143,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionSoundsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionSoundsGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Sounds is {} SoundsItem)
             {
-                foreach (var item in SoundsItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in SoundsItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1495,7 +1495,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionSoundsCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionSoundsCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionSoundsBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorSetterCommon.Instance.RemapLinks(this, mapping);
         public Armor(
             FormKey formKey,
@@ -2652,15 +2652,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IArmorGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2671,14 +2671,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
-                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.ContainedFormLinks)
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -3620,7 +3620,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

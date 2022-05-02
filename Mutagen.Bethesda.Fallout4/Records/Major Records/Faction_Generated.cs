@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FactionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionSetterCommon.Instance.RemapLinks(this, mapping);
         public Faction(FormKey formKey)
         {
@@ -2243,13 +2243,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFactionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFactionGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Relations.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Relations.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2287,7 +2287,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.VendorLocation is IFormLinkContainerGetter VendorLocationlinkCont)
             {
-                foreach (var item in VendorLocationlinkCont.ContainedFormLinks)
+                foreach (var item in VendorLocationlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2295,7 +2295,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (obj.Conditions is {} ConditionsItem)
             {
                 foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.ContainedFormLinks))
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3083,7 +3083,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FactionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

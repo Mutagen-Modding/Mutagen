@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceMapGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceMapGetter obj)
         {
             yield break;
         }

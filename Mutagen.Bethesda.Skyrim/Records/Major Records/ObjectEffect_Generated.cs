@@ -905,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ObjectEffect_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ObjectEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectEffectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectEffectSetterCommon.Instance.RemapLinks(this, mapping);
         public ObjectEffect(
             FormKey formKey,
@@ -1804,15 +1804,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IObjectEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectEffectGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.BaseEnchantment);
             yield return FormLinkInformation.Factory(obj.WornRestrictions);
-            foreach (var item in obj.Effects.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Effects.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2389,7 +2389,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ObjectEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectEffectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ObjectEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

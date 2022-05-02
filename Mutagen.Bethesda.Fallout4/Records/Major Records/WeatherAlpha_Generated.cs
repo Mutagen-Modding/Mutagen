@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherAlphaGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherAlphaGetter obj)
         {
             yield break;
         }

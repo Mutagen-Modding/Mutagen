@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => BaseLayerCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BaseLayerCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BaseLayerSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -879,11 +879,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBaseLayerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBaseLayerGetter obj)
         {
             if (obj.Header is {} HeaderItems)
             {
-                foreach (var item in HeaderItems.ContainedFormLinks)
+                foreach (var item in HeaderItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => BaseLayerCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BaseLayerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

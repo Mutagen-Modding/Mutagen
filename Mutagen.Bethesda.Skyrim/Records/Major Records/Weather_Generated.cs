@@ -3000,7 +3000,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherSetterCommon.Instance.RemapLinks(this, mapping);
         public Weather(
             FormKey formKey,
@@ -4795,9 +4795,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -4806,7 +4806,7 @@ namespace Mutagen.Bethesda.Skyrim
                 yield return PrecipitationInfo;
             }
             yield return FormLinkInformation.Factory(obj.VisualEffect);
-            foreach (var item in obj.Sounds.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Sounds.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4816,21 +4816,21 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.ImageSpaces is {} ImageSpacesItems)
             {
-                foreach (var item in ImageSpacesItems.ContainedFormLinks)
+                foreach (var item in ImageSpacesItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.VolumetricLighting is {} VolumetricLightingItems)
             {
-                foreach (var item in VolumetricLightingItems.ContainedFormLinks)
+                foreach (var item in VolumetricLightingItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Aurora is {} AuroraItems)
             {
-                foreach (var item in AuroraItems.ContainedFormLinks)
+                foreach (var item in AuroraItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -6624,7 +6624,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

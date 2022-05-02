@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestAdapterCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1270,14 +1270,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestAdapterGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             foreach (var item in obj.Aliases.WhereCastable<IQuestFragmentAliasGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1667,7 +1667,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestAdapterCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

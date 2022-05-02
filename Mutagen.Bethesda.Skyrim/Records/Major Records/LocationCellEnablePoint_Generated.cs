@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCellEnablePointCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCellEnablePointCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellEnablePointSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationCellEnablePointGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationCellEnablePointGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Actor);
             yield return FormLinkInformation.Factory(obj.Ref);
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCellEnablePointCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCellEnablePointCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationCellEnablePointBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

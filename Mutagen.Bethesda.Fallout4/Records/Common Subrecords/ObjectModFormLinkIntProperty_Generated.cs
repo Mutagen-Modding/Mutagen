@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ObjectModFormLinkIntPropertyCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModFormLinkIntPropertyCommon<T>.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectModFormLinkIntPropertySetterCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -661,9 +661,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IObjectModFormLinkIntPropertyGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectModFormLinkIntPropertyGetter<T> obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ObjectModFormLinkIntPropertyCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModFormLinkIntPropertyCommon<T>.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ObjectModFormLinkIntPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

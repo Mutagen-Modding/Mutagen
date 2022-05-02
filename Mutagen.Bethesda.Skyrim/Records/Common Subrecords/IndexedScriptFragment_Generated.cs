@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IIndexedScriptFragmentGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIndexedScriptFragmentGetter obj)
         {
             yield break;
         }

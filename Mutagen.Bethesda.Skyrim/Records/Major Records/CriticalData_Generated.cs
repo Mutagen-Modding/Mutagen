@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CriticalDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CriticalDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICriticalDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICriticalDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Effect);
             yield break;
@@ -1540,7 +1540,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CriticalDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CriticalDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CriticalDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DestructibleCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructibleCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1186,16 +1186,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDestructibleGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDestructibleGetter obj)
         {
             if (obj.Resistances is {} ResistancesItem)
             {
-                foreach (var item in ResistancesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ResistancesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.Stages.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Stages.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1558,7 +1558,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DestructibleCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructibleCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructibleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

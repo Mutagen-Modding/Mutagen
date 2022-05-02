@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => MajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MajorRecordCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public MajorRecord(FormKey formKey)
         {
@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMajorRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMajorRecordGetter obj)
         {
             yield break;
         }
@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => MajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MajorRecordCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

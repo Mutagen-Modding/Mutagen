@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Script_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptSetterCommon.Instance.RemapLinks(this, mapping);
         public Script(FormKey formKey)
         {
@@ -1010,15 +1010,15 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Fields is IFormLinkContainerGetter FieldslinkCont)
             {
-                foreach (var item in FieldslinkCont.ContainedFormLinks)
+                foreach (var item in FieldslinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

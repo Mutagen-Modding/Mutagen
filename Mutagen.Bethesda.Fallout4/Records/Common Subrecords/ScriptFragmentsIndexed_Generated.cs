@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptFragmentsIndexedCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptFragmentsIndexedCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFragmentsIndexedSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1049,11 +1049,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptFragmentsIndexedGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptFragmentsIndexedGetter obj)
         {
             if (obj.Script is IFormLinkContainerGetter ScriptlinkCont)
             {
-                foreach (var item in ScriptlinkCont.ContainedFormLinks)
+                foreach (var item in ScriptlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptFragmentsIndexedCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptFragmentsIndexedCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptFragmentsIndexedBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

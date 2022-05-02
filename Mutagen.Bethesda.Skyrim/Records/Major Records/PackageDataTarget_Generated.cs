@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageDataTargetCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageDataTargetCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageDataTargetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -930,15 +930,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageDataTargetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageDataTargetGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Target is IFormLinkContainerGetter TargetlinkCont)
             {
-                foreach (var item in TargetlinkCont.ContainedFormLinks)
+                foreach (var item in TargetlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageDataTargetCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageDataTargetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageDataTargetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkEntryPointAddRangeToValueCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkEntryPointAddRangeToValueCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddRangeToValueSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -979,9 +979,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkEntryPointAddRangeToValueGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkEntryPointAddRangeToValueGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }

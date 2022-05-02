@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWaterVelocityGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterVelocityGetter obj)
         {
             yield break;
         }

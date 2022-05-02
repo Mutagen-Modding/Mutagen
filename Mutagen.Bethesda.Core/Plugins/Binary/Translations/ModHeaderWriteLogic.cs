@@ -73,7 +73,7 @@ public class ModHeaderWriteLogic
                 {
                     majAction(maj);
                 }
-                foreach (var linkInfo in maj.ContainedFormLinks)
+                foreach (var linkInfo in maj.EnumerateFormLinks())
                 {
                     foreach (var formLinkAction in _formLinkIterationActions)
                     {

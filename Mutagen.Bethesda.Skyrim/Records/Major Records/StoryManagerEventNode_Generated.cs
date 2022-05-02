@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = StoryManagerEventNode_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => StoryManagerEventNodeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StoryManagerEventNodeCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerEventNodeSetterCommon.Instance.RemapLinks(this, mapping);
         public StoryManagerEventNode(
             FormKey formKey,
@@ -1202,9 +1202,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IStoryManagerEventNodeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IStoryManagerEventNodeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }

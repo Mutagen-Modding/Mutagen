@@ -23,7 +23,7 @@ public class TestMod : ITestMod, IDisposable
 {
     #region Interface
 
-    public IEnumerable<IFormLinkGetter> ContainedFormLinks => throw new NotImplementedException();
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => throw new NotImplementedException();
     public ModKey ModKey { get; }
     public GameRelease GameRelease { get; }
 

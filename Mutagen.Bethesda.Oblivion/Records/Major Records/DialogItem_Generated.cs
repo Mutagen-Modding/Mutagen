@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogItemCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogItemCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogItem(FormKey formKey)
         {
@@ -1952,9 +1952,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDialogItemGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1980,7 +1980,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (obj.Script is IFormLinkContainerGetter ScriptlinkCont)
             {
-                foreach (var item in ScriptlinkCont.ContainedFormLinks)
+                foreach (var item in ScriptlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2656,7 +2656,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogItemCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

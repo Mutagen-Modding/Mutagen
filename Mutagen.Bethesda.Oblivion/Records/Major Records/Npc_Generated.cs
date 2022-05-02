@@ -1744,7 +1744,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
         public Npc(FormKey formKey)
         {
@@ -2936,13 +2936,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Factions.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Factions.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2962,7 +2962,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return ScriptInfo;
             }
-            foreach (var item in obj.Items.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Items.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3982,7 +3982,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

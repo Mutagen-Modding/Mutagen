@@ -2668,7 +2668,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationSetterCommon.Instance.RemapLinks(this, mapping);
         public Location(
             FormKey formKey,
@@ -4057,22 +4057,22 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
             {
-                foreach (var item in ActorCellPersistentReferencesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ActorCellPersistentReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
             {
-                foreach (var item in LocationCellPersistentReferencesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in LocationCellPersistentReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4086,14 +4086,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.ActorCellUniques is {} ActorCellUniquesItem)
             {
-                foreach (var item in ActorCellUniquesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ActorCellUniquesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellUniques is {} LocationCellUniquesItem)
             {
-                foreach (var item in LocationCellUniquesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in LocationCellUniquesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4107,14 +4107,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
             {
-                foreach (var item in ActorCellStaticReferencesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ActorCellStaticReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
             {
-                foreach (var item in LocationCellStaticReferencesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in LocationCellStaticReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4126,15 +4126,15 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.ActorCellEncounterCell.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.ActorCellEncounterCell.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LocationCellEncounterCell.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.LocationCellEncounterCell.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.ReferenceCellEncounterCell.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.ReferenceCellEncounterCell.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4154,14 +4154,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.ActorCellEnablePoint is {} ActorCellEnablePointItem)
             {
-                foreach (var item in ActorCellEnablePointItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ActorCellEnablePointItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellEnablePoint is {} LocationCellEnablePointItem)
             {
-                foreach (var item in LocationCellEnablePointItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in LocationCellEnablePointItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -5541,7 +5541,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptFragmentsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptFragmentsGetter obj)
         {
             yield break;
         }

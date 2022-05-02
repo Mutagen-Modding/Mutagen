@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => VirtualMachineAdapterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VirtualMachineAdapterCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VirtualMachineAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -810,9 +810,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IVirtualMachineAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVirtualMachineAdapterGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }

@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshInfoMapCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapSetterCommon.Instance.RemapLinks(this, mapping);
         public NavigationMeshInfoMap(
             FormKey formKey,
@@ -1307,19 +1307,19 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavigationMeshInfoMapGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavigationMeshInfoMapGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.MapInfos.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.MapInfos.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.PreferredPathing is {} PreferredPathingItems)
             {
-                foreach (var item in PreferredPathingItems.ContainedFormLinks)
+                foreach (var item in PreferredPathingItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshInfoMapCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshInfoMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

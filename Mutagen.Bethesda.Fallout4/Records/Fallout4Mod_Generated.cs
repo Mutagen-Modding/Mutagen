@@ -3085,7 +3085,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void GetCustomRecordCount(Action<uint> setter);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4ModSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -6307,204 +6307,204 @@ namespace Mutagen.Bethesda.Fallout4
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
         
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFallout4ModGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout4ModGetter obj)
         {
-            foreach (var item in obj.ModHeader.ContainedFormLinks)
+            foreach (var item in obj.ModHeader.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Keywords.ContainedFormLinks)
+            foreach (var item in obj.Keywords.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Actions.ContainedFormLinks)
+            foreach (var item in obj.Actions.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Components.ContainedFormLinks)
+            foreach (var item in obj.Components.EnumerateFormLinks())
             {
                 yield return item;
             }
             if (obj.DamageTypes is IFormLinkContainerGetter DamageTypeslinkCont)
             {
-                foreach (var item in DamageTypeslinkCont.ContainedFormLinks)
+                foreach (var item in DamageTypeslinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Classes.ContainedFormLinks)
+            foreach (var item in obj.Classes.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Factions.ContainedFormLinks)
+            foreach (var item in obj.Factions.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.HeadParts.ContainedFormLinks)
+            foreach (var item in obj.HeadParts.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Races.ContainedFormLinks)
+            foreach (var item in obj.Races.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.SoundMarkers.ContainedFormLinks)
+            foreach (var item in obj.SoundMarkers.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.AcousticSpaces.ContainedFormLinks)
+            foreach (var item in obj.AcousticSpaces.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.MagicEffects.ContainedFormLinks)
+            foreach (var item in obj.MagicEffects.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.LandscapeTextures.ContainedFormLinks)
+            foreach (var item in obj.LandscapeTextures.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.ObjectEffects.ContainedFormLinks)
+            foreach (var item in obj.ObjectEffects.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Spells.ContainedFormLinks)
+            foreach (var item in obj.Spells.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Activators.ContainedFormLinks)
+            foreach (var item in obj.Activators.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.TalkingActivators.ContainedFormLinks)
+            foreach (var item in obj.TalkingActivators.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Armors.ContainedFormLinks)
+            foreach (var item in obj.Armors.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Books.ContainedFormLinks)
+            foreach (var item in obj.Books.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Containers.ContainedFormLinks)
+            foreach (var item in obj.Containers.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Doors.ContainedFormLinks)
+            foreach (var item in obj.Doors.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Ingredients.ContainedFormLinks)
+            foreach (var item in obj.Ingredients.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Lights.ContainedFormLinks)
+            foreach (var item in obj.Lights.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.MiscItems.ContainedFormLinks)
+            foreach (var item in obj.MiscItems.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Statics.ContainedFormLinks)
+            foreach (var item in obj.Statics.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.StaticCollections.ContainedFormLinks)
+            foreach (var item in obj.StaticCollections.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.MovableStatics.ContainedFormLinks)
+            foreach (var item in obj.MovableStatics.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Grasses.ContainedFormLinks)
+            foreach (var item in obj.Grasses.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Trees.ContainedFormLinks)
+            foreach (var item in obj.Trees.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Florae.ContainedFormLinks)
+            foreach (var item in obj.Florae.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Furniture.ContainedFormLinks)
+            foreach (var item in obj.Furniture.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Weapons.ContainedFormLinks)
+            foreach (var item in obj.Weapons.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Ammunitions.ContainedFormLinks)
+            foreach (var item in obj.Ammunitions.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Npcs.ContainedFormLinks)
+            foreach (var item in obj.Npcs.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.LeveledNpcs.ContainedFormLinks)
+            foreach (var item in obj.LeveledNpcs.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Keys.ContainedFormLinks)
+            foreach (var item in obj.Keys.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Ingestibles.ContainedFormLinks)
+            foreach (var item in obj.Ingestibles.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.IdleMarkers.ContainedFormLinks)
+            foreach (var item in obj.IdleMarkers.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Holotapes.ContainedFormLinks)
+            foreach (var item in obj.Holotapes.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Projectiles.ContainedFormLinks)
+            foreach (var item in obj.Projectiles.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Hazards.ContainedFormLinks)
+            foreach (var item in obj.Hazards.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.BendableSplines.ContainedFormLinks)
+            foreach (var item in obj.BendableSplines.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Terminals.ContainedFormLinks)
+            foreach (var item in obj.Terminals.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.LeveledItems.ContainedFormLinks)
+            foreach (var item in obj.LeveledItems.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Weather.ContainedFormLinks)
+            foreach (var item in obj.Weather.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Climates.ContainedFormLinks)
+            foreach (var item in obj.Climates.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.VisualEffects.ContainedFormLinks)
+            foreach (var item in obj.VisualEffects.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.Regions.ContainedFormLinks)
+            foreach (var item in obj.Regions.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.NavigationMeshInfoMaps.ContainedFormLinks)
+            foreach (var item in obj.NavigationMeshInfoMaps.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -11467,7 +11467,7 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]

@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedCreature_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedCreatureCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedCreatureCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedCreature(FormKey formKey)
         {
@@ -1432,9 +1432,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedCreatureGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedCreatureGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
-                foreach (var item in EnableParentItems.ContainedFormLinks)
+                foreach (var item in EnableParentItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1993,7 +1993,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedCreatureCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedCreatureCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

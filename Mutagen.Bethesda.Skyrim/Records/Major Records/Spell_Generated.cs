@@ -1138,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Spell_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SpellCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SpellCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellSetterCommon.Instance.RemapLinks(this, mapping);
         public Spell(
             FormKey formKey,
@@ -2133,9 +2133,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISpellGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISpellGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -2155,7 +2155,7 @@ namespace Mutagen.Bethesda.Skyrim
                 yield return EquipmentTypeInfo;
             }
             yield return FormLinkInformation.Factory(obj.HalfCostPerk);
-            foreach (var item in obj.Effects.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Effects.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2825,7 +2825,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SpellCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SpellCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -899,9 +899,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAPlacedTrapGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAPlacedTrapGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }

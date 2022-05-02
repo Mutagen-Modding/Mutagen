@@ -4656,7 +4656,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Race(FormKey formKey)
         {
@@ -7034,9 +7034,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -7064,7 +7064,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Properties is {} PropertiesItem)
             {
-                foreach (var item in PropertiesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -7088,7 +7088,7 @@ namespace Mutagen.Bethesda.Fallout4
             yield return FormLinkInformation.Factory(obj.ExplodableSubsegmentExplosion);
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
-                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -7108,11 +7108,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return AttackRaceInfo;
             }
-            foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Attacks.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -7120,7 +7120,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return BodyPartDataInfo;
             }
-            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -7152,15 +7152,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return SoundCloseCorpseInfo;
             }
-            foreach (var item in obj.BipedObjects.Values.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.BipedObjects.Values.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return item;
             }
-            foreach (var item in obj.MovementDataOverrides.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.MovementDataOverrides.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.EquipmentSlots.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.EquipmentSlots.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -7186,7 +7186,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.HeadData is {} HeadDataItem)
             {
-                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -7207,7 +7207,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return SubgraphAdditiveRaceInfo;
             }
-            foreach (var item in obj.Subgraphs.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Subgraphs.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -9387,7 +9387,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

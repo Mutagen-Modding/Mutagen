@@ -39,7 +39,7 @@ public abstract class AMod : IMod
     }
 
     #region NonImplemented IMod 
-    IEnumerable<IFormLinkGetter> IFormLinkContainerGetter.ContainedFormLinks => throw new NotImplementedException();
+    IEnumerable<IFormLinkGetter> IFormLinkContainerGetter.EnumerateFormLinks() => throw new NotImplementedException();
     void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();

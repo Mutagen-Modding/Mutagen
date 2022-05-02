@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcFaceTintingLayerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcFaceTintingLayerGetter obj)
         {
             yield break;
         }

@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Fallout4ModHeader_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModHeaderCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4ModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1958,7 +1958,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFallout4ModHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout4ModHeaderGetter obj)
         {
             if (obj.OverriddenForms is {} OverriddenFormsItem)
             {
@@ -1967,7 +1967,7 @@ namespace Mutagen.Bethesda.Fallout4
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.TransientTypes.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.TransientTypes.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2551,7 +2551,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModHeaderCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => Fallout4ModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

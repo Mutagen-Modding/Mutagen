@@ -1,12 +1,11 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 
-public class ModContainedFormLinksTests
+public class ModEnumerateFormLinksTests
 {
     [Fact]
     public void IteratesContainedFormLinks()
@@ -15,6 +14,6 @@ public class ModContainedFormLinksTests
         var npc = mod.Npcs.AddNew();
         var key = FormKey.Factory("123456:Skyrim.esm");
         npc.Class.SetTo(key);
-        mod.ContainedFormLinks.Select(x => x.FormKey).Should().Contain(key);
+        mod.EnumerateFormLinks().Select(x => x.FormKey).Should().Contain(key);
     }
 }

@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AIPackage_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => AIPackageCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AIPackageCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageSetterCommon.Instance.RemapLinks(this, mapping);
         public AIPackage(FormKey formKey)
         {
@@ -1390,15 +1390,15 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAIPackageGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAIPackageGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Location is {} LocationItems)
             {
-                foreach (var item in LocationItems.ContainedFormLinks)
+                foreach (var item in LocationItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1966,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => AIPackageCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AIPackageCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AIPackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

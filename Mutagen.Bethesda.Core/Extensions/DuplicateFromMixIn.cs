@@ -95,7 +95,7 @@ public static class DuplicateFromMixIn
                 return;
             }
 
-            foreach (var containedLink in linkRec.ContainedFormLinks)
+            foreach (var containedLink in linkRec.EnumerateFormLinks())
             {
                 if (containedLink.FormKey.ModKey != modKeyToDuplicateFrom) continue;
                 AddAllLinks(containedLink);

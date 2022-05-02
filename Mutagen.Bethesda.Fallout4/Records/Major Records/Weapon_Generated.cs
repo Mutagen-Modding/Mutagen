@@ -3396,7 +3396,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Weapon_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeaponCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponSetterCommon.Instance.RemapLinks(this, mapping);
         public Weapon(FormKey formKey)
         {
@@ -5432,15 +5432,15 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeaponGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeaponGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5455,7 +5455,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5466,7 +5466,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.ContainedFormLinks)
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5511,7 +5511,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.ObjectTemplates is {} ObjectTemplatesItem)
             {
-                foreach (var item in ObjectTemplatesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ObjectTemplatesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -5522,7 +5522,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.FirstPersonModel is {} FirstPersonModelItems)
             {
-                foreach (var item in FirstPersonModelItems.ContainedFormLinks)
+                foreach (var item in FirstPersonModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5540,7 +5540,7 @@ namespace Mutagen.Bethesda.Fallout4
             yield return FormLinkInformation.Factory(obj.FastEquipSound);
             if (obj.ExtraData is {} ExtraDataItems)
             {
-                foreach (var item in ExtraDataItems.ContainedFormLinks)
+                foreach (var item in ExtraDataItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -5568,7 +5568,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.DamageType is {} DamageTypeItems)
             {
-                foreach (var item in DamageTypeItems.ContainedFormLinks)
+                foreach (var item in DamageTypeItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -7081,7 +7081,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeaponCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeaponBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

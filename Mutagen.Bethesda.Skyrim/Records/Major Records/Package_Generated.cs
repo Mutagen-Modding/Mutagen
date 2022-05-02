@@ -1702,7 +1702,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Package_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageSetterCommon.Instance.RemapLinks(this, mapping);
         public Package(
             FormKey formKey,
@@ -2930,27 +2930,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.IdleAnimations is {} IdleAnimationsItems)
             {
-                foreach (var item in IdleAnimationsItems.ContainedFormLinks)
+                foreach (var item in IdleAnimationsItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2965,32 +2965,32 @@ namespace Mutagen.Bethesda.Skyrim
             }
             yield return FormLinkInformation.Factory(obj.PackageTemplate);
             foreach (var item in obj.Data.Values.WhereCastable<IAPackageDataGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return item;
             }
             foreach (var item in obj.ProcedureTree.WhereCastable<IPackageBranchGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.OnBegin is {} OnBeginItems)
             {
-                foreach (var item in OnBeginItems.ContainedFormLinks)
+                foreach (var item in OnBeginItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.OnEnd is {} OnEndItems)
             {
-                foreach (var item in OnEndItems.ContainedFormLinks)
+                foreach (var item in OnEndItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.OnChange is {} OnChangeItems)
             {
-                foreach (var item in OnChangeItems.ContainedFormLinks)
+                foreach (var item in OnChangeItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -3904,7 +3904,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

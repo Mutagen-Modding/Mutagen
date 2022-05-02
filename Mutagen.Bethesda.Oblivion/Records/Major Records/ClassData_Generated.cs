@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IClassDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IClassDataGetter obj)
         {
             yield break;
         }

@@ -113,14 +113,14 @@ public class LinkModule : GenerationModule
     {
         if (maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class))
         {
-            sb.AppendLine($"public IEnumerable<{nameof(IFormLinkGetter)}> GetContainedFormLinks({obj.Interface(getter: true)} obj)");
+            sb.AppendLine($"public IEnumerable<{nameof(IFormLinkGetter)}> EnumerateFormLinks({obj.Interface(getter: true)} obj)");
             using (sb.CurlyBrace())
             {
                 foreach (var baseClass in obj.BaseClassTrail())
                 {
                     if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                     {
-                        sb.AppendLine("foreach (var item in base.GetContainedFormLinks(obj))");
+                        sb.AppendLine("foreach (var item in base.EnumerateFormLinks(obj))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return item;");
@@ -192,7 +192,7 @@ public class LinkModule : GenerationModule
                         }
                         using (sb.CurlyBrace(doIt: doBrace))
                         {
-                            sb.AppendLine($"foreach (var item in {access}.{nameof(IFormLinkContainerGetter.ContainedFormLinks)})");
+                            sb.AppendLine($"foreach (var item in {access}.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}())");
                             using (sb.CurlyBrace())
                             {
                                 sb.AppendLine($"yield return item;");
@@ -218,13 +218,13 @@ public class LinkModule : GenerationModule
                                 switch (linktype)
                                 {
                                     case Case.Yes:
-                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}()))");
                                         break;
                                     case Case.Maybe:
                                         subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
                                         using (subFg.IncreaseDepth())
                                         {
-                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
+                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}()))");
                                         }
                                         break;
                                     default:
@@ -266,13 +266,13 @@ public class LinkModule : GenerationModule
                             switch (linktype)
                             {
                                 case Case.Yes:
-                                    sb.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
+                                    sb.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}()))");
                                     break;
                                 case Case.Maybe:
                                     sb.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
                                     using (sb.IncreaseDepth())
                                     {
-                                        sb.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
+                                        sb.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}()))");
                                     }
                                     break;
                                 default:
@@ -419,7 +419,7 @@ public class LinkModule : GenerationModule
     public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, StructuredStringBuilder sb, bool getter)
     {
         var shouldAlwaysOverride = obj.IsTopLevelGroup();
-        sb.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: true) != Case.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
+        sb.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: true) != Case.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.EnumerateFormLinks)}() => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateFormLinks(this);");
 
         if (!getter)
         {

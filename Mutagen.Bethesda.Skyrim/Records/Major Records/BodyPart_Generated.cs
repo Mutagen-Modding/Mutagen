@@ -1497,7 +1497,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum BPNDDataType
@@ -2468,7 +2468,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBodyPartGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyPartGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.ExplodableDebris);
             yield return FormLinkInformation.Factory(obj.ExplodableExplosion);
@@ -3043,7 +3043,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

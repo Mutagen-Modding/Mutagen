@@ -26,7 +26,7 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     protected abstract ICache<TMajor, FormKey> ProtectedCache { get; }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    internal ICache<TMajor, FormKey> InternalCache => this.ProtectedCache;
+    internal ICache<TMajor, FormKey> InternalCache => ProtectedCache;
 
     /// <summary>
     /// An enumerable of all the records contained by the group.
@@ -39,7 +39,7 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     /// <summary>
     /// Number of records contained in the group.
     /// </summary>
-    public int Count => this.ProtectedCache.Count;
+    public int Count => ProtectedCache.Count;
 
     /// <summary>
     /// The parent Mod object associated with the group.
@@ -66,12 +66,12 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
 
     protected AGroup()
     {
-        this.SourceMod = null!;
+        SourceMod = null!;
     }
 
     protected AGroup(IModGetter getter)
     {
-        this.SourceMod = null!;
+        SourceMod = null!;
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     /// </summary>
     public AGroup(IMod mod)
     {
-        this.SourceMod = mod;
+        SourceMod = mod;
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     /// <returns>String in format: "Group(_record_count_)"</returns>
     public override string ToString()
     {
-        return $"Group<{typeof(TMajor).Name}>({this.InternalCache.Count})";
+        return $"Group<{typeof(TMajor).Name}>({InternalCache.Count})";
     }
 
     /// <inheritdoc />
@@ -151,7 +151,7 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     public ILoquiRegistration ContainedRecordRegistration => _registration;
 
     /// <inheritdoc />
-    public abstract IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
+    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
 }
 
 internal static class GroupRecordTypeGetter<T>
@@ -178,9 +178,9 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
         ReadOnlyMemorySlice<byte> data,
         BinaryOverlayFactoryPackage package)
     {
-        this._locs = locs;
-        this._data = data;
-        this._package = package;
+        _locs = locs;
+        _data = data;
+        _package = package;
     }
 
     public T? TryGetValue(FormKey key)
@@ -198,7 +198,7 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
         {
             try
             {
-                return ConstructWrapper(this._locs[key]);
+                return ConstructWrapper(_locs[key]);
             }
             catch (Exception ex)
             {
@@ -218,17 +218,17 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
         return false;
     }
 
-    public int Count => this._locs.Count;
+    public int Count => _locs.Count;
 
-    public IEnumerable<FormKey> Keys => this._locs.Keys;
+    public IEnumerable<FormKey> Keys => _locs.Keys;
 
     public IEnumerable<T> Items => this.Select(kv => kv.Value);
 
-    public bool ContainsKey(FormKey key) => this._locs.ContainsKey(key);
+    public bool ContainsKey(FormKey key) => _locs.ContainsKey(key);
 
     public IEnumerator<IKeyValue<FormKey, T>> GetEnumerator()
     {
-        foreach (var kv in this._locs)
+        foreach (var kv in _locs)
         {
             KeyValue<FormKey, T> item;
             try
@@ -243,11 +243,11 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
         }
     }
 
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     private T ConstructWrapper(int pos)
     {
-        ReadOnlyMemorySlice<byte> slice = this._data.Slice(pos);
+        ReadOnlyMemorySlice<byte> slice = _data.Slice(pos);
         var majorMeta = _package.MetaData.Constants.MajorRecord(slice);
         if (majorMeta.IsCompressed)
         {
@@ -267,7 +267,7 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
             slice = new MemorySlice<byte>(buf);
         }
         return LoquiBinaryOverlayTranslation<T>.Create(
-            stream: new OverlayStream(this._data.Slice(pos), _package),
+            stream: new OverlayStream(_data.Slice(pos), _package),
             package: _package,
             recordTypeConverter: null);
     }
@@ -345,7 +345,7 @@ internal abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGrou
     public ILoquiRegistration ContainedRecordRegistration => _registration;
     public Type ContainedRecordType => typeof(TMajor);
 
-    public abstract IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
+    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
 
     public bool ContainsKey(FormKey key)
     {

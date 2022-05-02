@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -2082,9 +2082,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHeadDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHeadDataGetter obj)
         {
-            foreach (var item in obj.HeadParts.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.HeadParts.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2105,11 +2105,11 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return DefaultFaceTextureInfo;
             }
             foreach (var item in obj.TintLayers.WhereCastable<ITintGroupGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.MorphGroups.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.MorphGroups.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2719,7 +2719,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TintAssetsCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1171,13 +1171,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITintAssetsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITintAssetsGetter obj)
         {
             if (FormLinkInformation.TryFactory(obj.PresetDefault, out var PresetDefaultInfo))
             {
                 yield return PresetDefaultInfo;
             }
-            foreach (var item in obj.Presets.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Presets.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TintAssetsCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintAssetsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

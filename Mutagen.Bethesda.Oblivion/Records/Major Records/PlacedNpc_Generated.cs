@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedNpcCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedNpc(FormKey formKey)
         {
@@ -1571,9 +1571,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedNpcGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedNpcGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1583,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
-                foreach (var item in EnableParentItems.ContainedFormLinks)
+                foreach (var item in EnableParentItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2198,7 +2198,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedNpcCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

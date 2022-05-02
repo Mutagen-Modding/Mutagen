@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationTargetRadiusCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationTargetRadiusCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetRadiusSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -942,11 +942,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationTargetRadiusGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationTargetRadiusGetter obj)
         {
             if (obj.Target is IFormLinkContainerGetter TargetlinkCont)
             {
-                foreach (var item in TargetlinkCont.ContainedFormLinks)
+                foreach (var item in TargetlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationTargetRadiusCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationTargetRadiusCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationTargetRadiusBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

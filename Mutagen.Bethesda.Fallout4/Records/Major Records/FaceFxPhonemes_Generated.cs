@@ -2133,7 +2133,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFaceFxPhonemesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceFxPhonemesGetter obj)
         {
             yield break;
         }

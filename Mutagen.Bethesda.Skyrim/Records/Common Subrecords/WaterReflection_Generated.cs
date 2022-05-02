@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterReflectionCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterReflectionCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterReflectionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWaterReflectionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterReflectionGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Water);
             yield break;
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterReflectionCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterReflectionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WaterReflectionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
