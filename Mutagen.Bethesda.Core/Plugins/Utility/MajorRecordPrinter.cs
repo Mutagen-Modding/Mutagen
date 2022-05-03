@@ -6,22 +6,20 @@ namespace Mutagen.Bethesda.Plugins.Utility;
 public static class MajorRecordPrinter<TMajor>
     where TMajor : class, IMajorRecordGetter
 {
-    private static readonly string _TypeString;
-
+    public static string TypeString { get; }
+    
     static MajorRecordPrinter()
     {
         var t = typeof(TMajor);
         if (LoquiRegistration.TryGetRegister(t, out var regis))
         {
-            _TypeString = $"{regis.ProtocolKey.Namespace}.{t.Name}";
+            TypeString = $"{regis.ProtocolKey.Namespace}.{t.Name}";
         }
         else
         {
-            _TypeString = t.Name;
+            TypeString = t.Name;
         }
     }
-
-    public static string TypeString => _TypeString;
 
     public static string ToString(IMajorRecordGetter majorRec)
     {
