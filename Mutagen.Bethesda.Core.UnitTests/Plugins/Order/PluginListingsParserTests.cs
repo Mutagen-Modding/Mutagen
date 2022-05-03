@@ -29,46 +29,46 @@ public class PluginListingsParserTests
     public void Typical()
     {
         var parser = new PluginListingsParser( 
-            new ModListingParser(
+            new LoadOrderListingParser(
                 new HasEnabledMarkersInjection(true)));
         var result = parser.Parse(GetStream(@"*ModA.esm
 ModB.esp
 *ModC.esp"))
             .ToList();
         result.Should().Equal(
-            new ModListing("ModA.esm", true),
-            new ModListing("ModB.esp", false),
-            new ModListing("ModC.esp", true));
+            new LoadOrderListing("ModA.esm", true),
+            new LoadOrderListing("ModB.esp", false),
+            new LoadOrderListing("ModC.esp", true));
     }
         
     [Fact]
     public void CommentsWithNoEntry()
     {
         var parser = new PluginListingsParser(
-            new ModListingParser(
+            new LoadOrderListingParser(
                 new HasEnabledMarkersInjection(true)));
         var result = parser.Parse(GetStream(@"*ModA.esm
 #ModB.esp
 *ModC.esp"))
             .ToList();
         result.Should().Equal(
-            new ModListing("ModA.esm", true),
-            new ModListing("ModC.esp", true));
+            new LoadOrderListing("ModA.esm", true),
+            new LoadOrderListing("ModC.esp", true));
     }
         
     [Fact]
     public void CommentTrimming()
     {
         var parser = new PluginListingsParser(
-            new ModListingParser(
+            new LoadOrderListingParser(
                 new HasEnabledMarkersInjection(true)));
         var result = parser.Parse(GetStream(@"*ModA.esm
 ModB.esp#Hello
 *ModC.esp"))
             .ToList();
         result.Should().Equal(
-            new ModListing("ModA.esm", true),
-            new ModListing("ModB.esp", false),
-            new ModListing("ModC.esp", true));
+            new LoadOrderListing("ModA.esm", true),
+            new LoadOrderListing("ModB.esp", false),
+            new LoadOrderListing("ModC.esp", true));
     }
 }

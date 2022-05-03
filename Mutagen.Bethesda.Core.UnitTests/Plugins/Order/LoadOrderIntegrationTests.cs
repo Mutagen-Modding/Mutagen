@@ -1,10 +1,6 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Mutagen.Bethesda.Testing;
 using Xunit;
 
@@ -79,22 +75,23 @@ public class LoadOrderIntegrationTests
         File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey4.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey2.FileName), string.Empty);
-        var results = LoadOrder.GetListings(
+        var results = LoadOrder.GetLoadOrderListings(
                 game: GameRelease.SkyrimSE,
                 dataPath: dataPath,
                 pluginsFilePath: pluginsPath,
                 creationClubFilePath: cccPath)
             .ToList();
         results.Should().HaveCount(7);
-        results.Should().Equal(new ModListing[]
+        results.Select(x => new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
+            .Should().Equal(new LoadOrderListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, enabled: true),
-            new ModListing(TestConstants.MasterModKey, enabled: true),
-            new ModListing(TestConstants.MasterModKey2, enabled: false),
-            new ModListing(TestConstants.LightMasterModKey3, enabled: true),
-            new ModListing(TestConstants.LightMasterModKey4, enabled: false),
-            new ModListing(TestConstants.PluginModKey, enabled: true),
-            new ModListing(TestConstants.PluginModKey2, enabled: false),
+            new LoadOrderListing(TestConstants.LightMasterModKey, enabled: true),
+            new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
+            new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
+            new LoadOrderListing(TestConstants.LightMasterModKey3, enabled: true),
+            new LoadOrderListing(TestConstants.LightMasterModKey4, enabled: false),
+            new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
+            new LoadOrderListing(TestConstants.PluginModKey2, enabled: false),
         });
     }
 
@@ -122,21 +119,21 @@ public class LoadOrderIntegrationTests
         File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey4.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey2.FileName), string.Empty);
-        var results = LoadOrder.GetListings(
+        var results = LoadOrder.GetLoadOrderListings(
                 game: GameRelease.SkyrimSE,
                 dataPath: dataPath,
                 pluginsFilePath: pluginsPath,
                 creationClubFilePath: cccPath)
             .ToList();
         results.Should().HaveCount(6);
-        results.Should().Equal(new ModListing[]
+        results.Should().Equal(new LoadOrderListing[]
         {
-            new ModListing(TestConstants.MasterModKey, enabled: true),
-            new ModListing(TestConstants.MasterModKey2, enabled: false),
-            new ModListing(TestConstants.LightMasterModKey3, enabled: true),
-            new ModListing(TestConstants.LightMasterModKey4, enabled: false),
-            new ModListing(TestConstants.PluginModKey, enabled: true),
-            new ModListing(TestConstants.PluginModKey2, enabled: false),
+            new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
+            new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
+            new LoadOrderListing(TestConstants.LightMasterModKey3, enabled: true),
+            new LoadOrderListing(TestConstants.LightMasterModKey4, enabled: false),
+            new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
+            new LoadOrderListing(TestConstants.PluginModKey2, enabled: false),
         });
     }
 
@@ -155,17 +152,17 @@ public class LoadOrderIntegrationTests
         Directory.CreateDirectory(dataPath);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
-        var results = LoadOrder.GetListings(
+        var results = LoadOrder.GetLoadOrderListings(
                 game: GameRelease.Oblivion,
                 dataPath: dataPath,
                 pluginsFilePath: pluginsPath,
                 creationClubFilePath: null)
             .ToList();
         results.Should().HaveCount(2);
-        results.Should().Equal(new ModListing[]
+        results.Should().Equal(new LoadOrderListing[]
         {
-            new ModListing(TestConstants.MasterModKey, enabled: true),
-            new ModListing(TestConstants.PluginModKey, enabled: true),
+            new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
+            new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
         });
     }
 
@@ -207,24 +204,26 @@ public class LoadOrderIntegrationTests
         File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey4.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey2.FileName), string.Empty);
-        var results = LoadOrder.GetListings(
+        var results = LoadOrder.GetLoadOrderListings(
                 game: GameRelease.SkyrimSE,
                 dataPath: dataPath,
                 pluginsFilePath: pluginsPath,
                 creationClubFilePath: cccPath)
             .ToList();
         results.Should().HaveCount(8);
-        results.Should().Equal(new ModListing[]
-        {
-            new ModListing(TestConstants.LightMasterModKey2, enabled: true),
-            new ModListing(TestConstants.LightMasterModKey, enabled: true),
-            new ModListing(TestConstants.MasterModKey, enabled: true),
-            new ModListing(TestConstants.MasterModKey2, enabled: false),
-            new ModListing(TestConstants.LightMasterModKey3, enabled: true),
-            new ModListing(TestConstants.LightMasterModKey4, enabled: false),
-            new ModListing(TestConstants.PluginModKey, enabled: true),
-            new ModListing(TestConstants.PluginModKey2, enabled: false),
-        });
+        results
+            .Select(x => new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
+            .Should().Equal(new LoadOrderListing[]
+            {
+                new LoadOrderListing(TestConstants.LightMasterModKey2, enabled: true),
+                new LoadOrderListing(TestConstants.LightMasterModKey, enabled: true),
+                new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
+                new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
+                new LoadOrderListing(TestConstants.LightMasterModKey3, enabled: true),
+                new LoadOrderListing(TestConstants.LightMasterModKey4, enabled: false),
+                new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
+                new LoadOrderListing(TestConstants.PluginModKey2, enabled: false),
+            });
     }
 
     [Fact]
@@ -330,11 +329,11 @@ public class LoadOrderIntegrationTests
         LoadOrder.Write(
             path,
             GameRelease.Oblivion,
-            new ModListing[]
+            new LoadOrderListing[]
             {
-                new ModListing(TestConstants.PluginModKey, false),
-                new ModListing(TestConstants.PluginModKey2, true),
-                new ModListing(TestConstants.PluginModKey3, false),
+                new LoadOrderListing(TestConstants.PluginModKey, false),
+                new LoadOrderListing(TestConstants.PluginModKey2, true),
+                new LoadOrderListing(TestConstants.PluginModKey3, false),
             });
         var lines = File.ReadAllLines(path).ToList();
         Assert.Single(lines);
@@ -349,11 +348,11 @@ public class LoadOrderIntegrationTests
         LoadOrder.Write(
             path,
             GameRelease.SkyrimSE,
-            new ModListing[]
+            new LoadOrderListing[]
             {
-                new ModListing(TestConstants.PluginModKey, false),
-                new ModListing(TestConstants.PluginModKey2, true),
-                new ModListing(TestConstants.PluginModKey3, false),
+                new LoadOrderListing(TestConstants.PluginModKey, false),
+                new LoadOrderListing(TestConstants.PluginModKey2, true),
+                new LoadOrderListing(TestConstants.PluginModKey3, false),
             });
         var lines = File.ReadAllLines(path).ToList();
         Assert.Equal(3, lines.Count);
@@ -370,11 +369,11 @@ public class LoadOrderIntegrationTests
         LoadOrder.Write(
             path,
             GameRelease.SkyrimSE,
-            new ModListing[]
+            new LoadOrderListing[]
             {
-                new ModListing(TestConstants.Skyrim, true),
-                new ModListing(TestConstants.PluginModKey, true),
-                new ModListing(TestConstants.PluginModKey2, false),
+                new LoadOrderListing(TestConstants.Skyrim, true),
+                new LoadOrderListing(TestConstants.PluginModKey, true),
+                new LoadOrderListing(TestConstants.PluginModKey2, false),
             },
             removeImplicitMods: true);
         var lines = File.ReadAllLines(path).ToList();
@@ -391,11 +390,11 @@ public class LoadOrderIntegrationTests
         LoadOrder.Write(
             path,
             GameRelease.SkyrimSE,
-            new ModListing[]
+            new LoadOrderListing[]
             {
-                new ModListing(TestConstants.Skyrim, true),
-                new ModListing(TestConstants.PluginModKey, true),
-                new ModListing(TestConstants.PluginModKey2, false),
+                new LoadOrderListing(TestConstants.Skyrim, true),
+                new LoadOrderListing(TestConstants.PluginModKey, true),
+                new LoadOrderListing(TestConstants.PluginModKey2, false),
             },
             removeImplicitMods: false);
         var lines = File.ReadAllLines(path).ToList();
@@ -409,203 +408,203 @@ public class LoadOrderIntegrationTests
     [Fact]
     public void HasMod_Empty()
     {
-        Enumerable.Empty<ModListing>()
-            .HasMod(TestConstants.LightMasterModKey)
+        Enumerable.Empty<LoadOrderListing>()
+            .ListsMod(TestConstants.LightMasterModKey)
             .Should().BeFalse();
     }
 
     [Fact]
     public void HasMod_Typical()
     {
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true),
-            new ModListing(TestConstants.LightMasterModKey2, false),
-            new ModListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
+            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
         };
         listings
-            .HasMod(TestConstants.LightMasterModKey)
+            .ListsMod(TestConstants.LightMasterModKey)
             .Should().BeTrue();
         listings
-            .HasMod(TestConstants.LightMasterModKey2)
+            .ListsMod(TestConstants.LightMasterModKey2)
             .Should().BeTrue();
         listings
-            .HasMod(TestConstants.LightMasterModKey3)
+            .ListsMod(TestConstants.LightMasterModKey3)
             .Should().BeTrue();
         listings
-            .HasMod(TestConstants.LightMasterModKey4)
+            .ListsMod(TestConstants.LightMasterModKey4)
             .Should().BeFalse();
     }
 
     [Fact]
     public void HasMod_Enabled()
     {
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true),
-            new ModListing(TestConstants.LightMasterModKey2, false),
-            new ModListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
+            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
         };
         listings
-            .HasMod(TestConstants.LightMasterModKey, enabled: true)
+            .ListsMod(TestConstants.LightMasterModKey, enabled: true)
             .Should().BeTrue();
         listings
-            .HasMod(TestConstants.LightMasterModKey, enabled: false)
+            .ListsMod(TestConstants.LightMasterModKey, enabled: false)
             .Should().BeFalse();
         listings
-            .HasMod(TestConstants.LightMasterModKey2, enabled: false)
+            .ListsMod(TestConstants.LightMasterModKey2, enabled: false)
             .Should().BeTrue();
         listings
-            .HasMod(TestConstants.LightMasterModKey2, enabled: true)
+            .ListsMod(TestConstants.LightMasterModKey2, enabled: true)
             .Should().BeFalse();
         listings
-            .HasMod(TestConstants.LightMasterModKey3, enabled: true)
+            .ListsMod(TestConstants.LightMasterModKey3, enabled: true)
             .Should().BeTrue();
         listings
-            .HasMod(TestConstants.LightMasterModKey3, enabled: false)
-            .Should().BeFalse();
-    }
-
-    [Fact]
-    public void HasMods_EmptyListings()
-    {
-        Enumerable.Empty<ModListing>()
-            .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ListsMod(TestConstants.LightMasterModKey3, enabled: false)
             .Should().BeFalse();
     }
 
     [Fact]
-    public void HasMods_EmptyInput()
+    public void ListsMods_EmptyListings()
     {
-        Enumerable.Empty<ModListing>()
-            .HasMods()
+        Enumerable.Empty<LoadOrderListing>()
+            .ListsMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .Should().BeFalse();
+    }
+
+    [Fact]
+    public void ListsMods_EmptyInput()
+    {
+        Enumerable.Empty<LoadOrderListing>()
+            .ListsMods()
             .Should().BeTrue();
     }
 
     [Fact]
-    public void HasMods_Single()
+    public void ListsMods_Single()
     {
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true),
-            new ModListing(TestConstants.LightMasterModKey2, false),
-            new ModListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
+            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
         };
         listings
-            .HasMods(TestConstants.LightMasterModKey)
+            .ListsMods(TestConstants.LightMasterModKey)
             .Should().BeTrue();
         listings
-            .HasMods(TestConstants.LightMasterModKey2)
+            .ListsMods(TestConstants.LightMasterModKey2)
             .Should().BeTrue();
         listings
-            .HasMods(TestConstants.LightMasterModKey3)
+            .ListsMods(TestConstants.LightMasterModKey3)
             .Should().BeTrue();
         listings
-            .HasMods(TestConstants.LightMasterModKey4)
+            .ListsMods(TestConstants.LightMasterModKey4)
             .Should().BeFalse();
     }
 
     [Fact]
-    public void HasMods_Typical()
+    public void ListsMods_Typical()
     {
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true),
-            new ModListing(TestConstants.LightMasterModKey2, false),
-            new ModListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
+            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
         };
         listings
-            .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
+            .ListsMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
             .Should().BeTrue();
         listings
-            .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ListsMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
             .Should().BeTrue();
         listings
-            .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
+            .ListsMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
             .Should().BeFalse();
     }
 
     [Fact]
-    public void HasMods_Enabled_EmptyListings()
+    public void ListsMods_Enabled_EmptyListings()
     {
-        Enumerable.Empty<ModListing>()
-            .HasMods(true, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+        Enumerable.Empty<LoadOrderListing>()
+            .ListsMods(true, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
             .Should().BeFalse();
-        Enumerable.Empty<ModListing>()
-            .HasMods(false, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+        Enumerable.Empty<LoadOrderListing>()
+            .ListsMods(false, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
             .Should().BeFalse();
     }
 
     [Fact]
-    public void HasMods_Enabled_EmptyInput()
+    public void ListsMods_Enabled_EmptyInput()
     {
-        Enumerable.Empty<ModListing>()
-            .HasMods(true)
+        Enumerable.Empty<LoadOrderListing>()
+            .ListsMods(true)
             .Should().BeTrue();
-        Enumerable.Empty<ModListing>()
-            .HasMods(false)
+        Enumerable.Empty<LoadOrderListing>()
+            .ListsMods(false)
             .Should().BeTrue();
     }
 
     [Fact]
-    public void HasMods_Enabled_Single()
+    public void ListsMods_Enabled_Single()
     {
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true),
-            new ModListing(TestConstants.LightMasterModKey2, false),
-            new ModListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
+            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
         };
         listings
-            .HasMods(true, TestConstants.LightMasterModKey)
+            .ListsMods(true, TestConstants.LightMasterModKey)
             .Should().BeTrue();
         listings
-            .HasMods(false, TestConstants.LightMasterModKey)
+            .ListsMods(false, TestConstants.LightMasterModKey)
             .Should().BeFalse();
         listings
-            .HasMods(false, TestConstants.LightMasterModKey2)
+            .ListsMods(false, TestConstants.LightMasterModKey2)
             .Should().BeTrue();
         listings
-            .HasMods(true, TestConstants.LightMasterModKey2)
+            .ListsMods(true, TestConstants.LightMasterModKey2)
             .Should().BeFalse();
         listings
-            .HasMods(true, TestConstants.LightMasterModKey3)
+            .ListsMods(true, TestConstants.LightMasterModKey3)
             .Should().BeTrue();
         listings
-            .HasMods(false, TestConstants.LightMasterModKey3)
+            .ListsMods(false, TestConstants.LightMasterModKey3)
             .Should().BeFalse();
         listings
-            .HasMods(true, TestConstants.LightMasterModKey4)
+            .ListsMods(true, TestConstants.LightMasterModKey4)
             .Should().BeFalse();
         listings
-            .HasMods(false, TestConstants.LightMasterModKey4)
+            .ListsMods(false, TestConstants.LightMasterModKey4)
             .Should().BeFalse();
     }
 
     [Fact]
-    public void HasMods_Enabled_Typical()
+    public void ListsMods_Enabled_Typical()
     {
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true),
-            new ModListing(TestConstants.LightMasterModKey2, false),
-            new ModListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey, true),
+            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
+            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
         };
         listings
-            .HasMods(
+            .ListsMods(
                 true,
                 TestConstants.LightMasterModKey, TestConstants.LightMasterModKey3)
             .Should().BeTrue();
         listings
-            .HasMods(false, TestConstants.LightMasterModKey2)
+            .ListsMods(false, TestConstants.LightMasterModKey2)
             .Should().BeTrue();
         listings
-            .HasMods(
+            .ListsMods(
                 true,
                 TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
             .Should().BeFalse();
         listings
-            .HasMods(
+            .ListsMods(
                 true,
                 TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
             .Should().BeFalse();

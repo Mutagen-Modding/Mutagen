@@ -20,15 +20,15 @@ public class FileSyncedLoadOrderListingVM : ViewModel, IModListing
     [Reactive]
     public string GhostSuffix { get; set; } = string.Empty;
 
-    private readonly ObservableAsPropertyHelper<bool> _Exists;
-    public bool Exists => _Exists.Value;
+    private readonly ObservableAsPropertyHelper<bool> _existsOnDisk;
+    public bool ExistsOnDisk => _existsOnDisk.Value;
 
     private readonly ObservableAsPropertyHelper<bool> _Ghosted;
     public bool Ghosted => _Ghosted.Value;
 
     public FileSyncedLoadOrderListingVM(
         IDataDirectoryProvider dataDirectoryContext,
-        IModListingGetter listing)
+        ILoadOrderListingGetter listing)
     {
         ModKey = listing.ModKey;
         Enabled = listing.Enabled;
@@ -36,14 +36,14 @@ public class FileSyncedLoadOrderListingVM : ViewModel, IModListing
             
         var path = Path.Combine(dataDirectoryContext.Path, listing.ModKey.FileName);
         var exists = File.Exists(path);
-        _Exists = Observable.Defer(() =>
+        _existsOnDisk = Observable.Defer(() =>
                 Noggog.ObservableExt.WatchFile(path)
                     .Select(_ =>
                     {
                         var ret = File.Exists(path);
                         return ret;
                     }))
-            .ToGuiProperty(this, nameof(Exists), initialValue: exists);
+            .ToGuiProperty(this, nameof(ExistsOnDisk), initialValue: exists);
         _Ghosted = this.WhenAnyValue(x => x.GhostSuffix)
             .Select(x => !x.IsNullOrWhitespace())
             .ToGuiProperty(this, nameof(Ghosted));

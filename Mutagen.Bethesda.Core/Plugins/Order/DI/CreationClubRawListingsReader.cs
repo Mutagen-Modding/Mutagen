@@ -2,19 +2,19 @@
 
 public interface ICreationClubRawListingsReader
 {
-    IEnumerable<IModListingGetter> Read(Stream stream);
+    IEnumerable<ILoadOrderListingGetter> Read(Stream stream);
 }
 
 public class CreationClubRawListingsReader : ICreationClubRawListingsReader
 {
-    public IEnumerable<IModListingGetter> Read(Stream stream)
+    public IEnumerable<ILoadOrderListingGetter> Read(Stream stream)
     {
         using var streamReader = new StreamReader(stream);
         while (!streamReader.EndOfStream)
         {
             var str = streamReader.ReadLine().AsSpan();
             var modKey = ModKey.FromNameAndExtension(str);
-            yield return new ModListing(modKey, enabled: true);
+            yield return new LoadOrderListing(modKey, enabled: true);
         }
     }
 }

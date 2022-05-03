@@ -16,7 +16,7 @@ public interface IFindImplicitlyIncludedMods
     /// <returns>ModKeys that were referenced but not enabled</returns>
     /// <exception cref="MissingModException">If a mod was missing and <see cref="skipMissingMods"/> was false</exception>
     IEnumerable<ModKey> Find(
-        IEnumerable<IModListingGetter> loadOrderListing,
+        IEnumerable<ILoadOrderListingGetter> loadOrderListing,
         bool skipMissingMods = false);
 }
 
@@ -37,7 +37,7 @@ public class FindImplicitlyIncludedMods : IFindImplicitlyIncludedMods
     }
 
     public IEnumerable<ModKey> Find(
-        IEnumerable<IModListingGetter> loadOrderListing,
+        IEnumerable<ILoadOrderListingGetter> loadOrderListing,
         bool skipMissingMods = false)
     {
         var listingToIndices = loadOrderListing

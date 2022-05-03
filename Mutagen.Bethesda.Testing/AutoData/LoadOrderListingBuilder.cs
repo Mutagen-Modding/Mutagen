@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Plugins.Order;
 
 namespace Mutagen.Bethesda.Testing.AutoData;
 
-public class ModListingBuilder : ISpecimenBuilder
+public class LoadOrderListingBuilder : ISpecimenBuilder
 {
     public object Create(object request, ISpecimenContext context)
     {
@@ -18,24 +18,24 @@ public class ModListingBuilder : ISpecimenBuilder
             }
             if (req is Type t)
             {
-                if (t == typeof(ModListing))
+                if (t == typeof(LoadOrderListing))
                 {
                     var keys = context.CreateMany<ModKey>();
-                    return keys.Select(x => new ModListing(x, true, true));
+                    return keys.Select(x => new LoadOrderListing(x, true));
                 }
-                if (t == typeof(IModListingGetter))
+                if (t == typeof(ILoadOrderListingGetter))
                 {
                     var keys = context.CreateMany<ModKey>();
-                    return keys.Select(x => (IModListingGetter)new ModListing(x, true, true));
+                    return keys.Select(x => (ILoadOrderListingGetter)new LoadOrderListing(x, true));
                 }
             }
         }
         else if (request is Type t)
         {
-            if (t == typeof(ModListing)
-                || t == typeof(IModListingGetter))
+            if (t == typeof(LoadOrderListing)
+                || t == typeof(ILoadOrderListingGetter))
             {
-                return new ModListing(TestConstants.PluginModKey, true, true);
+                return new LoadOrderListing(TestConstants.PluginModKey, true);
             }
         }
             

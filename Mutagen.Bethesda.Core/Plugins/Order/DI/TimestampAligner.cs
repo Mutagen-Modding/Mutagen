@@ -24,8 +24,8 @@ public interface ITimestampAligner
     /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
     /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
     /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-    IEnumerable<IModListingGetter> AlignToTimestamps(
-        IEnumerable<IModListingGetter> incomingLoadOrder,
+    IEnumerable<ILoadOrderListingGetter> AlignToTimestamps(
+        IEnumerable<ILoadOrderListingGetter> incomingLoadOrder,
         DirectoryPath dataPath,
         bool throwOnMissingMods = true);
 
@@ -81,8 +81,8 @@ public class TimestampAligner : ITimestampAligner
     }
 
     /// <inheritdoc />
-    public IEnumerable<IModListingGetter> AlignToTimestamps(
-        IEnumerable<IModListingGetter> incomingLoadOrder,
+    public IEnumerable<ILoadOrderListingGetter> AlignToTimestamps(
+        IEnumerable<ILoadOrderListingGetter> incomingLoadOrder,
         DirectoryPath dataPath,
         bool throwOnMissingMods = true)
     {
@@ -100,7 +100,7 @@ public class TimestampAligner : ITimestampAligner
         var comp = new LoadOrderTimestampComparer(incomingLoadOrder.Select(i => i.ModKey).ToList());
         return list
             .OrderBy(i => (i.ModKey, i.Write), comp)
-            .Select(i => new ModListing(i.ModKey, i.Enabled));
+            .Select(i => new LoadOrderListing(i.ModKey, i.Enabled));
     }
 
     /// <inheritdoc />

@@ -41,4 +41,12 @@
         <None Include="$(SolutionDir)Mutagen.Bethesda.Testing\Files\**" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="AutoData\ModListingBuilder.cs">
+        <CodeLanguage>cs</CodeLanguage>
+        <DefaultPackFolder>content</DefaultPackFolder>
+        <BuildAction>Compile</BuildAction>
+      </Compile>
+    </ItemGroup>
+
 </Project>

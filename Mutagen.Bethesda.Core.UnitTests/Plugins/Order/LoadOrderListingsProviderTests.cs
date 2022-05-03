@@ -15,10 +15,10 @@ public class LoadOrderListingsProviderTests
 {
     [Theory, MutagenAutoData]
     public void Typical(
-        IEnumerable<IModListingGetter> implicits,
-        IEnumerable<IModListingGetter> ccc,
-        IEnumerable<IModListingGetter> plugins,
-        IEnumerable<IModListingGetter> orderRet)
+        IModListingGetter[] implicits,
+        IModListingGetter[] ccc,
+        IModListingGetter[] plugins,
+        ILoadOrderListingGetter[] orderRet)
     {
         var implicitProv = Substitute.For<IImplicitListingsProvider>();
         implicitProv.Get().Returns(implicits);
@@ -28,31 +28,33 @@ public class LoadOrderListingsProviderTests
         pluginsProv.Get().Returns(plugins);
         var orderListings = Substitute.For<IOrderListings>();
         orderListings.Order(
-                Arg.Any<IEnumerable<IModListingGetter>>(),
-                Arg.Any<IEnumerable<IModListingGetter>>(),
-                Arg.Any<IEnumerable<IModListingGetter>>(),
-                Arg.Any<Func<IModListingGetter, ModKey>>())
+                Arg.Any<IEnumerable<ILoadOrderListingGetter>>(),
+                Arg.Any<IEnumerable<ILoadOrderListingGetter>>(),
+                Arg.Any<IEnumerable<ILoadOrderListingGetter>>(),
+                Arg.Any<Func<ILoadOrderListingGetter, ModKey>>())
             .Returns(orderRet);
         new LoadOrderListingsProvider(
                 orderListings,
                 implicitProv,
                 pluginsProv,
                 cccProv)
-            .Get().Should().Equal(orderRet);
+            .Get()
+            .Select(x => (ILoadOrderListingGetter)new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
+            .Should().Equal(orderRet);
         cccProv.Received().Get(false);
         orderListings.Received()
             .Order(
-                Arg.Is<IEnumerable<IModListingGetter>>(x => x.SequenceEqual(implicits)),
-                Arg.Is<IEnumerable<IModListingGetter>>(x => x.SequenceEqual(plugins)),
-                Arg.Is<IEnumerable<IModListingGetter>>(x => x.SequenceEqual(ccc)),
-                Arg.Any<Func<IModListingGetter, ModKey>>());
+                Arg.Is<IEnumerable<ILoadOrderListingGetter>>(x => x.SequenceEqual(implicits)),
+                Arg.Is<IEnumerable<ILoadOrderListingGetter>>(x => x.SequenceEqual(plugins)),
+                Arg.Is<IEnumerable<ILoadOrderListingGetter>>(x => x.SequenceEqual(ccc)),
+                Arg.Any<Func<ILoadOrderListingGetter, ModKey>>());
     }
         
     [Theory, MutagenAutoData]
     public void BlockImplictsFromPlugins(
         IEnumerable<IModListingGetter> ccc,
         IEnumerable<IModListingGetter> plugins,
-        IEnumerable<IModListingGetter> orderRet)
+        IEnumerable<ILoadOrderListingGetter> orderRet)
     {
         var cccProv = Substitute.For<ICreationClubListingsProvider>();
         cccProv.Get(throwIfMissing: false).Returns(ccc);
@@ -63,23 +65,25 @@ public class LoadOrderListingsProviderTests
         implicitProv.Get().Returns(implicits);
         var orderListings = Substitute.For<IOrderListings>();
         orderListings.Order(
-                Arg.Any<IEnumerable<IModListingGetter>>(),
-                Arg.Any<IEnumerable<IModListingGetter>>(),
-                Arg.Any<IEnumerable<IModListingGetter>>(),
-                Arg.Any<Func<IModListingGetter, ModKey>>())
+                Arg.Any<IEnumerable<ILoadOrderListingGetter>>(),
+                Arg.Any<IEnumerable<ILoadOrderListingGetter>>(),
+                Arg.Any<IEnumerable<ILoadOrderListingGetter>>(),
+                Arg.Any<Func<ILoadOrderListingGetter, ModKey>>())
             .Returns(orderRet);
         new LoadOrderListingsProvider(
                 orderListings,
                 implicitProv,
                 pluginsProv,
                 cccProv)
-            .Get().Should().Equal(orderRet);
+            .Get()
+            .Select(x => (ILoadOrderListingGetter)new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
+            .Should().Equal(orderRet);
         cccProv.Received().Get(false);
         orderListings.Received()
             .Order(
-                Arg.Is<IEnumerable<IModListingGetter>>(x => x.SequenceEqual(implicits)),
-                Arg.Is<IEnumerable<IModListingGetter>>(x => x.SequenceEqual(plugins.Skip(1))),
-                Arg.Is<IEnumerable<IModListingGetter>>(x => x.SequenceEqual(ccc)),
-                Arg.Any<Func<IModListingGetter, ModKey>>());
+                Arg.Is<IEnumerable<ILoadOrderListingGetter>>(x => x.SequenceEqual(implicits)),
+                Arg.Is<IEnumerable<ILoadOrderListingGetter>>(x => x.SequenceEqual(plugins.Skip(1))),
+                Arg.Is<IEnumerable<ILoadOrderListingGetter>>(x => x.SequenceEqual(ccc)),
+                Arg.Any<Func<ILoadOrderListingGetter, ModKey>>());
     }
 }

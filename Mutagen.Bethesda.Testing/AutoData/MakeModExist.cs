@@ -1,5 +1,4 @@
-﻿using System.IO;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;

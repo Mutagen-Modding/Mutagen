@@ -67,7 +67,7 @@ public class CreationClubLiveListingsFileReaderTests
     {
         var scheduler = new TestScheduler();
         var path = $"{PathingUtil.DrivePrefix}SomePath";
-        var listingA = new ModListing("ModA.esp", true);
+        var listingA = new LoadOrderListing("ModA.esp", true);
         var fs = Substitute.For<IFileSystem>();
         fs.File.OpenRead(path).Returns(stream);
         var reader = Substitute.For<ICreationClubRawListingsReader>();
@@ -92,7 +92,7 @@ public class CreationClubLiveListingsFileReaderTests
         [Frozen]MockFileSystemWatcher fileChanges,
         [Frozen]MockFileSystem fs)
     {
-        var listingA = new ModListing("ModA.esp", true);
+        var listingA = new LoadOrderListing("ModA.esp", true);
         var reader = Substitute.For<ICreationClubRawListingsReader>();
         reader.Read(Arg.Any<Stream>()).Returns(listingA.AsEnumerable());
         var list = new CreationClubLiveListingsFileReader(
@@ -123,7 +123,7 @@ public class CreationClubLiveListingsFileReaderTests
         [Frozen]MockFileSystem fs)
     {
         fs.File.WriteAllText(path, string.Empty);
-        var listingA = new ModListing("ModA.esp", true);
+        var listingA = new LoadOrderListing("ModA.esp", true);
         var reader = Substitute.For<ICreationClubRawListingsReader>();
         reader.Read(Arg.Any<Stream>()).Returns(listingA.AsEnumerable());
         var list = new CreationClubLiveListingsFileReader(
@@ -154,8 +154,8 @@ public class CreationClubLiveListingsFileReaderTests
         [Frozen]MockFileSystem fs)
     {
         fs.File.WriteAllText(path, string.Empty);
-        var listingA = new ModListing("ModA.esp", true);
-        var listingB = new ModListing("ModB.esp", true);
+        var listingA = new LoadOrderListing("ModA.esp", true);
+        var listingB = new LoadOrderListing("ModB.esp", true);
         var reader = Substitute.For<ICreationClubRawListingsReader>();
         reader.Read(Arg.Any<Stream>()).Returns(listingA.AsEnumerable());
         var list = new CreationClubLiveListingsFileReader(

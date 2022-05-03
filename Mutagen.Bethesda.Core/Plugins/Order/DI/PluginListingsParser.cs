@@ -11,21 +11,21 @@ public interface IPluginListingsParser
     /// <param name="stream">Stream to read from</param>
     /// <returns>List of ModKeys representing a load order</returns>
     /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
-    IEnumerable<IModListingGetter> Parse(Stream stream);
+    IEnumerable<ILoadOrderListingGetter> Parse(Stream stream);
 }
 
 public class PluginListingsParser : IPluginListingsParser
 {
-    private readonly IModListingParser _listingParser;
+    private readonly ILoadOrderListingParser _listingParser;
 
     public PluginListingsParser(
-        IModListingParser listingParser)
+        ILoadOrderListingParser listingParser)
     {
         _listingParser = listingParser;
     }
         
     /// <inheritdoc />
-    public IEnumerable<IModListingGetter> Parse(Stream stream)
+    public IEnumerable<ILoadOrderListingGetter> Parse(Stream stream)
     {
         using var streamReader = new StreamReader(stream);
         while (!streamReader.EndOfStream)

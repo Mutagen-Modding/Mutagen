@@ -45,10 +45,10 @@ public class PluginRawListingsReaderTests
         FilePath existingPath,
         PluginRawListingsReader sut)
     {
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing("ModA.esp", true),
-            new ModListing("ModB.esp", false),
+            new LoadOrderListing("ModA.esp", true),
+            new LoadOrderListing("ModB.esp", false),
         };
         sut.Parser.Parse(default!).ReturnsForAnyArgs(listings);
         sut.Read(existingPath)

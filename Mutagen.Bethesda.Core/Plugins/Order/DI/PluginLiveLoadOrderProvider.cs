@@ -27,7 +27,7 @@ public class PluginLiveLoadOrderProvider : IPluginLiveLoadOrderProvider
         _pluginListingsFilePath = pluginListingsFilePath;
     }
         
-    public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state, IScheduler? scheduler = null)
+    public IObservable<IChangeSet<ILoadOrderListingGetter>> Get(out IObservable<ErrorResponse> state, IScheduler? scheduler = null)
     {
         var results = ObservableExt.WatchFile(_pluginListingsFilePath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
             .StartWith(Unit.Default)
@@ -35,13 +35,13 @@ public class PluginLiveLoadOrderProvider : IPluginLiveLoadOrderProvider
             {
                 try
                 {
-                    return GetResponse<IObservable<IChangeSet<IModListingGetter>>>.Succeed(
+                    return GetResponse<IObservable<IChangeSet<ILoadOrderListingGetter>>>.Succeed(
                         _listingsProvider.Get()
                             .AsObservableChangeSet());
                 }
                 catch (Exception ex)
                 {
-                    return GetResponse<IObservable<IChangeSet<IModListingGetter>>>.Fail(ex);
+                    return GetResponse<IObservable<IChangeSet<ILoadOrderListingGetter>>>.Fail(ex);
                 }
             })
             .Replay(1)
@@ -51,7 +51,7 @@ public class PluginLiveLoadOrderProvider : IPluginLiveLoadOrderProvider
         return results
             .Select(r =>
             {
-                return r.Value ?? Observable.Empty<IChangeSet<IModListingGetter>>();
+                return r.Value ?? Observable.Empty<IChangeSet<ILoadOrderListingGetter>>();
             })
             .Switch()
             .ObserveOnIfApplicable(scheduler);

@@ -22,7 +22,7 @@ public class PluginListingsProvider : IPluginListingsProvider
         _enabledPluginListingsProvider = enabledPluginListingsProvider;
     }
         
-    public IEnumerable<IModListingGetter> Get()
+    public IEnumerable<ILoadOrderListingGetter> Get()
     {
         switch (_gameReleaseContext.Release)
         {

@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 public interface ICreationClubLiveListingsFileReader
 {
-    IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state);
+    IObservable<IChangeSet<ILoadOrderListingGetter>> Get(out IObservable<ErrorResponse> state);
 }
 
 public class CreationClubLiveListingsFileReader : ICreationClubLiveListingsFileReader
@@ -27,13 +27,13 @@ public class CreationClubLiveListingsFileReader : ICreationClubLiveListingsFileR
         ListingsPathProvider = listingsPathProvider;
     }
         
-    public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state)
+    public IObservable<IChangeSet<ILoadOrderListingGetter>> Get(out IObservable<ErrorResponse> state)
     {
         var path = ListingsPathProvider.Path;
         if (path == null)
         {
             state = Observable.Return(ErrorResponse.Success);
-            return Observable.Empty<IChangeSet<IModListingGetter>>();
+            return Observable.Empty<IChangeSet<ILoadOrderListingGetter>>();
         }
         var raw = ObservableExt.WatchFile(path.Value, fileWatcherFactory: _fileSystem.FileSystemWatcher, throwIfInvalidPath: true)
             .StartWith(Unit.Default)
@@ -41,13 +41,13 @@ public class CreationClubLiveListingsFileReader : ICreationClubLiveListingsFileR
             {
                 try
                 {
-                    return GetResponse<IObservable<IChangeSet<IModListingGetter>>>.Succeed(
+                    return GetResponse<IObservable<IChangeSet<ILoadOrderListingGetter>>>.Succeed(
                         ListingsReader.Read(_fileSystem.File.OpenRead(path.Value))
                             .AsObservableChangeSet());
                 }
                 catch (Exception ex)
                 {
-                    return GetResponse<IObservable<IChangeSet<IModListingGetter>>>.Fail(ex);
+                    return GetResponse<IObservable<IChangeSet<ILoadOrderListingGetter>>>.Fail(ex);
                 }
             });
         state = raw
@@ -55,7 +55,7 @@ public class CreationClubLiveListingsFileReader : ICreationClubLiveListingsFileR
         return raw
             .Select(r =>
             {
-                return r.Value ?? Observable.Empty<IChangeSet<IModListingGetter>>();
+                return r.Value ?? Observable.Empty<IChangeSet<ILoadOrderListingGetter>>();
             })
             .Switch();
     }

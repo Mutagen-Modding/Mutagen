@@ -68,11 +68,11 @@ public class FindImplicitlyIncludedModsTests
             new Listing(ModA),
             new Listing(ModB, ModA, ModC),
             new Listing(ModC));
-        var list = new List<IModListingGetter>()
+        var list = new List<ILoadOrderListingGetter>()
         {
-            new ModListing(ModA, true),
-            new ModListing(ModC, true),
-            new ModListing(ModB, true),
+            new LoadOrderListing(ModA, true),
+            new LoadOrderListing(ModC, true),
+            new LoadOrderListing(ModB, true),
         };
         var found = sut.Find(list)
             .ToList();
@@ -92,11 +92,11 @@ public class FindImplicitlyIncludedModsTests
             new Listing(ModA),
             new Listing(ModB, ModA, ModC),
             new Listing(ModC));
-        var list = new List<IModListingGetter>()
+        var list = new List<ILoadOrderListingGetter>()
         {
-            new ModListing(ModA, true),
-            new ModListing(ModC, false),
-            new ModListing(ModB, true),
+            new LoadOrderListing(ModA, true),
+            new LoadOrderListing(ModC, false),
+            new LoadOrderListing(ModB, true),
         };
         var found = sut.Find(list)
             .ToList();
@@ -116,11 +116,11 @@ public class FindImplicitlyIncludedModsTests
             sut,
             new Listing(ModA),
             new Listing(ModB, ModA));
-        var list = new List<IModListingGetter>()
+        var list = new List<ILoadOrderListingGetter>()
         {
-            new ModListing(ModA, true),
-            new ModListing(ModC, false),
-            new ModListing(ModB, true),
+            new LoadOrderListing(ModA, true),
+            new LoadOrderListing(ModC, false),
+            new LoadOrderListing(ModB, true),
         };
         var found = sut.Find(list)
             .ToList();
@@ -141,12 +141,12 @@ public class FindImplicitlyIncludedModsTests
             new Listing(ModB, ModA, ModC),
             new Listing(ModC, ModD),
             new Listing(ModD));
-        var list = new List<IModListingGetter>()
+        var list = new List<ILoadOrderListingGetter>()
         {
-            new ModListing(ModA, true),
-            new ModListing(ModD, false),
-            new ModListing(ModC, false),
-            new ModListing(ModB, true),
+            new LoadOrderListing(ModA, true),
+            new LoadOrderListing(ModD, false),
+            new LoadOrderListing(ModC, false),
+            new LoadOrderListing(ModB, true),
         };
         var found = sut.Find(list)
             .ToList();
@@ -170,12 +170,12 @@ public class FindImplicitlyIncludedModsTests
             new Listing(ModB, ModA, ModC),
             new Listing(ModC, ModD),
             new Listing(ModD));
-        var list = new List<IModListingGetter>()
+        var list = new List<ILoadOrderListingGetter>()
         {
-            new ModListing(ModA, true),
-            new ModListing(ModC, false),
-            new ModListing(ModB, true),
-            new ModListing(ModD, false),
+            new LoadOrderListing(ModA, true),
+            new LoadOrderListing(ModC, false),
+            new LoadOrderListing(ModB, true),
+            new LoadOrderListing(ModD, false),
         };
         var found = sut.Find(list)
             .ToArray();
@@ -198,10 +198,10 @@ public class FindImplicitlyIncludedModsTests
             new Listing(ModA),
             new Listing(ModB, ModA, ModC),
             new Listing(ModC));
-        var list = new List<IModListingGetter>()
+        var list = new List<ILoadOrderListingGetter>()
         {
-            new ModListing(ModA, true),
-            new ModListing(ModB, true),
+            new LoadOrderListing(ModA, true),
+            new LoadOrderListing(ModB, true),
         };
         var found = sut.Find(list)
             .ToList();
@@ -225,12 +225,12 @@ public class FindImplicitlyIncludedModsTests
             
         mockFileSystem.File.Delete(Path.Combine(dataDirectoryProvider.Path, ModB.FileName));
             
-        var list = new List<IModListingGetter>()
+        var list = new List<ILoadOrderListingGetter>()
         {
-            new ModListing(ModA, true),
-            new ModListing(ModC, false),
-            new ModListing(ModB, true),
-            new ModListing(ModD, false),
+            new LoadOrderListing(ModA, true),
+            new LoadOrderListing(ModC, false),
+            new LoadOrderListing(ModB, true),
+            new LoadOrderListing(ModD, false),
         };
             
         Assert.Throws<MissingModException>(() =>
@@ -257,12 +257,12 @@ public class FindImplicitlyIncludedModsTests
             
         mockFileSystem.File.Delete(Path.Combine(dataDirectoryProvider.Path, ModB.FileName));
             
-        var list = new List<IModListingGetter>()
+        var list = new List<ILoadOrderListingGetter>()
         {
-            new ModListing(ModA, true),
-            new ModListing(ModC, false),
-            new ModListing(ModB, true),
-            new ModListing(ModD, false),
+            new LoadOrderListing(ModA, true),
+            new LoadOrderListing(ModC, false),
+            new LoadOrderListing(ModB, true),
+            new LoadOrderListing(ModD, false),
         };
             
         var found = sut.Find(list, skipMissingMods: true)

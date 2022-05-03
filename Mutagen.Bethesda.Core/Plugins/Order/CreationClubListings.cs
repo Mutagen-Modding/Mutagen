@@ -20,7 +20,7 @@ public static class CreationClubListings
             new GameDirectoryInjection(dataPath.Directory!.Value)).Path;
     }
 
-    public static IEnumerable<IModListingGetter> GetListings(GameCategory category, DirectoryPath dataPath)
+    public static IEnumerable<ILoadOrderListingGetter> GetLoadOrderListings(GameCategory category, DirectoryPath dataPath)
     {
         var gameCategoryInjection = new GameCategoryInjection(category);
         var dataDirectoryInjection = new DataDirectoryInjection(dataPath);
@@ -35,7 +35,7 @@ public static class CreationClubListings
             new CreationClubRawListingsReader()).Get();
     }
 
-    public static IEnumerable<IModListingGetter> ListingsFromPath(
+    public static IEnumerable<ILoadOrderListingGetter> LoadOrderListingsFromPath(
         FilePath cccFilePath,
         DirectoryPath dataPath,
         IFileSystem? fileSystem = null)
@@ -49,7 +49,7 @@ public static class CreationClubListings
             new CreationClubRawListingsReader()).Get();
     }
 
-    public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
+    public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrderListings(
         FilePath cccFilePath,
         DirectoryPath dataFolderPath,
         out IObservable<ErrorResponse> state,
@@ -69,11 +69,11 @@ public static class CreationClubListings
                 dataDir)).Get(out state, scheduler);
     }
 
-    public static IObservable<Unit> GetLoadOrderChanged(
+    public static IObservable<Unit> GetLoadOrderListingsChanged(
         FilePath cccFilePath,
         DirectoryPath dataFolderPath)
     {
-        return GetLiveLoadOrder(cccFilePath, dataFolderPath, out var _)
+        return GetLiveLoadOrderListings(cccFilePath, dataFolderPath, out var _)
             .QueryWhenChanged(q => Unit.Default);
     }
 }

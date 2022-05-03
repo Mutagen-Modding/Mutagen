@@ -22,7 +22,7 @@ public class CreationClubLiveLoadOrderProvider : ICreationClubLiveLoadOrderProvi
         FolderWatcher = folderWatcher;
     }
     
-    public IObservable<IChangeSet<IModListingGetter>> Get(
+    public IObservable<IChangeSet<ILoadOrderListingGetter>> Get(
         out IObservable<ErrorResponse> state,
         IScheduler? scheduler = null)
     {
@@ -32,13 +32,13 @@ public class CreationClubLiveLoadOrderProvider : ICreationClubLiveLoadOrderProvi
 
     public IObservable<Unit> Changed => InternalGet(out _).Unit();
 
-    private IObservable<IChangeSet<IModListingGetter>> InternalGet(out IObservable<ErrorResponse> state)
+    private IObservable<IChangeSet<ILoadOrderListingGetter>> InternalGet(out IObservable<ErrorResponse> state)
     {
         return ObservableCacheEx.And(
                 FileReader.Get(out state)
                     .AddKey(x => x.ModKey),
                 FolderWatcher.Get()
-                    .Transform<IModListingGetter, ModKey, ModKey>(x => new ModListing(x, true)))
+                    .Transform<ILoadOrderListingGetter, ModKey, ModKey>(x => new LoadOrderListing(x, true)))
             .RemoveKey();
     }
 }

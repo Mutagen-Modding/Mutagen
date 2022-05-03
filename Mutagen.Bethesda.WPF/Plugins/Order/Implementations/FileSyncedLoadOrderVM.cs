@@ -15,8 +15,8 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations;
 
 public class FileSyncedLoadOrderVM : ALoadOrderVM<FileSyncedLoadOrderListingVM>
 {
-    private readonly ObservableAsPropertyHelper<ErrorResponse> _State;
-    public ErrorResponse State => _State.Value;
+    private readonly ObservableAsPropertyHelper<ErrorResponse> _state;
+    public ErrorResponse State => _state.Value;
 
     public override IObservableCollection<FileSyncedLoadOrderListingVM> LoadOrder { get; }
 
@@ -30,7 +30,7 @@ public class FileSyncedLoadOrderVM : ALoadOrderVM<FileSyncedLoadOrderListingVM>
             .Transform(x => new FileSyncedLoadOrderListingVM(dataDirectoryContext, x))
             .RefCount();
 
-        _State = state
+        _state = state
             .ToGuiProperty(this, nameof(State), ErrorResponse.Fail("Uninitialized"));
             
         LoadOrder = loadOrder
@@ -51,7 +51,7 @@ public class FileSyncedLoadOrderVM : ALoadOrderVM<FileSyncedLoadOrderListingVM>
                     .QueryWhenChanged(x => x)
                     .Unit())
             .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
-            .Select(x => LoadOrder.Select(x => new ModListing(x.ModKey, x.Enabled, x.GhostSuffix)).ToArray())
+            .Select(x => LoadOrder.Select(x => new ModListing(x.ModKey, x.Enabled, x.ExistsOnDisk, x.GhostSuffix)).ToArray())
             .DistinctUntilChanged(new SequenceEqualityComparer())
             .Subscribe(x =>
             {

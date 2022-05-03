@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI;
 /// <summary>
 /// Parses a single line or filename into a ModListing object
 /// </summary>
-public interface IModListingParser
+public interface ILoadOrderListingParser
 {
     /// <summary>
     /// Attempts to convert from a string to a ModListing
@@ -14,7 +14,7 @@ public interface IModListingParser
     /// <param name="str">string to parse</param>
     /// <param name="listing">ModListing from the string, if successful</param>
     /// <returns>True if conversion successful</returns>
-    bool TryFromString(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModListing listing);
+    bool TryFromString(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out LoadOrderListing listing);
         
     /// <summary>
     /// Attempts to convert from a FileName to a ModListing
@@ -22,7 +22,7 @@ public interface IModListingParser
     /// <param name="fileName">FileName to parse</param>
     /// <param name="listing">ModListing from the FileName, if successful</param>
     /// <returns>True if conversion successful</returns>
-    bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out ModListing listing);
+    bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out LoadOrderListing listing);
         
     /// <summary>
     /// Converts from a string to a ModListing
@@ -30,7 +30,7 @@ public interface IModListingParser
     /// <param name="str">string to parse</param>
     /// <returns>ModListing from the string</returns>
     /// <exception cref="InvalidDataException">If string malformed</exception>
-    ModListing FromString(ReadOnlySpan<char> str);
+    LoadOrderListing FromString(ReadOnlySpan<char> str);
         
     /// <summary>
     /// Converts from a FileName to a ModListing
@@ -38,39 +38,39 @@ public interface IModListingParser
     /// <param name="fileName">FileName to parse</param>
     /// <returns>ModListing from the FileName</returns>
     /// <exception cref="InvalidDataException">If FileName malformed</exception>
-    ModListing FromFileName(FileName fileName);
+    LoadOrderListing FromFileName(FileName fileName);
 }
 
-public class ModListingParser : IModListingParser
+public class LoadOrderListingParser : ILoadOrderListingParser
 {
     private readonly IHasEnabledMarkersProvider _hasEnabledMarkers;
 
-    public ModListingParser(IHasEnabledMarkersProvider hasEnabledMarkers)
+    public LoadOrderListingParser(IHasEnabledMarkersProvider hasEnabledMarkers)
     {
         _hasEnabledMarkers = hasEnabledMarkers;
     }
         
     /// <inheritdoc />
-    public bool TryFromString(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModListing listing)
+    public bool TryFromString(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out LoadOrderListing listing)
     {
-        return ModListing.TryFromString(str, _hasEnabledMarkers.HasEnabledMarkers, out listing);
+        return LoadOrderListing.TryFromString(str, _hasEnabledMarkers.HasEnabledMarkers, out listing);
     }
 
     /// <inheritdoc />
-    public bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out ModListing listing)
+    public bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out LoadOrderListing listing)
     {
-        return ModListing.TryFromFileName(fileName, _hasEnabledMarkers.HasEnabledMarkers, out listing);
+        return LoadOrderListing.TryFromFileName(fileName, _hasEnabledMarkers.HasEnabledMarkers, out listing);
     }
 
     /// <inheritdoc />
-    public ModListing FromString(ReadOnlySpan<char> str)
+    public LoadOrderListing FromString(ReadOnlySpan<char> str)
     {
-        return ModListing.FromString(str, _hasEnabledMarkers.HasEnabledMarkers);
+        return LoadOrderListing.FromString(str, _hasEnabledMarkers.HasEnabledMarkers);
     }
 
     /// <inheritdoc />
-    public ModListing FromFileName(FileName name)
+    public LoadOrderListing FromFileName(FileName name)
     {
-        return ModListing.FromFileName(name, _hasEnabledMarkers.HasEnabledMarkers);
+        return LoadOrderListing.FromFileName(name, _hasEnabledMarkers.HasEnabledMarkers);
     }
 }

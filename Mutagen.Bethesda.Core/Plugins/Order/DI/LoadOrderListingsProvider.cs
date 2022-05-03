@@ -24,7 +24,7 @@ public class LoadOrderListingsProvider : ILoadOrderListingsProvider
     }
         
     /// <inheritdoc />
-    public IEnumerable<IModListingGetter> Get()
+    public IEnumerable<ILoadOrderListingGetter> Get()
     {
         var implicitListings = _implicitListingsProvider.Get().ToArray();
         return _orderListings.Order(
@@ -37,14 +37,14 @@ public class LoadOrderListingsProvider : ILoadOrderListingsProvider
 
 public class LoadOrderListingsInjection : ILoadOrderListingsProvider
 {
-    private IModListingGetter[] _listings;
+    private ILoadOrderListingGetter[] _listings;
         
-    public LoadOrderListingsInjection(IEnumerable<IModListingGetter> listings)
+    public LoadOrderListingsInjection(IEnumerable<ILoadOrderListingGetter> listings)
     {
         _listings = listings.ToArray();
     }
         
-    public LoadOrderListingsInjection(params IModListingGetter[] listings)
+    public LoadOrderListingsInjection(params ILoadOrderListingGetter[] listings)
     {
         _listings = listings;
     }
@@ -52,9 +52,9 @@ public class LoadOrderListingsInjection : ILoadOrderListingsProvider
     public LoadOrderListingsInjection(params ModKey[] keys)
     {
         _listings = keys
-            .Select<ModKey, IModListingGetter>(x => new ModListing(x, true))
+            .Select<ModKey, ILoadOrderListingGetter>(x => new LoadOrderListing(x, true))
             .ToArray();
     }
         
-    public IEnumerable<IModListingGetter> Get() => _listings;
+    public IEnumerable<ILoadOrderListingGetter> Get() => _listings;
 }

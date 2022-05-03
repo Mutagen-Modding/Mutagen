@@ -24,7 +24,7 @@ public class CreationClubLiveLoadOrderProviderTests
         sut.FileReader.Get(out _).Returns(x =>
         {
             x[0] = stateObs;
-            return Observable.Empty<IChangeSet<IModListingGetter>>();
+            return Observable.Empty<IChangeSet<ILoadOrderListingGetter>>();
         });
         sut.FolderWatcher.Get().Returns(
             Observable.Empty<IChangeSet<ModKey, ModKey>>());
@@ -45,12 +45,12 @@ public class CreationClubLiveLoadOrderProviderTests
         sut.FileReader.Get(out _).Returns(x =>
         {
             x[0] = stateObs;
-            return Observable.Return(new ChangeSet<IModListingGetter>(
-                new Change<IModListingGetter>[]
+            return Observable.Return(new ChangeSet<ILoadOrderListingGetter>(
+                new Change<ILoadOrderListingGetter>[]
                 {
-                    new Change<IModListingGetter>(
+                    new Change<ILoadOrderListingGetter>(
                         ListChangeReason.Add,
-                        new ModListing("ModA.esp", true))
+                        new LoadOrderListing("ModA.esp", true))
                 }));
         });
         sut.FolderWatcher.Get().Returns(
@@ -72,7 +72,7 @@ public class CreationClubLiveLoadOrderProviderTests
         sut.FileReader.Get(out _).Returns(x =>
         {
             x[0] = stateObs;
-            return Observable.Empty<IChangeSet<IModListingGetter>>();
+            return Observable.Empty<IChangeSet<ILoadOrderListingGetter>>();
         });
         sut.FolderWatcher.Get().Returns(
             Observable.Return(new ChangeSet<ModKey, ModKey>(
@@ -97,12 +97,12 @@ public class CreationClubLiveLoadOrderProviderTests
         sut.FileReader.Get(out _).Returns(x =>
         {
             x[0] = stateObs;
-            return Observable.Return(new ChangeSet<IModListingGetter>(
-                new Change<IModListingGetter>[]
+            return Observable.Return(new ChangeSet<ILoadOrderListingGetter>(
+                new Change<ILoadOrderListingGetter>[]
                 {
-                    new Change<IModListingGetter>(
+                    new Change<ILoadOrderListingGetter>(
                         ListChangeReason.Add,
-                        new ModListing("ModA.esp", true))
+                        new LoadOrderListing("ModA.esp", true))
                 }));
         });
         sut.FolderWatcher.Get().Returns(
@@ -117,7 +117,7 @@ public class CreationClubLiveLoadOrderProviderTests
         state.Subscribe();
         list.Count.Should().Be(1);
         list.Items.First().Should().Be(
-            new ModListing("ModA.esp", true));
+            new LoadOrderListing("ModA.esp", true));
         stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
     }
 
@@ -125,7 +125,7 @@ public class CreationClubLiveLoadOrderProviderTests
     public void FileAdded(CreationClubLiveLoadOrderProvider sut)
     {
         var stateObs = Substitute.For<IObservable<ErrorResponse>>();
-        var fileSubj = new Subject<IChangeSet<IModListingGetter>>();
+        var fileSubj = new Subject<IChangeSet<ILoadOrderListingGetter>>();
         sut.FileReader.Get(out _).Returns(x =>
         {
             x[0] = stateObs;
@@ -143,16 +143,16 @@ public class CreationClubLiveLoadOrderProviderTests
             .AsObservableList();
         state.Subscribe();
         list.Count.Should().Be(0);
-        fileSubj.OnNext(new ChangeSet<IModListingGetter>(
-            new Change<IModListingGetter>[]
+        fileSubj.OnNext(new ChangeSet<ILoadOrderListingGetter>(
+            new Change<ILoadOrderListingGetter>[]
             {
-                new Change<IModListingGetter>(
+                new Change<ILoadOrderListingGetter>(
                     ListChangeReason.Add,
-                    new ModListing("ModA.esp", true))
+                    new LoadOrderListing("ModA.esp", true))
             }));
         list.Count.Should().Be(1);
         list.Items.First().Should().Be(
-            new ModListing("ModA.esp", true));
+            new LoadOrderListing("ModA.esp", true));
         stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
     }
 
@@ -164,12 +164,12 @@ public class CreationClubLiveLoadOrderProviderTests
         {
             x[0] = stateObs;
             return
-                Observable.Return(new ChangeSet<IModListingGetter>(
-                    new Change<IModListingGetter>[]
+                Observable.Return(new ChangeSet<ILoadOrderListingGetter>(
+                    new Change<ILoadOrderListingGetter>[]
                     {
-                        new Change<IModListingGetter>(
+                        new Change<ILoadOrderListingGetter>(
                             ListChangeReason.Add,
-                            new ModListing("ModA.esp", true))
+                            new LoadOrderListing("ModA.esp", true))
                     }));
         });
             
@@ -190,7 +190,7 @@ public class CreationClubLiveLoadOrderProviderTests
             }));
         list.Count.Should().Be(1);
         list.Items.First().Should().Be(
-            new ModListing("ModA.esp", true));
+            new LoadOrderListing("ModA.esp", true));
         stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
     }
 
@@ -198,7 +198,7 @@ public class CreationClubLiveLoadOrderProviderTests
     public void FileRemoved(CreationClubLiveLoadOrderProvider sut)
     {
         var stateObs = Substitute.For<IObservable<ErrorResponse>>();
-        var fileSubj = new Subject<IChangeSet<IModListingGetter>>();
+        var fileSubj = new Subject<IChangeSet<ILoadOrderListingGetter>>();
         sut.FileReader.Get(out _).Returns(x =>
         {
             x[0] = stateObs;
@@ -214,22 +214,22 @@ public class CreationClubLiveLoadOrderProviderTests
         var list = sut.Get(out var state)
             .AsObservableList();
         state.Subscribe();
-        fileSubj.OnNext(new ChangeSet<IModListingGetter>(
-            new Change<IModListingGetter>[]
+        fileSubj.OnNext(new ChangeSet<ILoadOrderListingGetter>(
+            new Change<ILoadOrderListingGetter>[]
             {
-                new Change<IModListingGetter>(
+                new Change<ILoadOrderListingGetter>(
                     ListChangeReason.Add,
-                    new ModListing("ModA.esp", true))
+                    new LoadOrderListing("ModA.esp", true))
             }));
         list.Count.Should().Be(1);
         list.Items.First().Should().Be(
-            new ModListing("ModA.esp", true));
-        fileSubj.OnNext(new ChangeSet<IModListingGetter>(
-            new Change<IModListingGetter>[]
+            new LoadOrderListing("ModA.esp", true));
+        fileSubj.OnNext(new ChangeSet<ILoadOrderListingGetter>(
+            new Change<ILoadOrderListingGetter>[]
             {
-                new Change<IModListingGetter>(
+                new Change<ILoadOrderListingGetter>(
                     ListChangeReason.Remove,
-                    new ModListing("ModA.esp", true),
+                    new LoadOrderListing("ModA.esp", true),
                     0)
             }));
         list.Count.Should().Be(0);
@@ -244,12 +244,12 @@ public class CreationClubLiveLoadOrderProviderTests
         {
             x[0] = stateObs;
             return
-                Observable.Return(new ChangeSet<IModListingGetter>(
-                    new Change<IModListingGetter>[]
+                Observable.Return(new ChangeSet<ILoadOrderListingGetter>(
+                    new Change<ILoadOrderListingGetter>[]
                     {
-                        new Change<IModListingGetter>(
+                        new Change<ILoadOrderListingGetter>(
                             ListChangeReason.Add,
-                            new ModListing("ModA.esp", true))
+                            new LoadOrderListing("ModA.esp", true))
                     }));
         });
         var folderSubj = new Subject<IChangeSet<ModKey, ModKey>>();
@@ -267,7 +267,7 @@ public class CreationClubLiveLoadOrderProviderTests
             }));
         list.Count.Should().Be(1);
         list.Items.First().Should().Be(
-            new ModListing("ModA.esp", true));
+            new LoadOrderListing("ModA.esp", true));
         folderSubj.OnNext(new ChangeSet<ModKey, ModKey>(
             new Change<ModKey, ModKey>[]
             {

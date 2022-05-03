@@ -19,6 +19,7 @@ public class MutagenBaseCustomization : ICustomization
             makeModExist));
         fixture.Customizations.Add(new ModPathParameterBuilder(makeModExist));
         fixture.Customizations.Add(new ModPathMultipleBuilder());
+        fixture.Customizations.Add(new LoadOrderListingBuilder());
         fixture.Customizations.Add(new ModListingBuilder());
         fixture.Customizations.Add(new ModPathBuilder());
         fixture.Customizations.Add(new OrderBuilder());

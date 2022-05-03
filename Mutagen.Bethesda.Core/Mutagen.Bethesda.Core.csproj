@@ -141,6 +141,11 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Extensions\ListsModsMixIn.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Installs\DI\GameLocator.cs" />
     <Compile Include="Installs\GameLocations.cs" />
     <Compile Include="Installs\GameMetaData.cs" />
@@ -385,10 +390,10 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Plugins\Order\Internals\TypedLoadOrderAccess.cs" />
-    <Compile Include="Plugins\Order\LoadOrderMixIn.cs" />
     <Compile Include="Plugins\Binary\Translations\BooleanBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ByteArrayBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
+    <Compile Include="Plugins\Order\LoadOrderListing.cs" />
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
     <Compile Include="Plugins\Records\IFormKeyGetter.cs" />

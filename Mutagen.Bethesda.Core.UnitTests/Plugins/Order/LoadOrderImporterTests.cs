@@ -44,7 +44,7 @@ public class LoadOrderImporterTests
         }
 
         sut.LoadOrderListingsProvider.Get()
-            .Returns(modPaths.Select(x => new ModListing(x.ModKey, true)));
+            .Returns(modPaths.Select(x => new LoadOrderListing(x.ModKey, true)));
             
         var lo = sut.Import();
             

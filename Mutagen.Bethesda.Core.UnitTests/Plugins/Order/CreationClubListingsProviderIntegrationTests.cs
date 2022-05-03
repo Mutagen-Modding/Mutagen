@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO.Abstractions.TestingHelpers;
 using FluentAssertions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
@@ -55,8 +53,8 @@ ModB.esp"},
                 new CreationClubListingsPathInjection(cccPath),
                 new CreationClubRawListingsReader())
             .Get().Should().Equal(
-                new ModListing("ModA.esp", true),
-                new ModListing("ModB.esp", true));
+                new ModListing("ModA.esp", true, true),
+                new ModListing("ModB.esp", true, true));
     }
 
     [Fact]
@@ -77,6 +75,6 @@ ModB.esp"},
                 new CreationClubListingsPathInjection(cccPath),
                 new CreationClubRawListingsReader())
             .Get().Should().Equal(
-                new ModListing("ModA.esp", true));   
+                new ModListing("ModA.esp", true, true));   
     }
 }

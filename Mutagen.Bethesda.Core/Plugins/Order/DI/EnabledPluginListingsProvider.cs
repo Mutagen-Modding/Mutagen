@@ -2,7 +2,7 @@
 
 public interface IEnabledPluginListingsProvider
 {
-    IEnumerable<IModListingGetter> Get();
+    IEnumerable<ILoadOrderListingGetter> Get();
 }
 
 public class EnabledPluginListingsProvider : IEnabledPluginListingsProvider, IListingsProvider
@@ -18,7 +18,7 @@ public class EnabledPluginListingsProvider : IEnabledPluginListingsProvider, ILi
         PluginListingsPath = pluginListingsPath;
     }
         
-    public IEnumerable<IModListingGetter> Get()
+    public IEnumerable<ILoadOrderListingGetter> Get()
     {
         return Reader.Read(PluginListingsPath.Path);
     }

@@ -109,10 +109,10 @@ public class PluginLiveLoadOrderProviderTests
         [Frozen]MockFileSystemWatcher modified,
         [Frozen]MockFileSystem fs)
     {
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.MasterModKey, true),
-            new ModListing(TestConstants.MasterModKey2, false),
+            new LoadOrderListing(TestConstants.MasterModKey, true),
+            new LoadOrderListing(TestConstants.MasterModKey2, false),
         };
         var listingsProv = Substitute.For<IPluginListingsProvider>();
         listingsProv.Get().Returns(listings);
@@ -124,11 +124,11 @@ public class PluginLiveLoadOrderProviderTests
             .AsObservableList();
         list.Items.Should().Equal(listings);
             
-        var listings2 = new ModListing[]
+        var listings2 = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.MasterModKey, true),
-            new ModListing(TestConstants.MasterModKey2, false),
-            new ModListing(TestConstants.MasterModKey3, true),
+            new LoadOrderListing(TestConstants.MasterModKey, true),
+            new LoadOrderListing(TestConstants.MasterModKey2, false),
+            new LoadOrderListing(TestConstants.MasterModKey3, true),
         };
         listingsProv.Get().Returns(listings2);
         modified.MarkChanged(pluginPath);
@@ -167,10 +167,10 @@ public class PluginLiveLoadOrderProviderTests
         [Frozen]MockFileSystem fs)
     {
         TestScheduler scheduler = new();
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.MasterModKey, true),
-            new ModListing(TestConstants.MasterModKey2, false),
+            new LoadOrderListing(TestConstants.MasterModKey, true),
+            new LoadOrderListing(TestConstants.MasterModKey2, false),
         };
         var listingsProv = Substitute.For<IPluginListingsProvider>();
         listingsProv.Get().Returns(

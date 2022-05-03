@@ -9,15 +9,15 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order;
 
 public class ModListingParserTests
 {
-    private IModListingParser GetParser(bool enabledMarkers)
+    private ILoadOrderListingParser GetParser(bool enabledMarkers)
     {
-        return new ModListingParser(
+        return new LoadOrderListingParser(
             new HasEnabledMarkersInjection(enabledMarkers));
     }
 
-    private ModListing Get(IModListingParser parser, ParseType type, string str)
+    private LoadOrderListing Get(ILoadOrderListingParser parser, ParseType type, string str)
     {
-        ModListing? listing;
+        LoadOrderListing? listing;
         switch (type)
         {
             case ParseType.String:
@@ -108,24 +108,24 @@ public class ModListingParserTests
     [Fact]
     public void LoadOrderListingTests()
     {
-        var listing1 = new ModListing(TestConstants.PluginModKey, enabled: true);
-        var listing1Eq = new ModListing
+        var listing1 = new LoadOrderListing(TestConstants.PluginModKey, enabled: true);
+        var listing1Eq = new LoadOrderListing
         {
             ModKey = TestConstants.PluginModKey,
             Enabled = true,
         };
-        var listing1Disabled = new ModListing
+        var listing1Disabled = new LoadOrderListing
         {
             ModKey = TestConstants.PluginModKey,
             Enabled = false,
         };
-        var listing2 = new ModListing(TestConstants.PluginModKey2, enabled: true);
-        var listing2Eq = new ModListing()
+        var listing2 = new LoadOrderListing(TestConstants.PluginModKey2, enabled: true);
+        var listing2Eq = new LoadOrderListing()
         {
             ModKey = TestConstants.PluginModKey2,
             Enabled = true
         };
-        var listing2Disabled = new ModListing()
+        var listing2Disabled = new LoadOrderListing()
         {
             ModKey = TestConstants.PluginModKey2,
             Enabled = false

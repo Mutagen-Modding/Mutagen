@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using AutoFixture.Kernel;
+﻿using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 
@@ -23,9 +21,9 @@ public class ModKeyBuilder : ISpecimenBuilder
                 {
                     return new object[]
                     {
-                        TestConstants.MasterModKey,
-                        TestConstants.PluginModKey,
-                        TestConstants.PluginModKey2,
+                        GetRandomModKey(ModType.Master),
+                        GetRandomModKey(ModType.LightMaster),
+                        GetRandomModKey(ModType.Plugin),
                     };
                 }
             }

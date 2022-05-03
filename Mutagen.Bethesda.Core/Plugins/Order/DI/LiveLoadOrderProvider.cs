@@ -31,16 +31,16 @@ public class LiveLoadOrderProvider : ILiveLoadOrderProvider
         Timings = timings;
     }
     
-    public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state, IScheduler? scheduler = null)
+    public IObservable<IChangeSet<ILoadOrderListingGetter>> Get(out IObservable<ErrorResponse> state, IScheduler? scheduler = null)
     {
         var stateSubj = new BehaviorSubject<Exception?>(null);
         state = stateSubj
             .DistinctUntilChanged()
             .Select(x => x == null ? ErrorResponse.Success : ErrorResponse.Fail(x));
-        return Observable.Create<IChangeSet<IModListingGetter>>((observer) =>
+        return Observable.Create<IChangeSet<ILoadOrderListingGetter>>((observer) =>
             {
                 CompositeDisposable disp = new();
-                SourceList<IModListingGetter> list = new();
+                SourceList<ILoadOrderListingGetter> list = new();
                 var ret = PluginLive.Changed
                     .Merge(CccLive.Changed)
                     .StartWith(Unit.Default);

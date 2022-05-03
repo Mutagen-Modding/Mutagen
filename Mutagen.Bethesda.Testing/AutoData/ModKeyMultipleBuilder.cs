@@ -1,5 +1,4 @@
-﻿using System;
-using AutoFixture.Kernel;
+﻿using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Testing.AutoData;

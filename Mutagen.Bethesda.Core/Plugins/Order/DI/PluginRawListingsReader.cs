@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 public interface IPluginRawListingsReader
 {
-    IEnumerable<IModListingGetter> Read(FilePath pluginPath);
+    IEnumerable<ILoadOrderListingGetter> Read(FilePath pluginPath);
 }
 
 public class PluginRawListingsReader : IPluginRawListingsReader
@@ -21,7 +21,7 @@ public class PluginRawListingsReader : IPluginRawListingsReader
         Parser = parser;
     }
         
-    public IEnumerable<IModListingGetter> Read(FilePath pluginPath)
+    public IEnumerable<ILoadOrderListingGetter> Read(FilePath pluginPath)
     {
         if (!_fileSystem.File.Exists(pluginPath))
         {

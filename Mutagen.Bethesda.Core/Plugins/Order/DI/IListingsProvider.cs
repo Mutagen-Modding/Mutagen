@@ -8,5 +8,5 @@ public interface IListingsProvider
     /// <returns>Enumerable of ModKeys representing a load order</returns>
     /// <exception cref="InvalidDataException">Line in plugin file is unexpected</exception>
     /// <exception cref="FileNotFoundException">If some required file is missing</exception>
-    public IEnumerable<IModListingGetter> Get();
+    public IEnumerable<ILoadOrderListingGetter> Get();
 }

@@ -14,7 +14,7 @@ public static class LoadOrderExt
     /// <param name="loadOrder">Listings to filter</param>
     /// <returns>Listings that are enabled</returns>
     public static IEnumerable<TListing> OnlyEnabled<TListing>(this IEnumerable<TListing> loadOrder)
-        where TListing : IModListingGetter
+        where TListing : ILoadOrderListingGetter
     {
         return loadOrder.Where(x => x.Enabled);
     }
@@ -25,11 +25,11 @@ public static class LoadOrderExt
     /// <param name="loadOrder">Listings to filter</param>
     /// <returns>Listings that have mods that exist</returns>
     public static IEnumerable<TListing> OnlyExisting<TListing, TMod>(this IEnumerable<TListing> loadOrder)
-        where TListing : IModListingGetter<TMod>
+        where TListing : IModListingGetter
         where TMod : class, IModGetter
     {
         return loadOrder
-            .Where(x => x.Mod != null);
+            .Where(x => x.ExistsOnDisk);
     }
 
     /// <summary>
@@ -38,10 +38,10 @@ public static class LoadOrderExt
     /// <param name="loadOrder">Listings to filter</param>
     /// <returns>Listings that are enabled and have mods that exist</returns>
     public static IEnumerable<TListing> OnlyEnabledAndExisting<TListing>(this IEnumerable<TListing> loadOrder)
-        where TListing : IModListingGetter<IModGetter>
+        where TListing : IModListingGetter
     {
         return loadOrder
-            .Where(x => x.Enabled && x.Mod != null);
+            .Where(x => x.Enabled && x.ExistsOnDisk);
     }
 
     /// <summary>
@@ -70,9 +70,21 @@ public static class LoadOrderExt
     /// <param name="loadOrder">ModKeys to convert</param>
     /// <param name="markEnabled">Whether to mark the listings as enabled</param>
     /// <returns>ModKeys as LoadOrderListing objects</returns>
-    public static IEnumerable<IModListingGetter> AsListings(this IEnumerable<ModKey> loadOrder, bool markEnabled = true)
+    public static IEnumerable<ILoadOrderListingGetter> ToLoadOrderListings(this IEnumerable<ModKey> loadOrder, bool markEnabled = true)
     {
-        return loadOrder.Select(x => new ModListing(x, markEnabled));
+        return loadOrder.Select(x => new LoadOrderListing(x, markEnabled));
+    }
+
+    /// <summary>
+    /// Converts ModKeys to LoadOrderListing objects
+    /// </summary>
+    /// <param name="loadOrder">ModKeys to convert</param>
+    /// <param name="existsOnDisk">Whether to mark the ModListings as existing on disk</param>
+    /// <param name="markEnabled">Whether to mark the listings as enabled</param>
+    /// <returns>ModKeys as LoadOrderListing objects</returns>
+    public static IEnumerable<IModListingGetter> ToModListings(this IEnumerable<ModKey> loadOrder, bool existsOnDisk, bool markEnabled = true)
+    {
+        return loadOrder.Select(x => new ModListing(x, enabled: markEnabled, existsOnDisk: existsOnDisk));
     }
 
     public static bool TryGetIndex<TListing>(this ILoadOrderGetter<TListing> loadOrder, int index, [MaybeNullWhen(false)] out TListing listing)

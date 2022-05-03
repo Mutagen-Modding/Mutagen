@@ -8,7 +8,7 @@ public static class FlattenedMod_Tests
 {
     public static async Task Oblivion_FlattenMod(TestingSettings testingSettings)
     {
-        List<ModListing> loadOrderListing = new List<ModListing>()
+        List<LoadOrderListing> loadOrderListing = new List<LoadOrderListing>()
         {
             new ModKey("Oblivion", ModType.Master),
             new ModKey("Knights", ModType.Plugin)

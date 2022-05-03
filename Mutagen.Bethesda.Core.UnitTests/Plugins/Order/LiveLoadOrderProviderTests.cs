@@ -35,10 +35,10 @@ public class LiveLoadOrderProviderTests
         IScheduler scheduler,
         LiveLoadOrderProvider sut)
     {
-        var listings = new ModListing[]
+        var listings = new LoadOrderListing[]
         {
-            new ModListing(TestConstants.MasterModKey, true),
-            new ModListing(TestConstants.MasterModKey2, false),
+            new LoadOrderListing(TestConstants.MasterModKey, true),
+            new LoadOrderListing(TestConstants.MasterModKey2, false),
         };
         sut.ListingsProvider.Get().Returns(listings);
         sut.PluginLive.Changed.Returns(Observable.Empty<Unit>());
@@ -97,9 +97,9 @@ public class LiveLoadOrderProviderTests
         sut.PluginLive.Changed.Returns(pluginSubj);
         sut.CccLive.Changed.Returns(Observable.Empty<Unit>());
         sut.ListingsProvider.Get().Returns(
-            _ => Enumerable.Empty<IModListingGetter>(),
+            _ => Enumerable.Empty<ILoadOrderListingGetter>(),
             _ => throw new NotImplementedException(),
-            _ => Enumerable.Empty<IModListingGetter>());
+            _ => Enumerable.Empty<ILoadOrderListingGetter>());
             
         sut.Get(out var state, scheduler)
             .AsObservableList();
@@ -129,7 +129,7 @@ public class LiveLoadOrderProviderTests
         sut.ListingsProvider.Get().Returns(
             _ => throw new NotImplementedException(),
             _ => throw new NotImplementedException(),
-            _ => Enumerable.Empty<IModListingGetter>());
+            _ => Enumerable.Empty<ILoadOrderListingGetter>());
             
         sut.Get(out var state, scheduler)
             .AsObservableList();

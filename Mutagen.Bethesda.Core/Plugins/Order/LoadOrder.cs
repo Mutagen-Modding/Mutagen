@@ -21,7 +21,6 @@ public static class LoadOrder
 {
     private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
     private static OrderListings Orderer = new();
-    private static readonly TimestampAligner TimestampAligner = new(IFileSystemExt.DefaultFilesystem);
         
     #region Timestamps
 
@@ -41,8 +40,8 @@ public static class LoadOrder
     /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
     /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
     /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-    public static IEnumerable<IModListingGetter> AlignToTimestamps(
-        IEnumerable<IModListingGetter> incomingLoadOrder,
+    public static IEnumerable<ILoadOrderListingGetter> AlignToTimestamps(
+        IEnumerable<ILoadOrderListingGetter> incomingLoadOrder,
         DirectoryPath dataPath,
         bool throwOnMissingMods = true)
     {
@@ -96,7 +95,7 @@ public static class LoadOrder
     /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
     /// <exception cref="FileNotFoundException">If plugin file not located</exception>
     /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-    public static IEnumerable<IModListingGetter> GetListings(
+    public static IEnumerable<ILoadOrderListingGetter> GetLoadOrderListings(
         GameRelease game,
         DirectoryPath dataPath,
         bool throwOnMissingMods = true,
@@ -133,7 +132,7 @@ public static class LoadOrder
             .Get();
     }
 
-    public static IEnumerable<IModListingGetter> GetListings(
+    public static IEnumerable<ILoadOrderListingGetter> GetLoadOrderListings(
         GameRelease game,
         FilePath pluginsFilePath,
         FilePath? creationClubFilePath,
@@ -181,7 +180,7 @@ public static class LoadOrder
         return Orderer.Order(implicitListings, pluginsListings, creationClubListings, selector);
     }
 
-    public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
+    public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrderListings(
         GameRelease game,
         DirectoryPath dataFolderPath,
         out IObservable<ErrorResponse> state,
@@ -197,7 +196,7 @@ public static class LoadOrder
             new CreationClubEnabledProvider(
                 gameCategoryInjection),
             new GameDirectoryInjection(dataFolderPath.Directory!.Value));
-        return GetLiveLoadOrder(
+        return GetLiveLoadOrderListings(
             game,
             pluginPath.Path,
             dataFolderPath,
@@ -207,7 +206,7 @@ public static class LoadOrder
             scheduler: scheduler);
     }
 
-    public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
+    public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrderListings(
         IObservable<GameRelease> game,
         IObservable<DirectoryPath> dataFolderPath,
         out IObservable<ErrorResponse> state,
@@ -219,7 +218,7 @@ public static class LoadOrder
                 dataFolderPath,
                 (gameVal, dataFolderVal) =>
                 {
-                    var lo = GetLiveLoadOrder(
+                    var lo = GetLiveLoadOrderListings(
                         game: gameVal,
                         dataFolderPath: dataFolderVal,
                         loadOrderFilePath: PluginListings.GetListingsPath(gameVal),
@@ -237,7 +236,7 @@ public static class LoadOrder
             .Switch();
     }
 
-    public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
+    public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrderListings(
         GameRelease game,
         FilePath loadOrderFilePath,
         DirectoryPath dataFolderPath,
@@ -290,7 +289,7 @@ public static class LoadOrder
             .Get(out state, scheduler);
     }
 
-    public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
+    public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrderListings(
         IObservable<GameRelease> game,
         IObservable<FilePath> loadOrderFilePath,
         IObservable<DirectoryPath> dataFolderPath,
@@ -306,7 +305,7 @@ public static class LoadOrder
                 cccLoadOrderFilePath ?? Observable.Return(default(FilePath?)),
                 (gameVal, dataFolderVal, loadOrderFilePathVal, cccVal) =>
                 {
-                    var lo = GetLiveLoadOrder(
+                    var lo = GetLiveLoadOrderListings(
                         game: gameVal,
                         dataFolderPath: dataFolderVal,
                         loadOrderFilePath: loadOrderFilePathVal,
@@ -335,7 +334,7 @@ public static class LoadOrder
     /// <param name="fileSystem">Filesystem to use</param>
     public static ILoadOrder<IModListing<TMod>> Import<TMod>(
         DirectoryPath dataFolder,
-        IEnumerable<IModListingGetter> loadOrder,
+        IEnumerable<ILoadOrderListingGetter> loadOrder,
         GameRelease gameRelease,
         IFileSystem? fileSystem = null)
         where TMod : class, IModGetter
@@ -372,7 +371,7 @@ public static class LoadOrder
                 fileSystem,
                 new DataDirectoryInjection(dataFolder),
                 new LoadOrderListingsInjection(
-                    loadOrder.Select(x => new ModListing(x, true))),
+                    loadOrder.Select(x => new LoadOrderListing(x, true))),
                 new ModImporter<TMod>(
                     fileSystem,
                     new GameReleaseInjection(gameRelease)))
@@ -398,7 +397,7 @@ public static class LoadOrder
                 fileSystem,
                 new DataDirectoryInjection(dataFolder),
                 new LoadOrderListingsInjection(
-                    loadOrder.Select(x => new ModListing(x, true))),
+                    loadOrder.Select(x => new LoadOrderListing(x, true))),
                 new ModImporterWrapper<TMod>(factory))
             .Import();
     }
@@ -412,7 +411,7 @@ public static class LoadOrder
     /// <param name="fileSystem">Filesystem to use</param>
     public static ILoadOrder<IModListing<TMod>> Import<TMod>(
         DirectoryPath dataFolder,
-        IEnumerable<IModListingGetter> loadOrder,
+        IEnumerable<ILoadOrderListingGetter> loadOrder,
         Func<ModPath, TMod> factory,
         IFileSystem? fileSystem = null)
         where TMod : class, IModGetter
@@ -429,7 +428,7 @@ public static class LoadOrder
     public static void Write(
         FilePath path, 
         GameRelease release, 
-        IEnumerable<IModListingGetter> loadOrder,
+        IEnumerable<ILoadOrderListingGetter> loadOrder,
         bool removeImplicitMods = true,
         IFileSystem? fileSystem = null)
     {
@@ -450,7 +449,7 @@ public static class LoadOrder
         IFileSystem fs)
     {
         var pluginListingParser = new PluginListingsParser(
-            new ModListingParser(
+            new LoadOrderListingParser(
                 new HasEnabledMarkersProvider(gameContext)));
         var provider = new PluginListingsProvider(
             gameContext,

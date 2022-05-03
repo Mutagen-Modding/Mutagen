@@ -53,9 +53,9 @@ public class TimestampAlignerTests
         return new MockFileSystem(dict);
     }
 
-    private IEnumerable<IModListingGetter> GetListings(IEnumerable<(ModKey ModKey, DateTime Write)> items)
+    private IEnumerable<ILoadOrderListingGetter> GetListings(IEnumerable<(ModKey ModKey, DateTime Write)> items)
     {
-        return items.Select(i => new ModListing(i.ModKey, true));
+        return items.Select(i => new LoadOrderListing(i.ModKey, true));
     }
         
     [Fact]
@@ -78,10 +78,10 @@ public class TimestampAlignerTests
         var results = new TimestampAligner(fs)
             .AlignToTimestamps(GetListings(items), DataFolder)
             .ToList();
-        Assert.Equal(new ModListing(TestConstants.PluginModKey, true), results[0]);
-        Assert.Equal(new ModListing(TestConstants.PluginModKey2, true), results[1]);
-        Assert.Equal(new ModListing(TestConstants.PluginModKey3, true), results[2]);
-        Assert.Equal(new ModListing(TestConstants.PluginModKey4, true), results[3]);
+        Assert.Equal(new LoadOrderListing(TestConstants.PluginModKey, true), results[0]);
+        Assert.Equal(new LoadOrderListing(TestConstants.PluginModKey2, true), results[1]);
+        Assert.Equal(new LoadOrderListing(TestConstants.PluginModKey3, true), results[2]);
+        Assert.Equal(new LoadOrderListing(TestConstants.PluginModKey4, true), results[3]);
     }
 
     [Fact]
@@ -103,9 +103,9 @@ public class TimestampAlignerTests
         var results = new TimestampAligner(fs)
             .AlignToTimestamps(GetListings(items), DataFolder)
             .ToList();
-        Assert.Equal(new ModListing(TestConstants.PluginModKey, true), results[0]);
-        Assert.Equal(new ModListing(TestConstants.PluginModKey3, true), results[1]);
-        Assert.Equal(new ModListing(TestConstants.PluginModKey4, true), results[2]);
-        Assert.Equal(new ModListing(TestConstants.PluginModKey2, true), results[3]);
+        Assert.Equal(new LoadOrderListing(TestConstants.PluginModKey, true), results[0]);
+        Assert.Equal(new LoadOrderListing(TestConstants.PluginModKey3, true), results[1]);
+        Assert.Equal(new LoadOrderListing(TestConstants.PluginModKey4, true), results[2]);
+        Assert.Equal(new LoadOrderListing(TestConstants.PluginModKey2, true), results[3]);
     }
 }

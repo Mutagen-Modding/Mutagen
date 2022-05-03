@@ -28,7 +28,7 @@ public class CreationClubListingsIntegrationTests
     {
         var missingPath = Path.Combine(dataDirectoryProvider.Path, "Skyrim.ccc");
         Action a = () =>
-            CreationClubListings.ListingsFromPath(
+            CreationClubListings.LoadOrderListingsFromPath(
                 cccFilePath: missingPath,
                 dataPath: default,
                 fileSystem: fs);
@@ -48,13 +48,13 @@ public class CreationClubListingsIntegrationTests
                 existingModPath.ModKey.FileName,
                 TestConstants.LightMasterModKey2.FileName,
             });
-        var results = CreationClubListings.ListingsFromPath(
+        var results = CreationClubListings.LoadOrderListingsFromPath(
                 cccFilePath: cccPath.Path!.Value,
                 dataPath: dataDir.Path,
                 fileSystem: fs)
             .ToList();
         results.Should().HaveCount(1);
-        results[0].Should().Be(new ModListing(existingModPath.ModKey, enabled: true));
+        results[0].Should().Be(new ModListing(existingModPath.ModKey, enabled: true, existsOnDisk: true));
     }
 
     [Theory, MutagenAutoData]
@@ -69,7 +69,7 @@ public class CreationClubListingsIntegrationTests
         fs.File.WriteAllText(ccPath, @$"{TestConstants.PluginModKey.FileName}
 {TestConstants.PluginModKey3.FileName}");
         ErrorResponse err = ErrorResponse.Failure;
-        var live = CreationClubListings.GetLiveLoadOrder(ccPath, dataFolder.Path, out var state,
+        var live = CreationClubListings.GetLiveLoadOrderListings(ccPath, dataFolder.Path, out var state,
             fileSystem: fs);
         {
             var list = live.AsObservableList();

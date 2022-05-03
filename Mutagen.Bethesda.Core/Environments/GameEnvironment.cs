@@ -159,7 +159,7 @@ public class GameEnvironmentState :
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
-                new ModListingParser(
+                new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
@@ -272,7 +272,7 @@ public class GameEnvironmentState<TMod> :
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
-                new ModListingParser(
+                new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
@@ -394,7 +394,7 @@ public class GameEnvironmentState<TModSetter, TModGetter> :
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
-                new ModListingParser(
+                new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);

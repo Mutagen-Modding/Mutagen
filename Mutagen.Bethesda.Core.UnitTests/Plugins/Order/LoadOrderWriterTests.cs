@@ -34,11 +34,11 @@ public class LoadOrderWriterTests
                 implicitMods)
             .Write(
                 path,
-                new ModListing[]
+                new LoadOrderListing[]
                 {
-                    new ModListing(TestConstants.PluginModKey, false),
-                    new ModListing(TestConstants.PluginModKey2, true),
-                    new ModListing(TestConstants.PluginModKey3, false),
+                    new LoadOrderListing(TestConstants.PluginModKey, false),
+                    new LoadOrderListing(TestConstants.PluginModKey2, true),
+                    new LoadOrderListing(TestConstants.PluginModKey3, false),
                 });
         var lines = fs.File.ReadAllLines(path).ToList();
         Assert.Single(lines);
@@ -61,11 +61,11 @@ public class LoadOrderWriterTests
                 implicitMods)
             .Write(
                 path,
-                new ModListing[]
+                new LoadOrderListing[]
                 {
-                    new ModListing(TestConstants.PluginModKey, false),
-                    new ModListing(TestConstants.PluginModKey2, true),
-                    new ModListing(TestConstants.PluginModKey3, false),
+                    new LoadOrderListing(TestConstants.PluginModKey, false),
+                    new LoadOrderListing(TestConstants.PluginModKey2, true),
+                    new LoadOrderListing(TestConstants.PluginModKey3, false),
                 });
         var lines = fs.File.ReadAllLines(path).ToList();
         Assert.Equal(3, lines.Count);
@@ -90,11 +90,11 @@ public class LoadOrderWriterTests
                 implicitMods)
             .Write(
                 path,
-                new ModListing[]
+                new LoadOrderListing[]
                 {
-                    new ModListing(TestConstants.Skyrim, true),
-                    new ModListing(TestConstants.PluginModKey, true),
-                    new ModListing(TestConstants.PluginModKey2, false),
+                    new LoadOrderListing(TestConstants.Skyrim, true),
+                    new LoadOrderListing(TestConstants.PluginModKey, true),
+                    new LoadOrderListing(TestConstants.PluginModKey2, false),
                 },
                 removeImplicitMods: true);
         var lines = fs.File.ReadAllLines(path).ToList();
@@ -119,11 +119,11 @@ public class LoadOrderWriterTests
                 implicitMods)
             .Write(
                 path,
-                new ModListing[]
+                new LoadOrderListing[]
                 {
-                    new ModListing(TestConstants.Skyrim, true),
-                    new ModListing(TestConstants.PluginModKey, true),
-                    new ModListing(TestConstants.PluginModKey2, false),
+                    new LoadOrderListing(TestConstants.Skyrim, true),
+                    new LoadOrderListing(TestConstants.PluginModKey, true),
+                    new LoadOrderListing(TestConstants.PluginModKey2, false),
                 },
                 removeImplicitMods: false);
         var lines = fs.File.ReadAllLines(path).ToList();

@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using System.Collections.Immutable;
 using Mutagen.Bethesda.Installs.DI;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
@@ -21,14 +22,17 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
     internal IPluginListingsPathProvider? PluginListingsPathProvider { get; init; }
     internal ICreationClubListingsPathProvider? CccListingsPathProvider { get; init; }
 
-    private ImmutableList<Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>>> LoadOrderProcessors { get; init; }
+    private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
+
+    private ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>> ModListingProcessors { get; init; }
 
     private ImmutableList<TMod> MutableMods { get; init; }
 
     private GameEnvironmentBuilder(GameRelease release)
     {
         Release = new GameReleaseInjection(release);
-        LoadOrderProcessors = ImmutableList<Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>>>.Empty;
+        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
+        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>>.Empty;
         MutableMods = ImmutableList<TMod>.Empty;
     }
 
@@ -44,7 +48,8 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
         ListingsProvider = listingsProvider;
         PluginListingsPathProvider = pluginListingsPathProvider;
         CccListingsPathProvider = cccListingsPathProvider;
-        LoadOrderProcessors = ImmutableList<Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>>>.Empty;
+        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
+        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>>.Empty;
         MutableMods = ImmutableList<TMod>.Empty;
     }
 
@@ -54,13 +59,43 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
     }
 
     /// <summary>
-    /// Exposes the load order for transformation by the user
+    /// Exposes the load order for transformation by the user before any mods are read from disk
     /// </summary>
     /// <param name="transformer">Transformation lambda to process the incoming enumerable and return a new desired one</param>
     /// <returns>New builder with the new rules</returns>
-    public GameEnvironmentBuilder<TMod, TModGetter> TransformLoadOrder(Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>> transformer)
+    public GameEnvironmentBuilder<TMod, TModGetter> TransformLoadOrderListings(Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>> transformer)
     {
-        return this with { LoadOrderProcessors = LoadOrderProcessors.Add(transformer) };
+        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add(transformer) };
+    }
+
+    /// <summary>
+    /// Sets the load order to the given modkeys, with all of them enabled
+    /// </summary>
+    /// <param name="modKeys">ModKeys to set the load order to</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> WithLoadOrder(params ModKey[] modKeys)
+    {
+        return WithLoadOrder(modKeys.Select(x => (ILoadOrderListingGetter)new LoadOrderListing(x, enabled: true)).ToArray());
+    }
+
+    /// <summary>
+    /// Sets the load order to the given listings
+    /// </summary>
+    /// <param name="listings">Listings to set the load order to</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> WithLoadOrder(params ILoadOrderListingGetter[] listings)
+    {
+        return TransformLoadOrderListings(_ => listings);
+    }
+
+    /// <summary>
+    /// Exposes the load order for transformation by the user with mod objects loaded and accessible
+    /// </summary>
+    /// <param name="transformer">Transformation lambda to process the incoming enumerable and return a new desired one</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> TransformModListings(Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>> transformer)
+    {
+        return this with { ModListingProcessors = ModListingProcessors.Add(transformer) };
     }
 
     /// <summary>
@@ -77,10 +112,10 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
             case OutputModTrimming.NoTrimming:
                 break;
             case OutputModTrimming.Self:
-                ret = ret.TransformLoadOrder(x => x.Where(x => x.ModKey != mod.ModKey));
+                ret = ret.TransformLoadOrderListings(x => x.Where(x => x.ModKey != mod.ModKey));
                 break;
             case OutputModTrimming.SelfAndPast:
-                ret = ret.TransformLoadOrder(x => x.TakeWhile(x => x.ModKey != mod.ModKey));
+                ret = ret.TransformLoadOrderListings(x => x.TakeWhile(x => x.ModKey != mod.ModKey));
                 break;
             default:
                 throw new NotImplementedException();
@@ -112,7 +147,7 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
-                new ModListingParser(
+                new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         Release))));
 
@@ -141,7 +176,7 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
                 new CreationClubRawListingsReader()));
 
         var filteredListings = listingsProv.Get();
-        foreach (var filter in LoadOrderProcessors)
+        foreach (var filter in LoadOrderListingProcessors)
         {
             filteredListings = filter(filteredListings);
         }
@@ -154,7 +189,11 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
                 IFileSystemExt.DefaultFilesystem,
                 Release));
 
-        var lo = loGetter.Import();
+        ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import();
+        foreach (var filter in ModListingProcessors)
+        {
+            lo = filter(lo.ListedOrder).ToLoadOrder();
+        }
 
         var linkCache = lo.ToMutableLinkCache(MutableMods.ToArray());
 
@@ -177,14 +216,17 @@ public record GameEnvironmentBuilder
     internal IPluginListingsPathProvider? PluginListingsPathProvider { get; init; }
     internal ICreationClubListingsPathProvider? CccListingsPathProvider { get; init; }
 
-    private ImmutableList<Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>>> LoadOrderProcessors { get; init; }
+    private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
+
+    private ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>> ModListingProcessors { get; init; }
 
     private ImmutableList<IMod> MutableMods { get; init; }
 
     private GameEnvironmentBuilder(GameRelease release)
     {
         Release = new GameReleaseInjection(release);
-        LoadOrderProcessors = ImmutableList<Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>>>.Empty;
+        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
+        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>>.Empty;
         MutableMods = ImmutableList<IMod>.Empty;
     }
 
@@ -200,7 +242,8 @@ public record GameEnvironmentBuilder
         ListingsProvider = listingsProvider;
         PluginListingsPathProvider = pluginListingsPathProvider;
         CccListingsPathProvider = cccListingsPathProvider;
-        LoadOrderProcessors = ImmutableList<Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>>>.Empty;
+        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
+        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>>.Empty;
         MutableMods = ImmutableList<IMod>.Empty;
     }
 
@@ -210,13 +253,43 @@ public record GameEnvironmentBuilder
     }
 
     /// <summary>
-    /// Exposes the load order for transformation by the user
+    /// Exposes the load order for transformation by the user before any mods are read from disk
     /// </summary>
     /// <param name="transformer">Transformation lambda to process the incoming enumerable and return a new desired one</param>
     /// <returns>New builder with the new rules</returns>
-    public GameEnvironmentBuilder TransformLoadOrder(Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>> transformer)
+    public GameEnvironmentBuilder TransformLoadOrderListings(Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>> transformer)
     {
-        return this with { LoadOrderProcessors = LoadOrderProcessors.Add(transformer) };
+        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add(transformer) };
+    }
+
+    /// <summary>
+    /// Sets the load order to the given modkeys, with all of them enabled
+    /// </summary>
+    /// <param name="modKeys">ModKeys to set the load order to</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder WithLoadOrder(params ModKey[] modKeys)
+    {
+        return WithLoadOrder(modKeys.Select(x => (ILoadOrderListingGetter)new LoadOrderListing(x, enabled: true)).ToArray());
+    }
+
+    /// <summary>
+    /// Sets the load order to the given listings
+    /// </summary>
+    /// <param name="listings">Listings to set the load order to</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder WithLoadOrder(params ILoadOrderListingGetter[] listings)
+    {
+        return TransformLoadOrderListings(_ => listings);
+    }
+
+    /// <summary>
+    /// Exposes the load order for transformation by the user with mod objects loaded and accessible
+    /// </summary>
+    /// <param name="transformer">Transformation lambda to process the incoming enumerable and return a new desired one</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder TransformModListings(Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>> transformer)
+    {
+        return this with { ModListingProcessors = ModListingProcessors.Add(transformer) };
     }
 
     /// <summary>
@@ -233,10 +306,10 @@ public record GameEnvironmentBuilder
             case OutputModTrimming.NoTrimming:
                 break;
             case OutputModTrimming.Self:
-                ret = ret.TransformLoadOrder(x => x.Where(x => x.ModKey != mod.ModKey));
+                ret = ret.TransformLoadOrderListings(x => x.Where(x => x.ModKey != mod.ModKey));
                 break;
             case OutputModTrimming.SelfAndPast:
-                ret = ret.TransformLoadOrder(x => x.TakeWhile(x => x.ModKey != mod.ModKey));
+                ret = ret.TransformLoadOrderListings(x => x.TakeWhile(x => x.ModKey != mod.ModKey));
                 break;
             default:
                 throw new NotImplementedException();
@@ -268,7 +341,7 @@ public record GameEnvironmentBuilder
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
-                new ModListingParser(
+                new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         Release))));
 
@@ -297,20 +370,24 @@ public record GameEnvironmentBuilder
                 new CreationClubRawListingsReader()));
 
         var filteredListings = listingsProv.Get();
-        foreach (var filter in LoadOrderProcessors)
+        foreach (var filter in LoadOrderListingProcessors)
         {
             filteredListings = filter(filteredListings);
         }
 
-        var loGetter = new LoadOrderImporter<IModGetter>(
+        var loGetter = new LoadOrderImporter(
             IFileSystemExt.DefaultFilesystem,
             dataDirectory,
             new LoadOrderListingsInjection(filteredListings),
-            new ModImporter<IModGetter>(
+            new ModImporter(
                 IFileSystemExt.DefaultFilesystem,
                 Release));
 
-        var lo = loGetter.Import();
+        ILoadOrderGetter<IModListingGetter<IModGetter>> lo = loGetter.Import();
+        foreach (var filter in ModListingProcessors)
+        {
+            lo = filter(lo.ListedOrder).ToLoadOrder();
+        }
 
         var linkCache = lo.ToUntypedMutableLinkCache(Release.Release.ToCategory(), MutableMods.ToArray());
 

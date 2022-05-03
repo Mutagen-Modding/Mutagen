@@ -28,7 +28,7 @@ public class TimestampedPluginListingsProvider : ITimestampedPluginListingsProvi
         ListingsPathProvider = pluginListingsPathProvider;
     }
 
-    public IEnumerable<IModListingGetter> Get()
+    public IEnumerable<ILoadOrderListingGetter> Get()
     {
         var mods = RawListingsReader.Read(ListingsPathProvider.Path);
         return Aligner.AlignToTimestamps(

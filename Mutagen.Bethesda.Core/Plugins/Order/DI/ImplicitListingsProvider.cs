@@ -6,6 +6,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 public interface IImplicitListingsProvider : IListingsProvider
 {
+    new IEnumerable<IModListingGetter> Get();
 }
 
 public class ImplicitListingsProvider : IImplicitListingsProvider
@@ -28,6 +29,8 @@ public class ImplicitListingsProvider : IImplicitListingsProvider
     {
         return ListingModKeys.Listings
             .Where(x => _fileSystem.File.Exists(Path.Combine(DataFolder.Path, x.FileName.String)))
-            .Select(x => new ModListing(x, enabled: true));
+            .Select(x => new ModListing(x, enabled: true, existsOnDisk: true));
     }
+
+    IEnumerable<ILoadOrderListingGetter> IListingsProvider.Get() => Get();
 }

@@ -28,6 +28,6 @@ public class ImplicitListingsProviderTests
         fs.File.WriteAllText(Path.Combine(sut.DataFolder.Path, TestConstants.MasterModKey.FileName), string.Empty);
 
         sut.Get()
-            .Should().Equal(new ModListing(TestConstants.MasterModKey, true));
+            .Should().Equal(new ModListing(TestConstants.MasterModKey, true, true));
     }
 }

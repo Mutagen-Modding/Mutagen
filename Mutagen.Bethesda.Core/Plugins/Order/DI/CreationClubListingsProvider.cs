@@ -37,7 +37,9 @@ public class CreationClubListingsProvider : ICreationClubListingsProvider
     {
         return Get(throwIfMissing: true);
     }
-        
+
+    IEnumerable<ILoadOrderListingGetter> IListingsProvider.Get() => Get();
+
     public IEnumerable<IModListingGetter> Get(bool throwIfMissing)
     {
         var path = ListingsPathProvider.Path;
@@ -56,6 +58,7 @@ public class CreationClubListingsProvider : ICreationClubListingsProvider
 
         return Reader.Read(_fileSystem.File.OpenRead(path.Value))
             .Where(x => _fileSystem.File.Exists(Path.Combine(DirectoryProvider.Path, x.ModKey.FileName)))
+            .Select(x => x.ToModListing(existsOnDisk: true))
             .ToList();
     }
 }

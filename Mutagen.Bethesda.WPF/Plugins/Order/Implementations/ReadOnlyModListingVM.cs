@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order;
 
 public class ReadOnlyModListingVM : ViewModel, IModListingGetter
 {
-    private readonly IModListingGetter _listing;
+    private readonly ILoadOrderListingGetter _listing;
 
     public ModKey ModKey => _listing.ModKey;
 
@@ -19,22 +19,22 @@ public class ReadOnlyModListingVM : ViewModel, IModListingGetter
 
     public string GhostSuffix => _listing.GhostSuffix;
 
-    private readonly ObservableAsPropertyHelper<bool> _Exists;
-    public bool Exists => _Exists.Value;
+    private readonly ObservableAsPropertyHelper<bool> _existsOnDisk;
+    public bool ExistsOnDisk => _existsOnDisk.Value;
         
-    public ReadOnlyModListingVM(IModListingGetter listing, string dataFolder)
+    public ReadOnlyModListingVM(ILoadOrderListingGetter listing, string dataFolder)
     {
         _listing = listing;
         var path = Path.Combine(dataFolder, listing.ModKey.FileName);
         var exists = File.Exists(path);
-        _Exists = Observable.Defer(() =>
+        _existsOnDisk = Observable.Defer(() =>
                 Noggog.ObservableExt.WatchFile(path)
                     .Select(_ =>
                     {
                         var ret = File.Exists(path);
                         return ret;
                     }))
-            .ToGuiProperty(this, nameof(Exists), initialValue: exists);
+            .ToGuiProperty(this, nameof(ExistsOnDisk), initialValue: exists);
     }
 
     public override string ToString()

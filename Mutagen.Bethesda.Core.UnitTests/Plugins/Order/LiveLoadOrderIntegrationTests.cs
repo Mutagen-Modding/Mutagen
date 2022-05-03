@@ -50,7 +50,7 @@ public class LiveLoadOrderIntegrationTests
                 TestConstants.LightMasterModKey.ToString(),
                 TestConstants.LightMasterModKey2.ToString(),
             });
-        var live = LoadOrder.GetLiveLoadOrder(
+        var live = LoadOrder.GetLiveLoadOrderListings(
             GameRelease.SkyrimSE,
             pluginPath.Path,
             dataDir.Path, 
@@ -166,7 +166,7 @@ public class LiveLoadOrderIntegrationTests
                 TestConstants.LightMasterModKey.ToString(),
                 TestConstants.LightMasterModKey2.ToString(),
             });
-        var live = LoadOrder.GetLiveLoadOrder(
+        var live = LoadOrder.GetLiveLoadOrderListings(
             GameRelease.SkyrimSE,
             pluginPath.Path,
             dataDir.Path, 
@@ -257,7 +257,7 @@ public class LiveLoadOrderIntegrationTests
                 TestConstants.LightMasterModKey.ToString(),
                 TestConstants.LightMasterModKey2.ToString(),
             });
-        var live = LoadOrder.GetLiveLoadOrder(
+        var live = LoadOrder.GetLiveLoadOrderListings(
             GameRelease.SkyrimSE, 
             pluginPath.Path, 
             dataDir.Path, 
@@ -338,7 +338,7 @@ public class LiveLoadOrderIntegrationTests
                 TestConstants.LightMasterModKey.ToString(),
                 TestConstants.LightMasterModKey2.ToString(),
             });
-        var live = LoadOrder.GetLiveLoadOrder(
+        var live = LoadOrder.GetLiveLoadOrderListings(
             GameRelease.SkyrimSE,
             pluginPath.Path,
             dataDir.Path, 

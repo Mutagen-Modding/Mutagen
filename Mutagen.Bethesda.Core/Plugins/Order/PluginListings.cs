@@ -52,22 +52,22 @@ public static class PluginListings
     /// <param name="game">Game type</param>
     /// <returns>List of ModKeys representing a load order</returns>
     /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
-    public static IEnumerable<IModListingGetter> ListingsFromStream(Stream stream, GameRelease game)
+    public static IEnumerable<ILoadOrderListingGetter> LoadOrderListingsFromStream(Stream stream, GameRelease game)
     {
         return new PluginListingsParser(
-                new ModListingParser(
+                new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         new GameReleaseInjection(game))))
             .Parse(stream);
     }
 
     /// <inheritdoc cref="IPluginListingsProvider"/>
-    public static IEnumerable<IModListingGetter> Listings(
+    public static IEnumerable<ILoadOrderListingGetter> LoadOrderListings(
         GameRelease game,
         DirectoryPath dataPath,
         bool throwOnMissingMods = true)
     {
-        return ListingsFromPath(
+        return LoadOrderListingsFromPath(
             new PluginListingsPathProvider(
                 new GameReleaseInjection(game)).Path,
             game,
@@ -76,7 +76,7 @@ public static class PluginListings
     }
 
     /// <inheritdoc cref="IPluginListingsProvider"/>
-    public static IEnumerable<IModListingGetter> ListingsFromPath(
+    public static IEnumerable<ILoadOrderListingGetter> LoadOrderListingsFromPath(
         FilePath pluginTextPath,
         GameRelease game,
         DirectoryPath dataPath,
@@ -92,16 +92,16 @@ public static class PluginListings
     }
 
     /// <inheritdoc cref="IPluginListingsProvider"/>
-    public static IEnumerable<IModListingGetter> RawListingsFromPath(
+    public static IEnumerable<ILoadOrderListingGetter> RawLoadOrderListingsFromPath(
         FilePath pluginTextPath,
         GameRelease game)
     {
         using var fs = new FileStream(pluginTextPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        return ListingsFromStream(fs, game).ToList();
+        return LoadOrderListingsFromStream(fs, game).ToList();
     }
 
     /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
-    public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
+    public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrder(
         GameRelease game,
         FilePath loadOrderFilePath,
         DirectoryPath dataFolderPath,
@@ -152,7 +152,7 @@ public static class PluginListings
         IFileSystem fs)
     {
         var pluginListingParser = new PluginListingsParser(
-            new ModListingParser(
+            new LoadOrderListingParser(
                 new HasEnabledMarkersProvider(gameContext)));
         var provider = new PluginListingsProvider(
             gameContext,

@@ -8,7 +8,7 @@ public interface ILoadOrderWriter
 {
     void Write(
         FilePath path,
-        IEnumerable<IModListingGetter> loadOrder,
+        IEnumerable<ILoadOrderListingGetter> loadOrder,
         bool removeImplicitMods = true);
 }
 
@@ -31,7 +31,7 @@ public class LoadOrderWriter : ILoadOrderWriter
     /// <inheritdoc />
     public void Write(
         FilePath path,
-        IEnumerable<IModListingGetter> loadOrder,
+        IEnumerable<ILoadOrderListingGetter> loadOrder,
         bool removeImplicitMods = true)
     {
         bool markers = _hasEnabledMarkersProvider.HasEnabledMarkers;
