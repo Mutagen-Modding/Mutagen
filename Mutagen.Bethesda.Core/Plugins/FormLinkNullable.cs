@@ -58,28 +58,28 @@ public class FormLinkNullableGetter<TMajorGetter> :
     /// </summary>
     /// <param name="other">Other link to compare to</param>
     /// <returns>True if FormKey members are equal</returns>
-    public bool Equals(FormLink<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this._formKey, other?.FormKey);
+    public bool Equals(FormLink<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(_formKey, other?.FormKey);
 
     /// <summary>
     /// Compares equality of two links, where rhs is a nullable link.
     /// </summary>
     /// <param name="other">Other link to compare to</param>
     /// <returns>True if FormKey members are equal</returns>
-    public bool Equals(FormLinkNullable<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this._formKey, other?._formKey);
+    public bool Equals(FormLinkNullable<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(_formKey, other?._formKey);
 
     /// <summary>
     /// Compares equality of two links, where rhs is a non nullable link.
     /// </summary>
     /// <param name="other">Other link to compare to</param>
     /// <returns>True if FormKey members are equal</returns>
-    public bool Equals(IFormLinkGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this._formKey, other?.FormKey);
+    public bool Equals(IFormLinkGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(_formKey, other?.FormKey);
 
     /// <summary>
     /// Compares equality of two links, where rhs is a nullable link.
     /// </summary>
     /// <param name="other">Other link to compare to</param>
     /// <returns>True if FormKey members are equal</returns>
-    public bool Equals(IFormLinkNullableGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this._formKey, other?.FormKeyNullable);
+    public bool Equals(IFormLinkNullableGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(_formKey, other?.FormKeyNullable);
 
     /// <summary>
     /// Returns hash code
@@ -91,7 +91,7 @@ public class FormLinkNullableGetter<TMajorGetter> :
     /// Returns string representation of link
     /// </summary>
     /// <returns>Returns FormKey string</returns>
-    public override string ToString() => this._formKey?.ToString() ?? "Null";
+    public override string ToString() => _formKey?.ToString() ?? "Null";
 
     bool ILink.TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter formKey)
     {
@@ -153,12 +153,12 @@ public class FormLinkNullableGetter<TMajorGetter> :
 
     IFormLinkNullable<TMajorRet> IFormLinkNullableGetter<TMajorGetter>.Cast<TMajorRet>()
     {
-        return new FormLinkNullable<TMajorRet>(this.FormKeyNullable);
+        return new FormLinkNullable<TMajorRet>(FormKeyNullable);
     }
 
     IFormLink<TMajorRet> IFormLinkGetter<TMajorGetter>.Cast<TMajorRet>()
     {
-        return new FormLinkNullable<TMajorRet>(this.FormKeyNullable);
+        return new FormLinkNullable<TMajorRet>(FormKeyNullable);
     }
 }
 

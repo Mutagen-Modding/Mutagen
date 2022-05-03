@@ -16,7 +16,7 @@ public abstract class BaseFormKeyAllocator : IFormKeyAllocator
 
     protected BaseFormKeyAllocator(IMod mod)
     {
-        this.Mod = mod;
+        Mod = mod;
     }
 
     public abstract FormKey GetNextFormKey();

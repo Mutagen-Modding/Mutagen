@@ -28,12 +28,12 @@ public struct RecordType : IEquatable<RecordType>, IEquatable<string>
     /// <summary>
     /// The type as a four character string
     /// </summary>
-    public string Type => GetStringType(this.TypeInt);
+    public string Type => GetStringType(TypeInt);
 
     /// <summary>
     /// The type as a four character string, checking that all characters are printable
     /// </summary>
-    public string CheckedType => GetCheckedStringType(this.TypeInt);
+    public string CheckedType => GetCheckedStringType(TypeInt);
 
     /// <summary>
     /// Constructor taking in an integer
@@ -41,7 +41,7 @@ public struct RecordType : IEquatable<RecordType>, IEquatable<string>
     [DebuggerStepThrough]
     public RecordType (int type)
     {
-        this.TypeInt = type;
+        TypeInt = type;
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public struct RecordType : IEquatable<RecordType>, IEquatable<string>
         {
             throw new ArgumentException($"Type String not expected length: {typeStr.Length} != {Length}.");
         }
-        this.TypeInt = GetTypeInt(typeStr);
+        TypeInt = GetTypeInt(typeStr);
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ public struct RecordType : IEquatable<RecordType>, IEquatable<string>
     /// <returns>True if equal TypeInt value</returns>
     public bool Equals(RecordType other)
     {
-        return this.TypeInt == other.TypeInt;
+        return TypeInt == other.TypeInt;
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public struct RecordType : IEquatable<RecordType>, IEquatable<string>
     {
         if (string.IsNullOrWhiteSpace(other)) return false;
         if (other.Length != 4) return false;
-        return this.TypeInt == GetTypeInt(other);
+        return TypeInt == GetTypeInt(other);
     }
 
     public static bool operator ==(RecordType r1, RecordType r2)
@@ -136,7 +136,7 @@ public struct RecordType : IEquatable<RecordType>, IEquatable<string>
     /// <returns>String representation of RecordType</returns>
     public override string ToString()
     {
-        return this.Type;
+        return Type;
     }
 
     /// <summary>

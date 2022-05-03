@@ -43,7 +43,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <summary>
     /// True if FormKey is considered Null
     /// </summary>
-    public bool IsNull => this.ID == 0 || this.ModKey.IsNull;
+    public bool IsNull => ID == 0 || ModKey.IsNull;
 
     /// <summary>
     /// Constructor taking a ModKey and ID as separate parameters
@@ -53,8 +53,8 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <exception cref="ArgumentException">ID needs to contain no data in upper two bytes, or it will throw.</exception>
     public FormKey(ModKey modKey, uint id)
     {
-        this.ModKey = modKey;
-        this.ID = id & 0xFFFFFF;
+        ModKey = modKey;
+        ID = id & 0xFFFFFF;
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
         var justId = idWithModID & 0xFFFFFF;
         if (modID == 0 && justId == 0)
         {
-            return FormKey.Null;
+            return Null;
         }
 
         var master = masterReferences.Masters[modID];
@@ -115,7 +115,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
 
         uint id;
         int delim;
-        if (str[4] == ':' && str.Slice(0, 4).Equals(FormKey.NullStr, StringComparison.OrdinalIgnoreCase))
+        if (str[4] == ':' && str.Slice(0, 4).Equals(NullStr, StringComparison.OrdinalIgnoreCase))
         {
             delim = 4;
             id = 0;
@@ -144,7 +144,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
 
         if (!ModKey.TryFromNameAndExtension(str, out var modKey))
         {
-            if (str.Equals(FormKey.NullStr, StringComparison.OrdinalIgnoreCase))
+            if (str.Equals(NullStr, StringComparison.OrdinalIgnoreCase))
             {
                 modKey = ModKey.Null;
             }
@@ -198,11 +198,11 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <returns>String representation of FormKey</returns>
     public override string ToString()
     {
-        if (ID == 0 && this.ModKey.IsNull)
+        if (ID == 0 && ModKey.IsNull)
         {
             return "Null";
         }
-        return $"{(ID == 0 ? "Null" : IDString())}:{this.ModKey}";
+        return $"{(ID == 0 ? "Null" : IDString())}:{ModKey}";
     }
          
     /// <summary>
@@ -232,8 +232,8 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <returns>True if equal ModKey and ID values</returns>
     public bool Equals(FormKey other)
     {
-        if (!this.ModKey.Equals(other.ModKey)) return false;
-        if (this.ID != other.ID) return false;
+        if (!ModKey.Equals(other.ModKey)) return false;
+        if (ID != other.ID) return false;
         return true;
     }
 
@@ -244,8 +244,8 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     public override int GetHashCode()
     {
         var hash = new HashCode();
-        hash.Add(this.ModKey);
-        hash.Add(this.ID);
+        hash.Add(ModKey);
+        hash.Add(ID);
         return hash.ToHashCode();
     }
 

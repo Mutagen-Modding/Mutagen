@@ -35,7 +35,7 @@ public class RecordLocatorResults
 
     public bool TryGetSection(FormKey formKey, out RangeInt64 section)
     {
-        if (this._fromFormKeys.TryGetValue(formKey, out var item))
+        if (_fromFormKeys.TryGetValue(formKey, out var item))
         {
             section = item.Range;
             return true;

@@ -17,7 +17,7 @@ public class RecordTypeInfoCacheReader
 
     public RecordTypeInfoCacheReader(Func<IMutagenReadStream> streamCreator)
     {
-        this._streamCreator = streamCreator;
+        _streamCreator = streamCreator;
     }
 
     public bool IsOfRecordType<T>(FormKey formKey)

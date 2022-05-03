@@ -121,7 +121,7 @@ public record LoadOrderListing : ILoadOrderListingGetter
 
         if (ModKey.TryFromNameAndExtension(str, out key))
         {
-            listing = LoadOrderListing.CreateGhosted(key, ghostTerm.ToString());
+            listing = CreateGhosted(key, ghostTerm.ToString());
             return true;
         }
 

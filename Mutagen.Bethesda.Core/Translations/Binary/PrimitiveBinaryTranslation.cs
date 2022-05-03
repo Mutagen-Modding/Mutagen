@@ -45,7 +45,7 @@ public abstract class PrimitiveBinaryTranslation<TItem, TReader, TWriter> : IPri
         Action<TWriter, TItem>? write = null)
     {
         if (!item.HasValue) return;
-        write ??= this.Write;
+        write ??= Write;
         write(writer, item.Value);
     }
 }

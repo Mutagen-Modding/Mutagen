@@ -85,11 +85,11 @@ public class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
     /// <returns>The next FormKey from the Mod</returns>
     public override FormKey GetNextFormKey()
     {
-        lock (this._lock)
+        lock (_lock)
         {
-            lock (this.Mod)
+            lock (Mod)
             {
-                var candidateFormID = this.Mod.NextFormID;
+                var candidateFormID = Mod.NextFormID;
                 if (candidateFormID > 0xFFFFFF)
                     throw new OverflowException();
 
@@ -102,14 +102,14 @@ public class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
 
                 Mod.NextFormID = candidateFormID + 1;
 
-                return new FormKey(this.Mod.ModKey, candidateFormID);
+                return new FormKey(Mod.ModKey, candidateFormID);
             }
         }
     }
 
     protected override FormKey GetNextFormKeyNotNull(string editorID)
     {
-        lock (this._lock)
+        lock (_lock)
         {
             if (_state.Value.Cache.TryGetValue(editorID, out var id))
                 return id;
@@ -143,7 +143,7 @@ public class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
 
     public override void Commit()
     {
-        lock (this._lock)
+        lock (_lock)
         {
             if (!_state.IsValueCreated) return;
             WriteToFile(_saveLocation, _state.Value.Cache, _fileSystem);
@@ -152,11 +152,11 @@ public class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
 
     public override void Rollback()
     {
-        lock (this._lock)
+        lock (_lock)
         {
-            lock (this.Mod)
+            lock (Mod)
             {
-                this.Mod.NextFormID = _initialNextFormID;
+                Mod.NextFormID = _initialNextFormID;
             }
             _state = GetLazyInternalState();
         }

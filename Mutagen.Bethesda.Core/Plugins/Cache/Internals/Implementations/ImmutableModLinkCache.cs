@@ -618,7 +618,7 @@ public class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGett
     /// <param name="sourceMod">Mod to resolve against when linking</param>
     public ImmutableModLinkCache(TModGetter sourceMod, LinkCachePreferences prefs)
     {
-        this._sourceMod = sourceMod;
+        _sourceMod = sourceMod;
         _cache = new InternalImmutableModLinkCache(sourceMod, prefs);
         _simple = prefs.Retention == LinkCachePreferences.RetentionType.OnlyIdentifiers;
         _formKeyContexts = new ImmutableModLinkCacheContextCategory<TMod, TModGetter, FormKey>(

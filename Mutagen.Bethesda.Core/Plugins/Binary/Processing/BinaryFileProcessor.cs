@@ -19,8 +19,8 @@ public class BinaryFileProcessor : Stream
         /// <summary>
         /// True if config contains any instructions that would modify the stream
         /// </summary>
-        public bool HasProcessing => this._moves?.Count > 0
-                                     || this._substitutions?.Count > 0;
+        public bool HasProcessing => _moves?.Count > 0
+                                     || _substitutions?.Count > 0;
 
         public void SetSubstitution(long loc, byte sub)
         {
@@ -94,8 +94,8 @@ public class BinaryFileProcessor : Stream
 
     public override long Position
     {
-        get => this._position + bufferPos;
-        set => this.SetPosition(value);
+        get => _position + bufferPos;
+        set => SetPosition(value);
     }
 
     public BinaryFileProcessor(Stream source, Config config, int bufferLen = 4096)
@@ -104,18 +104,18 @@ public class BinaryFileProcessor : Stream
         this.config = config;
         if (this.config._moves != null)
         {
-            this._activeMoves = new SortedList<long, List<(RangeInt64 Section, byte[] Data)>>();
-            this._sortedMoves = new SortedList<long, RangeInt64>();
-            this._sortedMoves.Add(
+            _activeMoves = new SortedList<long, List<(RangeInt64 Section, byte[] Data)>>();
+            _sortedMoves = new SortedList<long, RangeInt64>();
+            _sortedMoves.Add(
                 this.config._moves.Select((m) => new KeyValuePair<long, RangeInt64>(m.Key.Min, m.Key)));
         }
-        this._buffer = new byte[bufferLen];
-        this.HasProcessing = this.config.HasProcessing;
+        _buffer = new byte[bufferLen];
+        HasProcessing = this.config.HasProcessing;
     }
 
     protected override void Dispose(bool disposing)
     {
-        this.source.Dispose();
+        source.Dispose();
         base.Dispose(disposing);
     }
 
@@ -128,13 +128,13 @@ public class BinaryFileProcessor : Stream
         if (bufferEnd != 0
             || _position != 0)
         {
-            this._position += this._buffer.Length + extraRead;
+            _position += _buffer.Length + extraRead;
         }
         bufferPos = 0;
         var prevExtraRead = extraRead;
         extraRead = 0;
-        bufferEnd = this.source.Read(this._buffer, 0, this._buffer.Length);
-        this._expandableBuffer.Clear();
+        bufferEnd = source.Read(_buffer, 0, _buffer.Length);
+        _expandableBuffer.Clear();
         if (bufferEnd == 0)
         {
             done = true;
@@ -228,7 +228,7 @@ public class BinaryFileProcessor : Stream
             {
                 // Delete out move
                 var moveRange = _sortedMoves[moveFromKey.Value];
-                var moveLocBufStart = moveRange.Min - this._position - moveDeletions;
+                var moveLocBufStart = moveRange.Min - _position - moveDeletions;
                 int len = (int)Math.Min(bufferEnd - moveLocBufStart, moveRange.Width);
 
                 // Copy to move cache
@@ -240,11 +240,11 @@ public class BinaryFileProcessor : Stream
                     length: len);
                 if (len < moveRange.Width)
                 {
-                    extraRead += this.source.Read(moveContents, len, (int)(moveRange.Width - len));
+                    extraRead += source.Read(moveContents, len, (int)(moveRange.Width - len));
                 }
 
                 var moveLoc = config._moves[moveRange];
-                this._activeMoves.GetOrAdd(moveLoc).Add((moveRange, moveContents));
+                _activeMoves.GetOrAdd(moveLoc).Add((moveRange, moveContents));
                 if (targetSection.IsInRange(moveLoc))
                 {
                     PreSortedListExt.Set<long>(moveToKeys, moveLoc);
@@ -253,22 +253,22 @@ public class BinaryFileProcessor : Stream
                 // Delete moved snippet
                 if (len == moveRange.Width)
                 {
-                    var sourceIndex = checked((int)(moveRange.Max + 1 - this._position - moveDeletions));
-                    var moveAmount = (this.ExpandableBufferActive ? this._expandableBuffer.Count : this._buffer.Length) - sourceIndex;
-                    int destination = checked((int)(moveRange.Min - this._position - moveDeletions));
+                    var sourceIndex = checked((int)(moveRange.Max + 1 - _position - moveDeletions));
+                    var moveAmount = (ExpandableBufferActive ? _expandableBuffer.Count : _buffer.Length) - sourceIndex;
+                    int destination = checked((int)(moveRange.Min - _position - moveDeletions));
                     if (ExpandableBufferActive)
                     {
                         for (int i = 0; i < moveAmount; i++)
                         {
-                            this._expandableBuffer[i + destination] = this._expandableBuffer[i + sourceIndex];
+                            _expandableBuffer[i + destination] = _expandableBuffer[i + sourceIndex];
                         }
                     }
                     else
                     {
                         Array.Copy(
-                            sourceArray: this._buffer,
+                            sourceArray: _buffer,
                             sourceIndex: sourceIndex,
-                            destinationArray: this._buffer,
+                            destinationArray: _buffer,
                             destinationIndex: destination,
                             length: moveAmount);
                     }
@@ -291,7 +291,7 @@ public class BinaryFileProcessor : Stream
                     bufferEnd += moveToPaste.Data.Length;
                 }
 
-                this._activeMoves.Remove(moveToKey.Value);
+                _activeMoves.Remove(moveToKey.Value);
                 moveToIndex++;
             }
             else if (additionKey != null)
@@ -332,7 +332,7 @@ public class BinaryFileProcessor : Stream
         else
         {
             Array.Copy(
-                sourceArray: this._buffer,
+                sourceArray: _buffer,
                 sourceIndex: sourceIndex,
                 destinationArray: destinationArray,
                 destinationIndex: 0,
@@ -344,8 +344,8 @@ public class BinaryFileProcessor : Stream
     {
         if (!HasProcessing)
         {
-            var ret = this.source.Read(buffer, offset, count);
-            this._position += ret;
+            var ret = source.Read(buffer, offset, count);
+            _position += ret;
             return ret;
         }
         if (count == 0) return 0;
@@ -359,7 +359,7 @@ public class BinaryFileProcessor : Stream
                 if (_expandableBuffer.Count == 0)
                 {
                     Array.Copy(
-                        sourceArray: this._buffer,
+                        sourceArray: _buffer,
                         sourceIndex: bufferPos,
                         destinationArray: buffer,
                         destinationIndex: offset,
@@ -369,7 +369,7 @@ public class BinaryFileProcessor : Stream
                 {
                     for (int i = 0; i < toRead; i++)
                     {
-                        buffer[i + offset] = this._expandableBuffer[bufferPos + i];
+                        buffer[i + offset] = _expandableBuffer[bufferPos + i];
                     }
                 }
                 bufferPos += toRead;
@@ -389,18 +389,18 @@ public class BinaryFileProcessor : Stream
 
     private void SetPosition(long pos)
     {
-        if (pos == this.Position) return;
-        if (pos < this.Position)
+        if (pos == Position) return;
+        if (pos < Position)
         {
             throw new NotImplementedException("Cannot move back in position");
         }
-        var diff = pos - this.Position;
+        var diff = pos - Position;
         if (diff > int.MaxValue)
         {
             throw new NotImplementedException("Need to upgrade to move large positions");
         }
         byte[] trash = new byte[diff];
-        this.Read(trash, offset: 0, count: (int)diff);
+        Read(trash, offset: 0, count: (int)diff);
     }
 
     #region N/A

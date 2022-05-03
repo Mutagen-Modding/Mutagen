@@ -50,7 +50,7 @@ internal class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKey> : II
     private IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey> ConstructUntypedContextCache()
     {
         var majorRecords = new Cache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
-        foreach (var majorRec in this._parent._sourceMod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(_parent))
+        foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(_parent))
         {
             var key = _keyGetter(majorRec.Record);
             if (key.Failed) continue;

@@ -62,7 +62,7 @@ public class FormKeyBinaryTranslation
         {
             using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
-                this.Write(
+                Write(
                     writer,
                     item);
             }

@@ -17,7 +17,7 @@ public class AlignmentRules
             subList[t] = new AlignmentStraightRecord(t.Type);
         }
 
-        this.Alignments.Add(
+        Alignments.Add(
             type,
             subList);
     }

@@ -28,10 +28,10 @@ internal class GenderedItemBinaryOverlay<T> : PluginBinaryOverlay, IGenderedItem
         T fallback)
         : base(bytes, package)
     {
-        this._male = male;
-        this._female = female;
-        this._creator = creator;
-        this._fallback = fallback;
+        _male = male;
+        _female = female;
+        _creator = creator;
+        _fallback = fallback;
     }
 
     public IEnumerator<T> GetEnumerator()
@@ -42,7 +42,7 @@ internal class GenderedItemBinaryOverlay<T> : PluginBinaryOverlay, IGenderedItem
 
     public void ToString(StructuredStringBuilder fg, string? name) => GenderedItem.ToString(this, fg, name);
 
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
 internal static class GenderedItemBinaryOverlay

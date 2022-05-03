@@ -109,7 +109,7 @@ struct DDS_HEADER
         return (9 * 4) + PixelFormat.GetSize() + (14 * 4);
     }
 
-    public void Write(System.IO.BinaryWriter bw)
+    public void Write(BinaryWriter bw)
     {
         bw.Write(dwSize);
         bw.Write(dwHeaderFlags);
@@ -162,7 +162,7 @@ struct DDS_HEADER_DXT10
     public uint arraySize;
     public uint miscFlags2;
 
-    public void Write(System.IO.BinaryWriter bw)
+    public void Write(BinaryWriter bw)
     {
         bw.Write(dxgiFormat);
         bw.Write(resourceDimension);

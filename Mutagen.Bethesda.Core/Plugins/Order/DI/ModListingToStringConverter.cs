@@ -20,6 +20,6 @@ public class ModListingToStringConverter : IModListingToStringConverter
     public string Convert<TMod>(IModListingGetter<TMod> getter)
         where TMod : class, IModGetter
     {
-        return IModListingGetter<TMod>.ToString(getter);
+        return IModListingGetter.ToString(getter);
     }
 }

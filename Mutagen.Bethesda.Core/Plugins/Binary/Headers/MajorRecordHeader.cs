@@ -286,7 +286,7 @@ public struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
     /// <summary>
     /// Raw bytes of the content data, excluding the header
     /// </summary>
-    public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(Header.HeaderLength, checked((int)this.Header.ContentLength));
+    public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(Header.HeaderLength, checked((int)Header.ContentLength));
 
     /// <summary>
     /// Total length of the Major Record, including the header and its content.

@@ -33,9 +33,9 @@ public class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStream
         IFileSystem? fileSystem = null)
         : base(fileSystem.GetOrDefault().File.OpenRead(path.Path), bufferSize)
     {
-        this._path = path;
-        this.MetaData = metaData;
-        this.OffsetReference = offsetReference;
+        _path = path;
+        MetaData = metaData;
+        OffsetReference = offsetReference;
     }
 
     /// <summary>
@@ -54,12 +54,12 @@ public class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStream
         IFileSystem? fileSystem = null)
         : base(fileSystem.GetOrDefault().File.OpenRead(path), bufferSize)
     {
-        this._path = path;
-        this.MetaData = new ParsingBundle(release, MasterReferenceCollection.FromPath(path, release, fileSystem: fileSystem))
+        _path = path;
+        MetaData = new ParsingBundle(release, MasterReferenceCollection.FromPath(path, release, fileSystem: fileSystem))
         {
             ModKey = path.ModKey
         };
-        this.OffsetReference = offsetReference;
+        OffsetReference = offsetReference;
     }
 
     /// <summary>
@@ -78,8 +78,8 @@ public class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStream
         long offsetReference = 0)
         : base(stream, bufferSize, dispose)
     {
-        this.MetaData = metaData;
-        this.OffsetReference = offsetReference;
+        MetaData = metaData;
+        OffsetReference = offsetReference;
     }
 
     /// <summary>
@@ -101,12 +101,12 @@ public class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStream
         : base(stream, bufferSize, dispose)
     {
         var startPos = stream.Position;
-        this.MetaData = new ParsingBundle(release, MasterReferenceCollection.FromStream(stream, modKey, release, disposeStream: false))
+        MetaData = new ParsingBundle(release, MasterReferenceCollection.FromStream(stream, modKey, release, disposeStream: false))
         {
             ModKey = modKey
         };
         stream.Position = startPos;
-        this.OffsetReference = offsetReference;
+        OffsetReference = offsetReference;
     }
 
     /// <summary>
@@ -119,15 +119,15 @@ public class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStream
     /// <returns>A new stream wrapping an internal array, set to position 0.</returns>
     public IMutagenReadStream ReadAndReframe(int length)
     {
-        var offset = this.OffsetReference + this.Position;
+        var offset = OffsetReference + Position;
         return new MutagenMemoryReadStream(
-            this.ReadMemory(length, readSafe: true),
-            this.MetaData, 
+            ReadMemory(length, readSafe: true),
+            MetaData, 
             offsetReference: offset);
     }
 
     public override string ToString()
     {
-        return $"{_path}{this._stream.Position}-{this._stream.Length} ({this._stream.Remaining()})";
+        return $"{_path}{_stream.Position}-{_stream.Length} ({_stream.Remaining()})";
     }
 }

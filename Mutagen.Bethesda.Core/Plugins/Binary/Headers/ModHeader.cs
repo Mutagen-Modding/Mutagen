@@ -27,8 +27,8 @@ public struct ModHeader
     /// <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
     public ModHeader(GameConstants meta, ReadOnlyMemorySlice<byte> span)
     {
-        this.Meta = meta;
-        this.Span = span.Slice(0, meta.ModHeaderLength);
+        Meta = meta;
+        Span = span.Slice(0, meta.ModHeaderLength);
     }
 
     /// <summary>
@@ -44,30 +44,30 @@ public struct ModHeader
     /// <summary>
     /// RecordType of the Mod header.
     /// </summary>
-    public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
+    public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(Span.Slice(0, 4)));
         
     /// <summary>
     /// The length explicitly contained in the length bytes of the header
     /// Note that for Mod headers, this is equivalent to ContentLength
     /// </summary>
-    public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
+    public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(Span.Slice(4, 4));
         
     /// <summary>
     /// The length of the content, excluding the header bytes.
     /// </summary>
-    public uint ContentLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
+    public uint ContentLength => BinaryPrimitives.ReadUInt32LittleEndian(Span.Slice(4, 4));
         
     /// <summary>
     /// Total length, including the header and its content.
     /// </summary>
-    public long TotalLength => this.HeaderLength + this.ContentLength;
+    public long TotalLength => HeaderLength + ContentLength;
 
     /// <summary>
     /// The integer representing a Mod Header's flags enum.
     /// Since each game has its own flag Enum, this field is offered as an int that should
     /// be casted to the appropriate enum for use.
     /// </summary>
-    public int Flags => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(8, 4));
+    public int Flags => BinaryPrimitives.ReadInt32LittleEndian(Span.Slice(8, 4));
 }
 
 /// <summary>
@@ -85,7 +85,7 @@ public struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
     /// <summary>
     /// Raw bytes of the content data, excluding the header
     /// </summary>
-    public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this._header.HeaderLength, checked((int)this._header.ContentLength));
+    public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(_header.HeaderLength, checked((int)_header.ContentLength));
 
     /// <summary>
     /// Total length of the Major Record, including the header and its content.
@@ -99,8 +99,8 @@ public struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
     /// <param name="span">Span to overlay on, aligned to the start of the ModHeader</param>
     public ModHeaderFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
     {
-        this._header = meta.ModHeader(span);
-        this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
+        _header = meta.ModHeader(span);
+        HeaderAndContentData = span.Slice(0, checked((int)_header.TotalLength));
     }
 
     /// <summary>
@@ -110,18 +110,18 @@ public struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
     /// <param name="span">Span to overlay on, aligned to the start of the header</param>
     public ModHeaderFrame(ModHeader header, ReadOnlyMemorySlice<byte> span)
     {
-        this._header = header;
-        this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
+        _header = header;
+        HeaderAndContentData = span.Slice(0, checked((int)_header.TotalLength));
     }
 
     #region Header Forwarding
     /// <inheritdoc/>
-    public override string? ToString() => this._header.ToString();
+    public override string? ToString() => _header.ToString();
 
     /// <inheritdoc/>
     public IEnumerator<SubrecordPinFrame> GetEnumerator() => HeaderExt.EnumerateSubrecords(this).GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
     /// Game metadata to use as reference for alignment

@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// </summary>
         public GenderedItem(T male, T female)
         {
-            this.Male = male;
-            this.Female = female;
+            Male = male;
+            Female = female;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             yield return Female;
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Prints the male and female items to the stream
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 IGenderedItemGetter<TItem>? lhs,
                 IGenderedItemGetter<TItem>? rhs,
                 Func<TItem, TItem, Include, TMask> maskGetter,
-                EqualsMaskHelper.Include include)
+                Include include)
                 where TMask : class, IMask<bool>
             {
                 if (lhs == null || rhs == null)
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 IGenderedItemGetter<TItem>? lhs,
                 IGenderedItemGetter<TItem>? rhs,
                 Func<TItem, TItem, Include, MaskItem<bool, TMask?>?> maskGetter,
-                EqualsMaskHelper.Include include)
+                Include include)
                 where TMask : class, IMask<bool>
             {
                 if (lhs == null || rhs == null)
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 IGenderedItemGetter<TItem>? lhs,
                 IGenderedItemGetter<TItem>? rhs,
                 Func<TItem, TItem, Include, bool> maskGetter,
-                EqualsMaskHelper.Include include)
+                Include include)
             {
                 if (lhs == null || rhs == null)
                 {

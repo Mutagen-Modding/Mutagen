@@ -32,9 +32,9 @@ public struct HeaderExport : IDisposable
         long sizePosition,
         RecordHeaderConstants recordConstants)
     {
-        this.Writer = writer;
-        this.RecordConstants = recordConstants;
-        this.SizePosition = sizePosition;
+        Writer = writer;
+        RecordConstants = recordConstants;
+        SizePosition = sizePosition;
     }
 
     /// <summary>
@@ -134,16 +134,16 @@ public struct HeaderExport : IDisposable
     /// </summary>
     public void Dispose()
     {
-        var endPos = this.Writer.Position;
-        this.Writer.Position = this.SizePosition;
-        var diff = endPos - this.SizePosition;
-        if (this.RecordConstants.HeaderIncludedInLength)
+        var endPos = Writer.Position;
+        Writer.Position = SizePosition;
+        var diff = endPos - SizePosition;
+        if (RecordConstants.HeaderIncludedInLength)
         {
             diff += Constants.HeaderLength;
         }
         else
         {
-            diff -= this.RecordConstants.LengthAfterType;
+            diff -= RecordConstants.LengthAfterType;
         }
 
         // If negative, we're likely mid-exception.
@@ -155,17 +155,17 @@ public struct HeaderExport : IDisposable
 
         try
         {
-            switch (this.RecordConstants.ObjectType)
+            switch (RecordConstants.ObjectType)
             {
                 case ObjectType.Subrecord:
                     {
-                        this.Writer.Write(checked((ushort)diff));
+                        Writer.Write(checked((ushort)diff));
                     }
                     break;
                 case ObjectType.Record:
                 case ObjectType.Group:
                     {
-                        this.Writer.Write(checked((uint)diff));
+                        Writer.Write(checked((uint)diff));
                     }
                     break;
                 default:
@@ -175,8 +175,8 @@ public struct HeaderExport : IDisposable
         catch (OverflowException)
         {
             throw new OverflowException(
-                $"{this.RecordConstants.ObjectType} header export resulted in an overflow. Diff: 0x{diff:X}");
+                $"{RecordConstants.ObjectType} header export resulted in an overflow. Diff: 0x{diff:X}");
         }
-        this.Writer.Position = endPos;
+        Writer.Position = endPos;
     }
 }

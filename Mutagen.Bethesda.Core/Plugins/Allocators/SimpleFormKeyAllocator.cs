@@ -20,7 +20,7 @@ public class SimpleFormKeyAllocator : IFormKeyAllocator
     /// </summary> 
     public SimpleFormKeyAllocator(IMod mod)
     {
-        this.Mod = mod;
+        Mod = mod;
     }
 
     /// <summary> 
@@ -32,11 +32,11 @@ public class SimpleFormKeyAllocator : IFormKeyAllocator
     /// <returns>The next FormKey from the Mod</returns> 
     public FormKey GetNextFormKey()
     {
-        lock (this.Mod)
+        lock (Mod)
         {
             return new FormKey(
-                this.Mod.ModKey,
-                checked(this.Mod.NextFormID++));
+                Mod.ModKey,
+                checked(Mod.NextFormID++));
         }
     }
 

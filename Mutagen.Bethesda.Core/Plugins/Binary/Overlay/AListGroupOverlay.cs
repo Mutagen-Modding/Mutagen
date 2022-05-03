@@ -24,14 +24,14 @@ internal class GroupListOverlay<T> : IReadOnlyList<T>
         ReadOnlyMemorySlice<byte> data,
         BinaryOverlayFactoryPackage package)
     {
-        this._locs = locs;
-        this._data = data;
-        this._package = package;
+        _locs = locs;
+        _data = data;
+        _package = package;
     }
 
     private T ConstructWrapper(int pos)
     {
-        ReadOnlyMemorySlice<byte> slice = this._data.Slice(pos);
+        ReadOnlyMemorySlice<byte> slice = _data.Slice(pos);
         var majorMeta = _package.MetaData.Constants.MajorRecord(slice);
         if (majorMeta.IsCompressed)
         {
@@ -93,7 +93,7 @@ internal class GroupListOverlay<T> : IReadOnlyList<T>
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return this.GetEnumerator();
+        return GetEnumerator();
     }
 }
 

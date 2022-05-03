@@ -36,7 +36,7 @@ public struct VariableHeader
     /// </summary>
     public byte HeaderLength => Constants.HeaderLength;
         
-    public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4));
+    public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(Span.Slice(0, 4));
         
     /// <summary>
     /// RecordType of the header
@@ -47,14 +47,14 @@ public struct VariableHeader
     {
         get
         {
-            switch (this.Constants.LengthLength)
+            switch (Constants.LengthLength)
             {
                 case 1:
-                    return this.Span[4];
+                    return Span[4];
                 case 2:
-                    return BinaryPrimitives.ReadUInt16LittleEndian(this.Span.Slice(4, 2));
+                    return BinaryPrimitives.ReadUInt16LittleEndian(Span.Slice(4, 2));
                 case 4:
-                    return BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
+                    return BinaryPrimitives.ReadUInt32LittleEndian(Span.Slice(4, 4));
                 default:
                     throw new NotImplementedException();
             }

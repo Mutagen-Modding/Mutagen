@@ -38,7 +38,7 @@ internal class InternalImmutableModLinkCache
                 return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
             },
             e => e.IsNullOrWhitespace());
-        this.ListedOrder = new List<IModGetter>()
+        ListedOrder = new List<IModGetter>()
         {
             sourceMod
         };

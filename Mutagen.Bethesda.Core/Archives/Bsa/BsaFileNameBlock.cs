@@ -10,7 +10,7 @@ class BsaFileNameBlock
     public BsaFileNameBlock(BsaReader bsa, long position)
     {
         Names = new Lazy<ReadOnlyMemorySlice<byte>[]>(
-            mode: System.Threading.LazyThreadSafetyMode.ExecutionAndPublication,
+            mode: LazyThreadSafetyMode.ExecutionAndPublication,
             valueFactory: () =>
             {
                 try

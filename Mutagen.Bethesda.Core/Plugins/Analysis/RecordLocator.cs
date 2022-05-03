@@ -25,7 +25,7 @@ public static class RecordLocator
 
         public FileLocationConstructor(GameConstants metaData)
         {
-            this.MetaData = metaData;
+            MetaData = metaData;
         }
 
         public void Add(
@@ -35,12 +35,12 @@ public static class RecordLocator
             RangeInt64 section)
         {
             var grupArr = parentGrupLocations.ToArray();
-            this.FromFormKeys[formKey] = (section, grupArr, record);
-            this.FromStartPositions.Add(section.Min);
-            this.FromEndPositions.Add(section.Max);
-            this.FormKeys.Add(new(formKey, section, record));
-            this.LastParsed = formKey;
-            this.LastLoc = section.Min;
+            FromFormKeys[formKey] = (section, grupArr, record);
+            FromStartPositions.Add(section.Min);
+            FromEndPositions.Add(section.Max);
+            FormKeys.Add(new(formKey, section, record));
+            LastParsed = formKey;
+            LastLoc = section.Min;
         }
     }
 

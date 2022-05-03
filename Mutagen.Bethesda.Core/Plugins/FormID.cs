@@ -28,13 +28,13 @@ public struct FormID : IEquatable<FormID>
     /// <summary>
     /// The ModIndex bytes of the FormID
     /// </summary>
-    public ModIndex ModIndex => new ModIndex(ModIndex.GetModIndexByteFromUInt(this.Raw));
+    public ModIndex ModIndex => new ModIndex(ModIndex.GetModIndexByteFromUInt(Raw));
         
     /// <summary>
     /// The ID bytes of a FormID.
     /// Exposed as a uint, but will only ever have values filling the first 6 bytes.
     /// </summary>
-    public uint ID => this.Raw & 0x00FFFFFF;
+    public uint ID => Raw & 0x00FFFFFF;
 
     /// <summary>
     /// Constructor taking a Mod index and ID as separate parameters
@@ -48,8 +48,8 @@ public struct FormID : IEquatable<FormID>
         {
             throw new ArgumentException("Data present in Mod index bytes of id");
         }
-        this.Raw = (uint)(modID.ID << 24);
-        this.Raw += this.Raw + id & 0x00FFFFFF;
+        Raw = (uint)(modID.ID << 24);
+        Raw += Raw + id & 0x00FFFFFF;
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public struct FormID : IEquatable<FormID>
     /// <param name="idWithModIndex">Mod index and Record ID to use</param>
     public FormID(uint idWithModIndex)
     {
-        this.Raw = idWithModIndex;
+        Raw = idWithModIndex;
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public struct FormID : IEquatable<FormID>
     /// <returns>byte array of size 4 with raw contents</returns>
     public byte[] ToBytes()
     {
-        return BitConverter.GetBytes(this.Raw);
+        return BitConverter.GetBytes(Raw);
     }
 
     /// <summary>
@@ -196,7 +196,7 @@ public struct FormID : IEquatable<FormID>
     /// <returns>True equal raw value</returns>
     public bool Equals(FormID other)
     {
-        return this.Raw == other.Raw;
+        return Raw == other.Raw;
     }
 
     /// <summary>
@@ -205,7 +205,7 @@ public struct FormID : IEquatable<FormID>
     /// <returns>Hashcode retrieved from Raw value.</returns>
     public override int GetHashCode()
     {
-        return this.Raw.GetHashCode();
+        return Raw.GetHashCode();
     }
 
     public static bool operator ==(FormID a, FormID b)

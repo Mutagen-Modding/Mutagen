@@ -12,9 +12,9 @@ public class RecordInterest
         IEnumerable<RecordType>? interestingTypes = null,
         IEnumerable<RecordType>? uninterestingTypes = null)
     {
-        this.InterestingTypes = new HashSet<RecordType>(
+        InterestingTypes = new HashSet<RecordType>(
             interestingTypes ?? EnumerableExt<RecordType>.Empty);
-        this.UninterestingTypes = new HashSet<RecordType>(
+        UninterestingTypes = new HashSet<RecordType>(
             uninterestingTypes ?? EnumerableExt<RecordType>.Empty);
     }
 
@@ -32,7 +32,7 @@ public class RecordInterest
         }
         else if (UninterestingTypes?.Count <= 0)
         {
-            return this.EmptyMeansInterested;
+            return EmptyMeansInterested;
         }
         return !UninterestingTypes?.Contains(type) ?? true;
     }

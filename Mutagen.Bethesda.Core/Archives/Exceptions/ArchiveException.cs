@@ -192,6 +192,6 @@ public class ArchiveException : Exception
 
     public override string ToString()
     {
-        return $"{nameof(ArchiveException)} {ArchiveFilePath}{InternalFolderAccessed?.Decorate(x => $"=>{x}")}{InternalFileAccessed?.Decorate(x => $"=>{x}")}: {this.Message} {this.InnerException}{this.StackTrace}";
+        return $"{nameof(ArchiveException)} {ArchiveFilePath}{InternalFolderAccessed?.Decorate(x => $"=>{x}")}{InternalFileAccessed?.Decorate(x => $"=>{x}")}: {Message} {InnerException}{StackTrace}";
     }
 }

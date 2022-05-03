@@ -6,9 +6,9 @@ namespace Mutagen.Bethesda.Plugins.Internals;
 
 public record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
 {
-    public FormKey? FormKeyNullable => this.FormKey;
+    public FormKey? FormKeyNullable => FormKey;
 
-    public bool IsNull => this.FormKey.IsNull;
+    public bool IsNull => FormKey.IsNull;
 
     public override string ToString()
     {
@@ -48,18 +48,18 @@ public record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
 
     public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
     {
-        modKey = this.FormKey.ModKey;
+        modKey = FormKey.ModKey;
         return true;
     }
 
     public bool TryResolveFormKey(ILinkCache cache, out FormKey formKey)
     {
-        formKey = this.FormKey;
+        formKey = FormKey;
         return true;
     }
 
     public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter majorRecord)
     {
-        return cache.TryResolve<IMajorRecordGetter>(this.FormKey, out majorRecord);
+        return cache.TryResolve<IMajorRecordGetter>(FormKey, out majorRecord);
     }
 }

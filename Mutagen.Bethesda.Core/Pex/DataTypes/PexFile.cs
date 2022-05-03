@@ -44,7 +44,7 @@ public partial class PexFile
         var hasDebugInfo = bundle.Reader.ReadUInt8() == 1;
         if (hasDebugInfo)
         {
-            file.DebugInfo = Mutagen.Bethesda.Pex.DebugInfo.Create(bundle);
+            file.DebugInfo = DebugInfo.Create(bundle);
         }
 
         var userFlagCount = br.ReadUInt16();
@@ -74,7 +74,7 @@ public partial class PexFile
         bw.Write(MachineName);
 
         var memoryTrib = new MemoryTributary();
-        var bw2 = new PexWriter(memoryTrib, Encoding.UTF8, this._gameCategory.IsBigEndian());
+        var bw2 = new PexWriter(memoryTrib, Encoding.UTF8, _gameCategory.IsBigEndian());
         var writeMeta = new PexWriteMeta(_gameCategory, bw2);
         WriteContent(writeMeta);
 

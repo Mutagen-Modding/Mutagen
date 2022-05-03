@@ -46,7 +46,7 @@ public class RecordTypeXmlTranslation : PrimitiveXmlTranslation<RecordType>
         TranslationCrystal? translationMask)
         where T : class, IMajorRecordGetter
     {
-        return this.Parse(
+        return Parse(
             node: node,
             item: out item,
             errorMask: errorMask);
@@ -59,7 +59,7 @@ public class RecordTypeXmlTranslation : PrimitiveXmlTranslation<RecordType>
         TranslationCrystal? translationMask)
         where T : class, IMajorRecordGetter
     {
-        return this.Parse(
+        return Parse(
             node: node,
             item: out item,
             errorMask: errorMask);

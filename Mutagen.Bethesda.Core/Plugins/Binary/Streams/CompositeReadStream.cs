@@ -37,15 +37,15 @@ public class CompositeReadStream : Stream
     {
         if (trimNulls)
         {
-            this._subStreams = streams.NotNull().ToArray();
+            _subStreams = streams.NotNull().ToArray();
         }
         else
         {
-            this._subStreams = streams.ToArray();
+            _subStreams = streams.ToArray();
         }
-        foreach (var stream in this._subStreams)
+        foreach (var stream in _subStreams)
         {
-            this._length += stream.Length;
+            _length += stream.Length;
             if (stream.Position != 0)
             {
                 if (resetPositions)
@@ -71,14 +71,14 @@ public class CompositeReadStream : Stream
         while (!Done && count > 0)
         {
             var toRead = (int)Math.Min(count, TargetStream.Length);
-            var amountRead = this.TargetStream.Read(buffer, offset, toRead);
+            var amountRead = TargetStream.Read(buffer, offset, toRead);
             totalRead += amountRead;
             count -= amountRead;
             offset += amountRead;
-            this._position += amountRead;
-            if (this.TargetStream.Remaining() == 0)
+            _position += amountRead;
+            if (TargetStream.Remaining() == 0)
             {
-                this._targetStreamIndex++;
+                _targetStreamIndex++;
             }
         }
         return totalRead;

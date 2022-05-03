@@ -412,7 +412,7 @@ internal static class PluginUtilityTranslation
         byte[] bytes)
     {
         var ret = await Task.WhenAll(streams).ConfigureAwait(false);
-        PluginUtilityTranslation.SetGroupLength(bytes, (uint)ret.Sum(i => i.Length));
+        SetGroupLength(bytes, (uint)ret.Sum(i => i.Length));
         return ret;
     }
 
@@ -420,7 +420,7 @@ internal static class PluginUtilityTranslation
         IEnumerable<Stream> streams,
         byte[] bytes)
     {
-        PluginUtilityTranslation.SetGroupLength(bytes, (uint)streams.NotNull().Sum(i => i.Length));
+        SetGroupLength(bytes, (uint)streams.NotNull().Sum(i => i.Length));
     }
 
     internal static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)

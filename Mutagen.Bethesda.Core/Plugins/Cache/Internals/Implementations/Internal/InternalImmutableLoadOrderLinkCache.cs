@@ -38,7 +38,7 @@ internal class InternalImmutableLoadOrderLinkCache
             metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
             m => TryGet<FormKey>.Succeed(m.FormKey),
             f => f.IsNull);
-        this._editorIdCache = new ImmutableLoadOrderLinkCacheCategory<string>(
+        _editorIdCache = new ImmutableLoadOrderLinkCacheCategory<string>(
             gameCategory,
             hasAny: hasAny,
             simple: simple,

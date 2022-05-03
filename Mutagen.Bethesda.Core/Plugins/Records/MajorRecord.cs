@@ -60,25 +60,25 @@ public partial class MajorRecord : IFormLinkContainer
     #region EditorID
     public virtual String? EditorID { get; set; }
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    String? IMajorRecordGetter.EditorID => this.EditorID;
+    String? IMajorRecordGetter.EditorID => EditorID;
     #endregion
 
     /// <summary>
     /// A convenience property to print "EditorID - FormKey"
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public string TitleString => $"{this.EditorID} - {this.FormKey}";
+    public string TitleString => $"{EditorID} - {FormKey}";
 
     public bool IsCompressed
     {
-        get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.CompressedFlag);
-        set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Constants.CompressedFlag, value);
+        get => EnumExt.HasFlag(MajorRecordFlagsRaw, Constants.CompressedFlag);
+        set => MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, Constants.CompressedFlag, value);
     }
 
     public bool IsDeleted
     {
-        get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.DeletedFlag);
-        set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Constants.DeletedFlag, value);
+        get => EnumExt.HasFlag(MajorRecordFlagsRaw, Constants.DeletedFlag);
+        set => MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, Constants.DeletedFlag, value);
     }
 
     protected abstract ushort? FormVersionAbstract { get; }
@@ -87,7 +87,7 @@ public partial class MajorRecord : IFormLinkContainer
 
     public virtual bool Disable()
     {
-        if (this.IsDeleted) return false;
+        if (IsDeleted) return false;
         MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, (int)Constants.InitiallyDisabled, true);
         return true;
     }
@@ -133,8 +133,8 @@ public static class IMajorRecordGetterExt
 [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
 internal abstract partial class MajorRecordBinaryOverlay : IMajorRecordGetter
 {
-    public bool IsCompressed => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.CompressedFlag);
-    public bool IsDeleted => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.DeletedFlag);
+    public bool IsCompressed => EnumExt.HasFlag(MajorRecordFlagsRaw, Constants.CompressedFlag);
+    public bool IsDeleted => EnumExt.HasFlag(MajorRecordFlagsRaw, Constants.DeletedFlag);
 
     protected abstract ushort? FormVersionAbstract { get; }
     ushort? IMajorRecordGetter.FormVersion => FormVersionAbstract;

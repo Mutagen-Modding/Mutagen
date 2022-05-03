@@ -64,7 +64,7 @@ public static class BinaryStringUtility
         {
             throw new ArgumentException();
         }
-        var ret = BinaryStringUtility.ToZString(mem[0..index], encoding);
+        var ret = ToZString(mem[0..index], encoding);
         stream.Position += index + 1;
         return ret;
     }

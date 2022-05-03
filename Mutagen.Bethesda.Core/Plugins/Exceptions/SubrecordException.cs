@@ -61,22 +61,22 @@ public class SubrecordException : RecordException
         {
             if (RecordType == null)
             {
-                return $"{nameof(SubrecordException)} {ModKey} => {FormKey} => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(SubrecordException)} {ModKey} => {FormKey} => {Subrecord}: {Message} {InnerException}{StackTrace}";
             }
             else
             {
-                return $"{nameof(SubrecordException)} {ModKey} => {FormKey}<{RecordType.Name}> => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(SubrecordException)} {ModKey} => {FormKey}<{RecordType.Name}> => {Subrecord}: {Message} {InnerException}{StackTrace}";
             }
         }
         else
         {
             if (RecordType == null)
             {
-                return $"{nameof(SubrecordException)} {ModKey} => {EditorID} ({FormKey}) => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(SubrecordException)} {ModKey} => {EditorID} ({FormKey}) => {Subrecord}: {Message} {InnerException}{StackTrace}";
             }
             else
             {
-                return $"{nameof(SubrecordException)} {ModKey} => {EditorID} ({FormKey}<{RecordType.Name}>) => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(SubrecordException)} {ModKey} => {EditorID} ({FormKey}<{RecordType.Name}>) => {Subrecord}: {Message} {InnerException}{StackTrace}";
             }
         }
     }

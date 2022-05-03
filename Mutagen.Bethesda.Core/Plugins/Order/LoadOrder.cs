@@ -761,8 +761,8 @@ public class LoadOrder<TListing> : ILoadOrder<TListing>
     public void Clear()
     {
         Dispose();
-        this._byLoadOrder.Clear();
-        this._byModKey.Clear();
+        _byLoadOrder.Clear();
+        _byModKey.Clear();
     }
 
     public bool RemoveKey(ModKey key)
@@ -824,7 +824,7 @@ public class LoadOrder<TListing> : ILoadOrder<TListing>
         return ListedOrder.Select(x => (Noggog.IKeyValue<ModKey, TListing>)new KeyValue<ModKey, TListing>(x.ModKey, x)).GetEnumerator();
     }
 
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
     /// Disposes all contained items that implement IDisposable

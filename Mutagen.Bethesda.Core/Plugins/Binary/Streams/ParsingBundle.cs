@@ -57,8 +57,8 @@ public class ParsingBundle
 
     public ParsingBundle(GameConstants constants, IMasterReferenceCollection masterReferences)
     {
-        this.Constants = constants;
-        this.MasterReferences = masterReferences;
+        Constants = constants;
+        MasterReferences = masterReferences;
     }
 
     public static implicit operator GameConstants(ParsingBundle bundle)

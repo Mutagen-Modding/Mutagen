@@ -24,8 +24,8 @@ public abstract class AMod : IMod
 
     protected AMod()
     {
-        this.ModKey = ModKey.Null;
-        this._allocator = new SimpleFormKeyAllocator(this);
+        ModKey = ModKey.Null;
+        _allocator = new SimpleFormKeyAllocator(this);
     }
 
     /// <summary> 

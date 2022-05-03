@@ -36,8 +36,8 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         ReadOnlyMemorySlice<byte> bytes,
         BinaryOverlayFactoryPackage package)
     {
-        this._data = bytes;
-        this._package = package;
+        _data = bytes;
+        _package = package;
     }
 
     public static void FillModTypes(

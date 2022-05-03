@@ -462,10 +462,10 @@ internal abstract class BinaryOverlayList
             PluginBinaryOverlay.SpanFactory<T> getter,
             int[] locs)
         {
-            this._mem = mem;
-            this._getter = getter;
-            this._package = package;
-            this._locations = locs;
+            _mem = mem;
+            _getter = getter;
+            _package = package;
+            _locations = locs;
         }
 
         public T this[int index] => _getter(_mem.Slice(_locations[index]), _package);
@@ -480,7 +480,7 @@ internal abstract class BinaryOverlayList
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     private class BinaryOverlayRecordListByLocationArray<T> : IReadOnlyList<T>
@@ -498,11 +498,11 @@ internal abstract class BinaryOverlayList
             PluginBinaryOverlay.SpanRecordFactory<T> getter,
             int[] locs)
         {
-            this._mem = mem;
-            this._getter = getter;
-            this._package = package;
-            this._recordTypeConverter = recordTypeConverter;
-            this._locations = locs;
+            _mem = mem;
+            _getter = getter;
+            _package = package;
+            _recordTypeConverter = recordTypeConverter;
+            _locations = locs;
         }
 
         public T this[int index] => _getter(_mem.Slice(_locations[index]), _package, _recordTypeConverter);
@@ -517,7 +517,7 @@ internal abstract class BinaryOverlayList
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     public class BinaryOverlayListByStartIndex<T> : IReadOnlyList<T>
@@ -533,10 +533,10 @@ internal abstract class BinaryOverlayList
             PluginBinaryOverlay.SpanFactory<T> getter,
             int itemLength)
         {
-            this._mem = mem;
-            this._package = package;
-            this._getter = getter;
-            this._itemLength = itemLength;
+            _mem = mem;
+            _package = package;
+            _getter = getter;
+            _itemLength = itemLength;
         }
 
         public T this[int index]
@@ -548,17 +548,17 @@ internal abstract class BinaryOverlayList
             }
         }
 
-        public int Count => this._mem.Length / _itemLength;
+        public int Count => _mem.Length / _itemLength;
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 yield return this[i];
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     public class BinaryOverlayListByStartIndexWithRecord<T> : IReadOnlyList<T>
@@ -580,21 +580,21 @@ internal abstract class BinaryOverlayList
             RecordType recordType,
             bool skipHeader)
         {
-            this._mem = mem;
-            this._package = package;
-            this._getter = getter;
-            this._itemLength = itemLength;
-            this._recordType = recordType;
-            this._totalItemLength = itemLength + this._package.MetaData.Constants.SubConstants.HeaderLength;
+            _mem = mem;
+            _package = package;
+            _getter = getter;
+            _itemLength = itemLength;
+            _recordType = recordType;
+            _totalItemLength = itemLength + _package.MetaData.Constants.SubConstants.HeaderLength;
             if (skipHeader)
             {
-                _sliceOffset = this._package.MetaData.Constants.SubConstants.HeaderLength;
+                _sliceOffset = _package.MetaData.Constants.SubConstants.HeaderLength;
                 _itemOffset = 0;
             }
             else
             {
                 _sliceOffset = 0;
-                _itemOffset = this._package.MetaData.Constants.SubConstants.HeaderLength;
+                _itemOffset = _package.MetaData.Constants.SubConstants.HeaderLength;
             }
         }
 
@@ -602,31 +602,31 @@ internal abstract class BinaryOverlayList
         {
             get
             {
-                var startIndex = index * this._totalItemLength;
+                var startIndex = index * _totalItemLength;
                 var subMeta = _package.MetaData.Constants.Subrecord(_mem.Slice(startIndex));
-                if (subMeta.RecordType != this._recordType)
+                if (subMeta.RecordType != _recordType)
                 {
-                    throw new ArgumentException($"Unexpected record type: {subMeta.RecordType} != {this._recordType}");
+                    throw new ArgumentException($"Unexpected record type: {subMeta.RecordType} != {_recordType}");
                 }
-                if (subMeta.ContentLength != this._itemLength)
+                if (subMeta.ContentLength != _itemLength)
                 {
-                    throw new ArgumentException($"Unexpected record length: {subMeta.ContentLength} != {this._itemLength}");
+                    throw new ArgumentException($"Unexpected record length: {subMeta.ContentLength} != {_itemLength}");
                 }
                 return _getter(_mem.Slice(startIndex + _sliceOffset, _itemLength + _itemOffset), _package);
             }
         }
 
-        public int Count => this._mem.Length / this._totalItemLength;
+        public int Count => _mem.Length / _totalItemLength;
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 yield return this[i];
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     public class BinaryOverlayListByStartIndexWithRecordSet<T> : IReadOnlyList<T>
@@ -645,43 +645,43 @@ internal abstract class BinaryOverlayList
             int itemLength,
             IRecordCollection recordTypes)
         {
-            this._mem = mem;
-            this._package = package;
-            this._getter = getter;
-            this._itemLength = itemLength;
-            this._recordTypes = recordTypes;
-            this._totalItemLength = itemLength + this._package.MetaData.Constants.SubConstants.HeaderLength;
+            _mem = mem;
+            _package = package;
+            _getter = getter;
+            _itemLength = itemLength;
+            _recordTypes = recordTypes;
+            _totalItemLength = itemLength + _package.MetaData.Constants.SubConstants.HeaderLength;
         }
 
         public T this[int index]
         {
             get
             {
-                var startIndex = index * this._totalItemLength;
+                var startIndex = index * _totalItemLength;
                 var subMeta = _package.MetaData.Constants.Subrecord(_mem.Slice(startIndex));
-                if (!this._recordTypes.Contains(subMeta.RecordType))
+                if (!_recordTypes.Contains(subMeta.RecordType))
                 {
                     throw new ArgumentException($"Unexpected record type: {subMeta.RecordType}");
                 }
-                if (subMeta.ContentLength != this._itemLength)
+                if (subMeta.ContentLength != _itemLength)
                 {
-                    throw new ArgumentException($"Unexpected record length: {subMeta.ContentLength} != {this._itemLength}");
+                    throw new ArgumentException($"Unexpected record length: {subMeta.ContentLength} != {_itemLength}");
                 }
                 return _getter(_mem.Slice(startIndex + _package.MetaData.Constants.SubConstants.HeaderLength, _itemLength), _package);
             }
         }
 
-        public int Count => this._mem.Length / this._totalItemLength;
+        public int Count => _mem.Length / _totalItemLength;
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 yield return this[i];
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     public class BinaryOverlayLazyList<T> : IReadOnlyList<T>
@@ -696,23 +696,23 @@ internal abstract class BinaryOverlayList
             BinaryOverlayFactoryPackage package,
             Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, IReadOnlyList<T>> getter)
         {
-            this._mem = mem;
-            this._getter = getter;
-            this._package = package;
-            this._list = new Lazy<IReadOnlyList<T>>(ConstructList, isThreadSafe: true);
+            _mem = mem;
+            _getter = getter;
+            _package = package;
+            _list = new Lazy<IReadOnlyList<T>>(ConstructList, isThreadSafe: true);
         }
 
         private IReadOnlyList<T> ConstructList()
         {
-            return this._getter(_mem, _package);
+            return _getter(_mem, _package);
         }
 
-        public T this[int index] => this._list.Value[index];
+        public T this[int index] => _list.Value[index];
 
-        public int Count => this._list.Value.Count;
+        public int Count => _list.Value.Count;
 
-        public IEnumerator<T> GetEnumerator() => this._list.Value.GetEnumerator();
+        public IEnumerator<T> GetEnumerator() => _list.Value.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

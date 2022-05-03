@@ -94,7 +94,7 @@ public class BinaryWriteParameters
                 {
                     throw new ArgumentException($"ModKeys were misaligned: {mod.ModKey} != {pathModKey}.  " +
                                                 $"Export to a file that matches the mod object's ModKey, or " +
-                                                $"modify your {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.ModKey)} parameters " +
+                                                $"modify your {nameof(BinaryWriteParameters)}.{nameof(ModKey)} parameters " +
                                                 $"to override this behavior.");
                 }
                 return mod.ModKey;

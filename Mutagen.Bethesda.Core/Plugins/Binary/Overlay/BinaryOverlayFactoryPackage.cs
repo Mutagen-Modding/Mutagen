@@ -11,8 +11,8 @@ internal struct BinaryOverlayFactoryPackage
 
     public BinaryOverlayFactoryPackage(ParsingBundle metaData)
     {
-        this.MetaData = metaData;
-        this.FormVersion = null;
+        MetaData = metaData;
+        FormVersion = null;
     }
 
     public static implicit operator ParsingBundle(BinaryOverlayFactoryPackage package)

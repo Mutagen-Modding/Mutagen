@@ -30,41 +30,41 @@ public struct MutagenFrame : IMutagenReadStream
     /// Whether the frame's contents have been read.
     /// Associated reader might have more content
     /// </summary>
-    public bool Complete => this.Position >= this.FinalLocation;
+    public bool Complete => Position >= FinalLocation;
 
     /// <inheritdoc/>
     public long Position
     {
-        get => this.Reader.Position;
-        set => this.Reader.Position = value;
+        get => Reader.Position;
+        set => Reader.Position = value;
     }
         
     /// <inheritdoc/>
-    public long PositionWithOffset => this.Position + this.Reader.OffsetReference;
+    public long PositionWithOffset => Position + Reader.OffsetReference;
         
     /// <inheritdoc/>
-    public long FinalWithOffset => this.FinalLocation + this.Reader.OffsetReference;
+    public long FinalWithOffset => FinalLocation + Reader.OffsetReference;
         
     /// <inheritdoc/>
-    public long TotalLength => this.FinalLocation - this.InitialPosition;
+    public long TotalLength => FinalLocation - InitialPosition;
         
     /// <inheritdoc/>
-    public long Remaining => this.FinalLocation - this.Position;
+    public long Remaining => FinalLocation - Position;
 
     /// <inheritdoc/>
     public long Length => Reader.Length;
 
     /// <inheritdoc/>
-    public long OffsetReference => this.Reader.OffsetReference;
+    public long OffsetReference => Reader.OffsetReference;
 
     /// <inheritdoc/>
-    public ReadOnlySpan<byte> RemainingSpan => this.Reader.RemainingSpan;
+    public ReadOnlySpan<byte> RemainingSpan => Reader.RemainingSpan;
         
     /// <inheritdoc/>
-    public ReadOnlyMemorySlice<byte> RemainingMemory => this.Reader.RemainingMemory;
+    public ReadOnlyMemorySlice<byte> RemainingMemory => Reader.RemainingMemory;
 
     /// <inheritdoc/>
-    public ParsingBundle MetaData => this.Reader.MetaData;
+    public ParsingBundle MetaData => Reader.MetaData;
 
     public bool IsLittleEndian => Reader.IsLittleEndian;
 
@@ -78,9 +78,9 @@ public struct MutagenFrame : IMutagenReadStream
     [DebuggerStepThrough]
     public MutagenFrame(IMutagenReadStream reader)
     {
-        this.Reader = reader;
-        this.InitialPosition = reader.Position;
-        this.FinalLocation = reader.Length;
+        Reader = reader;
+        InitialPosition = reader.Position;
+        FinalLocation = reader.Length;
     }
 
     [DebuggerStepThrough]
@@ -88,15 +88,15 @@ public struct MutagenFrame : IMutagenReadStream
         IMutagenReadStream reader,
         long finalPosition)
     {
-        this.Reader = reader;
-        this.InitialPosition = reader.Position;
-        this.FinalLocation = finalPosition;
+        Reader = reader;
+        InitialPosition = reader.Position;
+        FinalLocation = finalPosition;
     }
 
     /// <inheritdoc/>
     public bool TryCheckUpcomingRead(long length)
     {
-        return this.Position + length <= this.FinalLocation;
+        return Position + length <= FinalLocation;
     }
 
     /// <inheritdoc/>
@@ -115,12 +115,12 @@ public struct MutagenFrame : IMutagenReadStream
         {
             if (Complete)
             {
-                ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.PositionWithOffset}. Desired {length} more bytes. {this.Remaining} past the final position {this.FinalWithOffset}.");
+                ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {PositionWithOffset}. Desired {length} more bytes. {Remaining} past the final position {FinalWithOffset}.");
                 return false;
             }
             else
             {
-                ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.PositionWithOffset}. Desired {length} more bytes.  Only {this.Remaining} left before final position {this.FinalWithOffset}.");
+                ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {PositionWithOffset}. Desired {length} more bytes.  Only {Remaining} left before final position {FinalWithOffset}.");
                 return false;
             }
         }
@@ -135,13 +135,13 @@ public struct MutagenFrame : IMutagenReadStream
     /// <returns>True if location within frame's region</returns>
     public bool ContainsPosition(long loc)
     {
-        return this.Position <= loc && this.FinalLocation >= loc;
+        return Position <= loc && FinalLocation >= loc;
     }
 
     /// <inheritdoc/>
     public void SetPosition(long pos)
     {
-        this.Position = pos;
+        Position = pos;
     }
 
     /// <inheritdoc/>
@@ -152,31 +152,31 @@ public struct MutagenFrame : IMutagenReadStream
     /// <inheritdoc/>
     public void SetToFinalPosition()
     {
-        this.Reader.Position = this.FinalLocation;
+        Reader.Position = FinalLocation;
     }
 
     /// <inheritdoc/>
     public byte[] ReadRemainingBytes()
     {
-        return this.Reader.ReadBytes(checked((int)this.Remaining));
+        return Reader.ReadBytes(checked((int)Remaining));
     }
 
     /// <inheritdoc/>
     public ReadOnlySpan<byte> ReadRemainingSpan(bool readSafe)
     {
-        return this.Reader.ReadSpan(checked((int)this.Remaining), readSafe: readSafe);
+        return Reader.ReadSpan(checked((int)Remaining), readSafe: readSafe);
     }
 
     /// <inheritdoc/>
     public ReadOnlyMemorySlice<byte> ReadRemainingMemory(bool readSafe)
     {
-        return this.Reader.ReadMemory(checked((int)this.Remaining), readSafe: readSafe);
+        return Reader.ReadMemory(checked((int)Remaining), readSafe: readSafe);
     }
 
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"0x{this.PositionWithOffset.ToString("X")} - 0x{(this.FinalWithOffset - 1).ToString("X")} (0x{this.Remaining.ToString("X")})";
+        return $"0x{PositionWithOffset.ToString("X")} - 0x{(FinalWithOffset - 1).ToString("X")} (0x{Remaining.ToString("X")})";
     }
 
     /// <summary>
@@ -220,7 +220,7 @@ public struct MutagenFrame : IMutagenReadStream
     public MutagenFrame SpawnWithFinalPosition(long finalPosition)
     {
         return new MutagenFrame(
-            this.Reader,
+            Reader,
             finalPosition);
     }
         
@@ -234,18 +234,18 @@ public struct MutagenFrame : IMutagenReadStream
     public MutagenFrame SpawnWithLength(long length, bool checkFraming = true)
     {
         if (checkFraming 
-            && this.Remaining < length)
+            && Remaining < length)
         {
-            throw new ArgumentException($"Frame did not have enough remaining to allocate for desired length at {this.PositionWithOffset}. Desired {length} more bytes, but only had {this.Remaining}.");
+            throw new ArgumentException($"Frame did not have enough remaining to allocate for desired length at {PositionWithOffset}. Desired {length} more bytes, but only had {Remaining}.");
         }
         return new MutagenFrame(
-            this.Reader,
-            this.Reader.Position + length);
+            Reader,
+            Reader.Position + length);
     }
 
     public MutagenFrame SpawnAll()
     {
-        return new MutagenFrame(this.Reader, this.Reader.Length);
+        return new MutagenFrame(Reader, Reader.Length);
     }
 
     /// <summary>
@@ -255,11 +255,11 @@ public struct MutagenFrame : IMutagenReadStream
     /// <returns>New frame with a new backing stream with uncompressed content</returns>
     public MutagenFrame Decompress()
     {
-        var resultLen = this.Reader.ReadUInt32();
-        var bytes = this.Reader.ReadBytes((int)this.Remaining);
+        var resultLen = Reader.ReadUInt32();
+        var bytes = Reader.ReadBytes((int)Remaining);
         var res = Decompression.Decompress(bytes, resultLen);
         return new MutagenFrame(
-            new MutagenMemoryReadStream(res, this.MetaData));
+            new MutagenMemoryReadStream(res, MetaData));
     }
 
     /// <summary>
@@ -269,16 +269,16 @@ public struct MutagenFrame : IMutagenReadStream
     /// <returns>New frame with a new backing stream</returns>
     public MutagenFrame ReadAndReframe(int length)
     {
-        var offset = this.PositionWithOffset;
+        var offset = PositionWithOffset;
         return new MutagenFrame(
             new MutagenMemoryReadStream(
-                this.ReadMemory(length, readSafe: true),
-                this.MetaData,
+                ReadMemory(length, readSafe: true),
+                MetaData,
                 offsetReference: offset));
     }
 
     /// <inheritdoc/>
-    IMutagenReadStream IMutagenReadStream.ReadAndReframe(int length) => this.ReadAndReframe(length);
+    IMutagenReadStream IMutagenReadStream.ReadAndReframe(int length) => ReadAndReframe(length);
 
     /// <inheritdoc/>
     public int Read(byte[] buffer, int offset, int amount)

@@ -20,8 +20,8 @@ public class MutagenInterfaceReadStream : IMutagenReadStream
         long offsetReference = 0)
     {
         _readStream = stream;
-        this.MetaData = metaData;
-        this.OffsetReference = offsetReference;
+        MetaData = metaData;
+        OffsetReference = offsetReference;
     }
 
     /// <inheritdoc />
@@ -155,10 +155,10 @@ public class MutagenInterfaceReadStream : IMutagenReadStream
     /// <inheritdoc />
     public IMutagenReadStream ReadAndReframe(int length)
     {
-        var offset = this.OffsetReference + this.Position;
+        var offset = OffsetReference + Position;
         return new MutagenMemoryReadStream(
-            this.ReadMemory(length, readSafe: true), 
-            this.MetaData,
+            ReadMemory(length, readSafe: true), 
+            MetaData,
             offsetReference: offset);
     }
 

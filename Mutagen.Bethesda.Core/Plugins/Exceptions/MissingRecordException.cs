@@ -39,16 +39,16 @@ public class MissingRecordException : Exception
         {
             if (Type != null)
             {
-                return $"{nameof(MissingRecordException)} {FormKey?.ToString() ?? EditorID}<{Type}>: {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(MissingRecordException)} {FormKey?.ToString() ?? EditorID}<{Type}>: {Message} {InnerException}{StackTrace}";
             }
             else
             {
-                return $"{nameof(MissingRecordException)} {FormKey?.ToString() ?? EditorID}: {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(MissingRecordException)} {FormKey?.ToString() ?? EditorID}: {Message} {InnerException}{StackTrace}";
             }
         }
         else
         {
-            return $"{nameof(MissingRecordException)} {FormKey?.ToString() ?? EditorID}<{Type} (+{Types.Length - 1})>: {this.Message} {this.InnerException}{this.StackTrace}";
+            return $"{nameof(MissingRecordException)} {FormKey?.ToString() ?? EditorID}<{Type} (+{Types.Length - 1})>: {Message} {InnerException}{StackTrace}";
         }
     }
 }

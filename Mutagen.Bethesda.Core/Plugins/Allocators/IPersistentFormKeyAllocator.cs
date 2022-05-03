@@ -12,7 +12,7 @@ public abstract class BasePersistentFormKeyAllocator : BaseFormKeyAllocator, IPe
 
     protected BasePersistentFormKeyAllocator(IMod mod, string saveLocation) : base(mod)
     {
-        this._saveLocation = Path.GetFullPath(saveLocation);
+        _saveLocation = Path.GetFullPath(saveLocation);
     }
 
     /// <summary>

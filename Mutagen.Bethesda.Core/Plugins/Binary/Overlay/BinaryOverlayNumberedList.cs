@@ -45,31 +45,31 @@ internal class NumberedLoquiList<T> : IReadOnlyList<T>
         RecordTypeConverter recordTypeConverter,
         PluginBinaryOverlay.ConverterFactory<T> getter)
     {
-        this.Amount = amount;
-        this.Memory = mem;
-        this.Length = length;
-        this.Package = package;
-        this.Getter = getter;
-        this.RecordTypeConverter = recordTypeConverter;
+        Amount = amount;
+        Memory = mem;
+        Length = length;
+        Package = package;
+        Getter = getter;
+        RecordTypeConverter = recordTypeConverter;
     }
 
     public T this[int index]
     {
         get
         {
-            if (index >= this.Amount || index < 0)
+            if (index >= Amount || index < 0)
             {
                 throw new IndexOutOfRangeException();
             }
-            return this.Getter(new OverlayStream(this.Memory.Slice(index * Length), this.Package), this.Package, this.RecordTypeConverter);
+            return Getter(new OverlayStream(Memory.Slice(index * Length), Package), Package, RecordTypeConverter);
         }
     }
 
-    public int Count => this.Amount;
+    public int Count => Amount;
 
     public IEnumerator<T> GetEnumerator()
     {
-        for (int i = 0; i < this.Amount; i++)
+        for (int i = 0; i < Amount; i++)
         {
             yield return this[i];
         }
@@ -77,7 +77,7 @@ internal class NumberedLoquiList<T> : IReadOnlyList<T>
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return this.GetEnumerator();
+        return GetEnumerator();
     }
 }
 
@@ -90,32 +90,32 @@ internal class NumberedEnumList<T> : IReadOnlyList<T>
 
     public NumberedEnumList(ReadOnlyMemorySlice<byte> mem, int amount, byte enumLength)
     {
-        this.Amount = amount;
-        this.Memory = mem;
-        this.EnumLength = enumLength;
+        Amount = amount;
+        Memory = mem;
+        EnumLength = enumLength;
     }
 
     public T this[int index]
     {
         get
         {
-            if (index >= this.Amount || index < 0)
+            if (index >= Amount || index < 0)
             {
                 throw new IndexOutOfRangeException();
             }
-            if (((index + 1) * this.EnumLength) < this.Memory.Length)
+            if (((index + 1) * EnumLength) < Memory.Length)
             {
-                return EnumExt.Parse<T>(BinaryPrimitives.ReadInt32LittleEndian(this.Memory.Span.Slice(index * this.EnumLength)), default(T));
+                return EnumExt.Parse<T>(BinaryPrimitives.ReadInt32LittleEndian(Memory.Span.Slice(index * EnumLength)), default(T));
             }
             return default;
         }
     }
 
-    public int Count => this.Amount;
+    public int Count => Amount;
 
     public IEnumerator<T> GetEnumerator()
     {
-        for (int i = 0; i < this.Amount; i++)
+        for (int i = 0; i < Amount; i++)
         {
             yield return this[i];
         }
@@ -123,6 +123,6 @@ internal class NumberedEnumList<T> : IReadOnlyList<T>
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return this.GetEnumerator();
+        return GetEnumerator();
     }
 }

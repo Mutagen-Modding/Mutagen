@@ -21,7 +21,7 @@ public class ModTrimmer
         using var inputStream = streamCreator();
         if (inputStream.Complete) return;
         
-        using var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
+        using var writer = new BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
 
         var fileLocs = RecordLocator.GetLocations(
             inputStream,

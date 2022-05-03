@@ -35,7 +35,7 @@ public static class Warmup
                 if (regis == null) continue;
                 protocols.Add(regis);
             }
-            Loqui.Initialization.SpinUp(protocols.ToArray());
+            Initialization.SpinUp(protocols.ToArray());
             MetaInterfaceMapping.Warmup();
             OverrideMaskRegistrations.Warmup();
             _warmedUp = true;

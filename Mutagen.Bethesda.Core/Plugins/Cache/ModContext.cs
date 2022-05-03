@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
 
         public bool TryGetParentSimpleContext<TScopedTargetGetter>([MaybeNullWhen(false)] out IModContext<TScopedTargetGetter> parent) 
         {
-            var targetContext = this.Parent;
+            var targetContext = Parent;
             while (targetContext != null)
             {
                 if (targetContext.Record is TScopedTargetGetter)
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TScopedTarget : TScopedTargetGetter
             where TScopedTargetGetter : notnull
         {
-            var targetContext = this.Parent;
+            var targetContext = Parent;
             while (targetContext != null)
             {
                 if (targetContext.Record is TScopedTargetGetter)
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
 
         public bool TryGetParentSimpleContext<TScopedTargetGetter>([MaybeNullWhen(false)] out IModContext<TScopedTargetGetter> parent)
         {
-            var targetContext = this.Parent;
+            var targetContext = Parent;
             while (targetContext != null)
             {
                 if (targetContext.Record is TScopedTargetGetter)
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
 
         public TTarget DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
         {
-            return _duplicateInto(mod, this.Record, editorID);
+            return _duplicateInto(mod, Record, editorID);
         }
     }
     
@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
 
             public IModContext? Parent => null;
 
-            object? IModContext.Record => this.Record;
+            object? IModContext.Record => Record;
 
             public GroupModContext(
                 ModKey modKey,
@@ -290,22 +290,22 @@ namespace Mutagen.Bethesda.Plugins.Cache
 
             public TMajor DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
             {
-                return _group(mod).DuplicateInAsNewRecord(this.Record, editorID);
+                return _group(mod).DuplicateInAsNewRecord(Record, editorID);
             }
 
             public TMajor GetOrAddAsOverride(TMod mod)
             {
-                return _group(mod).GetOrAddAsOverride(this.Record);
+                return _group(mod).GetOrAddAsOverride(Record);
             }
 
             public TMajor? TryRetrieve(TMod mod)
             {
-                return _group(mod).TryGetValue(this.Record.FormKey);
+                return _group(mod).TryGetValue(Record.FormKey);
             }
 
             public TMajorGetter? TryRetrieveGetter(TModGetter mod)
             {
-                return _groupGetter(mod).TryGetValue(this.Record.FormKey);
+                return _groupGetter(mod).TryGetValue(Record.FormKey);
             }
 
             bool IModContext<TMod, TModGetter, TMajor, TMajorGetter>.TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter> parent)

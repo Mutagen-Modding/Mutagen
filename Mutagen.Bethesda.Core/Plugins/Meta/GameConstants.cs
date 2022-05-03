@@ -223,7 +223,7 @@ public record GameConstants
 
     public bool TrySubrecord(ReadOnlyMemorySlice<byte> span, RecordType targetType, out SubrecordHeader header)
     {
-        if (span.Length < this.SubConstants.HeaderLength)
+        if (span.Length < SubConstants.HeaderLength)
         {
             header = default;
             return false;
@@ -246,12 +246,12 @@ public record GameConstants
         {
             throw new ArgumentException($"Unexpected header type: {meta.RecordType}");
         }
-        return Plugins.Binary.Headers.SubrecordFrame.Factory(meta, span);
+        return Binary.Headers.SubrecordFrame.Factory(meta, span);
     }
 
     public bool TrySubrecordFrame(ReadOnlyMemorySlice<byte> span, RecordType targetType, out SubrecordFrame header)
     {
-        if (span.Length < this.SubConstants.HeaderLength)
+        if (span.Length < SubConstants.HeaderLength)
         {
             header = default;
             return false;
@@ -262,7 +262,7 @@ public record GameConstants
             header = default;
             return false;
         }
-        header = Plugins.Binary.Headers.SubrecordFrame.Factory(meta, span);
+        header = Binary.Headers.SubrecordFrame.Factory(meta, span);
         return true;
     }
 
@@ -271,11 +271,11 @@ public record GameConstants
         RecordType rec = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(span));
         if (rec == Internals.Constants.Group)
         {
-            return this.GroupConstants.VariableMeta(span);
+            return GroupConstants.VariableMeta(span);
         }
         else
         {
-            return this.MajorConstants.VariableMeta(span);
+            return MajorConstants.VariableMeta(span);
         }
     }
     #endregion

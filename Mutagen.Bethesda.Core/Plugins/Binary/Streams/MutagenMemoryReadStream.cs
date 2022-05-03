@@ -25,8 +25,8 @@ public class MutagenMemoryReadStream : BinaryMemoryReadStream, IMutagenReadStrea
         long offsetReference = 0)
         : base(data)
     {
-        this.MetaData = metaData;
-        this.OffsetReference = offsetReference;
+        MetaData = metaData;
+        OffsetReference = offsetReference;
     }
 
     /// <summary>
@@ -40,8 +40,8 @@ public class MutagenMemoryReadStream : BinaryMemoryReadStream, IMutagenReadStrea
     public IMutagenReadStream ReadAndReframe(int length)
     {
         return new MutagenMemoryReadStream(
-            this.Data, 
-            this.MetaData, 
-            offsetReference: this.OffsetReference + this.Position);
+            Data, 
+            MetaData, 
+            offsetReference: OffsetReference + Position);
     }
 }

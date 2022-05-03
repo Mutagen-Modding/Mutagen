@@ -241,22 +241,22 @@ public class RecordException : Exception
         {
             if (RecordType == null)
             {
-                return $"{nameof(RecordException)} {ModKey} => {FormKey}: {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(RecordException)} {ModKey} => {FormKey}: {Message} {InnerException}{StackTrace}";
             }
             else
             {
-                return $"{nameof(RecordException)} {ModKey} => {FormKey}<{RecordType.Name}>: {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(RecordException)} {ModKey} => {FormKey}<{RecordType.Name}>: {Message} {InnerException}{StackTrace}";
             }
         }
         else
         {
             if (RecordType == null)
             {
-                return $"{nameof(RecordException)} {ModKey} => {EditorID} ({FormKey}): {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(RecordException)} {ModKey} => {EditorID} ({FormKey}): {Message} {InnerException}{StackTrace}";
             }
             else
             {
-                return $"{nameof(RecordException)} {ModKey} => {EditorID} ({FormKey}<{RecordType.Name}>): {this.Message} {this.InnerException}{this.StackTrace}";
+                return $"{nameof(RecordException)} {ModKey} => {EditorID} ({FormKey}<{RecordType.Name}>): {Message} {InnerException}{StackTrace}";
             }
         }
     }

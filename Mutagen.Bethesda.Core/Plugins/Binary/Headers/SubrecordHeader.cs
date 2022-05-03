@@ -26,8 +26,8 @@ public struct SubrecordHeader
     /// <param name="span">Span to overlay on, aligned to the start of the Sub Record's header</param>
     public SubrecordHeader(GameConstants meta, ReadOnlyMemorySlice<byte> span)
     {
-        this.Meta = meta;
-        this.HeaderData = span.Slice(0, meta.SubConstants.HeaderLength);
+        Meta = meta;
+        HeaderData = span.Slice(0, meta.SubConstants.HeaderLength);
     }
 
     /// <summary>
@@ -43,22 +43,22 @@ public struct SubrecordHeader
     /// <summary>
     /// RecordType of the header
     /// </summary>
-    public RecordType RecordType => new RecordType(this.RecordTypeInt);
+    public RecordType RecordType => new RecordType(RecordTypeInt);
         
     /// <summary>
     /// RecordType of the header, represented as an int
     /// </summary>
-    public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4));
+    public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(0, 4));
         
     /// <summary>
     /// The length of the content of the Sub Record, excluding the header bytes.
     /// </summary>
-    public ushort ContentLength => BinaryPrimitives.ReadUInt16LittleEndian(this.HeaderData.Slice(4, 2));
+    public ushort ContentLength => BinaryPrimitives.ReadUInt16LittleEndian(HeaderData.Slice(4, 2));
 
     /// <summary>
     /// Total length of the Sub Record, including the header and its content.
     /// </summary>
-    public int TotalLength => this.HeaderLength + this.ContentLength;
+    public int TotalLength => HeaderLength + ContentLength;
 
     /// <inheritdoc/>
     public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")}";
@@ -99,8 +99,8 @@ public struct SubrecordPinHeader
     /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
     public SubrecordPinHeader(GameConstants meta, ReadOnlyMemorySlice<byte> span, int pinLocation)
     {
-        this.Meta = meta;
-        this.HeaderData = span.Slice(0, meta.SubConstants.HeaderLength);
+        Meta = meta;
+        HeaderData = span.Slice(0, meta.SubConstants.HeaderLength);
         Location = pinLocation;
     }
 
@@ -111,8 +111,8 @@ public struct SubrecordPinHeader
     /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
     public SubrecordPinHeader(SubrecordHeader header, int pinLocation)
     {
-        this.Meta = header.Meta;
-        this.HeaderData = header.HeaderData;
+        Meta = header.Meta;
+        HeaderData = header.HeaderData;
         Location = pinLocation;
     }
 
@@ -129,22 +129,22 @@ public struct SubrecordPinHeader
     /// <summary>
     /// RecordType of the header
     /// </summary>
-    public RecordType RecordType => new RecordType(this.RecordTypeInt);
+    public RecordType RecordType => new RecordType(RecordTypeInt);
         
     /// <summary>
     /// RecordType of the header, represented as an int
     /// </summary>
-    public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4));
+    public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(0, 4));
         
     /// <summary>
     /// The length of the content of the Sub Record, excluding the header bytes.
     /// </summary>
-    public ushort ContentLength => BinaryPrimitives.ReadUInt16LittleEndian(this.HeaderData.Slice(4, 2));
+    public ushort ContentLength => BinaryPrimitives.ReadUInt16LittleEndian(HeaderData.Slice(4, 2));
 
     /// <summary>
     /// Total length of the Sub Record, including the header and its content.
     /// </summary>
-    public int TotalLength => this.HeaderLength + this.ContentLength;
+    public int TotalLength => HeaderLength + ContentLength;
 
     /// <inheritdoc/>
     public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")} @ {Location.ToString()}";

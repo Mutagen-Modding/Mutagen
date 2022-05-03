@@ -67,7 +67,7 @@ public class ModKeyXmlTranslation : IXmlTranslation<ModKey>
         {
             try
             {
-                this.Write(
+                Write(
                     node: node,
                     name: name,
                     item: item,

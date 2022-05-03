@@ -139,7 +139,7 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
                 {
                     _localization = new Dictionary<Language, string?>();
                 }
-                if (StringsLookup.TryLookup(this.StringsSource, language, this.StringsKey!.Value, out str))
+                if (StringsLookup.TryLookup(StringsSource, language, StringsKey!.Value, out str))
                 {
                     _localization[language] = str;
                     return true;
@@ -225,10 +225,10 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
     public void Clear()
     {
         ClearNonDefault();
-        this._directString = null;
+        _directString = null;
     }
 
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public IEnumerator<KeyValuePair<Language, string>> GetEnumerator()
     {
@@ -291,7 +291,7 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
 
     public override string ToString()
     {
-        return this.String ?? string.Empty;
+        return String ?? string.Empty;
     }
 
     public TranslatedString DeepCopy()
@@ -299,14 +299,14 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
         if (_directString == null)
         {
             return new TranslatedString(
-                targetLanguage: this.TargetLanguage,
+                targetLanguage: TargetLanguage,
                 strs: this.ToArray());
         }
         else
         {
             return new TranslatedString(
-                targetLanguage: this.TargetLanguage,
-                directString: this._directString);
+                targetLanguage: TargetLanguage,
+                directString: _directString);
         }
     }
 
@@ -335,7 +335,7 @@ class TranslatedStringOnlyDefaultComparer : IEqualityComparer<ITranslatedStringG
 {
     public bool Equals(ITranslatedStringGetter? x, ITranslatedStringGetter? y)
     {
-        if (object.ReferenceEquals(x, y)) return true;
+        if (ReferenceEquals(x, y)) return true;
         if (x?.TargetLanguage != y?.TargetLanguage) return false;
         return string.Equals(x?.String, y?.String);
     }
@@ -353,7 +353,7 @@ class TranslatedStringComparer : IEqualityComparer<ITranslatedStringGetter>
 {
     public bool Equals(ITranslatedStringGetter? x, ITranslatedStringGetter? y)
     {
-        if (object.ReferenceEquals(x, y)) return true;
+        if (ReferenceEquals(x, y)) return true;
         if (x == null && y == null) return true;
         if (x == null || y == null) return false;
         if (x.NumLanguages != y.NumLanguages) return false;

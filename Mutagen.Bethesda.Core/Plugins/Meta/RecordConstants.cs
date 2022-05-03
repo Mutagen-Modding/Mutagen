@@ -55,16 +55,16 @@ public record RecordHeaderConstants
         byte headerLength,
         byte lengthLength)
     {
-        this.ObjectType = type;
-        this.HeaderLength = headerLength;
-        this.LengthLength = lengthLength;
-        this.LengthAfterLength = (byte)(this.HeaderLength - Constants.HeaderLength - this.LengthLength);
-        this.LengthAfterType = (byte)(this.HeaderLength - Constants.HeaderLength);
-        this.TypeAndLengthLength = (byte)(Constants.HeaderLength + this.LengthLength);
-        this.HeaderIncludedInLength = type == ObjectType.Group;
+        ObjectType = type;
+        HeaderLength = headerLength;
+        LengthLength = lengthLength;
+        LengthAfterLength = (byte)(HeaderLength - Constants.HeaderLength - LengthLength);
+        LengthAfterType = (byte)(HeaderLength - Constants.HeaderLength);
+        TypeAndLengthLength = (byte)(Constants.HeaderLength + LengthLength);
+        HeaderIncludedInLength = type == ObjectType.Group;
     }
 
     public VariableHeader VariableMeta(ReadOnlyMemorySlice<byte> span) => new VariableHeader(this, span);
-    public VariableHeader GetVariableMeta(IBinaryReadStream stream, int offset = 0) => new VariableHeader(this, stream.GetMemory(this.HeaderLength, offset));
-    public VariableHeader ReadVariableMeta(IBinaryReadStream stream) => new VariableHeader(this, stream.ReadMemory(this.HeaderLength));
+    public VariableHeader GetVariableMeta(IBinaryReadStream stream, int offset = 0) => new VariableHeader(this, stream.GetMemory(HeaderLength, offset));
+    public VariableHeader ReadVariableMeta(IBinaryReadStream stream) => new VariableHeader(this, stream.ReadMemory(HeaderLength));
 }

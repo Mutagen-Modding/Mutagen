@@ -23,7 +23,7 @@ public struct ModIndex
     /// </summary>
     public ModIndex(byte id)
     {
-        this.ID = id;
+        ID = id;
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public struct ModIndex
     public override bool Equals(object? obj)
     {
         if (obj is not ModIndex rhs) return false;
-        return this.ID == rhs.ID;
+        return ID == rhs.ID;
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public struct ModIndex
     /// <returns>Hashcode retrieved from index</returns>
     public override int GetHashCode()
     {
-        return this.ID.GetHashCode();
+        return ID.GetHashCode();
     }
 
     public static bool operator ==(ModIndex a, ModIndex b)

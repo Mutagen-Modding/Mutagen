@@ -23,7 +23,7 @@ public static class ModDecompressor
     {
         using var inputStream = streamCreator();
         using var inputStreamJumpback = streamCreator();
-        using var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
+        using var writer = new BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
 
         long runningDiff = 0;
         var fileLocs = RecordLocator.GetLocations(

@@ -85,7 +85,7 @@ public class ColorBinaryTranslation : PrimitiveBinaryTranslation<Color, MutagenF
         {
             throw new NotImplementedException();
         }
-        item = this.Parse(reader);
+        item = Parse(reader);
         return true;
     }
 
@@ -140,7 +140,7 @@ public class ColorBinaryTranslation : PrimitiveBinaryTranslation<Color, MutagenF
         Color item,
         ColorBinaryType binaryType)
     {
-        this.Write(
+        Write(
             writer,
             item,
             write: GetWriter(binaryType));
@@ -151,7 +151,7 @@ public class ColorBinaryTranslation : PrimitiveBinaryTranslation<Color, MutagenF
         Color? item,
         ColorBinaryType binaryType)
     {
-        this.WriteNullable(
+        WriteNullable(
             writer,
             item,
             write: GetWriter(binaryType));

@@ -31,7 +31,7 @@ public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
 
     public EDIDLink()
     {
-        this.EDID = Null;
+        EDID = Null;
     }
 
     /// <summary>
@@ -40,13 +40,13 @@ public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
     public EDIDLink(RecordType edid)
         : this()
     {
-        this.EDID = edid;
+        EDID = edid;
     }
 
     public override bool Equals(object? obj)
     {
         if (obj is not IEDIDLink<TMajor> rhs) return false;
-        return this.Equals(rhs);
+        return Equals(rhs);
     }
 
     /// <summary>
@@ -54,25 +54,25 @@ public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
     /// </summary>
     /// <param name="other">Other link to compare to</param>
     /// <returns>True if EDID members are equal</returns>
-    public bool Equals(IEDIDLink<TMajor>? other) => this.EDID.Equals(other?.EDID);
+    public bool Equals(IEDIDLink<TMajor>? other) => EDID.Equals(other?.EDID);
 
     /// <summary>
     /// Returns hash code
     /// </summary>
     /// <returns>Hash code evaluated from EDID member</returns>
-    public override int GetHashCode() => this.EDID.GetHashCode();
+    public override int GetHashCode() => EDID.GetHashCode();
 
     /// <summary>
     /// Returns string representation of link
     /// </summary>
     /// <returns>Returns EDID RecordType string</returns>
-    public override string ToString() => this.EDID.ToString();
+    public override string ToString() => EDID.ToString();
 
     private bool TryLinkToMod(
         IModGetter mod,
         [MaybeNullWhen(false)]out TMajor item)
     {
-        if (this.EDID == Null)
+        if (EDID == Null)
         {
             item = default!;
             return false;
@@ -82,7 +82,7 @@ public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
         var group = mod.GetTopLevelGroup<TMajor>();
         foreach (var rec in group)
         {
-            if (this.EDID.Type.Equals(rec.EditorID))
+            if (EDID.Type.Equals(rec.EditorID))
             {
                 item = rec;
                 return true;
@@ -100,7 +100,7 @@ public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
     /// <returns>True if link was resolved and a record was retrieved</returns>
     public bool TryResolve(ILinkCache cache, out TMajor major)
     {
-        if (this.EDID == Null)
+        if (EDID == Null)
         {
             major = default!;
             return false;
@@ -167,17 +167,17 @@ public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
 
     public void SetTo(RecordType type)
     {
-        this.EDID = type;
+        EDID = type;
     }
 
     public void SetTo(IEDIDLinkGetter<TMajor> link)
     {
-        this.EDID = link.EDID;
+        EDID = link.EDID;
     }
 
     public void Clear()
     {
-        this.EDID = Null;
+        EDID = Null;
     }
 
     public static implicit operator EDIDLink<TMajor>(RecordType recordType)
@@ -189,7 +189,7 @@ public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
     {
         if (major.EditorID == null)
         {
-            return EDIDLink<TMajor>.Null;
+            return Null;
         }
         else
         {

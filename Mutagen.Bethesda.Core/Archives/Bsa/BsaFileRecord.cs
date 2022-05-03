@@ -41,11 +41,11 @@ class BsaFileRecord : IArchiveFile
         _headerData = data;
         _nameBlock = nameBlock;
         Folder = folderRecord;
-        _name = new Lazy<FileName?>(GetName, System.Threading.LazyThreadSafetyMode.PublicationOnly);
+        _name = new Lazy<FileName?>(GetName, LazyThreadSafetyMode.PublicationOnly);
 
         // Will be replaced if CopyDataTo is called before value is created
         _size = new Lazy<(uint Size, uint OnDisk, uint Original)>(
-            mode: System.Threading.LazyThreadSafetyMode.ExecutionAndPublication,
+            mode: LazyThreadSafetyMode.ExecutionAndPublication,
             valueFactory: () =>
             {
                 using var rdr = BSA.GetStream();

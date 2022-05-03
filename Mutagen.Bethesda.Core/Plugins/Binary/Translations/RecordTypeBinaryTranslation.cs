@@ -52,7 +52,7 @@ public class RecordTypeBinaryTranslation : PrimitiveBinaryTranslation<RecordType
     public void Write<T>(MutagenWriter writer, IEDIDLinkGetter<T> item)
         where T : class, IMajorRecordGetter
     {
-        this.Write(
+        Write(
             writer,
             item.EDID);
     }

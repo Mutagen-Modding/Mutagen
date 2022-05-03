@@ -23,8 +23,8 @@ public class RecordTypeConverter
     {
         foreach (var conv in conversions)
         {
-            this.FromConversions[conv.Key] = conv.Value;
-            this.ToConversions[conv.Value] = conv.Key;
+            FromConversions[conv.Key] = conv.Value;
+            ToConversions[conv.Value] = conv.Key;
         }
     }
 }
