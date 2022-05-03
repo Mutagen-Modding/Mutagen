@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToMutableLinkCache(
+        public static ILinkCache<ISkyrimMod, ISkyrimModGetter> ToMutableLinkCache(
             this ILoadOrderGetter<ISkyrimModGetter> immutableBaseCache,
             params ISkyrimMod[] mutableMods)
         {
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToMutableLinkCache(
+        public static ILinkCache<ISkyrimMod, ISkyrimModGetter> ToMutableLinkCache(
             this ILoadOrderGetter<IModListingGetter<ISkyrimModGetter>> immutableBaseCache,
             params ISkyrimMod[] mutableMods)
         {
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToMutableLinkCache(
+        public static ILinkCache<ISkyrimMod, ISkyrimModGetter> ToMutableLinkCache(
             this IEnumerable<ISkyrimModGetter> immutableBaseCache,
             params ISkyrimMod[] mutableMods)
         {

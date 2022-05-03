@@ -13,8 +13,8 @@ public class LinkCacheExtensionsModule : GenerationModule
             || proto.Protocol.Namespace.Equals("Bethesda")) return;
         StructuredStringBuilder sb = new StructuredStringBuilder();
 
-        sb.AppendLine("using System.Collections.Generic;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
+        sb.AppendLine("using Mutagen.Bethesda.Plugins.Cache;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;");
 
         sb.AppendLine();
@@ -156,7 +156,7 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
                 using (var args = sb.Function(
-                           $"public static MutableLoadOrderLinkCache{generic} ToMutableLinkCache"))
+                           $"public static ILinkCache{generic} ToMutableLinkCache"))
                 {
                     args.Add($"this ILoadOrderGetter<{getterName}> immutableBaseCache");
                     args.Add($"params {setterName}[] mutableMods");
@@ -176,7 +176,7 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
                 using (var args = sb.Function(
-                           $"public static MutableLoadOrderLinkCache{generic} ToMutableLinkCache"))
+                           $"public static ILinkCache{generic} ToMutableLinkCache"))
                 {
                     args.Add($"this ILoadOrderGetter<IModListingGetter<{getterName}>> immutableBaseCache");
                     args.Add($"params {setterName}[] mutableMods");
@@ -196,7 +196,7 @@ public class LinkCacheExtensionsModule : GenerationModule
                     comment.Return.AppendLine($"LinkPackage attached to given LoadOrder");
                 }
                 using (var args = sb.Function(
-                           $"public static MutableLoadOrderLinkCache{generic} ToMutableLinkCache"))
+                           $"public static ILinkCache{generic} ToMutableLinkCache"))
                 {
                     args.Add($"this IEnumerable<{getterName}> immutableBaseCache");
                     args.Add($"params {setterName}[] mutableMods");

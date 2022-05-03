@@ -362,12 +362,13 @@ public static class LinkCacheConstructionMixIn
     /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
     /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
     /// <returns>LinkPackage attached to given LoadOrder</returns>
-    public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
+    public static ILinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
         this ILoadOrderGetter<TModGetter> immutableBaseCache,
         params TMod[] mutableMods)
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
+        if (mutableMods.Length == 0) return immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>();
         return new MutableLoadOrderLinkCache<TMod, TModGetter>(
             immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
             mutableMods);
@@ -398,12 +399,13 @@ public static class LinkCacheConstructionMixIn
     /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
     /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
     /// <returns>LinkPackage attached to given LoadOrder</returns>
-    public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
+    public static ILinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
         this ILoadOrderGetter<IModListingGetter<TModGetter>> immutableBaseCache,
         params TMod[] mutableMods)
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
+        if (mutableMods.Length == 0) return immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>();
         return new MutableLoadOrderLinkCache<TMod, TModGetter>(
             immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
             mutableMods);
@@ -416,11 +418,12 @@ public static class LinkCacheConstructionMixIn
     /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
     /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
     /// <returns>LinkPackage attached to given LoadOrder</returns>
-    public static MutableLoadOrderLinkCache ToUntypedMutableLinkCache<TMod>(
+    public static ILinkCache ToUntypedMutableLinkCache<TMod>(
         this ILoadOrderGetter<IModListingGetter<TMod>> immutableBaseCache,
         params TMod[] mutableMods)
         where TMod : class, IModGetter
     {
+        if (mutableMods.Length == 0) return immutableBaseCache.ToUntypedImmutableLinkCache();
         return new MutableLoadOrderLinkCache(
             immutableBaseCache.ToUntypedImmutableLinkCache<TMod>(),
             mutableMods.Select(x => (IMod)x).ToArray());
@@ -434,11 +437,12 @@ public static class LinkCacheConstructionMixIn
     /// <param name="category">Game category the mods are relative to</param>
     /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
     /// <returns>LinkPackage attached to given LoadOrder</returns>
-    public static MutableLoadOrderLinkCache ToUntypedMutableLinkCache(
+    public static ILinkCache ToUntypedMutableLinkCache(
         this ILoadOrderGetter<IModListingGetter<IModGetter>> immutableBaseCache,
         GameCategory category,
         params IMod[] mutableMods)
     {
+        if (mutableMods.Length == 0) return immutableBaseCache.ToUntypedImmutableLinkCache();
         var mismatchedMod = mutableMods.FirstOrDefault(x => x.GameRelease.ToCategory() != category);
         if (mismatchedMod != null)
         {
@@ -456,12 +460,13 @@ public static class LinkCacheConstructionMixIn
     /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
     /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
     /// <returns>LinkPackage attached to given LoadOrder</returns>
-    public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
+    public static ILinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
         this IEnumerable<TModGetter> immutableBaseCache,
         params TMod[] mutableMods)
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
+        if (mutableMods.Length == 0) return immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>();
         return new MutableLoadOrderLinkCache<TMod, TModGetter>(
             immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
             mutableMods);
@@ -475,11 +480,12 @@ public static class LinkCacheConstructionMixIn
     /// <param name="category">Game category the mods are relative to</param>
     /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
     /// <returns>LinkPackage attached to given LoadOrder</returns>
-    public static MutableLoadOrderLinkCache ToUntypedMutableLinkCache(
+    public static ILinkCache ToUntypedMutableLinkCache(
         this IEnumerable<IModGetter> immutableBaseCache,
         GameCategory category,
         params IMod[] mutableMods)
     {
+        if (mutableMods.Length == 0) return immutableBaseCache.ToUntypedImmutableLinkCache();
         var mismatchedMod = mutableMods.FirstOrDefault(x => x.GameRelease.ToCategory() != category);
         if (mismatchedMod != null)
         {

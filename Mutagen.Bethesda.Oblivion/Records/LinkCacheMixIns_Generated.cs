@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToMutableLinkCache(
+        public static ILinkCache<IOblivionMod, IOblivionModGetter> ToMutableLinkCache(
             this ILoadOrderGetter<IOblivionModGetter> immutableBaseCache,
             params IOblivionMod[] mutableMods)
         {
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToMutableLinkCache(
+        public static ILinkCache<IOblivionMod, IOblivionModGetter> ToMutableLinkCache(
             this ILoadOrderGetter<IModListingGetter<IOblivionModGetter>> immutableBaseCache,
             params IOblivionMod[] mutableMods)
         {
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToMutableLinkCache(
+        public static ILinkCache<IOblivionMod, IOblivionModGetter> ToMutableLinkCache(
             this IEnumerable<IOblivionModGetter> immutableBaseCache,
             params IOblivionMod[] mutableMods)
         {

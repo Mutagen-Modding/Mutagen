@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
 namespace Mutagen.Bethesda.Fallout4
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<IFallout4Mod, IFallout4ModGetter> ToMutableLinkCache(
+        public static ILinkCache<IFallout4Mod, IFallout4ModGetter> ToMutableLinkCache(
             this ILoadOrderGetter<IFallout4ModGetter> immutableBaseCache,
             params IFallout4Mod[] mutableMods)
         {
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<IFallout4Mod, IFallout4ModGetter> ToMutableLinkCache(
+        public static ILinkCache<IFallout4Mod, IFallout4ModGetter> ToMutableLinkCache(
             this ILoadOrderGetter<IModListingGetter<IFallout4ModGetter>> immutableBaseCache,
             params IFallout4Mod[] mutableMods)
         {
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<IFallout4Mod, IFallout4ModGetter> ToMutableLinkCache(
+        public static ILinkCache<IFallout4Mod, IFallout4ModGetter> ToMutableLinkCache(
             this IEnumerable<IFallout4ModGetter> immutableBaseCache,
             params IFallout4Mod[] mutableMods)
         {
