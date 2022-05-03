@@ -134,6 +134,7 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
     /// <returns>GameEnvironment with the rules applied</returns>
     public IGameEnvironmentState<TMod, TModGetter> Build()
     {
+        Warmup.Init();
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(Release, gameLocator);
@@ -328,6 +329,7 @@ public record GameEnvironmentBuilder
     /// <returns>GameEnvironment with the rules applied</returns>
     public IGameEnvironmentState Build()
     {
+        Warmup.Init();
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(Release, gameLocator);
