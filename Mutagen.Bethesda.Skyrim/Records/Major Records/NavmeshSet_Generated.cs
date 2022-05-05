@@ -66,11 +66,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshSetMixIn.ToString(
+            NavmeshSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -203,51 +203,42 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(NavmeshSet.Mask<bool>? printMask = null)
+            public string Print(NavmeshSet.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, NavmeshSet.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NavmeshSet.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(NavmeshSet.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if ((printMask?.Navmeshes?.Overall ?? true)
                         && Navmeshes is {} NavmeshesItem)
                     {
                         sb.AppendLine("Navmeshes =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(NavmeshesItem.Overall);
                             if (NavmeshesItem.Specific != null)
                             {
                                 foreach (var subItem in NavmeshesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -322,58 +313,45 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 if (Navmeshes is {} NavmeshesItem)
                 {
                     sb.AppendLine("Navmeshes =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(NavmeshesItem.Overall);
                         if (NavmeshesItem.Specific != null)
                         {
                             foreach (var subItem in NavmeshesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -491,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -553,24 +531,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INavmeshSetGetter item,
             string? name = null,
             NavmeshSet.Mask<bool>? printMask = null)
         {
-            return ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).ToString(
+            return ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INavmeshSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             NavmeshSet.Mask<bool>? printMask = null)
         {
-            ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).ToString(
+            ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -844,13 +822,13 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
         }
         
-        public string ToString(
+        public string Print(
             INavmeshSetGetter item,
             string? name = null,
             NavmeshSet.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -858,7 +836,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INavmeshSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -872,15 +850,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (NavmeshSet) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -891,20 +867,16 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.Navmeshes?.Overall ?? true)
             {
                 sb.AppendLine("Navmeshes =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Navmeshes)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -1174,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavmeshSetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1242,11 +1214,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshSetMixIn.ToString(
+            NavmeshSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

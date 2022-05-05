@@ -69,11 +69,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SimpleModelMixIn.ToString(
+            SimpleModelMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -188,23 +188,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(SimpleModel.Mask<bool>? printMask = null)
+            public string Print(SimpleModel.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, SimpleModel.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SimpleModel.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(SimpleModel.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.File ?? true)
                     {
@@ -215,7 +211,6 @@ namespace Mutagen.Bethesda.Skyrim
                         sb.AppendItem(Data, "Data");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -300,34 +295,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(File, "File");
@@ -455,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -525,24 +511,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISimpleModelGetter item,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).ToString(
+            return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISimpleModelGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).ToString(
+            ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -826,13 +812,13 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
         }
         
-        public string ToString(
+        public string Print(
             ISimpleModelGetter item,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -840,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISimpleModelGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -854,15 +840,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (SimpleModel) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1175,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1274,11 +1258,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SimpleModelMixIn.ToString(
+            SimpleModelMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

@@ -83,11 +83,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            DestructionStageMixIn.ToString(
+            DestructionStageMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -218,34 +218,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(DestructionStage.Mask<bool>? printMask = null)
+            public string Print(DestructionStage.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, DestructionStage.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DestructionStage.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(DestructionStage.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(sb);
+                        Data?.Print(sb);
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(sb);
+                        Model?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -330,37 +325,28 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Data?.ToString(sb);
-                Model?.ToString(sb);
+                Data?.Print(sb);
+                Model?.Print(sb);
             }
             #endregion
 
@@ -479,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -553,24 +539,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDestructionStageGetter item,
             string? name = null,
             DestructionStage.Mask<bool>? printMask = null)
         {
-            return ((DestructionStageCommon)((IDestructionStageGetter)item).CommonInstance()!).ToString(
+            return ((DestructionStageCommon)((IDestructionStageGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDestructionStageGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             DestructionStage.Mask<bool>? printMask = null)
         {
-            ((DestructionStageCommon)((IDestructionStageGetter)item).CommonInstance()!).ToString(
+            ((DestructionStageCommon)((IDestructionStageGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -878,13 +864,13 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IDestructionStageGetter item,
             string? name = null,
             DestructionStage.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -892,7 +878,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDestructionStageGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -906,15 +892,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (DestructionStage) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -925,12 +909,12 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(sb, "Data");
+                DataItem?.Print(sb, "Data");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(sb, "Model");
+                ModelItem?.Print(sb, "Model");
             }
         }
         
@@ -1300,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructionStageCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1405,11 +1389,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            DestructionStageMixIn.ToString(
+            DestructionStageMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

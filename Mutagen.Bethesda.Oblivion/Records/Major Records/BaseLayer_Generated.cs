@@ -67,11 +67,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BaseLayerMixIn.ToString(
+            BaseLayerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -179,30 +179,25 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(BaseLayer.Mask<bool>? printMask = null)
+            public string Print(BaseLayer.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, BaseLayer.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BaseLayer.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(BaseLayer.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Header?.Overall ?? true)
                     {
-                        Header?.ToString(sb);
+                        Header?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -277,36 +272,27 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Header?.ToString(sb);
+                Header?.Print(sb);
             }
             #endregion
 
@@ -422,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -490,24 +476,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IBaseLayerGetter item,
             string? name = null,
             BaseLayer.Mask<bool>? printMask = null)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).ToString(
+            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IBaseLayerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             BaseLayer.Mask<bool>? printMask = null)
         {
-            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).ToString(
+            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -791,13 +777,13 @@ namespace Mutagen.Bethesda.Oblivion
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IBaseLayerGetter item,
             string? name = null,
             BaseLayer.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -805,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IBaseLayerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -819,15 +805,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (BaseLayer) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -838,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Header?.Overall ?? true)
                 && item.Header is {} HeaderItem)
             {
-                HeaderItem?.ToString(sb, "Header");
+                HeaderItem?.Print(sb, "Header");
             }
         }
         
@@ -1144,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BaseLayerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1234,11 +1218,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BaseLayerMixIn.ToString(
+            BaseLayerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

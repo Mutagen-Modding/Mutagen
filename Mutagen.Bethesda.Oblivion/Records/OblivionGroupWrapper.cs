@@ -111,9 +111,9 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
             translationParams: translationParams);
     }
 
-    public void ToString(StructuredStringBuilder fg, string? name = null)
+    public void Print(StructuredStringBuilder fg, string? name = null)
     {
-        OblivionGroupMixIn.ToString(
+        OblivionGroupMixIn.Print(
             item: this,
             name: name);
     }

@@ -108,11 +108,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WaterMixIn.ToString(
+            WaterMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -290,23 +290,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Water.Mask<bool>? printMask = null)
+            public string Print(Water.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Water.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Water.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Texture ?? true)
                     {
@@ -330,14 +326,13 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(sb);
+                        Data?.Print(sb);
                     }
                     if (printMask?.RelatedWaters?.Overall ?? true)
                     {
-                        RelatedWaters?.ToString(sb);
+                        RelatedWaters?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -461,36 +456,27 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Texture, "Texture");
                 }
@@ -506,8 +492,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendItem(Sound, "Sound");
                 }
-                Data?.ToString(sb);
-                RelatedWaters?.ToString(sb);
+                Data?.Print(sb);
+                RelatedWaters?.Print(sb);
             }
             #endregion
 
@@ -687,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -765,24 +751,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWaterGetter item,
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
-            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWaterGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
-            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1126,13 +1112,13 @@ namespace Mutagen.Bethesda.Oblivion
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IWaterGetter item,
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1140,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWaterGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1154,15 +1140,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (Water) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1201,12 +1185,12 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(sb, "Data");
+                DataItem?.Print(sb, "Data");
             }
             if ((printMask?.RelatedWaters?.Overall ?? true)
                 && item.RelatedWaters is {} RelatedWatersItem)
             {
-                RelatedWatersItem?.ToString(sb, "RelatedWaters");
+                RelatedWatersItem?.Print(sb, "RelatedWaters");
             }
         }
         
@@ -1916,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2081,11 +2065,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WaterMixIn.ToString(
+            WaterMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

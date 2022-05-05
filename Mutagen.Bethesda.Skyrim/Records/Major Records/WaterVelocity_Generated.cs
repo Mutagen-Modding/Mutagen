@@ -71,11 +71,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WaterVelocityMixIn.ToString(
+            WaterVelocityMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -208,23 +208,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(WaterVelocity.Mask<bool>? printMask = null)
+            public string Print(WaterVelocity.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, WaterVelocity.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WaterVelocity.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(WaterVelocity.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Offset ?? true)
                     {
@@ -243,7 +239,6 @@ namespace Mutagen.Bethesda.Skyrim
                         sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -348,34 +343,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(Offset, "Offset");
@@ -512,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -578,24 +564,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWaterVelocityGetter item,
             string? name = null,
             WaterVelocity.Mask<bool>? printMask = null)
         {
-            return ((WaterVelocityCommon)((IWaterVelocityGetter)item).CommonInstance()!).ToString(
+            return ((WaterVelocityCommon)((IWaterVelocityGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWaterVelocityGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             WaterVelocity.Mask<bool>? printMask = null)
         {
-            ((WaterVelocityCommon)((IWaterVelocityGetter)item).CommonInstance()!).ToString(
+            ((WaterVelocityCommon)((IWaterVelocityGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -885,13 +871,13 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
         }
         
-        public string ToString(
+        public string Print(
             IWaterVelocityGetter item,
             string? name = null,
             WaterVelocity.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -899,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWaterVelocityGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -913,15 +899,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (WaterVelocity) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1227,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WaterVelocityBinaryWriteTranslation.Instance;
@@ -1294,11 +1278,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WaterVelocityMixIn.ToString(
+            WaterVelocityMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

@@ -101,11 +101,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceDataMixIn.ToString(
+            RaceDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -361,51 +361,47 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(RaceData.Mask<bool>? printMask = null)
+            public string Print(RaceData.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, RaceData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, RaceData.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(RaceData.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.SkillBoost0?.Overall ?? true)
                     {
-                        SkillBoost0?.ToString(sb);
+                        SkillBoost0?.Print(sb);
                     }
                     if (printMask?.SkillBoost1?.Overall ?? true)
                     {
-                        SkillBoost1?.ToString(sb);
+                        SkillBoost1?.Print(sb);
                     }
                     if (printMask?.SkillBoost2?.Overall ?? true)
                     {
-                        SkillBoost2?.ToString(sb);
+                        SkillBoost2?.Print(sb);
                     }
                     if (printMask?.SkillBoost3?.Overall ?? true)
                     {
-                        SkillBoost3?.ToString(sb);
+                        SkillBoost3?.Print(sb);
                     }
                     if (printMask?.SkillBoost4?.Overall ?? true)
                     {
-                        SkillBoost4?.ToString(sb);
+                        SkillBoost4?.Print(sb);
                     }
                     if (printMask?.SkillBoost5?.Overall ?? true)
                     {
-                        SkillBoost5?.ToString(sb);
+                        SkillBoost5?.Print(sb);
                     }
                     if (printMask?.SkillBoost6?.Overall ?? true)
                     {
-                        SkillBoost6?.ToString(sb);
+                        SkillBoost6?.Print(sb);
                     }
                     if (printMask?.Unused ?? true)
                     {
@@ -424,7 +420,6 @@ namespace Mutagen.Bethesda.Oblivion
                         sb.AppendItem(Flags, "Flags");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -599,42 +594,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                SkillBoost0?.ToString(sb);
-                SkillBoost1?.ToString(sb);
-                SkillBoost2?.ToString(sb);
-                SkillBoost3?.ToString(sb);
-                SkillBoost4?.ToString(sb);
-                SkillBoost5?.ToString(sb);
-                SkillBoost6?.ToString(sb);
+                SkillBoost0?.Print(sb);
+                SkillBoost1?.Print(sb);
+                SkillBoost2?.Print(sb);
+                SkillBoost3?.Print(sb);
+                SkillBoost4?.Print(sb);
+                SkillBoost5?.Print(sb);
+                SkillBoost6?.Print(sb);
                 {
                     sb.AppendItem(Unused, "Unused");
                 }
@@ -789,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -869,24 +855,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRaceDataGetter item,
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
-            return ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).ToString(
+            return ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRaceDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
-            ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).ToString(
+            ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1203,13 +1189,13 @@ namespace Mutagen.Bethesda.Oblivion
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             IRaceDataGetter item,
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1217,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRaceDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1231,15 +1217,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (RaceData) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1249,31 +1233,31 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (printMask?.SkillBoost0?.Overall ?? true)
             {
-                item.SkillBoost0?.ToString(sb, "SkillBoost0");
+                item.SkillBoost0?.Print(sb, "SkillBoost0");
             }
             if (printMask?.SkillBoost1?.Overall ?? true)
             {
-                item.SkillBoost1?.ToString(sb, "SkillBoost1");
+                item.SkillBoost1?.Print(sb, "SkillBoost1");
             }
             if (printMask?.SkillBoost2?.Overall ?? true)
             {
-                item.SkillBoost2?.ToString(sb, "SkillBoost2");
+                item.SkillBoost2?.Print(sb, "SkillBoost2");
             }
             if (printMask?.SkillBoost3?.Overall ?? true)
             {
-                item.SkillBoost3?.ToString(sb, "SkillBoost3");
+                item.SkillBoost3?.Print(sb, "SkillBoost3");
             }
             if (printMask?.SkillBoost4?.Overall ?? true)
             {
-                item.SkillBoost4?.ToString(sb, "SkillBoost4");
+                item.SkillBoost4?.Print(sb, "SkillBoost4");
             }
             if (printMask?.SkillBoost5?.Overall ?? true)
             {
-                item.SkillBoost5?.ToString(sb, "SkillBoost5");
+                item.SkillBoost5?.Print(sb, "SkillBoost5");
             }
             if (printMask?.SkillBoost6?.Overall ?? true)
             {
-                item.SkillBoost6?.ToString(sb, "SkillBoost6");
+                item.SkillBoost6?.Print(sb, "SkillBoost6");
             }
             if (printMask?.Unused ?? true)
             {
@@ -1281,11 +1265,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (true)
             {
-                item.Height.ToString(sb, "Height");
+                item.Height.Print(sb, "Height");
             }
             if (true)
             {
-                item.Weight.ToString(sb, "Weight");
+                item.Weight.Print(sb, "Weight");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1832,7 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceDataBinaryWriteTranslation.Instance;
@@ -1928,11 +1912,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceDataMixIn.ToString(
+            RaceDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

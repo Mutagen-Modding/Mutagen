@@ -68,11 +68,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            DoorTriangleMixIn.ToString(
+            DoorTriangleMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -196,23 +196,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(DoorTriangle.Mask<bool>? printMask = null)
+            public string Print(DoorTriangle.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, DoorTriangle.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DoorTriangle.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(DoorTriangle.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.TriangleBeforeDoor ?? true)
                     {
@@ -227,7 +223,6 @@ namespace Mutagen.Bethesda.Fallout4
                         sb.AppendItem(Door, "Door");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -322,34 +317,25 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(TriangleBeforeDoor, "TriangleBeforeDoor");
@@ -484,7 +470,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -550,24 +536,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDoorTriangleGetter item,
             string? name = null,
             DoorTriangle.Mask<bool>? printMask = null)
         {
-            return ((DoorTriangleCommon)((IDoorTriangleGetter)item).CommonInstance()!).ToString(
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDoorTriangleGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             DoorTriangle.Mask<bool>? printMask = null)
         {
-            ((DoorTriangleCommon)((IDoorTriangleGetter)item).CommonInstance()!).ToString(
+            ((DoorTriangleCommon)((IDoorTriangleGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -844,13 +830,13 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Door = item.Door.Equals(rhs.Door);
         }
         
-        public string ToString(
+        public string Print(
             IDoorTriangleGetter item,
             string? name = null,
             DoorTriangle.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -858,7 +844,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDoorTriangleGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -872,15 +858,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (DoorTriangle) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1161,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DoorTriangleCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1227,11 +1211,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            DoorTriangleMixIn.ToString(
+            DoorTriangleMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

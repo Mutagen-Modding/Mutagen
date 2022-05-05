@@ -614,11 +614,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedObjectMixIn.ToString(
+            PlacedObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1576,27 +1576,23 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(PlacedObject.Mask<bool>? printMask = null)
+            public string Print(PlacedObject.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, PlacedObject.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedObject.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(sb);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.Base ?? true)
                     {
@@ -1608,7 +1604,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Primitive?.Overall ?? true)
                     {
-                        Primitive?.ToString(sb);
+                        Primitive?.Print(sb);
                     }
                     if (printMask?.XORD ?? true)
                     {
@@ -1616,34 +1612,30 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.OcclusionPlane?.Overall ?? true)
                     {
-                        OcclusionPlane?.ToString(sb);
+                        OcclusionPlane?.Print(sb);
                     }
                     if ((printMask?.Portals?.Overall ?? true)
                         && Portals is {} PortalsItem)
                     {
                         sb.AppendLine("Portals =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(PortalsItem.Overall);
                             if (PortalsItem.Specific != null)
                             {
                                 foreach (var subItem in PortalsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.RoomPortal?.Overall ?? true)
                     {
-                        RoomPortal?.ToString(sb);
+                        RoomPortal?.Print(sb);
                     }
                     if (printMask?.Unknown ?? true)
                     {
@@ -1661,26 +1653,22 @@ namespace Mutagen.Bethesda.Skyrim
                         && LinkedRooms is {} LinkedRoomsItem)
                     {
                         sb.AppendLine("LinkedRooms =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(LinkedRoomsItem.Overall);
                             if (LinkedRoomsItem.Specific != null)
                             {
                                 foreach (var subItem in LinkedRoomsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.IsMultiBoundPrimitive ?? true)
                     {
@@ -1702,49 +1690,41 @@ namespace Mutagen.Bethesda.Skyrim
                         && Reflections is {} ReflectionsItem)
                     {
                         sb.AppendLine("Reflections =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(ReflectionsItem.Overall);
                             if (ReflectionsItem.Specific != null)
                             {
                                 foreach (var subItem in ReflectionsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.LitWater?.Overall ?? true)
                         && LitWater is {} LitWaterItem)
                     {
                         sb.AppendLine("LitWater =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(LitWaterItem.Overall);
                             if (LitWaterItem.Specific != null)
                             {
                                 foreach (var subItem in LitWaterItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.Emittance ?? true)
                     {
@@ -1752,15 +1732,15 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.LightData?.Overall ?? true)
                     {
-                        LightData?.ToString(sb);
+                        LightData?.Print(sb);
                     }
                     if (printMask?.Alpha?.Overall ?? true)
                     {
-                        Alpha?.ToString(sb);
+                        Alpha?.Print(sb);
                     }
                     if (printMask?.TeleportDestination?.Overall ?? true)
                     {
-                        TeleportDestination?.ToString(sb);
+                        TeleportDestination?.Print(sb);
                     }
                     if (printMask?.TeleportMessageBox ?? true)
                     {
@@ -1780,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.WaterVelocity?.Overall ?? true)
                     {
-                        WaterVelocity?.ToString(sb);
+                        WaterVelocity?.Print(sb);
                     }
                     if (printMask?.XCVL ?? true)
                     {
@@ -1808,7 +1788,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.ActivateParents?.Overall ?? true)
                     {
-                        ActivateParents?.ToString(sb);
+                        ActivateParents?.Print(sb);
                     }
                     if (printMask?.LeveledItemBaseObject ?? true)
                     {
@@ -1828,7 +1808,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Lock?.Overall ?? true)
                     {
-                        Lock?.ToString(sb);
+                        Lock?.Print(sb);
                     }
                     if (printMask?.EncounterZone ?? true)
                     {
@@ -1836,32 +1816,28 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.NavigationDoorLink?.Overall ?? true)
                     {
-                        NavigationDoorLink?.ToString(sb);
+                        NavigationDoorLink?.Print(sb);
                     }
                     if ((printMask?.LocationRefTypes?.Overall ?? true)
                         && LocationRefTypes is {} LocationRefTypesItem)
                     {
                         sb.AppendLine("LocationRefTypes =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(LocationRefTypesItem.Overall);
                             if (LocationRefTypesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationRefTypesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.IsIgnoredBySandbox ?? true)
                     {
@@ -1869,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Ownership?.Overall ?? true)
                     {
-                        Ownership?.ToString(sb);
+                        Ownership?.Print(sb);
                     }
                     if (printMask?.ItemCount ?? true)
                     {
@@ -1885,34 +1861,30 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
-                        EnableParent?.ToString(sb);
+                        EnableParent?.Print(sb);
                     }
                     if ((printMask?.LinkedReferences?.Overall ?? true)
                         && LinkedReferences is {} LinkedReferencesItem)
                     {
                         sb.AppendLine("LinkedReferences =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(LinkedReferencesItem.Overall);
                             if (LinkedReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in LinkedReferencesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.Patrol?.Overall ?? true)
                     {
-                        Patrol?.ToString(sb);
+                        Patrol?.Print(sb);
                     }
                     if (printMask?.Action ?? true)
                     {
@@ -1932,7 +1904,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.MapMarker?.Overall ?? true)
                     {
-                        MapMarker?.ToString(sb);
+                        MapMarker?.Print(sb);
                     }
                     if (printMask?.AttachRef ?? true)
                     {
@@ -1944,10 +1916,9 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Placement?.Overall ?? true)
                     {
-                        Placement?.ToString(sb);
+                        Placement?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -2581,71 +2552,58 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
-                VirtualMachineAdapter?.ToString(sb);
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 {
                     sb.AppendItem(Base, "Base");
                 }
                 {
                     sb.AppendItem(BoundHalfExtents, "BoundHalfExtents");
                 }
-                Primitive?.ToString(sb);
+                Primitive?.Print(sb);
                 {
                     sb.AppendItem(XORD, "XORD");
                 }
-                OcclusionPlane?.ToString(sb);
+                OcclusionPlane?.Print(sb);
                 if (Portals is {} PortalsItem)
                 {
                     sb.AppendLine("Portals =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(PortalsItem.Overall);
                         if (PortalsItem.Specific != null)
                         {
                             foreach (var subItem in PortalsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                RoomPortal?.ToString(sb);
+                RoomPortal?.Print(sb);
                 {
                     sb.AppendItem(Unknown, "Unknown");
                 }
@@ -2658,26 +2616,22 @@ namespace Mutagen.Bethesda.Skyrim
                 if (LinkedRooms is {} LinkedRoomsItem)
                 {
                     sb.AppendLine("LinkedRooms =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(LinkedRoomsItem.Overall);
                         if (LinkedRoomsItem.Specific != null)
                         {
                             foreach (var subItem in LinkedRoomsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(IsMultiBoundPrimitive, "IsMultiBoundPrimitive");
@@ -2694,55 +2648,47 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Reflections is {} ReflectionsItem)
                 {
                     sb.AppendLine("Reflections =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(ReflectionsItem.Overall);
                         if (ReflectionsItem.Specific != null)
                         {
                             foreach (var subItem in ReflectionsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (LitWater is {} LitWaterItem)
                 {
                     sb.AppendLine("LitWater =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(LitWaterItem.Overall);
                         if (LitWaterItem.Specific != null)
                         {
                             foreach (var subItem in LitWaterItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(Emittance, "Emittance");
                 }
-                LightData?.ToString(sb);
-                Alpha?.ToString(sb);
-                TeleportDestination?.ToString(sb);
+                LightData?.Print(sb);
+                Alpha?.Print(sb);
+                TeleportDestination?.Print(sb);
                 {
                     sb.AppendItem(TeleportMessageBox, "TeleportMessageBox");
                 }
@@ -2755,7 +2701,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(XWCS, "XWCS");
                 }
-                WaterVelocity?.ToString(sb);
+                WaterVelocity?.Print(sb);
                 {
                     sb.AppendItem(XCVL, "XCVL");
                 }
@@ -2774,7 +2720,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(SpawnContainer, "SpawnContainer");
                 }
-                ActivateParents?.ToString(sb);
+                ActivateParents?.Print(sb);
                 {
                     sb.AppendItem(LeveledItemBaseObject, "LeveledItemBaseObject");
                 }
@@ -2787,39 +2733,35 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(CollisionLayer, "CollisionLayer");
                 }
-                Lock?.ToString(sb);
+                Lock?.Print(sb);
                 {
                     sb.AppendItem(EncounterZone, "EncounterZone");
                 }
-                NavigationDoorLink?.ToString(sb);
+                NavigationDoorLink?.Print(sb);
                 if (LocationRefTypes is {} LocationRefTypesItem)
                 {
                     sb.AppendLine("LocationRefTypes =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(LocationRefTypesItem.Overall);
                         if (LocationRefTypesItem.Specific != null)
                         {
                             foreach (var subItem in LocationRefTypesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
                 }
-                Ownership?.ToString(sb);
+                Ownership?.Print(sb);
                 {
                     sb.AppendItem(ItemCount, "ItemCount");
                 }
@@ -2829,30 +2771,26 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(LocationReference, "LocationReference");
                 }
-                EnableParent?.ToString(sb);
+                EnableParent?.Print(sb);
                 if (LinkedReferences is {} LinkedReferencesItem)
                 {
                     sb.AppendLine("LinkedReferences =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(LinkedReferencesItem.Overall);
                         if (LinkedReferencesItem.Specific != null)
                         {
                             foreach (var subItem in LinkedReferencesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                Patrol?.ToString(sb);
+                Patrol?.Print(sb);
                 {
                     sb.AppendItem(Action, "Action");
                 }
@@ -2865,14 +2803,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(IsOpenByDefault, "IsOpenByDefault");
                 }
-                MapMarker?.ToString(sb);
+                MapMarker?.Print(sb);
                 {
                     sb.AppendItem(AttachRef, "AttachRef");
                 }
                 {
                     sb.AppendItem(DistantLodData, "DistantLodData");
                 }
-                Placement?.ToString(sb);
+                Placement?.Print(sb);
             }
             #endregion
 
@@ -3256,7 +3194,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -3458,24 +3396,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPlacedObjectGetter item,
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).ToString(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPlacedObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
-            ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).ToString(
+            ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -4125,13 +4063,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPlacedObjectGetter item,
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -4139,7 +4077,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPlacedObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -4153,15 +4091,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (PlacedObject) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -4176,7 +4112,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if (printMask?.Base ?? true)
             {
@@ -4190,7 +4126,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.Primitive?.Overall ?? true)
                 && item.Primitive is {} PrimitiveItem)
             {
-                PrimitiveItem?.ToString(sb, "Primitive");
+                PrimitiveItem?.Print(sb, "Primitive");
             }
             if ((printMask?.XORD ?? true)
                 && item.XORD is {} XORDItem)
@@ -4200,31 +4136,27 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.OcclusionPlane?.Overall ?? true)
                 && item.OcclusionPlane is {} OcclusionPlaneItem)
             {
-                OcclusionPlaneItem?.ToString(sb, "OcclusionPlane");
+                OcclusionPlaneItem?.Print(sb, "OcclusionPlane");
             }
             if ((printMask?.Portals?.Overall ?? true)
                 && item.Portals is {} PortalsItem)
             {
                 sb.AppendLine("Portals =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in PortalsItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.RoomPortal?.Overall ?? true)
                 && item.RoomPortal is {} RoomPortalItem)
             {
-                RoomPortalItem?.ToString(sb, "RoomPortal");
+                RoomPortalItem?.Print(sb, "RoomPortal");
             }
             if (printMask?.Unknown ?? true)
             {
@@ -4241,20 +4173,16 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.LinkedRooms?.Overall ?? true)
             {
                 sb.AppendLine("LinkedRooms =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.LinkedRooms)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.IsMultiBoundPrimitive ?? true)
             {
@@ -4278,38 +4206,30 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.Reflections?.Overall ?? true)
             {
                 sb.AppendLine("Reflections =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Reflections)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.LitWater?.Overall ?? true)
             {
                 sb.AppendLine("LitWater =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.LitWater)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.Emittance ?? true)
             {
@@ -4318,17 +4238,17 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.LightData?.Overall ?? true)
                 && item.LightData is {} LightDataItem)
             {
-                LightDataItem?.ToString(sb, "LightData");
+                LightDataItem?.Print(sb, "LightData");
             }
             if ((printMask?.Alpha?.Overall ?? true)
                 && item.Alpha is {} AlphaItem)
             {
-                AlphaItem?.ToString(sb, "Alpha");
+                AlphaItem?.Print(sb, "Alpha");
             }
             if ((printMask?.TeleportDestination?.Overall ?? true)
                 && item.TeleportDestination is {} TeleportDestinationItem)
             {
-                TeleportDestinationItem?.ToString(sb, "TeleportDestination");
+                TeleportDestinationItem?.Print(sb, "TeleportDestination");
             }
             if (printMask?.TeleportMessageBox ?? true)
             {
@@ -4351,7 +4271,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.WaterVelocity?.Overall ?? true)
                 && item.WaterVelocity is {} WaterVelocityItem)
             {
-                WaterVelocityItem?.ToString(sb, "WaterVelocity");
+                WaterVelocityItem?.Print(sb, "WaterVelocity");
             }
             if ((printMask?.XCVL ?? true)
                 && item.XCVL is {} XCVLItem)
@@ -4383,7 +4303,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.ActivateParents?.Overall ?? true)
                 && item.ActivateParents is {} ActivateParentsItem)
             {
-                ActivateParentsItem?.ToString(sb, "ActivateParents");
+                ActivateParentsItem?.Print(sb, "ActivateParents");
             }
             if (printMask?.LeveledItemBaseObject ?? true)
             {
@@ -4406,7 +4326,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.Lock?.Overall ?? true)
                 && item.Lock is {} LockItem)
             {
-                LockItem?.ToString(sb, "Lock");
+                LockItem?.Print(sb, "Lock");
             }
             if (printMask?.EncounterZone ?? true)
             {
@@ -4415,26 +4335,22 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.NavigationDoorLink?.Overall ?? true)
                 && item.NavigationDoorLink is {} NavigationDoorLinkItem)
             {
-                NavigationDoorLinkItem?.ToString(sb, "NavigationDoorLink");
+                NavigationDoorLinkItem?.Print(sb, "NavigationDoorLink");
             }
             if ((printMask?.LocationRefTypes?.Overall ?? true)
                 && item.LocationRefTypes is {} LocationRefTypesItem)
             {
                 sb.AppendLine("LocationRefTypes =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in LocationRefTypesItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.IsIgnoredBySandbox ?? true)
             {
@@ -4443,7 +4359,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.Ownership?.Overall ?? true)
                 && item.Ownership is {} OwnershipItem)
             {
-                OwnershipItem?.ToString(sb, "Ownership");
+                OwnershipItem?.Print(sb, "Ownership");
             }
             if ((printMask?.ItemCount ?? true)
                 && item.ItemCount is {} ItemCountItem)
@@ -4462,30 +4378,26 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
             {
-                EnableParentItem?.ToString(sb, "EnableParent");
+                EnableParentItem?.Print(sb, "EnableParent");
             }
             if (printMask?.LinkedReferences?.Overall ?? true)
             {
                 sb.AppendLine("LinkedReferences =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.LinkedReferences)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.Patrol?.Overall ?? true)
                 && item.Patrol is {} PatrolItem)
             {
-                PatrolItem?.ToString(sb, "Patrol");
+                PatrolItem?.Print(sb, "Patrol");
             }
             if ((printMask?.Action ?? true)
                 && item.Action is {} ActionItem)
@@ -4509,7 +4421,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.MapMarker?.Overall ?? true)
                 && item.MapMarker is {} MapMarkerItem)
             {
-                MapMarkerItem?.ToString(sb, "MapMarker");
+                MapMarkerItem?.Print(sb, "MapMarker");
             }
             if (printMask?.AttachRef ?? true)
             {
@@ -4523,7 +4435,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.Placement?.Overall ?? true)
                 && item.Placement is {} PlacementItem)
             {
-                PlacementItem?.ToString(sb, "Placement");
+                PlacementItem?.Print(sb, "Placement");
             }
         }
         
@@ -7034,7 +6946,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -7656,11 +7568,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedObjectMixIn.ToString(
+            PlacedObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

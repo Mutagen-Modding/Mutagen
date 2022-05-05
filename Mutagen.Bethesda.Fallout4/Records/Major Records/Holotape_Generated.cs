@@ -210,11 +210,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            HolotapeMixIn.ToString(
+            HolotapeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -463,31 +463,27 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Holotape.Mask<bool>? printMask = null)
+            public string Print(Holotape.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Holotape.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Holotape.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Holotape.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(sb);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(sb);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.PreviewTransform ?? true)
                     {
@@ -499,11 +495,11 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(sb);
+                        Model?.Print(sb);
                     }
                     if (printMask?.Icons?.Overall ?? true)
                     {
-                        Icons?.ToString(sb);
+                        Icons?.Print(sb);
                     }
                     if (printMask?.PickUpSound ?? true)
                     {
@@ -523,14 +519,13 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(sb);
+                        Data?.Print(sb);
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
                         sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -704,46 +699,37 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
-                VirtualMachineAdapter?.ToString(sb);
-                ObjectBounds?.ToString(sb);
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(PreviewTransform, "PreviewTransform");
                 }
                 {
                     sb.AppendItem(Name, "Name");
                 }
-                Model?.ToString(sb);
-                Icons?.ToString(sb);
+                Model?.Print(sb);
+                Icons?.Print(sb);
                 {
                     sb.AppendItem(PickUpSound, "PickUpSound");
                 }
@@ -756,7 +742,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Weight, "Weight");
                 }
-                Data?.ToString(sb);
+                Data?.Print(sb);
                 {
                     sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                 }
@@ -970,7 +956,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1120,24 +1106,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IHolotapeGetter item,
             string? name = null,
             Holotape.Mask<bool>? printMask = null)
         {
-            return ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).ToString(
+            return ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IHolotapeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Holotape.Mask<bool>? printMask = null)
         {
-            ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).ToString(
+            ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1515,13 +1501,13 @@ namespace Mutagen.Bethesda.Fallout4
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IHolotapeGetter item,
             string? name = null,
             Holotape.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1529,7 +1515,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IHolotapeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1543,15 +1529,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (Holotape) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1566,12 +1550,12 @@ namespace Mutagen.Bethesda.Fallout4
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if ((printMask?.ObjectBounds?.Overall ?? true)
                 && item.ObjectBounds is {} ObjectBoundsItem)
             {
-                ObjectBoundsItem?.ToString(sb, "ObjectBounds");
+                ObjectBoundsItem?.Print(sb, "ObjectBounds");
             }
             if (printMask?.PreviewTransform ?? true)
             {
@@ -1585,12 +1569,12 @@ namespace Mutagen.Bethesda.Fallout4
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(sb, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if ((printMask?.Icons?.Overall ?? true)
                 && item.Icons is {} IconsItem)
             {
-                IconsItem?.ToString(sb, "Icons");
+                IconsItem?.Print(sb, "Icons");
             }
             if (printMask?.PickUpSound ?? true)
             {
@@ -1610,7 +1594,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (printMask?.Data?.Overall ?? true)
             {
-                item.Data?.ToString(sb, "Data");
+                item.Data?.Print(sb, "Data");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -2541,7 +2525,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HolotapeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2757,11 +2741,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            HolotapeMixIn.ToString(
+            HolotapeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

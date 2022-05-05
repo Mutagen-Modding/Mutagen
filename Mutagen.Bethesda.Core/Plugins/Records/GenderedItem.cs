@@ -78,9 +78,9 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// </summary>
         /// <param name="sb">Stream to print into</param>
         /// <param name="name">Optional name to include</param>
-        public void ToString(StructuredStringBuilder sb, string? name)
+        public void Print(StructuredStringBuilder sb, string? name)
         {
-            GenderedItem.ToString(this, sb, name);
+            GenderedItem.Print(this, sb, name);
         }
     }
 
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     {
         public static class GenderedItem
         {
-            public static void ToString<TItem>(IGenderedItemGetter<TItem> item, StructuredStringBuilder sb, string? name)
+            public static void Print<TItem>(IGenderedItemGetter<TItem> item, StructuredStringBuilder sb, string? name)
             {
                 sb.AppendLine($"{name} =>");
                 sb.AppendLine("[");
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                     var male = item.Male;
                     if (male is IPrintable mp)
                     {
-                        mp.ToString(sb, "Male");
+                        mp.Print(sb, "Male");
                     }
                     else if (male != null)
                     {
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                     var female = item.Female;
                     if (female is IPrintable fp)
                     {
-                        fp.ToString(sb, "Female");
+                        fp.Print(sb, "Female");
                     }
                     else if (female != null)
                     {

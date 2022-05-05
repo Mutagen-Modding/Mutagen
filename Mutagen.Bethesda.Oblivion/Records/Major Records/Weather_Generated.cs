@@ -146,11 +146,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherMixIn.ToString(
+            WeatherMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -425,23 +425,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Weather.Mask<bool>? printMask = null)
+            public string Print(Weather.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Weather.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Weather.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Weather.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.TextureLowerLayer ?? true)
                     {
@@ -453,68 +449,59 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(sb);
+                        Model?.Print(sb);
                     }
                     if ((printMask?.Colors?.Overall ?? true)
                         && Colors is {} ColorsItem)
                     {
                         sb.AppendLine("Colors =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(ColorsItem.Overall);
                             if (ColorsItem.Specific != null)
                             {
                                 foreach (var subItem in ColorsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.FogDistance?.Overall ?? true)
                     {
-                        FogDistance?.ToString(sb);
+                        FogDistance?.Print(sb);
                     }
                     if (printMask?.HDRData?.Overall ?? true)
                     {
-                        HDRData?.ToString(sb);
+                        HDRData?.Print(sb);
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(sb);
+                        Data?.Print(sb);
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
                         && Sounds is {} SoundsItem)
                     {
                         sb.AppendLine("Sounds =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(SoundsItem.Overall);
                             if (SoundsItem.Specific != null)
                             {
                                 foreach (var subItem in SoundsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -648,89 +635,72 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(TextureLowerLayer, "TextureLowerLayer");
                 }
                 {
                     sb.AppendItem(TextureUpperLayer, "TextureUpperLayer");
                 }
-                Model?.ToString(sb);
+                Model?.Print(sb);
                 if (Colors is {} ColorsItem)
                 {
                     sb.AppendLine("Colors =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(ColorsItem.Overall);
                         if (ColorsItem.Specific != null)
                         {
                             foreach (var subItem in ColorsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                FogDistance?.ToString(sb);
-                HDRData?.ToString(sb);
-                Data?.ToString(sb);
+                FogDistance?.Print(sb);
+                HDRData?.Print(sb);
+                Data?.Print(sb);
                 if (Sounds is {} SoundsItem)
                 {
                     sb.AppendLine("Sounds =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(SoundsItem.Overall);
                         if (SoundsItem.Specific != null)
                         {
                             foreach (var subItem in SoundsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -911,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1001,24 +971,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeatherGetter item,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
-            return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).ToString(
+            return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeatherGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
-            ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).ToString(
+            ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1379,13 +1349,13 @@ namespace Mutagen.Bethesda.Oblivion
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IWeatherGetter item,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1393,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeatherGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1407,15 +1377,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (Weather) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1440,59 +1408,51 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(sb, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if ((printMask?.Colors?.Overall ?? true)
                 && item.Colors is {} ColorsItem)
             {
                 sb.AppendLine("Colors =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in ColorsItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.FogDistance?.Overall ?? true)
                 && item.FogDistance is {} FogDistanceItem)
             {
-                FogDistanceItem?.ToString(sb, "FogDistance");
+                FogDistanceItem?.Print(sb, "FogDistance");
             }
             if ((printMask?.HDRData?.Overall ?? true)
                 && item.HDRData is {} HDRDataItem)
             {
-                HDRDataItem?.ToString(sb, "HDRData");
+                HDRDataItem?.Print(sb, "HDRData");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(sb, "Data");
+                DataItem?.Print(sb, "Data");
             }
             if (printMask?.Sounds?.Overall ?? true)
             {
                 sb.AppendLine("Sounds =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Sounds)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -2325,7 +2285,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2502,11 +2462,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherMixIn.ToString(
+            WeatherMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

@@ -72,11 +72,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ConditionDataMixIn.ToString(
+            ConditionDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -200,23 +200,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(ConditionData.Mask<bool>? printMask = null)
+            public string Print(ConditionData.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, ConditionData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ConditionData.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(ConditionData.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.RunOnType ?? true)
                     {
@@ -231,7 +227,6 @@ namespace Mutagen.Bethesda.Skyrim
                         sb.AppendItem(Unknown3, "Unknown3");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -326,34 +321,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(RunOnType, "RunOnType");
@@ -462,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -534,24 +520,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IConditionDataGetter item,
             string? name = null,
             ConditionData.Mask<bool>? printMask = null)
         {
-            return ((ConditionDataCommon)((IConditionDataGetter)item).CommonInstance()!).ToString(
+            return ((ConditionDataCommon)((IConditionDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IConditionDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             ConditionData.Mask<bool>? printMask = null)
         {
-            ((ConditionDataCommon)((IConditionDataGetter)item).CommonInstance()!).ToString(
+            ((ConditionDataCommon)((IConditionDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -823,13 +809,13 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
         }
         
-        public string ToString(
+        public string Print(
             IConditionDataGetter item,
             string? name = null,
             ConditionData.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -837,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IConditionDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -851,15 +837,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (ConditionData) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1132,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConditionDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1168,11 +1152,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ConditionDataMixIn.ToString(
+            ConditionDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

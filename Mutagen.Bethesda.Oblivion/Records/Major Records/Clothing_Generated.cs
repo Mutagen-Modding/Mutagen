@@ -176,11 +176,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ClothingMixIn.ToString(
+            ClothingMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -435,23 +435,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Clothing.Mask<bool>? printMask = null)
+            public string Print(Clothing.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Clothing.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Clothing.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Clothing.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -471,15 +467,15 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.ClothingFlags?.Overall ?? true)
                     {
-                        ClothingFlags?.ToString(sb);
+                        ClothingFlags?.Print(sb);
                     }
                     if (printMask?.MaleBipedModel?.Overall ?? true)
                     {
-                        MaleBipedModel?.ToString(sb);
+                        MaleBipedModel?.Print(sb);
                     }
                     if (printMask?.MaleWorldModel?.Overall ?? true)
                     {
-                        MaleWorldModel?.ToString(sb);
+                        MaleWorldModel?.Print(sb);
                     }
                     if (printMask?.MaleIcon ?? true)
                     {
@@ -487,11 +483,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.FemaleBipedModel?.Overall ?? true)
                     {
-                        FemaleBipedModel?.ToString(sb);
+                        FemaleBipedModel?.Print(sb);
                     }
                     if (printMask?.FemaleWorldModel?.Overall ?? true)
                     {
-                        FemaleWorldModel?.ToString(sb);
+                        FemaleWorldModel?.Print(sb);
                     }
                     if (printMask?.FemaleIcon ?? true)
                     {
@@ -499,10 +495,9 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(sb);
+                        Data?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -676,36 +671,27 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Name, "Name");
                 }
@@ -718,18 +704,18 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendItem(EnchantmentPoints, "EnchantmentPoints");
                 }
-                ClothingFlags?.ToString(sb);
-                MaleBipedModel?.ToString(sb);
-                MaleWorldModel?.ToString(sb);
+                ClothingFlags?.Print(sb);
+                MaleBipedModel?.Print(sb);
+                MaleWorldModel?.Print(sb);
                 {
                     sb.AppendItem(MaleIcon, "MaleIcon");
                 }
-                FemaleBipedModel?.ToString(sb);
-                FemaleWorldModel?.ToString(sb);
+                FemaleBipedModel?.Print(sb);
+                FemaleWorldModel?.Print(sb);
                 {
                     sb.AppendItem(FemaleIcon, "FemaleIcon");
                 }
-                Data?.ToString(sb);
+                Data?.Print(sb);
             }
             #endregion
 
@@ -925,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1027,24 +1013,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IClothingGetter item,
             string? name = null,
             Clothing.Mask<bool>? printMask = null)
         {
-            return ((ClothingCommon)((IClothingGetter)item).CommonInstance()!).ToString(
+            return ((ClothingCommon)((IClothingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IClothingGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Clothing.Mask<bool>? printMask = null)
         {
-            ((ClothingCommon)((IClothingGetter)item).CommonInstance()!).ToString(
+            ((ClothingCommon)((IClothingGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1460,13 +1446,13 @@ namespace Mutagen.Bethesda.Oblivion
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IClothingGetter item,
             string? name = null,
             Clothing.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1474,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IClothingGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1488,15 +1474,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (Clothing) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1529,17 +1513,17 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.ClothingFlags?.Overall ?? true)
                 && item.ClothingFlags is {} ClothingFlagsItem)
             {
-                ClothingFlagsItem?.ToString(sb, "ClothingFlags");
+                ClothingFlagsItem?.Print(sb, "ClothingFlags");
             }
             if ((printMask?.MaleBipedModel?.Overall ?? true)
                 && item.MaleBipedModel is {} MaleBipedModelItem)
             {
-                MaleBipedModelItem?.ToString(sb, "MaleBipedModel");
+                MaleBipedModelItem?.Print(sb, "MaleBipedModel");
             }
             if ((printMask?.MaleWorldModel?.Overall ?? true)
                 && item.MaleWorldModel is {} MaleWorldModelItem)
             {
-                MaleWorldModelItem?.ToString(sb, "MaleWorldModel");
+                MaleWorldModelItem?.Print(sb, "MaleWorldModel");
             }
             if ((printMask?.MaleIcon ?? true)
                 && item.MaleIcon is {} MaleIconItem)
@@ -1549,12 +1533,12 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.FemaleBipedModel?.Overall ?? true)
                 && item.FemaleBipedModel is {} FemaleBipedModelItem)
             {
-                FemaleBipedModelItem?.ToString(sb, "FemaleBipedModel");
+                FemaleBipedModelItem?.Print(sb, "FemaleBipedModel");
             }
             if ((printMask?.FemaleWorldModel?.Overall ?? true)
                 && item.FemaleWorldModel is {} FemaleWorldModelItem)
             {
-                FemaleWorldModelItem?.ToString(sb, "FemaleWorldModel");
+                FemaleWorldModelItem?.Print(sb, "FemaleWorldModel");
             }
             if ((printMask?.FemaleIcon ?? true)
                 && item.FemaleIcon is {} FemaleIconItem)
@@ -1564,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(sb, "Data");
+                DataItem?.Print(sb, "Data");
             }
         }
         
@@ -2483,7 +2467,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClothingCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2690,11 +2674,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ClothingMixIn.ToString(
+            ClothingMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

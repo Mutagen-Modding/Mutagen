@@ -98,11 +98,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MovementDataMixIn.ToString(
+            MovementDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -327,58 +327,53 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(MovementData.Mask<bool>? printMask = null)
+            public string Print(MovementData.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, MovementData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MovementData.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(MovementData.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Left?.Overall ?? true)
                     {
-                        Left?.ToString(sb);
+                        Left?.Print(sb);
                     }
                     if (printMask?.Right?.Overall ?? true)
                     {
-                        Right?.ToString(sb);
+                        Right?.Print(sb);
                     }
                     if (printMask?.Forward?.Overall ?? true)
                     {
-                        Forward?.ToString(sb);
+                        Forward?.Print(sb);
                     }
                     if (printMask?.Back?.Overall ?? true)
                     {
-                        Back?.ToString(sb);
+                        Back?.Print(sb);
                     }
                     if (printMask?.Pitch?.Overall ?? true)
                     {
-                        Pitch?.ToString(sb);
+                        Pitch?.Print(sb);
                     }
                     if (printMask?.Roll?.Overall ?? true)
                     {
-                        Roll?.ToString(sb);
+                        Roll?.Print(sb);
                     }
                     if (printMask?.Yaw?.Overall ?? true)
                     {
-                        Yaw?.ToString(sb);
+                        Yaw?.Print(sb);
                     }
                     if (printMask?.Unused ?? true)
                     {
                         sb.AppendItem(Unused, "Unused");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -523,42 +518,33 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Left?.ToString(sb);
-                Right?.ToString(sb);
-                Forward?.ToString(sb);
-                Back?.ToString(sb);
-                Pitch?.ToString(sb);
-                Roll?.ToString(sb);
-                Yaw?.ToString(sb);
+                Left?.Print(sb);
+                Right?.Print(sb);
+                Forward?.Print(sb);
+                Back?.Print(sb);
+                Pitch?.Print(sb);
+                Roll?.Print(sb);
+                Yaw?.Print(sb);
                 {
                     sb.AppendItem(Unused, "Unused");
                 }
@@ -694,7 +680,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -768,24 +754,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMovementDataGetter item,
             string? name = null,
             MovementData.Mask<bool>? printMask = null)
         {
-            return ((MovementDataCommon)((IMovementDataGetter)item).CommonInstance()!).ToString(
+            return ((MovementDataCommon)((IMovementDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMovementDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             MovementData.Mask<bool>? printMask = null)
         {
-            ((MovementDataCommon)((IMovementDataGetter)item).CommonInstance()!).ToString(
+            ((MovementDataCommon)((IMovementDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1076,13 +1062,13 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
         }
         
-        public string ToString(
+        public string Print(
             IMovementDataGetter item,
             string? name = null,
             MovementData.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1090,7 +1076,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMovementDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1104,15 +1090,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (MovementData) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1122,31 +1106,31 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (printMask?.Left?.Overall ?? true)
             {
-                item.Left?.ToString(sb, "Left");
+                item.Left?.Print(sb, "Left");
             }
             if (printMask?.Right?.Overall ?? true)
             {
-                item.Right?.ToString(sb, "Right");
+                item.Right?.Print(sb, "Right");
             }
             if (printMask?.Forward?.Overall ?? true)
             {
-                item.Forward?.ToString(sb, "Forward");
+                item.Forward?.Print(sb, "Forward");
             }
             if (printMask?.Back?.Overall ?? true)
             {
-                item.Back?.ToString(sb, "Back");
+                item.Back?.Print(sb, "Back");
             }
             if (printMask?.Pitch?.Overall ?? true)
             {
-                item.Pitch?.ToString(sb, "Pitch");
+                item.Pitch?.Print(sb, "Pitch");
             }
             if (printMask?.Roll?.Overall ?? true)
             {
-                item.Roll?.ToString(sb, "Roll");
+                item.Roll?.Print(sb, "Roll");
             }
             if (printMask?.Yaw?.Overall ?? true)
             {
-                item.Yaw?.ToString(sb, "Yaw");
+                item.Yaw?.Print(sb, "Yaw");
             }
             if (printMask?.Unused ?? true)
             {
@@ -1642,7 +1626,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MovementDataBinaryWriteTranslation.Instance;
@@ -1712,11 +1696,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MovementDataMixIn.ToString(
+            MovementDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

@@ -241,11 +241,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellMixIn.ToString(
+            CellMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -701,23 +701,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Cell.Mask<bool>? printMask = null)
+            public string Print(Cell.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Cell.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Cell.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -733,32 +729,28 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Lighting?.Overall ?? true)
                     {
-                        Lighting?.ToString(sb);
+                        Lighting?.Print(sb);
                     }
                     if ((printMask?.Regions?.Overall ?? true)
                         && Regions is {} RegionsItem)
                     {
                         sb.AppendLine("Regions =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(RegionsItem.Overall);
                             if (RegionsItem.Specific != null)
                             {
                                 foreach (var subItem in RegionsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.MusicType ?? true)
                     {
@@ -790,11 +782,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.PathGrid?.Overall ?? true)
                     {
-                        PathGrid?.ToString(sb);
+                        PathGrid?.Print(sb);
                     }
                     if (printMask?.Landscape?.Overall ?? true)
                     {
-                        Landscape?.ToString(sb);
+                        Landscape?.Print(sb);
                     }
                     if (printMask?.Timestamp ?? true)
                     {
@@ -808,24 +800,20 @@ namespace Mutagen.Bethesda.Oblivion
                         && Persistent is {} PersistentItem)
                     {
                         sb.AppendLine("Persistent =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(PersistentItem.Overall);
                             if (PersistentItem.Specific != null)
                             {
                                 foreach (var subItem in PersistentItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.TemporaryTimestamp ?? true)
                     {
@@ -835,24 +823,20 @@ namespace Mutagen.Bethesda.Oblivion
                         && Temporary is {} TemporaryItem)
                     {
                         sb.AppendLine("Temporary =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(TemporaryItem.Overall);
                             if (TemporaryItem.Specific != null)
                             {
                                 foreach (var subItem in TemporaryItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.VisibleWhenDistantTimestamp ?? true)
                     {
@@ -862,27 +846,22 @@ namespace Mutagen.Bethesda.Oblivion
                         && VisibleWhenDistant is {} VisibleWhenDistantItem)
                     {
                         sb.AppendLine("VisibleWhenDistant =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(VisibleWhenDistantItem.Overall);
                             if (VisibleWhenDistantItem.Specific != null)
                             {
                                 foreach (var subItem in VisibleWhenDistantItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -1146,36 +1125,27 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Name, "Name");
                 }
@@ -1185,30 +1155,26 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendItem(Grid, "Grid");
                 }
-                Lighting?.ToString(sb);
+                Lighting?.Print(sb);
                 if (Regions is {} RegionsItem)
                 {
                     sb.AppendLine("Regions =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(RegionsItem.Overall);
                         if (RegionsItem.Specific != null)
                         {
                             foreach (var subItem in RegionsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(MusicType, "MusicType");
@@ -1231,8 +1197,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendItem(GlobalVariable, "GlobalVariable");
                 }
-                PathGrid?.ToString(sb);
-                Landscape?.ToString(sb);
+                PathGrid?.Print(sb);
+                Landscape?.Print(sb);
                 {
                     sb.AppendItem(Timestamp, "Timestamp");
                 }
@@ -1242,24 +1208,20 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Persistent is {} PersistentItem)
                 {
                     sb.AppendLine("Persistent =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(PersistentItem.Overall);
                         if (PersistentItem.Specific != null)
                         {
                             foreach (var subItem in PersistentItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
@@ -1267,24 +1229,20 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Temporary is {} TemporaryItem)
                 {
                     sb.AppendLine("Temporary =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(TemporaryItem.Overall);
                         if (TemporaryItem.Specific != null)
                         {
                             foreach (var subItem in TemporaryItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
@@ -1292,24 +1250,20 @@ namespace Mutagen.Bethesda.Oblivion
                 if (VisibleWhenDistant is {} VisibleWhenDistantItem)
                 {
                     sb.AppendLine("VisibleWhenDistant =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(VisibleWhenDistantItem.Overall);
                         if (VisibleWhenDistantItem.Specific != null)
                         {
                             foreach (var subItem in VisibleWhenDistantItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -1579,7 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1699,24 +1653,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICellGetter item,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
-            return ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICellGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
-            ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
+            ((CellCommon)((ICellGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -2496,13 +2450,13 @@ namespace Mutagen.Bethesda.Oblivion
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ICellGetter item,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -2510,7 +2464,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICellGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -2524,15 +2478,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (Cell) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -2562,26 +2514,22 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Lighting?.Overall ?? true)
                 && item.Lighting is {} LightingItem)
             {
-                LightingItem?.ToString(sb, "Lighting");
+                LightingItem?.Print(sb, "Lighting");
             }
             if ((printMask?.Regions?.Overall ?? true)
                 && item.Regions is {} RegionsItem)
             {
                 sb.AppendLine("Regions =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in RegionsItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.MusicType ?? true)
                 && item.MusicType is {} MusicTypeItem)
@@ -2617,12 +2565,12 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.PathGrid?.Overall ?? true)
                 && item.PathGrid is {} PathGridItem)
             {
-                PathGridItem?.ToString(sb, "PathGrid");
+                PathGridItem?.Print(sb, "PathGrid");
             }
             if ((printMask?.Landscape?.Overall ?? true)
                 && item.Landscape is {} LandscapeItem)
             {
-                LandscapeItem?.ToString(sb, "Landscape");
+                LandscapeItem?.Print(sb, "Landscape");
             }
             if (printMask?.Timestamp ?? true)
             {
@@ -2635,20 +2583,16 @@ namespace Mutagen.Bethesda.Oblivion
             if (printMask?.Persistent?.Overall ?? true)
             {
                 sb.AppendLine("Persistent =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Persistent)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.TemporaryTimestamp ?? true)
             {
@@ -2657,20 +2601,16 @@ namespace Mutagen.Bethesda.Oblivion
             if (printMask?.Temporary?.Overall ?? true)
             {
                 sb.AppendLine("Temporary =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Temporary)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.VisibleWhenDistantTimestamp ?? true)
             {
@@ -2679,20 +2619,16 @@ namespace Mutagen.Bethesda.Oblivion
             if (printMask?.VisibleWhenDistant?.Overall ?? true)
             {
                 sb.AppendLine("VisibleWhenDistant =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.VisibleWhenDistant)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -4743,7 +4679,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
@@ -4969,11 +4905,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellMixIn.ToString(
+            CellMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

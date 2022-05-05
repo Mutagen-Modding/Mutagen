@@ -126,11 +126,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FootstepSetMixIn.ToString(
+            FootstepSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -441,151 +441,126 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(FootstepSet.Mask<bool>? printMask = null)
+            public string Print(FootstepSet.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, FootstepSet.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FootstepSet.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(FootstepSet.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if ((printMask?.WalkForwardFootsteps?.Overall ?? true)
                         && WalkForwardFootsteps is {} WalkForwardFootstepsItem)
                     {
                         sb.AppendLine("WalkForwardFootsteps =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(WalkForwardFootstepsItem.Overall);
                             if (WalkForwardFootstepsItem.Specific != null)
                             {
                                 foreach (var subItem in WalkForwardFootstepsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.RunForwardFootsteps?.Overall ?? true)
                         && RunForwardFootsteps is {} RunForwardFootstepsItem)
                     {
                         sb.AppendLine("RunForwardFootsteps =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(RunForwardFootstepsItem.Overall);
                             if (RunForwardFootstepsItem.Specific != null)
                             {
                                 foreach (var subItem in RunForwardFootstepsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.WalkForwardAlternateFootsteps?.Overall ?? true)
                         && WalkForwardAlternateFootsteps is {} WalkForwardAlternateFootstepsItem)
                     {
                         sb.AppendLine("WalkForwardAlternateFootsteps =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(WalkForwardAlternateFootstepsItem.Overall);
                             if (WalkForwardAlternateFootstepsItem.Specific != null)
                             {
                                 foreach (var subItem in WalkForwardAlternateFootstepsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.RunForwardAlternateFootsteps?.Overall ?? true)
                         && RunForwardAlternateFootsteps is {} RunForwardAlternateFootstepsItem)
                     {
                         sb.AppendLine("RunForwardAlternateFootsteps =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(RunForwardAlternateFootstepsItem.Overall);
                             if (RunForwardAlternateFootstepsItem.Specific != null)
                             {
                                 foreach (var subItem in RunForwardAlternateFootstepsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.WalkForwardAlternateFootsteps2?.Overall ?? true)
                         && WalkForwardAlternateFootsteps2 is {} WalkForwardAlternateFootsteps2Item)
                     {
                         sb.AppendLine("WalkForwardAlternateFootsteps2 =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(WalkForwardAlternateFootsteps2Item.Overall);
                             if (WalkForwardAlternateFootsteps2Item.Specific != null)
                             {
                                 foreach (var subItem in WalkForwardAlternateFootsteps2Item.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -689,155 +664,126 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 if (WalkForwardFootsteps is {} WalkForwardFootstepsItem)
                 {
                     sb.AppendLine("WalkForwardFootsteps =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(WalkForwardFootstepsItem.Overall);
                         if (WalkForwardFootstepsItem.Specific != null)
                         {
                             foreach (var subItem in WalkForwardFootstepsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (RunForwardFootsteps is {} RunForwardFootstepsItem)
                 {
                     sb.AppendLine("RunForwardFootsteps =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(RunForwardFootstepsItem.Overall);
                         if (RunForwardFootstepsItem.Specific != null)
                         {
                             foreach (var subItem in RunForwardFootstepsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (WalkForwardAlternateFootsteps is {} WalkForwardAlternateFootstepsItem)
                 {
                     sb.AppendLine("WalkForwardAlternateFootsteps =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(WalkForwardAlternateFootstepsItem.Overall);
                         if (WalkForwardAlternateFootstepsItem.Specific != null)
                         {
                             foreach (var subItem in WalkForwardAlternateFootstepsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (RunForwardAlternateFootsteps is {} RunForwardAlternateFootstepsItem)
                 {
                     sb.AppendLine("RunForwardAlternateFootsteps =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(RunForwardAlternateFootstepsItem.Overall);
                         if (RunForwardAlternateFootstepsItem.Specific != null)
                         {
                             foreach (var subItem in RunForwardAlternateFootstepsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (WalkForwardAlternateFootsteps2 is {} WalkForwardAlternateFootsteps2Item)
                 {
                     sb.AppendLine("WalkForwardAlternateFootsteps2 =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(WalkForwardAlternateFootsteps2Item.Overall);
                         if (WalkForwardAlternateFootsteps2Item.Specific != null)
                         {
                             foreach (var subItem in WalkForwardAlternateFootsteps2Item.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -1029,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1103,24 +1049,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFootstepSetGetter item,
             string? name = null,
             FootstepSet.Mask<bool>? printMask = null)
         {
-            return ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).ToString(
+            return ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFootstepSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             FootstepSet.Mask<bool>? printMask = null)
         {
-            ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).ToString(
+            ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1463,13 +1409,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IFootstepSetGetter item,
             string? name = null,
             FootstepSet.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1477,7 +1423,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFootstepSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1491,15 +1437,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (FootstepSet) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1514,92 +1458,72 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.WalkForwardFootsteps?.Overall ?? true)
             {
                 sb.AppendLine("WalkForwardFootsteps =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.WalkForwardFootsteps)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.RunForwardFootsteps?.Overall ?? true)
             {
                 sb.AppendLine("RunForwardFootsteps =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.RunForwardFootsteps)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.WalkForwardAlternateFootsteps?.Overall ?? true)
             {
                 sb.AppendLine("WalkForwardAlternateFootsteps =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.WalkForwardAlternateFootsteps)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.RunForwardAlternateFootsteps?.Overall ?? true)
             {
                 sb.AppendLine("RunForwardAlternateFootsteps =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.RunForwardAlternateFootsteps)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.WalkForwardAlternateFootsteps2?.Overall ?? true)
             {
                 sb.AppendLine("WalkForwardAlternateFootsteps2 =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.WalkForwardAlternateFootsteps2)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -2244,7 +2168,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FootstepSetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2350,11 +2274,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FootstepSetMixIn.ToString(
+            FootstepSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

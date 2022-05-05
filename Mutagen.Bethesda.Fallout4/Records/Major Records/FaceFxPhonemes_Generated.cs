@@ -245,11 +245,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceFxPhonemesMixIn.ToString(
+            FaceFxPhonemesMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -672,23 +672,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(FaceFxPhonemes.Mask<bool>? printMask = null)
+            public string Print(FaceFxPhonemes.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, FaceFxPhonemes.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FaceFxPhonemes.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(FaceFxPhonemes.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.ForceNames ?? true)
                     {
@@ -696,93 +692,88 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     if (printMask?.Aah_LipBigAah?.Overall ?? true)
                     {
-                        Aah_LipBigAah?.ToString(sb);
+                        Aah_LipBigAah?.Print(sb);
                     }
                     if (printMask?.BigAah_LipDST?.Overall ?? true)
                     {
-                        BigAah_LipDST?.ToString(sb);
+                        BigAah_LipDST?.Print(sb);
                     }
                     if (printMask?.BMP_LipEee?.Overall ?? true)
                     {
-                        BMP_LipEee?.ToString(sb);
+                        BMP_LipEee?.Print(sb);
                     }
                     if (printMask?.ChJSh_LipFV?.Overall ?? true)
                     {
-                        ChJSh_LipFV?.ToString(sb);
+                        ChJSh_LipFV?.Print(sb);
                     }
                     if (printMask?.DST_LipK?.Overall ?? true)
                     {
-                        DST_LipK?.ToString(sb);
+                        DST_LipK?.Print(sb);
                     }
                     if (printMask?.Eee_LipL?.Overall ?? true)
                     {
-                        Eee_LipL?.ToString(sb);
+                        Eee_LipL?.Print(sb);
                     }
                     if (printMask?.Eh_LipR?.Overall ?? true)
                     {
-                        Eh_LipR?.ToString(sb);
+                        Eh_LipR?.Print(sb);
                     }
                     if (printMask?.FV_LipTh?.Overall ?? true)
                     {
-                        FV_LipTh?.ToString(sb);
+                        FV_LipTh?.Print(sb);
                     }
                     if (printMask?.I?.Overall ?? true)
                     {
-                        I?.ToString(sb);
+                        I?.Print(sb);
                     }
                     if (printMask?.K?.Overall ?? true)
                     {
-                        K?.ToString(sb);
+                        K?.Print(sb);
                     }
                     if (printMask?.N?.Overall ?? true)
                     {
-                        N?.ToString(sb);
+                        N?.Print(sb);
                     }
                     if (printMask?.Oh?.Overall ?? true)
                     {
-                        Oh?.ToString(sb);
+                        Oh?.Print(sb);
                     }
                     if (printMask?.OohQ?.Overall ?? true)
                     {
-                        OohQ?.ToString(sb);
+                        OohQ?.Print(sb);
                     }
                     if (printMask?.R?.Overall ?? true)
                     {
-                        R?.ToString(sb);
+                        R?.Print(sb);
                     }
                     if (printMask?.Th?.Overall ?? true)
                     {
-                        Th?.ToString(sb);
+                        Th?.Print(sb);
                     }
                     if (printMask?.W?.Overall ?? true)
                     {
-                        W?.ToString(sb);
+                        W?.Print(sb);
                     }
                     if ((printMask?.Unknowns?.Overall ?? true)
                         && Unknowns is {} UnknownsItem)
                     {
                         sb.AppendLine("Unknowns =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(UnknownsItem.Overall);
                             if (UnknownsItem.Specific != null)
                             {
                                 foreach (var subItem in UnknownsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -1027,75 +1018,62 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(ForceNames, "ForceNames");
                 }
-                Aah_LipBigAah?.ToString(sb);
-                BigAah_LipDST?.ToString(sb);
-                BMP_LipEee?.ToString(sb);
-                ChJSh_LipFV?.ToString(sb);
-                DST_LipK?.ToString(sb);
-                Eee_LipL?.ToString(sb);
-                Eh_LipR?.ToString(sb);
-                FV_LipTh?.ToString(sb);
-                I?.ToString(sb);
-                K?.ToString(sb);
-                N?.ToString(sb);
-                Oh?.ToString(sb);
-                OohQ?.ToString(sb);
-                R?.ToString(sb);
-                Th?.ToString(sb);
-                W?.ToString(sb);
+                Aah_LipBigAah?.Print(sb);
+                BigAah_LipDST?.Print(sb);
+                BMP_LipEee?.Print(sb);
+                ChJSh_LipFV?.Print(sb);
+                DST_LipK?.Print(sb);
+                Eee_LipL?.Print(sb);
+                Eh_LipR?.Print(sb);
+                FV_LipTh?.Print(sb);
+                I?.Print(sb);
+                K?.Print(sb);
+                N?.Print(sb);
+                Oh?.Print(sb);
+                OohQ?.Print(sb);
+                R?.Print(sb);
+                Th?.Print(sb);
+                W?.Print(sb);
                 if (Unknowns is {} UnknownsItem)
                 {
                     sb.AppendLine("Unknowns =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(UnknownsItem.Overall);
                         if (UnknownsItem.Specific != null)
                         {
                             foreach (var subItem in UnknownsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -1259,7 +1237,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1353,24 +1331,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFaceFxPhonemesGetter item,
             string? name = null,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).ToString(
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFaceFxPhonemesGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
-            ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).ToString(
+            ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1758,13 +1736,13 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IFaceFxPhonemesGetter item,
             string? name = null,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1772,7 +1750,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFaceFxPhonemesGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1786,15 +1764,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (FaceFxPhonemes) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1809,100 +1785,96 @@ namespace Mutagen.Bethesda.Fallout4
             if ((printMask?.Aah_LipBigAah?.Overall ?? true)
                 && item.Aah_LipBigAah is {} Aah_LipBigAahItem)
             {
-                Aah_LipBigAahItem?.ToString(sb, "Aah_LipBigAah");
+                Aah_LipBigAahItem?.Print(sb, "Aah_LipBigAah");
             }
             if ((printMask?.BigAah_LipDST?.Overall ?? true)
                 && item.BigAah_LipDST is {} BigAah_LipDSTItem)
             {
-                BigAah_LipDSTItem?.ToString(sb, "BigAah_LipDST");
+                BigAah_LipDSTItem?.Print(sb, "BigAah_LipDST");
             }
             if ((printMask?.BMP_LipEee?.Overall ?? true)
                 && item.BMP_LipEee is {} BMP_LipEeeItem)
             {
-                BMP_LipEeeItem?.ToString(sb, "BMP_LipEee");
+                BMP_LipEeeItem?.Print(sb, "BMP_LipEee");
             }
             if ((printMask?.ChJSh_LipFV?.Overall ?? true)
                 && item.ChJSh_LipFV is {} ChJSh_LipFVItem)
             {
-                ChJSh_LipFVItem?.ToString(sb, "ChJSh_LipFV");
+                ChJSh_LipFVItem?.Print(sb, "ChJSh_LipFV");
             }
             if ((printMask?.DST_LipK?.Overall ?? true)
                 && item.DST_LipK is {} DST_LipKItem)
             {
-                DST_LipKItem?.ToString(sb, "DST_LipK");
+                DST_LipKItem?.Print(sb, "DST_LipK");
             }
             if ((printMask?.Eee_LipL?.Overall ?? true)
                 && item.Eee_LipL is {} Eee_LipLItem)
             {
-                Eee_LipLItem?.ToString(sb, "Eee_LipL");
+                Eee_LipLItem?.Print(sb, "Eee_LipL");
             }
             if ((printMask?.Eh_LipR?.Overall ?? true)
                 && item.Eh_LipR is {} Eh_LipRItem)
             {
-                Eh_LipRItem?.ToString(sb, "Eh_LipR");
+                Eh_LipRItem?.Print(sb, "Eh_LipR");
             }
             if ((printMask?.FV_LipTh?.Overall ?? true)
                 && item.FV_LipTh is {} FV_LipThItem)
             {
-                FV_LipThItem?.ToString(sb, "FV_LipTh");
+                FV_LipThItem?.Print(sb, "FV_LipTh");
             }
             if ((printMask?.I?.Overall ?? true)
                 && item.I is {} IItem)
             {
-                IItem?.ToString(sb, "I");
+                IItem?.Print(sb, "I");
             }
             if ((printMask?.K?.Overall ?? true)
                 && item.K is {} KItem)
             {
-                KItem?.ToString(sb, "K");
+                KItem?.Print(sb, "K");
             }
             if ((printMask?.N?.Overall ?? true)
                 && item.N is {} NItem)
             {
-                NItem?.ToString(sb, "N");
+                NItem?.Print(sb, "N");
             }
             if ((printMask?.Oh?.Overall ?? true)
                 && item.Oh is {} OhItem)
             {
-                OhItem?.ToString(sb, "Oh");
+                OhItem?.Print(sb, "Oh");
             }
             if ((printMask?.OohQ?.Overall ?? true)
                 && item.OohQ is {} OohQItem)
             {
-                OohQItem?.ToString(sb, "OohQ");
+                OohQItem?.Print(sb, "OohQ");
             }
             if ((printMask?.R?.Overall ?? true)
                 && item.R is {} RItem)
             {
-                RItem?.ToString(sb, "R");
+                RItem?.Print(sb, "R");
             }
             if ((printMask?.Th?.Overall ?? true)
                 && item.Th is {} ThItem)
             {
-                ThItem?.ToString(sb, "Th");
+                ThItem?.Print(sb, "Th");
             }
             if ((printMask?.W?.Overall ?? true)
                 && item.W is {} WItem)
             {
-                WItem?.ToString(sb, "W");
+                WItem?.Print(sb, "W");
             }
             if (printMask?.Unknowns?.Overall ?? true)
             {
                 sb.AppendLine("Unknowns =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Unknowns)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -2775,7 +2747,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FaceFxPhonemesBinaryWriteTranslation.Instance;
@@ -2836,11 +2808,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceFxPhonemesMixIn.ToString(
+            FaceFxPhonemesMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

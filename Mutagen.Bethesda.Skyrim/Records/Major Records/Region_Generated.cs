@@ -152,11 +152,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMixIn.ToString(
+            RegionMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -422,23 +422,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Region.Mask<bool>? printMask = null)
+            public string Print(Region.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Region.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Region.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.MapColor ?? true)
                     {
@@ -452,51 +448,46 @@ namespace Mutagen.Bethesda.Skyrim
                         && RegionAreas is {} RegionAreasItem)
                     {
                         sb.AppendLine("RegionAreas =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(RegionAreasItem.Overall);
                             if (RegionAreasItem.Specific != null)
                             {
                                 foreach (var subItem in RegionAreasItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.Objects?.Overall ?? true)
                     {
-                        Objects?.ToString(sb);
+                        Objects?.Print(sb);
                     }
                     if (printMask?.Weather?.Overall ?? true)
                     {
-                        Weather?.ToString(sb);
+                        Weather?.Print(sb);
                     }
                     if (printMask?.Map?.Overall ?? true)
                     {
-                        Map?.ToString(sb);
+                        Map?.Print(sb);
                     }
                     if (printMask?.Land?.Overall ?? true)
                     {
-                        Land?.ToString(sb);
+                        Land?.Print(sb);
                     }
                     if (printMask?.Grasses?.Overall ?? true)
                     {
-                        Grasses?.ToString(sb);
+                        Grasses?.Print(sb);
                     }
                     if (printMask?.Sounds?.Overall ?? true)
                     {
-                        Sounds?.ToString(sb);
+                        Sounds?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -640,36 +631,27 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(MapColor, "MapColor");
                 }
@@ -679,31 +661,27 @@ namespace Mutagen.Bethesda.Skyrim
                 if (RegionAreas is {} RegionAreasItem)
                 {
                     sb.AppendLine("RegionAreas =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(RegionAreasItem.Overall);
                         if (RegionAreasItem.Specific != null)
                         {
                             foreach (var subItem in RegionAreasItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                Objects?.ToString(sb);
-                Weather?.ToString(sb);
-                Map?.ToString(sb);
-                Land?.ToString(sb);
-                Grasses?.ToString(sb);
-                Sounds?.ToString(sb);
+                Objects?.Print(sb);
+                Weather?.Print(sb);
+                Map?.Print(sb);
+                Land?.Print(sb);
+                Grasses?.Print(sb);
+                Sounds?.Print(sb);
             }
             #endregion
 
@@ -908,7 +886,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1000,24 +978,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRegionGetter item,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
-            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
+            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRegionGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
-            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
+            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1389,13 +1367,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IRegionGetter item,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1403,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRegionGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1417,15 +1395,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (Region) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1449,50 +1425,46 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.RegionAreas?.Overall ?? true)
             {
                 sb.AppendLine("RegionAreas =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.RegionAreas)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.Objects?.Overall ?? true)
                 && item.Objects is {} ObjectsItem)
             {
-                ObjectsItem?.ToString(sb, "Objects");
+                ObjectsItem?.Print(sb, "Objects");
             }
             if ((printMask?.Weather?.Overall ?? true)
                 && item.Weather is {} WeatherItem)
             {
-                WeatherItem?.ToString(sb, "Weather");
+                WeatherItem?.Print(sb, "Weather");
             }
             if ((printMask?.Map?.Overall ?? true)
                 && item.Map is {} MapItem)
             {
-                MapItem?.ToString(sb, "Map");
+                MapItem?.Print(sb, "Map");
             }
             if ((printMask?.Land?.Overall ?? true)
                 && item.Land is {} LandItem)
             {
-                LandItem?.ToString(sb, "Land");
+                LandItem?.Print(sb, "Land");
             }
             if ((printMask?.Grasses?.Overall ?? true)
                 && item.Grasses is {} GrassesItem)
             {
-                GrassesItem?.ToString(sb, "Grasses");
+                GrassesItem?.Print(sb, "Grasses");
             }
             if ((printMask?.Sounds?.Overall ?? true)
                 && item.Sounds is {} SoundsItem)
             {
-                SoundsItem?.ToString(sb, "Sounds");
+                SoundsItem?.Print(sb, "Sounds");
             }
         }
         
@@ -2340,7 +2312,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2476,11 +2448,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMixIn.ToString(
+            RegionMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

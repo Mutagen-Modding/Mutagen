@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Generation.Modules.Binary;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
 using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 

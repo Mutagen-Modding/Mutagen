@@ -76,11 +76,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellSubBlockMixIn.ToString(
+            CellSubBlockMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -249,23 +249,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(CellSubBlock.Mask<bool>? printMask = null)
+            public string Print(CellSubBlock.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, CellSubBlock.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CellSubBlock.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(CellSubBlock.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.BlockNumber ?? true)
                     {
@@ -283,27 +279,22 @@ namespace Mutagen.Bethesda.Oblivion
                         && Cells is {} CellsItem)
                     {
                         sb.AppendLine("Cells =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(CellsItem.Overall);
                             if (CellsItem.Specific != null)
                             {
                                 foreach (var subItem in CellsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -408,34 +399,25 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(BlockNumber, "BlockNumber");
@@ -449,24 +431,20 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Cells is {} CellsItem)
                 {
                     sb.AppendLine("Cells =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(CellsItem.Overall);
                         if (CellsItem.Specific != null)
                         {
                             foreach (var subItem in CellsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -630,7 +608,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -700,24 +678,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICellSubBlockGetter item,
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).ToString(
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICellSubBlockGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
-            ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).ToString(
+            ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1344,13 +1322,13 @@ namespace Mutagen.Bethesda.Oblivion
                 include);
         }
         
-        public string ToString(
+        public string Print(
             ICellSubBlockGetter item,
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1358,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICellSubBlockGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1372,15 +1350,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (CellSubBlock) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1403,20 +1379,16 @@ namespace Mutagen.Bethesda.Oblivion
             if (printMask?.Cells?.Overall ?? true)
             {
                 sb.AppendLine("Cells =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Cells)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -1936,7 +1908,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellSubBlockCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
@@ -2049,11 +2021,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellSubBlockMixIn.ToString(
+            CellSubBlockMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

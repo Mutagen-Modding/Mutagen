@@ -78,11 +78,11 @@ namespace Mutagen.Bethesda.Pex
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            DebugInfoMixIn.ToString(
+            DebugInfoMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -323,23 +323,19 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(DebugInfo.Mask<bool>? printMask = null)
+            public string Print(DebugInfo.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, DebugInfo.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DebugInfo.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(DebugInfo.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.ModificationTime ?? true)
                     {
@@ -349,73 +345,60 @@ namespace Mutagen.Bethesda.Pex
                         && Functions is {} FunctionsItem)
                     {
                         sb.AppendLine("Functions =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(FunctionsItem.Overall);
                             if (FunctionsItem.Specific != null)
                             {
                                 foreach (var subItem in FunctionsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.PropertyGroups?.Overall ?? true)
                         && PropertyGroups is {} PropertyGroupsItem)
                     {
                         sb.AppendLine("PropertyGroups =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(PropertyGroupsItem.Overall);
                             if (PropertyGroupsItem.Specific != null)
                             {
                                 foreach (var subItem in PropertyGroupsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.StructOrders?.Overall ?? true)
                         && StructOrders is {} StructOrdersItem)
                     {
                         sb.AppendLine("StructOrders =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(StructOrdersItem.Overall);
                             if (StructOrdersItem.Specific != null)
                             {
                                 foreach (var subItem in StructOrdersItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -520,34 +503,25 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(ModificationTime, "ModificationTime");
@@ -555,68 +529,56 @@ namespace Mutagen.Bethesda.Pex
                 if (Functions is {} FunctionsItem)
                 {
                     sb.AppendLine("Functions =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(FunctionsItem.Overall);
                         if (FunctionsItem.Specific != null)
                         {
                             foreach (var subItem in FunctionsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (PropertyGroups is {} PropertyGroupsItem)
                 {
                     sb.AppendLine("PropertyGroups =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(PropertyGroupsItem.Overall);
                         if (PropertyGroupsItem.Specific != null)
                         {
                             foreach (var subItem in PropertyGroupsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (StructOrders is {} StructOrdersItem)
                 {
                     sb.AppendLine("StructOrders =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(StructOrdersItem.Overall);
                         if (StructOrdersItem.Specific != null)
                         {
                             foreach (var subItem in StructOrdersItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -696,7 +658,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -761,24 +723,24 @@ namespace Mutagen.Bethesda.Pex
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDebugInfoGetter item,
             string? name = null,
             DebugInfo.Mask<bool>? printMask = null)
         {
-            return ((DebugInfoCommon)((IDebugInfoGetter)item).CommonInstance()!).ToString(
+            return ((DebugInfoCommon)((IDebugInfoGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDebugInfoGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             DebugInfo.Mask<bool>? printMask = null)
         {
-            ((DebugInfoCommon)((IDebugInfoGetter)item).CommonInstance()!).ToString(
+            ((DebugInfoCommon)((IDebugInfoGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1029,13 +991,13 @@ namespace Mutagen.Bethesda.Pex
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IDebugInfoGetter item,
             string? name = null,
             DebugInfo.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1043,7 +1005,7 @@ namespace Mutagen.Bethesda.Pex
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDebugInfoGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1057,15 +1019,13 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine($"{name} (DebugInfo) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1080,56 +1040,44 @@ namespace Mutagen.Bethesda.Pex
             if (printMask?.Functions?.Overall ?? true)
             {
                 sb.AppendLine("Functions =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Functions)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.PropertyGroups?.Overall ?? true)
             {
                 sb.AppendLine("PropertyGroups =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.PropertyGroups)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.StructOrders?.Overall ?? true)
             {
                 sb.AppendLine("StructOrders =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.StructOrders)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         

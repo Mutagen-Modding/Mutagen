@@ -26,10 +26,7 @@ public static class TestBattery
                 failed += 1 + test.ChildCount;
                 if (ex is IPrintable printable)
                 {
-                    StructuredStringBuilder sb = new StructuredStringBuilder();
-                    printable.ToString(sb);
-                    var str = sb.ToString();
-                    Console.Write(sb);
+                    Console.Write(printable.Print());
                     Console.WriteLine();
                 }
                 else

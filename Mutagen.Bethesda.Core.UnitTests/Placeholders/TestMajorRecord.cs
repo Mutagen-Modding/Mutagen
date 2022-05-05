@@ -69,7 +69,7 @@ public class TestMajorRecord : ITestMajorRecord
         throw new NotImplementedException();
     }
 
-    public void ToString(StructuredStringBuilder sb, string? name = null)
+    public void Print(StructuredStringBuilder sb, string? name = null)
     {
         throw new NotImplementedException();
     }

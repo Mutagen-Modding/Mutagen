@@ -129,11 +129,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedCreatureMixIn.ToString(
+            PlacedCreatureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -320,23 +320,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(PlacedCreature.Mask<bool>? printMask = null)
+            public string Print(PlacedCreature.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, PlacedCreature.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedCreature.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(PlacedCreature.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Base ?? true)
                     {
@@ -356,7 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
-                        EnableParent?.ToString(sb);
+                        EnableParent?.Print(sb);
                     }
                     if (printMask?.RagdollData ?? true)
                     {
@@ -368,10 +364,9 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Location?.Overall ?? true)
                     {
-                        Location?.ToString(sb);
+                        Location?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -505,36 +500,27 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Base, "Base");
                 }
@@ -547,14 +533,14 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendItem(GlobalVariable, "GlobalVariable");
                 }
-                EnableParent?.ToString(sb);
+                EnableParent?.Print(sb);
                 {
                     sb.AppendItem(RagdollData, "RagdollData");
                 }
                 {
                     sb.AppendItem(Scale, "Scale");
                 }
-                Location?.ToString(sb);
+                Location?.Print(sb);
             }
             #endregion
 
@@ -738,7 +724,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -820,24 +806,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPlacedCreatureGetter item,
             string? name = null,
             PlacedCreature.Mask<bool>? printMask = null)
         {
-            return ((PlacedCreatureCommon)((IPlacedCreatureGetter)item).CommonInstance()!).ToString(
+            return ((PlacedCreatureCommon)((IPlacedCreatureGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPlacedCreatureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             PlacedCreature.Mask<bool>? printMask = null)
         {
-            ((PlacedCreatureCommon)((IPlacedCreatureGetter)item).CommonInstance()!).ToString(
+            ((PlacedCreatureCommon)((IPlacedCreatureGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1187,13 +1173,13 @@ namespace Mutagen.Bethesda.Oblivion
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPlacedCreatureGetter item,
             string? name = null,
             PlacedCreature.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1201,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPlacedCreatureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1215,15 +1201,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (PlacedCreature) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1255,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
             {
-                EnableParentItem?.ToString(sb, "EnableParent");
+                EnableParentItem?.Print(sb, "EnableParent");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData is {} RagdollDataItem)
@@ -1270,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location is {} LocationItem)
             {
-                LocationItem?.ToString(sb, "Location");
+                LocationItem?.Print(sb, "Location");
             }
         }
         
@@ -1991,7 +1975,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedCreatureCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2159,11 +2143,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedCreatureMixIn.ToString(
+            PlacedCreatureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

@@ -76,11 +76,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptFragmentsIndexedMixIn.ToString(
+            ScriptFragmentsIndexedMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -248,23 +248,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(ScriptFragmentsIndexed.Mask<bool>? printMask = null)
+            public string Print(ScriptFragmentsIndexed.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, ScriptFragmentsIndexed.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ScriptFragmentsIndexed.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(ScriptFragmentsIndexed.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.ExtraBindDataVersion ?? true)
                     {
@@ -272,33 +268,28 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     if (printMask?.Script?.Overall ?? true)
                     {
-                        Script?.ToString(sb);
+                        Script?.Print(sb);
                     }
                     if ((printMask?.Fragments?.Overall ?? true)
                         && Fragments is {} FragmentsItem)
                     {
                         sb.AppendLine("Fragments =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(FragmentsItem.Overall);
                             if (FragmentsItem.Specific != null)
                             {
                                 foreach (var subItem in FragmentsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -393,60 +384,47 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                 }
-                Script?.ToString(sb);
+                Script?.Print(sb);
                 if (Fragments is {} FragmentsItem)
                 {
                     sb.AppendLine("Fragments =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(FragmentsItem.Overall);
                         if (FragmentsItem.Specific != null)
                         {
                             foreach (var subItem in FragmentsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -570,7 +548,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -636,24 +614,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IScriptFragmentsIndexedGetter item,
             string? name = null,
             ScriptFragmentsIndexed.Mask<bool>? printMask = null)
         {
-            return ((ScriptFragmentsIndexedCommon)((IScriptFragmentsIndexedGetter)item).CommonInstance()!).ToString(
+            return ((ScriptFragmentsIndexedCommon)((IScriptFragmentsIndexedGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IScriptFragmentsIndexedGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             ScriptFragmentsIndexed.Mask<bool>? printMask = null)
         {
-            ((ScriptFragmentsIndexedCommon)((IScriptFragmentsIndexedGetter)item).CommonInstance()!).ToString(
+            ((ScriptFragmentsIndexedCommon)((IScriptFragmentsIndexedGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -933,13 +911,13 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IScriptFragmentsIndexedGetter item,
             string? name = null,
             ScriptFragmentsIndexed.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -947,7 +925,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IScriptFragmentsIndexedGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -961,15 +939,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (ScriptFragmentsIndexed) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -983,25 +959,21 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (printMask?.Script?.Overall ?? true)
             {
-                item.Script?.ToString(sb, "Script");
+                item.Script?.Print(sb, "Script");
             }
             if (printMask?.Fragments?.Overall ?? true)
             {
                 sb.AppendLine("Fragments =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Fragments)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -1304,7 +1276,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptFragmentsIndexedCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1366,11 +1338,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptFragmentsIndexedMixIn.ToString(
+            ScriptFragmentsIndexedMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

@@ -444,11 +444,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherMixIn.ToString(
+            WeatherMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1422,48 +1422,40 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Weather.Mask<bool>? printMask = null)
+            public string Print(Weather.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Weather.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Weather.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Weather.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if ((printMask?.CloudTextures?.Overall ?? true)
                         && CloudTextures is {} CloudTexturesItem)
                     {
                         sb.AppendLine("CloudTextures =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(CloudTexturesItem.Overall);
                             if (CloudTexturesItem.Specific != null)
                             {
                                 foreach (var subItem in CloudTexturesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.DNAM ?? true)
                     {
@@ -1501,92 +1493,88 @@ namespace Mutagen.Bethesda.Skyrim
                         && Clouds is {} CloudsItem)
                     {
                         sb.AppendLine("Clouds =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(CloudsItem.Overall);
                             if (CloudsItem.Specific != null)
                             {
                                 foreach (var subItem in CloudsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.SkyUpperColor?.Overall ?? true)
                     {
-                        SkyUpperColor?.ToString(sb);
+                        SkyUpperColor?.Print(sb);
                     }
                     if (printMask?.FogNearColor?.Overall ?? true)
                     {
-                        FogNearColor?.ToString(sb);
+                        FogNearColor?.Print(sb);
                     }
                     if (printMask?.UnknownColor?.Overall ?? true)
                     {
-                        UnknownColor?.ToString(sb);
+                        UnknownColor?.Print(sb);
                     }
                     if (printMask?.AmbientColor?.Overall ?? true)
                     {
-                        AmbientColor?.ToString(sb);
+                        AmbientColor?.Print(sb);
                     }
                     if (printMask?.SunlightColor?.Overall ?? true)
                     {
-                        SunlightColor?.ToString(sb);
+                        SunlightColor?.Print(sb);
                     }
                     if (printMask?.SunColor?.Overall ?? true)
                     {
-                        SunColor?.ToString(sb);
+                        SunColor?.Print(sb);
                     }
                     if (printMask?.StarsColor?.Overall ?? true)
                     {
-                        StarsColor?.ToString(sb);
+                        StarsColor?.Print(sb);
                     }
                     if (printMask?.SkyLowerColor?.Overall ?? true)
                     {
-                        SkyLowerColor?.ToString(sb);
+                        SkyLowerColor?.Print(sb);
                     }
                     if (printMask?.HorizonColor?.Overall ?? true)
                     {
-                        HorizonColor?.ToString(sb);
+                        HorizonColor?.Print(sb);
                     }
                     if (printMask?.EffectLightingColor?.Overall ?? true)
                     {
-                        EffectLightingColor?.ToString(sb);
+                        EffectLightingColor?.Print(sb);
                     }
                     if (printMask?.CloudLodDiffuseColor?.Overall ?? true)
                     {
-                        CloudLodDiffuseColor?.ToString(sb);
+                        CloudLodDiffuseColor?.Print(sb);
                     }
                     if (printMask?.CloudLodAmbientColor?.Overall ?? true)
                     {
-                        CloudLodAmbientColor?.ToString(sb);
+                        CloudLodAmbientColor?.Print(sb);
                     }
                     if (printMask?.FogFarColor?.Overall ?? true)
                     {
-                        FogFarColor?.ToString(sb);
+                        FogFarColor?.Print(sb);
                     }
                     if (printMask?.SkyStaticsColor?.Overall ?? true)
                     {
-                        SkyStaticsColor?.ToString(sb);
+                        SkyStaticsColor?.Print(sb);
                     }
                     if (printMask?.WaterMultiplierColor?.Overall ?? true)
                     {
-                        WaterMultiplierColor?.ToString(sb);
+                        WaterMultiplierColor?.Print(sb);
                     }
                     if (printMask?.SunGlareColor?.Overall ?? true)
                     {
-                        SunGlareColor?.ToString(sb);
+                        SunGlareColor?.Print(sb);
                     }
                     if (printMask?.MoonGlareColor?.Overall ?? true)
                     {
-                        MoonGlareColor?.ToString(sb);
+                        MoonGlareColor?.Print(sb);
                     }
                     if (printMask?.FogDistanceDayNear ?? true)
                     {
@@ -1688,61 +1676,53 @@ namespace Mutagen.Bethesda.Skyrim
                         && Sounds is {} SoundsItem)
                     {
                         sb.AppendLine("Sounds =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(SoundsItem.Overall);
                             if (SoundsItem.Specific != null)
                             {
                                 foreach (var subItem in SoundsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.SkyStatics?.Overall ?? true)
                         && SkyStatics is {} SkyStaticsItem)
                     {
                         sb.AppendLine("SkyStatics =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(SkyStaticsItem.Overall);
                             if (SkyStaticsItem.Specific != null)
                             {
                                 foreach (var subItem in SkyStaticsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.ImageSpaces?.Overall ?? true)
                     {
-                        ImageSpaces?.ToString(sb);
+                        ImageSpaces?.Print(sb);
                     }
                     if (printMask?.VolumetricLighting?.Overall ?? true)
                     {
-                        VolumetricLighting?.ToString(sb);
+                        VolumetricLighting?.Print(sb);
                     }
                     if (printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                     {
-                        DirectionalAmbientLightingColors?.ToString(sb);
+                        DirectionalAmbientLightingColors?.Print(sb);
                     }
                     if (printMask?.NAM2 ?? true)
                     {
@@ -1754,7 +1734,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Aurora?.Overall ?? true)
                     {
-                        Aurora?.ToString(sb);
+                        Aurora?.Print(sb);
                     }
                     if (printMask?.SunGlareLensFlare ?? true)
                     {
@@ -1773,7 +1753,6 @@ namespace Mutagen.Bethesda.Skyrim
                         sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -2457,59 +2436,46 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 if (CloudTextures is {} CloudTexturesItem)
                 {
                     sb.AppendLine("CloudTextures =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(CloudTexturesItem.Overall);
                         if (CloudTexturesItem.Specific != null)
                         {
                             foreach (var subItem in CloudTexturesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(DNAM, "DNAM");
@@ -2538,42 +2504,38 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Clouds is {} CloudsItem)
                 {
                     sb.AppendLine("Clouds =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(CloudsItem.Overall);
                         if (CloudsItem.Specific != null)
                         {
                             foreach (var subItem in CloudsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                SkyUpperColor?.ToString(sb);
-                FogNearColor?.ToString(sb);
-                UnknownColor?.ToString(sb);
-                AmbientColor?.ToString(sb);
-                SunlightColor?.ToString(sb);
-                SunColor?.ToString(sb);
-                StarsColor?.ToString(sb);
-                SkyLowerColor?.ToString(sb);
-                HorizonColor?.ToString(sb);
-                EffectLightingColor?.ToString(sb);
-                CloudLodDiffuseColor?.ToString(sb);
-                CloudLodAmbientColor?.ToString(sb);
-                FogFarColor?.ToString(sb);
-                SkyStaticsColor?.ToString(sb);
-                WaterMultiplierColor?.ToString(sb);
-                SunGlareColor?.ToString(sb);
-                MoonGlareColor?.ToString(sb);
+                SkyUpperColor?.Print(sb);
+                FogNearColor?.Print(sb);
+                UnknownColor?.Print(sb);
+                AmbientColor?.Print(sb);
+                SunlightColor?.Print(sb);
+                SunColor?.Print(sb);
+                StarsColor?.Print(sb);
+                SkyLowerColor?.Print(sb);
+                HorizonColor?.Print(sb);
+                EffectLightingColor?.Print(sb);
+                CloudLodDiffuseColor?.Print(sb);
+                CloudLodAmbientColor?.Print(sb);
+                FogFarColor?.Print(sb);
+                SkyStaticsColor?.Print(sb);
+                WaterMultiplierColor?.Print(sb);
+                SunGlareColor?.Print(sb);
+                MoonGlareColor?.Print(sb);
                 {
                     sb.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
                 }
@@ -2649,59 +2611,51 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Sounds is {} SoundsItem)
                 {
                     sb.AppendLine("Sounds =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(SoundsItem.Overall);
                         if (SoundsItem.Specific != null)
                         {
                             foreach (var subItem in SoundsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (SkyStatics is {} SkyStaticsItem)
                 {
                     sb.AppendLine("SkyStatics =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(SkyStaticsItem.Overall);
                         if (SkyStaticsItem.Specific != null)
                         {
                             foreach (var subItem in SkyStaticsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                ImageSpaces?.ToString(sb);
-                VolumetricLighting?.ToString(sb);
-                DirectionalAmbientLightingColors?.ToString(sb);
+                ImageSpaces?.Print(sb);
+                VolumetricLighting?.Print(sb);
+                DirectionalAmbientLightingColors?.Print(sb);
                 {
                     sb.AppendItem(NAM2, "NAM2");
                 }
                 {
                     sb.AppendItem(NAM3, "NAM3");
                 }
-                Aurora?.ToString(sb);
+                Aurora?.Print(sb);
                 {
                     sb.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
                 }
@@ -3127,7 +3081,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -3317,24 +3271,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeatherGetter item,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
-            return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).ToString(
+            return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeatherGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
-            ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).ToString(
+            ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -3893,13 +3847,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IWeatherGetter item,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -3907,7 +3861,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeatherGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -3921,15 +3875,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (Weather) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -3944,20 +3896,16 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.CloudTextures?.Overall ?? true)
             {
                 sb.AppendLine("CloudTextures =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.CloudTextures)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.DNAM ?? true)
                 && item.DNAM is {} DNAMItem)
@@ -4000,88 +3948,84 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.Clouds?.Overall ?? true)
             {
                 sb.AppendLine("Clouds =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Clouds)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.SkyUpperColor?.Overall ?? true)
             {
-                item.SkyUpperColor?.ToString(sb, "SkyUpperColor");
+                item.SkyUpperColor?.Print(sb, "SkyUpperColor");
             }
             if (printMask?.FogNearColor?.Overall ?? true)
             {
-                item.FogNearColor?.ToString(sb, "FogNearColor");
+                item.FogNearColor?.Print(sb, "FogNearColor");
             }
             if (printMask?.UnknownColor?.Overall ?? true)
             {
-                item.UnknownColor?.ToString(sb, "UnknownColor");
+                item.UnknownColor?.Print(sb, "UnknownColor");
             }
             if (printMask?.AmbientColor?.Overall ?? true)
             {
-                item.AmbientColor?.ToString(sb, "AmbientColor");
+                item.AmbientColor?.Print(sb, "AmbientColor");
             }
             if (printMask?.SunlightColor?.Overall ?? true)
             {
-                item.SunlightColor?.ToString(sb, "SunlightColor");
+                item.SunlightColor?.Print(sb, "SunlightColor");
             }
             if (printMask?.SunColor?.Overall ?? true)
             {
-                item.SunColor?.ToString(sb, "SunColor");
+                item.SunColor?.Print(sb, "SunColor");
             }
             if (printMask?.StarsColor?.Overall ?? true)
             {
-                item.StarsColor?.ToString(sb, "StarsColor");
+                item.StarsColor?.Print(sb, "StarsColor");
             }
             if (printMask?.SkyLowerColor?.Overall ?? true)
             {
-                item.SkyLowerColor?.ToString(sb, "SkyLowerColor");
+                item.SkyLowerColor?.Print(sb, "SkyLowerColor");
             }
             if (printMask?.HorizonColor?.Overall ?? true)
             {
-                item.HorizonColor?.ToString(sb, "HorizonColor");
+                item.HorizonColor?.Print(sb, "HorizonColor");
             }
             if (printMask?.EffectLightingColor?.Overall ?? true)
             {
-                item.EffectLightingColor?.ToString(sb, "EffectLightingColor");
+                item.EffectLightingColor?.Print(sb, "EffectLightingColor");
             }
             if (printMask?.CloudLodDiffuseColor?.Overall ?? true)
             {
-                item.CloudLodDiffuseColor?.ToString(sb, "CloudLodDiffuseColor");
+                item.CloudLodDiffuseColor?.Print(sb, "CloudLodDiffuseColor");
             }
             if (printMask?.CloudLodAmbientColor?.Overall ?? true)
             {
-                item.CloudLodAmbientColor?.ToString(sb, "CloudLodAmbientColor");
+                item.CloudLodAmbientColor?.Print(sb, "CloudLodAmbientColor");
             }
             if (printMask?.FogFarColor?.Overall ?? true)
             {
-                item.FogFarColor?.ToString(sb, "FogFarColor");
+                item.FogFarColor?.Print(sb, "FogFarColor");
             }
             if (printMask?.SkyStaticsColor?.Overall ?? true)
             {
-                item.SkyStaticsColor?.ToString(sb, "SkyStaticsColor");
+                item.SkyStaticsColor?.Print(sb, "SkyStaticsColor");
             }
             if (printMask?.WaterMultiplierColor?.Overall ?? true)
             {
-                item.WaterMultiplierColor?.ToString(sb, "WaterMultiplierColor");
+                item.WaterMultiplierColor?.Print(sb, "WaterMultiplierColor");
             }
             if (printMask?.SunGlareColor?.Overall ?? true)
             {
-                item.SunGlareColor?.ToString(sb, "SunGlareColor");
+                item.SunGlareColor?.Print(sb, "SunGlareColor");
             }
             if (printMask?.MoonGlareColor?.Overall ?? true)
             {
-                item.MoonGlareColor?.ToString(sb, "MoonGlareColor");
+                item.MoonGlareColor?.Print(sb, "MoonGlareColor");
             }
             if (printMask?.FogDistanceDayNear ?? true)
             {
@@ -4182,53 +4126,45 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.Sounds?.Overall ?? true)
             {
                 sb.AppendLine("Sounds =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Sounds)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.SkyStatics?.Overall ?? true)
             {
                 sb.AppendLine("SkyStatics =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.SkyStatics)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.ImageSpaces?.Overall ?? true)
                 && item.ImageSpaces is {} ImageSpacesItem)
             {
-                ImageSpacesItem?.ToString(sb, "ImageSpaces");
+                ImageSpacesItem?.Print(sb, "ImageSpaces");
             }
             if ((printMask?.VolumetricLighting?.Overall ?? true)
                 && item.VolumetricLighting is {} VolumetricLightingItem)
             {
-                VolumetricLightingItem?.ToString(sb, "VolumetricLighting");
+                VolumetricLightingItem?.Print(sb, "VolumetricLighting");
             }
             if ((printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                 && item.DirectionalAmbientLightingColors is {} DirectionalAmbientLightingColorsItem)
             {
-                DirectionalAmbientLightingColorsItem?.ToString(sb, "DirectionalAmbientLightingColors");
+                DirectionalAmbientLightingColorsItem?.Print(sb, "DirectionalAmbientLightingColors");
             }
             if ((printMask?.NAM2 ?? true)
                 && item.NAM2 is {} NAM2Item)
@@ -4243,7 +4179,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.Aurora?.Overall ?? true)
                 && item.Aurora is {} AuroraItem)
             {
-                AuroraItem?.ToString(sb, "Aurora");
+                AuroraItem?.Print(sb, "Aurora");
             }
             if (printMask?.SunGlareLensFlare ?? true)
             {
@@ -6622,7 +6558,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -7208,11 +7144,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherMixIn.ToString(
+            WeatherMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

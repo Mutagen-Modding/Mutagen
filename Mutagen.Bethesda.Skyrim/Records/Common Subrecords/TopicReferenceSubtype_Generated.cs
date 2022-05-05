@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            TopicReferenceSubtypeMixIn.ToString(
+            TopicReferenceSubtypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -167,30 +167,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(TopicReferenceSubtype.Mask<bool>? printMask = null)
+            public string Print(TopicReferenceSubtype.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, TopicReferenceSubtype.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, TopicReferenceSubtype.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(TopicReferenceSubtype.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Subtype ?? true)
                     {
                         sb.AppendItem(Subtype, "Subtype");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -254,36 +249,27 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Subtype, "Subtype");
                 }
@@ -386,7 +372,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -441,24 +427,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ITopicReferenceSubtypeGetter item,
             string? name = null,
             TopicReferenceSubtype.Mask<bool>? printMask = null)
         {
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).ToString(
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ITopicReferenceSubtypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             TopicReferenceSubtype.Mask<bool>? printMask = null)
         {
-            ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).ToString(
+            ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -729,13 +715,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ITopicReferenceSubtypeGetter item,
             string? name = null,
             TopicReferenceSubtype.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -743,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ITopicReferenceSubtypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -757,15 +743,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (TopicReferenceSubtype) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1062,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TopicReferenceSubtypeBinaryWriteTranslation.Instance;
@@ -1123,11 +1107,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            TopicReferenceSubtypeMixIn.ToString(
+            TopicReferenceSubtypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

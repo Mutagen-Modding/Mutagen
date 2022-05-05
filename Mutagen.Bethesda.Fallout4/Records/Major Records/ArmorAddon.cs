@@ -49,9 +49,9 @@ internal class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
         yield return Female;
     }
 
-    public void ToString(StructuredStringBuilder fg, string? name = null)
+    public void Print(StructuredStringBuilder fg, string? name = null)
     {
-        GenderedItem.ToString(this, fg, name);
+        GenderedItem.Print(this, fg, name);
     }
 
     IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();

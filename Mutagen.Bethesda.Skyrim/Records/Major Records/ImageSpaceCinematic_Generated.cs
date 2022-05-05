@@ -60,11 +60,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceCinematicMixIn.ToString(
+            ImageSpaceCinematicMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -188,23 +188,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(ImageSpaceCinematic.Mask<bool>? printMask = null)
+            public string Print(ImageSpaceCinematic.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, ImageSpaceCinematic.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ImageSpaceCinematic.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(ImageSpaceCinematic.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Saturation ?? true)
                     {
@@ -219,7 +215,6 @@ namespace Mutagen.Bethesda.Skyrim
                         sb.AppendItem(Contrast, "Contrast");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -314,34 +309,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(Saturation, "Saturation");
@@ -471,7 +457,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -535,24 +521,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IImageSpaceCinematicGetter item,
             string? name = null,
             ImageSpaceCinematic.Mask<bool>? printMask = null)
         {
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)item).CommonInstance()!).ToString(
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IImageSpaceCinematicGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceCinematic.Mask<bool>? printMask = null)
         {
-            ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)item).CommonInstance()!).ToString(
+            ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -839,13 +825,13 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Contrast = item.Contrast.EqualsWithin(rhs.Contrast);
         }
         
-        public string ToString(
+        public string Print(
             IImageSpaceCinematicGetter item,
             string? name = null,
             ImageSpaceCinematic.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -853,7 +839,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IImageSpaceCinematicGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -867,15 +853,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (ImageSpaceCinematic) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1166,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImageSpaceCinematicBinaryWriteTranslation.Instance;
@@ -1232,11 +1216,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceCinematicMixIn.ToString(
+            ImageSpaceCinematicMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

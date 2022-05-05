@@ -72,11 +72,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            VendorValuesMixIn.ToString(
+            VendorValuesMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -236,23 +236,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(VendorValues.Mask<bool>? printMask = null)
+            public string Print(VendorValues.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, VendorValues.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, VendorValues.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(VendorValues.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.StartHour ?? true)
                     {
@@ -283,7 +279,6 @@ namespace Mutagen.Bethesda.Skyrim
                         sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -418,34 +413,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(StartHour, "StartHour");
@@ -603,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -675,24 +661,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IVendorValuesGetter item,
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).ToString(
+            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IVendorValuesGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
-            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).ToString(
+            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -991,13 +977,13 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
         }
         
-        public string ToString(
+        public string Print(
             IVendorValuesGetter item,
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1005,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IVendorValuesGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1019,15 +1005,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (VendorValues) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1372,7 +1356,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => VendorValuesBinaryWriteTranslation.Instance;
@@ -1442,11 +1426,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            VendorValuesMixIn.ToString(
+            VendorValuesMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

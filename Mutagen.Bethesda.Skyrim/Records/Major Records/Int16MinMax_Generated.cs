@@ -57,11 +57,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            Int16MinMaxMixIn.ToString(
+            Int16MinMaxMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -176,23 +176,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Int16MinMax.Mask<bool>? printMask = null)
+            public string Print(Int16MinMax.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Int16MinMax.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Int16MinMax.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Int16MinMax.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Min ?? true)
                     {
@@ -203,7 +199,6 @@ namespace Mutagen.Bethesda.Skyrim
                         sb.AppendItem(Max, "Max");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -288,34 +283,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(Min, "Min");
@@ -438,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -500,24 +486,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IInt16MinMaxGetter item,
             string? name = null,
             Int16MinMax.Mask<bool>? printMask = null)
         {
-            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)item).CommonInstance()!).ToString(
+            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IInt16MinMaxGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Int16MinMax.Mask<bool>? printMask = null)
         {
-            ((Int16MinMaxCommon)((IInt16MinMaxGetter)item).CommonInstance()!).ToString(
+            ((Int16MinMaxCommon)((IInt16MinMaxGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -790,13 +776,13 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Max = item.Max == rhs.Max;
         }
         
-        public string ToString(
+        public string Print(
             IInt16MinMaxGetter item,
             string? name = null,
             Int16MinMax.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -804,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IInt16MinMaxGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -818,15 +804,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (Int16MinMax) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1089,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => Int16MinMaxBinaryWriteTranslation.Instance;
@@ -1153,11 +1137,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            Int16MinMaxMixIn.ToString(
+            Int16MinMaxMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

@@ -55,11 +55,11 @@ namespace Mutagen.Bethesda.Pex
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PexObjectVariableDataMixIn.ToString(
+            PexObjectVariableDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -201,23 +201,19 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(PexObjectVariableData.Mask<bool>? printMask = null)
+            public string Print(PexObjectVariableData.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, PexObjectVariableData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PexObjectVariableData.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(PexObjectVariableData.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.VariableType ?? true)
                     {
@@ -240,7 +236,6 @@ namespace Mutagen.Bethesda.Pex
                         sb.AppendItem(BoolValue, "BoolValue");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -355,34 +350,25 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(VariableType, "VariableType");
@@ -484,7 +470,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -551,24 +537,24 @@ namespace Mutagen.Bethesda.Pex
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPexObjectVariableDataGetter item,
             string? name = null,
             PexObjectVariableData.Mask<bool>? printMask = null)
         {
-            return ((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)item).CommonInstance()!).ToString(
+            return ((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPexObjectVariableDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             PexObjectVariableData.Mask<bool>? printMask = null)
         {
-            ((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)item).CommonInstance()!).ToString(
+            ((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -813,13 +799,13 @@ namespace Mutagen.Bethesda.Pex
             ret.BoolValue = item.BoolValue == rhs.BoolValue;
         }
         
-        public string ToString(
+        public string Print(
             IPexObjectVariableDataGetter item,
             string? name = null,
             PexObjectVariableData.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -827,7 +813,7 @@ namespace Mutagen.Bethesda.Pex
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPexObjectVariableDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -841,15 +827,13 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine($"{name} (PexObjectVariableData) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(

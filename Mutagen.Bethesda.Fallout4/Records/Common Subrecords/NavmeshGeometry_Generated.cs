@@ -161,11 +161,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshGeometryMixIn.ToString(
+            NavmeshGeometryMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -567,23 +567,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(NavmeshGeometry.Mask<bool>? printMask = null)
+            public string Print(NavmeshGeometry.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, NavmeshGeometry.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NavmeshGeometry.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(NavmeshGeometry.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.NavmeshVersion ?? true)
                     {
@@ -595,158 +591,133 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     if (printMask?.Parent?.Overall ?? true)
                     {
-                        Parent?.ToString(sb);
+                        Parent?.Print(sb);
                     }
                     if ((printMask?.Vertices?.Overall ?? true)
                         && Vertices is {} VerticesItem)
                     {
                         sb.AppendLine("Vertices =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(VerticesItem.Overall);
                             if (VerticesItem.Specific != null)
                             {
                                 foreach (var subItem in VerticesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.Triangles?.Overall ?? true)
                         && Triangles is {} TrianglesItem)
                     {
                         sb.AppendLine("Triangles =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(TrianglesItem.Overall);
                             if (TrianglesItem.Specific != null)
                             {
                                 foreach (var subItem in TrianglesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.EdgeLinks?.Overall ?? true)
                         && EdgeLinks is {} EdgeLinksItem)
                     {
                         sb.AppendLine("EdgeLinks =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(EdgeLinksItem.Overall);
                             if (EdgeLinksItem.Specific != null)
                             {
                                 foreach (var subItem in EdgeLinksItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.DoorTriangles?.Overall ?? true)
                         && DoorTriangles is {} DoorTrianglesItem)
                     {
                         sb.AppendLine("DoorTriangles =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(DoorTrianglesItem.Overall);
                             if (DoorTrianglesItem.Specific != null)
                             {
                                 foreach (var subItem in DoorTrianglesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.Unknown?.Overall ?? true)
                         && Unknown is {} UnknownItem)
                     {
                         sb.AppendLine("Unknown =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(UnknownItem.Overall);
                             if (UnknownItem.Specific != null)
                             {
                                 foreach (var subItem in UnknownItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.Unknown2?.Overall ?? true)
                         && Unknown2 is {} Unknown2Item)
                     {
                         sb.AppendLine("Unknown2 =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(Unknown2Item.Overall);
                             if (Unknown2Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown2Item.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.NavmeshGrid ?? true)
                     {
                         sb.AppendItem(NavmeshGrid, "NavmeshGrid");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -911,34 +882,25 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(NavmeshVersion, "NavmeshVersion");
@@ -946,144 +908,120 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Magic, "Magic");
                 }
-                Parent?.ToString(sb);
+                Parent?.Print(sb);
                 if (Vertices is {} VerticesItem)
                 {
                     sb.AppendLine("Vertices =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(VerticesItem.Overall);
                         if (VerticesItem.Specific != null)
                         {
                             foreach (var subItem in VerticesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (Triangles is {} TrianglesItem)
                 {
                     sb.AppendLine("Triangles =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(TrianglesItem.Overall);
                         if (TrianglesItem.Specific != null)
                         {
                             foreach (var subItem in TrianglesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (EdgeLinks is {} EdgeLinksItem)
                 {
                     sb.AppendLine("EdgeLinks =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(EdgeLinksItem.Overall);
                         if (EdgeLinksItem.Specific != null)
                         {
                             foreach (var subItem in EdgeLinksItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (DoorTriangles is {} DoorTrianglesItem)
                 {
                     sb.AppendLine("DoorTriangles =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(DoorTrianglesItem.Overall);
                         if (DoorTrianglesItem.Specific != null)
                         {
                             foreach (var subItem in DoorTrianglesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (Unknown is {} UnknownItem)
                 {
                     sb.AppendLine("Unknown =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(UnknownItem.Overall);
                         if (UnknownItem.Specific != null)
                         {
                             foreach (var subItem in UnknownItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (Unknown2 is {} Unknown2Item)
                 {
                     sb.AppendLine("Unknown2 =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(Unknown2Item.Overall);
                         if (Unknown2Item.Specific != null)
                         {
                             foreach (var subItem in Unknown2Item.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(NavmeshGrid, "NavmeshGrid");
@@ -1236,7 +1174,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1316,24 +1254,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INavmeshGeometryGetter item,
             string? name = null,
             NavmeshGeometry.Mask<bool>? printMask = null)
         {
-            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)item).CommonInstance()!).ToString(
+            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INavmeshGeometryGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             NavmeshGeometry.Mask<bool>? printMask = null)
         {
-            ((NavmeshGeometryCommon)((INavmeshGeometryGetter)item).CommonInstance()!).ToString(
+            ((NavmeshGeometryCommon)((INavmeshGeometryGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1662,13 +1600,13 @@ namespace Mutagen.Bethesda.Fallout4
             ret.NavmeshGrid = MemoryExtensions.SequenceEqual(item.NavmeshGrid.Span, rhs.NavmeshGrid.Span);
         }
         
-        public string ToString(
+        public string Print(
             INavmeshGeometryGetter item,
             string? name = null,
             NavmeshGeometry.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1676,7 +1614,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INavmeshGeometryGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1690,15 +1628,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (NavmeshGeometry) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1716,115 +1652,91 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (printMask?.Parent?.Overall ?? true)
             {
-                item.Parent?.ToString(sb, "Parent");
+                item.Parent?.Print(sb, "Parent");
             }
             if (printMask?.Vertices?.Overall ?? true)
             {
                 sb.AppendLine("Vertices =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Vertices)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.Triangles?.Overall ?? true)
             {
                 sb.AppendLine("Triangles =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Triangles)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.EdgeLinks?.Overall ?? true)
             {
                 sb.AppendLine("EdgeLinks =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.EdgeLinks)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.DoorTriangles?.Overall ?? true)
             {
                 sb.AppendLine("DoorTriangles =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.DoorTriangles)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.Unknown?.Overall ?? true)
             {
                 sb.AppendLine("Unknown =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Unknown)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.Unknown2?.Overall ?? true)
             {
                 sb.AppendLine("Unknown2 =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Unknown2)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.NavmeshGrid ?? true)
             {
@@ -2419,7 +2331,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavmeshGeometryCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2518,11 +2430,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshGeometryMixIn.ToString(
+            NavmeshGeometryMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

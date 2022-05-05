@@ -248,11 +248,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FurnitureMixIn.ToString(
+            FurnitureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -579,31 +579,27 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Furniture.Mask<bool>? printMask = null)
+            public string Print(Furniture.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Furniture.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Furniture.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Furniture.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(sb);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(sb);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
@@ -611,36 +607,32 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(sb);
+                        Model?.Print(sb);
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(sb);
+                        Destructible?.Print(sb);
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
                         sb.AppendLine("Keywords =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.PNAM ?? true)
                     {
@@ -656,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.WorkbenchData?.Overall ?? true)
                     {
-                        WorkbenchData?.ToString(sb);
+                        WorkbenchData?.Print(sb);
                     }
                     if (printMask?.AssociatedSpell ?? true)
                     {
@@ -666,31 +658,26 @@ namespace Mutagen.Bethesda.Skyrim
                         && Markers is {} MarkersItem)
                     {
                         sb.AppendLine("Markers =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(MarkersItem.Overall);
                             if (MarkersItem.Specific != null)
                             {
                                 foreach (var subItem in MarkersItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.ModelFilename ?? true)
                     {
                         sb.AppendItem(ModelFilename, "ModelFilename");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -874,66 +861,53 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
-                VirtualMachineAdapter?.ToString(sb);
-                ObjectBounds?.ToString(sb);
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(Name, "Name");
                 }
-                Model?.ToString(sb);
-                Destructible?.ToString(sb);
+                Model?.Print(sb);
+                Destructible?.Print(sb);
                 if (Keywords is {} KeywordsItem)
                 {
                     sb.AppendLine("Keywords =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(PNAM, "PNAM");
@@ -944,31 +918,27 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(InteractionKeyword, "InteractionKeyword");
                 }
-                WorkbenchData?.ToString(sb);
+                WorkbenchData?.Print(sb);
                 {
                     sb.AppendItem(AssociatedSpell, "AssociatedSpell");
                 }
                 if (Markers is {} MarkersItem)
                 {
                     sb.AppendLine("Markers =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(MarkersItem.Overall);
                         if (MarkersItem.Specific != null)
                         {
                             foreach (var subItem in MarkersItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(ModelFilename, "ModelFilename");
@@ -1194,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1352,24 +1322,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFurnitureGetter item,
             string? name = null,
             Furniture.Mask<bool>? printMask = null)
         {
-            return ((FurnitureCommon)((IFurnitureGetter)item).CommonInstance()!).ToString(
+            return ((FurnitureCommon)((IFurnitureGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFurnitureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Furniture.Mask<bool>? printMask = null)
         {
-            ((FurnitureCommon)((IFurnitureGetter)item).CommonInstance()!).ToString(
+            ((FurnitureCommon)((IFurnitureGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1763,13 +1733,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IFurnitureGetter item,
             string? name = null,
             Furniture.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1777,7 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFurnitureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1791,15 +1761,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (Furniture) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1814,11 +1782,11 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(sb, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
@@ -1828,31 +1796,27 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(sb, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(sb, "Destructible");
+                DestructibleItem?.Print(sb, "Destructible");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
                 sb.AppendLine("Keywords =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.PNAM ?? true)
                 && item.PNAM is {} PNAMItem)
@@ -1871,7 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.WorkbenchData?.Overall ?? true)
                 && item.WorkbenchData is {} WorkbenchDataItem)
             {
-                WorkbenchDataItem?.ToString(sb, "WorkbenchData");
+                WorkbenchDataItem?.Print(sb, "WorkbenchData");
             }
             if (printMask?.AssociatedSpell ?? true)
             {
@@ -1881,20 +1845,16 @@ namespace Mutagen.Bethesda.Skyrim
                 && item.Markers is {} MarkersItem)
             {
                 sb.AppendLine("Markers =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in MarkersItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.ModelFilename ?? true)
                 && item.ModelFilename is {} ModelFilenameItem)
@@ -2990,7 +2950,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FurnitureCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3260,11 +3220,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FurnitureMixIn.ToString(
+            FurnitureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

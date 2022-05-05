@@ -114,11 +114,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AIPackageMixIn.ToString(
+            AIPackageMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -330,65 +330,56 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(AIPackage.Mask<bool>? printMask = null)
+            public string Print(AIPackage.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, AIPackage.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AIPackage.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(AIPackage.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(sb);
+                        Data?.Print(sb);
                     }
                     if (printMask?.Location?.Overall ?? true)
                     {
-                        Location?.ToString(sb);
+                        Location?.Print(sb);
                     }
                     if (printMask?.Schedule?.Overall ?? true)
                     {
-                        Schedule?.ToString(sb);
+                        Schedule?.Print(sb);
                     }
                     if (printMask?.Target?.Overall ?? true)
                     {
-                        Target?.ToString(sb);
+                        Target?.Print(sb);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
                         sb.AppendLine("Conditions =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -492,61 +483,48 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
-                Data?.ToString(sb);
-                Location?.ToString(sb);
-                Schedule?.ToString(sb);
-                Target?.ToString(sb);
+                base.PrintFillInternal(sb);
+                Data?.Print(sb);
+                Location?.Print(sb);
+                Schedule?.Print(sb);
+                Target?.Print(sb);
                 if (Conditions is {} ConditionsItem)
                 {
                     sb.AppendLine("Conditions =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -716,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -790,24 +768,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAIPackageGetter item,
             string? name = null,
             AIPackage.Mask<bool>? printMask = null)
         {
-            return ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).ToString(
+            return ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAIPackageGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             AIPackage.Mask<bool>? printMask = null)
         {
-            ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).ToString(
+            ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1154,13 +1132,13 @@ namespace Mutagen.Bethesda.Oblivion
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IAIPackageGetter item,
             string? name = null,
             AIPackage.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1168,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAIPackageGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1182,15 +1160,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (AIPackage) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1205,40 +1181,36 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(sb, "Data");
+                DataItem?.Print(sb, "Data");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location is {} LocationItem)
             {
-                LocationItem?.ToString(sb, "Location");
+                LocationItem?.Print(sb, "Location");
             }
             if ((printMask?.Schedule?.Overall ?? true)
                 && item.Schedule is {} ScheduleItem)
             {
-                ScheduleItem?.ToString(sb, "Schedule");
+                ScheduleItem?.Print(sb, "Schedule");
             }
             if ((printMask?.Target?.Overall ?? true)
                 && item.Target is {} TargetItem)
             {
-                TargetItem?.ToString(sb, "Target");
+                TargetItem?.Print(sb, "Target");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
                 sb.AppendLine("Conditions =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -1964,7 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AIPackageCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2111,11 +2083,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AIPackageMixIn.ToString(
+            AIPackageMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

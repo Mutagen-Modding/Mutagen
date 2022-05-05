@@ -18,7 +18,7 @@ public class MoreDataException : Exception, IPrintable
         return $"{Path} had more data past position 0x{Position:X}";
     }
 
-    public void ToString(StructuredStringBuilder sb, string name)
+    public void Print(StructuredStringBuilder sb, string name)
     {
         sb.AppendLine(Path);
         using (sb.IncreaseDepth())

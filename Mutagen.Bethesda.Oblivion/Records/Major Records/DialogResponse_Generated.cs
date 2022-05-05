@@ -73,11 +73,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogResponseMixIn.ToString(
+            DialogResponseMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -209,27 +209,23 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(DialogResponse.Mask<bool>? printMask = null)
+            public string Print(DialogResponse.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, DialogResponse.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DialogResponse.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(DialogResponse.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(sb);
+                        Data?.Print(sb);
                     }
                     if (printMask?.ResponseText ?? true)
                     {
@@ -240,7 +236,6 @@ namespace Mutagen.Bethesda.Oblivion
                         sb.AppendItem(ActorNotes, "ActorNotes");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -335,36 +330,27 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Data?.ToString(sb);
+                Data?.Print(sb);
                 {
                     sb.AppendItem(ResponseText, "ResponseText");
                 }
@@ -489,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -553,24 +539,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDialogResponseGetter item,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
+            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDialogResponseGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
-            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
+            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -860,13 +846,13 @@ namespace Mutagen.Bethesda.Oblivion
             ret.ActorNotes = string.Equals(item.ActorNotes, rhs.ActorNotes);
         }
         
-        public string ToString(
+        public string Print(
             IDialogResponseGetter item,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -874,7 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDialogResponseGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -888,15 +874,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (DialogResponse) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -907,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(sb, "Data");
+                DataItem?.Print(sb, "Data");
             }
             if ((printMask?.ResponseText ?? true)
                 && item.ResponseText is {} ResponseTextItem)
@@ -1266,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
@@ -1375,11 +1359,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogResponseMixIn.ToString(
+            DialogResponseMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

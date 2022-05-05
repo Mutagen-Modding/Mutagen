@@ -111,9 +111,9 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
             translationParams: translationParams);
     }
 
-    public void ToString(StructuredStringBuilder fg, string? name = null)
+    public void Print(StructuredStringBuilder fg, string? name = null)
     {
-        Fallout4GroupMixIn.ToString(
+        Fallout4GroupMixIn.Print(
             item: this,
             name: name);
     }

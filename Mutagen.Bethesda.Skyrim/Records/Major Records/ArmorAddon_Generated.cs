@@ -146,11 +146,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorAddonMixIn.ToString(
+            ArmorAddonMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -466,27 +466,23 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(ArmorAddon.Mask<bool>? printMask = null)
+            public string Print(ArmorAddon.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, ArmorAddon.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ArmorAddon.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(ArmorAddon.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.BodyTemplate?.Overall ?? true)
                     {
-                        BodyTemplate?.ToString(sb);
+                        BodyTemplate?.Print(sb);
                     }
                     if (printMask?.Race ?? true)
                     {
@@ -540,26 +536,22 @@ namespace Mutagen.Bethesda.Skyrim
                         && AdditionalRaces is {} AdditionalRacesItem)
                     {
                         sb.AppendLine("AdditionalRaces =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(AdditionalRacesItem.Overall);
                             if (AdditionalRacesItem.Specific != null)
                             {
                                 foreach (var subItem in AdditionalRacesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.FootstepSound ?? true)
                     {
@@ -574,7 +566,6 @@ namespace Mutagen.Bethesda.Skyrim
                         sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -788,37 +779,28 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
-                BodyTemplate?.ToString(sb);
+                base.PrintFillInternal(sb);
+                BodyTemplate?.Print(sb);
                 {
                     sb.AppendItem(Race, "Race");
                 }
@@ -859,26 +841,22 @@ namespace Mutagen.Bethesda.Skyrim
                 if (AdditionalRaces is {} AdditionalRacesItem)
                 {
                     sb.AppendLine("AdditionalRaces =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(AdditionalRacesItem.Overall);
                         if (AdditionalRacesItem.Specific != null)
                         {
                             foreach (var subItem in AdditionalRacesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(FootstepSound, "FootstepSound");
@@ -1120,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1222,24 +1200,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IArmorAddonGetter item,
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
-            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).ToString(
+            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IArmorAddonGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
-            ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).ToString(
+            ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1694,13 +1672,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IArmorAddonGetter item,
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1708,7 +1686,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IArmorAddonGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1722,15 +1700,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (ArmorAddon) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1745,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.BodyTemplate?.Overall ?? true)
                 && item.BodyTemplate is {} BodyTemplateItem)
             {
-                BodyTemplateItem?.ToString(sb, "BodyTemplate");
+                BodyTemplateItem?.Print(sb, "BodyTemplate");
             }
             if (printMask?.Race ?? true)
             {
@@ -1753,11 +1729,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (true)
             {
-                item.Priority.ToString(sb, "Priority");
+                item.Priority.Print(sb, "Priority");
             }
             if (true)
             {
-                item.WeightSliderEnabled.ToString(sb, "WeightSliderEnabled");
+                item.WeightSliderEnabled.Print(sb, "WeightSliderEnabled");
             }
             if (printMask?.Unknown ?? true)
             {
@@ -1778,40 +1754,36 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.WorldModel?.Overall ?? true)
                 && item.WorldModel is {} WorldModelItem)
             {
-                WorldModelItem?.ToString(sb, "WorldModel");
+                WorldModelItem?.Print(sb, "WorldModel");
             }
             if ((printMask?.FirstPersonModel?.Overall ?? true)
                 && item.FirstPersonModel is {} FirstPersonModelItem)
             {
-                FirstPersonModelItem?.ToString(sb, "FirstPersonModel");
+                FirstPersonModelItem?.Print(sb, "FirstPersonModel");
             }
             if ((printMask?.SkinTexture?.Overall ?? true)
                 && item.SkinTexture is {} SkinTextureItem)
             {
-                SkinTextureItem?.ToString(sb, "SkinTexture");
+                SkinTextureItem?.Print(sb, "SkinTexture");
             }
             if ((printMask?.TextureSwapList?.Overall ?? true)
                 && item.TextureSwapList is {} TextureSwapListItem)
             {
-                TextureSwapListItem?.ToString(sb, "TextureSwapList");
+                TextureSwapListItem?.Print(sb, "TextureSwapList");
             }
             if (printMask?.AdditionalRaces?.Overall ?? true)
             {
                 sb.AppendLine("AdditionalRaces =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.AdditionalRaces)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.FootstepSound ?? true)
             {
@@ -2798,7 +2770,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3061,11 +3033,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorAddonMixIn.ToString(
+            ArmorAddonMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

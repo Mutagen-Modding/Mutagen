@@ -127,11 +127,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ScenePhaseMixIn.ToString(
+            ScenePhaseMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -370,23 +370,19 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(ScenePhase.Mask<bool>? printMask = null)
+            public string Print(ScenePhase.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, ScenePhase.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ScenePhase.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(ScenePhase.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -396,62 +392,53 @@ namespace Mutagen.Bethesda.Skyrim
                         && StartConditions is {} StartConditionsItem)
                     {
                         sb.AppendLine("StartConditions =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(StartConditionsItem.Overall);
                             if (StartConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in StartConditionsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.CompletionConditions?.Overall ?? true)
                         && CompletionConditions is {} CompletionConditionsItem)
                     {
                         sb.AppendLine("CompletionConditions =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(CompletionConditionsItem.Overall);
                             if (CompletionConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in CompletionConditionsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.Unused?.Overall ?? true)
                     {
-                        Unused?.ToString(sb);
+                        Unused?.Print(sb);
                     }
                     if (printMask?.Unused2?.Overall ?? true)
                     {
-                        Unused2?.ToString(sb);
+                        Unused2?.Print(sb);
                     }
                     if (printMask?.EditorWidth ?? true)
                     {
                         sb.AppendItem(EditorWidth, "EditorWidth");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -576,34 +563,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(Name, "Name");
@@ -611,49 +589,41 @@ namespace Mutagen.Bethesda.Skyrim
                 if (StartConditions is {} StartConditionsItem)
                 {
                     sb.AppendLine("StartConditions =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(StartConditionsItem.Overall);
                         if (StartConditionsItem.Specific != null)
                         {
                             foreach (var subItem in StartConditionsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (CompletionConditions is {} CompletionConditionsItem)
                 {
                     sb.AppendLine("CompletionConditions =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(CompletionConditionsItem.Overall);
                         if (CompletionConditionsItem.Specific != null)
                         {
                             foreach (var subItem in CompletionConditionsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                Unused?.ToString(sb);
-                Unused2?.ToString(sb);
+                Unused?.Print(sb);
+                Unused2?.Print(sb);
                 {
                     sb.AppendItem(EditorWidth, "EditorWidth");
                 }
@@ -789,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -873,24 +843,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IScenePhaseGetter item,
             string? name = null,
             ScenePhase.Mask<bool>? printMask = null)
         {
-            return ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).ToString(
+            return ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IScenePhaseGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             ScenePhase.Mask<bool>? printMask = null)
         {
-            ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).ToString(
+            ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1212,13 +1182,13 @@ namespace Mutagen.Bethesda.Skyrim
             ret.EditorWidth = item.EditorWidth == rhs.EditorWidth;
         }
         
-        public string ToString(
+        public string Print(
             IScenePhaseGetter item,
             string? name = null,
             ScenePhase.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1226,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IScenePhaseGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1240,15 +1210,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (ScenePhase) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1264,48 +1232,40 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.StartConditions?.Overall ?? true)
             {
                 sb.AppendLine("StartConditions =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.StartConditions)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.CompletionConditions?.Overall ?? true)
             {
                 sb.AppendLine("CompletionConditions =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.CompletionConditions)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.Unused?.Overall ?? true)
                 && item.Unused is {} UnusedItem)
             {
-                UnusedItem?.ToString(sb, "Unused");
+                UnusedItem?.Print(sb, "Unused");
             }
             if ((printMask?.Unused2?.Overall ?? true)
                 && item.Unused2 is {} Unused2Item)
             {
-                Unused2Item?.ToString(sb, "Unused2");
+                Unused2Item?.Print(sb, "Unused2");
             }
             if ((printMask?.EditorWidth ?? true)
                 && item.EditorWidth is {} EditorWidthItem)
@@ -1855,7 +1815,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScenePhaseCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2034,11 +1994,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ScenePhaseMixIn.ToString(
+            ScenePhaseMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

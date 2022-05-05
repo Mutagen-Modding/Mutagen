@@ -142,11 +142,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledNpcMixIn.ToString(
+            LeveledNpcMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -407,27 +407,23 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(LeveledNpc.Mask<bool>? printMask = null)
+            public string Print(LeveledNpc.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, LeveledNpc.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LeveledNpc.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(LeveledNpc.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(sb);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.ChanceNone ?? true)
                     {
@@ -449,54 +445,45 @@ namespace Mutagen.Bethesda.Fallout4
                         && Entries is {} EntriesItem)
                     {
                         sb.AppendLine("Entries =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(EntriesItem.Overall);
                             if (EntriesItem.Specific != null)
                             {
                                 foreach (var subItem in EntriesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.FilterKeywordChances?.Overall ?? true)
                         && FilterKeywordChances is {} FilterKeywordChancesItem)
                     {
                         sb.AppendLine("FilterKeywordChances =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(FilterKeywordChancesItem.Overall);
                             if (FilterKeywordChancesItem.Specific != null)
                             {
                                 foreach (var subItem in FilterKeywordChancesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(sb);
+                        Model?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -630,37 +617,28 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
-                ObjectBounds?.ToString(sb);
+                base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(ChanceNone, "ChanceNone");
                 }
@@ -676,48 +654,40 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Entries is {} EntriesItem)
                 {
                     sb.AppendLine("Entries =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(EntriesItem.Overall);
                         if (EntriesItem.Specific != null)
                         {
                             foreach (var subItem in EntriesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (FilterKeywordChances is {} FilterKeywordChancesItem)
                 {
                     sb.AppendLine("FilterKeywordChances =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(FilterKeywordChancesItem.Overall);
                         if (FilterKeywordChancesItem.Specific != null)
                         {
                             foreach (var subItem in FilterKeywordChancesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                Model?.ToString(sb);
+                Model?.Print(sb);
             }
             #endregion
 
@@ -909,7 +879,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1011,24 +981,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILeveledNpcGetter item,
             string? name = null,
             LeveledNpc.Mask<bool>? printMask = null)
         {
-            return ((LeveledNpcCommon)((ILeveledNpcGetter)item).CommonInstance()!).ToString(
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILeveledNpcGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             LeveledNpc.Mask<bool>? printMask = null)
         {
-            ((LeveledNpcCommon)((ILeveledNpcGetter)item).CommonInstance()!).ToString(
+            ((LeveledNpcCommon)((ILeveledNpcGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1383,13 +1353,13 @@ namespace Mutagen.Bethesda.Fallout4
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILeveledNpcGetter item,
             string? name = null,
             LeveledNpc.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1397,7 +1367,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILeveledNpcGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1411,15 +1381,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (LeveledNpc) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1433,7 +1401,7 @@ namespace Mutagen.Bethesda.Fallout4
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(sb, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if (printMask?.ChanceNone ?? true)
             {
@@ -1455,44 +1423,36 @@ namespace Mutagen.Bethesda.Fallout4
                 && item.Entries is {} EntriesItem)
             {
                 sb.AppendLine("Entries =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in EntriesItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.FilterKeywordChances?.Overall ?? true)
                 && item.FilterKeywordChances is {} FilterKeywordChancesItem)
             {
                 sb.AppendLine("FilterKeywordChances =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in FilterKeywordChancesItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(sb, "Model");
+                ModelItem?.Print(sb, "Model");
             }
         }
         
@@ -2284,7 +2244,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2462,11 +2422,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledNpcMixIn.ToString(
+            LeveledNpcMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

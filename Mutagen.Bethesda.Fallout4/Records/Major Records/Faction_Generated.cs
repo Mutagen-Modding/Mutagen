@@ -252,11 +252,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FactionMixIn.ToString(
+            FactionMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -633,23 +633,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Faction.Mask<bool>? printMask = null)
+            public string Print(Faction.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Faction.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Faction.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Faction.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
@@ -659,24 +655,20 @@ namespace Mutagen.Bethesda.Fallout4
                         && Relations is {} RelationsItem)
                     {
                         sb.AppendLine("Relations =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(RelationsItem.Overall);
                             if (RelationsItem.Specific != null)
                             {
                                 foreach (var subItem in RelationsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.Flags ?? true)
                     {
@@ -708,30 +700,26 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     if (printMask?.CrimeValues?.Overall ?? true)
                     {
-                        CrimeValues?.ToString(sb);
+                        CrimeValues?.Print(sb);
                     }
                     if ((printMask?.Ranks?.Overall ?? true)
                         && Ranks is {} RanksItem)
                     {
                         sb.AppendLine("Ranks =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(RanksItem.Overall);
                             if (RanksItem.Specific != null)
                             {
                                 foreach (var subItem in RanksItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.VendorBuySellList ?? true)
                     {
@@ -743,37 +731,32 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     if (printMask?.VendorValues?.Overall ?? true)
                     {
-                        VendorValues?.ToString(sb);
+                        VendorValues?.Print(sb);
                     }
                     if (printMask?.VendorLocation?.Overall ?? true)
                     {
-                        VendorLocation?.ToString(sb);
+                        VendorLocation?.Print(sb);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
                         sb.AppendLine("Conditions =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -987,60 +970,47 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Name, "Name");
                 }
                 if (Relations is {} RelationsItem)
                 {
                     sb.AppendLine("Relations =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(RelationsItem.Overall);
                         if (RelationsItem.Specific != null)
                         {
                             foreach (var subItem in RelationsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
@@ -1063,28 +1033,24 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(JailOutfit, "JailOutfit");
                 }
-                CrimeValues?.ToString(sb);
+                CrimeValues?.Print(sb);
                 if (Ranks is {} RanksItem)
                 {
                     sb.AppendLine("Ranks =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(RanksItem.Overall);
                         if (RanksItem.Specific != null)
                         {
                             foreach (var subItem in RanksItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(VendorBuySellList, "VendorBuySellList");
@@ -1092,29 +1058,25 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(MerchantContainer, "MerchantContainer");
                 }
-                VendorValues?.ToString(sb);
-                VendorLocation?.ToString(sb);
+                VendorValues?.Print(sb);
+                VendorLocation?.Print(sb);
                 if (Conditions is {} ConditionsItem)
                 {
                     sb.AppendLine("Conditions =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -1337,7 +1299,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1455,24 +1417,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFactionGetter item,
             string? name = null,
             Faction.Mask<bool>? printMask = null)
         {
-            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).ToString(
+            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFactionGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Faction.Mask<bool>? printMask = null)
         {
-            ((FactionCommon)((IFactionGetter)item).CommonInstance()!).ToString(
+            ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1881,13 +1843,13 @@ namespace Mutagen.Bethesda.Fallout4
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IFactionGetter item,
             string? name = null,
             Faction.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1895,7 +1857,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFactionGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1909,15 +1871,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (Faction) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1937,20 +1897,16 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Relations?.Overall ?? true)
             {
                 sb.AppendLine("Relations =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Relations)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1983,25 +1939,21 @@ namespace Mutagen.Bethesda.Fallout4
             if ((printMask?.CrimeValues?.Overall ?? true)
                 && item.CrimeValues is {} CrimeValuesItem)
             {
-                CrimeValuesItem?.ToString(sb, "CrimeValues");
+                CrimeValuesItem?.Print(sb, "CrimeValues");
             }
             if (printMask?.Ranks?.Overall ?? true)
             {
                 sb.AppendLine("Ranks =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Ranks)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.VendorBuySellList ?? true)
             {
@@ -2014,31 +1966,27 @@ namespace Mutagen.Bethesda.Fallout4
             if ((printMask?.VendorValues?.Overall ?? true)
                 && item.VendorValues is {} VendorValuesItem)
             {
-                VendorValuesItem?.ToString(sb, "VendorValues");
+                VendorValuesItem?.Print(sb, "VendorValues");
             }
             if ((printMask?.VendorLocation?.Overall ?? true)
                 && item.VendorLocation is {} VendorLocationItem)
             {
-                VendorLocationItem?.ToString(sb, "VendorLocation");
+                VendorLocationItem?.Print(sb, "VendorLocation");
             }
             if ((printMask?.Conditions?.Overall ?? true)
                 && item.Conditions is {} ConditionsItem)
             {
                 sb.AppendLine("Conditions =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in ConditionsItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -3081,7 +3029,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3349,11 +3297,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FactionMixIn.ToString(
+            FactionMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

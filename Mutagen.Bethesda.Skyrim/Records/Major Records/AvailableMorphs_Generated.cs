@@ -96,11 +96,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AvailableMorphsMixIn.ToString(
+            AvailableMorphsMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -265,42 +265,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(AvailableMorphs.Mask<bool>? printMask = null)
+            public string Print(AvailableMorphs.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, AvailableMorphs.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AvailableMorphs.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(AvailableMorphs.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Nose?.Overall ?? true)
                     {
-                        Nose?.ToString(sb);
+                        Nose?.Print(sb);
                     }
                     if (printMask?.Brow?.Overall ?? true)
                     {
-                        Brow?.ToString(sb);
+                        Brow?.Print(sb);
                     }
                     if (printMask?.Eye?.Overall ?? true)
                     {
-                        Eye?.ToString(sb);
+                        Eye?.Print(sb);
                     }
                     if (printMask?.Lip?.Overall ?? true)
                     {
-                        Lip?.ToString(sb);
+                        Lip?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -405,39 +400,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Nose?.ToString(sb);
-                Brow?.ToString(sb);
-                Eye?.ToString(sb);
-                Lip?.ToString(sb);
+                Nose?.Print(sb);
+                Brow?.Print(sb);
+                Eye?.Print(sb);
+                Lip?.Print(sb);
             }
             #endregion
 
@@ -557,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -623,24 +609,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAvailableMorphsGetter item,
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
-            return ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).ToString(
+            return ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAvailableMorphsGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
-            ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).ToString(
+            ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -943,13 +929,13 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IAvailableMorphsGetter item,
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -957,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAvailableMorphsGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -971,15 +957,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (AvailableMorphs) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -990,22 +974,22 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.Nose?.Overall ?? true)
                 && item.Nose is {} NoseItem)
             {
-                NoseItem?.ToString(sb, "Nose");
+                NoseItem?.Print(sb, "Nose");
             }
             if ((printMask?.Brow?.Overall ?? true)
                 && item.Brow is {} BrowItem)
             {
-                BrowItem?.ToString(sb, "Brow");
+                BrowItem?.Print(sb, "Brow");
             }
             if ((printMask?.Eye?.Overall ?? true)
                 && item.Eye is {} EyeItem)
             {
-                EyeItem?.ToString(sb, "Eye");
+                EyeItem?.Print(sb, "Eye");
             }
             if ((printMask?.Lip?.Overall ?? true)
                 && item.Lip is {} LipItem)
             {
-                LipItem?.ToString(sb, "Lip");
+                LipItem?.Print(sb, "Lip");
             }
         }
         
@@ -1441,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AvailableMorphsBinaryWriteTranslation.Instance;
@@ -1534,11 +1518,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AvailableMorphsMixIn.ToString(
+            AvailableMorphsMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

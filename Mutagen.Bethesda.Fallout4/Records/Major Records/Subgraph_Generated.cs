@@ -105,11 +105,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SubgraphMixIn.ToString(
+            SubgraphMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -359,23 +359,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Subgraph.Mask<bool>? printMask = null)
+            public string Print(Subgraph.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Subgraph.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Subgraph.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Subgraph.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.BehaviorGraph ?? true)
                     {
@@ -385,76 +381,64 @@ namespace Mutagen.Bethesda.Fallout4
                         && ActorKeywords is {} ActorKeywordsItem)
                     {
                         sb.AppendLine("ActorKeywords =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(ActorKeywordsItem.Overall);
                             if (ActorKeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in ActorKeywordsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.TargetKeywords?.Overall ?? true)
                         && TargetKeywords is {} TargetKeywordsItem)
                     {
                         sb.AppendLine("TargetKeywords =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(TargetKeywordsItem.Overall);
                             if (TargetKeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in TargetKeywordsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.AnimationPaths?.Overall ?? true)
                         && AnimationPaths is {} AnimationPathsItem)
                     {
                         sb.AppendLine("AnimationPaths =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(AnimationPathsItem.Overall);
                             if (AnimationPathsItem.Specific != null)
                             {
                                 foreach (var subItem in AnimationPathsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.Role ?? true)
                     {
@@ -465,7 +449,6 @@ namespace Mutagen.Bethesda.Fallout4
                         sb.AppendItem(Perspective, "Perspective");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -590,34 +573,25 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(BehaviorGraph, "BehaviorGraph");
@@ -625,74 +599,62 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ActorKeywords is {} ActorKeywordsItem)
                 {
                     sb.AppendLine("ActorKeywords =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(ActorKeywordsItem.Overall);
                         if (ActorKeywordsItem.Specific != null)
                         {
                             foreach (var subItem in ActorKeywordsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (TargetKeywords is {} TargetKeywordsItem)
                 {
                     sb.AppendLine("TargetKeywords =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(TargetKeywordsItem.Overall);
                         if (TargetKeywordsItem.Specific != null)
                         {
                             foreach (var subItem in TargetKeywordsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (AnimationPaths is {} AnimationPathsItem)
                 {
                     sb.AppendLine("AnimationPaths =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(AnimationPathsItem.Overall);
                         if (AnimationPathsItem.Specific != null)
                         {
                             foreach (var subItem in AnimationPathsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(Role, "Role");
@@ -836,7 +798,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -908,24 +870,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISubgraphGetter item,
             string? name = null,
             Subgraph.Mask<bool>? printMask = null)
         {
-            return ((SubgraphCommon)((ISubgraphGetter)item).CommonInstance()!).ToString(
+            return ((SubgraphCommon)((ISubgraphGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISubgraphGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Subgraph.Mask<bool>? printMask = null)
         {
-            ((SubgraphCommon)((ISubgraphGetter)item).CommonInstance()!).ToString(
+            ((SubgraphCommon)((ISubgraphGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1233,13 +1195,13 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Perspective = item.Perspective == rhs.Perspective;
         }
         
-        public string ToString(
+        public string Print(
             ISubgraphGetter item,
             string? name = null,
             Subgraph.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1247,7 +1209,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISubgraphGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1261,15 +1223,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (Subgraph) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1285,56 +1245,44 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.ActorKeywords?.Overall ?? true)
             {
                 sb.AppendLine("ActorKeywords =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.ActorKeywords)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.TargetKeywords?.Overall ?? true)
             {
                 sb.AppendLine("TargetKeywords =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.TargetKeywords)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.AnimationPaths?.Overall ?? true)
             {
                 sb.AppendLine("AnimationPaths =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.AnimationPaths)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.Role ?? true)
             {
@@ -1802,7 +1750,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SubgraphCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1957,11 +1905,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SubgraphMixIn.ToString(
+            SubgraphMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

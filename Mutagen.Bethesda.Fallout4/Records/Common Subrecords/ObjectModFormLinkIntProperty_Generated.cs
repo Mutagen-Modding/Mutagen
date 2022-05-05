@@ -71,11 +71,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectModFormLinkIntPropertyMixIn.ToString(
+            ObjectModFormLinkIntPropertyMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -209,26 +209,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString<T>(
+        public static string Print<T>(
             this IObjectModFormLinkIntPropertyGetter<T> item,
             string? name = null,
             ObjectModFormLinkIntProperty.Mask<bool>? printMask = null)
             where T : struct, Enum
         {
-            return ((ObjectModFormLinkIntPropertyCommon<T>)((IObjectModFormLinkIntPropertyGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            return ((ObjectModFormLinkIntPropertyCommon<T>)((IObjectModFormLinkIntPropertyGetter<T>)item).CommonInstance(typeof(T))!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString<T>(
+        public static void Print<T>(
             this IObjectModFormLinkIntPropertyGetter<T> item,
             StructuredStringBuilder sb,
             string? name = null,
             ObjectModFormLinkIntProperty.Mask<bool>? printMask = null)
             where T : struct, Enum
         {
-            ((ObjectModFormLinkIntPropertyCommon<T>)((IObjectModFormLinkIntPropertyGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            ((ObjectModFormLinkIntPropertyCommon<T>)((IObjectModFormLinkIntPropertyGetter<T>)item).CommonInstance(typeof(T))!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -528,13 +528,13 @@ namespace Mutagen.Bethesda.Fallout4
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IObjectModFormLinkIntPropertyGetter<T> item,
             string? name = null,
             ObjectModFormLinkIntProperty.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IObjectModFormLinkIntPropertyGetter<T> item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -556,15 +556,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (ObjectModFormLinkIntProperty<{typeof(T).Name}>) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -912,7 +910,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModFormLinkIntPropertyCommon<T>.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -976,11 +974,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectModFormLinkIntPropertyMixIn.ToString(
+            ObjectModFormLinkIntPropertyMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1126,23 +1124,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
         
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
         
-            public string ToString(ObjectModFormLinkIntProperty.Mask<bool>? printMask = null)
+            public string Print(ObjectModFormLinkIntProperty.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
         
-            public void ToString(StructuredStringBuilder sb, ObjectModFormLinkIntProperty.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ObjectModFormLinkIntProperty.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(ObjectModFormLinkIntProperty.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Record ?? true)
                     {
@@ -1157,7 +1151,6 @@ namespace Mutagen.Bethesda.Fallout4
                         sb.AppendItem(FunctionType, "FunctionType");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
         
@@ -1241,36 +1234,27 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
         
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
         
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Record, "Record");
                 }

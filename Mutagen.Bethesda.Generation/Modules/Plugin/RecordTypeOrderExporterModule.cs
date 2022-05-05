@@ -1,6 +1,7 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Noggog.IO;
 using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
@@ -21,7 +22,8 @@ public class RecordTypeOrderExporterModule : GenerationModule
             StructuredStringBuilder sb = new();
             var set = new HashSet<RecordType>();
             await WriteRecordTypes(obj, sb, null, set);
-            sb.Generate(path);
+            ExportStringToFile exportStringToFile = new();
+            exportStringToFile.ExportToFile(path, sb.GetString());
         }
     }
 

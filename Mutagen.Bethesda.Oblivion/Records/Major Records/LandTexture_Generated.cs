@@ -91,11 +91,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LandTextureMixIn.ToString(
+            LandTextureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -271,23 +271,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(LandTexture.Mask<bool>? printMask = null)
+            public string Print(LandTexture.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, LandTexture.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LandTexture.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(LandTexture.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Icon ?? true)
                     {
@@ -295,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (printMask?.Havok?.Overall ?? true)
                     {
-                        Havok?.ToString(sb);
+                        Havok?.Print(sb);
                     }
                     if (printMask?.TextureSpecularExponent ?? true)
                     {
@@ -305,29 +301,24 @@ namespace Mutagen.Bethesda.Oblivion
                         && PotentialGrass is {} PotentialGrassItem)
                     {
                         sb.AppendLine("PotentialGrass =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(PotentialGrassItem.Overall);
                             if (PotentialGrassItem.Specific != null)
                             {
                                 foreach (var subItem in PotentialGrassItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -421,66 +412,53 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Icon, "Icon");
                 }
-                Havok?.ToString(sb);
+                Havok?.Print(sb);
                 {
                     sb.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
                 }
                 if (PotentialGrass is {} PotentialGrassItem)
                 {
                     sb.AppendLine("PotentialGrass =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(PotentialGrassItem.Overall);
                         if (PotentialGrassItem.Specific != null)
                         {
                             foreach (var subItem in PotentialGrassItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -650,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -722,24 +700,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILandTextureGetter item,
             string? name = null,
             LandTexture.Mask<bool>? printMask = null)
         {
-            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).ToString(
+            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILandTextureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             LandTexture.Mask<bool>? printMask = null)
         {
-            ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).ToString(
+            ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1069,13 +1047,13 @@ namespace Mutagen.Bethesda.Oblivion
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILandTextureGetter item,
             string? name = null,
             LandTexture.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1083,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILandTextureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1097,15 +1075,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (LandTexture) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1125,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Havok?.Overall ?? true)
                 && item.Havok is {} HavokItem)
             {
-                HavokItem?.ToString(sb, "Havok");
+                HavokItem?.Print(sb, "Havok");
             }
             if ((printMask?.TextureSpecularExponent ?? true)
                 && item.TextureSpecularExponent is {} TextureSpecularExponentItem)
@@ -1135,20 +1111,16 @@ namespace Mutagen.Bethesda.Oblivion
             if (printMask?.PotentialGrass?.Overall ?? true)
             {
                 sb.AppendLine("PotentialGrass =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.PotentialGrass)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -1760,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LandTextureCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1897,11 +1869,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LandTextureMixIn.ToString(
+            LandTextureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

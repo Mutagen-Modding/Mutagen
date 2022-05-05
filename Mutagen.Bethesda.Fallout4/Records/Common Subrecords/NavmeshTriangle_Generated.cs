@@ -75,11 +75,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshTriangleMixIn.ToString(
+            NavmeshTriangleMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -248,23 +248,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(NavmeshTriangle.Mask<bool>? printMask = null)
+            public string Print(NavmeshTriangle.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, NavmeshTriangle.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NavmeshTriangle.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(NavmeshTriangle.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Vertices ?? true)
                     {
@@ -299,7 +295,6 @@ namespace Mutagen.Bethesda.Fallout4
                         sb.AppendItem(CoverFlags, "CoverFlags");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -444,34 +439,25 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(Vertices, "Vertices");
@@ -636,7 +622,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -710,24 +696,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INavmeshTriangleGetter item,
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
-            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).ToString(
+            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INavmeshTriangleGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
-            ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).ToString(
+            ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1018,13 +1004,13 @@ namespace Mutagen.Bethesda.Fallout4
             ret.CoverFlags = item.CoverFlags == rhs.CoverFlags;
         }
         
-        public string ToString(
+        public string Print(
             INavmeshTriangleGetter item,
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1032,7 +1018,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INavmeshTriangleGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1046,15 +1032,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (NavmeshTriangle) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1416,7 +1400,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshTriangleBinaryWriteTranslation.Instance;
@@ -1486,11 +1470,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshTriangleMixIn.ToString(
+            NavmeshTriangleMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

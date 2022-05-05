@@ -124,11 +124,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ClimateMixIn.ToString(
+            ClimateMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -381,46 +381,38 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Climate.Mask<bool>? printMask = null)
+            public string Print(Climate.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Climate.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Climate.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Climate.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if ((printMask?.Weathers?.Overall ?? true)
                         && Weathers is {} WeathersItem)
                     {
                         sb.AppendLine("Weathers =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(WeathersItem.Overall);
                             if (WeathersItem.Specific != null)
                             {
                                 foreach (var subItem in WeathersItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.SunTexture ?? true)
                     {
@@ -432,7 +424,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(sb);
+                        Model?.Print(sb);
                     }
                     if (printMask?.SunriseBeginRaw ?? true)
                     {
@@ -467,7 +459,6 @@ namespace Mutagen.Bethesda.Fallout4
                         sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -641,57 +632,44 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 if (Weathers is {} WeathersItem)
                 {
                     sb.AppendLine("Weathers =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(WeathersItem.Overall);
                         if (WeathersItem.Specific != null)
                         {
                             foreach (var subItem in WeathersItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(SunTexture, "SunTexture");
@@ -699,7 +677,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(SunGlareTexture, "SunGlareTexture");
                 }
-                Model?.ToString(sb);
+                Model?.Print(sb);
                 {
                     sb.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
                 }
@@ -937,7 +915,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1035,24 +1013,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IClimateGetter item,
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
-            return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).ToString(
+            return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IClimateGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
-            ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).ToString(
+            ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1409,13 +1387,13 @@ namespace Mutagen.Bethesda.Fallout4
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IClimateGetter item,
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1423,7 +1401,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IClimateGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1437,15 +1415,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (Climate) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1461,20 +1437,16 @@ namespace Mutagen.Bethesda.Fallout4
                 && item.Weathers is {} WeathersItem)
             {
                 sb.AppendLine("Weathers =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in WeathersItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.SunTexture ?? true)
                 && item.SunTexture is {} SunTextureItem)
@@ -1489,7 +1461,7 @@ namespace Mutagen.Bethesda.Fallout4
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(sb, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.SunriseBeginRaw ?? true)
             {
@@ -2289,7 +2261,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClimateCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2466,11 +2438,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ClimateMixIn.ToString(
+            ClimateMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

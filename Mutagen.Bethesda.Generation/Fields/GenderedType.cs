@@ -220,7 +220,7 @@ public class GenderedType : WrapperType
 
     public override void GenerateToString(StructuredStringBuilder sb, string name, Accessor accessor, string sbAccessor)
     {
-        sb.AppendLine($"{accessor}{(this.Nullable ? "?" : null)}.ToString({sbAccessor}, \"{name}\");");
+        sb.AppendLine($"{accessor}{(this.Nullable ? "?" : null)}.Print({sbAccessor}, \"{name}\");");
     }
 
     public override void GenerateUnsetNth(StructuredStringBuilder sb, Accessor identifier)

@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.Pex
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            DebugPropertyGroupMixIn.ToString(
+            DebugPropertyGroupMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -213,23 +213,19 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(DebugPropertyGroup.Mask<bool>? printMask = null)
+            public string Print(DebugPropertyGroup.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, DebugPropertyGroup.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DebugPropertyGroup.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(DebugPropertyGroup.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectName ?? true)
                     {
@@ -243,29 +239,24 @@ namespace Mutagen.Bethesda.Pex
                         && PropertyNames is {} PropertyNamesItem)
                     {
                         sb.AppendLine("PropertyNames =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(PropertyNamesItem.Overall);
                             if (PropertyNamesItem.Specific != null)
                             {
                                 foreach (var subItem in PropertyNamesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -360,34 +351,25 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(ObjectName, "ObjectName");
@@ -398,26 +380,22 @@ namespace Mutagen.Bethesda.Pex
                 if (PropertyNames is {} PropertyNamesItem)
                 {
                     sb.AppendLine("PropertyNames =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(PropertyNamesItem.Overall);
                         if (PropertyNamesItem.Specific != null)
                         {
                             foreach (var subItem in PropertyNamesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -496,7 +474,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -559,24 +537,24 @@ namespace Mutagen.Bethesda.Pex
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDebugPropertyGroupGetter item,
             string? name = null,
             DebugPropertyGroup.Mask<bool>? printMask = null)
         {
-            return ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)item).CommonInstance()!).ToString(
+            return ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDebugPropertyGroupGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             DebugPropertyGroup.Mask<bool>? printMask = null)
         {
-            ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)item).CommonInstance()!).ToString(
+            ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -818,13 +796,13 @@ namespace Mutagen.Bethesda.Pex
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IDebugPropertyGroupGetter item,
             string? name = null,
             DebugPropertyGroup.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -832,7 +810,7 @@ namespace Mutagen.Bethesda.Pex
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDebugPropertyGroupGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -846,15 +824,13 @@ namespace Mutagen.Bethesda.Pex
             {
                 sb.AppendLine($"{name} (DebugPropertyGroup) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -873,20 +849,16 @@ namespace Mutagen.Bethesda.Pex
             if (printMask?.PropertyNames?.Overall ?? true)
             {
                 sb.AppendLine("PropertyNames =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.PropertyNames)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         

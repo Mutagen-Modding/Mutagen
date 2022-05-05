@@ -71,11 +71,11 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MajorRecordMixIn.ToString(
+            MajorRecordMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -192,23 +192,19 @@ namespace Mutagen.Bethesda.Plugins.Records
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(MajorRecord.Mask<bool>? printMask = null)
+            public string Print(MajorRecord.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, MajorRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MajorRecord.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(MajorRecord.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.MajorRecordFlagsRaw ?? true)
                     {
@@ -227,7 +223,6 @@ namespace Mutagen.Bethesda.Plugins.Records
                         sb.AppendItem(EditorID, "EditorID");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -332,34 +327,25 @@ namespace Mutagen.Bethesda.Plugins.Records
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
@@ -559,7 +545,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -639,24 +625,24 @@ namespace Mutagen.Bethesda.Plugins.Records
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMajorRecordGetter item,
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
-            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).ToString(
+            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMajorRecordGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
-            ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).ToString(
+            ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1215,13 +1201,13 @@ namespace Mutagen.Bethesda.Plugins.Records
             ret.EditorID = string.Equals(item.EditorID, rhs.EditorID);
         }
         
-        public string ToString(
+        public string Print(
             IMajorRecordGetter item,
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1229,7 +1215,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMajorRecordGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1243,15 +1229,13 @@ namespace Mutagen.Bethesda.Plugins.Records
             {
                 sb.AppendLine($"{name} (MajorRecord) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1673,7 +1657,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MajorRecordCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
@@ -1743,11 +1727,11 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MajorRecordMixIn.ToString(
+            MajorRecordMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

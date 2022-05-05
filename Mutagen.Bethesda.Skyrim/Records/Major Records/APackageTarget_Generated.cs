@@ -58,11 +58,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            APackageTargetMixIn.ToString(
+            APackageTargetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -162,30 +162,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(APackageTarget.Mask<bool>? printMask = null)
+            public string Print(APackageTarget.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, APackageTarget.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, APackageTarget.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(APackageTarget.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.CountOrDistance ?? true)
                     {
                         sb.AppendItem(CountOrDistance, "CountOrDistance");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -260,34 +255,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(StructuredStringBuilder sb, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(StructuredStringBuilder sb)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(CountOrDistance, "CountOrDistance");
@@ -382,7 +368,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -450,24 +436,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAPackageTargetGetter item,
             string? name = null,
             APackageTarget.Mask<bool>? printMask = null)
         {
-            return ((APackageTargetCommon)((IAPackageTargetGetter)item).CommonInstance()!).ToString(
+            return ((APackageTargetCommon)((IAPackageTargetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAPackageTargetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             APackageTarget.Mask<bool>? printMask = null)
         {
-            ((APackageTargetCommon)((IAPackageTargetGetter)item).CommonInstance()!).ToString(
+            ((APackageTargetCommon)((IAPackageTargetGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -732,13 +718,13 @@ namespace Mutagen.Bethesda.Skyrim
             ret.CountOrDistance = item.CountOrDistance == rhs.CountOrDistance;
         }
         
-        public string ToString(
+        public string Print(
             IAPackageTargetGetter item,
             string? name = null,
             APackageTarget.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -746,7 +732,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAPackageTargetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -760,15 +746,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (APackageTarget) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1039,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => APackageTargetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1081,11 +1065,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public virtual void ToString(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            APackageTargetMixIn.ToString(
+            APackageTargetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

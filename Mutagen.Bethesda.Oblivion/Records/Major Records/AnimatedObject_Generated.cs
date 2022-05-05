@@ -85,11 +85,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AnimatedObjectMixIn.ToString(
+            AnimatedObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -214,34 +214,29 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(AnimatedObject.Mask<bool>? printMask = null)
+            public string Print(AnimatedObject.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, AnimatedObject.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AnimatedObject.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(AnimatedObject.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(sb);
+                        Model?.Print(sb);
                     }
                     if (printMask?.IdleAnimation ?? true)
                     {
                         sb.AppendItem(IdleAnimation, "IdleAnimation");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -315,37 +310,28 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
-                Model?.ToString(sb);
+                base.PrintFillInternal(sb);
+                Model?.Print(sb);
                 {
                     sb.AppendItem(IdleAnimation, "IdleAnimation");
                 }
@@ -509,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -587,24 +573,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAnimatedObjectGetter item,
             string? name = null,
             AnimatedObject.Mask<bool>? printMask = null)
         {
-            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).ToString(
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAnimatedObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             AnimatedObject.Mask<bool>? printMask = null)
         {
-            ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).ToString(
+            ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -923,13 +909,13 @@ namespace Mutagen.Bethesda.Oblivion
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IAnimatedObjectGetter item,
             string? name = null,
             AnimatedObject.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -937,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAnimatedObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -951,15 +937,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (AnimatedObject) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -974,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(sb, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.IdleAnimation ?? true)
             {
@@ -1521,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AnimatedObjectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1634,11 +1618,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AnimatedObjectMixIn.ToString(
+            AnimatedObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

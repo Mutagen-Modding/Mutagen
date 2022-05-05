@@ -79,11 +79,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellLightingMixIn.ToString(
+            CellLightingMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -261,23 +261,19 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(CellLighting.Mask<bool>? printMask = null)
+            public string Print(CellLighting.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, CellLighting.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CellLighting.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(CellLighting.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.AmbientColor ?? true)
                     {
@@ -316,7 +312,6 @@ namespace Mutagen.Bethesda.Oblivion
                         sb.AppendItem(FogClipDistance, "FogClipDistance");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -471,34 +466,25 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(AmbientColor, "AmbientColor");
@@ -670,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -746,24 +732,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICellLightingGetter item,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
-            return ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).ToString(
+            return ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICellLightingGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
-            ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).ToString(
+            ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1068,13 +1054,13 @@ namespace Mutagen.Bethesda.Oblivion
             ret.FogClipDistance = item.FogClipDistance.EqualsWithin(rhs.FogClipDistance);
         }
         
-        public string ToString(
+        public string Print(
             ICellLightingGetter item,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1082,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICellLightingGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1096,15 +1082,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (CellLighting) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1493,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellLightingBinaryWriteTranslation.Instance;
@@ -1565,11 +1549,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellLightingMixIn.ToString(
+            CellLightingMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

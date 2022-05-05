@@ -113,9 +113,9 @@ internal class SkyrimGroupWrapper<TMajor> : ISkyrimGroupGetter<TMajor>
             translationParams: translationParams);
     }
 
-    public void ToString(StructuredStringBuilder fg, string? name = null)
+    public void Print(StructuredStringBuilder fg, string? name = null)
     {
-        SkyrimGroupMixIn.ToString(
+        SkyrimGroupMixIn.Print(
             item: this,
             name: name);
     }

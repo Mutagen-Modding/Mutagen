@@ -519,11 +519,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            OblivionModMixIn.ToString(
+            OblivionModMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1589,254 +1589,249 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(OblivionMod.Mask<bool>? printMask = null)
+            public string Print(OblivionMod.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, OblivionMod.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, OblivionMod.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(OblivionMod.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.ModHeader?.Overall ?? true)
                     {
-                        ModHeader?.ToString(sb);
+                        ModHeader?.Print(sb);
                     }
                     if (printMask?.GameSettings?.Overall ?? true)
                     {
-                        GameSettings?.ToString(sb);
+                        GameSettings?.Print(sb);
                     }
                     if (printMask?.Globals?.Overall ?? true)
                     {
-                        Globals?.ToString(sb);
+                        Globals?.Print(sb);
                     }
                     if (printMask?.Classes?.Overall ?? true)
                     {
-                        Classes?.ToString(sb);
+                        Classes?.Print(sb);
                     }
                     if (printMask?.Factions?.Overall ?? true)
                     {
-                        Factions?.ToString(sb);
+                        Factions?.Print(sb);
                     }
                     if (printMask?.Hairs?.Overall ?? true)
                     {
-                        Hairs?.ToString(sb);
+                        Hairs?.Print(sb);
                     }
                     if (printMask?.Eyes?.Overall ?? true)
                     {
-                        Eyes?.ToString(sb);
+                        Eyes?.Print(sb);
                     }
                     if (printMask?.Races?.Overall ?? true)
                     {
-                        Races?.ToString(sb);
+                        Races?.Print(sb);
                     }
                     if (printMask?.Sounds?.Overall ?? true)
                     {
-                        Sounds?.ToString(sb);
+                        Sounds?.Print(sb);
                     }
                     if (printMask?.Skills?.Overall ?? true)
                     {
-                        Skills?.ToString(sb);
+                        Skills?.Print(sb);
                     }
                     if (printMask?.MagicEffects?.Overall ?? true)
                     {
-                        MagicEffects?.ToString(sb);
+                        MagicEffects?.Print(sb);
                     }
                     if (printMask?.Scripts?.Overall ?? true)
                     {
-                        Scripts?.ToString(sb);
+                        Scripts?.Print(sb);
                     }
                     if (printMask?.LandTextures?.Overall ?? true)
                     {
-                        LandTextures?.ToString(sb);
+                        LandTextures?.Print(sb);
                     }
                     if (printMask?.Enchantments?.Overall ?? true)
                     {
-                        Enchantments?.ToString(sb);
+                        Enchantments?.Print(sb);
                     }
                     if (printMask?.Spells?.Overall ?? true)
                     {
-                        Spells?.ToString(sb);
+                        Spells?.Print(sb);
                     }
                     if (printMask?.Birthsigns?.Overall ?? true)
                     {
-                        Birthsigns?.ToString(sb);
+                        Birthsigns?.Print(sb);
                     }
                     if (printMask?.Activators?.Overall ?? true)
                     {
-                        Activators?.ToString(sb);
+                        Activators?.Print(sb);
                     }
                     if (printMask?.AlchemicalApparatus?.Overall ?? true)
                     {
-                        AlchemicalApparatus?.ToString(sb);
+                        AlchemicalApparatus?.Print(sb);
                     }
                     if (printMask?.Armors?.Overall ?? true)
                     {
-                        Armors?.ToString(sb);
+                        Armors?.Print(sb);
                     }
                     if (printMask?.Books?.Overall ?? true)
                     {
-                        Books?.ToString(sb);
+                        Books?.Print(sb);
                     }
                     if (printMask?.Clothes?.Overall ?? true)
                     {
-                        Clothes?.ToString(sb);
+                        Clothes?.Print(sb);
                     }
                     if (printMask?.Containers?.Overall ?? true)
                     {
-                        Containers?.ToString(sb);
+                        Containers?.Print(sb);
                     }
                     if (printMask?.Doors?.Overall ?? true)
                     {
-                        Doors?.ToString(sb);
+                        Doors?.Print(sb);
                     }
                     if (printMask?.Ingredients?.Overall ?? true)
                     {
-                        Ingredients?.ToString(sb);
+                        Ingredients?.Print(sb);
                     }
                     if (printMask?.Lights?.Overall ?? true)
                     {
-                        Lights?.ToString(sb);
+                        Lights?.Print(sb);
                     }
                     if (printMask?.Miscellaneous?.Overall ?? true)
                     {
-                        Miscellaneous?.ToString(sb);
+                        Miscellaneous?.Print(sb);
                     }
                     if (printMask?.Statics?.Overall ?? true)
                     {
-                        Statics?.ToString(sb);
+                        Statics?.Print(sb);
                     }
                     if (printMask?.Grasses?.Overall ?? true)
                     {
-                        Grasses?.ToString(sb);
+                        Grasses?.Print(sb);
                     }
                     if (printMask?.Trees?.Overall ?? true)
                     {
-                        Trees?.ToString(sb);
+                        Trees?.Print(sb);
                     }
                     if (printMask?.Flora?.Overall ?? true)
                     {
-                        Flora?.ToString(sb);
+                        Flora?.Print(sb);
                     }
                     if (printMask?.Furniture?.Overall ?? true)
                     {
-                        Furniture?.ToString(sb);
+                        Furniture?.Print(sb);
                     }
                     if (printMask?.Weapons?.Overall ?? true)
                     {
-                        Weapons?.ToString(sb);
+                        Weapons?.Print(sb);
                     }
                     if (printMask?.Ammunitions?.Overall ?? true)
                     {
-                        Ammunitions?.ToString(sb);
+                        Ammunitions?.Print(sb);
                     }
                     if (printMask?.Npcs?.Overall ?? true)
                     {
-                        Npcs?.ToString(sb);
+                        Npcs?.Print(sb);
                     }
                     if (printMask?.Creatures?.Overall ?? true)
                     {
-                        Creatures?.ToString(sb);
+                        Creatures?.Print(sb);
                     }
                     if (printMask?.LeveledCreatures?.Overall ?? true)
                     {
-                        LeveledCreatures?.ToString(sb);
+                        LeveledCreatures?.Print(sb);
                     }
                     if (printMask?.SoulGems?.Overall ?? true)
                     {
-                        SoulGems?.ToString(sb);
+                        SoulGems?.Print(sb);
                     }
                     if (printMask?.Keys?.Overall ?? true)
                     {
-                        Keys?.ToString(sb);
+                        Keys?.Print(sb);
                     }
                     if (printMask?.Potions?.Overall ?? true)
                     {
-                        Potions?.ToString(sb);
+                        Potions?.Print(sb);
                     }
                     if (printMask?.Subspaces?.Overall ?? true)
                     {
-                        Subspaces?.ToString(sb);
+                        Subspaces?.Print(sb);
                     }
                     if (printMask?.SigilStones?.Overall ?? true)
                     {
-                        SigilStones?.ToString(sb);
+                        SigilStones?.Print(sb);
                     }
                     if (printMask?.LeveledItems?.Overall ?? true)
                     {
-                        LeveledItems?.ToString(sb);
+                        LeveledItems?.Print(sb);
                     }
                     if (printMask?.Weathers?.Overall ?? true)
                     {
-                        Weathers?.ToString(sb);
+                        Weathers?.Print(sb);
                     }
                     if (printMask?.Climates?.Overall ?? true)
                     {
-                        Climates?.ToString(sb);
+                        Climates?.Print(sb);
                     }
                     if (printMask?.Regions?.Overall ?? true)
                     {
-                        Regions?.ToString(sb);
+                        Regions?.Print(sb);
                     }
                     if (printMask?.Cells?.Overall ?? true)
                     {
-                        Cells?.ToString(sb);
+                        Cells?.Print(sb);
                     }
                     if (printMask?.Worldspaces?.Overall ?? true)
                     {
-                        Worldspaces?.ToString(sb);
+                        Worldspaces?.Print(sb);
                     }
                     if (printMask?.DialogTopics?.Overall ?? true)
                     {
-                        DialogTopics?.ToString(sb);
+                        DialogTopics?.Print(sb);
                     }
                     if (printMask?.Quests?.Overall ?? true)
                     {
-                        Quests?.ToString(sb);
+                        Quests?.Print(sb);
                     }
                     if (printMask?.IdleAnimations?.Overall ?? true)
                     {
-                        IdleAnimations?.ToString(sb);
+                        IdleAnimations?.Print(sb);
                     }
                     if (printMask?.AIPackages?.Overall ?? true)
                     {
-                        AIPackages?.ToString(sb);
+                        AIPackages?.Print(sb);
                     }
                     if (printMask?.CombatStyles?.Overall ?? true)
                     {
-                        CombatStyles?.ToString(sb);
+                        CombatStyles?.Print(sb);
                     }
                     if (printMask?.LoadScreens?.Overall ?? true)
                     {
-                        LoadScreens?.ToString(sb);
+                        LoadScreens?.Print(sb);
                     }
                     if (printMask?.LeveledSpells?.Overall ?? true)
                     {
-                        LeveledSpells?.ToString(sb);
+                        LeveledSpells?.Print(sb);
                     }
                     if (printMask?.AnimatedObjects?.Overall ?? true)
                     {
-                        AnimatedObjects?.ToString(sb);
+                        AnimatedObjects?.Print(sb);
                     }
                     if (printMask?.Waters?.Overall ?? true)
                     {
-                        Waters?.ToString(sb);
+                        Waters?.Print(sb);
                     }
                     if (printMask?.EffectShaders?.Overall ?? true)
                     {
-                        EffectShaders?.ToString(sb);
+                        EffectShaders?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -2471,92 +2466,83 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                ModHeader?.ToString(sb);
-                GameSettings?.ToString(sb);
-                Globals?.ToString(sb);
-                Classes?.ToString(sb);
-                Factions?.ToString(sb);
-                Hairs?.ToString(sb);
-                Eyes?.ToString(sb);
-                Races?.ToString(sb);
-                Sounds?.ToString(sb);
-                Skills?.ToString(sb);
-                MagicEffects?.ToString(sb);
-                Scripts?.ToString(sb);
-                LandTextures?.ToString(sb);
-                Enchantments?.ToString(sb);
-                Spells?.ToString(sb);
-                Birthsigns?.ToString(sb);
-                Activators?.ToString(sb);
-                AlchemicalApparatus?.ToString(sb);
-                Armors?.ToString(sb);
-                Books?.ToString(sb);
-                Clothes?.ToString(sb);
-                Containers?.ToString(sb);
-                Doors?.ToString(sb);
-                Ingredients?.ToString(sb);
-                Lights?.ToString(sb);
-                Miscellaneous?.ToString(sb);
-                Statics?.ToString(sb);
-                Grasses?.ToString(sb);
-                Trees?.ToString(sb);
-                Flora?.ToString(sb);
-                Furniture?.ToString(sb);
-                Weapons?.ToString(sb);
-                Ammunitions?.ToString(sb);
-                Npcs?.ToString(sb);
-                Creatures?.ToString(sb);
-                LeveledCreatures?.ToString(sb);
-                SoulGems?.ToString(sb);
-                Keys?.ToString(sb);
-                Potions?.ToString(sb);
-                Subspaces?.ToString(sb);
-                SigilStones?.ToString(sb);
-                LeveledItems?.ToString(sb);
-                Weathers?.ToString(sb);
-                Climates?.ToString(sb);
-                Regions?.ToString(sb);
-                Cells?.ToString(sb);
-                Worldspaces?.ToString(sb);
-                DialogTopics?.ToString(sb);
-                Quests?.ToString(sb);
-                IdleAnimations?.ToString(sb);
-                AIPackages?.ToString(sb);
-                CombatStyles?.ToString(sb);
-                LoadScreens?.ToString(sb);
-                LeveledSpells?.ToString(sb);
-                AnimatedObjects?.ToString(sb);
-                Waters?.ToString(sb);
-                EffectShaders?.ToString(sb);
+                ModHeader?.Print(sb);
+                GameSettings?.Print(sb);
+                Globals?.Print(sb);
+                Classes?.Print(sb);
+                Factions?.Print(sb);
+                Hairs?.Print(sb);
+                Eyes?.Print(sb);
+                Races?.Print(sb);
+                Sounds?.Print(sb);
+                Skills?.Print(sb);
+                MagicEffects?.Print(sb);
+                Scripts?.Print(sb);
+                LandTextures?.Print(sb);
+                Enchantments?.Print(sb);
+                Spells?.Print(sb);
+                Birthsigns?.Print(sb);
+                Activators?.Print(sb);
+                AlchemicalApparatus?.Print(sb);
+                Armors?.Print(sb);
+                Books?.Print(sb);
+                Clothes?.Print(sb);
+                Containers?.Print(sb);
+                Doors?.Print(sb);
+                Ingredients?.Print(sb);
+                Lights?.Print(sb);
+                Miscellaneous?.Print(sb);
+                Statics?.Print(sb);
+                Grasses?.Print(sb);
+                Trees?.Print(sb);
+                Flora?.Print(sb);
+                Furniture?.Print(sb);
+                Weapons?.Print(sb);
+                Ammunitions?.Print(sb);
+                Npcs?.Print(sb);
+                Creatures?.Print(sb);
+                LeveledCreatures?.Print(sb);
+                SoulGems?.Print(sb);
+                Keys?.Print(sb);
+                Potions?.Print(sb);
+                Subspaces?.Print(sb);
+                SigilStones?.Print(sb);
+                LeveledItems?.Print(sb);
+                Weathers?.Print(sb);
+                Climates?.Print(sb);
+                Regions?.Print(sb);
+                Cells?.Print(sb);
+                Worldspaces?.Print(sb);
+                DialogTopics?.Print(sb);
+                Quests?.Print(sb);
+                IdleAnimations?.Print(sb);
+                AIPackages?.Print(sb);
+                CombatStyles?.Print(sb);
+                LoadScreens?.Print(sb);
+                LeveledSpells?.Print(sb);
+                AnimatedObjects?.Print(sb);
+                Waters?.Print(sb);
+                EffectShaders?.Print(sb);
             }
             #endregion
 
@@ -3380,7 +3366,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -3560,24 +3546,24 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IOblivionModGetter item,
             string? name = null,
             OblivionMod.Mask<bool>? printMask = null)
         {
-            return ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).ToString(
+            return ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IOblivionModGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             OblivionMod.Mask<bool>? printMask = null)
         {
-            ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).ToString(
+            ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -5153,13 +5139,13 @@ namespace Mutagen.Bethesda.Oblivion
             ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
         }
         
-        public string ToString(
+        public string Print(
             IOblivionModGetter item,
             string? name = null,
             OblivionMod.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -5167,7 +5153,7 @@ namespace Mutagen.Bethesda.Oblivion
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IOblivionModGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -5181,15 +5167,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendLine($"{name} (OblivionMod) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -5199,231 +5183,231 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (printMask?.ModHeader?.Overall ?? true)
             {
-                item.ModHeader?.ToString(sb, "ModHeader");
+                item.ModHeader?.Print(sb, "ModHeader");
             }
             if (printMask?.GameSettings?.Overall ?? true)
             {
-                item.GameSettings?.ToString(sb, "GameSettings");
+                item.GameSettings?.Print(sb, "GameSettings");
             }
             if (printMask?.Globals?.Overall ?? true)
             {
-                item.Globals?.ToString(sb, "Globals");
+                item.Globals?.Print(sb, "Globals");
             }
             if (printMask?.Classes?.Overall ?? true)
             {
-                item.Classes?.ToString(sb, "Classes");
+                item.Classes?.Print(sb, "Classes");
             }
             if (printMask?.Factions?.Overall ?? true)
             {
-                item.Factions?.ToString(sb, "Factions");
+                item.Factions?.Print(sb, "Factions");
             }
             if (printMask?.Hairs?.Overall ?? true)
             {
-                item.Hairs?.ToString(sb, "Hairs");
+                item.Hairs?.Print(sb, "Hairs");
             }
             if (printMask?.Eyes?.Overall ?? true)
             {
-                item.Eyes?.ToString(sb, "Eyes");
+                item.Eyes?.Print(sb, "Eyes");
             }
             if (printMask?.Races?.Overall ?? true)
             {
-                item.Races?.ToString(sb, "Races");
+                item.Races?.Print(sb, "Races");
             }
             if (printMask?.Sounds?.Overall ?? true)
             {
-                item.Sounds?.ToString(sb, "Sounds");
+                item.Sounds?.Print(sb, "Sounds");
             }
             if (printMask?.Skills?.Overall ?? true)
             {
-                item.Skills?.ToString(sb, "Skills");
+                item.Skills?.Print(sb, "Skills");
             }
             if (printMask?.MagicEffects?.Overall ?? true)
             {
-                item.MagicEffects?.ToString(sb, "MagicEffects");
+                item.MagicEffects?.Print(sb, "MagicEffects");
             }
             if (printMask?.Scripts?.Overall ?? true)
             {
-                item.Scripts?.ToString(sb, "Scripts");
+                item.Scripts?.Print(sb, "Scripts");
             }
             if (printMask?.LandTextures?.Overall ?? true)
             {
-                item.LandTextures?.ToString(sb, "LandTextures");
+                item.LandTextures?.Print(sb, "LandTextures");
             }
             if (printMask?.Enchantments?.Overall ?? true)
             {
-                item.Enchantments?.ToString(sb, "Enchantments");
+                item.Enchantments?.Print(sb, "Enchantments");
             }
             if (printMask?.Spells?.Overall ?? true)
             {
-                item.Spells?.ToString(sb, "Spells");
+                item.Spells?.Print(sb, "Spells");
             }
             if (printMask?.Birthsigns?.Overall ?? true)
             {
-                item.Birthsigns?.ToString(sb, "Birthsigns");
+                item.Birthsigns?.Print(sb, "Birthsigns");
             }
             if (printMask?.Activators?.Overall ?? true)
             {
-                item.Activators?.ToString(sb, "Activators");
+                item.Activators?.Print(sb, "Activators");
             }
             if (printMask?.AlchemicalApparatus?.Overall ?? true)
             {
-                item.AlchemicalApparatus?.ToString(sb, "AlchemicalApparatus");
+                item.AlchemicalApparatus?.Print(sb, "AlchemicalApparatus");
             }
             if (printMask?.Armors?.Overall ?? true)
             {
-                item.Armors?.ToString(sb, "Armors");
+                item.Armors?.Print(sb, "Armors");
             }
             if (printMask?.Books?.Overall ?? true)
             {
-                item.Books?.ToString(sb, "Books");
+                item.Books?.Print(sb, "Books");
             }
             if (printMask?.Clothes?.Overall ?? true)
             {
-                item.Clothes?.ToString(sb, "Clothes");
+                item.Clothes?.Print(sb, "Clothes");
             }
             if (printMask?.Containers?.Overall ?? true)
             {
-                item.Containers?.ToString(sb, "Containers");
+                item.Containers?.Print(sb, "Containers");
             }
             if (printMask?.Doors?.Overall ?? true)
             {
-                item.Doors?.ToString(sb, "Doors");
+                item.Doors?.Print(sb, "Doors");
             }
             if (printMask?.Ingredients?.Overall ?? true)
             {
-                item.Ingredients?.ToString(sb, "Ingredients");
+                item.Ingredients?.Print(sb, "Ingredients");
             }
             if (printMask?.Lights?.Overall ?? true)
             {
-                item.Lights?.ToString(sb, "Lights");
+                item.Lights?.Print(sb, "Lights");
             }
             if (printMask?.Miscellaneous?.Overall ?? true)
             {
-                item.Miscellaneous?.ToString(sb, "Miscellaneous");
+                item.Miscellaneous?.Print(sb, "Miscellaneous");
             }
             if (printMask?.Statics?.Overall ?? true)
             {
-                item.Statics?.ToString(sb, "Statics");
+                item.Statics?.Print(sb, "Statics");
             }
             if (printMask?.Grasses?.Overall ?? true)
             {
-                item.Grasses?.ToString(sb, "Grasses");
+                item.Grasses?.Print(sb, "Grasses");
             }
             if (printMask?.Trees?.Overall ?? true)
             {
-                item.Trees?.ToString(sb, "Trees");
+                item.Trees?.Print(sb, "Trees");
             }
             if (printMask?.Flora?.Overall ?? true)
             {
-                item.Flora?.ToString(sb, "Flora");
+                item.Flora?.Print(sb, "Flora");
             }
             if (printMask?.Furniture?.Overall ?? true)
             {
-                item.Furniture?.ToString(sb, "Furniture");
+                item.Furniture?.Print(sb, "Furniture");
             }
             if (printMask?.Weapons?.Overall ?? true)
             {
-                item.Weapons?.ToString(sb, "Weapons");
+                item.Weapons?.Print(sb, "Weapons");
             }
             if (printMask?.Ammunitions?.Overall ?? true)
             {
-                item.Ammunitions?.ToString(sb, "Ammunitions");
+                item.Ammunitions?.Print(sb, "Ammunitions");
             }
             if (printMask?.Npcs?.Overall ?? true)
             {
-                item.Npcs?.ToString(sb, "Npcs");
+                item.Npcs?.Print(sb, "Npcs");
             }
             if (printMask?.Creatures?.Overall ?? true)
             {
-                item.Creatures?.ToString(sb, "Creatures");
+                item.Creatures?.Print(sb, "Creatures");
             }
             if (printMask?.LeveledCreatures?.Overall ?? true)
             {
-                item.LeveledCreatures?.ToString(sb, "LeveledCreatures");
+                item.LeveledCreatures?.Print(sb, "LeveledCreatures");
             }
             if (printMask?.SoulGems?.Overall ?? true)
             {
-                item.SoulGems?.ToString(sb, "SoulGems");
+                item.SoulGems?.Print(sb, "SoulGems");
             }
             if (printMask?.Keys?.Overall ?? true)
             {
-                item.Keys?.ToString(sb, "Keys");
+                item.Keys?.Print(sb, "Keys");
             }
             if (printMask?.Potions?.Overall ?? true)
             {
-                item.Potions?.ToString(sb, "Potions");
+                item.Potions?.Print(sb, "Potions");
             }
             if (printMask?.Subspaces?.Overall ?? true)
             {
-                item.Subspaces?.ToString(sb, "Subspaces");
+                item.Subspaces?.Print(sb, "Subspaces");
             }
             if (printMask?.SigilStones?.Overall ?? true)
             {
-                item.SigilStones?.ToString(sb, "SigilStones");
+                item.SigilStones?.Print(sb, "SigilStones");
             }
             if (printMask?.LeveledItems?.Overall ?? true)
             {
-                item.LeveledItems?.ToString(sb, "LeveledItems");
+                item.LeveledItems?.Print(sb, "LeveledItems");
             }
             if (printMask?.Weathers?.Overall ?? true)
             {
-                item.Weathers?.ToString(sb, "Weathers");
+                item.Weathers?.Print(sb, "Weathers");
             }
             if (printMask?.Climates?.Overall ?? true)
             {
-                item.Climates?.ToString(sb, "Climates");
+                item.Climates?.Print(sb, "Climates");
             }
             if (printMask?.Regions?.Overall ?? true)
             {
-                item.Regions?.ToString(sb, "Regions");
+                item.Regions?.Print(sb, "Regions");
             }
             if (printMask?.Cells?.Overall ?? true)
             {
-                item.Cells?.ToString(sb, "Cells");
+                item.Cells?.Print(sb, "Cells");
             }
             if (printMask?.Worldspaces?.Overall ?? true)
             {
-                item.Worldspaces?.ToString(sb, "Worldspaces");
+                item.Worldspaces?.Print(sb, "Worldspaces");
             }
             if (printMask?.DialogTopics?.Overall ?? true)
             {
-                item.DialogTopics?.ToString(sb, "DialogTopics");
+                item.DialogTopics?.Print(sb, "DialogTopics");
             }
             if (printMask?.Quests?.Overall ?? true)
             {
-                item.Quests?.ToString(sb, "Quests");
+                item.Quests?.Print(sb, "Quests");
             }
             if (printMask?.IdleAnimations?.Overall ?? true)
             {
-                item.IdleAnimations?.ToString(sb, "IdleAnimations");
+                item.IdleAnimations?.Print(sb, "IdleAnimations");
             }
             if (printMask?.AIPackages?.Overall ?? true)
             {
-                item.AIPackages?.ToString(sb, "AIPackages");
+                item.AIPackages?.Print(sb, "AIPackages");
             }
             if (printMask?.CombatStyles?.Overall ?? true)
             {
-                item.CombatStyles?.ToString(sb, "CombatStyles");
+                item.CombatStyles?.Print(sb, "CombatStyles");
             }
             if (printMask?.LoadScreens?.Overall ?? true)
             {
-                item.LoadScreens?.ToString(sb, "LoadScreens");
+                item.LoadScreens?.Print(sb, "LoadScreens");
             }
             if (printMask?.LeveledSpells?.Overall ?? true)
             {
-                item.LeveledSpells?.ToString(sb, "LeveledSpells");
+                item.LeveledSpells?.Print(sb, "LeveledSpells");
             }
             if (printMask?.AnimatedObjects?.Overall ?? true)
             {
-                item.AnimatedObjects?.ToString(sb, "AnimatedObjects");
+                item.AnimatedObjects?.Print(sb, "AnimatedObjects");
             }
             if (printMask?.Waters?.Overall ?? true)
             {
-                item.Waters?.ToString(sb, "Waters");
+                item.Waters?.Print(sb, "Waters");
             }
             if (printMask?.EffectShaders?.Overall ?? true)
             {
-                item.EffectShaders?.ToString(sb, "EffectShaders");
+                item.EffectShaders?.Print(sb, "EffectShaders");
             }
         }
         
@@ -11970,7 +11954,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public GameRelease GameRelease => GameRelease.Oblivion;
         IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
@@ -12711,11 +12695,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            OblivionModMixIn.ToString(
+            OblivionModMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

@@ -554,11 +554,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcMixIn.ToString(
+            NpcMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1448,58 +1448,50 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(Npc.Mask<bool>? printMask = null)
+            public string Print(Npc.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, Npc.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Npc.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Npc.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(sb);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(sb);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.Configuration?.Overall ?? true)
                     {
-                        Configuration?.ToString(sb);
+                        Configuration?.Print(sb);
                     }
                     if ((printMask?.Factions?.Overall ?? true)
                         && Factions is {} FactionsItem)
                     {
                         sb.AppendLine("Factions =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(FactionsItem.Overall);
                             if (FactionsItem.Specific != null)
                             {
                                 foreach (var subItem in FactionsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.DeathItem ?? true)
                     {
@@ -1521,30 +1513,26 @@ namespace Mutagen.Bethesda.Skyrim
                         && ActorEffect is {} ActorEffectItem)
                     {
                         sb.AppendLine("ActorEffect =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(ActorEffectItem.Overall);
                             if (ActorEffectItem.Specific != null)
                             {
                                 foreach (var subItem in ActorEffectItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(sb);
+                        Destructible?.Print(sb);
                     }
                     if (printMask?.WornArmor ?? true)
                     {
@@ -1562,24 +1550,20 @@ namespace Mutagen.Bethesda.Skyrim
                         && Attacks is {} AttacksItem)
                     {
                         sb.AppendLine("Attacks =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(AttacksItem.Overall);
                             if (AttacksItem.Specific != null)
                             {
                                 foreach (var subItem in AttacksItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.SpectatorOverridePackageList ?? true)
                     {
@@ -1601,101 +1585,85 @@ namespace Mutagen.Bethesda.Skyrim
                         && Perks is {} PerksItem)
                     {
                         sb.AppendLine("Perks =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(PerksItem.Overall);
                             if (PerksItem.Specific != null)
                             {
                                 foreach (var subItem in PerksItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.Items?.Overall ?? true)
                         && Items is {} ItemsItem)
                     {
                         sb.AppendLine("Items =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(ItemsItem.Overall);
                             if (ItemsItem.Specific != null)
                             {
                                 foreach (var subItem in ItemsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.AIData?.Overall ?? true)
                     {
-                        AIData?.ToString(sb);
+                        AIData?.Print(sb);
                     }
                     if ((printMask?.Packages?.Overall ?? true)
                         && Packages is {} PackagesItem)
                     {
                         sb.AppendLine("Packages =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(PackagesItem.Overall);
                             if (PackagesItem.Specific != null)
                             {
                                 foreach (var subItem in PackagesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
                         sb.AppendLine("Keywords =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.Class ?? true)
                     {
@@ -1711,32 +1679,28 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.PlayerSkills?.Overall ?? true)
                     {
-                        PlayerSkills?.ToString(sb);
+                        PlayerSkills?.Print(sb);
                     }
                     if ((printMask?.HeadParts?.Overall ?? true)
                         && HeadParts is {} HeadPartsItem)
                     {
                         sb.AppendLine("HeadParts =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(HeadPartsItem.Overall);
                             if (HeadPartsItem.Specific != null)
                             {
                                 foreach (var subItem in HeadPartsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.HairColor ?? true)
                     {
@@ -1768,7 +1732,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.Sound?.Overall ?? true)
                     {
-                        Sound?.ToString(sb);
+                        Sound?.Print(sb);
                     }
                     if (printMask?.DefaultOutfit ?? true)
                     {
@@ -1796,37 +1760,32 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     if (printMask?.FaceMorph?.Overall ?? true)
                     {
-                        FaceMorph?.ToString(sb);
+                        FaceMorph?.Print(sb);
                     }
                     if (printMask?.FaceParts?.Overall ?? true)
                     {
-                        FaceParts?.ToString(sb);
+                        FaceParts?.Print(sb);
                     }
                     if ((printMask?.TintLayers?.Overall ?? true)
                         && TintLayers is {} TintLayersItem)
                     {
                         sb.AppendLine("TintLayers =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(TintLayersItem.Overall);
                             if (TintLayersItem.Specific != null)
                             {
                                 foreach (var subItem in TintLayersItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -2330,60 +2289,47 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
-                VirtualMachineAdapter?.ToString(sb);
-                ObjectBounds?.ToString(sb);
-                Configuration?.ToString(sb);
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                Configuration?.Print(sb);
                 if (Factions is {} FactionsItem)
                 {
                     sb.AppendLine("Factions =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(FactionsItem.Overall);
                         if (FactionsItem.Specific != null)
                         {
                             foreach (var subItem in FactionsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(DeathItem, "DeathItem");
@@ -2400,28 +2346,24 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ActorEffect is {} ActorEffectItem)
                 {
                     sb.AppendLine("ActorEffect =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(ActorEffectItem.Overall);
                         if (ActorEffectItem.Specific != null)
                         {
                             foreach (var subItem in ActorEffectItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                Destructible?.ToString(sb);
+                Destructible?.Print(sb);
                 {
                     sb.AppendItem(WornArmor, "WornArmor");
                 }
@@ -2434,24 +2376,20 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Attacks is {} AttacksItem)
                 {
                     sb.AppendLine("Attacks =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(AttacksItem.Overall);
                         if (AttacksItem.Specific != null)
                         {
                             foreach (var subItem in AttacksItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
@@ -2468,95 +2406,79 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Perks is {} PerksItem)
                 {
                     sb.AppendLine("Perks =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(PerksItem.Overall);
                         if (PerksItem.Specific != null)
                         {
                             foreach (var subItem in PerksItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (Items is {} ItemsItem)
                 {
                     sb.AppendLine("Items =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(ItemsItem.Overall);
                         if (ItemsItem.Specific != null)
                         {
                             foreach (var subItem in ItemsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
-                AIData?.ToString(sb);
+                AIData?.Print(sb);
                 if (Packages is {} PackagesItem)
                 {
                     sb.AppendLine("Packages =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(PackagesItem.Overall);
                         if (PackagesItem.Specific != null)
                         {
                             foreach (var subItem in PackagesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 if (Keywords is {} KeywordsItem)
                 {
                     sb.AppendLine("Keywords =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(Class, "Class");
@@ -2567,30 +2489,26 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(ShortName, "ShortName");
                 }
-                PlayerSkills?.ToString(sb);
+                PlayerSkills?.Print(sb);
                 if (HeadParts is {} HeadPartsItem)
                 {
                     sb.AppendLine("HeadParts =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(HeadPartsItem.Overall);
                         if (HeadPartsItem.Specific != null)
                         {
                             foreach (var subItem in HeadPartsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(HairColor, "HairColor");
@@ -2613,7 +2531,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(SoundLevel, "SoundLevel");
                 }
-                Sound?.ToString(sb);
+                Sound?.Print(sb);
                 {
                     sb.AppendItem(DefaultOutfit, "DefaultOutfit");
                 }
@@ -2632,29 +2550,25 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(TextureLighting, "TextureLighting");
                 }
-                FaceMorph?.ToString(sb);
-                FaceParts?.ToString(sb);
+                FaceMorph?.Print(sb);
+                FaceParts?.Print(sb);
                 if (TintLayers is {} TintLayersItem)
                 {
                     sb.AppendLine("TintLayers =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(TintLayersItem.Overall);
                         if (TintLayersItem.Specific != null)
                         {
                             foreach (var subItem in TintLayersItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion
@@ -2997,7 +2911,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -3213,24 +3127,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INpcGetter item,
             string? name = null,
             Npc.Mask<bool>? printMask = null)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).ToString(
+            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INpcGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             Npc.Mask<bool>? printMask = null)
         {
-            ((NpcCommon)((INpcGetter)item).CommonInstance()!).ToString(
+            ((NpcCommon)((INpcGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -3814,13 +3728,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             INpcGetter item,
             string? name = null,
             Npc.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -3828,7 +3742,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INpcGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -3842,15 +3756,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (Npc) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -3865,33 +3777,29 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(sb, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(sb, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if (printMask?.Configuration?.Overall ?? true)
             {
-                item.Configuration?.ToString(sb, "Configuration");
+                item.Configuration?.Print(sb, "Configuration");
             }
             if (printMask?.Factions?.Overall ?? true)
             {
                 sb.AppendLine("Factions =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Factions)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.DeathItem ?? true)
             {
@@ -3913,25 +3821,21 @@ namespace Mutagen.Bethesda.Skyrim
                 && item.ActorEffect is {} ActorEffectItem)
             {
                 sb.AppendLine("ActorEffect =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in ActorEffectItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(sb, "Destructible");
+                DestructibleItem?.Print(sb, "Destructible");
             }
             if (printMask?.WornArmor ?? true)
             {
@@ -3948,20 +3852,16 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.Attacks?.Overall ?? true)
             {
                 sb.AppendLine("Attacks =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Attacks)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.SpectatorOverridePackageList ?? true)
             {
@@ -3983,80 +3883,64 @@ namespace Mutagen.Bethesda.Skyrim
                 && item.Perks is {} PerksItem)
             {
                 sb.AppendLine("Perks =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in PerksItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.Items?.Overall ?? true)
                 && item.Items is {} ItemsItem)
             {
                 sb.AppendLine("Items =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in ItemsItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.AIData?.Overall ?? true)
             {
-                item.AIData?.ToString(sb, "AIData");
+                item.AIData?.Print(sb, "AIData");
             }
             if (printMask?.Packages?.Overall ?? true)
             {
                 sb.AppendLine("Packages =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Packages)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
                 sb.AppendLine("Keywords =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.Class ?? true)
             {
@@ -4075,25 +3959,21 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.PlayerSkills?.Overall ?? true)
                 && item.PlayerSkills is {} PlayerSkillsItem)
             {
-                PlayerSkillsItem?.ToString(sb, "PlayerSkills");
+                PlayerSkillsItem?.Print(sb, "PlayerSkills");
             }
             if (printMask?.HeadParts?.Overall ?? true)
             {
                 sb.AppendLine("HeadParts =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.HeadParts)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.HairColor ?? true)
             {
@@ -4126,7 +4006,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.Sound?.Overall ?? true)
                 && item.Sound is {} SoundItem)
             {
-                SoundItem?.ToString(sb, "Sound");
+                SoundItem?.Print(sb, "Sound");
             }
             if (printMask?.DefaultOutfit ?? true)
             {
@@ -4156,30 +4036,26 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.FaceMorph?.Overall ?? true)
                 && item.FaceMorph is {} FaceMorphItem)
             {
-                FaceMorphItem?.ToString(sb, "FaceMorph");
+                FaceMorphItem?.Print(sb, "FaceMorph");
             }
             if ((printMask?.FaceParts?.Overall ?? true)
                 && item.FaceParts is {} FacePartsItem)
             {
-                FacePartsItem?.ToString(sb, "FaceParts");
+                FacePartsItem?.Print(sb, "FaceParts");
             }
             if (printMask?.TintLayers?.Overall ?? true)
             {
                 sb.AppendLine("TintLayers =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.TintLayers)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -6272,7 +6148,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -6856,11 +6732,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcMixIn.ToString(
+            NpcMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

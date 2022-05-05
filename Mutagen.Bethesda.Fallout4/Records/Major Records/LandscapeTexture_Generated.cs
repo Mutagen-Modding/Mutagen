@@ -102,11 +102,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LandscapeTextureMixIn.ToString(
+            LandscapeTextureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -303,23 +303,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(LandscapeTexture.Mask<bool>? printMask = null)
+            public string Print(LandscapeTexture.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, LandscapeTexture.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LandscapeTexture.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(LandscapeTexture.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.TextureSet ?? true)
                     {
@@ -345,33 +341,28 @@ namespace Mutagen.Bethesda.Fallout4
                         && Grasses is {} GrassesItem)
                     {
                         sb.AppendLine("Grasses =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(GrassesItem.Overall);
                             if (GrassesItem.Specific != null)
                             {
                                 foreach (var subItem in GrassesItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (sb.IncreaseDepth())
+                                    using (sb.Brace())
                                     {
                                         {
                                             sb.AppendItem(subItem);
                                         }
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                     if (printMask?.HNAMDataTypeState ?? true)
                     {
                         sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -495,36 +486,27 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(TextureSet, "TextureSet");
                 }
@@ -543,26 +525,22 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Grasses is {} GrassesItem)
                 {
                     sb.AppendLine("Grasses =>");
-                    sb.AppendLine("[");
-                    using (sb.IncreaseDepth())
+                    using (sb.Brace())
                     {
                         sb.AppendItem(GrassesItem.Overall);
                         if (GrassesItem.Specific != null)
                         {
                             foreach (var subItem in GrassesItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (sb.IncreaseDepth())
+                                using (sb.Brace())
                                 {
                                     {
                                         sb.AppendItem(subItem);
                                     }
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
                 {
                     sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
@@ -762,7 +740,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -842,24 +820,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILandscapeTextureGetter item,
             string? name = null,
             LandscapeTexture.Mask<bool>? printMask = null)
         {
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).ToString(
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILandscapeTextureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             LandscapeTexture.Mask<bool>? printMask = null)
         {
-            ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).ToString(
+            ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1198,13 +1176,13 @@ namespace Mutagen.Bethesda.Fallout4
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILandscapeTextureGetter item,
             string? name = null,
             LandscapeTexture.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1212,7 +1190,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILandscapeTextureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1226,15 +1204,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (LandscapeTexture) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1269,20 +1245,16 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Grasses?.Overall ?? true)
             {
                 sb.AppendLine("Grasses =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Grasses)
                     {
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             if (printMask?.HNAMDataTypeState ?? true)
             {
@@ -1914,7 +1886,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LandscapeTextureCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2068,11 +2040,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LandscapeTextureMixIn.ToString(
+            LandscapeTextureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

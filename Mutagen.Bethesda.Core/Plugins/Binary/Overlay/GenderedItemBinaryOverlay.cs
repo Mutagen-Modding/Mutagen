@@ -11,10 +11,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
 internal class GenderedItemBinaryOverlay<T> : PluginBinaryOverlay, IGenderedItemGetter<T>
 {
-    private int? _male;
-    private int? _female;
-    private T _fallback;
-    private Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> _creator;
+    private readonly int? _male;
+    private readonly int? _female;
+    private readonly T _fallback;
+    private readonly Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> _creator;
 
     public T Male => _male.HasValue ? _creator(_data.Slice(_male.Value), _package) : _fallback;
     public T Female => _female.HasValue ? _creator(_data.Slice(_female.Value), _package) : _fallback;
@@ -40,7 +40,7 @@ internal class GenderedItemBinaryOverlay<T> : PluginBinaryOverlay, IGenderedItem
         yield return Female;
     }
 
-    public void ToString(StructuredStringBuilder fg, string? name) => GenderedItem.ToString(this, fg, name);
+    public void Print(StructuredStringBuilder fg, string? name) => GenderedItem.Print(this, fg, name);
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

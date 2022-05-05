@@ -72,11 +72,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherAmbientColorSetMixIn.ToString(
+            WeatherAmbientColorSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -241,42 +241,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(WeatherAmbientColorSet.Mask<bool>? printMask = null)
+            public string Print(WeatherAmbientColorSet.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, WeatherAmbientColorSet.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeatherAmbientColorSet.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(WeatherAmbientColorSet.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (printMask?.Sunrise?.Overall ?? true)
                     {
-                        Sunrise?.ToString(sb);
+                        Sunrise?.Print(sb);
                     }
                     if (printMask?.Day?.Overall ?? true)
                     {
-                        Day?.ToString(sb);
+                        Day?.Print(sb);
                     }
                     if (printMask?.Sunset?.Overall ?? true)
                     {
-                        Sunset?.ToString(sb);
+                        Sunset?.Print(sb);
                     }
                     if (printMask?.Night?.Overall ?? true)
                     {
-                        Night?.ToString(sb);
+                        Night?.Print(sb);
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -381,39 +376,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (sb.IncreaseDepth())
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (sb.IncreaseDepth())
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Sunrise?.ToString(sb);
-                Day?.ToString(sb);
-                Sunset?.ToString(sb);
-                Night?.ToString(sb);
+                Sunrise?.Print(sb);
+                Day?.Print(sb);
+                Sunset?.Print(sb);
+                Night?.Print(sb);
             }
             #endregion
 
@@ -533,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -599,24 +585,24 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeatherAmbientColorSetGetter item,
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
-            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).ToString(
+            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeatherAmbientColorSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
-            ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).ToString(
+            ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -906,13 +892,13 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Night = MaskItemExt.Factory(item.Night.GetEqualsMask(rhs.Night, include), include);
         }
         
-        public string ToString(
+        public string Print(
             IWeatherAmbientColorSetGetter item,
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -920,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeatherAmbientColorSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -934,15 +920,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"{name} (WeatherAmbientColorSet) =>");
             }
-            sb.AppendLine("[");
-            using (sb.IncreaseDepth())
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -952,19 +936,19 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (printMask?.Sunrise?.Overall ?? true)
             {
-                item.Sunrise?.ToString(sb, "Sunrise");
+                item.Sunrise?.Print(sb, "Sunrise");
             }
             if (printMask?.Day?.Overall ?? true)
             {
-                item.Day?.ToString(sb, "Day");
+                item.Day?.Print(sb, "Day");
             }
             if (printMask?.Sunset?.Overall ?? true)
             {
-                item.Sunset?.ToString(sb, "Sunset");
+                item.Sunset?.Print(sb, "Sunset");
             }
             if (printMask?.Night?.Overall ?? true)
             {
-                item.Night?.ToString(sb, "Night");
+                item.Night?.Print(sb, "Night");
             }
         }
         
@@ -1322,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherAmbientColorSetBinaryWriteTranslation.Instance;
@@ -1385,11 +1369,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherAmbientColorSetMixIn.ToString(
+            WeatherAmbientColorSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
