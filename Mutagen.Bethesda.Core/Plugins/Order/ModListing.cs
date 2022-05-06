@@ -54,13 +54,26 @@ public record ModListing : IModListingGetter
 
 /// <inheritdoc cref="IModListingGetter{TMod}" />
 [DebuggerDisplay("{ToString()}")]
-public record ModListing<TMod> : ModListing, IModListing<TMod>
+public record ModListing<TMod> : IModListing<TMod>
     where TMod : class, IModGetter
 {
+    /// <inheritdoc />
+    public ModKey ModKey { get; init; }
+
+    /// <inheritdoc />
+    public bool Enabled { get; init; }
+
+    /// <inheritdoc />
+    public bool ExistsOnDisk => Mod != null;
+
+    /// <inheritdoc />
+    public bool Ghosted => !string.IsNullOrWhiteSpace(GhostSuffix);
+
+    /// <inheritdoc />
+    public string GhostSuffix { get; init; } = string.Empty;
+    
     /// <inheritdoc cref="IModListing{TMod}.Mod" />
     public TMod? Mod { get; set; }
-
-    public bool Exists => Mod != null;
 
     private ModListing(ModKey key, TMod? mod, bool enabled, string ghostSuffix = "")
     {
