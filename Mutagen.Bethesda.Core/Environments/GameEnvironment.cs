@@ -19,7 +19,7 @@ public class GameEnvironment
     {
     }
         
-    public IGameEnvironmentState<TModSetter, TModGetter> Construct<TModSetter, TModGetter>(
+    public IGameEnvironment<TModSetter, TModGetter> Construct<TModSetter, TModGetter>(
         GameRelease release,
         LinkCachePreferences? linkCachePrefs = null)
         where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
@@ -33,7 +33,7 @@ public class GameEnvironment
         return GameEnvironmentState<TModSetter, TModGetter>.Construct(release, gameFolderPath, linkCachePrefs);
     }
 
-    public IGameEnvironmentState<TModGetter> Construct<TModGetter>(
+    public IGameEnvironment<TModGetter> Construct<TModGetter>(
         GameRelease release,
         LinkCachePreferences? linkCachePrefs = null)
         where TModGetter : class, IModGetter
@@ -46,7 +46,7 @@ public class GameEnvironment
         return GameEnvironmentState<TModGetter>.Construct(release, gameFolderPath, linkCachePrefs);
     }
 
-    public IGameEnvironmentState Construct(
+    public IGameEnvironment Construct(
         GameRelease release,
         LinkCachePreferences? linkCachePrefs = null)
     {
@@ -59,7 +59,7 @@ public class GameEnvironment
     }
 }
 
-public interface IGameEnvironmentState : IDisposable
+public interface IGameEnvironment : IDisposable
 {
     DirectoryPath DataFolderPath { get; }
     GameRelease GameRelease { get; }
@@ -77,7 +77,7 @@ public interface IGameEnvironmentState : IDisposable
     ILinkCache LinkCache { get; }
 }
 
-public interface IGameEnvironmentState<TMod> : IGameEnvironmentState 
+public interface IGameEnvironment<TMod> : IGameEnvironment
     where TMod : class, IModGetter
 {
     /// <summary>
@@ -86,7 +86,7 @@ public interface IGameEnvironmentState<TMod> : IGameEnvironmentState
     new ILoadOrder<IModListing<TMod>> LoadOrder { get; }
 }
 
-public interface IGameEnvironmentState<TModSetter, TModGetter> : IGameEnvironmentState<TModGetter> 
+public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TModGetter>
     where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
 {
@@ -108,7 +108,7 @@ public class GameEnvironmentState :
     IDataDirectoryProvider,
     IPluginListingsPathProvider,
     ICreationClubListingsPathProvider,
-    IGameEnvironmentState
+    IGameEnvironment
 {
     private readonly bool _dispose;
 
@@ -148,7 +148,7 @@ public class GameEnvironmentState :
         LinkCache.Dispose();
     }
 
-    public static IGameEnvironmentState Construct(
+    public static IGameEnvironment Construct(
         GameRelease release,
         DirectoryPath gameFolder,
         LinkCachePreferences? linkCachePrefs = null)
@@ -220,7 +220,7 @@ public class GameEnvironmentState<TMod> :
     IDataDirectoryProvider,
     IPluginListingsPathProvider,
     ICreationClubListingsPathProvider,
-    IGameEnvironmentState<TMod>
+    IGameEnvironment<TMod>
     where TMod : class, IModGetter
 {
     private readonly bool _dispose;
@@ -261,7 +261,7 @@ public class GameEnvironmentState<TMod> :
         LinkCache.Dispose();
     }
 
-    public static IGameEnvironmentState<TMod> Construct(
+    public static IGameEnvironment<TMod> Construct(
         GameRelease release,
         DirectoryPath gameFolder,
         LinkCachePreferences? linkCachePrefs = null)
@@ -325,7 +325,7 @@ public class GameEnvironmentState<TMod> :
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 
-    ILoadOrderGetter<IModListingGetter<IModGetter>> IGameEnvironmentState.LoadOrder => LoadOrder;
+    ILoadOrderGetter<IModListingGetter<IModGetter>> IGameEnvironment.LoadOrder => LoadOrder;
 }
 
 /// <summary>
@@ -335,7 +335,7 @@ public class GameEnvironmentState<TModSetter, TModGetter> :
     IDataDirectoryProvider, 
     IPluginListingsPathProvider,
     ICreationClubListingsPathProvider,
-    IGameEnvironmentState<TModSetter, TModGetter> 
+    IGameEnvironment<TModSetter, TModGetter> 
     where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
 {
@@ -383,7 +383,7 @@ public class GameEnvironmentState<TModSetter, TModGetter> :
         LinkCache.Dispose();
     }
 
-    public static IGameEnvironmentState<TModSetter, TModGetter> Construct(
+    public static IGameEnvironment<TModSetter, TModGetter> Construct(
         GameRelease release,
         DirectoryPath gameFolder,
         LinkCachePreferences? linkCachePrefs = null)
@@ -447,7 +447,7 @@ public class GameEnvironmentState<TModSetter, TModGetter> :
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 
-    ILinkCache IGameEnvironmentState.LinkCache => LinkCache;
+    ILinkCache IGameEnvironment.LinkCache => LinkCache;
 
-    ILoadOrderGetter<IModListingGetter<IModGetter>> IGameEnvironmentState.LoadOrder => LoadOrder;
+    ILoadOrderGetter<IModListingGetter<IModGetter>> IGameEnvironment.LoadOrder => LoadOrder;
 }

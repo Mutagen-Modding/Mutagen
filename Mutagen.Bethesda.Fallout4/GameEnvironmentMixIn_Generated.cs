@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda
 {
     public static class GameEnvironmentMixIn
     {
-        public static IGameEnvironmentState<IFallout4Mod, IFallout4ModGetter> Fallout4(
+        public static IGameEnvironment<IFallout4Mod, IFallout4ModGetter> Fallout4(
             this GameEnvironment env,
             LinkCachePreferences? linkCachePrefs = null)
         {

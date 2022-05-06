@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda
 {
     public static class GameEnvironmentMixIn
     {
-        public static IGameEnvironmentState<ISkyrimMod, ISkyrimModGetter> Skyrim(
+        public static IGameEnvironment<ISkyrimMod, ISkyrimModGetter> Skyrim(
             this GameEnvironment env,
             SkyrimRelease gameRelease,
             LinkCachePreferences? linkCachePrefs = null)

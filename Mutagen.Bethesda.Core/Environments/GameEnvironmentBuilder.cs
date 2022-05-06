@@ -132,7 +132,7 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
     /// Creates an environment with all the given rules added to the builder
     /// </summary>
     /// <returns>GameEnvironment with the rules applied</returns>
-    public IGameEnvironmentState<TMod, TModGetter> Build()
+    public IGameEnvironment<TMod, TModGetter> Build()
     {
         Warmup.Init();
         var category = new GameCategoryContext(Release);
@@ -327,7 +327,7 @@ public record GameEnvironmentBuilder
     /// Creates an environment with all the given rules added to the builder
     /// </summary>
     /// <returns>GameEnvironment with the rules applied</returns>
-    public IGameEnvironmentState Build()
+    public IGameEnvironment Build()
     {
         Warmup.Init();
         var category = new GameCategoryContext(Release);

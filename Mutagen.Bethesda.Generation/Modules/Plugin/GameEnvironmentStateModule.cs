@@ -36,7 +36,7 @@ public class GameEnvironmentStateModule : GenerationModule
             using (sb.CurlyBrace())
             {
                 var hasMultipleReleases = modObj.GetObjectData().HasMultipleReleases;
-                var retType = $"IGameEnvironmentState<I{modObj.Name}, I{modObj.Name}Getter>";
+                var retType = $"IGameEnvironment<I{modObj.Name}, I{modObj.Name}Getter>";
                 using (var args = sb.Function(
                            $"public static {retType} {modObj.ProtoGen.Protocol.Namespace}"))
                 {

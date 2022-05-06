@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda
 {
     public static class GameEnvironmentMixIn
     {
-        public static IGameEnvironmentState<IOblivionMod, IOblivionModGetter> Oblivion(
+        public static IGameEnvironment<IOblivionMod, IOblivionModGetter> Oblivion(
             this GameEnvironment env,
             LinkCachePreferences? linkCachePrefs = null)
         {
