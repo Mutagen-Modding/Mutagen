@@ -73,6 +73,12 @@
         <None Update="Plugins\Binary\Headers\ModHeaderOverflow">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\SomeSubrecords">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\DuplicateSubrecord">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Pex\Actor.pex">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
