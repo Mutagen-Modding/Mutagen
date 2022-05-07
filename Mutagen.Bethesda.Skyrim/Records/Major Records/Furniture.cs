@@ -201,14 +201,15 @@ partial class FurnitureBinaryCreateTranslation
         FillBinaryMarkers(frame, (i) => GetNthMarker(item, i));
     }
 
-    public static void FillBinaryMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
+    public static void FillBinaryMarkers<T>(T stream, Func<int, FurnitureMarker> getter)
+        where T : IMutagenReadStream
     {
         var recs = RecordSpanExtensions.ParseRepeatingSubrecord(
             stream.RemainingMemory,
             stream.MetaData.Constants,
             RecordTypes.FNPR,
             out var parsed);
-        for (int i = 0; i < recs.Length; i++)
+        for (int i = 0; i < recs.Count; i++)
         {
             var marker = getter(i);
 

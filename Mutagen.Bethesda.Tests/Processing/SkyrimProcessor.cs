@@ -277,9 +277,9 @@ public class SkyrimProcessor : Processor
             var locs = RecordSpanExtensions.FindAllOfSubrecords(
                 majorFrame.Content,
                 majorFrame.Meta,
-                targets.ToGetter());
+                targets);
             uint actualNext = 0;
-            if (locs.Length > 0)
+            if (locs.Count > 0)
             {
                 actualNext = locs
                     .Select(l => l.AsUInt32())
@@ -632,13 +632,13 @@ public class SkyrimProcessor : Processor
                 unam,
                 out var _);
             if (unamLocs == null
-                || unamLocs.Length != dataValues.Count
-                || unamLocs.Length != count)
+                || unamLocs.Count != dataValues.Count
+                || unamLocs.Count != count)
             {
                 throw new ArgumentException();
             }
 
-            for (sbyte i = 0; i < unamLocs.Length; i++)
+            for (sbyte i = 0; i < unamLocs.Count; i++)
             {
                 var unamRec = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(curLoc + unamLocs[i].Location));
                 dataValues[i] = (

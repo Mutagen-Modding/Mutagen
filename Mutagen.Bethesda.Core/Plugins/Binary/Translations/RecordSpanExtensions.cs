@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
@@ -7,23 +8,45 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 public static class RecordSpanExtensions
 {
     /// <summary>
-    /// Parses span data and enumerates pairs of record type -> locations
+    /// Enumerates SubrecordPinFrames of all subrecords within span
     /// 
     /// It is assumed the span contains only subrecords
     /// </summary>
     /// <param name="span">Bytes containing subrecords</param>
     /// <param name="meta">Metadata to use in subrecord parsing</param>
-    /// <returns>Enumerable of KeyValue pairs of encountered RecordTypes and their locations relative to the input span</returns>
-    public static IEnumerable<KeyValuePair<RecordType, int>> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span,
+    /// <returns>Enumerable of SubrecordPinFrames</returns>
+    public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(
+        ReadOnlyMemorySlice<byte> span,
         GameConstants meta)
     {
         int loc = 0;
         while (span.Length > loc)
         {
-            var subMeta = meta.Subrecord(span.Slice(loc));
-            var len = subMeta.TotalLength;
-            yield return new KeyValuePair<RecordType, int>(subMeta.RecordType, loc);
-            loc += len;
+            var frame = meta.SubrecordFrame(span.Slice(loc));
+            yield return new SubrecordPinFrame(frame, loc);
+            loc += frame.TotalLength;
+        }
+    }
+    
+    /// <summary>
+    /// Enumerates SubrecordPinFrames of all subrecords within span
+    /// 
+    /// It is assumed the span contains only subrecords
+    /// </summary>
+    /// <param name="span">Bytes containing subrecords</param>
+    /// <param name="meta">Metadata to use in subrecord parsing</param>
+    /// <param name="action">Action to run on each enumerated subrecord</param>
+    public static void EnumerateSubrecords(
+        ReadOnlyMemorySlice<byte> span,
+        GameConstants meta,
+        Action<SubrecordPinFrame> action)
+    {
+        int loc = 0;
+        while (span.Length > loc)
+        {
+            var frame = meta.SubrecordFrame(span.Slice(loc));
+            action(new SubrecordPinFrame(frame, loc));
+            loc += frame.TotalLength;
         }
     }
 
@@ -37,8 +60,11 @@ public static class RecordSpanExtensions
     /// <param name="recordType">Repeating type to locate</param>
     /// <param name="lenParsed">The amount of data located subrecords cover</param>
     /// <returns>SubrecordPinFrames of located records relative to given span</returns>
-    public static SubrecordPinFrame[] ParseRepeatingSubrecord(ReadOnlyMemorySlice<byte> span, GameConstants meta,
-        RecordType recordType, out int lenParsed)
+    public static IReadOnlyList<SubrecordPinFrame> ParseRepeatingSubrecord(
+        ReadOnlyMemorySlice<byte> span, 
+        GameConstants meta,
+        RecordType recordType, 
+        out int lenParsed)
     {
         lenParsed = 0;
         List<SubrecordPinFrame> list = new List<SubrecordPinFrame>();
@@ -50,82 +76,13 @@ public static class RecordSpanExtensions
             lenParsed += subMeta.TotalLength;
         }
 
-        return list.ToArray();
+        return list;
     }
 
     /// <summary>
-    /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
-    /// -1 represents a recordtype that was not found.
-    /// 
-    /// Not suggested to use with high numbers of record types, as it is an N^2 algorithm
-    /// </summary>
-    /// <param name="data">Subrecord data to be parsed</param>
-    /// <param name="meta">Metadata to use in subrecord parsing</param>
-    /// <param name="recordTypes">Record types to locate</param>
-    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
-    public static SubrecordPinFrame?[] TryFindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta,
-        params RecordType[] recordTypes)
-    {
-        return TryFindFirstSubrecords(data, meta, out _, recordTypes);
-    }
-
-    /// <summary>
-    /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
-    /// -1 represents a recordtype that was not found.
-    /// 
-    /// Not suggested to use with high numbers of record types, as it is an N^2 algorithm
-    /// </summary>
-    /// <param name="data">Subrecord data to be parsed</param>
-    /// <param name="meta">Metadata to use in subrecord parsing</param>
-    /// <param name="lenParsed">Amount parsed after processing</param>
-    /// <param name="recordTypes">Record types to locate</param>
-    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
-    public static SubrecordPinFrame?[] TryFindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
-        params RecordType[] recordTypes)
-    {
-        lenParsed = 0;
-        SubrecordPinFrame?[] ret = new SubrecordPinFrame?[recordTypes.Length];
-        while (data.Length > lenParsed)
-        {
-            var subMeta = meta.Subrecord(data.Slice(lenParsed));
-            var recType = subMeta.RecordType;
-            for (int i = 0; i < recordTypes.Length; i++)
-            {
-                if (recordTypes[i] == recType && ret[i] == null)
-                {
-                    ret[i] = new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed);
-                    bool breakOut = false;
-
-                    // Check to see if there's still more to find
-                    for (int j = 0; j < ret.Length; j++)
-                    {
-                        if (ret[j] == null)
-                        {
-                            breakOut = true;
-                            break;
-                        }
-                    }
-
-                    if (breakOut)
-                    {
-                        break;
-                    }
-
-                    // Found everything
-                    return ret;
-                }
-            }
-
-            lenParsed += subMeta.TotalLength;
-        }
-
-        return ret;
-    }
-
-    /// <summary>
-    /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
-    /// -1 represents a recordtype that was not found.
-    /// 
+    /// Locates the first encountered instances of all given subrecord types, and returns an array of SubrecordPinFrames
+    /// of the ones located.<br/>
+    /// <br/>
     /// If a subrecord is encountered that is not of the target types, it will stop looking for more matches
     /// 
     /// </summary>
@@ -134,7 +91,7 @@ public static class RecordSpanExtensions
     /// <param name="meta">Metadata to use in subrecord parsing</param>
     /// <param name="lenParsed">Amount of data contained in located records</param>
     /// <returns>SubrecordPinFrames of located records relative to given span</returns>
-    public static SubrecordPinFrame?[] TryFindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
+    public static IReadOnlyList<SubrecordPinFrame?> TryFindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
         params RecordType[] recordTypes)
     {
         return TryFindNextSubrecords(
@@ -146,12 +103,33 @@ public static class RecordSpanExtensions
     }
 
     /// <summary>
-    /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
-    /// -1 represents a recordtype that was not found.
+    /// Locates the first encountered instances of all given subrecord types, and returns an array of SubrecordPinFrames
+    /// of the ones located.<br/>
+    /// <br/>
+    /// If a subrecord is encountered that is not of the target types, it will stop looking for more matches
     /// 
-    /// If a subrecord is encountered that is not of the target types, it will stop looking for more matches.
+    /// </summary>
+    /// <param name="data">Subrecord data to be parsed</param>
+    /// <param name="recordTypes">Record types to locate</param>
+    /// <param name="meta">Metadata to use in subrecord parsing</param>
+    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
+    public static IReadOnlyList<SubrecordPinFrame?> TryFindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta,
+        params RecordType[] recordTypes)
+    {
+        return TryFindNextSubrecords(
+            data: data,
+            meta: meta,
+            lenParsed: out _,
+            stopOnAlreadyEncounteredRecord: false,
+            recordTypes: recordTypes);
+    }
+
+    /// <summary>
+    /// Locates the first encountered instances of all given subrecord types, and returns an array of SubrecordPinFrames
+    /// of the ones located.<br/>
+    /// <br/>
+    /// If a subrecord is encountered that is not of the target types, it will stop looking for more matches. <br/>
     /// If a subrecord is encountered that was already seen, it will stop looking for more matches.
-    /// 
     /// </summary>
     /// <param name="data">Subrecord data to be parsed</param>
     /// <param name="recordTypes">Record types to locate</param>
@@ -159,7 +137,7 @@ public static class RecordSpanExtensions
     /// <param name="lenParsed">Amount of data contained in located records</param>
     /// <param name="stopOnAlreadyEncounteredRecord">Whether to stop looking if encountering a record type that has already been seen</param>
     /// <returns>SubrecordPinFrames of located records relative to given span</returns>
-    public static SubrecordPinFrame?[] TryFindNextSubrecords(
+    public static IReadOnlyList<SubrecordPinFrame?> TryFindNextSubrecords(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
         out int lenParsed,
@@ -260,7 +238,7 @@ public static class RecordSpanExtensions
         return null;
     }
 
-    public static SubrecordPinFrame[] FindAllOfSubrecord(
+    public static IReadOnlyList<SubrecordPinFrame> FindAllOfSubrecord(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
         RecordType recordType)
@@ -278,13 +256,13 @@ public static class RecordSpanExtensions
             lenParsed += subMeta.TotalLength;
         }
 
-        return ret.ToArray();
+        return ret;
     }
 
-    public static SubrecordPinFrame[] FindAllOfSubrecords(
+    public static IReadOnlyList<SubrecordPinFrame> FindAllOfSubrecords(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
-        ICollectionGetter<RecordType> recordTypes)
+        IReadOnlyCollection<RecordType> recordTypes)
     {
         List<SubrecordPinFrame> ret = new List<SubrecordPinFrame>();
         int lenParsed = 0;
@@ -299,7 +277,15 @@ public static class RecordSpanExtensions
             lenParsed += subMeta.TotalLength;
         }
 
-        return ret.ToArray();
+        return ret;
+    }
+
+    public static IReadOnlyList<SubrecordPinFrame> FindAllOfSubrecords(
+        ReadOnlyMemorySlice<byte> data,
+        GameConstants meta,
+        params RecordType[] recordTypes)
+    {
+        return FindAllOfSubrecords(data, meta, (IReadOnlyCollection<RecordType>)recordTypes);
     }
     
     public static int SkipPastAll(ReadOnlyMemorySlice<byte> data, GameConstants constants, RecordType toSkip,

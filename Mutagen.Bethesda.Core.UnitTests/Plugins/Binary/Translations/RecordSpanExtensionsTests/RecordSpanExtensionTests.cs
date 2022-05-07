@@ -7,12 +7,15 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Translations.RecordSpanExten
 
 public abstract class RecordSpanExtensionTests
 {
-    public static readonly RecordType FirstTypicalType = new("EDID");
-    public static readonly int FirstTypicalLocation = 0;
-    public static readonly RecordType SecondTypicalType = new("FNAM");
-    public static readonly int SecondTypicalLocation = 7 + GameConstants.Oblivion.SubConstants.HeaderLength;
+    public static readonly RecordType FirstType = new("EDID");
+    public static readonly int FirstLocation = 0;
+    public static readonly ushort FirstLength = 7;
+    public static readonly RecordType SecondType = new("FNAM");
+    public static readonly int SecondLocation = FirstLength + GameConstants.Oblivion.SubConstants.HeaderLength;
+    public static readonly ushort SecondLength = 9;
     public static readonly RecordType DuplicateType = new("EDID");
-    public static readonly int DuplicateLocation = 7 + GameConstants.Oblivion.SubConstants.HeaderLength * 2 + 9;
+    public static readonly int DuplicateLocation = FirstLength + GameConstants.Oblivion.SubConstants.HeaderLength * 2 + SecondLength;
+    public static readonly ushort DuplicateLength = 3;
     
     public static ReadOnlyMemorySlice<byte> GetTypical()
     {
@@ -22,5 +25,15 @@ public abstract class RecordSpanExtensionTests
     public static ReadOnlyMemorySlice<byte> GetDuplicate()
     {
         return TestDataPathing.GetBytes("Plugins/Binary/Translations/RecordSpanExtensionsTests/DuplicateSubrecord");
+    }
+    
+    public static ReadOnlyMemorySlice<byte> Repeating()
+    {
+        return TestDataPathing.GetBytes("Plugins/Binary/Translations/RecordSpanExtensionsTests/RepeatingSubrecords");
+    }
+    
+    public static ReadOnlyMemorySlice<byte> FnamStart()
+    {
+        return TestDataPathing.GetBytes("Plugins/Binary/Translations/RecordSpanExtensionsTests/FnamStart");
     }
 }

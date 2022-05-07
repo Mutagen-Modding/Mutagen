@@ -290,3 +290,5 @@ Mutagen.Bethesda.Sqlite/Mutagen.Bethesda.Sqlite.xml
 
 *wpftmp.csproj
 GenerationLines.txt
+
+*.bak
