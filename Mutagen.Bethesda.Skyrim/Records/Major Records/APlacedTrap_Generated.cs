@@ -85,16 +85,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IAPlacedTrapGetter.EncounterZone => this.EncounterZone;
         #endregion
-        #region Ownership
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Ownership? _Ownership;
-        public Ownership? Ownership
+        #region Owner
+        private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        public IFormLinkNullable<IOwnerGetter> Owner
         {
-            get => _Ownership;
-            set => _Ownership = value;
+            get => _Owner;
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IOwnershipGetter? IAPlacedTrapGetter.Ownership => this.Ownership;
+        IFormLinkNullableGetter<IOwnerGetter> IAPlacedTrapGetter.Owner => this.Owner;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IAPlacedTrapGetter.FactionRank => this.FactionRank;
         #endregion
         #region HeadTrackingWeight
         public Single? HeadTrackingWeight { get; set; }
@@ -268,7 +272,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.EncounterZone = initialValue;
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.Owner = initialValue;
+                this.FactionRank = initialValue;
                 this.HeadTrackingWeight = initialValue;
                 this.FavorCost = initialValue;
                 this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
@@ -294,7 +299,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
-                TItem Ownership,
+                TItem Owner,
+                TItem FactionRank,
                 TItem HeadTrackingWeight,
                 TItem FavorCost,
                 TItem Reflections,
@@ -319,7 +325,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.EncounterZone = EncounterZone;
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.Owner = Owner;
+                this.FactionRank = FactionRank;
                 this.HeadTrackingWeight = HeadTrackingWeight;
                 this.FavorCost = FavorCost;
                 this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(Reflections, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
@@ -347,7 +354,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem EncounterZone;
-            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public TItem Owner;
+            public TItem FactionRank;
             public TItem HeadTrackingWeight;
             public TItem FavorCost;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>? Reflections;
@@ -377,7 +385,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
-                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
                 if (!object.Equals(this.FavorCost, rhs.FavorCost)) return false;
                 if (!object.Equals(this.Reflections, rhs.Reflections)) return false;
@@ -399,7 +408,8 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.EncounterZone);
-                hash.Add(this.Ownership);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
                 hash.Add(this.HeadTrackingWeight);
                 hash.Add(this.FavorCost);
                 hash.Add(this.Reflections);
@@ -430,11 +440,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
                 }
                 if (!eval(this.EncounterZone)) return false;
-                if (Ownership != null)
-                {
-                    if (!eval(this.Ownership.Overall)) return false;
-                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.FactionRank)) return false;
                 if (!eval(this.HeadTrackingWeight)) return false;
                 if (!eval(this.FavorCost)) return false;
                 if (this.Reflections != null)
@@ -517,11 +524,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
                 }
                 if (eval(this.EncounterZone)) return true;
-                if (Ownership != null)
-                {
-                    if (eval(this.Ownership.Overall)) return true;
-                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Owner)) return true;
+                if (eval(this.FactionRank)) return true;
                 if (eval(this.HeadTrackingWeight)) return true;
                 if (eval(this.FavorCost)) return true;
                 if (this.Reflections != null)
@@ -607,7 +611,8 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.EncounterZone = eval(this.EncounterZone);
-                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                obj.Owner = eval(this.Owner);
+                obj.FactionRank = eval(this.FactionRank);
                 obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
                 obj.FavorCost = eval(this.FavorCost);
                 if (Reflections != null)
@@ -702,9 +707,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(EncounterZone, "EncounterZone");
                     }
-                    if (printMask?.Ownership?.Overall ?? true)
+                    if (printMask?.Owner ?? true)
                     {
-                        Ownership?.Print(sb);
+                        sb.AppendItem(Owner, "Owner");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.HeadTrackingWeight ?? true)
                     {
@@ -839,7 +848,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? EncounterZone;
-            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public Exception? Owner;
+            public Exception? FactionRank;
             public Exception? HeadTrackingWeight;
             public Exception? FavorCost;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>? Reflections;
@@ -866,8 +876,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return VirtualMachineAdapter;
                     case APlacedTrap_FieldIndex.EncounterZone:
                         return EncounterZone;
-                    case APlacedTrap_FieldIndex.Ownership:
-                        return Ownership;
+                    case APlacedTrap_FieldIndex.Owner:
+                        return Owner;
+                    case APlacedTrap_FieldIndex.FactionRank:
+                        return FactionRank;
                     case APlacedTrap_FieldIndex.HeadTrackingWeight:
                         return HeadTrackingWeight;
                     case APlacedTrap_FieldIndex.FavorCost:
@@ -912,8 +924,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case APlacedTrap_FieldIndex.EncounterZone:
                         this.EncounterZone = ex;
                         break;
-                    case APlacedTrap_FieldIndex.Ownership:
-                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                    case APlacedTrap_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case APlacedTrap_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
                         break;
                     case APlacedTrap_FieldIndex.HeadTrackingWeight:
                         this.HeadTrackingWeight = ex;
@@ -974,8 +989,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case APlacedTrap_FieldIndex.EncounterZone:
                         this.EncounterZone = (Exception?)obj;
                         break;
-                    case APlacedTrap_FieldIndex.Ownership:
-                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                    case APlacedTrap_FieldIndex.Owner:
+                        this.Owner = (Exception?)obj;
+                        break;
+                    case APlacedTrap_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
                         break;
                     case APlacedTrap_FieldIndex.HeadTrackingWeight:
                         this.HeadTrackingWeight = (Exception?)obj;
@@ -1030,7 +1048,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
                 if (EncounterZone != null) return true;
-                if (Ownership != null) return true;
+                if (Owner != null) return true;
+                if (FactionRank != null) return true;
                 if (HeadTrackingWeight != null) return true;
                 if (FavorCost != null) return true;
                 if (Reflections != null) return true;
@@ -1075,7 +1094,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(EncounterZone, "EncounterZone");
                 }
-                Ownership?.Print(sb);
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
                 {
                     sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
                 }
@@ -1186,7 +1210,8 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
-                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
                 ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
@@ -1225,7 +1250,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool EncounterZone;
-            public Ownership.TranslationMask? Ownership;
+            public bool Owner;
+            public bool FactionRank;
             public bool HeadTrackingWeight;
             public bool FavorCost;
             public WaterReflection.TranslationMask? Reflections;
@@ -1249,6 +1275,8 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.EncounterZone = defaultOn;
+                this.Owner = defaultOn;
+                this.FactionRank = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
                 this.FavorCost = defaultOn;
                 this.Emittance = defaultOn;
@@ -1267,7 +1295,8 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((EncounterZone, null));
-                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((Owner, null));
+                ret.Add((FactionRank, null));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((FavorCost, null));
                 ret.Add((Reflections == null ? DefaultOn : !Reflections.GetCrystal().CopyNothing, Reflections?.GetCrystal()));
@@ -1419,7 +1448,8 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
-        new Ownership? Ownership { get; set; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
+        new Int32? FactionRank { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new Single? FavorCost { get; set; }
         new ExtendedList<WaterReflection> Reflections { get; }
@@ -1470,7 +1500,8 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
-        IOwnershipGetter? Ownership { get; }
+        IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
+        Int32? FactionRank { get; }
         Single? HeadTrackingWeight { get; }
         Single? FavorCost { get; }
         IReadOnlyList<IWaterReflectionGetter> Reflections { get; }
@@ -1655,21 +1686,22 @@ namespace Mutagen.Bethesda.Skyrim
         Version2 = 5,
         VirtualMachineAdapter = 6,
         EncounterZone = 7,
-        Ownership = 8,
-        HeadTrackingWeight = 9,
-        FavorCost = 10,
-        Reflections = 11,
-        LinkedReferences = 12,
-        ActivateParents = 13,
-        EnableParent = 14,
-        Emittance = 15,
-        MultiBoundReference = 16,
-        IgnoredBySandbox = 17,
-        LocationRefTypes = 18,
-        LocationReference = 19,
-        DistantLodData = 20,
-        Scale = 21,
-        Placement = 22,
+        Owner = 8,
+        FactionRank = 9,
+        HeadTrackingWeight = 10,
+        FavorCost = 11,
+        Reflections = 12,
+        LinkedReferences = 13,
+        ActivateParents = 14,
+        EnableParent = 15,
+        Emittance = 16,
+        MultiBoundReference = 17,
+        IgnoredBySandbox = 18,
+        LocationRefTypes = 19,
+        LocationReference = 20,
+        DistantLodData = 21,
+        Scale = 22,
+        Placement = 23,
     }
     #endregion
 
@@ -1687,9 +1719,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "29f40f03-4046-4b2d-b061-b0c5c48d253b";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(APlacedTrap.Mask<>);
 
@@ -1792,7 +1824,8 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.EncounterZone.Clear();
-            item.Ownership = null;
+            item.Owner.Clear();
+            item.FactionRank = default;
             item.HeadTrackingWeight = default;
             item.FavorCost = default;
             item.Reflections.Clear();
@@ -1826,7 +1859,7 @@ namespace Mutagen.Bethesda.Skyrim
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.EncounterZone.Relink(mapping);
-            obj.Ownership?.RemapLinks(mapping);
+            obj.Owner.Relink(mapping);
             obj.Reflections.RemapLinks(mapping);
             obj.LinkedReferences.RemapLinks(mapping);
             obj.ActivateParents?.RemapLinks(mapping);
@@ -1903,11 +1936,8 @@ namespace Mutagen.Bethesda.Skyrim
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
-            ret.Ownership = EqualsMaskHelper.EqualsHelper(
-                item.Ownership,
-                rhs.Ownership,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
             ret.FavorCost = item.FavorCost.EqualsWithin(rhs.FavorCost);
             ret.Reflections = item.Reflections.CollectionEqualsHelper(
@@ -2004,10 +2034,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
-            if ((printMask?.Ownership?.Overall ?? true)
-                && item.Ownership is {} OwnershipItem)
+            if (printMask?.Owner ?? true)
             {
-                OwnershipItem?.Print(sb, "Ownership");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if ((printMask?.HeadTrackingWeight ?? true)
                 && item.HeadTrackingWeight is {} HeadTrackingWeightItem)
@@ -2174,13 +2208,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
+            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Owner) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
-                {
-                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.Ownership))) return false;
-                }
-                else if (!isOwnershipEqual) return false;
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.HeadTrackingWeight) ?? true))
             {
@@ -2283,9 +2317,10 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.EncounterZone);
-            if (item.Ownership is {} Ownershipitem)
+            hash.Add(item.Owner);
+            if (item.FactionRank is {} FactionRankitem)
             {
-                hash.Add(Ownershipitem);
+                hash.Add(FactionRankitem);
             }
             if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
             {
@@ -2362,12 +2397,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return EncounterZoneInfo;
             }
-            if (obj.Ownership is {} OwnershipItems)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                foreach (var item in OwnershipItems.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
+                yield return OwnerInfo;
             }
             foreach (var item in obj.Reflections.SelectMany(f => f.EnumerateFormLinks()))
             {
@@ -2512,31 +2544,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.EncounterZone.SetTo(rhs.EncounterZone.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Owner) ?? true))
             {
-                errorMask?.PushIndex((int)APlacedTrap_FieldIndex.Ownership);
-                try
-                {
-                    if(rhs.Ownership is {} rhsOwnership)
-                    {
-                        item.Ownership = rhsOwnership.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.Ownership));
-                    }
-                    else
-                    {
-                        item.Ownership = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.HeadTrackingWeight) ?? true))
             {
@@ -2923,13 +2937,14 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.EncounterZone,
                 header: translationParams.ConvertToCustom(RecordTypes.XEZN));
-            if (item.Ownership is {} OwnershipItem)
-            {
-                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
-                    item: OwnershipItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Owner,
+                header: translationParams.ConvertToCustom(RecordTypes.XOWN));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.HeadTrackingWeight,
@@ -3124,12 +3139,16 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)APlacedTrap_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)APlacedTrap_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams);
-                    return (int)APlacedTrap_FieldIndex.Ownership;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)APlacedTrap_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XHTW:
                 {
@@ -3304,7 +3323,14 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _EncounterZoneLocation;
         public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
         #endregion
-        public IOwnershipGetter? Ownership { get; private set; }
+        #region Owner
+        private int? _OwnerLocation;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;
         public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
@@ -3392,13 +3418,14 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)APlacedTrap_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    _OwnerLocation = (stream.Position - offset);
+                    return (int)APlacedTrap_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
-                        stream: stream,
-                        package: _package,
-                        parseParams: parseParams);
-                    return (int)APlacedTrap_FieldIndex.Ownership;
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)APlacedTrap_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XHTW:
                 {

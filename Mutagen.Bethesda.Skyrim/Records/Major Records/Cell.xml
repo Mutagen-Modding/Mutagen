@@ -38,7 +38,10 @@
       <ByteArray name="XWCS" recordType="XWCS" />
       <RefDirect name="WaterVelocity" refName="CellWaterVelocity" />
       <FormLink name="Water" refName="Water" recordType="XCWT" />
-      <RefDirect name="Ownership" refName="Ownership" />
+      <FormLink name="Owner" recordType="XOWN">
+        <Interface>IOwner</Interface>
+      </FormLink>
+      <Int32 name="FactionRank" recordType="XRNK" />
       <FormLink name="LockList" recordType="XILL">
         <Interface>ILockList</Interface>
       </FormLink>

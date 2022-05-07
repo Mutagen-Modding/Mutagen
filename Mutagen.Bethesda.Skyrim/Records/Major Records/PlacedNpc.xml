@@ -28,7 +28,10 @@
       <FormLink name="Horse" recordType="XHOR" refName="PlacedNpc" />
       <Float name="FavorCost" recordType="XFVC" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <RefDirect name="Ownership" refName="Ownership" />
+      <FormLink name="Owner" recordType="XOWN">
+        <Interface>IOwner</Interface>
+      </FormLink>
+      <Int32 name="FactionRank" recordType="XRNK" />
       <FormLink name="Emittance" recordType="XEMI">
         <Interface>IEmittance</Interface>
       </FormLink>

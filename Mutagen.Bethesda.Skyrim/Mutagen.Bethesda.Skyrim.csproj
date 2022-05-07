@@ -902,9 +902,6 @@
     <Compile Include="Records\Common Subrecords\ObjectBounds_Generated.cs">
       <DependentUpon>ObjectBounds.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\Ownership_Generated.cs">
-      <DependentUpon>Ownership.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\Patrol_Generated.cs">
       <DependentUpon>Patrol.xml</DependentUpon>
     </Compile>

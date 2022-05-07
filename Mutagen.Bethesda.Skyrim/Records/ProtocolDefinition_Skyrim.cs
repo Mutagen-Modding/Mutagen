@@ -252,7 +252,6 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             CellLighting_Registration.Instance,
             LightingTemplate_Registration.Instance,
             Location_Registration.Instance,
-            Ownership_Registration.Instance,
             CellWaterVelocity_Registration.Instance,
             EncounterZone_Registration.Instance,
             CellBlock_Registration.Instance,

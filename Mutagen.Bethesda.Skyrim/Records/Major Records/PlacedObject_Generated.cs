@@ -483,16 +483,20 @@ namespace Mutagen.Bethesda.Skyrim
         #region IsIgnoredBySandbox
         public Boolean IsIgnoredBySandbox { get; set; } = default;
         #endregion
-        #region Ownership
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Ownership? _Ownership;
-        public Ownership? Ownership
+        #region Owner
+        private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        public IFormLinkNullable<IOwnerGetter> Owner
         {
-            get => _Ownership;
-            set => _Ownership = value;
+            get => _Owner;
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IOwnershipGetter? IPlacedObjectGetter.Ownership => this.Ownership;
+        IFormLinkNullableGetter<IOwnerGetter> IPlacedObjectGetter.Owner => this.Owner;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedObjectGetter.FactionRank => this.FactionRank;
         #endregion
         #region ItemCount
         public Int32? ItemCount { get; set; }
@@ -679,7 +683,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(initialValue, new NavigationDoorLink.Mask<TItem>(initialValue));
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.IsIgnoredBySandbox = initialValue;
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.Owner = initialValue;
+                this.FactionRank = initialValue;
                 this.ItemCount = initialValue;
                 this.Charge = initialValue;
                 this.LocationReference = initialValue;
@@ -746,7 +751,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem NavigationDoorLink,
                 TItem LocationRefTypes,
                 TItem IsIgnoredBySandbox,
-                TItem Ownership,
+                TItem Owner,
+                TItem FactionRank,
                 TItem ItemCount,
                 TItem Charge,
                 TItem LocationReference,
@@ -812,7 +818,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(NavigationDoorLink, new NavigationDoorLink.Mask<TItem>(NavigationDoorLink));
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.IsIgnoredBySandbox = IsIgnoredBySandbox;
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.Owner = Owner;
+                this.FactionRank = FactionRank;
                 this.ItemCount = ItemCount;
                 this.Charge = Charge;
                 this.LocationReference = LocationReference;
@@ -881,7 +888,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>? NavigationDoorLink { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypes;
             public TItem IsIgnoredBySandbox;
-            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public TItem Owner;
+            public TItem FactionRank;
             public TItem ItemCount;
             public TItem Charge;
             public TItem LocationReference;
@@ -952,7 +960,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.NavigationDoorLink, rhs.NavigationDoorLink)) return false;
                 if (!object.Equals(this.LocationRefTypes, rhs.LocationRefTypes)) return false;
                 if (!object.Equals(this.IsIgnoredBySandbox, rhs.IsIgnoredBySandbox)) return false;
-                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.ItemCount, rhs.ItemCount)) return false;
                 if (!object.Equals(this.Charge, rhs.Charge)) return false;
                 if (!object.Equals(this.LocationReference, rhs.LocationReference)) return false;
@@ -1015,7 +1024,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.NavigationDoorLink);
                 hash.Add(this.LocationRefTypes);
                 hash.Add(this.IsIgnoredBySandbox);
-                hash.Add(this.Ownership);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
                 hash.Add(this.ItemCount);
                 hash.Add(this.Charge);
                 hash.Add(this.LocationReference);
@@ -1179,11 +1189,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (!eval(this.IsIgnoredBySandbox)) return false;
-                if (Ownership != null)
-                {
-                    if (!eval(this.Ownership.Overall)) return false;
-                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.FactionRank)) return false;
                 if (!eval(this.ItemCount)) return false;
                 if (!eval(this.Charge)) return false;
                 if (!eval(this.LocationReference)) return false;
@@ -1372,11 +1379,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (eval(this.IsIgnoredBySandbox)) return true;
-                if (Ownership != null)
-                {
-                    if (eval(this.Ownership.Overall)) return true;
-                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Owner)) return true;
+                if (eval(this.FactionRank)) return true;
                 if (eval(this.ItemCount)) return true;
                 if (eval(this.Charge)) return true;
                 if (eval(this.LocationReference)) return true;
@@ -1543,7 +1547,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.IsIgnoredBySandbox = eval(this.IsIgnoredBySandbox);
-                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                obj.Owner = eval(this.Owner);
+                obj.FactionRank = eval(this.FactionRank);
                 obj.ItemCount = eval(this.ItemCount);
                 obj.Charge = eval(this.Charge);
                 obj.LocationReference = eval(this.LocationReference);
@@ -1843,9 +1848,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
                     }
-                    if (printMask?.Ownership?.Overall ?? true)
+                    if (printMask?.Owner ?? true)
                     {
-                        Ownership?.Print(sb);
+                        sb.AppendItem(Owner, "Owner");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.ItemCount ?? true)
                     {
@@ -1972,7 +1981,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, NavigationDoorLink.ErrorMask?>? NavigationDoorLink;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypes;
             public Exception? IsIgnoredBySandbox;
-            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public Exception? Owner;
+            public Exception? FactionRank;
             public Exception? ItemCount;
             public Exception? Charge;
             public Exception? LocationReference;
@@ -2081,8 +2091,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return LocationRefTypes;
                     case PlacedObject_FieldIndex.IsIgnoredBySandbox:
                         return IsIgnoredBySandbox;
-                    case PlacedObject_FieldIndex.Ownership:
-                        return Ownership;
+                    case PlacedObject_FieldIndex.Owner:
+                        return Owner;
+                    case PlacedObject_FieldIndex.FactionRank:
+                        return FactionRank;
                     case PlacedObject_FieldIndex.ItemCount:
                         return ItemCount;
                     case PlacedObject_FieldIndex.Charge:
@@ -2250,8 +2262,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.IsIgnoredBySandbox:
                         this.IsIgnoredBySandbox = ex;
                         break;
-                    case PlacedObject_FieldIndex.Ownership:
-                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                    case PlacedObject_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case PlacedObject_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
                         break;
                     case PlacedObject_FieldIndex.ItemCount:
                         this.ItemCount = ex;
@@ -2435,8 +2450,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.IsIgnoredBySandbox:
                         this.IsIgnoredBySandbox = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Ownership:
-                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                    case PlacedObject_FieldIndex.Owner:
+                        this.Owner = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.ItemCount:
                         this.ItemCount = (Exception?)obj;
@@ -2532,7 +2550,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (NavigationDoorLink != null) return true;
                 if (LocationRefTypes != null) return true;
                 if (IsIgnoredBySandbox != null) return true;
-                if (Ownership != null) return true;
+                if (Owner != null) return true;
+                if (FactionRank != null) return true;
                 if (ItemCount != null) return true;
                 if (Charge != null) return true;
                 if (LocationReference != null) return true;
@@ -2761,7 +2780,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
                 }
-                Ownership?.Print(sb);
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
                 {
                     sb.AppendItem(ItemCount, "ItemCount");
                 }
@@ -2862,7 +2886,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.NavigationDoorLink = this.NavigationDoorLink.Combine(rhs.NavigationDoorLink, (l, r) => l.Combine(r));
                 ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
-                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.ItemCount = this.ItemCount.Combine(rhs.ItemCount);
                 ret.Charge = this.Charge.Combine(rhs.Charge);
                 ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
@@ -2942,7 +2967,8 @@ namespace Mutagen.Bethesda.Skyrim
             public NavigationDoorLink.TranslationMask? NavigationDoorLink;
             public bool LocationRefTypes;
             public bool IsIgnoredBySandbox;
-            public Ownership.TranslationMask? Ownership;
+            public bool Owner;
+            public bool FactionRank;
             public bool ItemCount;
             public bool Charge;
             public bool LocationReference;
@@ -2995,6 +3021,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EncounterZone = defaultOn;
                 this.LocationRefTypes = defaultOn;
                 this.IsIgnoredBySandbox = defaultOn;
+                this.Owner = defaultOn;
+                this.FactionRank = defaultOn;
                 this.ItemCount = defaultOn;
                 this.Charge = defaultOn;
                 this.LocationReference = defaultOn;
@@ -3054,7 +3082,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NavigationDoorLink != null ? NavigationDoorLink.OnOverall : DefaultOn, NavigationDoorLink?.GetCrystal()));
                 ret.Add((LocationRefTypes, null));
                 ret.Add((IsIgnoredBySandbox, null));
-                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((Owner, null));
+                ret.Add((FactionRank, null));
                 ret.Add((ItemCount, null));
                 ret.Add((Charge, null));
                 ret.Add((LocationReference, null));
@@ -3269,7 +3298,8 @@ namespace Mutagen.Bethesda.Skyrim
         new NavigationDoorLink? NavigationDoorLink { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
-        new Ownership? Ownership { get; set; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
+        new Int32? FactionRank { get; set; }
         new Int32? ItemCount { get; set; }
         new Single? Charge { get; set; }
         new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
@@ -3357,7 +3387,8 @@ namespace Mutagen.Bethesda.Skyrim
         INavigationDoorLinkGetter? NavigationDoorLink { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Boolean IsIgnoredBySandbox { get; }
-        IOwnershipGetter? Ownership { get; }
+        IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
+        Int32? FactionRank { get; }
         Int32? ItemCount { get; }
         Single? Charge { get; }
         IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
@@ -3579,21 +3610,22 @@ namespace Mutagen.Bethesda.Skyrim
         NavigationDoorLink = 46,
         LocationRefTypes = 47,
         IsIgnoredBySandbox = 48,
-        Ownership = 49,
-        ItemCount = 50,
-        Charge = 51,
-        LocationReference = 52,
-        EnableParent = 53,
-        LinkedReferences = 54,
-        Patrol = 55,
-        Action = 56,
-        HeadTrackingWeight = 57,
-        FavorCost = 58,
-        IsOpenByDefault = 59,
-        MapMarker = 60,
-        AttachRef = 61,
-        DistantLodData = 62,
-        Placement = 63,
+        Owner = 49,
+        FactionRank = 50,
+        ItemCount = 51,
+        Charge = 52,
+        LocationReference = 53,
+        EnableParent = 54,
+        LinkedReferences = 55,
+        Patrol = 56,
+        Action = 57,
+        HeadTrackingWeight = 58,
+        FavorCost = 59,
+        IsOpenByDefault = 60,
+        MapMarker = 61,
+        AttachRef = 62,
+        DistantLodData = 63,
+        Placement = 64,
     }
     #endregion
 
@@ -3611,9 +3643,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "15cab6c0-7390-410a-b2a8-7ee0e58569a6";
 
-        public const ushort AdditionalFieldCount = 58;
+        public const ushort AdditionalFieldCount = 59;
 
-        public const ushort FieldCount = 64;
+        public const ushort FieldCount = 65;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -3792,7 +3824,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.NavigationDoorLink = null;
             item.LocationRefTypes = null;
             item.IsIgnoredBySandbox = default;
-            item.Ownership = null;
+            item.Owner.Clear();
+            item.FactionRank = default;
             item.ItemCount = default;
             item.Charge = default;
             item.LocationReference.Clear();
@@ -3846,7 +3879,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.EncounterZone.Relink(mapping);
             obj.NavigationDoorLink?.RemapLinks(mapping);
             obj.LocationRefTypes?.RemapLinks(mapping);
-            obj.Ownership?.RemapLinks(mapping);
+            obj.Owner.Relink(mapping);
             obj.LocationReference.Relink(mapping);
             obj.EnableParent?.RemapLinks(mapping);
             obj.LinkedReferences.RemapLinks(mapping);
@@ -4022,11 +4055,8 @@ namespace Mutagen.Bethesda.Skyrim
                 (l, r) => object.Equals(l, r),
                 include);
             ret.IsIgnoredBySandbox = item.IsIgnoredBySandbox == rhs.IsIgnoredBySandbox;
-            ret.Ownership = EqualsMaskHelper.EqualsHelper(
-                item.Ownership,
-                rhs.Ownership,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.ItemCount = item.ItemCount == rhs.ItemCount;
             ret.Charge = item.Charge.EqualsWithin(rhs.Charge);
             ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
@@ -4356,10 +4386,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.IsIgnoredBySandbox, "IsIgnoredBySandbox");
             }
-            if ((printMask?.Ownership?.Overall ?? true)
-                && item.Ownership is {} OwnershipItem)
+            if (printMask?.Owner ?? true)
             {
-                OwnershipItem?.Print(sb, "Ownership");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if ((printMask?.ItemCount ?? true)
                 && item.ItemCount is {} ItemCountItem)
@@ -4701,13 +4735,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.IsIgnoredBySandbox != rhs.IsIgnoredBySandbox) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
-                {
-                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Ownership))) return false;
-                }
-                else if (!isOwnershipEqual) return false;
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.ItemCount) ?? true))
             {
@@ -4921,9 +4955,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             hash.Add(item.LocationRefTypes);
             hash.Add(item.IsIgnoredBySandbox);
-            if (item.Ownership is {} Ownershipitem)
+            hash.Add(item.Owner);
+            if (item.FactionRank is {} FactionRankitem)
             {
-                hash.Add(Ownershipitem);
+                hash.Add(FactionRankitem);
             }
             if (item.ItemCount is {} ItemCountitem)
             {
@@ -5107,12 +5142,9 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Ownership is {} OwnershipItems)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                foreach (var item in OwnershipItems.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
+                yield return OwnerInfo;
             }
             if (FormLinkInformation.TryFactory(obj.LocationReference, out var LocationReferenceInfo))
             {
@@ -5778,31 +5810,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.IsIgnoredBySandbox = rhs.IsIgnoredBySandbox;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
             {
-                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Ownership);
-                try
-                {
-                    if(rhs.Ownership is {} rhsOwnership)
-                    {
-                        item.Ownership = rhsOwnership.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Ownership));
-                    }
-                    else
-                    {
-                        item.Ownership = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ItemCount) ?? true))
             {
@@ -6367,13 +6381,14 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.IsIgnoredBySandbox,
                 header: translationParams.ConvertToCustom(RecordTypes.XIS2));
-            if (item.Ownership is {} OwnershipItem)
-            {
-                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
-                    item: OwnershipItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Owner,
+                header: translationParams.ConvertToCustom(RecordTypes.XOWN));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ItemCount,
@@ -6804,12 +6819,16 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)PlacedObject_FieldIndex.IsIgnoredBySandbox;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams);
-                    return (int)PlacedObject_FieldIndex.Ownership;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)PlacedObject_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XCNT:
                 {
@@ -7103,7 +7122,14 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _IsIgnoredBySandboxLocation;
         public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
         #endregion
-        public IOwnershipGetter? Ownership { get; private set; }
+        #region Owner
+        private int? _OwnerLocation;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         #region ItemCount
         private int? _ItemCountLocation;
         public Int32? ItemCount => _ItemCountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ItemCountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
@@ -7462,13 +7488,14 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)PlacedObject_FieldIndex.IsIgnoredBySandbox;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    _OwnerLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
-                        stream: stream,
-                        package: _package,
-                        parseParams: parseParams);
-                    return (int)PlacedObject_FieldIndex.Ownership;
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XCNT:
                 {

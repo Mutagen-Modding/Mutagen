@@ -101,7 +101,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
-                TItem Ownership,
+                TItem Owner,
+                TItem FactionRank,
                 TItem HeadTrackingWeight,
                 TItem FavorCost,
                 TItem Reflections,
@@ -126,7 +127,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 VirtualMachineAdapter: VirtualMachineAdapter,
                 EncounterZone: EncounterZone,
-                Ownership: Ownership,
+                Owner: Owner,
+                FactionRank: FactionRank,
                 HeadTrackingWeight: HeadTrackingWeight,
                 FavorCost: FavorCost,
                 Reflections: Reflections,
@@ -705,22 +707,23 @@ namespace Mutagen.Bethesda.Skyrim
         Version2 = 5,
         VirtualMachineAdapter = 6,
         EncounterZone = 7,
-        Ownership = 8,
-        HeadTrackingWeight = 9,
-        FavorCost = 10,
-        Reflections = 11,
-        LinkedReferences = 12,
-        ActivateParents = 13,
-        EnableParent = 14,
-        Emittance = 15,
-        MultiBoundReference = 16,
-        IgnoredBySandbox = 17,
-        LocationRefTypes = 18,
-        LocationReference = 19,
-        DistantLodData = 20,
-        Scale = 21,
-        Placement = 22,
-        Projectile = 23,
+        Owner = 8,
+        FactionRank = 9,
+        HeadTrackingWeight = 10,
+        FavorCost = 11,
+        Reflections = 12,
+        LinkedReferences = 13,
+        ActivateParents = 14,
+        EnableParent = 15,
+        Emittance = 16,
+        MultiBoundReference = 17,
+        IgnoredBySandbox = 18,
+        LocationRefTypes = 19,
+        LocationReference = 20,
+        DistantLodData = 21,
+        Scale = 22,
+        Placement = 23,
+        Projectile = 24,
     }
     #endregion
 
@@ -740,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(PlacedFlame.Mask<>);
 
@@ -994,7 +997,9 @@ namespace Mutagen.Bethesda.Skyrim
                     return (PlacedFlame_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.EncounterZone:
                     return (PlacedFlame_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.Ownership:
+                case APlacedTrap_FieldIndex.Owner:
+                    return (PlacedFlame_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.FactionRank:
                     return (PlacedFlame_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.HeadTrackingWeight:
                     return (PlacedFlame_FieldIndex)((int)index);

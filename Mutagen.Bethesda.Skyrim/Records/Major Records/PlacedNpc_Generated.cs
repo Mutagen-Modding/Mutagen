@@ -259,16 +259,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEnableParentGetter? IPlacedNpcGetter.EnableParent => this.EnableParent;
         #endregion
-        #region Ownership
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Ownership? _Ownership;
-        public Ownership? Ownership
+        #region Owner
+        private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        public IFormLinkNullable<IOwnerGetter> Owner
         {
-            get => _Ownership;
-            set => _Ownership = value;
+            get => _Owner;
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IOwnershipGetter? IPlacedNpcGetter.Ownership => this.Ownership;
+        IFormLinkNullableGetter<IOwnerGetter> IPlacedNpcGetter.Owner => this.Owner;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedNpcGetter.FactionRank => this.FactionRank;
         #endregion
         #region Emittance
         private readonly IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
@@ -356,7 +360,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Horse = initialValue;
                 this.FavorCost = initialValue;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.Owner = initialValue;
+                this.FactionRank = initialValue;
                 this.Emittance = initialValue;
                 this.MultiboundReference = initialValue;
                 this.IsIgnoredBySandbox2 = initialValue;
@@ -393,7 +398,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Horse,
                 TItem FavorCost,
                 TItem EnableParent,
-                TItem Ownership,
+                TItem Owner,
+                TItem FactionRank,
                 TItem Emittance,
                 TItem MultiboundReference,
                 TItem IsIgnoredBySandbox2,
@@ -429,7 +435,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Horse = Horse;
                 this.FavorCost = FavorCost;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.Owner = Owner;
+                this.FactionRank = FactionRank;
                 this.Emittance = Emittance;
                 this.MultiboundReference = MultiboundReference;
                 this.IsIgnoredBySandbox2 = IsIgnoredBySandbox2;
@@ -468,7 +475,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Horse;
             public TItem FavorCost;
             public MaskItem<TItem, EnableParent.Mask<TItem>?>? EnableParent { get; set; }
-            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public TItem Owner;
+            public TItem FactionRank;
             public TItem Emittance;
             public TItem MultiboundReference;
             public TItem IsIgnoredBySandbox2;
@@ -509,7 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Horse, rhs.Horse)) return false;
                 if (!object.Equals(this.FavorCost, rhs.FavorCost)) return false;
                 if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
-                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.Emittance, rhs.Emittance)) return false;
                 if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
                 if (!object.Equals(this.IsIgnoredBySandbox2, rhs.IsIgnoredBySandbox2)) return false;
@@ -542,7 +551,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Horse);
                 hash.Add(this.FavorCost);
                 hash.Add(this.EnableParent);
-                hash.Add(this.Ownership);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
                 hash.Add(this.Emittance);
                 hash.Add(this.MultiboundReference);
                 hash.Add(this.IsIgnoredBySandbox2);
@@ -621,11 +631,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.EnableParent.Overall)) return false;
                     if (this.EnableParent.Specific != null && !this.EnableParent.Specific.All(eval)) return false;
                 }
-                if (Ownership != null)
-                {
-                    if (!eval(this.Ownership.Overall)) return false;
-                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.FactionRank)) return false;
                 if (!eval(this.Emittance)) return false;
                 if (!eval(this.MultiboundReference)) return false;
                 if (!eval(this.IsIgnoredBySandbox2)) return false;
@@ -706,11 +713,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.EnableParent.Overall)) return true;
                     if (this.EnableParent.Specific != null && this.EnableParent.Specific.Any(eval)) return true;
                 }
-                if (Ownership != null)
-                {
-                    if (eval(this.Ownership.Overall)) return true;
-                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Owner)) return true;
+                if (eval(this.FactionRank)) return true;
                 if (eval(this.Emittance)) return true;
                 if (eval(this.MultiboundReference)) return true;
                 if (eval(this.IsIgnoredBySandbox2)) return true;
@@ -784,7 +788,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Horse = eval(this.Horse);
                 obj.FavorCost = eval(this.FavorCost);
                 obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent.Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
-                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                obj.Owner = eval(this.Owner);
+                obj.FactionRank = eval(this.FactionRank);
                 obj.Emittance = eval(this.Emittance);
                 obj.MultiboundReference = eval(this.MultiboundReference);
                 obj.IsIgnoredBySandbox2 = eval(this.IsIgnoredBySandbox2);
@@ -928,9 +933,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         EnableParent?.Print(sb);
                     }
-                    if (printMask?.Ownership?.Overall ?? true)
+                    if (printMask?.Owner ?? true)
                     {
-                        Ownership?.Print(sb);
+                        sb.AppendItem(Owner, "Owner");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.Emittance ?? true)
                     {
@@ -985,7 +994,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Horse;
             public Exception? FavorCost;
             public MaskItem<Exception?, EnableParent.ErrorMask?>? EnableParent;
-            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public Exception? Owner;
+            public Exception? FactionRank;
             public Exception? Emittance;
             public Exception? MultiboundReference;
             public Exception? IsIgnoredBySandbox2;
@@ -1043,8 +1053,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return FavorCost;
                     case PlacedNpc_FieldIndex.EnableParent:
                         return EnableParent;
-                    case PlacedNpc_FieldIndex.Ownership:
-                        return Ownership;
+                    case PlacedNpc_FieldIndex.Owner:
+                        return Owner;
+                    case PlacedNpc_FieldIndex.FactionRank:
+                        return FactionRank;
                     case PlacedNpc_FieldIndex.Emittance:
                         return Emittance;
                     case PlacedNpc_FieldIndex.MultiboundReference:
@@ -1131,8 +1143,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.EnableParent:
                         this.EnableParent = new MaskItem<Exception?, EnableParent.ErrorMask?>(ex, null);
                         break;
-                    case PlacedNpc_FieldIndex.Ownership:
-                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                    case PlacedNpc_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
                         break;
                     case PlacedNpc_FieldIndex.Emittance:
                         this.Emittance = ex;
@@ -1226,8 +1241,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.EnableParent:
                         this.EnableParent = (MaskItem<Exception?, EnableParent.ErrorMask?>?)obj;
                         break;
-                    case PlacedNpc_FieldIndex.Ownership:
-                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                    case PlacedNpc_FieldIndex.Owner:
+                        this.Owner = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
                         break;
                     case PlacedNpc_FieldIndex.Emittance:
                         this.Emittance = (Exception?)obj;
@@ -1275,7 +1293,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Horse != null) return true;
                 if (FavorCost != null) return true;
                 if (EnableParent != null) return true;
-                if (Ownership != null) return true;
+                if (Owner != null) return true;
+                if (FactionRank != null) return true;
                 if (Emittance != null) return true;
                 if (MultiboundReference != null) return true;
                 if (IsIgnoredBySandbox2 != null) return true;
@@ -1395,7 +1414,12 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(FavorCost, "FavorCost");
                 }
                 EnableParent?.Print(sb);
-                Ownership?.Print(sb);
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
                 {
                     sb.AppendItem(Emittance, "Emittance");
                 }
@@ -1439,7 +1463,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Horse = this.Horse.Combine(rhs.Horse);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
                 ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
-                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
                 ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
                 ret.IsIgnoredBySandbox2 = this.IsIgnoredBySandbox2.Combine(rhs.IsIgnoredBySandbox2);
@@ -1489,7 +1514,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Horse;
             public bool FavorCost;
             public EnableParent.TranslationMask? EnableParent;
-            public Ownership.TranslationMask? Ownership;
+            public bool Owner;
+            public bool FactionRank;
             public bool Emittance;
             public bool MultiboundReference;
             public bool IsIgnoredBySandbox2;
@@ -1519,6 +1545,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HeadTrackingWeight = defaultOn;
                 this.Horse = defaultOn;
                 this.FavorCost = defaultOn;
+                this.Owner = defaultOn;
+                this.FactionRank = defaultOn;
                 this.Emittance = defaultOn;
                 this.MultiboundReference = defaultOn;
                 this.IsIgnoredBySandbox2 = defaultOn;
@@ -1552,7 +1580,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Horse, null));
                 ret.Add((FavorCost, null));
                 ret.Add((EnableParent != null ? EnableParent.OnOverall : DefaultOn, EnableParent?.GetCrystal()));
-                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((Owner, null));
+                ret.Add((FactionRank, null));
                 ret.Add((Emittance, null));
                 ret.Add((MultiboundReference, null));
                 ret.Add((IsIgnoredBySandbox2, null));
@@ -1742,7 +1771,8 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IPlacedNpcGetter> Horse { get; set; }
         new Single? FavorCost { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new Ownership? Ownership { get; set; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
+        new Int32? FactionRank { get; set; }
         new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
         new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
         new Boolean IsIgnoredBySandbox2 { get; set; }
@@ -1804,7 +1834,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IPlacedNpcGetter> Horse { get; }
         Single? FavorCost { get; }
         IEnableParentGetter? EnableParent { get; }
-        IOwnershipGetter? Ownership { get; }
+        IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
+        Int32? FactionRank { get; }
         IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference { get; }
         Boolean IsIgnoredBySandbox2 { get; }
@@ -2000,12 +2031,13 @@ namespace Mutagen.Bethesda.Skyrim
         Horse = 25,
         FavorCost = 26,
         EnableParent = 27,
-        Ownership = 28,
-        Emittance = 29,
-        MultiboundReference = 30,
-        IsIgnoredBySandbox2 = 31,
-        Scale = 32,
-        Placement = 33,
+        Owner = 28,
+        FactionRank = 29,
+        Emittance = 30,
+        MultiboundReference = 31,
+        IsIgnoredBySandbox2 = 32,
+        Scale = 33,
+        Placement = 34,
     }
     #endregion
 
@@ -2023,9 +2055,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "b00383a9-1cbf-4c8c-9cdf-f2e886a6909a";
 
-        public const ushort AdditionalFieldCount = 28;
+        public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 34;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(PlacedNpc.Mask<>);
 
@@ -2153,7 +2185,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.Horse.Clear();
             item.FavorCost = default;
             item.EnableParent = null;
-            item.Ownership = null;
+            item.Owner.Clear();
+            item.FactionRank = default;
             item.Emittance.Clear();
             item.MultiboundReference.Clear();
             item.IsIgnoredBySandbox2 = default;
@@ -2188,7 +2221,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.LocationRefTypes?.RemapLinks(mapping);
             obj.Horse.Relink(mapping);
             obj.EnableParent?.RemapLinks(mapping);
-            obj.Ownership?.RemapLinks(mapping);
+            obj.Owner.Relink(mapping);
             obj.Emittance.Relink(mapping);
             obj.MultiboundReference.Relink(mapping);
         }
@@ -2307,11 +2340,8 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.EnableParent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Ownership = EqualsMaskHelper.EqualsHelper(
-                item.Ownership,
-                rhs.Ownership,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.Emittance = item.Emittance.Equals(rhs.Emittance);
             ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
             ret.IsIgnoredBySandbox2 = item.IsIgnoredBySandbox2 == rhs.IsIgnoredBySandbox2;
@@ -2492,10 +2522,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 EnableParentItem?.Print(sb, "EnableParent");
             }
-            if ((printMask?.Ownership?.Overall ?? true)
-                && item.Ownership is {} OwnershipItem)
+            if (printMask?.Owner ?? true)
             {
-                OwnershipItem?.Print(sb, "Ownership");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if (printMask?.Emittance ?? true)
             {
@@ -2675,13 +2709,13 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 else if (!isEnableParentEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Ownership) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Owner) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
-                {
-                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.Ownership))) return false;
-                }
-                else if (!isOwnershipEqual) return false;
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
             {
@@ -2796,9 +2830,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(EnableParentitem);
             }
-            if (item.Ownership is {} Ownershipitem)
+            hash.Add(item.Owner);
+            if (item.FactionRank is {} FactionRankitem)
             {
-                hash.Add(Ownershipitem);
+                hash.Add(FactionRankitem);
             }
             hash.Add(item.Emittance);
             hash.Add(item.MultiboundReference);
@@ -2903,12 +2938,9 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return item;
                 }
             }
-            if (obj.Ownership is {} OwnershipItems)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                foreach (var item in OwnershipItems.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
+                yield return OwnerInfo;
             }
             if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
             {
@@ -3247,31 +3279,13 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Ownership) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Owner) ?? true))
             {
-                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Ownership);
-                try
-                {
-                    if(rhs.Ownership is {} rhsOwnership)
-                    {
-                        item.Ownership = rhsOwnership.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Ownership));
-                    }
-                    else
-                    {
-                        item.Ownership = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
             {
@@ -3589,13 +3603,14 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     translationParams: translationParams);
             }
-            if (item.Ownership is {} OwnershipItem)
-            {
-                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
-                    item: OwnershipItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Owner,
+                header: translationParams.ConvertToCustom(RecordTypes.XOWN));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Emittance,
@@ -3851,12 +3866,16 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)PlacedNpc_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams);
-                    return (int)PlacedNpc_FieldIndex.Ownership;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)PlacedNpc_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XEMI:
                 {
@@ -4021,7 +4040,14 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _EnableParentLocation;
         public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IOwnershipGetter? Ownership { get; private set; }
+        #region Owner
+        private int? _OwnerLocation;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         #region Emittance
         private int? _EmittanceLocation;
         public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
@@ -4241,13 +4267,14 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)PlacedNpc_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    _OwnerLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
-                        stream: stream,
-                        package: _package,
-                        parseParams: parseParams);
-                    return (int)PlacedNpc_FieldIndex.Ownership;
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XEMI:
                 {

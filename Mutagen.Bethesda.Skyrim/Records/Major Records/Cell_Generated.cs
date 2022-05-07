@@ -236,16 +236,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> ICellGetter.Water => this.Water;
         #endregion
-        #region Ownership
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Ownership? _Ownership;
-        public Ownership? Ownership
+        #region Owner
+        private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        public IFormLinkNullable<IOwnerGetter> Owner
         {
-            get => _Ownership;
-            set => _Ownership = value;
+            get => _Owner;
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IOwnershipGetter? ICellGetter.Ownership => this.Ownership;
+        IFormLinkNullableGetter<IOwnerGetter> ICellGetter.Owner => this.Owner;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? ICellGetter.FactionRank => this.FactionRank;
         #endregion
         #region LockList
         private readonly IFormLinkNullable<ILockListGetter> _LockList = new FormLinkNullable<ILockListGetter>();
@@ -424,7 +428,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.XWCS = initialValue;
                 this.WaterVelocity = new MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>(initialValue, new CellWaterVelocity.Mask<TItem>(initialValue));
                 this.Water = initialValue;
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.Owner = initialValue;
+                this.FactionRank = initialValue;
                 this.LockList = initialValue;
                 this.WaterEnvironmentMap = initialValue;
                 this.SkyAndWeatherFromRegion = initialValue;
@@ -467,7 +472,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem XWCS,
                 TItem WaterVelocity,
                 TItem Water,
-                TItem Ownership,
+                TItem Owner,
+                TItem FactionRank,
                 TItem LockList,
                 TItem WaterEnvironmentMap,
                 TItem SkyAndWeatherFromRegion,
@@ -509,7 +515,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.XWCS = XWCS;
                 this.WaterVelocity = new MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>(WaterVelocity, new CellWaterVelocity.Mask<TItem>(WaterVelocity));
                 this.Water = Water;
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.Owner = Owner;
+                this.FactionRank = FactionRank;
                 this.LockList = LockList;
                 this.WaterEnvironmentMap = WaterEnvironmentMap;
                 this.SkyAndWeatherFromRegion = SkyAndWeatherFromRegion;
@@ -554,7 +561,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem XWCS;
             public MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>? WaterVelocity { get; set; }
             public TItem Water;
-            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public TItem Owner;
+            public TItem FactionRank;
             public TItem LockList;
             public TItem WaterEnvironmentMap;
             public TItem SkyAndWeatherFromRegion;
@@ -601,7 +609,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.XWCS, rhs.XWCS)) return false;
                 if (!object.Equals(this.WaterVelocity, rhs.WaterVelocity)) return false;
                 if (!object.Equals(this.Water, rhs.Water)) return false;
-                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.LockList, rhs.LockList)) return false;
                 if (!object.Equals(this.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
                 if (!object.Equals(this.SkyAndWeatherFromRegion, rhs.SkyAndWeatherFromRegion)) return false;
@@ -640,7 +649,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.XWCS);
                 hash.Add(this.WaterVelocity);
                 hash.Add(this.Water);
-                hash.Add(this.Ownership);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
                 hash.Add(this.LockList);
                 hash.Add(this.WaterEnvironmentMap);
                 hash.Add(this.SkyAndWeatherFromRegion);
@@ -710,11 +720,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.WaterVelocity.Specific != null && !this.WaterVelocity.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Water)) return false;
-                if (Ownership != null)
-                {
-                    if (!eval(this.Ownership.Overall)) return false;
-                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.FactionRank)) return false;
                 if (!eval(this.LockList)) return false;
                 if (!eval(this.WaterEnvironmentMap)) return false;
                 if (!eval(this.SkyAndWeatherFromRegion)) return false;
@@ -819,11 +826,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.WaterVelocity.Specific != null && this.WaterVelocity.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Water)) return true;
-                if (Ownership != null)
-                {
-                    if (eval(this.Ownership.Overall)) return true;
-                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Owner)) return true;
+                if (eval(this.FactionRank)) return true;
                 if (eval(this.LockList)) return true;
                 if (eval(this.WaterEnvironmentMap)) return true;
                 if (eval(this.SkyAndWeatherFromRegion)) return true;
@@ -922,7 +926,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.XWCS = eval(this.XWCS);
                 obj.WaterVelocity = this.WaterVelocity == null ? null : new MaskItem<R, CellWaterVelocity.Mask<R>?>(eval(this.WaterVelocity.Overall), this.WaterVelocity.Specific?.Translate(eval));
                 obj.Water = eval(this.Water);
-                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                obj.Owner = eval(this.Owner);
+                obj.FactionRank = eval(this.FactionRank);
                 obj.LockList = eval(this.LockList);
                 obj.WaterEnvironmentMap = eval(this.WaterEnvironmentMap);
                 obj.SkyAndWeatherFromRegion = eval(this.SkyAndWeatherFromRegion);
@@ -1083,9 +1088,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Water, "Water");
                     }
-                    if (printMask?.Ownership?.Overall ?? true)
+                    if (printMask?.Owner ?? true)
                     {
-                        Ownership?.Print(sb);
+                        sb.AppendItem(Owner, "Owner");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.LockList ?? true)
                     {
@@ -1227,7 +1236,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? XWCS;
             public MaskItem<Exception?, CellWaterVelocity.ErrorMask?>? WaterVelocity;
             public Exception? Water;
-            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public Exception? Owner;
+            public Exception? FactionRank;
             public Exception? LockList;
             public Exception? WaterEnvironmentMap;
             public Exception? SkyAndWeatherFromRegion;
@@ -1285,8 +1295,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return WaterVelocity;
                     case Cell_FieldIndex.Water:
                         return Water;
-                    case Cell_FieldIndex.Ownership:
-                        return Ownership;
+                    case Cell_FieldIndex.Owner:
+                        return Owner;
+                    case Cell_FieldIndex.FactionRank:
+                        return FactionRank;
                     case Cell_FieldIndex.LockList:
                         return LockList;
                     case Cell_FieldIndex.WaterEnvironmentMap:
@@ -1379,8 +1391,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Cell_FieldIndex.Water:
                         this.Water = ex;
                         break;
-                    case Cell_FieldIndex.Ownership:
-                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                    case Cell_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case Cell_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
                         break;
                     case Cell_FieldIndex.LockList:
                         this.LockList = ex;
@@ -1492,8 +1507,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Cell_FieldIndex.Water:
                         this.Water = (Exception?)obj;
                         break;
-                    case Cell_FieldIndex.Ownership:
-                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                    case Cell_FieldIndex.Owner:
+                        this.Owner = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.LockList:
                         this.LockList = (Exception?)obj;
@@ -1571,7 +1589,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (XWCS != null) return true;
                 if (WaterVelocity != null) return true;
                 if (Water != null) return true;
-                if (Ownership != null) return true;
+                if (Owner != null) return true;
+                if (FactionRank != null) return true;
                 if (LockList != null) return true;
                 if (WaterEnvironmentMap != null) return true;
                 if (SkyAndWeatherFromRegion != null) return true;
@@ -1672,7 +1691,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Water, "Water");
                 }
-                Ownership?.Print(sb);
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
                 {
                     sb.AppendItem(LockList, "LockList");
                 }
@@ -1791,7 +1815,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.XWCS = this.XWCS.Combine(rhs.XWCS);
                 ret.WaterVelocity = this.WaterVelocity.Combine(rhs.WaterVelocity, (l, r) => l.Combine(r));
                 ret.Water = this.Water.Combine(rhs.Water);
-                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.LockList = this.LockList.Combine(rhs.LockList);
                 ret.WaterEnvironmentMap = this.WaterEnvironmentMap.Combine(rhs.WaterEnvironmentMap);
                 ret.SkyAndWeatherFromRegion = this.SkyAndWeatherFromRegion.Combine(rhs.SkyAndWeatherFromRegion);
@@ -1847,7 +1872,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool XWCS;
             public CellWaterVelocity.TranslationMask? WaterVelocity;
             public bool Water;
-            public Ownership.TranslationMask? Ownership;
+            public bool Owner;
+            public bool FactionRank;
             public bool LockList;
             public bool WaterEnvironmentMap;
             public bool SkyAndWeatherFromRegion;
@@ -1885,6 +1911,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.XWCN = defaultOn;
                 this.XWCS = defaultOn;
                 this.Water = defaultOn;
+                this.Owner = defaultOn;
+                this.FactionRank = defaultOn;
                 this.LockList = defaultOn;
                 this.WaterEnvironmentMap = defaultOn;
                 this.SkyAndWeatherFromRegion = defaultOn;
@@ -1923,7 +1951,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((XWCS, null));
                 ret.Add((WaterVelocity != null ? WaterVelocity.OnOverall : DefaultOn, WaterVelocity?.GetCrystal()));
                 ret.Add((Water, null));
-                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((Owner, null));
+                ret.Add((FactionRank, null));
                 ret.Add((LockList, null));
                 ret.Add((WaterEnvironmentMap, null));
                 ret.Add((SkyAndWeatherFromRegion, null));
@@ -2152,7 +2181,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? XWCS { get; set; }
         new CellWaterVelocity? WaterVelocity { get; set; }
         new IFormLinkNullable<IWaterGetter> Water { get; set; }
-        new Ownership? Ownership { get; set; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
+        new Int32? FactionRank { get; set; }
         new IFormLinkNullable<ILockListGetter> LockList { get; set; }
         new String? WaterEnvironmentMap { get; set; }
         new IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; set; }
@@ -2219,7 +2249,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? XWCS { get; }
         ICellWaterVelocityGetter? WaterVelocity { get; }
         IFormLinkNullableGetter<IWaterGetter> Water { get; }
-        IOwnershipGetter? Ownership { get; }
+        IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
+        Int32? FactionRank { get; }
         IFormLinkNullableGetter<ILockListGetter> LockList { get; }
         String? WaterEnvironmentMap { get; }
         IFormLinkNullableGetter<IRegionGetter> SkyAndWeatherFromRegion { get; }
@@ -2633,24 +2664,25 @@ namespace Mutagen.Bethesda.Skyrim
         XWCS = 19,
         WaterVelocity = 20,
         Water = 21,
-        Ownership = 22,
-        LockList = 23,
-        WaterEnvironmentMap = 24,
-        SkyAndWeatherFromRegion = 25,
-        AcousticSpace = 26,
-        EncounterZone = 27,
-        Music = 28,
-        ImageSpace = 29,
-        Landscape = 30,
-        NavigationMeshes = 31,
-        Timestamp = 32,
-        UnknownGroupData = 33,
-        PersistentTimestamp = 34,
-        PersistentUnknownGroupData = 35,
-        Persistent = 36,
-        TemporaryTimestamp = 37,
-        TemporaryUnknownGroupData = 38,
-        Temporary = 39,
+        Owner = 22,
+        FactionRank = 23,
+        LockList = 24,
+        WaterEnvironmentMap = 25,
+        SkyAndWeatherFromRegion = 26,
+        AcousticSpace = 27,
+        EncounterZone = 28,
+        Music = 29,
+        ImageSpace = 30,
+        Landscape = 31,
+        NavigationMeshes = 32,
+        Timestamp = 33,
+        UnknownGroupData = 34,
+        PersistentTimestamp = 35,
+        PersistentUnknownGroupData = 36,
+        Persistent = 37,
+        TemporaryTimestamp = 38,
+        TemporaryUnknownGroupData = 39,
+        Temporary = 40,
     }
     #endregion
 
@@ -2668,9 +2700,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "cc9052c9-5f1f-4624-b5ad-16ffbce0f78e";
 
-        public const ushort AdditionalFieldCount = 34;
+        public const ushort AdditionalFieldCount = 35;
 
-        public const ushort FieldCount = 40;
+        public const ushort FieldCount = 41;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -2812,7 +2844,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.XWCS = default;
             item.WaterVelocity = null;
             item.Water.Clear();
-            item.Ownership = null;
+            item.Owner.Clear();
+            item.FactionRank = default;
             item.LockList.Clear();
             item.WaterEnvironmentMap = default;
             item.SkyAndWeatherFromRegion.Clear();
@@ -2851,7 +2884,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Regions?.RemapLinks(mapping);
             obj.Location.Relink(mapping);
             obj.Water.Relink(mapping);
-            obj.Ownership?.RemapLinks(mapping);
+            obj.Owner.Relink(mapping);
             obj.LockList.Relink(mapping);
             obj.SkyAndWeatherFromRegion.Relink(mapping);
             obj.AcousticSpace.Relink(mapping);
@@ -3113,11 +3146,8 @@ namespace Mutagen.Bethesda.Skyrim
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Water = item.Water.Equals(rhs.Water);
-            ret.Ownership = EqualsMaskHelper.EqualsHelper(
-                item.Ownership,
-                rhs.Ownership,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.LockList = item.LockList.Equals(rhs.LockList);
             ret.WaterEnvironmentMap = string.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
             ret.SkyAndWeatherFromRegion = item.SkyAndWeatherFromRegion.Equals(rhs.SkyAndWeatherFromRegion);
@@ -3283,10 +3313,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Water.FormKeyNullable, "Water");
             }
-            if ((printMask?.Ownership?.Overall ?? true)
-                && item.Ownership is {} OwnershipItem)
+            if (printMask?.Owner ?? true)
             {
-                OwnershipItem?.Print(sb, "Ownership");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if (printMask?.LockList ?? true)
             {
@@ -3516,13 +3550,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Water.Equals(rhs.Water)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
-                {
-                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)Cell_FieldIndex.Ownership))) return false;
-                }
-                else if (!isOwnershipEqual) return false;
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
             {
@@ -3673,9 +3707,10 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(WaterVelocityitem);
             }
             hash.Add(item.Water);
-            if (item.Ownership is {} Ownershipitem)
+            hash.Add(item.Owner);
+            if (item.FactionRank is {} FactionRankitem)
             {
-                hash.Add(Ownershipitem);
+                hash.Add(FactionRankitem);
             }
             hash.Add(item.LockList);
             if (item.WaterEnvironmentMap is {} WaterEnvironmentMapitem)
@@ -3745,12 +3780,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return WaterInfo;
             }
-            if (obj.Ownership is {} OwnershipItems)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                foreach (var item in OwnershipItems.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
+                yield return OwnerInfo;
             }
             if (FormLinkInformation.TryFactory(obj.LockList, out var LockListInfo))
             {
@@ -4720,31 +4752,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Water.SetTo(rhs.Water.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
-                errorMask?.PushIndex((int)Cell_FieldIndex.Ownership);
-                try
-                {
-                    if(rhs.Ownership is {} rhsOwnership)
-                    {
-                        item.Ownership = rhsOwnership.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.Ownership));
-                    }
-                    else
-                    {
-                        item.Ownership = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
             {
@@ -5144,13 +5158,14 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.Water,
                 header: translationParams.ConvertToCustom(RecordTypes.XCWT));
-            if (item.Ownership is {} OwnershipItem)
-            {
-                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
-                    item: OwnershipItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Owner,
+                header: translationParams.ConvertToCustom(RecordTypes.XOWN));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LockList,
@@ -5389,12 +5404,16 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams);
-                    return (int)Cell_FieldIndex.Ownership;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)Cell_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XILL:
                 {
@@ -5589,7 +5608,14 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _WaterLocation;
         public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
-        public IOwnershipGetter? Ownership { get; private set; }
+        #region Owner
+        private int? _OwnerLocation;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         #region LockList
         private int? _LockListLocation;
         public IFormLinkNullableGetter<ILockListGetter> LockList => _LockListLocation.HasValue ? new FormLinkNullable<ILockListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LockListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILockListGetter>.Null;
@@ -5784,13 +5810,14 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    _OwnerLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
-                        stream: stream,
-                        package: _package,
-                        parseParams: parseParams);
-                    return (int)Cell_FieldIndex.Ownership;
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XILL:
                 {
