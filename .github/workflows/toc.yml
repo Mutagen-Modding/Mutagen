@@ -3,6 +3,7 @@ on:
     branches:
       - release
       - dev
+      - prerelease
 name: TOC Generator
 jobs:
   generateTOC:
