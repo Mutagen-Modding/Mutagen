@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - release
+      - dev
 name: TOC Generator
 jobs:
   generateTOC:
