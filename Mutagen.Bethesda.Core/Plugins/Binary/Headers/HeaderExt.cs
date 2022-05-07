@@ -253,7 +253,7 @@ public static class HeaderExt
 
     #region Find
     /// <summary>
-    /// Iterates a MajorRecordFrame's contents and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's contents and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -272,7 +272,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's contents and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's contents and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -288,7 +288,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -308,7 +308,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -325,7 +325,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -344,7 +344,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -361,7 +361,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -381,7 +381,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -398,7 +398,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -414,12 +414,11 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
     /// <param name="offset">Offset within the Major Record's contents to start searching</param>
-    /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
     /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
     /// <returns>First encountered SubrecordHeader with the given type</returns>
     public static SubrecordPinHeader FindSubrecordHeader(this MajorRecordFrame majorFrame, RecordType type, int offset)
@@ -432,7 +431,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
@@ -448,7 +447,7 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
