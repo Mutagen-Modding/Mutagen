@@ -264,7 +264,7 @@ public struct SubrecordFrame
 }
 
 /// <summary>
-/// A struct that overlays on top of bytes that is able to retrive Sub Record data on demand.
+/// A struct that overlays on top of bytes that is able to retrieve Sub Record data on demand.
 /// In addition, it keeps track of its location relative to its parent MajorRecordFrame
 /// </summary>
 public struct SubrecordPinFrame
@@ -297,7 +297,7 @@ public struct SubrecordPinFrame
         Location = pinLocation;
     }
 
-    private SubrecordPinFrame(SubrecordFrame frame, int pinLocation)
+    public SubrecordPinFrame(SubrecordFrame frame, int pinLocation)
     {
         Frame = frame;
         Location = pinLocation;
