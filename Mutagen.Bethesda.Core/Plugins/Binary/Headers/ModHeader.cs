@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 /// <summary>
 /// A ref struct that overlays on top of bytes that is able to retrive Mod header data on demand.
 /// </summary>
-public struct ModHeader
+public readonly struct ModHeader
 {
     /// <summary>
     /// Game metadata to use as reference for alignment
@@ -73,7 +73,7 @@ public struct ModHeader
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrive Mod Record header and content data on demand.
 /// </summary>
-public struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
+public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
 {
     private readonly ModHeader _header;
 

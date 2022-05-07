@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrieve Major Record header data on demand.
 /// </summary>
-public struct MajorRecordHeader
+public readonly struct MajorRecordHeader
 {
     /// <summary>
     /// Game metadata to use as reference for alignment
@@ -274,7 +274,7 @@ public ref struct MajorRecordHeaderWritable
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrive Major Record header and content data on demand.
 /// </summary>
-public struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
+public readonly struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
 {
     public readonly MajorRecordHeader Header;
         
@@ -407,7 +407,7 @@ public struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
 /// A struct that overlays on top of bytes that is able to retrive Major Record data on demand.
 /// In addition, it keeps track of its location relative to its parent MajorRecordFrame
 /// </summary>
-public struct MajorRecordPinFrame
+public readonly struct MajorRecordPinFrame
 {
     /// <summary>
     /// Frame struct contained in the pin

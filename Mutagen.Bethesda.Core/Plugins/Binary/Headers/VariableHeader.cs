@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 /// A ref struct that overlays on top of bytes that is able to retrive basic header data on demand
 /// utilizing a given constants object to define the lengths
 /// </summary>
-public struct VariableHeader
+public readonly struct VariableHeader
 {
     /// <summary>
     /// Bytes overlaid onto

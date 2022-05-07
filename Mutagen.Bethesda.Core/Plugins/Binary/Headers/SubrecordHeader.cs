@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrieve Sub Record header data on demand.
 /// </summary>
-public struct SubrecordHeader
+public readonly struct SubrecordHeader
 {
     /// <summary>
     /// Game metadata to use as reference for alignment
@@ -68,7 +68,7 @@ public struct SubrecordHeader
 /// A struct that overlays on top of bytes that is able to retrieve Sub Record header data on demand.
 /// In addition, it keeps track of its location relative to its parent MajorRecordFrame
 /// </summary>
-public struct SubrecordPinHeader
+public readonly struct SubrecordPinHeader
 {
     /// <summary>
     /// Game metadata to use as reference for alignment

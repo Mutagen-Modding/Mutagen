@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrive Group header data on demand.
 /// </summary>
-public struct GroupHeader
+public readonly struct GroupHeader
 {
     /// <summary>
     /// Game metadata to use as reference for alignment
@@ -105,9 +105,9 @@ public struct GroupHeader
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrive Group data on demand.
 /// </summary>
-public struct GroupFrame : IEnumerable<MajorRecordPinFrame>
+public readonly struct GroupFrame : IEnumerable<MajorRecordPinFrame>
 {
-    private readonly GroupHeader _header { get; }
+    private readonly GroupHeader _header;
         
     /// <summary>
     /// Raw bytes of both header and content data
