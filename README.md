@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Mutagen](#mutagen)
+  - [Goals](#goals)
+  - [Sample API](#sample-api)
+  - [Seeing Mutagen in Action](#seeing-mutagen-in-action)
+    - [Synthesis](#synthesis)
+    - [Example Project](#example-project)
+  - [Installing Mutagen](#installing-mutagen)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ![Release](https://github.com/Mutagen-Modding/Mutagen/workflows/Release/badge.svg) ![Dev](https://github.com/Mutagen-Modding/Mutagen/workflows/Dev/badge.svg) [![NuGet Stats](https://img.shields.io/nuget/v/Mutagen.Bethesda.svg)](https://www.nuget.org/packages/Mutagen.Bethesda)
 
 [![Discord](https://discordapp.com/api/guilds/759302581448474626/widget.png)](https://discord.gg/53KMEsW)
