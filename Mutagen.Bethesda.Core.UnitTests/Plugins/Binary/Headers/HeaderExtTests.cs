@@ -87,36 +87,6 @@ public class HeaderExtTests
     }
 
     [Fact]
-    public void EnumerateSubrecordsDirect()
-    {
-        byte[] b = TestDataPathing.GetBytes("Plugins/Binary/Headers/EnumerateSubrecordsDirect");
-        var recs = HeaderExt.EnumerateSubrecords(b, GameConstants.Oblivion, 2)
-            .ToList();
-        recs.Should().HaveCount(2);
-        recs[0].RecordType.Should().Be(RecordTypes.MAST);
-        recs[1].RecordType.Should().Be(RecordTypes.DATA);
-        recs[0].ContentLength.Should().Be(4);
-        recs[1].ContentLength.Should().Be(4);
-        recs[0].AsInt32().Should().Be(0x04030201);
-        recs[1].AsInt32().Should().Be(0x06070809);
-    }
-
-    [Fact]
-    public void EnumerateSubrecordsDirectWithOverflow()
-    {
-        byte[] b = TestDataPathing.GetBytes("Plugins/Binary/Headers/EnumerateSubrecordsDirectWithOverflow");
-        var recs = HeaderExt.EnumerateSubrecords(b, GameConstants.Oblivion, 2, new List<RecordType>() { RecordTypes.XXXX })
-            .ToList();
-        recs.Should().HaveCount(2);
-        recs[0].RecordType.Should().Be(RecordTypes.MAST);
-        recs[1].RecordType.Should().Be(RecordTypes.DATA);
-        recs[0].ContentLength.Should().Be(4);
-        recs[1].ContentLength.Should().Be(2);
-        recs[0].AsInt32().Should().Be(0x04030201);
-        recs[1].AsInt16().Should().Be(0x0809);
-    }
-
-    [Fact]
     public void ModHeaderFrameOverflow()
     {
         byte[] b = TestDataPathing.GetBytes(TestDataPathing.HeaderOverflow);

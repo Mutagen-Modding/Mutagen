@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Meta;
 
@@ -41,6 +42,8 @@ public record GameConstants
     public RecordHeaderConstants SubConstants { get; }
 
     public ReadOnlyMemorySlice<Language> Languages { get; }
+
+    public IReadOnlyCollection<RecordType> HeaderOverflow { get; } = new SingleCollection<RecordType>(RecordTypes.XXXX);
 
     /// <summary> 
     /// Constructor 
@@ -237,7 +240,7 @@ public record GameConstants
         return true;
     }
 
-    public SubrecordFrame SubrecordFrame(ReadOnlyMemorySlice<byte> span) => new SubrecordFrame(this, span);
+    public SubrecordFrame SubrecordFrame(ReadOnlyMemorySlice<byte> span) => new(this, span);
 
     public SubrecordFrame SubrecordFrame(ReadOnlyMemorySlice<byte> span, RecordType targetType)
     {

@@ -2,6 +2,7 @@
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using Xunit;
 
@@ -28,6 +29,32 @@ public class EnumerateSubrecordsTests : RecordSpanExtensionTests
         ret[1].RecordType.Should().Be(SecondType);
         ret[1].Location.Should().Be(SecondLocation);
         ret[1].ContentLength.Should().Be(SecondLength);
+    }
+
+    [Fact]
+    public void EnumerateSubrecordsOffset()
+    {
+        var ret = RecordSpanExtensions.EnumerateSubrecords(Offset(), GameConstants.Oblivion, offset: OffsetAmount).ToArray();
+        ret.Length.Should().Be(2);
+        ret[0].RecordType.Should().Be(FirstType);
+        ret[0].Location.Should().Be(FirstLocation + OffsetAmount);
+        ret[0].ContentLength.Should().Be(FirstLength);
+        ret[1].RecordType.Should().Be(SecondType);
+        ret[1].Location.Should().Be(SecondLocation + OffsetAmount);
+        ret[1].ContentLength.Should().Be(SecondLength);
+    }
+
+    [Fact]
+    public void EnumerateSubrecordsWithOverflow()
+    {
+        var recs = RecordSpanExtensions.EnumerateSubrecords(Overflow(), GameConstants.Oblivion).ToArray();
+        recs.Length.Should().Be(2);
+        recs[0].RecordType.Should().Be(RecordTypes.MAST);
+        recs[1].RecordType.Should().Be(RecordTypes.DATA);
+        recs[0].ContentLength.Should().Be(4);
+        recs[1].ContentLength.Should().Be(2);
+        recs[0].AsInt32().Should().Be(0x04030201);
+        recs[1].AsInt16().Should().Be(0x0809);
     }
 
     [Fact]
@@ -67,6 +94,34 @@ public class EnumerateSubrecordsTests : RecordSpanExtensionTests
         ret[1].RecordType.Should().Be(SecondType);
         ret[1].Location.Should().Be(SecondLocation);
         ret[1].ContentLength.Should().Be(SecondLength);
+    }
+
+    [Fact]
+    public void EnumerateSubrecordsActionOffset()
+    {
+        List<SubrecordPinFrame> ret = new();
+        RecordSpanExtensions.EnumerateSubrecords(Offset(), GameConstants.Oblivion, ret.Add, offset: OffsetAmount);
+        ret.Count.Should().Be(2);
+        ret[0].RecordType.Should().Be(FirstType);
+        ret[0].Location.Should().Be(FirstLocation + OffsetAmount);
+        ret[0].ContentLength.Should().Be(FirstLength);
+        ret[1].RecordType.Should().Be(SecondType);
+        ret[1].Location.Should().Be(SecondLocation + OffsetAmount);
+        ret[1].ContentLength.Should().Be(SecondLength);
+    }
+
+    [Fact]
+    public void EnumerateSubrecordsActionWithOverflow()
+    {
+        List<SubrecordPinFrame> recs = new();
+        RecordSpanExtensions.EnumerateSubrecords(Overflow(), GameConstants.Oblivion, recs.Add);
+        recs.Count.Should().Be(2);
+        recs[0].RecordType.Should().Be(RecordTypes.MAST);
+        recs[1].RecordType.Should().Be(RecordTypes.DATA);
+        recs[0].ContentLength.Should().Be(4);
+        recs[1].ContentLength.Should().Be(2);
+        recs[0].AsInt32().Should().Be(0x04030201);
+        recs[1].AsInt16().Should().Be(0x0809);
     }
 
     [Fact]

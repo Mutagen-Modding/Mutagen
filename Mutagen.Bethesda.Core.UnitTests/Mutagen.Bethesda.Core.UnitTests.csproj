@@ -85,6 +85,12 @@
         <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\FnamStart">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\Overflow">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\OffsetSubrecords">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Pex\Actor.pex">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

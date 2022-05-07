@@ -16,6 +16,7 @@ public abstract class RecordSpanExtensionTests
     public static readonly RecordType DuplicateType = new("EDID");
     public static readonly int DuplicateLocation = FirstLength + GameConstants.Oblivion.SubConstants.HeaderLength * 2 + SecondLength;
     public static readonly ushort DuplicateLength = 3;
+    public static readonly int OffsetAmount = 2;
     
     public static ReadOnlyMemorySlice<byte> GetTypical()
     {
@@ -35,5 +36,15 @@ public abstract class RecordSpanExtensionTests
     public static ReadOnlyMemorySlice<byte> FnamStart()
     {
         return TestDataPathing.GetBytes("Plugins/Binary/Translations/RecordSpanExtensionsTests/FnamStart");
+    }
+    
+    public static ReadOnlyMemorySlice<byte> Offset()
+    {
+        return TestDataPathing.GetBytes("Plugins/Binary/Translations/RecordSpanExtensionsTests/OffsetSubrecords");
+    }
+    
+    public static ReadOnlyMemorySlice<byte> Overflow()
+    {
+        return TestDataPathing.GetBytes("Plugins/Binary/Translations/RecordSpanExtensionsTests/Overflow");
     }
 }

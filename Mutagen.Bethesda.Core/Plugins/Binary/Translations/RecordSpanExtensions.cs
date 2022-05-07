@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
@@ -14,17 +13,29 @@ public static class RecordSpanExtensions
     /// </summary>
     /// <param name="span">Bytes containing subrecords</param>
     /// <param name="meta">Metadata to use in subrecord parsing</param>
+    /// <param name="offset">Amount to offset the pin location by</param>
     /// <returns>Enumerable of SubrecordPinFrames</returns>
     public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(
         ReadOnlyMemorySlice<byte> span,
-        GameConstants meta)
+        GameConstants meta,
+        int offset = 0)
     {
-        int loc = 0;
+        int loc = offset;
         while (span.Length > loc)
         {
-            var frame = meta.SubrecordFrame(span.Slice(loc));
-            yield return new SubrecordPinFrame(frame, loc);
-            loc += frame.TotalLength;
+            var subFrame = meta.SubrecordFrame(span.Slice(loc));
+            if (meta.HeaderOverflow.Contains(subFrame.RecordType))
+            { // Length overflow record
+                var nextLen = subFrame.AsUInt32();
+                loc += subFrame.TotalLength;
+                var nextSpan = span.Slice(loc, checked((int)(nextLen + meta.SubConstants.HeaderLength)));
+                var subHeader = new SubrecordHeader(meta, nextSpan);
+                yield return SubrecordPinFrame.FactoryNoTrim(subHeader, nextSpan, loc);
+                loc += checked((int)(subHeader.HeaderLength + nextLen));
+                continue;
+            }
+            yield return new SubrecordPinFrame(subFrame, loc);
+            loc += subFrame.TotalLength;
         }
     }
     
@@ -36,17 +47,29 @@ public static class RecordSpanExtensions
     /// <param name="span">Bytes containing subrecords</param>
     /// <param name="meta">Metadata to use in subrecord parsing</param>
     /// <param name="action">Action to run on each enumerated subrecord</param>
+    /// <param name="offset">Amount to offset the pin location by</param>
     public static void EnumerateSubrecords(
         ReadOnlyMemorySlice<byte> span,
         GameConstants meta,
-        Action<SubrecordPinFrame> action)
+        Action<SubrecordPinFrame> action,
+        int offset = 0)
     {
-        int loc = 0;
+        int loc = offset;
         while (span.Length > loc)
         {
-            var frame = meta.SubrecordFrame(span.Slice(loc));
-            action(new SubrecordPinFrame(frame, loc));
-            loc += frame.TotalLength;
+            var subFrame = meta.SubrecordFrame(span.Slice(loc));
+            if (meta.HeaderOverflow.Contains(subFrame.RecordType))
+            { // Length overflow record
+                var nextLen = subFrame.AsUInt32();
+                loc += subFrame.TotalLength;
+                var nextSpan = span.Slice(loc, checked((int)(nextLen + meta.SubConstants.HeaderLength)));
+                var subHeader = new SubrecordHeader(meta, nextSpan);
+                action(SubrecordPinFrame.FactoryNoTrim(subHeader, nextSpan, loc));
+                loc += checked((int)(subHeader.HeaderLength + nextLen));
+                continue;
+            }
+            action(new SubrecordPinFrame(subFrame, loc));
+            loc += subFrame.TotalLength;
         }
     }
 
