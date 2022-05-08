@@ -148,16 +148,37 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region NavmeshGrid
+        #region Waypoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _NavmeshGrid = new byte[0];
-        public MemorySlice<Byte> NavmeshGrid
+        private ExtendedList<NavmeshWaypoint> _Waypoints = new ExtendedList<NavmeshWaypoint>();
+        public ExtendedList<NavmeshWaypoint> Waypoints
         {
-            get => _NavmeshGrid;
-            set => this._NavmeshGrid = value;
+            get => this._Waypoints;
+            init => this._Waypoints = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> INavmeshGeometryGetter.NavmeshGrid => this.NavmeshGrid;
+        IReadOnlyList<INavmeshWaypointGetter> INavmeshGeometryGetter.Waypoints => _Waypoints;
+        #endregion
+
+        #endregion
+        #region GridSize
+        public UInt32 GridSize { get; set; } = default;
+        public static RangeUInt32 GridSize_Range = new RangeUInt32(UInt32.MinValue, 12);
+        #endregion
+        #region GridMaxDistance
+        public P2Float GridMaxDistance { get; set; } = default;
+        #endregion
+        #region GridMin
+        public P3Float GridMin { get; set; } = default;
+        #endregion
+        #region GridMax
+        public P3Float GridMax { get; set; } = default;
+        #endregion
+        #region GridArrays
+        public NavmeshGridArray GridArrays { get; set; } = new NavmeshGridArray();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INavmeshGridArrayGetter INavmeshGeometryGetter.GridArrays => GridArrays;
         #endregion
 
         #region To String
@@ -207,7 +228,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
                 this.Unknown = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Unknown2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.NavmeshGrid = initialValue;
+                this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>());
+                this.GridSize = initialValue;
+                this.GridMaxDistance = initialValue;
+                this.GridMin = initialValue;
+                this.GridMax = initialValue;
+                this.GridArrays = new MaskItem<TItem, NavmeshGridArray.Mask<TItem>?>(initialValue, new NavmeshGridArray.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -220,7 +246,12 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem DoorTriangles,
                 TItem Unknown,
                 TItem Unknown2,
-                TItem NavmeshGrid)
+                TItem Waypoints,
+                TItem GridSize,
+                TItem GridMaxDistance,
+                TItem GridMin,
+                TItem GridMax,
+                TItem GridArrays)
             {
                 this.NavmeshVersion = NavmeshVersion;
                 this.Magic = Magic;
@@ -231,7 +262,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(DoorTriangles, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
                 this.Unknown = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Unknown, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Unknown2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Unknown2, Enumerable.Empty<(int Index, TItem Value)>());
-                this.NavmeshGrid = NavmeshGrid;
+                this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(Waypoints, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>());
+                this.GridSize = GridSize;
+                this.GridMaxDistance = GridMaxDistance;
+                this.GridMin = GridMin;
+                this.GridMax = GridMax;
+                this.GridArrays = new MaskItem<TItem, NavmeshGridArray.Mask<TItem>?>(GridArrays, new NavmeshGridArray.Mask<TItem>(GridArrays));
             }
 
             #pragma warning disable CS8618
@@ -252,7 +288,12 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>? DoorTriangles;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Unknown;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Unknown2;
-            public TItem NavmeshGrid;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>? Waypoints;
+            public TItem GridSize;
+            public TItem GridMaxDistance;
+            public TItem GridMin;
+            public TItem GridMax;
+            public MaskItem<TItem, NavmeshGridArray.Mask<TItem>?>? GridArrays { get; set; }
             #endregion
 
             #region Equals
@@ -274,7 +315,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.DoorTriangles, rhs.DoorTriangles)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.NavmeshGrid, rhs.NavmeshGrid)) return false;
+                if (!object.Equals(this.Waypoints, rhs.Waypoints)) return false;
+                if (!object.Equals(this.GridSize, rhs.GridSize)) return false;
+                if (!object.Equals(this.GridMaxDistance, rhs.GridMaxDistance)) return false;
+                if (!object.Equals(this.GridMin, rhs.GridMin)) return false;
+                if (!object.Equals(this.GridMax, rhs.GridMax)) return false;
+                if (!object.Equals(this.GridArrays, rhs.GridArrays)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -289,7 +335,12 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.DoorTriangles);
                 hash.Add(this.Unknown);
                 hash.Add(this.Unknown2);
-                hash.Add(this.NavmeshGrid);
+                hash.Add(this.Waypoints);
+                hash.Add(this.GridSize);
+                hash.Add(this.GridMaxDistance);
+                hash.Add(this.GridMin);
+                hash.Add(this.GridMax);
+                hash.Add(this.GridArrays);
                 return hash.ToHashCode();
             }
 
@@ -374,7 +425,27 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.NavmeshGrid)) return false;
+                if (this.Waypoints != null)
+                {
+                    if (!eval(this.Waypoints.Overall)) return false;
+                    if (this.Waypoints.Specific != null)
+                    {
+                        foreach (var item in this.Waypoints.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.GridSize)) return false;
+                if (!eval(this.GridMaxDistance)) return false;
+                if (!eval(this.GridMin)) return false;
+                if (!eval(this.GridMax)) return false;
+                if (GridArrays != null)
+                {
+                    if (!eval(this.GridArrays.Overall)) return false;
+                    if (this.GridArrays.Specific != null && !this.GridArrays.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -458,7 +529,27 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.NavmeshGrid)) return true;
+                if (this.Waypoints != null)
+                {
+                    if (eval(this.Waypoints.Overall)) return true;
+                    if (this.Waypoints.Specific != null)
+                    {
+                        foreach (var item in this.Waypoints.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.GridSize)) return true;
+                if (eval(this.GridMaxDistance)) return true;
+                if (eval(this.GridMin)) return true;
+                if (eval(this.GridMax)) return true;
+                if (GridArrays != null)
+                {
+                    if (eval(this.GridArrays.Overall)) return true;
+                    if (this.GridArrays.Specific != null && this.GridArrays.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -563,7 +654,26 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.NavmeshGrid = eval(this.NavmeshGrid);
+                if (Waypoints != null)
+                {
+                    obj.Waypoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>?>(eval(this.Waypoints.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>());
+                    if (Waypoints.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>();
+                        obj.Waypoints.Specific = l;
+                        foreach (var item in Waypoints.Specific)
+                        {
+                            MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.GridSize = eval(this.GridSize);
+                obj.GridMaxDistance = eval(this.GridMaxDistance);
+                obj.GridMin = eval(this.GridMin);
+                obj.GridMax = eval(this.GridMax);
+                obj.GridArrays = this.GridArrays == null ? null : new MaskItem<R, NavmeshGridArray.Mask<R>?>(eval(this.GridArrays.Overall), this.GridArrays.Specific?.Translate(eval));
             }
             #endregion
 
@@ -714,9 +824,44 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.NavmeshGrid ?? true)
+                    if ((printMask?.Waypoints?.Overall ?? true)
+                        && Waypoints is {} WaypointsItem)
                     {
-                        sb.AppendItem(NavmeshGrid, "NavmeshGrid");
+                        sb.AppendLine("Waypoints =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(WaypointsItem.Overall);
+                            if (WaypointsItem.Specific != null)
+                            {
+                                foreach (var subItem in WaypointsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.GridSize ?? true)
+                    {
+                        sb.AppendItem(GridSize, "GridSize");
+                    }
+                    if (printMask?.GridMaxDistance ?? true)
+                    {
+                        sb.AppendItem(GridMaxDistance, "GridMaxDistance");
+                    }
+                    if (printMask?.GridMin ?? true)
+                    {
+                        sb.AppendItem(GridMin, "GridMin");
+                    }
+                    if (printMask?.GridMax ?? true)
+                    {
+                        sb.AppendItem(GridMax, "GridMax");
+                    }
+                    if (printMask?.GridArrays?.Overall ?? true)
+                    {
+                        GridArrays?.Print(sb);
                     }
                 }
             }
@@ -751,7 +896,12 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>? DoorTriangles;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Unknown;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Unknown2;
-            public Exception? NavmeshGrid;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>? Waypoints;
+            public Exception? GridSize;
+            public Exception? GridMaxDistance;
+            public Exception? GridMin;
+            public Exception? GridMax;
+            public MaskItem<Exception?, NavmeshGridArray.ErrorMask?>? GridArrays;
             #endregion
 
             #region IErrorMask
@@ -778,8 +928,18 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown;
                     case NavmeshGeometry_FieldIndex.Unknown2:
                         return Unknown2;
-                    case NavmeshGeometry_FieldIndex.NavmeshGrid:
-                        return NavmeshGrid;
+                    case NavmeshGeometry_FieldIndex.Waypoints:
+                        return Waypoints;
+                    case NavmeshGeometry_FieldIndex.GridSize:
+                        return GridSize;
+                    case NavmeshGeometry_FieldIndex.GridMaxDistance:
+                        return GridMaxDistance;
+                    case NavmeshGeometry_FieldIndex.GridMin:
+                        return GridMin;
+                    case NavmeshGeometry_FieldIndex.GridMax:
+                        return GridMax;
+                    case NavmeshGeometry_FieldIndex.GridArrays:
+                        return GridArrays;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -817,8 +977,23 @@ namespace Mutagen.Bethesda.Fallout4
                     case NavmeshGeometry_FieldIndex.Unknown2:
                         this.Unknown2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case NavmeshGeometry_FieldIndex.NavmeshGrid:
-                        this.NavmeshGrid = ex;
+                    case NavmeshGeometry_FieldIndex.Waypoints:
+                        this.Waypoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>(ex, null);
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridSize:
+                        this.GridSize = ex;
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridMaxDistance:
+                        this.GridMaxDistance = ex;
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridMin:
+                        this.GridMin = ex;
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridMax:
+                        this.GridMax = ex;
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridArrays:
+                        this.GridArrays = new MaskItem<Exception?, NavmeshGridArray.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -857,8 +1032,23 @@ namespace Mutagen.Bethesda.Fallout4
                     case NavmeshGeometry_FieldIndex.Unknown2:
                         this.Unknown2 = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case NavmeshGeometry_FieldIndex.NavmeshGrid:
-                        this.NavmeshGrid = (Exception?)obj;
+                    case NavmeshGeometry_FieldIndex.Waypoints:
+                        this.Waypoints = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>)obj;
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridSize:
+                        this.GridSize = (Exception?)obj;
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridMaxDistance:
+                        this.GridMaxDistance = (Exception?)obj;
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridMin:
+                        this.GridMin = (Exception?)obj;
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridMax:
+                        this.GridMax = (Exception?)obj;
+                        break;
+                    case NavmeshGeometry_FieldIndex.GridArrays:
+                        this.GridArrays = (MaskItem<Exception?, NavmeshGridArray.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -877,7 +1067,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (DoorTriangles != null) return true;
                 if (Unknown != null) return true;
                 if (Unknown2 != null) return true;
-                if (NavmeshGrid != null) return true;
+                if (Waypoints != null) return true;
+                if (GridSize != null) return true;
+                if (GridMaxDistance != null) return true;
+                if (GridMin != null) return true;
+                if (GridMax != null) return true;
+                if (GridArrays != null) return true;
                 return false;
             }
             #endregion
@@ -1024,9 +1219,37 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (Waypoints is {} WaypointsItem)
                 {
-                    sb.AppendItem(NavmeshGrid, "NavmeshGrid");
+                    sb.AppendLine("Waypoints =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(WaypointsItem.Overall);
+                        if (WaypointsItem.Specific != null)
+                        {
+                            foreach (var subItem in WaypointsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
+                {
+                    sb.AppendItem(GridSize, "GridSize");
+                }
+                {
+                    sb.AppendItem(GridMaxDistance, "GridMaxDistance");
+                }
+                {
+                    sb.AppendItem(GridMin, "GridMin");
+                }
+                {
+                    sb.AppendItem(GridMax, "GridMax");
+                }
+                GridArrays?.Print(sb);
             }
             #endregion
 
@@ -1044,7 +1267,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DoorTriangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>(ExceptionExt.Combine(this.DoorTriangles?.Overall, rhs.DoorTriangles?.Overall), ExceptionExt.Combine(this.DoorTriangles?.Specific, rhs.DoorTriangles?.Specific));
                 ret.Unknown = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Unknown?.Overall, rhs.Unknown?.Overall), ExceptionExt.Combine(this.Unknown?.Specific, rhs.Unknown?.Specific));
                 ret.Unknown2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Unknown2?.Overall, rhs.Unknown2?.Overall), ExceptionExt.Combine(this.Unknown2?.Specific, rhs.Unknown2?.Specific));
-                ret.NavmeshGrid = this.NavmeshGrid.Combine(rhs.NavmeshGrid);
+                ret.Waypoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>(ExceptionExt.Combine(this.Waypoints?.Overall, rhs.Waypoints?.Overall), ExceptionExt.Combine(this.Waypoints?.Specific, rhs.Waypoints?.Specific));
+                ret.GridSize = this.GridSize.Combine(rhs.GridSize);
+                ret.GridMaxDistance = this.GridMaxDistance.Combine(rhs.GridMaxDistance);
+                ret.GridMin = this.GridMin.Combine(rhs.GridMin);
+                ret.GridMax = this.GridMax.Combine(rhs.GridMax);
+                ret.GridArrays = this.GridArrays.Combine(rhs.GridArrays, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1077,7 +1305,12 @@ namespace Mutagen.Bethesda.Fallout4
             public DoorTriangle.TranslationMask? DoorTriangles;
             public bool Unknown;
             public bool Unknown2;
-            public bool NavmeshGrid;
+            public NavmeshWaypoint.TranslationMask? Waypoints;
+            public bool GridSize;
+            public bool GridMaxDistance;
+            public bool GridMin;
+            public bool GridMax;
+            public NavmeshGridArray.TranslationMask? GridArrays;
             #endregion
 
             #region Ctors
@@ -1092,7 +1325,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Vertices = defaultOn;
                 this.Unknown = defaultOn;
                 this.Unknown2 = defaultOn;
-                this.NavmeshGrid = defaultOn;
+                this.GridSize = defaultOn;
+                this.GridMaxDistance = defaultOn;
+                this.GridMin = defaultOn;
+                this.GridMax = defaultOn;
             }
 
             #endregion
@@ -1117,7 +1353,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((DoorTriangles == null ? DefaultOn : !DoorTriangles.GetCrystal().CopyNothing, DoorTriangles?.GetCrystal()));
                 ret.Add((Unknown, null));
                 ret.Add((Unknown2, null));
-                ret.Add((NavmeshGrid, null));
+                ret.Add((Waypoints == null ? DefaultOn : !Waypoints.GetCrystal().CopyNothing, Waypoints?.GetCrystal()));
+                ret.Add((GridSize, null));
+                ret.Add((GridMaxDistance, null));
+                ret.Add((GridMin, null));
+                ret.Add((GridMax, null));
+                ret.Add((GridArrays != null ? GridArrays.OnOverall : DefaultOn, GridArrays?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1205,7 +1446,12 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<DoorTriangle> DoorTriangles { get; }
         new ExtendedList<UInt64> Unknown { get; }
         new ExtendedList<UInt32> Unknown2 { get; }
-        new MemorySlice<Byte> NavmeshGrid { get; set; }
+        new ExtendedList<NavmeshWaypoint> Waypoints { get; }
+        new UInt32 GridSize { get; set; }
+        new P2Float GridMaxDistance { get; set; }
+        new P3Float GridMin { get; set; }
+        new P3Float GridMax { get; set; }
+        new NavmeshGridArray GridArrays { get; set; }
     }
 
     public partial interface INavmeshGeometryGetter :
@@ -1230,7 +1476,12 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IDoorTriangleGetter> DoorTriangles { get; }
         IReadOnlyList<UInt64> Unknown { get; }
         IReadOnlyList<UInt32> Unknown2 { get; }
-        ReadOnlyMemorySlice<Byte> NavmeshGrid { get; }
+        IReadOnlyList<INavmeshWaypointGetter> Waypoints { get; }
+        UInt32 GridSize { get; }
+        P2Float GridMaxDistance { get; }
+        P3Float GridMin { get; }
+        P3Float GridMax { get; }
+        INavmeshGridArrayGetter GridArrays { get; }
 
     }
 
@@ -1409,7 +1660,12 @@ namespace Mutagen.Bethesda.Fallout4
         DoorTriangles = 6,
         Unknown = 7,
         Unknown2 = 8,
-        NavmeshGrid = 9,
+        Waypoints = 9,
+        GridSize = 10,
+        GridMaxDistance = 11,
+        GridMin = 12,
+        GridMax = 13,
+        GridArrays = 14,
     }
     #endregion
 
@@ -1427,9 +1683,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "0f14b502-0797-43b9-810a-e958643a5d68";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(NavmeshGeometry.Mask<>);
 
@@ -1513,7 +1769,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.DoorTriangles.Clear();
             item.Unknown.Clear();
             item.Unknown2.Clear();
-            item.NavmeshGrid = new byte[0];
+            item.Waypoints.Clear();
+            item.GridSize = default;
+            item.GridMaxDistance = default;
+            item.GridMin = default;
+            item.GridMax = default;
+            item.GridArrays.Clear();
         }
         
         #region Mutagen
@@ -1598,7 +1859,15 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Unknown2,
                 (l, r) => l == r,
                 include);
-            ret.NavmeshGrid = MemoryExtensions.SequenceEqual(item.NavmeshGrid.Span, rhs.NavmeshGrid.Span);
+            ret.Waypoints = item.Waypoints.CollectionEqualsHelper(
+                rhs.Waypoints,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.GridSize = item.GridSize == rhs.GridSize;
+            ret.GridMaxDistance = item.GridMaxDistance.Equals(rhs.GridMaxDistance);
+            ret.GridMin = item.GridMin.Equals(rhs.GridMin);
+            ret.GridMax = item.GridMax.Equals(rhs.GridMax);
+            ret.GridArrays = MaskItemExt.Factory(item.GridArrays.GetEqualsMask(rhs.GridArrays, include), include);
         }
         
         public string Print(
@@ -1739,9 +2008,39 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.NavmeshGrid ?? true)
+            if (printMask?.Waypoints?.Overall ?? true)
             {
-                sb.AppendLine($"NavmeshGrid => {SpanExt.ToHexString(item.NavmeshGrid)}");
+                sb.AppendLine("Waypoints =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Waypoints)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.GridSize ?? true)
+            {
+                sb.AppendItem(item.GridSize, "GridSize");
+            }
+            if (printMask?.GridMaxDistance ?? true)
+            {
+                sb.AppendItem(item.GridMaxDistance, "GridMaxDistance");
+            }
+            if (printMask?.GridMin ?? true)
+            {
+                sb.AppendItem(item.GridMin, "GridMin");
+            }
+            if (printMask?.GridMax ?? true)
+            {
+                sb.AppendItem(item.GridMax, "GridMax");
+            }
+            if (printMask?.GridArrays?.Overall ?? true)
+            {
+                item.GridArrays?.Print(sb, "GridArrays");
             }
         }
         
@@ -1792,9 +2091,33 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Unknown2.SequenceEqualNullable(rhs.Unknown2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.NavmeshGrid) ?? true))
+            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Waypoints) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.NavmeshGrid.Span, rhs.NavmeshGrid.Span)) return false;
+                if (!lhs.Waypoints.SequenceEqual(rhs.Waypoints, (l, r) => ((NavmeshWaypointCommon)((INavmeshWaypointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Waypoints)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridSize) ?? true))
+            {
+                if (lhs.GridSize != rhs.GridSize) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMaxDistance) ?? true))
+            {
+                if (!lhs.GridMaxDistance.Equals(rhs.GridMaxDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMin) ?? true))
+            {
+                if (!lhs.GridMin.Equals(rhs.GridMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMax) ?? true))
+            {
+                if (!lhs.GridMax.Equals(rhs.GridMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridArrays) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.GridArrays, rhs.GridArrays, out var lhsGridArrays, out var rhsGridArrays, out var isGridArraysEqual))
+                {
+                    if (!((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)lhsGridArrays).CommonInstance()!).Equals(lhsGridArrays, rhsGridArrays, crystal?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.GridArrays))) return false;
+                }
+                else if (!isGridArraysEqual) return false;
             }
             return true;
         }
@@ -1811,7 +2134,12 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.DoorTriangles);
             hash.Add(item.Unknown);
             hash.Add(item.Unknown2);
-            hash.Add(item.NavmeshGrid);
+            hash.Add(item.Waypoints);
+            hash.Add(item.GridSize);
+            hash.Add(item.GridMaxDistance);
+            hash.Add(item.GridMin);
+            hash.Add(item.GridMax);
+            hash.Add(item.GridArrays);
             return hash.ToHashCode();
         }
         
@@ -2012,9 +2340,67 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.NavmeshGrid) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Waypoints) ?? true))
             {
-                item.NavmeshGrid = rhs.NavmeshGrid.ToArray();
+                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.Waypoints);
+                try
+                {
+                    item.Waypoints.SetTo(
+                        rhs.Waypoints
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridSize) ?? true))
+            {
+                item.GridSize = rhs.GridSize;
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMaxDistance) ?? true))
+            {
+                item.GridMaxDistance = rhs.GridMaxDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMin) ?? true))
+            {
+                item.GridMin = rhs.GridMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMax) ?? true))
+            {
+                item.GridMax = rhs.GridMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridArrays) ?? true))
+            {
+                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.GridArrays);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridArrays) ?? true))
+                    {
+                        item.GridArrays = rhs.GridArrays.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.GridArrays),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -2168,9 +2554,32 @@ namespace Mutagen.Bethesda.Fallout4
                 items: item.Unknown2,
                 countLengthLength: 4,
                 transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            NavmeshGeometryBinaryWriteTranslation.WriteBinaryNavmeshGrid(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshWaypointGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Waypoints,
+                countLengthLength: 4,
+                transl: (MutagenWriter subWriter, INavmeshWaypointGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((NavmeshWaypointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            writer.Write(item.GridSize);
+            P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.GridMaxDistance);
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.GridMin);
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.GridMax);
+            var GridArraysItem = item.GridArrays;
+            ((NavmeshGridArrayBinaryWriteTranslation)((IBinaryItem)GridArraysItem).BinaryWriteTranslator).Write(
+                item: GridArraysItem,
+                writer: writer);
         }
 
         public static partial void WriteBinaryParentCustom(
@@ -2182,19 +2591,6 @@ namespace Mutagen.Bethesda.Fallout4
             INavmeshGeometryGetter item)
         {
             WriteBinaryParentCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryNavmeshGridCustom(
-            MutagenWriter writer,
-            INavmeshGeometryGetter item);
-
-        public static void WriteBinaryNavmeshGrid(
-            MutagenWriter writer,
-            INavmeshGeometryGetter item)
-        {
-            WriteBinaryNavmeshGridCustom(
                 writer: writer,
                 item: item);
         }
@@ -2272,16 +2668,19 @@ namespace Mutagen.Bethesda.Fallout4
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
-            NavmeshGeometryBinaryCreateTranslation.FillBinaryNavmeshGridCustom(
-                frame: frame,
-                item: item);
+            item.Waypoints.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshWaypoint>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    reader: frame,
+                    transl: NavmeshWaypoint.TryCreateFromBinary));
+            item.GridSize = frame.ReadUInt32();
+            item.GridMaxDistance = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.GridMin = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.GridMax = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.GridArrays = Mutagen.Bethesda.Fallout4.NavmeshGridArray.CreateFromBinary(frame: frame);
         }
 
         public static partial void FillBinaryParentCustom(
-            MutagenFrame frame,
-            INavmeshGeometry item);
-
-        public static partial void FillBinaryNavmeshGridCustom(
             MutagenFrame frame,
             INavmeshGeometry item);
 
@@ -2379,6 +2778,18 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<UInt32> Unknown2 => BinaryOverlayList.FactoryByCountLength<UInt32>(_data.Slice(UnknownEndingPos), _package, 4, countLength: 4, (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
         protected int Unknown2EndingPos;
         #endregion
+        #region Waypoints
+        public IReadOnlyList<INavmeshWaypointGetter> Waypoints => BinaryOverlayList.FactoryByCountLength<NavmeshWaypointBinaryOverlay>(_data.Slice(Unknown2EndingPos), _package, 18, countLength: 4, (s, p) => NavmeshWaypointBinaryOverlay.NavmeshWaypointFactory(s, p));
+        protected int WaypointsEndingPos;
+        #endregion
+        public UInt32 GridSize => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(WaypointsEndingPos, 0x4));
+        public P2Float GridMaxDistance => P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(WaypointsEndingPos + 0x4, 0x8));
+        public P3Float GridMin => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(WaypointsEndingPos + 0xC, 0xC));
+        public P3Float GridMax => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(WaypointsEndingPos + 0x18, 0xC));
+        #region GridArrays
+        public INavmeshGridArrayGetter GridArrays => NavmeshGridArrayBinaryOverlay.NavmeshGridArrayFactory(new OverlayStream(_data.Slice(WaypointsEndingPos + 0x24), _package), _package, default(TypedParseParams));
+        protected int GridArraysEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2411,6 +2822,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
             ret.UnknownEndingPos = ret.DoorTrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.DoorTrianglesEndingPos)) * 8 + 4;
             ret.Unknown2EndingPos = ret.UnknownEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.UnknownEndingPos)) * 4 + 4;
+            ret.WaypointsEndingPos = ret.Unknown2EndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.Unknown2EndingPos)) * 18 + 4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

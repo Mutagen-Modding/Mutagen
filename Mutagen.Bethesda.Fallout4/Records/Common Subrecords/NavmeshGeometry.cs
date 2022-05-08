@@ -43,11 +43,6 @@ partial class NavmeshGeometryBinaryCreateTranslation
             return wrld;
         }
     }
-
-    public static partial void FillBinaryNavmeshGridCustom(MutagenFrame frame, INavmeshGeometry item)
-    {
-        item.NavmeshGrid = frame.ReadRemainingBytes();
-    }
 }
 
 partial class NavmeshGeometryBinaryWriteTranslation
@@ -56,17 +51,10 @@ partial class NavmeshGeometryBinaryWriteTranslation
     {
         item.Parent.WriteToBinary(writer);
     }
-
-    public static partial void WriteBinaryNavmeshGridCustom(MutagenWriter writer, INavmeshGeometryGetter item)
-    {
-        writer.Write(item.NavmeshGrid);
-    }
 }
 
 partial class NavmeshGeometryBinaryOverlay
 {
-    public ReadOnlyMemorySlice<byte> NavmeshGrid { get; private set; }
-
     public IReadOnlyList<INavmeshTriangleGetter> Triangles =>
         new TrianglesOverlay(
             _data,
@@ -82,14 +70,6 @@ partial class NavmeshGeometryBinaryOverlay
     {
         var count = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(VerticesEndingPos));
         TrianglesEndingPos = VerticesEndingPos + checked((int)((count * 0x15) + 4));
-    }
-
-    partial void CustomFactoryEnd(
-        OverlayStream stream,
-        int finalPos,
-        int offset)
-    {
-        NavmeshGrid = _data.Slice(Unknown2EndingPos);
     }
 
     class TrianglesOverlay : IReadOnlyList<INavmeshTriangleGetter>

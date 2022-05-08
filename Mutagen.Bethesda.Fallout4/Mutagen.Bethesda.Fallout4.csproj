@@ -1231,9 +1231,6 @@
     <Compile Include="Records\Common Subrecords\DoorTriangle_Generated.cs">
       <DependentUpon>NavmeshGeometry.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\NavmeshGrid_Generated.cs">
-      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\NavmeshGridArray_Generated.cs">
       <DependentUpon>NavmeshGeometry.xml</DependentUpon>
     </Compile>
@@ -1440,6 +1437,9 @@
     </Compile>
     <Compile Include="Records\Major Records\NavmeshNode_Generated.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\NavmeshWaypoint_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

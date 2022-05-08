@@ -17,7 +17,12 @@
       <List name="Unknown2" counterLength="4">
         <UInt32 />
       </List>
-      <ByteArray name="NavmeshGrid" binaryOverlay="NoGeneration" binary="Custom" />
+      <RefList name="Waypoints" refName="NavmeshWaypoint" counterLength="4" />
+      <UInt32 name="GridSize" max="12" />
+      <P2Float name="GridMaxDistance" />
+      <P3Float name="GridMin" />
+      <P3Float name="GridMax" />
+      <RefDirect name="GridArrays" refName="NavmeshGridArray" />
     </Fields>
   </Object>
   <Object name="ANavmeshParent" abstract="true" objType="Subrecord" GUID="e219990e-658c-437d-bc6f-4a10eaa0ca00" ID="330">
@@ -61,13 +66,11 @@
       <FormLink name="Door" refName="PlacedObject" />
     </Fields>
   </Object>
-  <Object name="NavmeshGrid" objType="Subrecord" GUID="36ec4d04-9bfc-4126-a1dc-5bbe75ce65c0" ID="327">
+  <Object name="NavmeshWaypoint" objType="Subrecord" GUID="a3667aa1-7249-4344-bf97-58cbda074f32" ID="452">
     <Fields>
-      <UInt32 name="Size" max="12" />
-      <P2Float name="MaxDistance" />
-      <P3Float name="Min" />
-      <P3Float name="Max" />
-      <RefDirect name="GridArrays" refName="NavmeshGridArray" />
+      <P3Float name="Location" />
+      <Int16 name="TriangleIndex" />
+      <Int32 name="Unknown" />
     </Fields>
   </Object>
   <Object name="NavmeshGridArray" objType="Subrecord" GUID="9bea625e-c592-44aa-87e7-806bc63aa372" ID="328">

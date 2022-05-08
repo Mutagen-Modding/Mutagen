@@ -276,7 +276,6 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             NavmeshGeometry_Registration.Instance,
             WorldspaceNavmeshParent_Registration.Instance,
             CellNavmeshParent_Registration.Instance,
-            NavmeshGrid_Registration.Instance,
             NavmeshGridArray_Registration.Instance,
             MaterialObject_Registration.Instance,
             ANavmeshParent_Registration.Instance,
@@ -330,7 +329,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             IslandData_Registration.Instance,
             PreferredPathing_Registration.Instance,
             NavmeshSet_Registration.Instance,
-            NavmeshNode_Registration.Instance
+            NavmeshNode_Registration.Instance,
+            NavmeshWaypoint_Registration.Instance
         );
     }
 }
