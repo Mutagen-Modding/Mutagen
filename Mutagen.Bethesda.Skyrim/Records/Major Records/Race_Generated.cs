@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -8644,7 +8645,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x80)
                     {
                         this.DATADataTypeState |= Race.DATADataType.Break0;
@@ -8668,7 +8669,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.MovementTypeNames = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
@@ -245,7 +246,7 @@ public class SkyrimProcessor : Processor
                 int groupPos = 0;
                 while (groupPos < groupFrame.Content.Length)
                 {
-                    var majorMeta = stream.MetaData.Constants.MajorRecord(groupFrame.Content.Slice(groupPos));
+                    var majorMeta = stream.MetaData.Constants.MajorRecordHeader(groupFrame.Content.Slice(groupPos));
                     actualCount++;
                     groupPos += checked((int)majorMeta.TotalLength);
                 }
@@ -561,7 +562,7 @@ public class SkyrimProcessor : Processor
             var curLoc = startLoc;
             while (anamPos.HasValue && anamPos.Value < xnamPos.Value)
             {
-                var anamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value));
+                var anamRecord = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(anamPos.Value));
                 var recs = RecordSpanExtensions.TryFindNextSubrecords(
                     majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength),
                     majorFrame.Meta,
@@ -595,7 +596,7 @@ public class SkyrimProcessor : Processor
                 }
 
                 var finalRec =
-                    majorFrame.Meta.Subrecord(
+                    majorFrame.Meta.SubrecordHeader(
                         majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + finalLoc));
                 var dataSlice = majorFrame.Content.Slice(anamPos.Value,
                     anamRecord.TotalLength + finalLoc + finalRec.TotalLength);
@@ -604,7 +605,7 @@ public class SkyrimProcessor : Processor
                     && recs[1] != null)
                 {
                     // Ensure bool value is 1 or 0
-                    var cnam = majorFrame.Meta.SubrecordFrame(
+                    var cnam = majorFrame.Meta.Subrecord(
                         majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + recs[1].Value.Location));
                     if (cnam.Content.Length != 1)
                     {
@@ -640,7 +641,7 @@ public class SkyrimProcessor : Processor
 
             for (sbyte i = 0; i < unamLocs.Count; i++)
             {
-                var unamRec = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(curLoc + unamLocs[i].Location));
+                var unamRec = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(curLoc + unamLocs[i].Location));
                 dataValues[i] = (
                     (sbyte)unamRec.Content[0],
                     dataValues[i].Data);
@@ -675,7 +676,7 @@ public class SkyrimProcessor : Processor
         var inputValues = new List<(sbyte Index, ReadOnlyMemorySlice<byte> Data)>();
         while (unamPos.HasValue)
         {
-            var unamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(unamPos.Value));
+            var unamRecord = majorFrame.Meta.Subrecord(majorFrame.Content.Slice(unamPos.Value));
             var recs = RecordSpanExtensions.TryFindNextSubrecords(
                 majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength),
                 majorFrame.Meta,
@@ -705,7 +706,7 @@ public class SkyrimProcessor : Processor
             }
 
             var finalRec =
-                majorFrame.Meta.Subrecord(majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength + finalLoc));
+                majorFrame.Meta.SubrecordHeader(majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength + finalLoc));
             inputValues.Add(
                 ((sbyte)unamRecord.Content[0],
                     majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength + finalLoc + finalRec.TotalLength)));

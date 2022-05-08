@@ -9,6 +9,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -142,7 +143,7 @@ partial class WorldspaceBinaryOverlay
     private int? _TopCellLocation;
     public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new OverlayStream(_grupData!.Value.Slice(_TopCellLocation!.Value), _package), _package, insideWorldspace: true) : default;
 
-    public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedData) : 0;
+    public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData.Value).LastModifiedData) : 0;
 
     public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = ListExt.Empty<IWorldspaceBlockGetter>();
 

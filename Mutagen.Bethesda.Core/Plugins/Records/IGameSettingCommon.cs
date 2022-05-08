@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Records.Internals;
@@ -151,7 +152,7 @@ public static class GameSettingUtility
     /// <returns>A response of the GameSettingType if found, or a reason if not.</returns>
     public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlyMemorySlice<byte> span, GameConstants meta)
     {
-        var majorMeta = meta.MajorRecordFrame(span);
+        var majorMeta = meta.MajorRecord(span);
         var edidFrame = majorMeta.FindSubrecord(RecordTypes.EDID);
         var edid = edidFrame.AsString(MutagenEncodingProvider._1252);
         if (edid.Length == 0)

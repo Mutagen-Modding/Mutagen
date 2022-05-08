@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -4267,7 +4268,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x30)
                     {
                         this.DATADataTypeState |= Light.DATADataType.Break0;

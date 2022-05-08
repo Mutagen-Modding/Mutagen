@@ -192,7 +192,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 if (!generatedStart)
                 {
                     generatedStart = true;
-                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
+                    sb.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubrecordHeader(_data.Slice({locationAccessor})).ContentLength;");
                 }
                 sb.AppendLine($"if (subLen <= {length.PassedAccessor})");
                 using (sb.CurlyBrace())

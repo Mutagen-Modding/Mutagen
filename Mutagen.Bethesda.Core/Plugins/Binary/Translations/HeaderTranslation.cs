@@ -314,19 +314,19 @@ public class HeaderTranslation
 
     public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, int loc, GameConstants meta)
     {
-        var subMeta = meta.Subrecord(span.Slice(loc));
+        var subMeta = meta.SubrecordHeader(span.Slice(loc));
         return span.Slice(loc + subMeta.HeaderLength, subMeta.ContentLength);
     }
 
     public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta, TypedParseParams? parseParams = null)
     {
-        var subMeta = meta.Subrecord(span);
+        var subMeta = meta.SubrecordHeader(span);
         return span.Slice(subMeta.HeaderLength, parseParams?.LengthOverride ?? subMeta.ContentLength);
     }
 
     public static ReadOnlyMemorySlice<byte> ExtractRecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
     {
-        var majorMeta = meta.MajorRecord(span);
+        var majorMeta = meta.MajorRecordHeader(span);
         var len = majorMeta.ContentLength;
         len += (byte)meta.MajorConstants.LengthAfterLength;
         return span.Slice(meta.MajorConstants.TypeAndLengthLength, checked((int)len));
@@ -334,7 +334,7 @@ public class HeaderTranslation
 
     public static ReadOnlyMemorySlice<byte> ExtractGroupMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
     {
-        var groupMeta = meta.Group(span);
+        var groupMeta = meta.GroupHeader(span);
         var len = groupMeta.ContentLength;
         len += (byte)meta.GroupConstants.LengthAfterLength;
         return span.Slice(meta.GroupConstants.TypeAndLengthLength, checked((int)len));

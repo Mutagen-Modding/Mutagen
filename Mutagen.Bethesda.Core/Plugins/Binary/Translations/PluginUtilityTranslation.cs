@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -443,7 +444,7 @@ internal static class PluginUtilityTranslation
         int? lengthOverride)
     {
         if (!loc.HasValue) return null;
-        var header = constants.SubrecordFrame(bytes[loc.Value..]);
+        var header = constants.Subrecord(bytes[loc.Value..]);
         if (lengthOverride != null)
         {
             return bytes.Slice(
@@ -465,7 +466,7 @@ internal static class PluginUtilityTranslation
     {
         if (existingLoc.HasValue)
         {
-            var overflowHeader = constants.SubrecordFrame(data.Slice(existingLoc.Value));
+            var overflowHeader = constants.Subrecord(data.Slice(existingLoc.Value));
             var len = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
             // Need to skip the data record, which doesn't have a proper length
             stream.Position += constants.SubConstants.HeaderLength + len;

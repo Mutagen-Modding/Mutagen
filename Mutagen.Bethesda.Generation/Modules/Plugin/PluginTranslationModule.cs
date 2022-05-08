@@ -625,6 +625,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         yield return "Mutagen.Bethesda.Plugins.Binary.Translations";
         yield return "Mutagen.Bethesda.Plugins.Binary.Streams";
         yield return "Mutagen.Bethesda.Plugins.Exceptions";
+        yield return "Mutagen.Bethesda.Plugins.Binary.Headers";
             
         if (obj.GetObjectType() == ObjectType.Group && !obj.IsListGroup())
         {

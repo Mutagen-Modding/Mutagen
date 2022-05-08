@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
@@ -33,7 +34,7 @@ public class HeaderParsing
     [Benchmark]
     public (bool, long) MajorRecordHeaderSpan()
     {
-        var meta = constants.MajorRecord(frame.RemainingMemory);
+        var meta = constants.MajorRecordHeader(frame.RemainingMemory);
         if (meta.RecordType != type) return (false, -1);
         return (true, meta.ContentLength);
     }
@@ -49,14 +50,14 @@ public class HeaderParsing
     [Benchmark]
     public ReadOnlySpan<byte> MajorRecordFrame()
     {
-        var meta = constants.MajorRecordFrame(frame.RemainingMemory);
+        var meta = constants.MajorRecord(frame.RemainingMemory);
         return meta.Content;
     }
 
     [Benchmark]
     public ReadOnlyMemorySlice<byte> MajorRecordMemoryFrame()
     {
-        var meta = constants.MajorRecordFrame(frame.RemainingMemory);
+        var meta = constants.MajorRecord(frame.RemainingMemory);
         return meta.Content;
     }
 }

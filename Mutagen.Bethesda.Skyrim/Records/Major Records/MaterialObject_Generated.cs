@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -2423,7 +2424,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.DNAMs = BinaryOverlayList.FactoryByArray<ReadOnlyMemorySlice<Byte>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => p.MetaData.Constants.SubrecordFrame(s).Content,
+                        getter: (s, p) => p.MetaData.Constants.Subrecord(s).Content,
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -2435,7 +2436,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x1C)
                     {
                         this.DATADataTypeState |= MaterialObject.DATADataType.Break0;

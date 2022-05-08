@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -1881,7 +1882,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.AnimationPaths = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

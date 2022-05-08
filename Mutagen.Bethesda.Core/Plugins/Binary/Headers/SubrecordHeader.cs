@@ -187,7 +187,7 @@ public struct SubrecordFrame
     /// <param name="span">Span to overlay on, aligned to the start of the header</param>
     public SubrecordFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
     {
-        Header = meta.Subrecord(span);
+        Header = meta.SubrecordHeader(span);
         HeaderAndContentData = span.Slice(0, Header.TotalLength);
     }
 

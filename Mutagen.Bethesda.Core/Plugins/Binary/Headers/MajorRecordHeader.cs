@@ -300,7 +300,7 @@ public readonly struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
     /// <param name="span">Span to overlay on, aligned to the start of the header</param>
     public MajorRecordFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
     {
-        Header = meta.MajorRecord(span);
+        Header = meta.MajorRecordHeader(span);
         HeaderAndContentData = span.Slice(0, checked((int)Header.TotalLength));
     }
 

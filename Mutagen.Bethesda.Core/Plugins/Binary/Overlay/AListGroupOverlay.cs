@@ -32,7 +32,7 @@ internal class GroupListOverlay<T> : IReadOnlyList<T>
     private T ConstructWrapper(int pos)
     {
         ReadOnlyMemorySlice<byte> slice = _data.Slice(pos);
-        var majorMeta = _package.MetaData.Constants.MajorRecord(slice);
+        var majorMeta = _package.MetaData.Constants.MajorRecordHeader(slice);
         if (majorMeta.IsCompressed)
         {
             uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(slice.Slice(majorMeta.HeaderLength));

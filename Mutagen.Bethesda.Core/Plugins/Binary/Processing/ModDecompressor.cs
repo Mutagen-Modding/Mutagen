@@ -2,6 +2,8 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Utility;
 using System.Text;
 using Mutagen.Bethesda.Plugins.Analysis;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing;
 
@@ -70,7 +72,7 @@ public static class ModDecompressor
             var majorMetaSpan = majorMeta.HeaderData.ToArray();
 
             // Write major Meta
-            var writableMajorMeta = inputStream.MetaData.Constants.MajorRecordWritable(majorMetaSpan.AsSpan());
+            var writableMajorMeta = inputStream.MetaData.Constants.MajorRecordHeaderWritable(majorMetaSpan.AsSpan());
             writableMajorMeta.IsCompressed = false;
             writableMajorMeta.ContentLength = (uint)(len + lengthDiff);
             writer.Write(majorMetaSpan);

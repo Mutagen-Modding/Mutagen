@@ -1,5 +1,6 @@
 ﻿using System.Buffers.Binary;
 using Ionic.Zlib;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
@@ -23,7 +24,7 @@ public static class Decompression
 
     internal static ReadOnlyMemorySlice<byte> DecompressMajorRecordSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)
     {
-        var majorMeta = meta.MajorRecord(slice);
+        var majorMeta = meta.MajorRecordHeader(slice);
         if (majorMeta.IsCompressed)
         {
             uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(slice.Slice(majorMeta.HeaderLength));

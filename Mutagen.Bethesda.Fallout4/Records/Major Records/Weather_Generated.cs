@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -8419,7 +8420,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAM0:
                 {
                     _NAM0Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x120)
                     {
                         this.NAM0DataTypeState |= Weather.NAM0DataType.Break0;
@@ -8438,7 +8439,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x20)
                     {
                         this.FNAMDataTypeState |= Weather.FNAMDataType.Break0;
@@ -8452,7 +8453,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x13)
                     {
                         this.DATADataTypeState |= Weather.DATADataType.Break0;
@@ -8496,7 +8497,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.IMSP:
                 {
                     _IMSPLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x10)
                     {
                         this.IMSPDataTypeState |= Weather.IMSPDataType.Break0;

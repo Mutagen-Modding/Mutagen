@@ -6,6 +6,8 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.Skyrim;
@@ -145,7 +147,7 @@ partial class RaceBinaryOverlay
             var loc = _bipedObjectNamesLoc.Value;
             for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
             {
-                if (!_package.MetaData.Constants.TrySubrecordFrame(_data.Slice(loc), RecordTypes.NAME, out var subHeader)) break;
+                if (!_package.MetaData.Constants.TrySubrecord(_data.Slice(loc), RecordTypes.NAME, out var subHeader)) break;
                 BipedObject type = (BipedObject)i;
                 var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content, _package.MetaData.Encodings.NonTranslated);
                 if (!string.IsNullOrEmpty(val))

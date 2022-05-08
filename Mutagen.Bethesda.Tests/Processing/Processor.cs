@@ -537,7 +537,7 @@ public abstract class Processor
         int sizeChange = 0;
         while (pos < frame.Content.Length)
         {
-            var subRec = frame.Meta.SubrecordFrame(frame.Content.Slice(pos));
+            var subRec = frame.Meta.Subrecord(frame.Content.Slice(pos));
             if (subRec.RecordType == counterType)
             {
                 prevWasCounter = true;

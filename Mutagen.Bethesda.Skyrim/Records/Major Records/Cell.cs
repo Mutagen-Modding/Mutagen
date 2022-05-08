@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Skyrim;
@@ -339,14 +340,14 @@ partial class CellBinaryOverlay
     private int? _landscapeLocation;
     public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new OverlayStream(_grupData!.Value.Slice(_landscapeLocation!.Value), _package), _package) : default;
 
-    public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedData) : 0;
+    public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData.Value).LastModifiedData) : 0;
 
     private int? _persistentLocation;
-    public int PersistentTimestamp => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedData) : 0;
+    public int PersistentTimestamp => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedData) : 0;
     public IReadOnlyList<IPlacedGetter> Persistent { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
     private int? _temporaryLocation;
-    public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedData) : 0;
+    public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedData) : 0;
     public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
     public int PersistentUnknownGroupData => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_persistentLocation.Value + 20)) : 0;
@@ -388,7 +389,7 @@ partial class CellBinaryOverlay
         {
             InsideWorldspace = insideWorldspace
         };
-        var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingMemory).TotalLength));
+        var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecordHeader(stream.RemainingMemory).TotalLength));
         int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
         stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
         ret.CustomFactoryEnd(
@@ -449,7 +450,7 @@ partial class CellBinaryOverlay
                 ReadOnlyMemorySlice<byte> span,
                 BinaryOverlayFactoryPackage package)
             {
-                var majorMeta = package.MetaData.Constants.MajorRecord(span);
+                var majorMeta = package.MetaData.Constants.MajorRecordHeader(span);
                 switch (majorMeta.RecordType.TypeInt)
                 {
                     case RecordTypeInts.ACHR:
@@ -556,7 +557,7 @@ partial class CellBinaryOverlay
     public partial Cell.Flag GetFlagsCustom()
     {
         if (!_flagsLoc.HasValue) return default(Cell.Flag);
-        var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(_flagsLoc.Value));
+        var subHeader = _package.MetaData.Constants.Subrecord(_data.Slice(_flagsLoc.Value));
         switch (subHeader.Content.Length)
         {
             case 1:

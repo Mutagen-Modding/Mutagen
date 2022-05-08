@@ -2,8 +2,10 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using System.Buffers.Binary;
 using System.Collections;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
@@ -82,7 +84,7 @@ internal abstract class BinaryOverlayList
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
         var mem = stream.RemainingMemory;
-        var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+        var initialHeader = package.MetaData.Constants.Subrecord(mem);
         var recType = initialHeader.RecordType;
         if (recType == countType)
         {
@@ -125,7 +127,7 @@ internal abstract class BinaryOverlayList
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
         var mem = stream.RemainingMemory;
-        var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+        var initialHeader = package.MetaData.Constants.Subrecord(mem);
         var recType = initialHeader.RecordType;
         if (recType == countType)
         {
@@ -166,7 +168,7 @@ internal abstract class BinaryOverlayList
         bool skipHeader = true)
     {
         var mem = stream.RemainingMemory;
-        var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+        var initialHeader = package.MetaData.Constants.Subrecord(mem);
         var recType = initialHeader.RecordType;
         if (recType == countType)
         {
@@ -217,7 +219,7 @@ internal abstract class BinaryOverlayList
         bool skipHeader = true)
     {
         var mem = stream.RemainingMemory;
-        var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+        var initialHeader = package.MetaData.Constants.Subrecord(mem);
         var recType = initialHeader.RecordType;
         if (recType == countType)
         {
@@ -268,7 +270,7 @@ internal abstract class BinaryOverlayList
         bool skipHeader = true)
     {
         var mem = stream.RemainingMemory;
-        var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+        var initialHeader = package.MetaData.Constants.Subrecord(mem);
         var recType = initialHeader.RecordType;
         if (recType == countType)
         {
@@ -603,7 +605,7 @@ internal abstract class BinaryOverlayList
             get
             {
                 var startIndex = index * _totalItemLength;
-                var subMeta = _package.MetaData.Constants.Subrecord(_mem.Slice(startIndex));
+                var subMeta = _package.MetaData.Constants.SubrecordHeader(_mem.Slice(startIndex));
                 if (subMeta.RecordType != _recordType)
                 {
                     throw new ArgumentException($"Unexpected record type: {subMeta.RecordType} != {_recordType}");
@@ -658,7 +660,7 @@ internal abstract class BinaryOverlayList
             get
             {
                 var startIndex = index * _totalItemLength;
-                var subMeta = _package.MetaData.Constants.Subrecord(_mem.Slice(startIndex));
+                var subMeta = _package.MetaData.Constants.SubrecordHeader(_mem.Slice(startIndex));
                 if (!_recordTypes.Contains(subMeta.RecordType))
                 {
                     throw new ArgumentException($"Unexpected record type: {subMeta.RecordType}");

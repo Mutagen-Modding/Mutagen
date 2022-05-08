@@ -158,6 +158,11 @@
     </Compile>
     <Compile Include="Plugins\Analysis\RecordLocatorResults.cs" />
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
+    <Compile Include="Plugins\Binary\Headers\HeaderConstructionMixIns.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Binary\Overlay\BinaryOverlayArray2d.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />

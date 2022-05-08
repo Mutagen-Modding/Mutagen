@@ -23,7 +23,7 @@ public static class RecordSpanExtensions
         int loc = offset;
         while (span.Length > loc)
         {
-            var subFrame = meta.SubrecordFrame(span.Slice(loc));
+            var subFrame = meta.Subrecord(span.Slice(loc));
             if (meta.HeaderOverflow.Contains(subFrame.RecordType))
             { // Length overflow record
                 var nextLen = subFrame.AsUInt32();
@@ -57,7 +57,7 @@ public static class RecordSpanExtensions
         int loc = offset;
         while (span.Length > loc)
         {
-            var subFrame = meta.SubrecordFrame(span.Slice(loc));
+            var subFrame = meta.Subrecord(span.Slice(loc));
             if (meta.HeaderOverflow.Contains(subFrame.RecordType))
             { // Length overflow record
                 var nextLen = subFrame.AsUInt32();
@@ -93,7 +93,7 @@ public static class RecordSpanExtensions
         List<SubrecordPinFrame> list = new List<SubrecordPinFrame>();
         while (span.Length > lenParsed)
         {
-            var subMeta = meta.Subrecord(span.Slice(lenParsed));
+            var subMeta = meta.SubrecordHeader(span.Slice(lenParsed));
             if (subMeta.RecordType != recordType) break;
             list.Add(new SubrecordPinFrame(meta, span.Slice(lenParsed), lenParsed));
             lenParsed += subMeta.TotalLength;
@@ -171,7 +171,7 @@ public static class RecordSpanExtensions
         SubrecordPinFrame?[] ret = new SubrecordPinFrame?[recordTypes.Length];
         while (data.Length > lenParsed)
         {
-            var subMeta = meta.Subrecord(data.Slice(lenParsed));
+            var subMeta = meta.SubrecordHeader(data.Slice(lenParsed));
             var recType = subMeta.RecordType;
             bool breakOut = true;
             for (int i = 0; i < recordTypes.Length; i++)
@@ -228,7 +228,7 @@ public static class RecordSpanExtensions
         int loc = offset ?? 0;
         while (data.Length > loc)
         {
-            var subMeta = meta.Subrecord(data.Slice(loc));
+            var subMeta = meta.SubrecordHeader(data.Slice(loc));
             if (subMeta.RecordType == recordType)
             {
                 return new SubrecordPinFrame(meta, data.Slice(loc), loc);
@@ -249,7 +249,7 @@ public static class RecordSpanExtensions
         int loc = offset ?? 0;
         while (data.Length > loc)
         {
-            var subMeta = meta.Subrecord(data.Slice(loc));
+            var subMeta = meta.SubrecordHeader(data.Slice(loc));
             if (recordTypes.Contains(subMeta.RecordType))
             {
                 return new SubrecordPinFrame(meta, data.Slice(loc), loc);
@@ -270,7 +270,7 @@ public static class RecordSpanExtensions
         int lenParsed = 0;
         while (data.Length > lenParsed)
         {
-            var subMeta = meta.Subrecord(data.Slice(lenParsed));
+            var subMeta = meta.SubrecordHeader(data.Slice(lenParsed));
             if (subMeta.RecordType == recordType)
             {
                 ret.Add(new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed));
@@ -291,7 +291,7 @@ public static class RecordSpanExtensions
         int lenParsed = 0;
         while (data.Length > lenParsed)
         {
-            var subMeta = meta.Subrecord(data.Slice(lenParsed));
+            var subMeta = meta.SubrecordHeader(data.Slice(lenParsed));
             if (recordTypes.Contains(subMeta.RecordType))
             {
                 ret.Add(new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed));
@@ -318,7 +318,7 @@ public static class RecordSpanExtensions
         numRecordsPassed = 0;
         while (pos < data.Length)
         {
-            var subHeader = constants.Subrecord(data.Slice(pos));
+            var subHeader = constants.SubrecordHeader(data.Slice(pos));
             if (subHeader.RecordType != toSkip) break;
             pos += subHeader.TotalLength;
             numRecordsPassed++;

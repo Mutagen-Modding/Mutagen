@@ -248,7 +248,7 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
     private T ConstructWrapper(int pos)
     {
         ReadOnlyMemorySlice<byte> slice = _data.Slice(pos);
-        var majorMeta = _package.MetaData.Constants.MajorRecord(slice);
+        var majorMeta = _package.MetaData.Constants.MajorRecordHeader(slice);
         if (majorMeta.IsCompressed)
         {
             uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(slice.Slice(majorMeta.HeaderLength));
@@ -288,7 +288,7 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
         ObjectType? lastParsed = default;
         while (stream.Position < finalPos)
         {
-            VariableHeader varMeta = package.MetaData.Constants.NextRecordVariableMeta(stream.RemainingMemory);
+            VariableHeader varMeta = package.MetaData.Constants.VariableHeader(stream.RemainingMemory);
             if (varMeta.IsGroup)
             {
                 if (lastParsed != ObjectType.Record)
@@ -300,7 +300,7 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
             }
             else
             {
-                MajorRecordHeader majorMeta = package.MetaData.Constants.MajorRecord(stream.RemainingMemory);
+                MajorRecordHeader majorMeta = package.MetaData.Constants.MajorRecordHeader(stream.RemainingMemory);
                 if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
                 {
                     throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);

@@ -4,6 +4,8 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
 using System;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.Skyrim;
@@ -80,7 +82,7 @@ abstract partial class GlobalBinaryOverlay
         BinaryOverlayFactoryPackage package,
         TypedParseParams? translationParams)
     {
-        var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
+        var majorFrame = package.MetaData.Constants.MajorRecord(stream.RemainingMemory);
         var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);
         switch (globalChar)
         {

@@ -131,7 +131,7 @@ public readonly struct GroupFrame : IEnumerable<MajorRecordPinFrame>
     /// <param name="span">Span to overlay on, aligned to the start of the header</param>
     public GroupFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
     {
-        _header = meta.Group(span);
+        _header = meta.GroupHeader(span);
         HeaderAndContentData = span.Slice(0, checked((int)_header.TotalLength));
     }
 
