@@ -279,12 +279,12 @@ public static class HeaderExt
     /// <returns>SubrecordHeader if found, otherwise null</returns>
     public static SubrecordPinHeader? TryFindSubrecordHeader(this MajorRecordFrame majorFrame, RecordType type)
     {
-        var find = RecordSpanExtensions.TryFindSubrecord(majorFrame.Content, majorFrame.Meta, type);
-        if (find == null)
+        if (majorFrame.TryFindSubrecordHeader(type, out var header))
         {
-            return null;
+            return header;
         }
-        return new SubrecordPinHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location), find.Value.Location + majorFrame.HeaderLength);
+
+        return default;
     }
 
     /// <summary>
@@ -316,12 +316,12 @@ public static class HeaderExt
     /// <returns>SubrecordHeader if found, otherwise null</returns>
     public static SubrecordPinHeader? TryFindSubrecordHeader(this MajorRecordFrame majorFrame, RecordType type, int offset)
     {
-        var find = RecordSpanExtensions.TryFindSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
-        if (find == null)
+        if (TryFindSubrecordHeader(majorFrame, type, offset, out var header))
         {
-            return null;
+            return header;
         }
-        return new SubrecordPinHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location + offset - majorFrame.HeaderLength), find.Value.Location + offset);
+
+        return default;
     }
 
     /// <summary>
@@ -339,7 +339,7 @@ public static class HeaderExt
             pin = default;
             return false;
         }
-        pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location), find.Value.Location + majorFrame.HeaderLength);
+        pin = find.Value.Frame.Pin(find.Value.Location + majorFrame.HeaderLength);
         return true;
     }
 
@@ -351,13 +351,12 @@ public static class HeaderExt
     /// <returns>SubrecordHeader if found, otherwise null</returns>
     public static SubrecordPinFrame? TryFindSubrecord(this MajorRecordFrame majorFrame, RecordType type)
     {
-        var find = RecordSpanExtensions.TryFindSubrecord(majorFrame.Content, majorFrame.Meta, type);
-        if (find == null)
+        if (TryFindSubrecord(majorFrame, type, out var frame))
         {
-            return null;
+            return frame;
         }
 
-        return new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location), find.Value.Location + majorFrame.HeaderLength);
+        return default;
     }
 
     /// <summary>
@@ -389,12 +388,12 @@ public static class HeaderExt
     /// <returns>SubrecordHeader if found, otherwise null</returns>
     public static SubrecordPinFrame? TryFindSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset)
     {
-        var find = RecordSpanExtensions.TryFindSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
-        if (find == null)
+        if (TryFindSubrecord(majorFrame, type, offset, out var frame))
         {
-            return null;
+            return frame;
         }
-        return new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location + offset - majorFrame.HeaderLength), find.Value.Location + offset);
+
+        return default;
     }
 
     /// <summary>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ownership" objType="Subrecord" GUID="818a652b-094d-4aef-8854-d66f76b2037e" ID="458">
+    <Fields>
+      <Data recordType="XOWN">
+        <Fields>
+          <FormLink name="Owner">
+            <Interface>IOwner</Interface>
+          </FormLink>
+          <Int32 name="Unknown" />
+          <Bool name="NoCrime" byteLength="4" importantByteLength="1" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

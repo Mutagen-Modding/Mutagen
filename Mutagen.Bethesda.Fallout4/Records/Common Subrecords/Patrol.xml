@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Patrol" objType="Subrecord" GUID="268951c1-1f84-40b9-9f69-078f8ef2b858" ID="485">
+    <Fields>
+      <Float name="IdleTime" recordType="XPRD" nullable="False" />
+      <CustomLogic name="PatrolScriptMarker" recordType="XPPA" />
+      <FormLink name="Idle" recordType="INAM" refName="IdleAnimation" nullable="False" />
+      <RefList name="Topics" refName="ATopicReference" binary="Custom" />
+      <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -10,16 +10,17 @@
       <String name="Filter" recordType="FLTR" />
       <RefList name="Parts" refName="StaticPart" />
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
   <Object name="StaticPart" objType="Subrecord" GUID="24d0a7c0-8933-4abb-9d66-c56a3ce655fa" ID="198">
     <Fields>
       <FormLink name="Static" recordType="ONAM" >
         <Interface>IStaticObject</Interface>
       </FormLink>
-      <RefList name="Placements" refName="Placement" recordType="DATA" />
+      <RefList name="Placements" refName="StaticPlacement" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="Placement" objType="Subrecord" GUID="caddd826-3213-4e45-b983-17447ba30c77" ID="199">
+  <Object name="StaticPlacement" objType="Subrecord" GUID="caddd826-3213-4e45-b983-17447ba30c77" ID="199">
     <Fields>
       <P3Float name="Position" />
       <P3Float name="Rotation" />

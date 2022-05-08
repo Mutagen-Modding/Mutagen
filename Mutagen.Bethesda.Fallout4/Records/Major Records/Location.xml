@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Location" recordType="LCTN" baseClass="Fallout4MajorRecord" objType="Record" GUID="09ffb45f-a070-402d-a2eb-a6bcdeb35cdc" ID="467">
+    <Fields>
+    </Fields>
+    <LinkInterface>ILocationRecord</LinkInterface>
+  </Object>
+</Loqui>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LightingTemplate" recordType="LGTM" baseClass="Fallout4MajorRecord" objType="Record" GUID="e3ab581e-42ce-4c15-9c2d-28956462d5ef" ID="466">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

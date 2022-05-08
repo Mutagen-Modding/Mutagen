@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -25,18 +26,15 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
 using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
-using System;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -70,11 +68,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedArrowMixIn.ToString(
+            PlacedArrowMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -112,16 +110,17 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem UnknownReference,
                 TItem XATP,
                 TItem AmmoCount,
-                TItem LinkedRefTransient,
+                TItem IsLinkedRefTransient,
                 TItem Layer,
                 TItem MaterialSwap,
                 TItem ReferenceGroup,
                 TItem XCVR,
                 TItem EnableParent,
                 TItem Ownership,
+                TItem FactionRank,
                 TItem Emittance,
                 TItem MultiBoundReference,
-                TItem IgnoredBySandbox,
+                TItem IsIgnoredBySandbox,
                 TItem LocationRefTypes,
                 TItem LocationReference,
                 TItem Scale,
@@ -148,16 +147,17 @@ namespace Mutagen.Bethesda.Fallout4
                 UnknownReference: UnknownReference,
                 XATP: XATP,
                 AmmoCount: AmmoCount,
-                LinkedRefTransient: LinkedRefTransient,
+                IsLinkedRefTransient: IsLinkedRefTransient,
                 Layer: Layer,
                 MaterialSwap: MaterialSwap,
                 ReferenceGroup: ReferenceGroup,
                 XCVR: XCVR,
                 EnableParent: EnableParent,
                 Ownership: Ownership,
+                FactionRank: FactionRank,
                 Emittance: Emittance,
                 MultiBoundReference: MultiBoundReference,
-                IgnoredBySandbox: IgnoredBySandbox,
+                IsIgnoredBySandbox: IsIgnoredBySandbox,
                 LocationRefTypes: LocationRefTypes,
                 LocationReference: LocationReference,
                 Scale: Scale,
@@ -240,30 +240,25 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(PlacedArrow.Mask<bool>? printMask = null)
+            public string Print(PlacedArrow.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, PlacedArrow.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedArrow.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(PlacedArrow.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.Brace())
                 {
                     if (printMask?.Projectile ?? true)
                     {
                         sb.AppendItem(Projectile, "Projectile");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -327,36 +322,27 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(StructuredStringBuilder sb, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected override void ToString_FillInternal(StructuredStringBuilder sb)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(sb);
+                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Projectile, "Projectile");
                 }
@@ -527,7 +513,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -548,6 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedArrowInternal>,
         IPlacedArrowGetter,
+        IPositionRotation,
         IScripted
     {
         new IFormLink<IProjectileGetter> Projectile { get; set; }
@@ -567,6 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<IPlacedArrowGetter>,
         IMapsToGetter<IPlacedArrowGetter>,
+        IPositionRotationGetter,
         IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => PlacedArrow_Registration.Instance;
@@ -595,24 +583,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPlacedArrowGetter item,
             string? name = null,
             PlacedArrow.Mask<bool>? printMask = null)
         {
-            return ((PlacedArrowCommon)((IPlacedArrowGetter)item).CommonInstance()!).ToString(
+            return ((PlacedArrowCommon)((IPlacedArrowGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPlacedArrowGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             PlacedArrow.Mask<bool>? printMask = null)
         {
-            ((PlacedArrowCommon)((IPlacedArrowGetter)item).CommonInstance()!).ToString(
+            ((PlacedArrowCommon)((IPlacedArrowGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -745,25 +733,26 @@ namespace Mutagen.Bethesda.Fallout4
         UnknownReference = 13,
         XATP = 14,
         AmmoCount = 15,
-        LinkedRefTransient = 16,
+        IsLinkedRefTransient = 16,
         Layer = 17,
         MaterialSwap = 18,
         ReferenceGroup = 19,
         XCVR = 20,
         EnableParent = 21,
         Ownership = 22,
-        Emittance = 23,
-        MultiBoundReference = 24,
-        IgnoredBySandbox = 25,
-        LocationRefTypes = 26,
-        LocationReference = 27,
-        Scale = 28,
-        DistantLodData = 29,
-        Position = 30,
-        Rotation = 31,
-        Comments = 32,
-        DATADataTypeState = 33,
-        Projectile = 34,
+        FactionRank = 23,
+        Emittance = 24,
+        MultiBoundReference = 25,
+        IsIgnoredBySandbox = 26,
+        LocationRefTypes = 27,
+        LocationReference = 28,
+        Scale = 29,
+        DistantLodData = 30,
+        Position = 31,
+        Rotation = 32,
+        Comments = 33,
+        DATADataTypeState = 34,
+        Projectile = 35,
     }
     #endregion
 
@@ -783,7 +772,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(PlacedArrow.Mask<>);
 
@@ -965,13 +954,13 @@ namespace Mutagen.Bethesda.Fallout4
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPlacedArrowGetter item,
             string? name = null,
             PlacedArrow.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -979,7 +968,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPlacedArrowGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -993,15 +982,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (PlacedArrow) =>");
             }
-            sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1055,7 +1042,7 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PlacedArrow_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.AmmoCount:
                     return (PlacedArrow_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.LinkedRefTransient:
+                case APlacedTrap_FieldIndex.IsLinkedRefTransient:
                     return (PlacedArrow_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Layer:
                     return (PlacedArrow_FieldIndex)((int)index);
@@ -1069,11 +1056,13 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PlacedArrow_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Ownership:
                     return (PlacedArrow_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.FactionRank:
+                    return (PlacedArrow_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Emittance:
                     return (PlacedArrow_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.MultiBoundReference:
                     return (PlacedArrow_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.IgnoredBySandbox:
+                case APlacedTrap_FieldIndex.IsIgnoredBySandbox:
                     return (PlacedArrow_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.LocationRefTypes:
                     return (PlacedArrow_FieldIndex)((int)index);
@@ -1613,7 +1602,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedArrowCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1686,11 +1675,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
+        public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedArrowMixIn.ToString(
+            PlacedArrowMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

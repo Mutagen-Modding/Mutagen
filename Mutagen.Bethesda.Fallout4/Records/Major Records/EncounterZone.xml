@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EncounterZone" recordType="ECZN" baseClass="Fallout4MajorRecord" objType="Record" GUID="c458c51c-ed0d-4453-b148-737ce5c34e4d" ID="464">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

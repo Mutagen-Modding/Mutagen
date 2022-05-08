@@ -74,6 +74,46 @@ internal class Fallout4InheritingInterfaceMapping : IInterfaceMapping
             Global_Registration.Instance,
         });
         dict[typeof(IGlobalShortGetter)] = dict[typeof(IGlobalShort)] with { Setter = false };
+        dict[typeof(IPlacedArrow)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedArrowGetter)] = dict[typeof(IPlacedArrow)] with { Setter = false };
+        dict[typeof(IPlacedBarrier)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedBarrierGetter)] = dict[typeof(IPlacedBarrier)] with { Setter = false };
+        dict[typeof(IPlacedBeam)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedBeamGetter)] = dict[typeof(IPlacedBeam)] with { Setter = false };
+        dict[typeof(IPlacedCone)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedConeGetter)] = dict[typeof(IPlacedCone)] with { Setter = false };
+        dict[typeof(IPlacedFlame)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedFlameGetter)] = dict[typeof(IPlacedFlame)] with { Setter = false };
+        dict[typeof(IPlacedHazard)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedHazardGetter)] = dict[typeof(IPlacedHazard)] with { Setter = false };
+        dict[typeof(IPlacedMissile)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedMissileGetter)] = dict[typeof(IPlacedMissile)] with { Setter = false };
+        dict[typeof(IPlacedTrap)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedTrapGetter)] = dict[typeof(IPlacedTrap)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

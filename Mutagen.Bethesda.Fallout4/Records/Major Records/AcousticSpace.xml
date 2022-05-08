@@ -9,5 +9,6 @@
       <Bool name="IsInterior" byteLength="1" recordType="XTRI" />
       <Float name="WeatherAttenuationDb" recordType="WNAM" integerType="UShort" divisor="100" />
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

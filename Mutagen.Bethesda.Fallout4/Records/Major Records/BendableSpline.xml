@@ -16,5 +16,6 @@
       </Data>
       <FormLink name="Texture" refName="TextureSet" recordType="TNAM" />
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

@@ -502,6 +502,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<INavigationMeshInfoMapGetter> IFallout4ModGetter.NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
         #endregion
+        #region Cells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly Fallout4ListGroup<CellBlock> _Cells_Object = new Fallout4ListGroup<CellBlock>();
+        public Fallout4ListGroup<CellBlock> Cells => _Cells_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4ListGroupGetter<ICellBlockGetter> IFallout4ModGetter.Cells => _Cells_Object;
+        #endregion
 
         #region To String
 
@@ -596,6 +603,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.VisualEffects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Regions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.NavigationMeshInfoMaps = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Cells = new MaskItem<TItem, Fallout4ListGroup.Mask<TItem>?>(initialValue, new Fallout4ListGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -653,7 +661,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ShaderParticleGeometries,
                 TItem VisualEffects,
                 TItem Regions,
-                TItem NavigationMeshInfoMaps)
+                TItem NavigationMeshInfoMaps,
+                TItem Cells)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -710,6 +719,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.VisualEffects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(VisualEffects, new Fallout4Group.Mask<TItem>(VisualEffects));
                 this.Regions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Regions, new Fallout4Group.Mask<TItem>(Regions));
                 this.NavigationMeshInfoMaps = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(NavigationMeshInfoMaps, new Fallout4Group.Mask<TItem>(NavigationMeshInfoMaps));
+                this.Cells = new MaskItem<TItem, Fallout4ListGroup.Mask<TItem>?>(Cells, new Fallout4ListGroup.Mask<TItem>(Cells));
             }
 
             #pragma warning disable CS8618
@@ -776,6 +786,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? VisualEffects { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Regions { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? NavigationMeshInfoMaps { get; set; }
+            public MaskItem<TItem, Fallout4ListGroup.Mask<TItem>?>? Cells { get; set; }
             #endregion
 
             #region Equals
@@ -843,6 +854,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.VisualEffects, rhs.VisualEffects)) return false;
                 if (!object.Equals(this.Regions, rhs.Regions)) return false;
                 if (!object.Equals(this.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps)) return false;
+                if (!object.Equals(this.Cells, rhs.Cells)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -903,6 +915,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.VisualEffects);
                 hash.Add(this.Regions);
                 hash.Add(this.NavigationMeshInfoMaps);
+                hash.Add(this.Cells);
                 return hash.ToHashCode();
             }
 
@@ -1186,6 +1199,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.NavigationMeshInfoMaps.Overall)) return false;
                     if (this.NavigationMeshInfoMaps.Specific != null && !this.NavigationMeshInfoMaps.Specific.All(eval)) return false;
                 }
+                if (Cells != null)
+                {
+                    if (!eval(this.Cells.Overall)) return false;
+                    if (this.Cells.Specific != null && !this.Cells.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1468,6 +1486,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.NavigationMeshInfoMaps.Overall)) return true;
                     if (this.NavigationMeshInfoMaps.Specific != null && this.NavigationMeshInfoMaps.Specific.Any(eval)) return true;
                 }
+                if (Cells != null)
+                {
+                    if (eval(this.Cells.Overall)) return true;
+                    if (this.Cells.Specific != null && this.Cells.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1537,6 +1560,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.VisualEffects = this.VisualEffects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.VisualEffects.Overall), this.VisualEffects.Specific?.Translate(eval));
                 obj.Regions = this.Regions == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
                 obj.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.NavigationMeshInfoMaps.Overall), this.NavigationMeshInfoMaps.Specific?.Translate(eval));
+                obj.Cells = this.Cells == null ? null : new MaskItem<R, Fallout4ListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1775,6 +1799,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         NavigationMeshInfoMaps?.Print(sb);
                     }
+                    if (printMask?.Cells?.Overall ?? true)
+                    {
+                        Cells?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1854,6 +1882,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<VisualEffect.ErrorMask>?>? VisualEffects;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Region.ErrorMask>?>? Regions;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>? NavigationMeshInfoMaps;
+            public MaskItem<Exception?, Fallout4ListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
             #endregion
 
             #region IErrorMask
@@ -1972,6 +2001,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Regions;
                     case Fallout4Mod_FieldIndex.NavigationMeshInfoMaps:
                         return NavigationMeshInfoMaps;
+                    case Fallout4Mod_FieldIndex.Cells:
+                        return Cells;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2146,6 +2177,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.NavigationMeshInfoMaps:
                         this.NavigationMeshInfoMaps = new MaskItem<Exception?, Fallout4Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Cells:
+                        this.Cells = new MaskItem<Exception?, Fallout4ListGroup.ErrorMask<CellBlock.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2322,6 +2356,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.NavigationMeshInfoMaps:
                         this.NavigationMeshInfoMaps = (MaskItem<Exception?, Fallout4Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Cells:
+                        this.Cells = (MaskItem<Exception?, Fallout4ListGroup.ErrorMask<CellBlock.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2385,6 +2422,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (VisualEffects != null) return true;
                 if (Regions != null) return true;
                 if (NavigationMeshInfoMaps != null) return true;
+                if (Cells != null) return true;
                 return false;
             }
             #endregion
@@ -2465,6 +2503,7 @@ namespace Mutagen.Bethesda.Fallout4
                 VisualEffects?.Print(sb);
                 Regions?.Print(sb);
                 NavigationMeshInfoMaps?.Print(sb);
+                Cells?.Print(sb);
             }
             #endregion
 
@@ -2528,6 +2567,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.VisualEffects = this.VisualEffects.Combine(rhs.VisualEffects, (l, r) => l.Combine(r));
                 ret.Regions = this.Regions.Combine(rhs.Regions, (l, r) => l.Combine(r));
                 ret.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps.Combine(rhs.NavigationMeshInfoMaps, (l, r) => l.Combine(r));
+                ret.Cells = this.Cells.Combine(rhs.Cells, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2606,6 +2646,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<VisualEffect.TranslationMask>? VisualEffects;
             public Fallout4Group.TranslationMask<Region.TranslationMask>? Regions;
             public Fallout4Group.TranslationMask<NavigationMeshInfoMap.TranslationMask>? NavigationMeshInfoMaps;
+            public Fallout4ListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
             #endregion
 
             #region Ctors
@@ -2685,6 +2726,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((VisualEffects != null ? VisualEffects.OnOverall : DefaultOn, VisualEffects?.GetCrystal()));
                 ret.Add((Regions != null ? Regions.OnOverall : DefaultOn, Regions?.GetCrystal()));
                 ret.Add((NavigationMeshInfoMaps != null ? NavigationMeshInfoMaps.OnOverall : DefaultOn, NavigationMeshInfoMaps?.GetCrystal()));
+                ret.Add((Cells != null ? Cells.OnOverall : DefaultOn, Cells?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3002,6 +3044,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.NavigationMeshInfoMaps.RecordCache.Set(rhsMod.NavigationMeshInfoMaps.RecordCache.Items);
             }
+            if (mask?.Cells ?? true)
+            {
+                if (rhsMod.Cells.Records.Count > 0)
+                {
+                    throw new NotImplementedException("Cell additions need implementing");
+                }
+            }
         }
 
         public override void SyncRecordCount()
@@ -3066,6 +3115,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += VisualEffects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Regions.RecordCache.Count > 0 ? 1 : default(uint);
             count += NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Cells.Records.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3371,6 +3421,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<VisualEffect> VisualEffects { get; }
         new Fallout4Group<Region> Regions { get; }
         new Fallout4Group<NavigationMeshInfoMap> NavigationMeshInfoMaps { get; }
+        new Fallout4ListGroup<CellBlock> Cells { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3444,6 +3495,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IVisualEffectGetter> VisualEffects { get; }
         IFallout4GroupGetter<IRegionGetter> Regions { get; }
         IFallout4GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps { get; }
+        IFallout4ListGroupGetter<ICellBlockGetter> Cells { get; }
 
     }
 
@@ -4069,6 +4121,7 @@ namespace Mutagen.Bethesda.Fallout4
         VisualEffects = 52,
         Regions = 53,
         NavigationMeshInfoMaps = 54,
+        Cells = 55,
     }
     #endregion
 
@@ -4086,9 +4139,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 55;
+        public const ushort AdditionalFieldCount = 56;
 
-        public const ushort FieldCount = 55;
+        public const ushort FieldCount = 56;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4265,6 +4318,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.VisualEffects.RemapLinks(mapping);
             obj.Regions.RemapLinks(mapping);
             obj.NavigationMeshInfoMaps.RemapLinks(mapping);
+            obj.Cells.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -4353,6 +4407,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.VisualEffects.Remove(keys);
             obj.Regions.Remove(keys);
             obj.NavigationMeshInfoMaps.Remove(keys);
+            obj.Cells.Remove(keys);
         }
         
         public void Remove(
@@ -4848,6 +4903,104 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
+                case "PlacedTrap":
+                case "IPlacedTrapGetter":
+                case "IPlacedTrap":
+                case "IPlacedTrapInternal":
+                case "PlacedHazard":
+                case "IPlacedHazardGetter":
+                case "IPlacedHazard":
+                case "IPlacedHazardInternal":
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IPlaceableObject":
+                case "IPlaceableObjectGetter":
+                    Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBendableSplineGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IHolotapeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMovableStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticCollectionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITalkingActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -4962,6 +5115,10 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(IMovableStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "ILockList":
+                case "ILockListGetter":
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IPlacedTrapTarget":
                 case "IPlacedTrapTargetGetter":
                     Remove(obj, keys, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown);
@@ -4970,6 +5127,9 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                     Remove(obj, keys, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown);
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
                     break;
                 case "INpcSpawn":
                 case "INpcSpawnGetter":
@@ -4992,6 +5152,36 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IEffectRecordGetter":
                     Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "ILocationTargetable":
+                case "ILocationTargetableGetter":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IPlacedSimple":
+                case "IPlacedSimpleGetter":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IPlacedThing":
+                case "IPlacedThingGetter":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ILinkedReference":
+                case "ILinkedReferenceGetter":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
                     break;
                 case "ISound":
                 case "ISoundGetter":
@@ -5108,6 +5298,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.VisualEffects = MaskItemExt.Factory(item.VisualEffects.GetEqualsMask(rhs.VisualEffects, include), include);
             ret.Regions = MaskItemExt.Factory(item.Regions.GetEqualsMask(rhs.Regions, include), include);
             ret.NavigationMeshInfoMaps = MaskItemExt.Factory(item.NavigationMeshInfoMaps.GetEqualsMask(rhs.NavigationMeshInfoMaps, include), include);
+            ret.Cells = MaskItemExt.Factory(item.Cells.GetEqualsMask(rhs.Cells, include), include);
         }
         
         public string Print(
@@ -5371,6 +5562,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.NavigationMeshInfoMaps?.Overall ?? true)
             {
                 item.NavigationMeshInfoMaps?.Print(sb, "NavigationMeshInfoMaps");
+            }
+            if (printMask?.Cells?.Overall ?? true)
+            {
+                item.Cells?.Print(sb, "Cells");
             }
         }
         
@@ -5821,6 +6016,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isNavigationMeshInfoMapsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Cells) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Cells, rhs.Cells, out var lhsCells, out var rhsCells, out var isCellsEqual))
+                {
+                    if (!object.Equals(lhsCells, rhsCells)) return false;
+                }
+                else if (!isCellsEqual) return false;
+            }
             return true;
         }
         
@@ -5882,6 +6085,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.VisualEffects);
             hash.Add(item.Regions);
             hash.Add(item.NavigationMeshInfoMaps);
+            hash.Add(item.Cells);
             return hash.ToHashCode();
         }
         
@@ -6170,6 +6374,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case "INavigationMeshInfoMap":
                 case "INavigationMeshInfoMapInternal":
                     return obj.NavigationMeshInfoMaps;
+                case "CellBlock":
+                case "ICellBlockGetter":
+                case "ICellBlock":
+                    return obj.Cells.Records;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -6194,7 +6402,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[54];
+            Stream[] outputStreams = new Stream[55];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -6250,6 +6458,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.VisualEffects, 51, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Regions, 52, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, 53, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 54, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6493,6 +6702,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.Cells.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -6711,6 +6924,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Cells.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7235,6 +7452,51 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -7742,6 +8004,13 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.NavigationMeshInfoMaps,
                 groupGetter: (m) => m.NavigationMeshInfoMaps))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                linkCache: linkCache,
+                modKey: obj.ModKey,
+                parent: null))
             {
                 yield return item;
             }
@@ -8528,6 +8797,76 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.NavigationMeshInfoMaps,
                         groupGetter: (m) => m.NavigationMeshInfoMaps))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
@@ -9672,6 +10011,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Cells) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Cells);
+                try
+                {
+                    item.Cells.DeepCopyIn(
+                        rhs: rhs.Cells,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Cells));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9816,6 +10175,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool VisualEffects;
         public bool Regions;
         public bool NavigationMeshInfoMaps;
+        public bool Cells;
         public GroupMask()
         {
         }
@@ -9875,6 +10235,7 @@ namespace Mutagen.Bethesda.Fallout4
             VisualEffects = defaultValue;
             Regions = defaultValue;
             NavigationMeshInfoMaps = defaultValue;
+            Cells = defaultValue;
         }
     }
 
@@ -10496,6 +10857,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)NavigationMeshInfoMapsItem).BinaryWriteTranslator).Write<INavigationMeshInfoMapGetter>(
                         item: NavigationMeshInfoMapsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Cells ?? true)
+            {
+                var CellsItem = item.Cells;
+                if (CellsItem.Records.Count > 0)
+                {
+                    ((Fallout4ListGroupBinaryWriteTranslation)((IBinaryItem)CellsItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
+                        item: CellsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -11322,6 +11694,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps;
                 }
+                case RecordTypeInts.CELL:
+                {
+                    if (importMask?.Cells ?? true)
+                    {
+                        item.Cells.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Cells;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -11755,6 +12141,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? Fallout4GroupBinaryOverlay<INavigationMeshInfoMapGetter>.Fallout4GroupFactory(_data, _NavigationMeshInfoMapsLocations, _package) : default;
         public IFallout4GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new Fallout4Group<NavigationMeshInfoMap>(this);
         #endregion
+        #region Cells
+        private RangeInt64? _CellsLocation;
+        private IFallout4ListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? Fallout4ListGroupBinaryOverlay<ICellBlockGetter>.Fallout4ListGroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package), _package) : default;
+        public IFallout4ListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new Fallout4ListGroup<CellBlock>();
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -12166,6 +12557,11 @@ namespace Mutagen.Bethesda.Fallout4
                     _NavigationMeshInfoMapsLocations ??= new();
                     _NavigationMeshInfoMapsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps;
+                }
+                case RecordTypeInts.CELL:
+                {
+                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    return (int)Fallout4Mod_FieldIndex.Cells;
                 }
                 default:
                     return default(int?);

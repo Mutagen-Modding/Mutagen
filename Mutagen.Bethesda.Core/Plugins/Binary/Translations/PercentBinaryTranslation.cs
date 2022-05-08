@@ -38,8 +38,9 @@ public class PercentBinaryTranslation
         }
     }
 
-    public static void Write(MutagenWriter writer, Percent item, FloatIntegerType integerType)
+    public static void Write(MutagenWriter writer, Percent? item, FloatIntegerType integerType)
     {
+        if (!item.HasValue) return;
         switch (integerType)
         {
             case FloatIntegerType.UInt:
@@ -53,6 +54,15 @@ public class PercentBinaryTranslation
                 return;
             default:
                 throw new NotImplementedException();
+        }
+    }
+
+    public static void Write(MutagenWriter writer, Percent? item, FloatIntegerType integerType, RecordType header)
+    {
+        if (!item.HasValue) return;
+        using (HeaderExport.Subrecord(writer, header))
+        {
+            Write(writer, item, integerType);
         }
     }
 }

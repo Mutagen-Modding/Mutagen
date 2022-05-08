@@ -882,6 +882,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ITextureSetInternal>,
         IObjectBounded,
         IObjectId,
+        IPlaceableObject,
         ITextureSetGetter
     {
         /// <summary>
@@ -915,7 +916,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<ITextureSetGetter>,
         IMapsToGetter<ITextureSetGetter>,
         IObjectBoundedGetter,
-        IObjectIdGetter
+        IObjectIdGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         #region ObjectBounds

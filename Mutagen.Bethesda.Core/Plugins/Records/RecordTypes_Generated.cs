@@ -83,6 +83,7 @@ public partial class RecordTypes
     public static readonly RecordType KEYM = new(0x4D59454B);
     public static readonly RecordType KYWD = new(0x4457594B);
     public static readonly RecordType LAND = new(0x444E414C);
+    public static readonly RecordType LAYR = new(0x5259414C);
     public static readonly RecordType LCRT = new(0x5452434C);
     public static readonly RecordType LCTN = new(0x4E54434C);
     public static readonly RecordType LENS = new(0x534E454C);
@@ -132,6 +133,7 @@ public partial class RecordTypes
     public static readonly RecordType RELA = new(0x414C4552);
     public static readonly RecordType REVB = new(0x42564552);
     public static readonly RecordType RFCT = new(0x54434652);
+    public static readonly RecordType RFGP = new(0x50474652);
     public static readonly RecordType ROAD = new(0x44414F52);
     public static readonly RecordType SBSP = new(0x50534253);
     public static readonly RecordType SCEN = new(0x4E454353);
@@ -167,7 +169,11 @@ public partial class RecordTypes
     public static readonly RecordType WOOP = new(0x504F4F57);
     public static readonly RecordType WRLD = new(0x444C5257);
     public static readonly RecordType WTHR = new(0x52485457);
+    public static readonly RecordType XAMC = new(0x434D4158);
     public static readonly RecordType XAPD = new(0x44504158);
+    public static readonly RecordType XASP = new(0x50534158);
+    public static readonly RecordType XATP = new(0x50544158);
+    public static readonly RecordType XCVR = new(0x52564358);
     public static readonly RecordType XEMI = new(0x494D4558);
     public static readonly RecordType XESP = new(0x50534558);
     public static readonly RecordType XEZN = new(0x4E5A4558);
@@ -175,12 +181,16 @@ public partial class RecordTypes
     public static readonly RecordType XHTW = new(0x57544858);
     public static readonly RecordType XIS2 = new(0x32534958);
     public static readonly RecordType XLKR = new(0x524B4C58);
+    public static readonly RecordType XLKT = new(0x544B4C58);
     public static readonly RecordType XLOD = new(0x444F4C58);
     public static readonly RecordType XLRL = new(0x4C524C58);
     public static readonly RecordType XLRT = new(0x54524C58);
+    public static readonly RecordType XLYR = new(0x52594C58);
     public static readonly RecordType XMBR = new(0x52424D58);
+    public static readonly RecordType XMSP = new(0x50534D58);
     public static readonly RecordType XOWN = new(0x4E574F58);
     public static readonly RecordType XPWR = new(0x52575058);
+    public static readonly RecordType XRFG = new(0x47465258);
     public static readonly RecordType XRNK = new(0x4B4E5258);
     public static readonly RecordType XSCL = new(0x4C435358);
     public static readonly RecordType XXXX = new(0x58585858);

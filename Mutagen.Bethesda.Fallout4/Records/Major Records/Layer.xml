@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Layer" recordType="LAYR" baseClass="Fallout4MajorRecord" objType="Record" GUID="732a94be-1082-44ce-a4d4-169b255b8abe" ID="473">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

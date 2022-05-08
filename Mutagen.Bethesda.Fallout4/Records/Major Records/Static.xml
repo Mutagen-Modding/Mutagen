@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Static" recordType="STAT" objType="Record" baseClass="Fallout4MajorRecord" majorFlags="true" GUID="ecd28406-13ba-4ad0-b206-c6b54b791a0b" ID="155">
     <Fields>
@@ -18,7 +18,7 @@
           <Float name="LeafFrequency" />
         </Fields>
       </Data>
-      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" />
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
       <RefList name="DistantLods" refName="DistantLod" binary="NoGeneration" />
       <CustomLogic name="DistantLodParsing" recordType="MNAM" />
     </Fields>

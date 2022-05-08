@@ -103,6 +103,7 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IFurnitureAssociation</LinkInterface>
   </Object>

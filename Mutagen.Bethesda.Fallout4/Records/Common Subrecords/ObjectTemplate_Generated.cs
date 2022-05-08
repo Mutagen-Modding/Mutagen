@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
-        #region EditorOnly
-        public Boolean EditorOnly { get; set; } = default;
+        #region IsEditorOnly
+        public Boolean IsEditorOnly { get; set; } = default;
         #endregion
         #region Name
         /// <summary>
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedRequired
         where T : struct, Enum
     {
-        new Boolean EditorOnly { get; set; }
+        new Boolean IsEditorOnly { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ObjectTemplate_Registration.Instance;
-        Boolean EditorOnly { get; }
+        Boolean IsEditorOnly { get; }
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum ObjectTemplate_FieldIndex
     {
-        EditorOnly = 0,
+        IsEditorOnly = 0,
         Name = 1,
         AddonIndex = 2,
         LevelMin = 3,
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IObjectTemplate<T> item)
         {
             ClearPartial();
-            item.EditorOnly = default;
+            item.IsEditorOnly = default;
             item.Name = default;
             item.AddonIndex = ObjectTemplate<T>._AddonIndex_Default;
             item.LevelMin = default;
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.EditorOnly = item.EditorOnly == rhs.EditorOnly;
+            ret.IsEditorOnly = item.IsEditorOnly == rhs.IsEditorOnly;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.AddonIndex = item.AddonIndex == rhs.AddonIndex;
             ret.LevelMin = item.LevelMin == rhs.LevelMin;
@@ -768,9 +768,9 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             ObjectTemplate.Mask<bool>? printMask = null)
         {
-            if (printMask?.EditorOnly ?? true)
+            if (printMask?.IsEditorOnly ?? true)
             {
-                sb.AppendItem(item.EditorOnly, "EditorOnly");
+                sb.AppendItem(item.IsEditorOnly, "IsEditorOnly");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
@@ -852,9 +852,9 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.EditorOnly) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.IsEditorOnly) ?? true))
             {
-                if (lhs.EditorOnly != rhs.EditorOnly) return false;
+                if (lhs.IsEditorOnly != rhs.IsEditorOnly) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Name) ?? true))
             {
@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IObjectTemplateGetter<T> item)
         {
             var hash = new HashCode();
-            hash.Add(item.EditorOnly);
+            hash.Add(item.IsEditorOnly);
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
@@ -963,9 +963,9 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
             where T : struct, Enum
         {
-            if ((copyMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.EditorOnly) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.IsEditorOnly) ?? true))
             {
-                item.EditorOnly = rhs.EditorOnly;
+                item.IsEditorOnly = rhs.IsEditorOnly;
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Name) ?? true))
             {
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.EditorOnly,
+                item: item.IsEditorOnly,
                 header: translationParams.ConvertToCustom(RecordTypes.OBTF));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1250,9 +1250,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.OBTF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.EditorOnly) return ParseResult.Stop;
-                    item.EditorOnly = true;
-                    return (int)ObjectTemplate_FieldIndex.EditorOnly;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.IsEditorOnly) return ParseResult.Stop;
+                    item.IsEditorOnly = true;
+                    return (int)ObjectTemplate_FieldIndex.IsEditorOnly;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -1348,9 +1348,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        #region EditorOnly
-        private int? _EditorOnlyLocation;
-        public Boolean EditorOnly => _EditorOnlyLocation.HasValue ? true : default;
+        #region IsEditorOnly
+        private int? _IsEditorOnlyLocation;
+        public Boolean IsEditorOnly => _IsEditorOnlyLocation.HasValue ? true : default;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -1429,9 +1429,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.OBTF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.EditorOnly) return ParseResult.Stop;
-                    _EditorOnlyLocation = (stream.Position - offset);
-                    return (int)ObjectTemplate_FieldIndex.EditorOnly;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ObjectTemplate_FieldIndex.IsEditorOnly) return ParseResult.Stop;
+                    _IsEditorOnlyLocation = (stream.Position - offset);
+                    return (int)ObjectTemplate_FieldIndex.IsEditorOnly;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.EditorOnly = initialValue;
+                this.IsEditorOnly = initialValue;
                 this.Name = initialValue;
                 this.AddonIndex = initialValue;
                 this.LevelMin = initialValue;
@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
         
             public Mask(
-                TItem EditorOnly,
+                TItem IsEditorOnly,
                 TItem Name,
                 TItem AddonIndex,
                 TItem LevelMin,
@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Includes,
                 TItem Properties)
             {
-                this.EditorOnly = EditorOnly;
+                this.IsEditorOnly = IsEditorOnly;
                 this.Name = Name;
                 this.AddonIndex = AddonIndex;
                 this.LevelMin = LevelMin;
@@ -1547,7 +1547,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
         
             #region Members
-            public TItem EditorOnly;
+            public TItem IsEditorOnly;
             public TItem Name;
             public TItem AddonIndex;
             public TItem LevelMin;
@@ -1570,7 +1570,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.EditorOnly, rhs.EditorOnly)) return false;
+                if (!object.Equals(this.IsEditorOnly, rhs.IsEditorOnly)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.AddonIndex, rhs.AddonIndex)) return false;
                 if (!object.Equals(this.LevelMin, rhs.LevelMin)) return false;
@@ -1586,7 +1586,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.EditorOnly);
+                hash.Add(this.IsEditorOnly);
                 hash.Add(this.Name);
                 hash.Add(this.AddonIndex);
                 hash.Add(this.LevelMin);
@@ -1605,7 +1605,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.EditorOnly)) return false;
+                if (!eval(this.IsEditorOnly)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.AddonIndex)) return false;
                 if (!eval(this.LevelMin)) return false;
@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.EditorOnly)) return true;
+                if (eval(this.IsEditorOnly)) return true;
                 if (eval(this.Name)) return true;
                 if (eval(this.AddonIndex)) return true;
                 if (eval(this.LevelMin)) return true;
@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Fallout4
         
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.EditorOnly = eval(this.EditorOnly);
+                obj.IsEditorOnly = eval(this.IsEditorOnly);
                 obj.Name = eval(this.Name);
                 obj.AddonIndex = eval(this.AddonIndex);
                 obj.LevelMin = eval(this.LevelMin);
@@ -1782,9 +1782,9 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(ObjectTemplate.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.EditorOnly ?? true)
+                    if (printMask?.IsEditorOnly ?? true)
                     {
-                        sb.AppendItem(EditorOnly, "EditorOnly");
+                        sb.AppendItem(IsEditorOnly, "IsEditorOnly");
                     }
                     if (printMask?.Name ?? true)
                     {
@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public Exception? EditorOnly;
+            public Exception? IsEditorOnly;
             public Exception? Name;
             public Exception? AddonIndex;
             public Exception? LevelMin;
@@ -1916,8 +1916,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ObjectTemplate_FieldIndex enu = (ObjectTemplate_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectTemplate_FieldIndex.EditorOnly:
-                        return EditorOnly;
+                    case ObjectTemplate_FieldIndex.IsEditorOnly:
+                        return IsEditorOnly;
                     case ObjectTemplate_FieldIndex.Name:
                         return Name;
                     case ObjectTemplate_FieldIndex.AddonIndex:
@@ -1948,8 +1948,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ObjectTemplate_FieldIndex enu = (ObjectTemplate_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectTemplate_FieldIndex.EditorOnly:
-                        this.EditorOnly = ex;
+                    case ObjectTemplate_FieldIndex.IsEditorOnly:
+                        this.IsEditorOnly = ex;
                         break;
                     case ObjectTemplate_FieldIndex.Name:
                         this.Name = ex;
@@ -1991,8 +1991,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ObjectTemplate_FieldIndex enu = (ObjectTemplate_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectTemplate_FieldIndex.EditorOnly:
-                        this.EditorOnly = (Exception?)obj;
+                    case ObjectTemplate_FieldIndex.IsEditorOnly:
+                        this.IsEditorOnly = (Exception?)obj;
                         break;
                     case ObjectTemplate_FieldIndex.Name:
                         this.Name = (Exception?)obj;
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (EditorOnly != null) return true;
+                if (IsEditorOnly != null) return true;
                 if (Name != null) return true;
                 if (AddonIndex != null) return true;
                 if (LevelMin != null) return true;
@@ -2069,7 +2069,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(EditorOnly, "EditorOnly");
+                    sb.AppendItem(IsEditorOnly, "IsEditorOnly");
                 }
                 {
                     sb.AppendItem(Name, "Name");
@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.EditorOnly = this.EditorOnly.Combine(rhs.EditorOnly);
+                ret.IsEditorOnly = this.IsEditorOnly.Combine(rhs.IsEditorOnly);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.AddonIndex = this.AddonIndex.Combine(rhs.AddonIndex);
                 ret.LevelMin = this.LevelMin.Combine(rhs.LevelMin);
@@ -2190,7 +2190,7 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool EditorOnly;
+            public bool IsEditorOnly;
             public bool Name;
             public bool AddonIndex;
             public bool LevelMin;
@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.EditorOnly = defaultOn;
+                this.IsEditorOnly = defaultOn;
                 this.Name = defaultOn;
                 this.AddonIndex = defaultOn;
                 this.LevelMin = defaultOn;
@@ -2234,7 +2234,7 @@ namespace Mutagen.Bethesda.Fallout4
         
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((EditorOnly, null));
+                ret.Add((IsEditorOnly, null));
                 ret.Add((Name, null));
                 ret.Add((AddonIndex, null));
                 ret.Add((LevelMin, null));

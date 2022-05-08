@@ -81,6 +81,7 @@ public partial class RecordTypeInts
     public const int KEYM = 0x4D59454B;
     public const int KYWD = 0x4457594B;
     public const int LAND = 0x444E414C;
+    public const int LAYR = 0x5259414C;
     public const int LCRT = 0x5452434C;
     public const int LCTN = 0x4E54434C;
     public const int LENS = 0x534E454C;
@@ -130,6 +131,7 @@ public partial class RecordTypeInts
     public const int RELA = 0x414C4552;
     public const int REVB = 0x42564552;
     public const int RFCT = 0x54434652;
+    public const int RFGP = 0x50474652;
     public const int ROAD = 0x44414F52;
     public const int SBSP = 0x50534253;
     public const int SCEN = 0x4E454353;
@@ -165,7 +167,11 @@ public partial class RecordTypeInts
     public const int WOOP = 0x504F4F57;
     public const int WRLD = 0x444C5257;
     public const int WTHR = 0x52485457;
+    public const int XAMC = 0x434D4158;
     public const int XAPD = 0x44504158;
+    public const int XASP = 0x50534158;
+    public const int XATP = 0x50544158;
+    public const int XCVR = 0x52564358;
     public const int XEMI = 0x494D4558;
     public const int XESP = 0x50534558;
     public const int XEZN = 0x4E5A4558;
@@ -173,12 +179,16 @@ public partial class RecordTypeInts
     public const int XHTW = 0x57544858;
     public const int XIS2 = 0x32534958;
     public const int XLKR = 0x524B4C58;
+    public const int XLKT = 0x544B4C58;
     public const int XLOD = 0x444F4C58;
     public const int XLRL = 0x4C524C58;
     public const int XLRT = 0x54524C58;
+    public const int XLYR = 0x52594C58;
     public const int XMBR = 0x52424D58;
+    public const int XMSP = 0x50534D58;
     public const int XOWN = 0x4E574F58;
     public const int XPWR = 0x52575058;
+    public const int XRFG = 0x47465258;
     public const int XRNK = 0x4B4E5258;
     public const int XSCL = 0x4C435358;
     public const int XXXX = 0x58585858;

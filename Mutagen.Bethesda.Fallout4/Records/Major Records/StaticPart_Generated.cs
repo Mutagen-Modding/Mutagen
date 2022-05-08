@@ -63,15 +63,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Placements
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Placement>? _Placements;
-        public ExtendedList<Placement>? Placements
+        private ExtendedList<StaticPlacement>? _Placements;
+        public ExtendedList<StaticPlacement>? Placements
         {
             get => this._Placements;
             set => this._Placements = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IPlacementGetter>? IStaticPartGetter.Placements => _Placements;
+        IReadOnlyList<IStaticPlacementGetter>? IStaticPartGetter.Placements => _Placements;
         #endregion
 
         #endregion
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Static = initialValue;
-                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Placement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Placement.Mask<TItem>?>>());
+                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Placements)
             {
                 this.Static = Static;
-                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Placement.Mask<TItem>?>>?>(Placements, Enumerable.Empty<MaskItemIndexed<TItem, Placement.Mask<TItem>?>>());
+                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(Placements, Enumerable.Empty<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem Static;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Placement.Mask<TItem>?>>?>? Placements;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>? Placements;
             #endregion
 
             #region Equals
@@ -216,14 +216,14 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Static = eval(this.Static);
                 if (Placements != null)
                 {
-                    obj.Placements = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Placement.Mask<R>?>>?>(eval(this.Placements.Overall), Enumerable.Empty<MaskItemIndexed<R, Placement.Mask<R>?>>());
+                    obj.Placements = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>?>(eval(this.Placements.Overall), Enumerable.Empty<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>());
                     if (Placements.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, Placement.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>();
                         obj.Placements.Specific = l;
                         foreach (var item in Placements.Specific)
                         {
-                            MaskItemIndexed<R, Placement.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Placement.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, StaticPlacement.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, StaticPlacement.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public Exception? Static;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Placement.ErrorMask?>>?>? Placements;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StaticPlacement.ErrorMask?>>?>? Placements;
             #endregion
 
             #region IErrorMask
@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Fallout4
                         this.Static = ex;
                         break;
                     case StaticPart_FieldIndex.Placements:
-                        this.Placements = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Placement.ErrorMask?>>?>(ex, null);
+                        this.Placements = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StaticPlacement.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Fallout4
                         this.Static = (Exception?)obj;
                         break;
                     case StaticPart_FieldIndex.Placements:
-                        this.Placements = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Placement.ErrorMask?>>?>)obj;
+                        this.Placements = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StaticPlacement.ErrorMask?>>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Static = this.Static.Combine(rhs.Static);
-                ret.Placements = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Placement.ErrorMask?>>?>(ExceptionExt.Combine(this.Placements?.Overall, rhs.Placements?.Overall), ExceptionExt.Combine(this.Placements?.Specific, rhs.Placements?.Specific));
+                ret.Placements = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StaticPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Placements?.Overall, rhs.Placements?.Overall), ExceptionExt.Combine(this.Placements?.Specific, rhs.Placements?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Static;
-            public Placement.TranslationMask? Placements;
+            public StaticPlacement.TranslationMask? Placements;
             #endregion
 
             #region Ctors
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Fallout4
         IStaticPartGetter
     {
         new IFormLinkNullable<IStaticObjectGetter> Static { get; set; }
-        new ExtendedList<Placement>? Placements { get; set; }
+        new ExtendedList<StaticPlacement>? Placements { get; set; }
     }
 
     public partial interface IStaticPartGetter :
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => StaticPart_Registration.Instance;
         IFormLinkNullableGetter<IStaticObjectGetter> Static { get; }
-        IReadOnlyList<IPlacementGetter>? Placements { get; }
+        IReadOnlyList<IStaticPlacementGetter>? Placements { get; }
 
     }
 
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)StaticPart_FieldIndex.Placements) ?? true))
             {
-                if (!lhs.Placements.SequenceEqualNullable(rhs.Placements, (l, r) => ((PlacementCommon)((IPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StaticPart_FieldIndex.Placements)))) return false;
+                if (!lhs.Placements.SequenceEqualNullable(rhs.Placements, (l, r) => ((StaticPlacementCommon)((IStaticPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StaticPart_FieldIndex.Placements)))) return false;
             }
             return true;
         }
@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Fallout4
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<Placement>();
+                            .ToExtendedList<StaticPlacement>();
                     }
                     else
                     {
@@ -1141,14 +1141,14 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.Static,
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlacementGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IStaticPlacementGetter>.Instance.Write(
                 writer: writer,
                 items: item.Placements,
                 recordType: translationParams.ConvertToCustom(RecordTypes.DATA),
-                transl: (MutagenWriter subWriter, IPlacementGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IStaticPlacementGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
-                    ((PlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((StaticPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1213,10 +1213,10 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Placements) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Placements = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Placement>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<StaticPlacement>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: Placement.TryCreateFromBinary)
-                        .CastExtendedList<Placement>();
+                            transl: StaticPlacement.TryCreateFromBinary)
+                        .CastExtendedList<StaticPlacement>();
                     return (int)StaticPart_FieldIndex.Placements;
                 }
                 default:
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _StaticLocation;
         public IFormLinkNullableGetter<IStaticObjectGetter> Static => _StaticLocation.HasValue ? new FormLinkNullable<IStaticObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticObjectGetter>.Null;
         #endregion
-        public IReadOnlyList<IPlacementGetter>? Placements { get; private set; }
+        public IReadOnlyList<IStaticPlacementGetter>? Placements { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1361,11 +1361,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Placements) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Placements = BinaryOverlayList.FactoryByStartIndex<PlacementBinaryOverlay>(
+                    this.Placements = BinaryOverlayList.FactoryByStartIndex<StaticPlacementBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 28,
-                        getter: (s, p) => PlacementBinaryOverlay.PlacementFactory(s, p));
+                        getter: (s, p) => StaticPlacementBinaryOverlay.StaticPlacementFactory(s, p));
                     stream.Position += subLen;
                     return (int)StaticPart_FieldIndex.Placements;
                 }

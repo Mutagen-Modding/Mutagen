@@ -6,7 +6,7 @@
       <Where>Enum</Where>
     </Generic>
     <Fields>
-      <Bool name="EditorOnly" recordType="OBTF" boolAsMarker="True" />
+      <Bool name="IsEditorOnly" recordType="OBTF" boolAsMarker="True" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <CustomLogic name="OBTSLogic" recordType="OBTS" />
       <Int16 name="AddonIndex" binary="NoGeneration" default="-1" />

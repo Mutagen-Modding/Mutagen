@@ -484,8 +484,9 @@ public abstract class Processor
         return true;
     }
 
-    public void ProcessBool(ReadOnlySpan<byte> span, ref long offsetLoc)
+    public void ProcessBool(ReadOnlySpan<byte> span, ref long offsetLoc, byte importantBytes)
     {
+        if (importantBytes != 1) throw new NotImplementedException();
         if (span[0] > 1)
         {
             _instructions.SetSubstitution(
@@ -505,11 +506,11 @@ public abstract class Processor
         }
     }
 
-    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, ref int loc, byte length)
+    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, ref int loc, byte length, byte importantBytes)
     {
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
-        ProcessBool(pin.Content.Slice(loc, length), ref longLoc);
+        ProcessBool(pin.Content.Slice(loc, length), ref longLoc, importantBytes);
         loc += length;
         return true;
     }

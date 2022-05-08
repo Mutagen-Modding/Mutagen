@@ -218,7 +218,7 @@ public readonly struct SubrecordFrame
     }
 
     /// <inheritdoc/>
-    public override string ToString() => Header.ToString();
+    public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength:X}";
 
     #region Header Forwarding
     /// <summary>

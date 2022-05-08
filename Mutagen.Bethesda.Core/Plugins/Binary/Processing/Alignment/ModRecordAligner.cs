@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 
@@ -22,52 +24,59 @@ public static class ModRecordAligner
         // Always interested in parent record types 
         interest.InterestingTypes.Add("CELL"); 
         interest.InterestingTypes.Add("WRLD"); 
-        var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest); 
-        if (gameMode == GameRelease.Oblivion) 
-        { 
-            var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedRules")); 
-            using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode)) 
-            { 
-                using var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode); 
-                AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs); 
-            } 
- 
-            var alignedGroupsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedGroups")); 
-            using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode)) 
-            { 
-                using var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode); 
-                AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs); 
-            } 
- 
-            fileLocs = RecordLocator.GetLocations(alignedGroupsFile, gameMode, interest); 
-            var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedCells")); 
-            using (var mutaReader = new BinaryReadStream(alignedGroupsFile)) 
+        var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest);
+
+        using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode))
+        {
+            var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedRules"));
+            using var writer = new MutagenWriter(alignedMajorRecordsFile, gameMode);
+            AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
+            inputPath = alignedMajorRecordsFile;
+        }
+
+        using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode))
+        {
+            var alignedGroupsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedGroups"));
+            using var writer = new MutagenWriter(alignedGroupsFile, gameMode);
+            AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
+            inputPath = alignedGroupsFile;
+        }
+
+        if (gameMode is GameRelease.Oblivion or GameRelease.Fallout4)
+        {
+            fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest);
+            var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedCells"));
+            using (var mutaReader = new MutagenBinaryReadStream(inputPath, gameMode))
+            {
+                using var writer = new MutagenWriter(alignedCellsFile, gameMode);
+                foreach (var grup in fileLocs.GrupLocations.Keys)
+                {
+                    if (grup <= mutaReader.Position) continue;
+                    var noRecordLength = grup - mutaReader.Position;
+                    mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
+
+                    // If complete overall, return 
+                    if (mutaReader.Complete) break;
+
+                    var nextGrup = mutaReader.GetGroupHeader();
+                    if (writer.MetaData.Constants.GroupConstants.Cell.TopGroupType == nextGrup.GroupType)
+                    {
+                        mutaReader.WriteTo(writer.BaseStream, nextGrup.HeaderLength);
+                        AlignCellChildren(mutaReader, writer);
+                    }
+                }
+                mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
+            }
+            inputPath = alignedCellsFile;
+        }
+
+        if (gameMode is GameRelease.Oblivion)
+        {
+            var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedWorldspaces"));
+            fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest); 
+            using (var mutaReader = new MutagenBinaryReadStream(inputPath, gameMode)) 
             { 
                 using var writer = new MutagenWriter(alignedCellsFile, gameMode); 
-                foreach (var grup in fileLocs.GrupLocations.Keys) 
-                { 
-                    if (grup <= mutaReader.Position) continue; 
-                    var noRecordLength = grup - mutaReader.Position; 
-                    mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength); 
- 
-                    // If complete overall, return 
-                    if (mutaReader.Complete) break; 
- 
-                    mutaReader.WriteTo(writer.BaseStream, 12); 
-                    var grupType = mutaReader.ReadInt32(); 
-                    writer.Write(grupType); 
-                    if (writer.MetaData.Constants.GroupConstants.Cell.TopGroupType == grupType) 
-                    { 
-                        AlignCellChildren(mutaReader, writer); 
-                    } 
-                } 
-                mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining)); 
-            } 
- 
-            fileLocs = RecordLocator.GetLocations(alignedCellsFile, gameMode, interest); 
-            using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, gameMode)) 
-            { 
-                using var writer = new MutagenWriter(outputPath.Path, gameMode); 
                 foreach (var grup in fileLocs.GrupLocations.Keys) 
                 { 
                     if (grup <= mutaReader.Position) continue; 
@@ -87,23 +96,9 @@ public static class ModRecordAligner
                 } 
                 mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining)); 
             } 
-        } 
-        else 
-        { 
-            var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedRules")); 
-            using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode)) 
-            { 
-                using var writer = new MutagenWriter(alignedMajorRecordsFile, gameMode); 
-                AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs); 
-            } 
- 
-            var alignedGroupsFile = Path.Combine(temp, "alignedGroups"); 
-            using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode)) 
-            { 
-                using var writer = new MutagenWriter(new FileStream(outputPath.Path, FileMode.Create), gameMode); 
-                AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs); 
-            } 
-        } 
+        }
+
+        File.Copy(inputPath, outputPath, true);
     } 
  
     private static void AlignMajorRecordsByRules( 
@@ -131,8 +126,9 @@ public static class ModRecordAligner
             inputStream.WriteTo(writer.BaseStream, (int)noRecordLength); 
  
             // If complete overall, return 
-            if (inputStream.Complete) break; 
- 
+            if (inputStream.Complete) break;
+
+            var majorHeader = inputStream.GetMajorRecordHeader();
             var recType = HeaderTranslation.ReadNextRecordType( 
                 inputStream, 
                 out var len); 
@@ -283,24 +279,19 @@ public static class ModRecordAligner
     } 
  
     private static void AlignCellChildren( 
-        BinaryReadStream mutaReader, 
+        IMutagenReadStream mutaReader, 
         MutagenWriter writer) 
-    { 
-        writer.Write(mutaReader.ReadSpan(4, readSafe: false)); 
+    {  
         var storage = new Dictionary<int, ReadOnlyMemorySlice<byte>>(); 
         for (int i = 0; i < 3; i++) 
-        { 
-            mutaReader.Position += 4; 
-            var subLen = mutaReader.ReadInt32(); 
-            mutaReader.Position += 4; 
-            var subGrupType = mutaReader.ReadInt32(); 
-            mutaReader.Position -= 16; 
-            if (!writer.MetaData.Constants.GroupConstants.Cell.SubTypes.Contains(subGrupType)) 
-            { 
-                i = 3; // end loop 
-                continue; 
+        {
+            if (!mutaReader.TryGetGroupHeader(out var grupHeader)) break;
+            var subGroupType = grupHeader.GroupType;
+            if (!writer.MetaData.Constants.GroupConstants.Cell.SubTypes.Contains(subGroupType)) 
+            {
+                break;
             } 
-            storage[subGrupType] = mutaReader.ReadMemory(subLen, readSafe: true); 
+            storage[subGroupType] = mutaReader.ReadMemory(checked((int)grupHeader.TotalLength), readSafe: true); 
         } 
         foreach (var item in writer.MetaData.Constants.GroupConstants.Cell.SubTypes) 
         { 
@@ -322,12 +313,12 @@ public static class ModRecordAligner
         for (int i = 0; i < 3; i++) 
         { 
             RecordType type = HeaderTranslation.GetNextRecordType(reader); 
-            switch (type.Type) 
+            switch (type.TypeInt) 
             { 
-                case "ROAD": 
+                case RecordTypeInts.ROAD: 
                     roadStorage = reader.ReadMemory(checked((int)reader.GetMajorRecordHeader().TotalLength)); 
                     break; 
-                case "CELL": 
+                case RecordTypeInts.CELL: 
                     if (cellStorage != null) 
                     { 
                         throw new ArgumentException(); 
@@ -344,7 +335,7 @@ public static class ModRecordAligner
                     reader.Position = startPos; 
                     cellStorage = reader.ReadMemory(checked((int)(cellMajorMeta.TotalLength + cellGroupLen))); 
                     break; 
-                case "GRUP": 
+                case RecordTypeInts.GRUP: 
                     if (roadStorage != null 
                         && cellStorage != null) 
                     { 
@@ -353,7 +344,7 @@ public static class ModRecordAligner
                     } 
                     grupBytes.Add(reader.ReadMemory(checked((int)reader.GetGroupHeader().TotalLength))); 
                     break; 
-                case "WRLD": 
+                case RecordTypeInts.WRLD: 
                     i = 3; // end loop 
                     continue; 
                 default: 

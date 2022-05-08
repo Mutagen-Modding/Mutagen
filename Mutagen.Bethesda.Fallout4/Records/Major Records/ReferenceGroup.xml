@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ReferenceGroup" objType="Record" recordType="RFGP" baseClass="Fallout4MajorRecord" GUID="4deaf871-34fe-481e-8fb7-0098b1b3fcbd" ID="483">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

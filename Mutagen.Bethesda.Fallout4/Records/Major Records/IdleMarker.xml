@@ -16,5 +16,6 @@
       <RefDirect name="Model" refName="Model" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

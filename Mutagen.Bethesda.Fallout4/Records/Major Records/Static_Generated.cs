@@ -1542,6 +1542,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.FULL,
                 RecordTypes.DNAM,
                 RecordTypes.NVNM,
+                RecordTypes.XXXX,
                 RecordTypes.MNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
@@ -2591,7 +2592,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ((NavmeshGeometryBinaryWriteTranslation)((IBinaryItem)NavmeshGeometryItem).BinaryWriteTranslator).Write(
                     item: NavmeshGeometryItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             StaticBinaryWriteTranslation.WriteBinaryDistantLodParsing(
                 writer: writer,
@@ -2765,7 +2766,9 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NVNM:
                 {
-                    item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(frame: frame);
+                    item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride));
                     return (int)Static_FieldIndex.NavmeshGeometry;
                 }
                 case RecordTypeInts.MNAM:
@@ -2773,6 +2776,11 @@ namespace Mutagen.Bethesda.Fallout4
                     return StaticBinaryCreateTranslation.FillBinaryDistantLodParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2890,8 +2898,9 @@ namespace Mutagen.Bethesda.Fallout4
         public Single LeafFrequency => _LeafFrequency_IsSet ? _data.Slice(_LeafFrequencyLocation, 4).Float() : default;
         #endregion
         #region NavmeshGeometry
+        private int? _NavmeshGeometryLengthOverride;
         private RangeInt32? _NavmeshGeometryLocation;
-        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(new OverlayStream(_data.Slice(_NavmeshGeometryLocation!.Value.Min), _package), _package) : default;
+        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(new OverlayStream(_data.Slice(_NavmeshGeometryLocation!.Value.Min), _package), _package, new TypedParseParams(_NavmeshGeometryLengthOverride, null)) : default;
         #endregion
         #region DistantLodParsing
         public partial ParseResult DistantLodParsingCustomParse(
@@ -3022,6 +3031,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NVNM:
                 {
                     _NavmeshGeometryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _NavmeshGeometryLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Static_FieldIndex.NavmeshGeometry;
                 }
                 case RecordTypeInts.MNAM:
@@ -3029,6 +3043,11 @@ namespace Mutagen.Bethesda.Fallout4
                     return DistantLodParsingCustomParse(
                         stream,
                         offset);
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

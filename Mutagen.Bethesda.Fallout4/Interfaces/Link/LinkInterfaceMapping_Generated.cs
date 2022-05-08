@@ -19,6 +19,33 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
     public Fallout4LinkInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IPlaceableObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AcousticSpace_Registration.Instance,
+            Activator_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            BendableSpline_Registration.Instance,
+            Book_Registration.Instance,
+            Container_Registration.Instance,
+            Door_Registration.Instance,
+            Flora_Registration.Instance,
+            Furniture_Registration.Instance,
+            Holotape_Registration.Instance,
+            IdleMarker_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Key_Registration.Instance,
+            Light_Registration.Instance,
+            MiscItem_Registration.Instance,
+            MovableStatic_Registration.Instance,
+            SoundMarker_Registration.Instance,
+            StaticCollection_Registration.Instance,
+            TalkingActivator_Registration.Instance,
+            Terminal_Registration.Instance,
+            TextureSet_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IPlaceableObjectGetter)] = dict[typeof(IPlaceableObject)] with { Setter = false };
         dict[typeof(IIdleRelation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ActionRecord_Registration.Instance,
@@ -155,6 +182,12 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Tree_Registration.Instance,
         });
         dict[typeof(IRegionTargetGetter)] = dict[typeof(IRegionTarget)] with { Setter = false };
+        dict[typeof(ILockList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Npc_Registration.Instance,
+        });
+        dict[typeof(ILockListGetter)] = dict[typeof(ILockList)] with { Setter = false };
         dict[typeof(IPlacedTrapTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Hazard_Registration.Instance,
@@ -164,6 +197,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,
+            APlacedTrap_Registration.Instance,
         });
         dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };
         dict[typeof(INpcSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -185,6 +219,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IEmittanceGetter)] = dict[typeof(IEmittance)] with { Setter = false };
         dict[typeof(ILocationRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
+            Location_Registration.Instance,
             LocationReferenceType_Registration.Instance,
         });
         dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
@@ -201,6 +236,30 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)] with { Setter = false };
+        dict[typeof(IPlaced)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            PlacedNpc_Registration.Instance,
+            PlacedObject_Registration.Instance,
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
+        dict[typeof(IPlacedSimple)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            PlacedNpc_Registration.Instance,
+            PlacedObject_Registration.Instance,
+        });
+        dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)] with { Setter = false };
+        dict[typeof(IPlacedThing)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            PlacedObject_Registration.Instance,
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(IPlacedThingGetter)] = dict[typeof(IPlacedThing)] with { Setter = false };
+        dict[typeof(ILinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)] with { Setter = false };
         dict[typeof(ISound)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             SoundDescriptor_Registration.Instance,

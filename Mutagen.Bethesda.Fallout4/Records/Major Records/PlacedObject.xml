@@ -1,6 +1,237 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedObject" recordType="REFR" baseClass="Fallout4MajorRecord" objType="Record" GUID="9f17225a-a9f1-4e82-a287-6e1b20a495ed" ID="76">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <FormLink name="Base" recordType="NAME">
+        <Interface>IPlaceableObject</Interface>
+      </FormLink>
+      <P3Float name="BoundHalfExtents" recordType="XMBO" />
+      <RefDirect name="Primitive" refName="PlacedPrimitive" />
+      <RefList name="Portals" refName="Portal" recordType="XPOD" />
+      <RefDirect name="RoomPortal" refName="Bounding" recordType="XPTL" />
+      <ByteArray name="XORD" recordType="XORD" />
+      <RefDirect name="OcclusionPlane" refName="Bounding" recordType="XOCP" />
+      <CustomLogic name="BoundData" recordType="XRMR" />
+      <Int16 name="Unknown" binary="NoGeneration" />
+      <FormLink name="LightingTemplate" recordType="LNAM" refName="Light" binary="NoGeneration" />
+      <FormLink name="ImageSpace" refName="ImageSpaceAdapter" recordType="INAM" binary="NoGeneration" />
+      <List name="LinkedRooms" binary="NoGeneration">
+        <FormLink recordType="XLRM" refName="PlacedObject" />
+      </List>
+      <Bool name="IsMultiBoundPrimitive" boolAsMarker="XMBP" />
+      <ByteArray name="RagdollData" recordType="XRGD" />
+      <ByteArray name="RagdollBipedData" recordType="XRGB" />
+      <Float name="Radius" recordType="XRDS" />
+      <FormLink name="Emittance" recordType="XEMI">
+        <Interface>IEmittance</Interface>
+      </FormLink>
+      <RefDirect name="Lighting" refName="PlacedObjectLighting" />
+      <List name="LitWater">
+        <FormLink refName="PlacedObject" recordType="XLTW" />
+      </List>
+      <RefDirect name="Alpha" refName="Alpha" />
+      <RefDirect name="TeleportDestination" refName="TeleportDestination" />
+      <FormLink name="TeleportLocName" refName="Message" recordType="XTNM" />
+      <FormLink name="MultiboundReference" recordType="XMBR">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <ByteArray name="XWCN" recordType="XWCN" />
+      <RefDirect name="WaterVelocity" refName="WaterVelocity" />
+      <FormLink name="AcousticRestriction" refName="PlacedObject" recordType="XASP" />
+      <Bool name="IsActivationPoint" boolAsMarker="XATP" />
+      <UInt32 name="AmmoCount" recordType="XAMC" />
+      <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
+      <FormLink name="Layer" recordType="XLYR" refName="Layer" />
+      <FormLink name="MaterialSwap" recordType="XMSP" refName="MaterialSwap" />
+      <FormLink name="ReferenceGroup" recordType="XRFG" refName="ReferenceGroup" />
+      <RefDirect name="Radio" refName="PlacedObjectRadio" />
+      <RefDirect name="Spline" refName="PlacedObjectSpline" />
+      <RefDirect name="ProjectedDecal" refName="ProjectedDecal" />
+      <FormLink name="SpawnContainer" refName="PlacedObject" recordType="XSPC" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <FormLink name="LeveledItemBaseObject" refName="LeveledItem" recordType="XLIB" />
+      <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
+      <FormLink name="PersistentLocation" refName="Location" recordType="XLCN" />
+      <UInt32 name="CollisionLayer" recordType="XTRI" />
+      <RefDirect name="Lock" refName="LockData" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <RefDirect name="NavigationDoorLink" refName="NavigationDoorLink" />
+      <FormLink name="LocationRefType" refName="LocationReferenceType" recordType="XLIB" />
+      <List name="LocationRefTypes" recordType="XLRT">
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <Int32 name="ItemCount" recordType="XCNT" />
+      <Percent name="HealthPercent" recordType="XHLT" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <RefList name="LinkedReferences" refName="LinkedReferences" />
+      <RefDirect name="Patrol" refName="Patrol" />
+      <Enum name="Action" enumName="PlacedObject.ActionFlag" recordType="XACT" byteLength="4" />
+      <Float name="HeadTrackingWeight" recordType="XHTW" />
+      <Float name="FavorCost" recordType="XFVC" />
+      <Bool name="OpenByDefault" boolAsMarker="ONAM" />
+      <RefDirect name="MapMarker" refName="PlacedObjectMapMarker" markerType="XMRK" />
+      <FormLink name="AttachRef" recordType="XATR">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <RefList name="SplineConnections" refName="SplineLink" />
+      <RefList name="PowerGridConnections" refName="PowerGridConnection" counterRecType="XWPG" />
+      <ByteArray name="XCVR" recordType="XCVR" />
+      <ByteArray name="XCVL" recordType="XCVL" />
+      <FormLink name="CurrentZoneReference" recordType="XCZR">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <ByteArray name="XCZA" recordType="XCZA" />
+      <FormLink name="CurrentZoneCell" refName="Cell" recordType="XCZC" />
+      <Float name="Scale" recordType="XSCL" />
+      <List name="DistantLodData" recordType="XLOD">
+        <Float />
+      </List>
+      <Data>
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+      <String name="Comments" recordType="MNAM" />
+    </Fields>
     <LinkInterface>ILocationTargetable</LinkInterface>
+    <LinkInterface>IPlaced</LinkInterface>
+    <LinkInterface>IPlacedSimple</LinkInterface>
+    <LinkInterface>IPlacedThing</LinkInterface>
+  </Object>
+  <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM" GUID="09069228-afa1-4393-8b84-4c71d5b70c4e" ID="491">
+    <Fields>
+      <P3Float name="Bounds" binary="Custom" byteLength="12" />
+      <Color name="Color" binaryType="NoAlphaFloat" />
+      <Float name="Unknown" />
+      <Enum name="Type" enumName="PlacedPrimitive.TypeEnum" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="Portal" objType="Subrecord" GUID="e328d7ce-87a6-46cb-9389-ddcf22a44683" ID="492">
+    <Fields>
+      <FormLink name="Origin" refName="PlacedObject" />
+      <FormLink name="Destination" refName="PlacedObject" />
+    </Fields>
+  </Object>
+  <Object name="Bounding" objType="Subrecord" GUID="03cc885e-351f-4bc0-a917-fbfc57447603" ID="493">
+    <Fields>
+      <Float name="Width" />
+      <Float name="Height" />
+      <P3Float name="Position" />
+      <Float name="RotationQ1" />
+      <Float name="RotationQ2" />
+      <Float name="RotationQ3" />
+      <Float name="RotationQ4" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectLighting" objType="Subrecord" recordType="XLIG" GUID="d460114e-36e8-4227-94be-e669bad39a4a" ID="494">
+    <Fields>
+      <Float name="Fov90PlusMinus" />
+      <Float name="Fade1PlusMinus" />
+      <Float name="EndDistanceCap" />
+      <Float name="ShadowDepthBias" />
+      <Break />
+      <Float name="NearClip" />
+      <Break />
+      <Float name="VolumetricIntensity" />
+    </Fields>
+  </Object>
+  <Object name="Alpha" objType="Subrecord" recordType="XALP" GUID="ff481746-c406-4ee5-8d89-cdc761cdc180" ID="495">
+    <Fields>
+      <UInt8 name="Cutoff" />
+      <UInt8 name="Base" />
+    </Fields>
+  </Object>
+  <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL" GUID="68a9c725-3177-42ef-989c-8b2bb257bc39" ID="496">
+    <Fields>
+      <FormLink name="Door" refName="PlacedObject" />
+      <P3Float name="Position" />
+      <P3Float name="Rotation" />
+      <Enum name="Flags" enumName="TeleportDestination.Flag" byteLength="4" />
+      <FormLink name="TransitionInterior" refName="Cell" />
+    </Fields>
+  </Object>
+  <Object name="WaterVelocity" objType="Subrecord" recordType="XWCU" GUID="32088d8e-5e65-4053-8ea1-7aa62027a23d" ID="497">
+    <Fields>
+      <P3Float name="Offset" />
+      <Int32 name="Unknown" />
+      <P3Float name="Angle" />
+      <ByteArray name="Unknown2" byteLength="20" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectRadio" objType="Subrecord" recordType="XRDO" GUID="2b9ff158-2747-4d81-b71e-053c508e5244" ID="498">
+    <Fields>
+      <Float name="Frequency" />
+      <Float name="MinWeakDistance" />
+      <Float name="MaxWeakDistance" />
+      <Enum name="Flags" enumName="PlacedObjectRadio.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectSpline" objType="Subrecord" recordType="XBSD" GUID="616bd223-60c8-40d9-8420-805af78219c4" ID="499">
+    <Fields>
+      <Float name="Slack" />
+      <Float name="Thickness" />
+      <P3Float name="HalfExtents" />
+      <Break />
+      <Bool name="IsWindDetachedEnd" byteLength="1" />
+      <ByteArray name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="ProjectedDecal" objType="Subrecord" recordType="XPDD" GUID="6e7bd45a-c360-415f-90fd-c53651eded41" ID="500">
+    <Fields>
+      <Float name="WidthScale" />
+      <Float name="HeightScale" />
+    </Fields>
+  </Object>
+  <Object name="LockData" objType="Subrecord" recordType="XLOC" GUID="161943a4-d2bc-4c57-a644-59f3f3696d00" ID="501">
+    <Fields>
+      <Enum name="Level" enumName="LockLevel" byteLength="4" />
+      <FormLink name="Key" refName="Key" />
+      <Enum name="Flags" enumName="LockData.Flag" byteLength="4" />
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP" GUID="8162e9a0-b94e-4d37-8af4-596cfc71fddc" ID="502">
+    <Fields>
+      <FormLink name="NavMesh" refName="NavigationMesh" />
+      <Int16 name="TeleportMarkerTriangle" />
+      <Int16 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectMapMarker" objType="Subrecord" GUID="a2bde384-d1b4-4065-883f-6f4181960d02" ID="503">
+    <Fields>
+      <Enum name="Flags" enumName="PlacedObjectMapMarker.Flag" recordType="FNAM" byteLength="1" nullable="False" />
+      <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
+      <Data recordType="TNAM">
+        <Fields>
+          <Enum name="Type" enumName="PlacedObjectMapMarker.Types" byteLength="1" />
+          <UInt8 name="Unknown" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="SplineLink" objType="Subrecord" recordType="XPLK" GUID="6a8c4bcf-82e6-45ff-bac5-e2e2fa78c540" ID="504">
+    <Fields>
+      <FormLink name="Ref">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Break />
+      <Int32 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="PowerGridConnection" objType="Subrecord" recordType="XWPN" GUID="990b88e5-1232-4c43-803e-5fb09588a50b" ID="505">
+    <Fields>
+      <FormLink name="NodeOne">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <FormLink name="NodeTwo">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <FormLink name="Line" refName="PlacedObject" />
+    </Fields>
   </Object>
 </Loqui>

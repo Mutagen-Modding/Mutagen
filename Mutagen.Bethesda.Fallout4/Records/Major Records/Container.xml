@@ -28,5 +28,6 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

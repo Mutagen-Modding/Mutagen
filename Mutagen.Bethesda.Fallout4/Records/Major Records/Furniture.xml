@@ -45,11 +45,12 @@
           </Direct>
         </Ref>
       </List>
-      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" />
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
   <Object name="FurnitureMarkerParameters" objType="Subrecord" GUID="c75d9213-af7a-438c-a3d9-d953c0001d6a" ID="334">
     <Fields>

@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -22,18 +23,15 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
 using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
-using System;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -85,11 +83,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            Fallout4ListGroupMixIn.ToString(
+            Fallout4ListGroupMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -195,7 +193,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -269,26 +267,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString<T>(
+        public static string Print<T>(
             this IFallout4ListGroupGetter<T> item,
             string? name = null,
             Fallout4ListGroup.Mask<bool>? printMask = null)
             where T : class, ICellBlockGetter, IBinaryItem
         {
-            return ((Fallout4ListGroupCommon<T>)((IFallout4ListGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            return ((Fallout4ListGroupCommon<T>)((IFallout4ListGroupGetter<T>)item).CommonInstance(typeof(T))!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString<T>(
+        public static void Print<T>(
             this IFallout4ListGroupGetter<T> item,
             StructuredStringBuilder sb,
             string? name = null,
             Fallout4ListGroup.Mask<bool>? printMask = null)
             where T : class, ICellBlockGetter, IBinaryItem
         {
-            ((Fallout4ListGroupCommon<T>)((IFallout4ListGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            ((Fallout4ListGroupCommon<T>)((IFallout4ListGroupGetter<T>)item).CommonInstance(typeof(T))!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -911,13 +909,13 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IFallout4ListGroupGetter<T> item,
             string? name = null,
             Fallout4ListGroup.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -925,7 +923,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFallout4ListGroupGetter<T> item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -939,15 +937,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (Fallout4ListGroup<{typeof(T).Name}>) =>");
             }
-            sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -970,20 +966,16 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Records?.Overall ?? true)
             {
                 sb.AppendLine("Records =>");
-                sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Records)
                     {
-                        sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(sb, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
         }
         
@@ -1437,7 +1429,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ListGroupCommon<T>.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
@@ -1537,11 +1529,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            Fallout4ListGroupMixIn.ToString(
+            Fallout4ListGroupMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1720,23 +1712,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
         
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
         
-            public string ToString(Fallout4ListGroup.Mask<bool>? printMask = null)
+            public string Print(Fallout4ListGroup.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
         
-            public void ToString(StructuredStringBuilder sb, Fallout4ListGroup.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Fallout4ListGroup.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(Fallout4ListGroup.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
@@ -1754,27 +1742,22 @@ namespace Mutagen.Bethesda.Fallout4
                         && Records is {} RecordsItem)
                     {
                         sb.AppendLine("Records =>");
-                        sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.Brace())
                         {
                             sb.AppendItem(RecordsItem.Overall);
                             if (RecordsItem.Specific != null)
                             {
                                 foreach (var subItem in RecordsItem.Specific)
                                 {
-                                    sb.AppendLine("[");
-                                    using (new DepthWrapper(sb))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(sb);
+                                        subItem?.Print(sb);
                                     }
-                                    sb.AppendLine("]");
                                 }
                             }
                         }
-                        sb.AppendLine("]");
                     }
                 }
-                sb.AppendLine("]");
             }
             #endregion
         
@@ -1880,34 +1863,25 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
         
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
         
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
                     sb.AppendItem(Type, "Type");
@@ -1921,24 +1895,20 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Records is {} RecordsItem)
                 {
                     sb.AppendLine("Records =>");
-                    sb.AppendLine("[");
-                    using (new DepthWrapper(sb))
+                    using (sb.Brace())
                     {
                         sb.AppendItem(RecordsItem.Overall);
                         if (RecordsItem.Specific != null)
                         {
                             foreach (var subItem in RecordsItem.Specific)
                             {
-                                sb.AppendLine("[");
-                                using (new DepthWrapper(sb))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(sb);
+                                    subItem?.Print(sb);
                                 }
-                                sb.AppendLine("]");
                             }
                         }
                     }
-                    sb.AppendLine("]");
                 }
             }
             #endregion

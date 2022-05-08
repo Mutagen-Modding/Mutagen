@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -21,19 +22,16 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
 using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
-using System;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -53,6 +51,9 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public CellLighting.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region AmbientColor
         public Color AmbientColor { get; set; } = default;
         #endregion
@@ -103,14 +104,47 @@ namespace Mutagen.Bethesda.Fallout4
         #region Inherits
         public CellLighting.Inherit Inherits { get; set; } = default;
         #endregion
+        #region NearHeightMid
+        public Single NearHeightMid { get; set; } = default;
+        #endregion
+        #region NearHeightRange
+        public Single NearHeightRange { get; set; } = default;
+        #endregion
+        #region ForColorHighNear
+        public Color ForColorHighNear { get; set; } = default;
+        #endregion
+        #region ForColorHighFar
+        public Color ForColorHighFar { get; set; } = default;
+        #endregion
+        #region HighDensityScale
+        public Single HighDensityScale { get; set; } = default;
+        #endregion
+        #region FogNearScale
+        public Single FogNearScale { get; set; } = default;
+        #endregion
+        #region FogFarScale
+        public Single FogFarScale { get; set; } = default;
+        #endregion
+        #region FogHighNearScale
+        public Single FogHighNearScale { get; set; } = default;
+        #endregion
+        #region FogHighFarScale
+        public Single FogHighFarScale { get; set; } = default;
+        #endregion
+        #region FarHeightMid
+        public Single FarHeightMid { get; set; } = default;
+        #endregion
+        #region FarHeightRange
+        public Single FarHeightRange { get; set; } = default;
+        #endregion
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellLightingMixIn.ToString(
+            CellLightingMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -142,6 +176,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.AmbientColor = initialValue;
                 this.DirectionalColor = initialValue;
                 this.FogNearColor = initialValue;
@@ -158,9 +193,21 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LightFadeBegin = initialValue;
                 this.LightFadeEnd = initialValue;
                 this.Inherits = initialValue;
+                this.NearHeightMid = initialValue;
+                this.NearHeightRange = initialValue;
+                this.ForColorHighNear = initialValue;
+                this.ForColorHighFar = initialValue;
+                this.HighDensityScale = initialValue;
+                this.FogNearScale = initialValue;
+                this.FogFarScale = initialValue;
+                this.FogHighNearScale = initialValue;
+                this.FogHighFarScale = initialValue;
+                this.FarHeightMid = initialValue;
+                this.FarHeightRange = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem AmbientColor,
                 TItem DirectionalColor,
                 TItem FogNearColor,
@@ -176,8 +223,20 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem FogMax,
                 TItem LightFadeBegin,
                 TItem LightFadeEnd,
-                TItem Inherits)
+                TItem Inherits,
+                TItem NearHeightMid,
+                TItem NearHeightRange,
+                TItem ForColorHighNear,
+                TItem ForColorHighFar,
+                TItem HighDensityScale,
+                TItem FogNearScale,
+                TItem FogFarScale,
+                TItem FogHighNearScale,
+                TItem FogHighFarScale,
+                TItem FarHeightMid,
+                TItem FarHeightRange)
             {
+                this.Versioning = Versioning;
                 this.AmbientColor = AmbientColor;
                 this.DirectionalColor = DirectionalColor;
                 this.FogNearColor = FogNearColor;
@@ -194,6 +253,17 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LightFadeBegin = LightFadeBegin;
                 this.LightFadeEnd = LightFadeEnd;
                 this.Inherits = Inherits;
+                this.NearHeightMid = NearHeightMid;
+                this.NearHeightRange = NearHeightRange;
+                this.ForColorHighNear = ForColorHighNear;
+                this.ForColorHighFar = ForColorHighFar;
+                this.HighDensityScale = HighDensityScale;
+                this.FogNearScale = FogNearScale;
+                this.FogFarScale = FogFarScale;
+                this.FogHighNearScale = FogHighNearScale;
+                this.FogHighFarScale = FogHighFarScale;
+                this.FarHeightMid = FarHeightMid;
+                this.FarHeightRange = FarHeightRange;
             }
 
             #pragma warning disable CS8618
@@ -205,6 +275,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem AmbientColor;
             public TItem DirectionalColor;
             public TItem FogNearColor;
@@ -221,6 +292,17 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem LightFadeBegin;
             public TItem LightFadeEnd;
             public TItem Inherits;
+            public TItem NearHeightMid;
+            public TItem NearHeightRange;
+            public TItem ForColorHighNear;
+            public TItem ForColorHighFar;
+            public TItem HighDensityScale;
+            public TItem FogNearScale;
+            public TItem FogFarScale;
+            public TItem FogHighNearScale;
+            public TItem FogHighFarScale;
+            public TItem FarHeightMid;
+            public TItem FarHeightRange;
             #endregion
 
             #region Equals
@@ -233,6 +315,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.AmbientColor, rhs.AmbientColor)) return false;
                 if (!object.Equals(this.DirectionalColor, rhs.DirectionalColor)) return false;
                 if (!object.Equals(this.FogNearColor, rhs.FogNearColor)) return false;
@@ -249,11 +332,23 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.LightFadeBegin, rhs.LightFadeBegin)) return false;
                 if (!object.Equals(this.LightFadeEnd, rhs.LightFadeEnd)) return false;
                 if (!object.Equals(this.Inherits, rhs.Inherits)) return false;
+                if (!object.Equals(this.NearHeightMid, rhs.NearHeightMid)) return false;
+                if (!object.Equals(this.NearHeightRange, rhs.NearHeightRange)) return false;
+                if (!object.Equals(this.ForColorHighNear, rhs.ForColorHighNear)) return false;
+                if (!object.Equals(this.ForColorHighFar, rhs.ForColorHighFar)) return false;
+                if (!object.Equals(this.HighDensityScale, rhs.HighDensityScale)) return false;
+                if (!object.Equals(this.FogNearScale, rhs.FogNearScale)) return false;
+                if (!object.Equals(this.FogFarScale, rhs.FogFarScale)) return false;
+                if (!object.Equals(this.FogHighNearScale, rhs.FogHighNearScale)) return false;
+                if (!object.Equals(this.FogHighFarScale, rhs.FogHighFarScale)) return false;
+                if (!object.Equals(this.FarHeightMid, rhs.FarHeightMid)) return false;
+                if (!object.Equals(this.FarHeightRange, rhs.FarHeightRange)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.AmbientColor);
                 hash.Add(this.DirectionalColor);
                 hash.Add(this.FogNearColor);
@@ -270,6 +365,17 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.LightFadeBegin);
                 hash.Add(this.LightFadeEnd);
                 hash.Add(this.Inherits);
+                hash.Add(this.NearHeightMid);
+                hash.Add(this.NearHeightRange);
+                hash.Add(this.ForColorHighNear);
+                hash.Add(this.ForColorHighFar);
+                hash.Add(this.HighDensityScale);
+                hash.Add(this.FogNearScale);
+                hash.Add(this.FogFarScale);
+                hash.Add(this.FogHighNearScale);
+                hash.Add(this.FogHighFarScale);
+                hash.Add(this.FarHeightMid);
+                hash.Add(this.FarHeightRange);
                 return hash.ToHashCode();
             }
 
@@ -278,6 +384,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.AmbientColor)) return false;
                 if (!eval(this.DirectionalColor)) return false;
                 if (!eval(this.FogNearColor)) return false;
@@ -298,6 +405,17 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.LightFadeBegin)) return false;
                 if (!eval(this.LightFadeEnd)) return false;
                 if (!eval(this.Inherits)) return false;
+                if (!eval(this.NearHeightMid)) return false;
+                if (!eval(this.NearHeightRange)) return false;
+                if (!eval(this.ForColorHighNear)) return false;
+                if (!eval(this.ForColorHighFar)) return false;
+                if (!eval(this.HighDensityScale)) return false;
+                if (!eval(this.FogNearScale)) return false;
+                if (!eval(this.FogFarScale)) return false;
+                if (!eval(this.FogHighNearScale)) return false;
+                if (!eval(this.FogHighFarScale)) return false;
+                if (!eval(this.FarHeightMid)) return false;
+                if (!eval(this.FarHeightRange)) return false;
                 return true;
             }
             #endregion
@@ -305,6 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.AmbientColor)) return true;
                 if (eval(this.DirectionalColor)) return true;
                 if (eval(this.FogNearColor)) return true;
@@ -325,6 +444,17 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.LightFadeBegin)) return true;
                 if (eval(this.LightFadeEnd)) return true;
                 if (eval(this.Inherits)) return true;
+                if (eval(this.NearHeightMid)) return true;
+                if (eval(this.NearHeightRange)) return true;
+                if (eval(this.ForColorHighNear)) return true;
+                if (eval(this.ForColorHighFar)) return true;
+                if (eval(this.HighDensityScale)) return true;
+                if (eval(this.FogNearScale)) return true;
+                if (eval(this.FogFarScale)) return true;
+                if (eval(this.FogHighNearScale)) return true;
+                if (eval(this.FogHighFarScale)) return true;
+                if (eval(this.FarHeightMid)) return true;
+                if (eval(this.FarHeightRange)) return true;
                 return false;
             }
             #endregion
@@ -339,6 +469,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.AmbientColor = eval(this.AmbientColor);
                 obj.DirectionalColor = eval(this.DirectionalColor);
                 obj.FogNearColor = eval(this.FogNearColor);
@@ -355,28 +486,39 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.LightFadeBegin = eval(this.LightFadeBegin);
                 obj.LightFadeEnd = eval(this.LightFadeEnd);
                 obj.Inherits = eval(this.Inherits);
+                obj.NearHeightMid = eval(this.NearHeightMid);
+                obj.NearHeightRange = eval(this.NearHeightRange);
+                obj.ForColorHighNear = eval(this.ForColorHighNear);
+                obj.ForColorHighFar = eval(this.ForColorHighFar);
+                obj.HighDensityScale = eval(this.HighDensityScale);
+                obj.FogNearScale = eval(this.FogNearScale);
+                obj.FogFarScale = eval(this.FogFarScale);
+                obj.FogHighNearScale = eval(this.FogHighNearScale);
+                obj.FogHighFarScale = eval(this.FogHighFarScale);
+                obj.FarHeightMid = eval(this.FarHeightMid);
+                obj.FarHeightRange = eval(this.FarHeightRange);
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                return ToString(printMask: null);
-            }
+            public override string ToString() => this.Print();
 
-            public string ToString(CellLighting.Mask<bool>? printMask = null)
+            public string Print(CellLighting.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
-                ToString(sb, printMask);
+                Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void ToString(StructuredStringBuilder sb, CellLighting.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CellLighting.Mask<bool>? printMask = null)
             {
                 sb.AppendLine($"{nameof(CellLighting.Mask<TItem>)} =>");
-                sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.AmbientColor ?? true)
                     {
                         sb.AppendItem(AmbientColor, "AmbientColor");
@@ -419,7 +561,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     if (printMask?.AmbientColors?.Overall ?? true)
                     {
-                        AmbientColors?.ToString(sb);
+                        AmbientColors?.Print(sb);
                     }
                     if (printMask?.FogFarColor ?? true)
                     {
@@ -441,8 +583,51 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Inherits, "Inherits");
                     }
+                    if (printMask?.NearHeightMid ?? true)
+                    {
+                        sb.AppendItem(NearHeightMid, "NearHeightMid");
+                    }
+                    if (printMask?.NearHeightRange ?? true)
+                    {
+                        sb.AppendItem(NearHeightRange, "NearHeightRange");
+                    }
+                    if (printMask?.ForColorHighNear ?? true)
+                    {
+                        sb.AppendItem(ForColorHighNear, "ForColorHighNear");
+                    }
+                    if (printMask?.ForColorHighFar ?? true)
+                    {
+                        sb.AppendItem(ForColorHighFar, "ForColorHighFar");
+                    }
+                    if (printMask?.HighDensityScale ?? true)
+                    {
+                        sb.AppendItem(HighDensityScale, "HighDensityScale");
+                    }
+                    if (printMask?.FogNearScale ?? true)
+                    {
+                        sb.AppendItem(FogNearScale, "FogNearScale");
+                    }
+                    if (printMask?.FogFarScale ?? true)
+                    {
+                        sb.AppendItem(FogFarScale, "FogFarScale");
+                    }
+                    if (printMask?.FogHighNearScale ?? true)
+                    {
+                        sb.AppendItem(FogHighNearScale, "FogHighNearScale");
+                    }
+                    if (printMask?.FogHighFarScale ?? true)
+                    {
+                        sb.AppendItem(FogHighFarScale, "FogHighFarScale");
+                    }
+                    if (printMask?.FarHeightMid ?? true)
+                    {
+                        sb.AppendItem(FarHeightMid, "FarHeightMid");
+                    }
+                    if (printMask?.FarHeightRange ?? true)
+                    {
+                        sb.AppendItem(FarHeightRange, "FarHeightRange");
+                    }
                 }
-                sb.AppendLine("]");
             }
             #endregion
 
@@ -466,6 +651,7 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? AmbientColor;
             public Exception? DirectionalColor;
             public Exception? FogNearColor;
@@ -482,6 +668,17 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? LightFadeBegin;
             public Exception? LightFadeEnd;
             public Exception? Inherits;
+            public Exception? NearHeightMid;
+            public Exception? NearHeightRange;
+            public Exception? ForColorHighNear;
+            public Exception? ForColorHighFar;
+            public Exception? HighDensityScale;
+            public Exception? FogNearScale;
+            public Exception? FogFarScale;
+            public Exception? FogHighNearScale;
+            public Exception? FogHighFarScale;
+            public Exception? FarHeightMid;
+            public Exception? FarHeightRange;
             #endregion
 
             #region IErrorMask
@@ -490,6 +687,8 @@ namespace Mutagen.Bethesda.Fallout4
                 CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case CellLighting_FieldIndex.Versioning:
+                        return Versioning;
                     case CellLighting_FieldIndex.AmbientColor:
                         return AmbientColor;
                     case CellLighting_FieldIndex.DirectionalColor:
@@ -522,6 +721,28 @@ namespace Mutagen.Bethesda.Fallout4
                         return LightFadeEnd;
                     case CellLighting_FieldIndex.Inherits:
                         return Inherits;
+                    case CellLighting_FieldIndex.NearHeightMid:
+                        return NearHeightMid;
+                    case CellLighting_FieldIndex.NearHeightRange:
+                        return NearHeightRange;
+                    case CellLighting_FieldIndex.ForColorHighNear:
+                        return ForColorHighNear;
+                    case CellLighting_FieldIndex.ForColorHighFar:
+                        return ForColorHighFar;
+                    case CellLighting_FieldIndex.HighDensityScale:
+                        return HighDensityScale;
+                    case CellLighting_FieldIndex.FogNearScale:
+                        return FogNearScale;
+                    case CellLighting_FieldIndex.FogFarScale:
+                        return FogFarScale;
+                    case CellLighting_FieldIndex.FogHighNearScale:
+                        return FogHighNearScale;
+                    case CellLighting_FieldIndex.FogHighFarScale:
+                        return FogHighFarScale;
+                    case CellLighting_FieldIndex.FarHeightMid:
+                        return FarHeightMid;
+                    case CellLighting_FieldIndex.FarHeightRange:
+                        return FarHeightRange;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -532,6 +753,9 @@ namespace Mutagen.Bethesda.Fallout4
                 CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case CellLighting_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case CellLighting_FieldIndex.AmbientColor:
                         this.AmbientColor = ex;
                         break;
@@ -580,6 +804,39 @@ namespace Mutagen.Bethesda.Fallout4
                     case CellLighting_FieldIndex.Inherits:
                         this.Inherits = ex;
                         break;
+                    case CellLighting_FieldIndex.NearHeightMid:
+                        this.NearHeightMid = ex;
+                        break;
+                    case CellLighting_FieldIndex.NearHeightRange:
+                        this.NearHeightRange = ex;
+                        break;
+                    case CellLighting_FieldIndex.ForColorHighNear:
+                        this.ForColorHighNear = ex;
+                        break;
+                    case CellLighting_FieldIndex.ForColorHighFar:
+                        this.ForColorHighFar = ex;
+                        break;
+                    case CellLighting_FieldIndex.HighDensityScale:
+                        this.HighDensityScale = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogNearScale:
+                        this.FogNearScale = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogFarScale:
+                        this.FogFarScale = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogHighNearScale:
+                        this.FogHighNearScale = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogHighFarScale:
+                        this.FogHighFarScale = ex;
+                        break;
+                    case CellLighting_FieldIndex.FarHeightMid:
+                        this.FarHeightMid = ex;
+                        break;
+                    case CellLighting_FieldIndex.FarHeightRange:
+                        this.FarHeightRange = ex;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -590,6 +847,9 @@ namespace Mutagen.Bethesda.Fallout4
                 CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case CellLighting_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case CellLighting_FieldIndex.AmbientColor:
                         this.AmbientColor = (Exception?)obj;
                         break;
@@ -638,6 +898,39 @@ namespace Mutagen.Bethesda.Fallout4
                     case CellLighting_FieldIndex.Inherits:
                         this.Inherits = (Exception?)obj;
                         break;
+                    case CellLighting_FieldIndex.NearHeightMid:
+                        this.NearHeightMid = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.NearHeightRange:
+                        this.NearHeightRange = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.ForColorHighNear:
+                        this.ForColorHighNear = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.ForColorHighFar:
+                        this.ForColorHighFar = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.HighDensityScale:
+                        this.HighDensityScale = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogNearScale:
+                        this.FogNearScale = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogFarScale:
+                        this.FogFarScale = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogHighNearScale:
+                        this.FogHighNearScale = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogHighFarScale:
+                        this.FogHighFarScale = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.FarHeightMid:
+                        this.FarHeightMid = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.FarHeightRange:
+                        this.FarHeightRange = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -646,6 +939,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (AmbientColor != null) return true;
                 if (DirectionalColor != null) return true;
                 if (FogNearColor != null) return true;
@@ -662,40 +956,45 @@ namespace Mutagen.Bethesda.Fallout4
                 if (LightFadeBegin != null) return true;
                 if (LightFadeEnd != null) return true;
                 if (Inherits != null) return true;
+                if (NearHeightMid != null) return true;
+                if (NearHeightRange != null) return true;
+                if (ForColorHighNear != null) return true;
+                if (ForColorHighFar != null) return true;
+                if (HighDensityScale != null) return true;
+                if (FogNearScale != null) return true;
+                if (FogFarScale != null) return true;
+                if (FogHighNearScale != null) return true;
+                if (FogHighFarScale != null) return true;
+                if (FarHeightMid != null) return true;
+                if (FarHeightRange != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var sb = new StructuredStringBuilder();
-                ToString(sb, null);
-                return sb.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                sb.AppendLine("[");
-                using (new DepthWrapper(sb))
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
                         sb.AppendLine("Overall =>");
-                        sb.AppendLine("[");
-                        using (new DepthWrapper(sb))
+                        using (sb.Brace())
                         {
                             sb.AppendLine($"{this.Overall}");
                         }
-                        sb.AppendLine("]");
                     }
-                    ToString_FillInternal(sb);
+                    PrintFillInternal(sb);
                 }
-                sb.AppendLine("]");
             }
-            protected void ToString_FillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
                 {
                     sb.AppendItem(AmbientColor, "AmbientColor");
                 }
@@ -726,7 +1025,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(FogPower, "FogPower");
                 }
-                AmbientColors?.ToString(sb);
+                AmbientColors?.Print(sb);
                 {
                     sb.AppendItem(FogFarColor, "FogFarColor");
                 }
@@ -742,6 +1041,39 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Inherits, "Inherits");
                 }
+                {
+                    sb.AppendItem(NearHeightMid, "NearHeightMid");
+                }
+                {
+                    sb.AppendItem(NearHeightRange, "NearHeightRange");
+                }
+                {
+                    sb.AppendItem(ForColorHighNear, "ForColorHighNear");
+                }
+                {
+                    sb.AppendItem(ForColorHighFar, "ForColorHighFar");
+                }
+                {
+                    sb.AppendItem(HighDensityScale, "HighDensityScale");
+                }
+                {
+                    sb.AppendItem(FogNearScale, "FogNearScale");
+                }
+                {
+                    sb.AppendItem(FogFarScale, "FogFarScale");
+                }
+                {
+                    sb.AppendItem(FogHighNearScale, "FogHighNearScale");
+                }
+                {
+                    sb.AppendItem(FogHighFarScale, "FogHighFarScale");
+                }
+                {
+                    sb.AppendItem(FarHeightMid, "FarHeightMid");
+                }
+                {
+                    sb.AppendItem(FarHeightRange, "FarHeightRange");
+                }
             }
             #endregion
 
@@ -750,6 +1082,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.AmbientColor = this.AmbientColor.Combine(rhs.AmbientColor);
                 ret.DirectionalColor = this.DirectionalColor.Combine(rhs.DirectionalColor);
                 ret.FogNearColor = this.FogNearColor.Combine(rhs.FogNearColor);
@@ -766,6 +1099,17 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.LightFadeBegin = this.LightFadeBegin.Combine(rhs.LightFadeBegin);
                 ret.LightFadeEnd = this.LightFadeEnd.Combine(rhs.LightFadeEnd);
                 ret.Inherits = this.Inherits.Combine(rhs.Inherits);
+                ret.NearHeightMid = this.NearHeightMid.Combine(rhs.NearHeightMid);
+                ret.NearHeightRange = this.NearHeightRange.Combine(rhs.NearHeightRange);
+                ret.ForColorHighNear = this.ForColorHighNear.Combine(rhs.ForColorHighNear);
+                ret.ForColorHighFar = this.ForColorHighFar.Combine(rhs.ForColorHighFar);
+                ret.HighDensityScale = this.HighDensityScale.Combine(rhs.HighDensityScale);
+                ret.FogNearScale = this.FogNearScale.Combine(rhs.FogNearScale);
+                ret.FogFarScale = this.FogFarScale.Combine(rhs.FogFarScale);
+                ret.FogHighNearScale = this.FogHighNearScale.Combine(rhs.FogHighNearScale);
+                ret.FogHighFarScale = this.FogHighFarScale.Combine(rhs.FogHighFarScale);
+                ret.FarHeightMid = this.FarHeightMid.Combine(rhs.FarHeightMid);
+                ret.FarHeightRange = this.FarHeightRange.Combine(rhs.FarHeightRange);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -789,6 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool AmbientColor;
             public bool DirectionalColor;
             public bool FogNearColor;
@@ -805,6 +1150,17 @@ namespace Mutagen.Bethesda.Fallout4
             public bool LightFadeBegin;
             public bool LightFadeEnd;
             public bool Inherits;
+            public bool NearHeightMid;
+            public bool NearHeightRange;
+            public bool ForColorHighNear;
+            public bool ForColorHighFar;
+            public bool HighDensityScale;
+            public bool FogNearScale;
+            public bool FogFarScale;
+            public bool FogHighNearScale;
+            public bool FogHighFarScale;
+            public bool FarHeightMid;
+            public bool FarHeightRange;
             #endregion
 
             #region Ctors
@@ -814,6 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.AmbientColor = defaultOn;
                 this.DirectionalColor = defaultOn;
                 this.FogNearColor = defaultOn;
@@ -829,6 +1186,17 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LightFadeBegin = defaultOn;
                 this.LightFadeEnd = defaultOn;
                 this.Inherits = defaultOn;
+                this.NearHeightMid = defaultOn;
+                this.NearHeightRange = defaultOn;
+                this.ForColorHighNear = defaultOn;
+                this.ForColorHighFar = defaultOn;
+                this.HighDensityScale = defaultOn;
+                this.FogNearScale = defaultOn;
+                this.FogFarScale = defaultOn;
+                this.FogHighNearScale = defaultOn;
+                this.FogHighFarScale = defaultOn;
+                this.FarHeightMid = defaultOn;
+                this.FarHeightRange = defaultOn;
             }
 
             #endregion
@@ -844,6 +1212,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((AmbientColor, null));
                 ret.Add((DirectionalColor, null));
                 ret.Add((FogNearColor, null));
@@ -860,6 +1229,17 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((LightFadeBegin, null));
                 ret.Add((LightFadeEnd, null));
                 ret.Add((Inherits, null));
+                ret.Add((NearHeightMid, null));
+                ret.Add((NearHeightRange, null));
+                ret.Add((ForColorHighNear, null));
+                ret.Add((ForColorHighFar, null));
+                ret.Add((HighDensityScale, null));
+                ret.Add((FogNearScale, null));
+                ret.Add((FogFarScale, null));
+                ret.Add((FogHighNearScale, null));
+                ret.Add((FogHighFarScale, null));
+                ret.Add((FarHeightMid, null));
+                ret.Add((FarHeightRange, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -867,6 +1247,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
+        }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1,
+            Break1 = 2,
+            Break2 = 4
         }
         #endregion
 
@@ -912,7 +1302,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -932,6 +1322,7 @@ namespace Mutagen.Bethesda.Fallout4
         ICellLightingGetter,
         ILoquiObjectSetter<ICellLighting>
     {
+        new CellLighting.VersioningBreaks Versioning { get; set; }
         new Color AmbientColor { get; set; }
         new Color DirectionalColor { get; set; }
         new Color FogNearColor { get; set; }
@@ -948,6 +1339,17 @@ namespace Mutagen.Bethesda.Fallout4
         new Single LightFadeBegin { get; set; }
         new Single LightFadeEnd { get; set; }
         new CellLighting.Inherit Inherits { get; set; }
+        new Single NearHeightMid { get; set; }
+        new Single NearHeightRange { get; set; }
+        new Color ForColorHighNear { get; set; }
+        new Color ForColorHighFar { get; set; }
+        new Single HighDensityScale { get; set; }
+        new Single FogNearScale { get; set; }
+        new Single FogFarScale { get; set; }
+        new Single FogHighNearScale { get; set; }
+        new Single FogHighFarScale { get; set; }
+        new Single FarHeightMid { get; set; }
+        new Single FarHeightRange { get; set; }
     }
 
     public partial interface ICellLightingGetter :
@@ -962,6 +1364,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => CellLighting_Registration.Instance;
+        CellLighting.VersioningBreaks Versioning { get; }
         Color AmbientColor { get; }
         Color DirectionalColor { get; }
         Color FogNearColor { get; }
@@ -978,6 +1381,17 @@ namespace Mutagen.Bethesda.Fallout4
         Single LightFadeBegin { get; }
         Single LightFadeEnd { get; }
         CellLighting.Inherit Inherits { get; }
+        Single NearHeightMid { get; }
+        Single NearHeightRange { get; }
+        Color ForColorHighNear { get; }
+        Color ForColorHighFar { get; }
+        Single HighDensityScale { get; }
+        Single FogNearScale { get; }
+        Single FogFarScale { get; }
+        Single FogHighNearScale { get; }
+        Single FogHighFarScale { get; }
+        Single FarHeightMid { get; }
+        Single FarHeightRange { get; }
 
     }
 
@@ -1002,24 +1416,24 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICellLightingGetter item,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
-            return ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).ToString(
+            return ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICellLightingGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
-            ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).ToString(
+            ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1147,22 +1561,34 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum CellLighting_FieldIndex
     {
-        AmbientColor = 0,
-        DirectionalColor = 1,
-        FogNearColor = 2,
-        FogNear = 3,
-        FogFar = 4,
-        DirectionalRotationXY = 5,
-        DirectionalRotationZ = 6,
-        DirectionalFade = 7,
-        FogClipDistance = 8,
-        FogPower = 9,
-        AmbientColors = 10,
-        FogFarColor = 11,
-        FogMax = 12,
-        LightFadeBegin = 13,
-        LightFadeEnd = 14,
-        Inherits = 15,
+        Versioning = 0,
+        AmbientColor = 1,
+        DirectionalColor = 2,
+        FogNearColor = 3,
+        FogNear = 4,
+        FogFar = 5,
+        DirectionalRotationXY = 6,
+        DirectionalRotationZ = 7,
+        DirectionalFade = 8,
+        FogClipDistance = 9,
+        FogPower = 10,
+        AmbientColors = 11,
+        FogFarColor = 12,
+        FogMax = 13,
+        LightFadeBegin = 14,
+        LightFadeEnd = 15,
+        Inherits = 16,
+        NearHeightMid = 17,
+        NearHeightRange = 18,
+        ForColorHighNear = 19,
+        ForColorHighFar = 20,
+        HighDensityScale = 21,
+        FogNearScale = 22,
+        FogFarScale = 23,
+        FogHighNearScale = 24,
+        FogHighFarScale = 25,
+        FarHeightMid = 26,
+        FarHeightRange = 27,
     }
     #endregion
 
@@ -1180,9 +1606,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "edebd51b-a10e-4441-b1dd-730eef1d9b1b";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 28;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(CellLighting.Mask<>);
 
@@ -1257,6 +1683,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ICellLighting item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.AmbientColor = default;
             item.DirectionalColor = default;
             item.FogNearColor = default;
@@ -1273,6 +1700,17 @@ namespace Mutagen.Bethesda.Fallout4
             item.LightFadeBegin = default;
             item.LightFadeEnd = default;
             item.Inherits = default;
+            item.NearHeightMid = default;
+            item.NearHeightRange = default;
+            item.ForColorHighNear = default;
+            item.ForColorHighFar = default;
+            item.HighDensityScale = default;
+            item.FogNearScale = default;
+            item.FogFarScale = default;
+            item.FogHighNearScale = default;
+            item.FogHighFarScale = default;
+            item.FarHeightMid = default;
+            item.FarHeightRange = default;
         }
         
         #region Mutagen
@@ -1327,6 +1765,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.AmbientColor = item.AmbientColor.ColorOnlyEquals(rhs.AmbientColor);
             ret.DirectionalColor = item.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor);
             ret.FogNearColor = item.FogNearColor.ColorOnlyEquals(rhs.FogNearColor);
@@ -1343,15 +1782,26 @@ namespace Mutagen.Bethesda.Fallout4
             ret.LightFadeBegin = item.LightFadeBegin.EqualsWithin(rhs.LightFadeBegin);
             ret.LightFadeEnd = item.LightFadeEnd.EqualsWithin(rhs.LightFadeEnd);
             ret.Inherits = item.Inherits == rhs.Inherits;
+            ret.NearHeightMid = item.NearHeightMid.EqualsWithin(rhs.NearHeightMid);
+            ret.NearHeightRange = item.NearHeightRange.EqualsWithin(rhs.NearHeightRange);
+            ret.ForColorHighNear = item.ForColorHighNear.ColorOnlyEquals(rhs.ForColorHighNear);
+            ret.ForColorHighFar = item.ForColorHighFar.ColorOnlyEquals(rhs.ForColorHighFar);
+            ret.HighDensityScale = item.HighDensityScale.EqualsWithin(rhs.HighDensityScale);
+            ret.FogNearScale = item.FogNearScale.EqualsWithin(rhs.FogNearScale);
+            ret.FogFarScale = item.FogFarScale.EqualsWithin(rhs.FogFarScale);
+            ret.FogHighNearScale = item.FogHighNearScale.EqualsWithin(rhs.FogHighNearScale);
+            ret.FogHighFarScale = item.FogHighFarScale.EqualsWithin(rhs.FogHighFarScale);
+            ret.FarHeightMid = item.FarHeightMid.EqualsWithin(rhs.FarHeightMid);
+            ret.FarHeightRange = item.FarHeightRange.EqualsWithin(rhs.FarHeightRange);
         }
         
-        public string ToString(
+        public string Print(
             ICellLightingGetter item,
             string? name = null,
             CellLighting.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
-            ToString(
+            Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1359,7 +1809,7 @@ namespace Mutagen.Bethesda.Fallout4
             return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICellLightingGetter item,
             StructuredStringBuilder sb,
             string? name = null,
@@ -1373,15 +1823,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"{name} (CellLighting) =>");
             }
-            sb.AppendLine("[");
-            using (new DepthWrapper(sb))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
                     sb: sb,
                     printMask: printMask);
             }
-            sb.AppendLine("]");
         }
         
         protected static void ToStringFields(
@@ -1389,6 +1837,10 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             CellLighting.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.AmbientColor ?? true)
             {
                 sb.AppendItem(item.AmbientColor, "AmbientColor");
@@ -1431,7 +1883,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (printMask?.AmbientColors?.Overall ?? true)
             {
-                item.AmbientColors?.ToString(sb, "AmbientColors");
+                item.AmbientColors?.Print(sb, "AmbientColors");
             }
             if (printMask?.FogFarColor ?? true)
             {
@@ -1453,6 +1905,50 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Inherits, "Inherits");
             }
+            if (printMask?.NearHeightMid ?? true)
+            {
+                sb.AppendItem(item.NearHeightMid, "NearHeightMid");
+            }
+            if (printMask?.NearHeightRange ?? true)
+            {
+                sb.AppendItem(item.NearHeightRange, "NearHeightRange");
+            }
+            if (printMask?.ForColorHighNear ?? true)
+            {
+                sb.AppendItem(item.ForColorHighNear, "ForColorHighNear");
+            }
+            if (printMask?.ForColorHighFar ?? true)
+            {
+                sb.AppendItem(item.ForColorHighFar, "ForColorHighFar");
+            }
+            if (printMask?.HighDensityScale ?? true)
+            {
+                sb.AppendItem(item.HighDensityScale, "HighDensityScale");
+            }
+            if (printMask?.FogNearScale ?? true)
+            {
+                sb.AppendItem(item.FogNearScale, "FogNearScale");
+            }
+            if (printMask?.FogFarScale ?? true)
+            {
+                sb.AppendItem(item.FogFarScale, "FogFarScale");
+            }
+            if (printMask?.FogHighNearScale ?? true)
+            {
+                sb.AppendItem(item.FogHighNearScale, "FogHighNearScale");
+            }
+            if (printMask?.FogHighFarScale ?? true)
+            {
+                sb.AppendItem(item.FogHighFarScale, "FogHighFarScale");
+            }
+            if (printMask?.FarHeightMid ?? true)
+            {
+                sb.AppendItem(item.FarHeightMid, "FarHeightMid");
+            }
+            if (printMask?.FarHeightRange ?? true)
+            {
+                sb.AppendItem(item.FarHeightRange, "FarHeightRange");
+            }
         }
         
         #region Equals and Hash
@@ -1462,6 +1958,10 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.AmbientColor) ?? true))
             {
                 if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
@@ -1530,12 +2030,57 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.Inherits != rhs.Inherits) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.NearHeightMid) ?? true))
+            {
+                if (!lhs.NearHeightMid.EqualsWithin(rhs.NearHeightMid)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.NearHeightRange) ?? true))
+            {
+                if (!lhs.NearHeightRange.EqualsWithin(rhs.NearHeightRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.ForColorHighNear) ?? true))
+            {
+                if (!lhs.ForColorHighNear.ColorOnlyEquals(rhs.ForColorHighNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.ForColorHighFar) ?? true))
+            {
+                if (!lhs.ForColorHighFar.ColorOnlyEquals(rhs.ForColorHighFar)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.HighDensityScale) ?? true))
+            {
+                if (!lhs.HighDensityScale.EqualsWithin(rhs.HighDensityScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FogNearScale) ?? true))
+            {
+                if (!lhs.FogNearScale.EqualsWithin(rhs.FogNearScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FogFarScale) ?? true))
+            {
+                if (!lhs.FogFarScale.EqualsWithin(rhs.FogFarScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FogHighNearScale) ?? true))
+            {
+                if (!lhs.FogHighNearScale.EqualsWithin(rhs.FogHighNearScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FogHighFarScale) ?? true))
+            {
+                if (!lhs.FogHighFarScale.EqualsWithin(rhs.FogHighFarScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FarHeightMid) ?? true))
+            {
+                if (!lhs.FarHeightMid.EqualsWithin(rhs.FarHeightMid)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FarHeightRange) ?? true))
+            {
+                if (!lhs.FarHeightRange.EqualsWithin(rhs.FarHeightRange)) return false;
+            }
             return true;
         }
         
         public virtual int GetHashCode(ICellLightingGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.AmbientColor);
             hash.Add(item.DirectionalColor);
             hash.Add(item.FogNearColor);
@@ -1552,6 +2097,17 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.LightFadeBegin);
             hash.Add(item.LightFadeEnd);
             hash.Add(item.Inherits);
+            hash.Add(item.NearHeightMid);
+            hash.Add(item.NearHeightRange);
+            hash.Add(item.ForColorHighNear);
+            hash.Add(item.ForColorHighFar);
+            hash.Add(item.HighDensityScale);
+            hash.Add(item.FogNearScale);
+            hash.Add(item.FogFarScale);
+            hash.Add(item.FogHighNearScale);
+            hash.Add(item.FogHighFarScale);
+            hash.Add(item.FarHeightMid);
+            hash.Add(item.FarHeightRange);
             return hash.ToHashCode();
         }
         
@@ -1584,6 +2140,10 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.AmbientColor) ?? true))
             {
                 item.AmbientColor = rhs.AmbientColor;
@@ -1665,6 +2225,53 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.Inherits) ?? true))
             {
                 item.Inherits = rhs.Inherits;
+            }
+            if (rhs.Versioning.HasFlag(CellLighting.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.NearHeightMid) ?? true))
+            {
+                item.NearHeightMid = rhs.NearHeightMid;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.NearHeightRange) ?? true))
+            {
+                item.NearHeightRange = rhs.NearHeightRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.ForColorHighNear) ?? true))
+            {
+                item.ForColorHighNear = rhs.ForColorHighNear;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.ForColorHighFar) ?? true))
+            {
+                item.ForColorHighFar = rhs.ForColorHighFar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.HighDensityScale) ?? true))
+            {
+                item.HighDensityScale = rhs.HighDensityScale;
+            }
+            if (rhs.Versioning.HasFlag(CellLighting.VersioningBreaks.Break1)) return;
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogNearScale) ?? true))
+            {
+                item.FogNearScale = rhs.FogNearScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogFarScale) ?? true))
+            {
+                item.FogFarScale = rhs.FogFarScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogHighNearScale) ?? true))
+            {
+                item.FogHighNearScale = rhs.FogHighNearScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogHighFarScale) ?? true))
+            {
+                item.FogHighFarScale = rhs.FogHighFarScale;
+            }
+            if (rhs.Versioning.HasFlag(CellLighting.VersioningBreaks.Break2)) return;
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FarHeightMid) ?? true))
+            {
+                item.FarHeightMid = rhs.FarHeightMid;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FarHeightRange) ?? true))
+            {
+                item.FarHeightRange = rhs.FarHeightRange;
             }
         }
         
@@ -1808,6 +2415,48 @@ namespace Mutagen.Bethesda.Fallout4
                 writer,
                 item.Inherits,
                 length: 4);
+            if (!item.Versioning.HasFlag(CellLighting.VersioningBreaks.Break0))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NearHeightMid);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NearHeightRange);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ForColorHighNear);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ForColorHighFar);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.HighDensityScale);
+                if (!item.Versioning.HasFlag(CellLighting.VersioningBreaks.Break1))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.FogNearScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.FogFarScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.FogHighNearScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.FogHighFarScale);
+                    if (!item.Versioning.HasFlag(CellLighting.VersioningBreaks.Break2))
+                    {
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.FarHeightMid);
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.FarHeightRange);
+                    }
+                }
+            }
         }
 
         public void Write(
@@ -1866,6 +2515,32 @@ namespace Mutagen.Bethesda.Fallout4
             item.Inherits = EnumBinaryTranslation<CellLighting.Inherit, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
+            if (frame.Complete)
+            {
+                item.Versioning |= CellLighting.VersioningBreaks.Break0;
+                return;
+            }
+            item.NearHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NearHeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.ForColorHighNear = frame.ReadColor(ColorBinaryType.Alpha);
+            item.ForColorHighFar = frame.ReadColor(ColorBinaryType.Alpha);
+            item.HighDensityScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= CellLighting.VersioningBreaks.Break1;
+                return;
+            }
+            item.FogNearScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogFarScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogHighNearScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogHighFarScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= CellLighting.VersioningBreaks.Break2;
+                return;
+            }
+            item.FarHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FarHeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1915,7 +2590,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        void IPrintable.ToString(StructuredStringBuilder sb, string? name) => this.ToString(sb, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellLightingBinaryWriteTranslation.Instance;
@@ -1931,6 +2606,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
+        public CellLighting.VersioningBreaks Versioning { get; private set; }
         public Color AmbientColor => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color DirectionalColor => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color FogNearColor => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
@@ -1947,6 +2623,17 @@ namespace Mutagen.Bethesda.Fallout4
         public Single LightFadeBegin => _data.Slice(0x50, 0x4).Float();
         public Single LightFadeEnd => _data.Slice(0x54, 0x4).Float();
         public CellLighting.Inherit Inherits => (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
+        public Single NearHeightMid => _data.Length <= 0x5C ? default : _data.Slice(0x5C, 0x4).Float();
+        public Single NearHeightRange => _data.Length <= 0x60 ? default : _data.Slice(0x60, 0x4).Float();
+        public Color ForColorHighNear => _data.Length <= 0x64 ? default : _data.Slice(0x64, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color ForColorHighFar => _data.Length <= 0x68 ? default : _data.Slice(0x68, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single HighDensityScale => _data.Length <= 0x6C ? default : _data.Slice(0x6C, 0x4).Float();
+        public Single FogNearScale => _data.Length <= 0x70 ? default : _data.Slice(0x70, 0x4).Float();
+        public Single FogFarScale => _data.Length <= 0x74 ? default : _data.Slice(0x74, 0x4).Float();
+        public Single FogHighNearScale => _data.Length <= 0x78 ? default : _data.Slice(0x78, 0x4).Float();
+        public Single FogHighFarScale => _data.Length <= 0x7C ? default : _data.Slice(0x7C, 0x4).Float();
+        public Single FarHeightMid => _data.Length <= 0x80 ? default : _data.Slice(0x80, 0x4).Float();
+        public Single FarHeightRange => _data.Length <= 0x84 ? default : _data.Slice(0x84, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1973,7 +2660,18 @@ namespace Mutagen.Bethesda.Fallout4
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x5C + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._data.Length <= 0x5C)
+            {
+                ret.Versioning |= CellLighting.VersioningBreaks.Break0;
+            }
+            if (ret._data.Length <= 0x70)
+            {
+                ret.Versioning |= CellLighting.VersioningBreaks.Break1;
+            }
+            if (ret._data.Length <= 0x80)
+            {
+                ret.Versioning |= CellLighting.VersioningBreaks.Break2;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1994,11 +2692,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellLightingMixIn.ToString(
+            CellLightingMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);

@@ -2057,6 +2057,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBounded,
         IObjectId,
         IOutfitTarget,
+        IPlaceableObject,
         IScripted,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -2136,6 +2137,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundedGetter,
         IObjectIdGetter,
         IOutfitTargetGetter,
+        IPlaceableObjectGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

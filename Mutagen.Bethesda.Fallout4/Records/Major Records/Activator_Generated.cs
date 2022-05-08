@@ -1575,6 +1575,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequired,
         IObjectBounded,
         IObjectId,
+        IPlaceableObject,
         IScripted,
         IStaticObject,
         ITranslatedNamed,
@@ -1642,6 +1643,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequiredGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IPlaceableObjectGetter,
         IScriptedGetter,
         IStaticObjectGetter,
         ITranslatedNamedGetter,
@@ -1963,7 +1965,8 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
-                RecordTypes.NVNM);
+                RecordTypes.NVNM,
+                RecordTypes.XXXX);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ActivatorBinaryWriteTranslation);
@@ -3355,7 +3358,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ((NavmeshGeometryBinaryWriteTranslation)((IBinaryItem)NavmeshGeometryItem).BinaryWriteTranslator).Write(
                     item: NavmeshGeometryItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
         }
 
@@ -3600,8 +3603,15 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NVNM:
                 {
-                    item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(frame: frame);
+                    item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride));
                     return (int)Activator_FieldIndex.NavmeshGeometry;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3747,8 +3757,9 @@ namespace Mutagen.Bethesda.Fallout4
             PreviousParse lastParsed);
         #endregion
         #region NavmeshGeometry
+        private int? _NavmeshGeometryLengthOverride;
         private RangeInt32? _NavmeshGeometryLocation;
-        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(new OverlayStream(_data.Slice(_NavmeshGeometryLocation!.Value.Min), _package), _package) : default;
+        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(new OverlayStream(_data.Slice(_NavmeshGeometryLocation!.Value.Min), _package), _package, new TypedParseParams(_NavmeshGeometryLengthOverride, null)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3950,7 +3961,17 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NVNM:
                 {
                     _NavmeshGeometryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _NavmeshGeometryLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Activator_FieldIndex.NavmeshGeometry;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

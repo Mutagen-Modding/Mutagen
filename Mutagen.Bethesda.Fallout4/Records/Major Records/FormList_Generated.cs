@@ -416,6 +416,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IFormList :
         IFallout4MajorRecordInternal,
         IFormListGetter,
+        ILockList,
         ILoquiObjectSetter<IFormListInternal>,
         IObjectId
     {
@@ -432,6 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IFormListGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        ILockListGetter,
         ILoquiObject<IFormListGetter>,
         IMapsToGetter<IFormListGetter>,
         IObjectIdGetter

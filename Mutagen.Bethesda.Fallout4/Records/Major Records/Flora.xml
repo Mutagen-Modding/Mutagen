@@ -23,5 +23,6 @@
     </Fields>
     <LinkInterface>IRegionTarget</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

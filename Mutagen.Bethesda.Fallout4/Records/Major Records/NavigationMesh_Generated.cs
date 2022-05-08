@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -39,7 +40,7 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public abstract partial class NavigationMesh :
+    public partial class NavigationMesh :
         Fallout4MajorRecord,
         IEquatable<INavigationMeshGetter>,
         ILoquiObjectSetter<NavigationMesh>,
@@ -53,6 +54,52 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region NavmeshGeometry
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NavmeshGeometry? _NavmeshGeometry;
+        public NavmeshGeometry? NavmeshGeometry
+        {
+            get => _NavmeshGeometry;
+            set => _NavmeshGeometry = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INavmeshGeometryGetter? INavigationMeshGetter.NavmeshGeometry => this.NavmeshGeometry;
+        #endregion
+        #region ONAM
+        private readonly IFormLinkNullable<IStaticObjectGetter> _ONAM = new FormLinkNullable<IStaticObjectGetter>();
+        public IFormLinkNullable<IStaticObjectGetter> ONAM
+        {
+            get => _ONAM;
+            set => _ONAM.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IStaticObjectGetter> INavigationMeshGetter.ONAM => this.ONAM;
+        #endregion
+        #region NNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _NNAM;
+        public MemorySlice<Byte>? NNAM
+        {
+            get => this._NNAM;
+            set => this._NNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.NNAM => this.NNAM;
+        #endregion
+        #region PreCutMapEntries
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<PreCutMapEntry>? _PreCutMapEntries;
+        public ExtendedList<PreCutMapEntry>? PreCutMapEntries
+        {
+            get => this._PreCutMapEntries;
+            set => this._PreCutMapEntries = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPreCutMapEntryGetter>? INavigationMeshGetter.PreCutMapEntries => _PreCutMapEntries;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +125,10 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
+                this.ONAM = initialValue;
+                this.NNAM = initialValue;
+                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -86,7 +137,11 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem NavmeshGeometry,
+                TItem ONAM,
+                TItem NNAM,
+                TItem PreCutMapEntries)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +150,10 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
+                this.ONAM = ONAM;
+                this.NNAM = NNAM;
+                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(PreCutMapEntries, Enumerable.Empty<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -103,6 +162,13 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>? NavmeshGeometry { get; set; }
+            public TItem ONAM;
+            public TItem NNAM;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>? PreCutMapEntries;
             #endregion
 
             #region Equals
@@ -116,11 +182,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.NavmeshGeometry, rhs.NavmeshGeometry)) return false;
+                if (!object.Equals(this.ONAM, rhs.ONAM)) return false;
+                if (!object.Equals(this.NNAM, rhs.NNAM)) return false;
+                if (!object.Equals(this.PreCutMapEntries, rhs.PreCutMapEntries)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.NavmeshGeometry);
+                hash.Add(this.ONAM);
+                hash.Add(this.NNAM);
+                hash.Add(this.PreCutMapEntries);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +205,25 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (NavmeshGeometry != null)
+                {
+                    if (!eval(this.NavmeshGeometry.Overall)) return false;
+                    if (this.NavmeshGeometry.Specific != null && !this.NavmeshGeometry.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ONAM)) return false;
+                if (!eval(this.NNAM)) return false;
+                if (this.PreCutMapEntries != null)
+                {
+                    if (!eval(this.PreCutMapEntries.Overall)) return false;
+                    if (this.PreCutMapEntries.Specific != null)
+                    {
+                        foreach (var item in this.PreCutMapEntries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -139,6 +232,25 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (NavmeshGeometry != null)
+                {
+                    if (eval(this.NavmeshGeometry.Overall)) return true;
+                    if (this.NavmeshGeometry.Specific != null && this.NavmeshGeometry.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ONAM)) return true;
+                if (eval(this.NNAM)) return true;
+                if (this.PreCutMapEntries != null)
+                {
+                    if (eval(this.PreCutMapEntries.Overall)) return true;
+                    if (this.PreCutMapEntries.Specific != null)
+                    {
+                        foreach (var item in this.PreCutMapEntries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -154,6 +266,24 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.NavmeshGeometry = this.NavmeshGeometry == null ? null : new MaskItem<R, NavmeshGeometry.Mask<R>?>(eval(this.NavmeshGeometry.Overall), this.NavmeshGeometry.Specific?.Translate(eval));
+                obj.ONAM = eval(this.ONAM);
+                obj.NNAM = eval(this.NNAM);
+                if (PreCutMapEntries != null)
+                {
+                    obj.PreCutMapEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>?>(eval(this.PreCutMapEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>());
+                    if (PreCutMapEntries.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>();
+                        obj.PreCutMapEntries.Specific = l;
+                        foreach (var item in PreCutMapEntries.Specific)
+                        {
+                            MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -172,6 +302,37 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(NavigationMesh.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.NavmeshGeometry?.Overall ?? true)
+                    {
+                        NavmeshGeometry?.Print(sb);
+                    }
+                    if (printMask?.ONAM ?? true)
+                    {
+                        sb.AppendItem(ONAM, "ONAM");
+                    }
+                    if (printMask?.NNAM ?? true)
+                    {
+                        sb.AppendItem(NNAM, "NNAM");
+                    }
+                    if ((printMask?.PreCutMapEntries?.Overall ?? true)
+                        && PreCutMapEntries is {} PreCutMapEntriesItem)
+                    {
+                        sb.AppendLine("PreCutMapEntries =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PreCutMapEntriesItem.Overall);
+                            if (PreCutMapEntriesItem.Specific != null)
+                            {
+                                foreach (var subItem in PreCutMapEntriesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -182,12 +343,27 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, NavmeshGeometry.ErrorMask?>? NavmeshGeometry;
+            public Exception? ONAM;
+            public Exception? NNAM;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>? PreCutMapEntries;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMesh_FieldIndex.NavmeshGeometry:
+                        return NavmeshGeometry;
+                    case NavigationMesh_FieldIndex.ONAM:
+                        return ONAM;
+                    case NavigationMesh_FieldIndex.NNAM:
+                        return NNAM;
+                    case NavigationMesh_FieldIndex.PreCutMapEntries:
+                        return PreCutMapEntries;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +374,18 @@ namespace Mutagen.Bethesda.Fallout4
                 NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMesh_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = new MaskItem<Exception?, NavmeshGeometry.ErrorMask?>(ex, null);
+                        break;
+                    case NavigationMesh_FieldIndex.ONAM:
+                        this.ONAM = ex;
+                        break;
+                    case NavigationMesh_FieldIndex.NNAM:
+                        this.NNAM = ex;
+                        break;
+                    case NavigationMesh_FieldIndex.PreCutMapEntries:
+                        this.PreCutMapEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +397,18 @@ namespace Mutagen.Bethesda.Fallout4
                 NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavigationMesh_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = (MaskItem<Exception?, NavmeshGeometry.ErrorMask?>?)obj;
+                        break;
+                    case NavigationMesh_FieldIndex.ONAM:
+                        this.ONAM = (Exception?)obj;
+                        break;
+                    case NavigationMesh_FieldIndex.NNAM:
+                        this.NNAM = (Exception?)obj;
+                        break;
+                    case NavigationMesh_FieldIndex.PreCutMapEntries:
+                        this.PreCutMapEntries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +418,10 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (NavmeshGeometry != null) return true;
+                if (ONAM != null) return true;
+                if (NNAM != null) return true;
+                if (PreCutMapEntries != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +448,31 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                NavmeshGeometry?.Print(sb);
+                {
+                    sb.AppendItem(ONAM, "ONAM");
+                }
+                {
+                    sb.AppendItem(NNAM, "NNAM");
+                }
+                if (PreCutMapEntries is {} PreCutMapEntriesItem)
+                {
+                    sb.AppendLine("PreCutMapEntries =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PreCutMapEntriesItem.Overall);
+                        if (PreCutMapEntriesItem.Specific != null)
+                        {
+                            foreach (var subItem in PreCutMapEntriesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -252,6 +481,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
+                ret.ONAM = this.ONAM.Combine(rhs.ONAM);
+                ret.NNAM = this.NNAM.Combine(rhs.NNAM);
+                ret.PreCutMapEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.PreCutMapEntries?.Overall, rhs.PreCutMapEntries?.Overall), ExceptionExt.Combine(this.PreCutMapEntries?.Specific, rhs.PreCutMapEntries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +506,33 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public NavmeshGeometry.TranslationMask? NavmeshGeometry;
+            public bool ONAM;
+            public bool NNAM;
+            public PreCutMapEntry.TranslationMask? PreCutMapEntries;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ONAM = defaultOn;
+                this.NNAM = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((NavmeshGeometry != null ? NavmeshGeometry.OnOverall : DefaultOn, NavmeshGeometry?.GetCrystal()));
+                ret.Add((ONAM, null));
+                ret.Add((NNAM, null));
+                ret.Add((PreCutMapEntries == null ? DefaultOn : !PreCutMapEntries.GetCrystal().CopyNothing, PreCutMapEntries?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +544,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMesh_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshSetterCommon.Instance.RemapLinks(this, mapping);
         public NavigationMesh(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -333,6 +586,13 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<NavigationMesh>.ToString(this);
         }
 
+        protected override Type LinkType => typeof(INavigationMesh);
+
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -367,6 +627,32 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
+        #region Binary Create
+        public new static NavigationMesh CreateFromBinary(
+            MutagenFrame frame,
+            TypedParseParams? translationParams = null)
+        {
+            var ret = new NavigationMesh();
+            ((NavigationMeshSetterCommon)((INavigationMeshGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                translationParams: translationParams);
+            return ret;
+        }
+
+        #endregion
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out NavigationMesh item,
+            TypedParseParams? translationParams = null)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(
+                frame: frame,
+                translationParams: translationParams);
+            return startPos != frame.Position;
+        }
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
@@ -378,7 +664,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         internal static new NavigationMesh GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new NavigationMesh();
         }
 
     }
@@ -387,9 +673,18 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface INavigationMesh :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<INavigationMeshInternal>,
         INavigationMeshGetter
     {
+        new NavmeshGeometry? NavmeshGeometry { get; set; }
+        new IFormLinkNullable<IStaticObjectGetter> ONAM { get; set; }
+        new MemorySlice<Byte>? NNAM { get; set; }
+        new ExtendedList<PreCutMapEntry>? PreCutMapEntries { get; set; }
+        #region Mutagen
+        new NavigationMesh.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface INavigationMeshInternal :
@@ -399,12 +694,23 @@ namespace Mutagen.Bethesda.Fallout4
     {
     }
 
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.NAVM)]
     public partial interface INavigationMeshGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<INavigationMeshGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<INavigationMeshGetter>,
+        IMapsToGetter<INavigationMeshGetter>
     {
         static new ILoquiRegistration StaticRegistration => NavigationMesh_Registration.Instance;
+        INavmeshGeometryGetter? NavmeshGeometry { get; }
+        IFormLinkNullableGetter<IStaticObjectGetter> ONAM { get; }
+        ReadOnlyMemorySlice<Byte>? NNAM { get; }
+        IReadOnlyList<IPreCutMapEntryGetter>? PreCutMapEntries { get; }
+
+        #region Mutagen
+        NavigationMesh.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -569,6 +875,10 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        NavmeshGeometry = 6,
+        ONAM = 7,
+        NNAM = 8,
+        PreCutMapEntries = 9,
     }
     #endregion
 
@@ -586,9 +896,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "35cce2b5-c4b4-40e7-98ef-ecac3ddb2914";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(NavigationMesh.Mask<>);
 
@@ -618,8 +928,15 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.NAVM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.NAVM);
+            var all = RecordCollection.Factory(
+                RecordTypes.NAVM,
+                RecordTypes.NVNM,
+                RecordTypes.XXXX,
+                RecordTypes.ONAM,
+                RecordTypes.NNAM,
+                RecordTypes.MNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshBinaryWriteTranslation);
         #region Interface
@@ -663,6 +980,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INavigationMeshInternal item)
         {
             ClearPartial();
+            item.NavmeshGeometry = null;
+            item.ONAM.Clear();
+            item.NNAM = default;
+            item.PreCutMapEntries = null;
             base.Clear(item);
         }
         
@@ -680,6 +1001,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(INavigationMesh obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.NavmeshGeometry?.RemapLinks(mapping);
+            obj.ONAM.Relink(mapping);
+            obj.PreCutMapEntries?.RemapLinks(mapping);
         }
         
         #endregion
@@ -690,6 +1014,12 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
+            PluginUtilityTranslation.MajorRecordParse<INavigationMeshInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: NavigationMeshBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: NavigationMeshBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -742,6 +1072,17 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.NavmeshGeometry = EqualsMaskHelper.EqualsHelper(
+                item.NavmeshGeometry,
+                rhs.NavmeshGeometry,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ONAM = item.ONAM.Equals(rhs.ONAM);
+            ret.NNAM = MemorySliceExt.Equal(item.NNAM, rhs.NNAM);
+            ret.PreCutMapEntries = item.PreCutMapEntries.CollectionEqualsHelper(
+                rhs.PreCutMapEntries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -791,6 +1132,35 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.NavmeshGeometry?.Overall ?? true)
+                && item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                NavmeshGeometryItem?.Print(sb, "NavmeshGeometry");
+            }
+            if (printMask?.ONAM ?? true)
+            {
+                sb.AppendItem(item.ONAM.FormKeyNullable, "ONAM");
+            }
+            if ((printMask?.NNAM ?? true)
+                && item.NNAM is {} NNAMItem)
+            {
+                sb.AppendLine($"NNAM => {SpanExt.ToHexString(NNAMItem)}");
+            }
+            if ((printMask?.PreCutMapEntries?.Overall ?? true)
+                && item.PreCutMapEntries is {} PreCutMapEntriesItem)
+            {
+                sb.AppendLine("PreCutMapEntries =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in PreCutMapEntriesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static NavigationMesh_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -839,6 +1209,26 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NavmeshGeometry, rhs.NavmeshGeometry, out var lhsNavmeshGeometry, out var rhsNavmeshGeometry, out var isNavmeshGeometryEqual))
+                {
+                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, crystal?.GetSubCrystal((int)NavigationMesh_FieldIndex.NavmeshGeometry))) return false;
+                }
+                else if (!isNavmeshGeometryEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.ONAM) ?? true))
+            {
+                if (!lhs.ONAM.Equals(rhs.ONAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NNAM, rhs.NNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PreCutMapEntries) ?? true))
+            {
+                if (!lhs.PreCutMapEntries.SequenceEqualNullable(rhs.PreCutMapEntries, (l, r) => ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavigationMesh_FieldIndex.PreCutMapEntries)))) return false;
+            }
             return true;
         }
         
@@ -867,6 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(INavigationMeshGetter item)
         {
             var hash = new HashCode();
+            if (item.NavmeshGeometry is {} NavmeshGeometryitem)
+            {
+                hash.Add(NavmeshGeometryitem);
+            }
+            hash.Add(item.ONAM);
+            if (item.NNAM is {} NNAMItem)
+            {
+                hash.Add(NNAMItem);
+            }
+            hash.Add(item.PreCutMapEntries);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -896,6 +1296,24 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            if (obj.NavmeshGeometry is IFormLinkContainerGetter NavmeshGeometrylinkCont)
+            {
+                foreach (var item in NavmeshGeometrylinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.ONAM, out var ONAMInfo))
+            {
+                yield return ONAMInfo;
+            }
+            if (obj.PreCutMapEntries is {} PreCutMapEntriesItem)
+            {
+                foreach (var item in PreCutMapEntriesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
             yield break;
         }
         
@@ -905,7 +1323,9 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            throw new NotImplementedException();
+            var newRec = new NavigationMesh(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
         
         public override Fallout4MajorRecord Duplicate(
@@ -968,6 +1388,79 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.NavmeshGeometry);
+                try
+                {
+                    if(rhs.NavmeshGeometry is {} rhsNavmeshGeometry)
+                    {
+                        item.NavmeshGeometry = rhsNavmeshGeometry.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.NavmeshGeometry));
+                    }
+                    else
+                    {
+                        item.NavmeshGeometry = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.ONAM) ?? true))
+            {
+                item.ONAM.SetTo(rhs.ONAM.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
+            {
+                if(rhs.NNAM is {} NNAMrhs)
+                {
+                    item.NNAM = NNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.NNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PreCutMapEntries) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.PreCutMapEntries);
+                try
+                {
+                    if ((rhs.PreCutMapEntries != null))
+                    {
+                        item.PreCutMapEntries = 
+                            rhs.PreCutMapEntries
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<PreCutMapEntry>();
+                    }
+                    else
+                    {
+                        item.PreCutMapEntries = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1116,6 +1609,44 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static NavigationMeshBinaryWriteTranslation Instance = new NavigationMeshBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            INavigationMeshGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                ((NavmeshGeometryBinaryWriteTranslation)((IBinaryItem)NavmeshGeometryItem).BinaryWriteTranslator).Write(
+                    item: NavmeshGeometryItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ONAM,
+                header: translationParams.ConvertToCustom(RecordTypes.ONAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.NNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPreCutMapEntryGetter>.Instance.Write(
+                writer: writer,
+                items: item.PreCutMapEntries,
+                recordType: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                transl: (MutagenWriter subWriter, IPreCutMapEntryGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((PreCutMapEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             INavigationMeshGetter item,
@@ -1130,10 +1661,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1181,7 +1714,73 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static NavigationMeshBinaryCreateTranslation Instance = new NavigationMeshBinaryCreateTranslation();
 
-        public override RecordType RecordType => throw new ArgumentException();
+        public override RecordType RecordType => RecordTypes.NAVM;
+        public static void FillBinaryStructs(
+            INavigationMeshInternal item,
+            MutagenFrame frame)
+        {
+            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            INavigationMeshInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.NVNM:
+                {
+                    item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride));
+                    return (int)NavigationMesh_FieldIndex.NavmeshGeometry;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ONAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)NavigationMesh_FieldIndex.ONAM;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)NavigationMesh_FieldIndex.NNAM;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreCutMapEntries = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PreCutMapEntry>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: PreCutMapEntry.TryCreateFromBinary)
+                        .CastExtendedList<PreCutMapEntry>();
+                    return (int)NavigationMesh_FieldIndex.PreCutMapEntries;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1197,7 +1796,7 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal abstract partial class NavigationMeshBinaryOverlay :
+    internal partial class NavigationMeshBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         INavigationMeshGetter
     {
@@ -1214,6 +1813,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1225,7 +1825,24 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(INavigationMesh);
 
+        public NavigationMesh.MajorFlag MajorFlags => (NavigationMesh.MajorFlag)this.MajorRecordFlagsRaw;
+
+        #region NavmeshGeometry
+        private int? _NavmeshGeometryLengthOverride;
+        private RangeInt32? _NavmeshGeometryLocation;
+        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(new OverlayStream(_data.Slice(_NavmeshGeometryLocation!.Value.Min), _package), _package, new TypedParseParams(_NavmeshGeometryLengthOverride, null)) : default;
+        #endregion
+        #region ONAM
+        private int? _ONAMLocation;
+        public IFormLinkNullableGetter<IStaticObjectGetter> ONAM => _ONAMLocation.HasValue ? new FormLinkNullable<IStaticObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ONAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticObjectGetter>.Null;
+        #endregion
+        #region NNAM
+        private int? _NNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<IPreCutMapEntryGetter>? PreCutMapEntries { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1242,7 +1859,102 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
+        public static NavigationMeshBinaryOverlay NavigationMeshFactory(
+            OverlayStream stream,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams? parseParams = null)
+        {
+            stream = Decompression.DecompressStream(stream);
+            var ret = new NavigationMeshBinaryOverlay(
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                package: package);
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
+            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                majorReference: ret,
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                parseParams: parseParams,
+                fill: ret.FillRecordType);
+            return ret;
+        }
 
+        public static NavigationMeshBinaryOverlay NavigationMeshFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams? parseParams = null)
+        {
+            return NavigationMeshFactory(
+                stream: new OverlayStream(slice, package),
+                package: package,
+                parseParams: parseParams);
+        }
+
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.NVNM:
+                {
+                    _NavmeshGeometryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _NavmeshGeometryLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)NavigationMesh_FieldIndex.NavmeshGeometry;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _ONAMLocation = (stream.Position - offset);
+                    return (int)NavigationMesh_FieldIndex.ONAM;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _NNAMLocation = (stream.Position - offset);
+                    return (int)NavigationMesh_FieldIndex.NNAM;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.PreCutMapEntries = BinaryOverlayList.FactoryByLazyParse<PreCutMapEntryBinaryOverlay>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        getter: (s, p) => PreCutMapEntryBinaryOverlay.PreCutMapEntryFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)NavigationMesh_FieldIndex.PreCutMapEntries;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

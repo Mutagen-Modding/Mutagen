@@ -34,5 +34,6 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

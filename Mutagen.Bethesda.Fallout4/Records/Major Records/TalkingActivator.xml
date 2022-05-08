@@ -15,5 +15,6 @@
       <Int16 name="FNAM" recordType="FNAM" />
       <FormLink name="VoiceType" recordType="VNAM" refName="VoiceType" />
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [LocationReferenceType]
+    /// Implemented by: [Location, LocationReferenceType]
     /// </summary>
     public partial interface ILocationRecord :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [LocationReferenceType]
+    /// Implemented by: [Location, LocationReferenceType]
     /// </summary>
     public partial interface ILocationRecordGetter : IFallout4MajorRecordGetter
     {

@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -29,6 +30,22 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
         AddDynamicProcessing(RecordTypes.BNDS, ProcessBendableSplines);
         AddDynamicProcessing(RecordTypes.REGN, ProcessRegions);
+        AddDynamicProcessing(
+            ProcessPlaced,
+            PlacedObject_Registration.TriggeringRecordType,
+            PlacedNpc_Registration.TriggeringRecordType,
+            PlacedArrow_Registration.TriggeringRecordType,
+            PlacedBarrier_Registration.TriggeringRecordType,
+            PlacedBeam_Registration.TriggeringRecordType,
+            PlacedCone_Registration.TriggeringRecordType,
+            PlacedFlame_Registration.TriggeringRecordType,
+            PlacedHazard_Registration.TriggeringRecordType,
+            PlacedMissile_Registration.TriggeringRecordType,
+            PlacedTrap_Registration.TriggeringRecordType);
+        AddDynamicProcessing(RecordTypes.ACHR, ProcessPlacedNpc);
+        AddDynamicProcessing(RecordTypes.REFR, ProcessPlacedObject);
+        AddDynamicProcessing(RecordTypes.NAVM, ProcessNavmeshes);
+        AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
     }
 
     private void ProcessGameSettings(
@@ -136,9 +153,9 @@ public class Fallout4Processor : Processor
         if (majorFrame.TryFindSubrecord(RecordTypes.AIDT, out frame))
         {
             int offset = 6;
-            ProcessBool(frame, fileOffset, ref offset, 2);
+            ProcessBool(frame, fileOffset, ref offset, 2, 1);
             offset = 20;
-            ProcessBool(frame, fileOffset, ref offset, 4);
+            ProcessBool(frame, fileOffset, ref offset, 4, 1);
         }
         if (majorFrame.TryFindSubrecord(RecordTypes.TPLT, out frame))
         {
@@ -222,6 +239,116 @@ public class Fallout4Processor : Processor
         }
     }
 
+    private void ProcessPlacedObject(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.XTEL, out var xtel))
+        {
+            int loc = 0;
+            ProcessZeroFloats(xtel, fileOffset, ref loc, 6);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XPRM, out var xprm))
+        {
+            int loc = 0;
+            ProcessZeroFloats(xprm, fileOffset, ref loc, 3);
+            ProcessColorFloat(xprm, fileOffset, ref loc, alpha: false);
+            ProcessZeroFloats(xprm, fileOffset, ref loc, 1);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XBSD, out var xbsd)
+            && xbsd.ContentLength > 20)
+        {
+            int loc = 20;
+            ProcessBool(xbsd, fileOffset, ref loc, 1, 1);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRMR, out var xrmr)
+            && xrmr.AsInt32() == 0
+            && !majorFrame.TryFindSubrecord(RecordTypes.LNAM, out _)
+            && !majorFrame.TryFindSubrecord(RecordTypes.INAM, out _)
+            && !majorFrame.TryFindSubrecord(RecordTypes.XLRM, out _))
+        {
+            _instructions.SetRemove(RangeInt64.FromLength(fileOffset + xrmr.Location, xrmr.TotalLength));
+            ProcessLengths(
+                majorFrame,
+                -xrmr.TotalLength,
+                fileOffset);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.XOWN, out var xown)
+            && xown.ContentLength == 12)
+        {
+            int offset = 8;
+            ProcessBool(xown, fileOffset, ref offset, 4, 1);
+        }
+    }
+
+    private void ProcessNavmeshes(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.NVNM, out var nvnm))
+        {
+            var vertexCount = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(nvnm.Content.Slice(16)));
+            var loc = 20;
+            ProcessZeroFloats(nvnm, fileOffset, ref loc, vertexCount * 3);
+        }
+    }
+
+    private void ProcessPlacedNpc(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.XOWN, out var xown)
+            && xown.ContentLength == 12)
+        {
+            int offset = 8;
+            ProcessBool(xown, fileOffset, ref offset, 4, 1);
+        }
+    }
+
+    private void ProcessCells(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        CleanEmptyCellGroups(
+            stream,
+            formKey,
+            fileOffset,
+            numSubGroups: 2);
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XOWN, out var xown)
+            && xown.ContentLength == 12)
+        {
+            int offset = 8;
+            ProcessBool(xown, fileOffset, ref offset, 4, 1);
+        }
+    }
+
+    private void ProcessPlaced(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var sizeChange = 0;
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec))
+        {
+            ProcessZeroFloats(dataRec, fileOffset, 6);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XOWN, out var xown)
+            && xown.ContentLength == 12)
+        {
+            int offset = 8;
+            ProcessBool(xown, fileOffset, ref offset, 4, 1);
+        }
+
+        ProcessLengths(
+            majorFrame,
+            sizeChange,
+            fileOffset);
+    }
+
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
     {
         switch (source)
@@ -264,6 +391,8 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "TERM", "FULL" },
                     new RecordType[] { "LVLI", "ONAM" },
                     new RecordType[] { "REGN", "RDMP" },
+                    new RecordType[] { "CELL", "FULL" },
+                    new RecordType[] { "REFR", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
