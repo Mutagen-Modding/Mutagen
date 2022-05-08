@@ -132,6 +132,11 @@
         <DefaultPackFolder>content</DefaultPackFolder>
         <BuildAction>Compile</BuildAction>
       </Compile>
+      <Compile Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\FindAllOfSubrecordTests.cs">
+        <CodeLanguage>cs</CodeLanguage>
+        <DefaultPackFolder>content</DefaultPackFolder>
+        <BuildAction>Compile</BuildAction>
+      </Compile>
     </ItemGroup>
 
 </Project>

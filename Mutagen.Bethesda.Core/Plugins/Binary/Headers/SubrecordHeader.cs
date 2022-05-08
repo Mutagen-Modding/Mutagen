@@ -61,7 +61,7 @@ public readonly struct SubrecordHeader
     public int TotalLength => HeaderLength + ContentLength;
 
     /// <inheritdoc/>
-    public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")}";
+    public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength:X}";
 }
 
 /// <summary>
@@ -156,9 +156,9 @@ public readonly struct SubrecordPinHeader
 }
 
 /// <summary>
-/// A struct that overlays on top of bytes that is able to retrive Sub Record header and content data on demand.
+/// A struct that overlays on top of bytes that is able to retrieve Sub Record header and content data on demand.
 /// </summary>
-public struct SubrecordFrame
+public readonly struct SubrecordFrame
 {
     /// <summary>
     /// Header struct contained in the frame
@@ -261,13 +261,18 @@ public struct SubrecordFrame
     {
         return frame.Header;
     }
+
+    public SubrecordPinFrame Pin(int loc)
+    {
+        return new SubrecordPinFrame(this, loc);
+    }
 }
 
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrieve Sub Record data on demand.
 /// In addition, it keeps track of its location relative to its parent MajorRecordFrame
 /// </summary>
-public struct SubrecordPinFrame
+public readonly struct SubrecordPinFrame
 {
     /// <summary>
     /// Frame struct contained in the pin

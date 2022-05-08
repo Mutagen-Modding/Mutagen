@@ -48,13 +48,15 @@ public class EnumerateSubrecordsTests : RecordSpanExtensionTests
     public void EnumerateSubrecordsWithOverflow()
     {
         var recs = RecordSpanExtensions.EnumerateSubrecords(Overflow(), GameConstants.Oblivion).ToArray();
-        recs.Length.Should().Be(2);
-        recs[0].RecordType.Should().Be(RecordTypes.MAST);
-        recs[1].RecordType.Should().Be(RecordTypes.DATA);
-        recs[0].ContentLength.Should().Be(4);
-        recs[1].ContentLength.Should().Be(2);
+        recs.Length.Should().Be(3);
+        recs.Select(x => x.RecordType).Should().Equal(
+            RecordTypes.MAST,
+            RecordTypes.DATA,
+            RecordTypes.EDID);
+        recs.Select(x => x.ContentLength).Should().Equal(4, 2, 4);
         recs[0].AsInt32().Should().Be(0x04030201);
         recs[1].AsInt16().Should().Be(0x0809);
+        recs[2].AsInt32().Should().Be(0x44332211);
     }
 
     [Fact]
@@ -115,13 +117,15 @@ public class EnumerateSubrecordsTests : RecordSpanExtensionTests
     {
         List<SubrecordPinFrame> recs = new();
         RecordSpanExtensions.EnumerateSubrecords(Overflow(), GameConstants.Oblivion, recs.Add);
-        recs.Count.Should().Be(2);
-        recs[0].RecordType.Should().Be(RecordTypes.MAST);
-        recs[1].RecordType.Should().Be(RecordTypes.DATA);
-        recs[0].ContentLength.Should().Be(4);
-        recs[1].ContentLength.Should().Be(2);
+        recs.Count.Should().Be(3);
+        recs.Select(x => x.RecordType).Should().Equal(
+            RecordTypes.MAST,
+            RecordTypes.DATA,
+            RecordTypes.EDID);
+        recs.Select(x => x.ContentLength).Should().Equal(4, 2, 4);
         recs[0].AsInt32().Should().Be(0x04030201);
         recs[1].AsInt16().Should().Be(0x0809);
+        recs[2].AsInt32().Should().Be(0x44332211);
     }
 
     [Fact]

@@ -6,6 +6,17 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
 public static class RecordSpanExtensions
 {
+    private static SubrecordPinFrame HandleOverflow(
+        ReadOnlyMemorySlice<byte> data,
+        SubrecordPinFrame overflow)
+    {
+        var nextLen = overflow.AsUInt32();
+        var loc = overflow.EndLocation;
+        var nextSpan = data.Slice(loc, checked((int)(nextLen + overflow.Meta.SubConstants.HeaderLength)));
+        var subHeader = new SubrecordHeader(overflow.Meta, nextSpan);
+        return SubrecordPinFrame.FactoryNoTrim(subHeader, nextSpan, loc);
+    }
+    
     /// <summary>
     /// Enumerates SubrecordPinFrames of all subrecords within span
     /// 
@@ -26,12 +37,9 @@ public static class RecordSpanExtensions
             var subFrame = meta.Subrecord(span.Slice(loc));
             if (meta.HeaderOverflow.Contains(subFrame.RecordType))
             { // Length overflow record
-                var nextLen = subFrame.AsUInt32();
-                loc += subFrame.TotalLength;
-                var nextSpan = span.Slice(loc, checked((int)(nextLen + meta.SubConstants.HeaderLength)));
-                var subHeader = new SubrecordHeader(meta, nextSpan);
-                yield return SubrecordPinFrame.FactoryNoTrim(subHeader, nextSpan, loc);
-                loc += checked((int)(subHeader.HeaderLength + nextLen));
+                var ret = HandleOverflow(span, subFrame.Pin(loc));
+                yield return ret;
+                loc = ret.EndLocation;
                 continue;
             }
             yield return new SubrecordPinFrame(subFrame, loc);
@@ -60,12 +68,9 @@ public static class RecordSpanExtensions
             var subFrame = meta.Subrecord(span.Slice(loc));
             if (meta.HeaderOverflow.Contains(subFrame.RecordType))
             { // Length overflow record
-                var nextLen = subFrame.AsUInt32();
-                loc += subFrame.TotalLength;
-                var nextSpan = span.Slice(loc, checked((int)(nextLen + meta.SubConstants.HeaderLength)));
-                var subHeader = new SubrecordHeader(meta, nextSpan);
-                action(SubrecordPinFrame.FactoryNoTrim(subHeader, nextSpan, loc));
-                loc += checked((int)(subHeader.HeaderLength + nextLen));
+                var ret = HandleOverflow(span, subFrame.Pin(loc));
+                action(ret);
+                loc = ret.EndLocation;
                 continue;
             }
             action(new SubrecordPinFrame(subFrame, loc));
@@ -168,11 +173,21 @@ public static class RecordSpanExtensions
         params RecordType[] recordTypes)
     {
         lenParsed = 0;
+        SubrecordPinFrame? overflow = null;
         SubrecordPinFrame?[] ret = new SubrecordPinFrame?[recordTypes.Length];
+        int numFound = 0;
         while (data.Length > lenParsed)
         {
-            var subMeta = meta.SubrecordHeader(data.Slice(lenParsed));
+            var subMeta = meta.Subrecord(data.Slice(lenParsed));
             var recType = subMeta.RecordType;
+            
+            if (meta.HeaderOverflow.Contains(recType))
+            {
+                overflow = subMeta.Pin(lenParsed);
+                lenParsed += subMeta.TotalLength;
+                continue;
+            }
+            
             bool breakOut = true;
             for (int i = 0; i < recordTypes.Length; i++)
             {
@@ -181,18 +196,18 @@ public static class RecordSpanExtensions
                     breakOut = false;
                     if (ret[i] == null)
                     {
-                        ret[i] = new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed);
-                        bool moreToFind = false;
-                        for (int j = 0; j < ret.Length; j++)
+                        if (overflow.HasValue && meta.HeaderOverflow.Contains(overflow.Value.RecordType))
                         {
-                            if (ret[j] == null)
-                            {
-                                moreToFind = true;
-                                break;
-                            }
+                            var rec = HandleOverflow(data, overflow.Value);
+                            ret[i] = rec;
+                            lenParsed += rec.ContentLength;
+                        }
+                        else
+                        {
+                            ret[i] = new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed);
                         }
 
-                        if (!moreToFind)
+                        if (++numFound >= ret.Length)
                         {
                             lenParsed += subMeta.TotalLength;
                             // Found everything
@@ -207,6 +222,8 @@ public static class RecordSpanExtensions
                     break;
                 }
             }
+
+            overflow = null;
 
             if (breakOut)
             {
@@ -223,17 +240,32 @@ public static class RecordSpanExtensions
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
         RecordType recordType,
-        int? offset = null)
+        int offset = 0)
     {
-        int loc = offset ?? 0;
+        int loc = offset;
+        SubrecordPinFrame? overflow = null;
         while (data.Length > loc)
         {
-            var subMeta = meta.SubrecordHeader(data.Slice(loc));
-            if (subMeta.RecordType == recordType)
+            var subMeta = meta.Subrecord(data.Slice(loc));
+            var nextRecType = subMeta.RecordType;
+            if (nextRecType == recordType)
             {
+                if (overflow.HasValue && meta.HeaderOverflow.Contains(overflow.Value.RecordType))
+                {
+                    return HandleOverflow(data, overflow.Value);
+                }
                 return new SubrecordPinFrame(meta, data.Slice(loc), loc);
             }
-
+            else if (meta.HeaderOverflow.Contains(nextRecType))
+            {
+                overflow = subMeta.Pin(loc);
+            }
+            else if (overflow.HasValue)
+            {
+                loc += overflow.Value.AsInt32() + meta.SubConstants.HeaderLength;
+                overflow = null;
+                continue;
+            }
             loc += subMeta.TotalLength;
         }
 
@@ -243,22 +275,46 @@ public static class RecordSpanExtensions
     public static SubrecordPinFrame? TryFindSubrecord(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
-        ICollectionGetter<RecordType> recordTypes,
-        int? offset = null)
+        IReadOnlyCollection<RecordType> recordTypes,
+        int offset = 0)
     {
-        int loc = offset ?? 0;
+        int loc = offset;
+        SubrecordPinFrame? overflow  = null;
         while (data.Length > loc)
         {
-            var subMeta = meta.SubrecordHeader(data.Slice(loc));
-            if (recordTypes.Contains(subMeta.RecordType))
+            var subFrame = new SubrecordPinFrame(meta.Subrecord(data.Slice(loc)), loc);
+            var nextRecType = subFrame.RecordType;
+            if (recordTypes.Contains(nextRecType))
             {
+                if (overflow.HasValue && meta.HeaderOverflow.Contains(overflow.Value.RecordType))
+                {
+                    return HandleOverflow(data, overflow.Value);
+                }
                 return new SubrecordPinFrame(meta, data.Slice(loc), loc);
             }
+            else if (meta.HeaderOverflow.Contains(nextRecType))
+            {
+                overflow = subFrame;
+            }
+            else if (overflow.HasValue)
+            {
+                loc += overflow.Value.AsInt32() + meta.SubConstants.HeaderLength;
+                overflow = null;
+                continue;
+            }
 
-            loc += subMeta.TotalLength;
+            loc += subFrame.TotalLength;
         }
 
         return null;
+    }
+
+    public static SubrecordPinFrame? TryFindSubrecord(
+        ReadOnlyMemorySlice<byte> data,
+        GameConstants meta,
+        params RecordType[] recordTypes)
+    {
+        return TryFindSubrecord(data, meta, (IReadOnlyCollection<RecordType>)recordTypes);
     }
 
     public static IReadOnlyList<SubrecordPinFrame> FindAllOfSubrecord(
@@ -267,16 +323,38 @@ public static class RecordSpanExtensions
         RecordType recordType)
     {
         List<SubrecordPinFrame> ret = new List<SubrecordPinFrame>();
+        SubrecordPinFrame? overflow = null;
         int lenParsed = 0;
         while (data.Length > lenParsed)
         {
-            var subMeta = meta.SubrecordHeader(data.Slice(lenParsed));
-            if (subMeta.RecordType == recordType)
+            var subFrame = meta.Subrecord(data.Slice(lenParsed));
+            var nextRecType = subFrame.RecordType;
+            if (nextRecType == recordType)
             {
-                ret.Add(new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed));
+                if (overflow.HasValue && meta.HeaderOverflow.Contains(overflow.Value.RecordType))
+                {
+                    var rec = HandleOverflow(data, overflow.Value);
+                    lenParsed += rec.ContentLength;
+                    ret.Add(rec);
+                }
+                else
+                {
+                    ret.Add(new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed));
+                }
+                overflow = null;
+            }
+            else if (meta.HeaderOverflow.Contains(nextRecType))
+            {
+                overflow = subFrame.Pin(lenParsed);
+            }
+            else if (overflow.HasValue)
+            {
+                lenParsed += overflow.Value.AsInt32() + meta.SubConstants.HeaderLength;
+                overflow = null;
+                continue;
             }
 
-            lenParsed += subMeta.TotalLength;
+            lenParsed += subFrame.TotalLength;
         }
 
         return ret;
@@ -288,16 +366,38 @@ public static class RecordSpanExtensions
         IReadOnlyCollection<RecordType> recordTypes)
     {
         List<SubrecordPinFrame> ret = new List<SubrecordPinFrame>();
+        SubrecordPinFrame? overflow = null;
         int lenParsed = 0;
         while (data.Length > lenParsed)
         {
-            var subMeta = meta.SubrecordHeader(data.Slice(lenParsed));
-            if (recordTypes.Contains(subMeta.RecordType))
+            var subFrame = meta.Subrecord(data.Slice(lenParsed));
+            var nextRecType = subFrame.RecordType;
+            if (recordTypes.Contains(nextRecType))
             {
-                ret.Add(new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed));
+                if (overflow.HasValue && meta.HeaderOverflow.Contains(overflow.Value.RecordType))
+                {
+                    var rec = HandleOverflow(data, overflow.Value);
+                    lenParsed += rec.ContentLength;
+                    ret.Add(rec);
+                }
+                else
+                {
+                    ret.Add(new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed));
+                }
+                overflow = null;
+            }
+            else if (meta.HeaderOverflow.Contains(nextRecType))
+            {
+                overflow = subFrame.Pin(lenParsed);
+            }
+            else if (overflow.HasValue)
+            {
+                lenParsed += overflow.Value.AsInt32() + meta.SubConstants.HeaderLength;
+                overflow = null;
+                continue;
             }
 
-            lenParsed += subMeta.TotalLength;
+            lenParsed += subFrame.TotalLength;
         }
 
         return ret;

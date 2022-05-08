@@ -876,25 +876,25 @@ public abstract class Processor
     protected bool DynamicMove(
         MajorRecordFrame majorFrame,
         long fileOffset,
-        ICollection<RecordType> offendingIndices,
-        ICollection<RecordType> offendingLimits,
-        ICollection<RecordType> locationsToMove,
+        IReadOnlyCollection<RecordType> offendingIndices,
+        IReadOnlyCollection<RecordType> offendingLimits,
+        IReadOnlyCollection<RecordType> locationsToMove,
         bool enforcePast = false)
     {
         var offender = RecordSpanExtensions.TryFindSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
-            recordTypes: offendingIndices.ToGetter())?.Location;
+            recordTypes: offendingIndices)?.Location;
         if (offender == null) return false;
         var limit = RecordSpanExtensions.TryFindSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
-            recordTypes: offendingLimits.ToGetter())?.Location;
+            recordTypes: offendingLimits)?.Location;
         if (limit == null) return false;
         long? locToMove = RecordSpanExtensions.TryFindSubrecord(
             majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
             majorFrame.Meta,
-            recordTypes: locationsToMove.ToGetter())?.Location;
+            recordTypes: locationsToMove)?.Location;
         if (locToMove == null)
         {
             locToMove = majorFrame.TotalLength;
