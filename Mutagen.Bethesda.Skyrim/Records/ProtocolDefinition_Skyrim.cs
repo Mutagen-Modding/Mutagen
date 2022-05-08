@@ -301,8 +301,6 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             WorldspaceParent_Registration.Instance,
             WorldspaceLandDefaults_Registration.Instance,
             WorldspaceMap_Registration.Instance,
-            WorldspaceMapOffset_Registration.Instance,
-            WorldspaceObjectBounds_Registration.Instance,
             BaseLayer_Registration.Instance,
             AlphaLayer_Registration.Instance,
             LayerHeader_Registration.Instance,

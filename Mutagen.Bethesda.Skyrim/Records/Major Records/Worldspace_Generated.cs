@@ -236,10 +236,11 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IWorldspaceMapGetter? IWorldspaceGetter.MapData => this.MapData;
         #endregion
-        #region MapOffset
-        public WorldspaceMapOffset MapOffset { get; set; } = new WorldspaceMapOffset();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWorldspaceMapOffsetGetter IWorldspaceGetter.MapOffset => MapOffset;
+        #region WorldMapOffsetScale
+        public Single WorldMapOffsetScale { get; set; } = default;
+        #endregion
+        #region WorldMapCellOffset
+        public P3Float WorldMapCellOffset { get; set; } = default;
         #endregion
         #region DistantLodMultiplier
         public Single? DistantLodMultiplier { get; set; }
@@ -249,16 +250,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         public Worldspace.Flag Flags { get; set; } = default;
         #endregion
-        #region ObjectBounds
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private WorldspaceObjectBounds? _ObjectBounds;
-        public WorldspaceObjectBounds? ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWorldspaceObjectBoundsGetter? IWorldspaceGetter.ObjectBounds => this.ObjectBounds;
+        #region ObjectBoundsMin
+        public P2Float ObjectBoundsMin { get; set; } = default;
+        #endregion
+        #region ObjectBoundsMax
+        public P2Float ObjectBoundsMax { get; set; } = default;
         #endregion
         #region Music
         private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
@@ -337,6 +333,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
+        #region ONAMDataTypeState
+        public Worldspace.ONAMDataType ONAMDataTypeState { get; set; } = default;
+        #endregion
+        #region NAM0DataTypeState
+        public Worldspace.NAM0DataType NAM0DataTypeState { get; set; } = default;
+        #endregion
+        #region NAM9DataTypeState
+        public Worldspace.NAM9DataType NAM9DataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -378,10 +383,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MapImage = initialValue;
                 this.CloudModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.MapData = new MaskItem<TItem, WorldspaceMap.Mask<TItem>?>(initialValue, new WorldspaceMap.Mask<TItem>(initialValue));
-                this.MapOffset = new MaskItem<TItem, WorldspaceMapOffset.Mask<TItem>?>(initialValue, new WorldspaceMapOffset.Mask<TItem>(initialValue));
+                this.WorldMapOffsetScale = initialValue;
+                this.WorldMapCellOffset = initialValue;
                 this.DistantLodMultiplier = initialValue;
                 this.Flags = initialValue;
-                this.ObjectBounds = new MaskItem<TItem, WorldspaceObjectBounds.Mask<TItem>?>(initialValue, new WorldspaceObjectBounds.Mask<TItem>(initialValue));
+                this.ObjectBoundsMin = initialValue;
+                this.ObjectBoundsMax = initialValue;
                 this.Music = initialValue;
                 this.CanopyShadow = initialValue;
                 this.WaterNoiseTexture = initialValue;
@@ -393,6 +400,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubCellsTimestamp = initialValue;
                 this.SubCellsUnknown = initialValue;
                 this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.ONAMDataTypeState = initialValue;
+                this.NAM0DataTypeState = initialValue;
+                this.NAM9DataTypeState = initialValue;
             }
 
             public Mask(
@@ -418,10 +428,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem MapImage,
                 TItem CloudModel,
                 TItem MapData,
-                TItem MapOffset,
+                TItem WorldMapOffsetScale,
+                TItem WorldMapCellOffset,
                 TItem DistantLodMultiplier,
                 TItem Flags,
-                TItem ObjectBounds,
+                TItem ObjectBoundsMin,
+                TItem ObjectBoundsMax,
                 TItem Music,
                 TItem CanopyShadow,
                 TItem WaterNoiseTexture,
@@ -432,7 +444,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem TopCell,
                 TItem SubCellsTimestamp,
                 TItem SubCellsUnknown,
-                TItem SubCells)
+                TItem SubCells,
+                TItem ONAMDataTypeState,
+                TItem NAM0DataTypeState,
+                TItem NAM9DataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -457,10 +472,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MapImage = MapImage;
                 this.CloudModel = new MaskItem<TItem, Model.Mask<TItem>?>(CloudModel, new Model.Mask<TItem>(CloudModel));
                 this.MapData = new MaskItem<TItem, WorldspaceMap.Mask<TItem>?>(MapData, new WorldspaceMap.Mask<TItem>(MapData));
-                this.MapOffset = new MaskItem<TItem, WorldspaceMapOffset.Mask<TItem>?>(MapOffset, new WorldspaceMapOffset.Mask<TItem>(MapOffset));
+                this.WorldMapOffsetScale = WorldMapOffsetScale;
+                this.WorldMapCellOffset = WorldMapCellOffset;
                 this.DistantLodMultiplier = DistantLodMultiplier;
                 this.Flags = Flags;
-                this.ObjectBounds = new MaskItem<TItem, WorldspaceObjectBounds.Mask<TItem>?>(ObjectBounds, new WorldspaceObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ObjectBoundsMin = ObjectBoundsMin;
+                this.ObjectBoundsMax = ObjectBoundsMax;
                 this.Music = Music;
                 this.CanopyShadow = CanopyShadow;
                 this.WaterNoiseTexture = WaterNoiseTexture;
@@ -472,6 +489,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubCellsTimestamp = SubCellsTimestamp;
                 this.SubCellsUnknown = SubCellsUnknown;
                 this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.ONAMDataTypeState = ONAMDataTypeState;
+                this.NAM0DataTypeState = NAM0DataTypeState;
+                this.NAM9DataTypeState = NAM9DataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -499,10 +519,12 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem MapImage;
             public MaskItem<TItem, Model.Mask<TItem>?>? CloudModel { get; set; }
             public MaskItem<TItem, WorldspaceMap.Mask<TItem>?>? MapData { get; set; }
-            public MaskItem<TItem, WorldspaceMapOffset.Mask<TItem>?>? MapOffset { get; set; }
+            public TItem WorldMapOffsetScale;
+            public TItem WorldMapCellOffset;
             public TItem DistantLodMultiplier;
             public TItem Flags;
-            public MaskItem<TItem, WorldspaceObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ObjectBoundsMin;
+            public TItem ObjectBoundsMax;
             public TItem Music;
             public TItem CanopyShadow;
             public TItem WaterNoiseTexture;
@@ -514,6 +536,9 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem SubCellsTimestamp;
             public TItem SubCellsUnknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>? SubCells;
+            public TItem ONAMDataTypeState;
+            public TItem NAM0DataTypeState;
+            public TItem NAM9DataTypeState;
             #endregion
 
             #region Equals
@@ -543,10 +568,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.MapImage, rhs.MapImage)) return false;
                 if (!object.Equals(this.CloudModel, rhs.CloudModel)) return false;
                 if (!object.Equals(this.MapData, rhs.MapData)) return false;
-                if (!object.Equals(this.MapOffset, rhs.MapOffset)) return false;
+                if (!object.Equals(this.WorldMapOffsetScale, rhs.WorldMapOffsetScale)) return false;
+                if (!object.Equals(this.WorldMapCellOffset, rhs.WorldMapCellOffset)) return false;
                 if (!object.Equals(this.DistantLodMultiplier, rhs.DistantLodMultiplier)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ObjectBoundsMin, rhs.ObjectBoundsMin)) return false;
+                if (!object.Equals(this.ObjectBoundsMax, rhs.ObjectBoundsMax)) return false;
                 if (!object.Equals(this.Music, rhs.Music)) return false;
                 if (!object.Equals(this.CanopyShadow, rhs.CanopyShadow)) return false;
                 if (!object.Equals(this.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
@@ -558,6 +585,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
                 if (!object.Equals(this.SubCellsUnknown, rhs.SubCellsUnknown)) return false;
                 if (!object.Equals(this.SubCells, rhs.SubCells)) return false;
+                if (!object.Equals(this.ONAMDataTypeState, rhs.ONAMDataTypeState)) return false;
+                if (!object.Equals(this.NAM0DataTypeState, rhs.NAM0DataTypeState)) return false;
+                if (!object.Equals(this.NAM9DataTypeState, rhs.NAM9DataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -579,10 +609,12 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.MapImage);
                 hash.Add(this.CloudModel);
                 hash.Add(this.MapData);
-                hash.Add(this.MapOffset);
+                hash.Add(this.WorldMapOffsetScale);
+                hash.Add(this.WorldMapCellOffset);
                 hash.Add(this.DistantLodMultiplier);
                 hash.Add(this.Flags);
-                hash.Add(this.ObjectBounds);
+                hash.Add(this.ObjectBoundsMin);
+                hash.Add(this.ObjectBoundsMax);
                 hash.Add(this.Music);
                 hash.Add(this.CanopyShadow);
                 hash.Add(this.WaterNoiseTexture);
@@ -594,6 +626,9 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.SubCellsTimestamp);
                 hash.Add(this.SubCellsUnknown);
                 hash.Add(this.SubCells);
+                hash.Add(this.ONAMDataTypeState);
+                hash.Add(this.NAM0DataTypeState);
+                hash.Add(this.NAM9DataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -651,18 +686,12 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.MapData.Overall)) return false;
                     if (this.MapData.Specific != null && !this.MapData.Specific.All(eval)) return false;
                 }
-                if (MapOffset != null)
-                {
-                    if (!eval(this.MapOffset.Overall)) return false;
-                    if (this.MapOffset.Specific != null && !this.MapOffset.Specific.All(eval)) return false;
-                }
+                if (!eval(this.WorldMapOffsetScale)) return false;
+                if (!eval(this.WorldMapCellOffset)) return false;
                 if (!eval(this.DistantLodMultiplier)) return false;
                 if (!eval(this.Flags)) return false;
-                if (ObjectBounds != null)
-                {
-                    if (!eval(this.ObjectBounds.Overall)) return false;
-                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
-                }
+                if (!eval(this.ObjectBoundsMin)) return false;
+                if (!eval(this.ObjectBoundsMax)) return false;
                 if (!eval(this.Music)) return false;
                 if (!eval(this.CanopyShadow)) return false;
                 if (!eval(this.WaterNoiseTexture)) return false;
@@ -689,6 +718,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (!eval(this.ONAMDataTypeState)) return false;
+                if (!eval(this.NAM0DataTypeState)) return false;
+                if (!eval(this.NAM9DataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -744,18 +776,12 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.MapData.Overall)) return true;
                     if (this.MapData.Specific != null && this.MapData.Specific.Any(eval)) return true;
                 }
-                if (MapOffset != null)
-                {
-                    if (eval(this.MapOffset.Overall)) return true;
-                    if (this.MapOffset.Specific != null && this.MapOffset.Specific.Any(eval)) return true;
-                }
+                if (eval(this.WorldMapOffsetScale)) return true;
+                if (eval(this.WorldMapCellOffset)) return true;
                 if (eval(this.DistantLodMultiplier)) return true;
                 if (eval(this.Flags)) return true;
-                if (ObjectBounds != null)
-                {
-                    if (eval(this.ObjectBounds.Overall)) return true;
-                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
-                }
+                if (eval(this.ObjectBoundsMin)) return true;
+                if (eval(this.ObjectBoundsMax)) return true;
                 if (eval(this.Music)) return true;
                 if (eval(this.CanopyShadow)) return true;
                 if (eval(this.WaterNoiseTexture)) return true;
@@ -782,6 +808,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (eval(this.ONAMDataTypeState)) return true;
+                if (eval(this.NAM0DataTypeState)) return true;
+                if (eval(this.NAM9DataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -827,10 +856,12 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.MapImage = eval(this.MapImage);
                 obj.CloudModel = this.CloudModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.CloudModel.Overall), this.CloudModel.Specific?.Translate(eval));
                 obj.MapData = this.MapData == null ? null : new MaskItem<R, WorldspaceMap.Mask<R>?>(eval(this.MapData.Overall), this.MapData.Specific?.Translate(eval));
-                obj.MapOffset = this.MapOffset == null ? null : new MaskItem<R, WorldspaceMapOffset.Mask<R>?>(eval(this.MapOffset.Overall), this.MapOffset.Specific?.Translate(eval));
+                obj.WorldMapOffsetScale = eval(this.WorldMapOffsetScale);
+                obj.WorldMapCellOffset = eval(this.WorldMapCellOffset);
                 obj.DistantLodMultiplier = eval(this.DistantLodMultiplier);
                 obj.Flags = eval(this.Flags);
-                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, WorldspaceObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ObjectBoundsMin = eval(this.ObjectBoundsMin);
+                obj.ObjectBoundsMax = eval(this.ObjectBoundsMax);
                 obj.Music = eval(this.Music);
                 obj.CanopyShadow = eval(this.CanopyShadow);
                 obj.WaterNoiseTexture = eval(this.WaterNoiseTexture);
@@ -856,6 +887,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                obj.ONAMDataTypeState = eval(this.ONAMDataTypeState);
+                obj.NAM0DataTypeState = eval(this.NAM0DataTypeState);
+                obj.NAM9DataTypeState = eval(this.NAM9DataTypeState);
             }
             #endregion
 
@@ -953,9 +987,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         MapData?.Print(sb);
                     }
-                    if (printMask?.MapOffset?.Overall ?? true)
+                    if (printMask?.WorldMapOffsetScale ?? true)
                     {
-                        MapOffset?.Print(sb);
+                        sb.AppendItem(WorldMapOffsetScale, "WorldMapOffsetScale");
+                    }
+                    if (printMask?.WorldMapCellOffset ?? true)
+                    {
+                        sb.AppendItem(WorldMapCellOffset, "WorldMapCellOffset");
                     }
                     if (printMask?.DistantLodMultiplier ?? true)
                     {
@@ -965,9 +1003,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    if (printMask?.ObjectBoundsMin ?? true)
                     {
-                        ObjectBounds?.Print(sb);
+                        sb.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
+                    }
+                    if (printMask?.ObjectBoundsMax ?? true)
+                    {
+                        sb.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
                     }
                     if (printMask?.Music ?? true)
                     {
@@ -1028,6 +1070,18 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
+                    if (printMask?.ONAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(ONAMDataTypeState, "ONAMDataTypeState");
+                    }
+                    if (printMask?.NAM0DataTypeState ?? true)
+                    {
+                        sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
+                    }
+                    if (printMask?.NAM9DataTypeState ?? true)
+                    {
+                        sb.AppendItem(NAM9DataTypeState, "NAM9DataTypeState");
+                    }
                 }
             }
             #endregion
@@ -1055,10 +1109,12 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? MapImage;
             public MaskItem<Exception?, Model.ErrorMask?>? CloudModel;
             public MaskItem<Exception?, WorldspaceMap.ErrorMask?>? MapData;
-            public MaskItem<Exception?, WorldspaceMapOffset.ErrorMask?>? MapOffset;
+            public Exception? WorldMapOffsetScale;
+            public Exception? WorldMapCellOffset;
             public Exception? DistantLodMultiplier;
             public Exception? Flags;
-            public MaskItem<Exception?, WorldspaceObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ObjectBoundsMin;
+            public Exception? ObjectBoundsMax;
             public Exception? Music;
             public Exception? CanopyShadow;
             public Exception? WaterNoiseTexture;
@@ -1070,6 +1126,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? SubCellsTimestamp;
             public Exception? SubCellsUnknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>? SubCells;
+            public Exception? ONAMDataTypeState;
+            public Exception? NAM0DataTypeState;
+            public Exception? NAM9DataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1110,14 +1169,18 @@ namespace Mutagen.Bethesda.Skyrim
                         return CloudModel;
                     case Worldspace_FieldIndex.MapData:
                         return MapData;
-                    case Worldspace_FieldIndex.MapOffset:
-                        return MapOffset;
+                    case Worldspace_FieldIndex.WorldMapOffsetScale:
+                        return WorldMapOffsetScale;
+                    case Worldspace_FieldIndex.WorldMapCellOffset:
+                        return WorldMapCellOffset;
                     case Worldspace_FieldIndex.DistantLodMultiplier:
                         return DistantLodMultiplier;
                     case Worldspace_FieldIndex.Flags:
                         return Flags;
-                    case Worldspace_FieldIndex.ObjectBounds:
-                        return ObjectBounds;
+                    case Worldspace_FieldIndex.ObjectBoundsMin:
+                        return ObjectBoundsMin;
+                    case Worldspace_FieldIndex.ObjectBoundsMax:
+                        return ObjectBoundsMax;
                     case Worldspace_FieldIndex.Music:
                         return Music;
                     case Worldspace_FieldIndex.CanopyShadow:
@@ -1140,6 +1203,12 @@ namespace Mutagen.Bethesda.Skyrim
                         return SubCellsUnknown;
                     case Worldspace_FieldIndex.SubCells:
                         return SubCells;
+                    case Worldspace_FieldIndex.ONAMDataTypeState:
+                        return ONAMDataTypeState;
+                    case Worldspace_FieldIndex.NAM0DataTypeState:
+                        return NAM0DataTypeState;
+                    case Worldspace_FieldIndex.NAM9DataTypeState:
+                        return NAM9DataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1198,8 +1267,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Worldspace_FieldIndex.MapData:
                         this.MapData = new MaskItem<Exception?, WorldspaceMap.ErrorMask?>(ex, null);
                         break;
-                    case Worldspace_FieldIndex.MapOffset:
-                        this.MapOffset = new MaskItem<Exception?, WorldspaceMapOffset.ErrorMask?>(ex, null);
+                    case Worldspace_FieldIndex.WorldMapOffsetScale:
+                        this.WorldMapOffsetScale = ex;
+                        break;
+                    case Worldspace_FieldIndex.WorldMapCellOffset:
+                        this.WorldMapCellOffset = ex;
                         break;
                     case Worldspace_FieldIndex.DistantLodMultiplier:
                         this.DistantLodMultiplier = ex;
@@ -1207,8 +1279,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Worldspace_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case Worldspace_FieldIndex.ObjectBounds:
-                        this.ObjectBounds = new MaskItem<Exception?, WorldspaceObjectBounds.ErrorMask?>(ex, null);
+                    case Worldspace_FieldIndex.ObjectBoundsMin:
+                        this.ObjectBoundsMin = ex;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMax:
+                        this.ObjectBoundsMax = ex;
                         break;
                     case Worldspace_FieldIndex.Music:
                         this.Music = ex;
@@ -1242,6 +1317,15 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Worldspace_FieldIndex.SubCells:
                         this.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.ONAMDataTypeState:
+                        this.ONAMDataTypeState = ex;
+                        break;
+                    case Worldspace_FieldIndex.NAM0DataTypeState:
+                        this.NAM0DataTypeState = ex;
+                        break;
+                    case Worldspace_FieldIndex.NAM9DataTypeState:
+                        this.NAM9DataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1302,8 +1386,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Worldspace_FieldIndex.MapData:
                         this.MapData = (MaskItem<Exception?, WorldspaceMap.ErrorMask?>?)obj;
                         break;
-                    case Worldspace_FieldIndex.MapOffset:
-                        this.MapOffset = (MaskItem<Exception?, WorldspaceMapOffset.ErrorMask?>?)obj;
+                    case Worldspace_FieldIndex.WorldMapOffsetScale:
+                        this.WorldMapOffsetScale = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.WorldMapCellOffset:
+                        this.WorldMapCellOffset = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.DistantLodMultiplier:
                         this.DistantLodMultiplier = (Exception?)obj;
@@ -1311,8 +1398,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Worldspace_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case Worldspace_FieldIndex.ObjectBounds:
-                        this.ObjectBounds = (MaskItem<Exception?, WorldspaceObjectBounds.ErrorMask?>?)obj;
+                    case Worldspace_FieldIndex.ObjectBoundsMin:
+                        this.ObjectBoundsMin = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMax:
+                        this.ObjectBoundsMax = (Exception?)obj;
                         break;
                     case Worldspace_FieldIndex.Music:
                         this.Music = (Exception?)obj;
@@ -1347,6 +1437,15 @@ namespace Mutagen.Bethesda.Skyrim
                     case Worldspace_FieldIndex.SubCells:
                         this.SubCells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>)obj;
                         break;
+                    case Worldspace_FieldIndex.ONAMDataTypeState:
+                        this.ONAMDataTypeState = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.NAM0DataTypeState:
+                        this.NAM0DataTypeState = (Exception?)obj;
+                        break;
+                    case Worldspace_FieldIndex.NAM9DataTypeState:
+                        this.NAM9DataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1372,10 +1471,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (MapImage != null) return true;
                 if (CloudModel != null) return true;
                 if (MapData != null) return true;
-                if (MapOffset != null) return true;
+                if (WorldMapOffsetScale != null) return true;
+                if (WorldMapCellOffset != null) return true;
                 if (DistantLodMultiplier != null) return true;
                 if (Flags != null) return true;
-                if (ObjectBounds != null) return true;
+                if (ObjectBoundsMin != null) return true;
+                if (ObjectBoundsMax != null) return true;
                 if (Music != null) return true;
                 if (CanopyShadow != null) return true;
                 if (WaterNoiseTexture != null) return true;
@@ -1387,6 +1488,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (SubCellsTimestamp != null) return true;
                 if (SubCellsUnknown != null) return true;
                 if (SubCells != null) return true;
+                if (ONAMDataTypeState != null) return true;
+                if (NAM0DataTypeState != null) return true;
+                if (NAM9DataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1466,14 +1570,24 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 CloudModel?.Print(sb);
                 MapData?.Print(sb);
-                MapOffset?.Print(sb);
+                {
+                    sb.AppendItem(WorldMapOffsetScale, "WorldMapOffsetScale");
+                }
+                {
+                    sb.AppendItem(WorldMapCellOffset, "WorldMapCellOffset");
+                }
                 {
                     sb.AppendItem(DistantLodMultiplier, "DistantLodMultiplier");
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
-                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
+                }
+                {
+                    sb.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
+                }
                 {
                     sb.AppendItem(Music, "Music");
                 }
@@ -1520,6 +1634,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                {
+                    sb.AppendItem(ONAMDataTypeState, "ONAMDataTypeState");
+                }
+                {
+                    sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
+                }
+                {
+                    sb.AppendItem(NAM9DataTypeState, "NAM9DataTypeState");
+                }
             }
             #endregion
 
@@ -1544,10 +1667,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MapImage = this.MapImage.Combine(rhs.MapImage);
                 ret.CloudModel = this.CloudModel.Combine(rhs.CloudModel, (l, r) => l.Combine(r));
                 ret.MapData = this.MapData.Combine(rhs.MapData, (l, r) => l.Combine(r));
-                ret.MapOffset = this.MapOffset.Combine(rhs.MapOffset, (l, r) => l.Combine(r));
+                ret.WorldMapOffsetScale = this.WorldMapOffsetScale.Combine(rhs.WorldMapOffsetScale);
+                ret.WorldMapCellOffset = this.WorldMapCellOffset.Combine(rhs.WorldMapCellOffset);
                 ret.DistantLodMultiplier = this.DistantLodMultiplier.Combine(rhs.DistantLodMultiplier);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ObjectBoundsMin = this.ObjectBoundsMin.Combine(rhs.ObjectBoundsMin);
+                ret.ObjectBoundsMax = this.ObjectBoundsMax.Combine(rhs.ObjectBoundsMax);
                 ret.Music = this.Music.Combine(rhs.Music);
                 ret.CanopyShadow = this.CanopyShadow.Combine(rhs.CanopyShadow);
                 ret.WaterNoiseTexture = this.WaterNoiseTexture.Combine(rhs.WaterNoiseTexture);
@@ -1559,6 +1684,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
                 ret.SubCellsUnknown = this.SubCellsUnknown.Combine(rhs.SubCellsUnknown);
                 ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
+                ret.ONAMDataTypeState = this.ONAMDataTypeState.Combine(rhs.ONAMDataTypeState);
+                ret.NAM0DataTypeState = this.NAM0DataTypeState.Combine(rhs.NAM0DataTypeState);
+                ret.NAM9DataTypeState = this.NAM9DataTypeState.Combine(rhs.NAM9DataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1597,10 +1725,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool MapImage;
             public Model.TranslationMask? CloudModel;
             public WorldspaceMap.TranslationMask? MapData;
-            public WorldspaceMapOffset.TranslationMask? MapOffset;
+            public bool WorldMapOffsetScale;
+            public bool WorldMapCellOffset;
             public bool DistantLodMultiplier;
             public bool Flags;
-            public WorldspaceObjectBounds.TranslationMask? ObjectBounds;
+            public bool ObjectBoundsMin;
+            public bool ObjectBoundsMax;
             public bool Music;
             public bool CanopyShadow;
             public bool WaterNoiseTexture;
@@ -1612,6 +1742,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SubCellsTimestamp;
             public bool SubCellsUnknown;
             public WorldspaceBlock.TranslationMask? SubCells;
+            public bool ONAMDataTypeState;
+            public bool NAM0DataTypeState;
+            public bool NAM9DataTypeState;
             #endregion
 
             #region Ctors
@@ -1630,8 +1763,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LodWater = defaultOn;
                 this.LodWaterHeight = defaultOn;
                 this.MapImage = defaultOn;
+                this.WorldMapOffsetScale = defaultOn;
+                this.WorldMapCellOffset = defaultOn;
                 this.DistantLodMultiplier = defaultOn;
                 this.Flags = defaultOn;
+                this.ObjectBoundsMin = defaultOn;
+                this.ObjectBoundsMax = defaultOn;
                 this.Music = defaultOn;
                 this.CanopyShadow = defaultOn;
                 this.WaterNoiseTexture = defaultOn;
@@ -1641,6 +1778,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OffsetData = defaultOn;
                 this.SubCellsTimestamp = defaultOn;
                 this.SubCellsUnknown = defaultOn;
+                this.ONAMDataTypeState = defaultOn;
+                this.NAM0DataTypeState = defaultOn;
+                this.NAM9DataTypeState = defaultOn;
             }
 
             #endregion
@@ -1664,10 +1804,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MapImage, null));
                 ret.Add((CloudModel != null ? CloudModel.OnOverall : DefaultOn, CloudModel?.GetCrystal()));
                 ret.Add((MapData != null ? MapData.OnOverall : DefaultOn, MapData?.GetCrystal()));
-                ret.Add((MapOffset != null ? MapOffset.OnOverall : DefaultOn, MapOffset?.GetCrystal()));
+                ret.Add((WorldMapOffsetScale, null));
+                ret.Add((WorldMapCellOffset, null));
                 ret.Add((DistantLodMultiplier, null));
                 ret.Add((Flags, null));
-                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ObjectBoundsMin, null));
+                ret.Add((ObjectBoundsMax, null));
                 ret.Add((Music, null));
                 ret.Add((CanopyShadow, null));
                 ret.Add((WaterNoiseTexture, null));
@@ -1679,6 +1821,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SubCellsTimestamp, null));
                 ret.Add((SubCellsUnknown, null));
                 ret.Add((SubCells == null ? DefaultOn : !SubCells.GetCrystal().CopyNothing, SubCells?.GetCrystal()));
+                ret.Add((ONAMDataTypeState, null));
+                ret.Add((NAM0DataTypeState, null));
+                ret.Add((NAM9DataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1758,6 +1903,18 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum ONAMDataType
+        {
+        }
+        [Flags]
+        public enum NAM0DataType
+        {
+        }
+        [Flags]
+        public enum NAM9DataType
+        {
         }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
@@ -1890,10 +2047,12 @@ namespace Mutagen.Bethesda.Skyrim
         new String? MapImage { get; set; }
         new Model? CloudModel { get; set; }
         new WorldspaceMap? MapData { get; set; }
-        new WorldspaceMapOffset MapOffset { get; set; }
+        new Single WorldMapOffsetScale { get; set; }
+        new P3Float WorldMapCellOffset { get; set; }
         new Single? DistantLodMultiplier { get; set; }
         new Worldspace.Flag Flags { get; set; }
-        new WorldspaceObjectBounds? ObjectBounds { get; set; }
+        new P2Float ObjectBoundsMin { get; set; }
+        new P2Float ObjectBoundsMax { get; set; }
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new String? CanopyShadow { get; set; }
         new String? WaterNoiseTexture { get; set; }
@@ -1905,6 +2064,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 SubCellsTimestamp { get; set; }
         new Int32 SubCellsUnknown { get; set; }
         new ExtendedList<WorldspaceBlock> SubCells { get; }
+        new Worldspace.ONAMDataType ONAMDataTypeState { get; set; }
+        new Worldspace.NAM0DataType NAM0DataTypeState { get; set; }
+        new Worldspace.NAM9DataType NAM9DataTypeState { get; set; }
         #region Mutagen
         new Worldspace.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1954,10 +2116,12 @@ namespace Mutagen.Bethesda.Skyrim
         String? MapImage { get; }
         IModelGetter? CloudModel { get; }
         IWorldspaceMapGetter? MapData { get; }
-        IWorldspaceMapOffsetGetter MapOffset { get; }
+        Single WorldMapOffsetScale { get; }
+        P3Float WorldMapCellOffset { get; }
         Single? DistantLodMultiplier { get; }
         Worldspace.Flag Flags { get; }
-        IWorldspaceObjectBoundsGetter? ObjectBounds { get; }
+        P2Float ObjectBoundsMin { get; }
+        P2Float ObjectBoundsMax { get; }
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
         String? CanopyShadow { get; }
         String? WaterNoiseTexture { get; }
@@ -1969,6 +2133,9 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 SubCellsTimestamp { get; }
         Int32 SubCellsUnknown { get; }
         IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; }
+        Worldspace.ONAMDataType ONAMDataTypeState { get; }
+        Worldspace.NAM0DataType NAM0DataTypeState { get; }
+        Worldspace.NAM9DataType NAM9DataTypeState { get; }
 
         #region Mutagen
         Worldspace.MajorFlag MajorFlags { get; }
@@ -2365,21 +2532,26 @@ namespace Mutagen.Bethesda.Skyrim
         MapImage = 19,
         CloudModel = 20,
         MapData = 21,
-        MapOffset = 22,
-        DistantLodMultiplier = 23,
-        Flags = 24,
-        ObjectBounds = 25,
-        Music = 26,
-        CanopyShadow = 27,
-        WaterNoiseTexture = 28,
-        HdLodDiffuseTexture = 29,
-        HdLodNormalTexture = 30,
-        WaterEnvironmentMap = 31,
-        OffsetData = 32,
-        TopCell = 33,
-        SubCellsTimestamp = 34,
-        SubCellsUnknown = 35,
-        SubCells = 36,
+        WorldMapOffsetScale = 22,
+        WorldMapCellOffset = 23,
+        DistantLodMultiplier = 24,
+        Flags = 25,
+        ObjectBoundsMin = 26,
+        ObjectBoundsMax = 27,
+        Music = 28,
+        CanopyShadow = 29,
+        WaterNoiseTexture = 30,
+        HdLodDiffuseTexture = 31,
+        HdLodNormalTexture = 32,
+        WaterEnvironmentMap = 33,
+        OffsetData = 34,
+        TopCell = 35,
+        SubCellsTimestamp = 36,
+        SubCellsUnknown = 37,
+        SubCells = 38,
+        ONAMDataTypeState = 39,
+        NAM0DataTypeState = 40,
+        NAM9DataTypeState = 41,
     }
     #endregion
 
@@ -2397,9 +2569,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "2ee9dfa0-e46f-43fe-b3e3-acc2314e4bce";
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 36;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 42;
 
         public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
@@ -2561,10 +2733,12 @@ namespace Mutagen.Bethesda.Skyrim
             item.MapImage = default;
             item.CloudModel = null;
             item.MapData = null;
-            item.MapOffset.Clear();
+            item.WorldMapOffsetScale = default;
+            item.WorldMapCellOffset = default;
             item.DistantLodMultiplier = default;
             item.Flags = default;
-            item.ObjectBounds = null;
+            item.ObjectBoundsMin = default;
+            item.ObjectBoundsMax = default;
             item.Music.Clear();
             item.CanopyShadow = default;
             item.WaterNoiseTexture = default;
@@ -2576,6 +2750,9 @@ namespace Mutagen.Bethesda.Skyrim
             item.SubCellsTimestamp = default;
             item.SubCellsUnknown = default;
             item.SubCells.Clear();
+            item.ONAMDataTypeState = default;
+            item.NAM0DataTypeState = default;
+            item.NAM9DataTypeState = default;
             base.Clear(item);
         }
         
@@ -3017,14 +3194,12 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.MapData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.MapOffset = MaskItemExt.Factory(item.MapOffset.GetEqualsMask(rhs.MapOffset, include), include);
+            ret.WorldMapOffsetScale = item.WorldMapOffsetScale.EqualsWithin(rhs.WorldMapOffsetScale);
+            ret.WorldMapCellOffset = item.WorldMapCellOffset.Equals(rhs.WorldMapCellOffset);
             ret.DistantLodMultiplier = item.DistantLodMultiplier.EqualsWithin(rhs.DistantLodMultiplier);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
-                item.ObjectBounds,
-                rhs.ObjectBounds,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.ObjectBoundsMin = item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
+            ret.ObjectBoundsMax = item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
             ret.Music = item.Music.Equals(rhs.Music);
             ret.CanopyShadow = string.Equals(item.CanopyShadow, rhs.CanopyShadow);
             ret.WaterNoiseTexture = string.Equals(item.WaterNoiseTexture, rhs.WaterNoiseTexture);
@@ -3043,6 +3218,9 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.SubCells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.ONAMDataTypeState = item.ONAMDataTypeState == rhs.ONAMDataTypeState;
+            ret.NAM0DataTypeState = item.NAM0DataTypeState == rhs.NAM0DataTypeState;
+            ret.NAM9DataTypeState = item.NAM9DataTypeState == rhs.NAM9DataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3175,9 +3353,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 MapDataItem?.Print(sb, "MapData");
             }
-            if (printMask?.MapOffset?.Overall ?? true)
+            if (printMask?.WorldMapOffsetScale ?? true)
             {
-                item.MapOffset?.Print(sb, "MapOffset");
+                sb.AppendItem(item.WorldMapOffsetScale, "WorldMapOffsetScale");
+            }
+            if (printMask?.WorldMapCellOffset ?? true)
+            {
+                sb.AppendItem(item.WorldMapCellOffset, "WorldMapCellOffset");
             }
             if ((printMask?.DistantLodMultiplier ?? true)
                 && item.DistantLodMultiplier is {} DistantLodMultiplierItem)
@@ -3188,10 +3370,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Flags, "Flags");
             }
-            if ((printMask?.ObjectBounds?.Overall ?? true)
-                && item.ObjectBounds is {} ObjectBoundsItem)
+            if (printMask?.ObjectBoundsMin ?? true)
             {
-                ObjectBoundsItem?.Print(sb, "ObjectBounds");
+                sb.AppendItem(item.ObjectBoundsMin, "ObjectBoundsMin");
+            }
+            if (printMask?.ObjectBoundsMax ?? true)
+            {
+                sb.AppendItem(item.ObjectBoundsMax, "ObjectBoundsMax");
             }
             if (printMask?.Music ?? true)
             {
@@ -3253,6 +3438,18 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+            }
+            if (printMask?.ONAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.ONAMDataTypeState, "ONAMDataTypeState");
+            }
+            if (printMask?.NAM0DataTypeState ?? true)
+            {
+                sb.AppendItem(item.NAM0DataTypeState, "NAM0DataTypeState");
+            }
+            if (printMask?.NAM9DataTypeState ?? true)
+            {
+                sb.AppendItem(item.NAM9DataTypeState, "NAM9DataTypeState");
             }
         }
         
@@ -3386,13 +3583,13 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 else if (!isMapDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapOffset) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffsetScale) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.MapOffset, rhs.MapOffset, out var lhsMapOffset, out var rhsMapOffset, out var isMapOffsetEqual))
-                {
-                    if (!((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)lhsMapOffset).CommonInstance()!).Equals(lhsMapOffset, rhsMapOffset, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.MapOffset))) return false;
-                }
-                else if (!isMapOffsetEqual) return false;
+                if (!lhs.WorldMapOffsetScale.EqualsWithin(rhs.WorldMapOffsetScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapCellOffset) ?? true))
+            {
+                if (!lhs.WorldMapCellOffset.Equals(rhs.WorldMapCellOffset)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
             {
@@ -3402,13 +3599,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBounds) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
-                {
-                    if (!((WorldspaceObjectBoundsCommon)((IWorldspaceObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.ObjectBounds))) return false;
-                }
-                else if (!isObjectBoundsEqual) return false;
+                if (!lhs.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
+            {
+                if (!lhs.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
@@ -3457,6 +3654,18 @@ namespace Mutagen.Bethesda.Skyrim
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
                 if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ONAMDataTypeState) ?? true))
+            {
+                if (lhs.ONAMDataTypeState != rhs.ONAMDataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM0DataTypeState) ?? true))
+            {
+                if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM9DataTypeState) ?? true))
+            {
+                if (lhs.NAM9DataTypeState != rhs.NAM9DataTypeState) return false;
             }
             return true;
         }
@@ -3529,16 +3738,15 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(MapDataitem);
             }
-            hash.Add(item.MapOffset);
+            hash.Add(item.WorldMapOffsetScale);
+            hash.Add(item.WorldMapCellOffset);
             if (item.DistantLodMultiplier is {} DistantLodMultiplieritem)
             {
                 hash.Add(DistantLodMultiplieritem);
             }
             hash.Add(item.Flags);
-            if (item.ObjectBounds is {} ObjectBoundsitem)
-            {
-                hash.Add(ObjectBoundsitem);
-            }
+            hash.Add(item.ObjectBoundsMin);
+            hash.Add(item.ObjectBoundsMax);
             hash.Add(item.Music);
             if (item.CanopyShadow is {} CanopyShadowitem)
             {
@@ -3571,6 +3779,9 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.SubCellsTimestamp);
             hash.Add(item.SubCellsUnknown);
             hash.Add(item.SubCells);
+            hash.Add(item.ONAMDataTypeState);
+            hash.Add(item.NAM0DataTypeState);
+            hash.Add(item.NAM9DataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -4603,27 +4814,13 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapOffset) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffsetScale) ?? true))
             {
-                errorMask?.PushIndex((int)Worldspace_FieldIndex.MapOffset);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapOffset) ?? true))
-                    {
-                        item.MapOffset = rhs.MapOffset.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapOffset),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.WorldMapOffsetScale = rhs.WorldMapOffsetScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapCellOffset) ?? true))
+            {
+                item.WorldMapCellOffset = rhs.WorldMapCellOffset;
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
             {
@@ -4633,31 +4830,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBounds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
             {
-                errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBounds);
-                try
-                {
-                    if(rhs.ObjectBounds is {} rhsObjectBounds)
-                    {
-                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.ObjectBounds));
-                    }
-                    else
-                    {
-                        item.ObjectBounds = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ObjectBoundsMin = rhs.ObjectBoundsMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
+            {
+                item.ObjectBoundsMax = rhs.ObjectBoundsMax;
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
@@ -4751,6 +4930,18 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ONAMDataTypeState) ?? true))
+            {
+                item.ONAMDataTypeState = rhs.ONAMDataTypeState;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM0DataTypeState) ?? true))
+            {
+                item.NAM0DataTypeState = rhs.NAM0DataTypeState;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM9DataTypeState) ?? true))
+            {
+                item.NAM9DataTypeState = rhs.NAM9DataTypeState;
             }
         }
         
@@ -5007,11 +5198,15 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     translationParams: translationParams);
             }
-            var MapOffsetItem = item.MapOffset;
-            ((WorldspaceMapOffsetBinaryWriteTranslation)((IBinaryItem)MapOffsetItem).BinaryWriteTranslator).Write(
-                item: MapOffsetItem,
-                writer: writer,
-                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ONAM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WorldMapOffsetScale);
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WorldMapCellOffset);
+            }
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DistantLodMultiplier,
@@ -5021,12 +5216,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item.Flags,
                 length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
-            if (item.ObjectBounds is {} ObjectBoundsItem)
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.NAM0)))
             {
-                ((WorldspaceObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
-                    item: ObjectBoundsItem,
+                WorldspaceBinaryWriteTranslation.WriteBinaryObjectBoundsMin(
                     writer: writer,
-                    translationParams: translationParams);
+                    item: item);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.NAM9)))
+            {
+                WorldspaceBinaryWriteTranslation.WriteBinaryObjectBoundsMax(
+                    writer: writer,
+                    item: item);
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -5062,6 +5262,32 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item.OffsetData,
                 header: translationParams.ConvertToCustom(RecordTypes.OFST),
                 overflowRecord: RecordTypes.XXXX);
+        }
+
+        public static partial void WriteBinaryObjectBoundsMinCustom(
+            MutagenWriter writer,
+            IWorldspaceGetter item);
+
+        public static void WriteBinaryObjectBoundsMin(
+            MutagenWriter writer,
+            IWorldspaceGetter item)
+        {
+            WriteBinaryObjectBoundsMinCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryObjectBoundsMaxCustom(
+            MutagenWriter writer,
+            IWorldspaceGetter item);
+
+        public static void WriteBinaryObjectBoundsMax(
+            MutagenWriter writer,
+            IWorldspaceGetter item)
+        {
+            WriteBinaryObjectBoundsMaxCustom(
+                writer: writer,
+                item: item);
         }
 
         public static partial void CustomBinaryEndExport(
@@ -5275,8 +5501,11 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    item.MapOffset = Mutagen.Bethesda.Skyrim.WorldspaceMapOffset.CreateFromBinary(frame: frame);
-                    return (int)Worldspace_FieldIndex.MapOffset;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.WorldMapOffsetScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.WorldMapCellOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Worldspace_FieldIndex.WorldMapCellOffset;
                 }
                 case RecordTypeInts.NAMA:
                 {
@@ -5293,12 +5522,22 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)Worldspace_FieldIndex.Flags;
                 }
                 case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    WorldspaceBinaryCreateTranslation.FillBinaryObjectBoundsMinCustom(
+                        frame: dataFrame,
+                        item: item);
+                    return (int)Worldspace_FieldIndex.ObjectBoundsMin;
+                }
                 case RecordTypeInts.NAM9:
                 {
-                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.WorldspaceObjectBounds.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams);
-                    return (int)Worldspace_FieldIndex.ObjectBounds;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    WorldspaceBinaryCreateTranslation.FillBinaryObjectBoundsMaxCustom(
+                        frame: dataFrame,
+                        item: item);
+                    return (int)Worldspace_FieldIndex.ObjectBoundsMax;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -5367,6 +5606,14 @@ namespace Mutagen.Bethesda.Skyrim
                         contentLength: contentLength);
             }
         }
+
+        public static partial void FillBinaryObjectBoundsMinCustom(
+            MutagenFrame frame,
+            IWorldspaceInternal item);
+
+        public static partial void FillBinaryObjectBoundsMaxCustom(
+            MutagenFrame frame,
+            IWorldspaceInternal item);
 
         public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
@@ -5497,10 +5744,17 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _MapDataLocation;
         public IWorldspaceMapGetter? MapData => _MapDataLocation.HasValue ? WorldspaceMapBinaryOverlay.WorldspaceMapFactory(new OverlayStream(_data.Slice(_MapDataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        #region MapOffset
-        private RangeInt32? _MapOffsetLocation;
-        private IWorldspaceMapOffsetGetter? _MapOffset => _MapOffsetLocation.HasValue ? WorldspaceMapOffsetBinaryOverlay.WorldspaceMapOffsetFactory(new OverlayStream(_data.Slice(_MapOffsetLocation!.Value.Min), _package), _package) : default;
-        public IWorldspaceMapOffsetGetter MapOffset => _MapOffset ?? new WorldspaceMapOffset();
+        private RangeInt32? _ONAMLocation;
+        public Worldspace.ONAMDataType ONAMDataTypeState { get; private set; }
+        #region WorldMapOffsetScale
+        private int _WorldMapOffsetScaleLocation => _ONAMLocation!.Value.Min;
+        private bool _WorldMapOffsetScale_IsSet => _ONAMLocation.HasValue;
+        public Single WorldMapOffsetScale => _WorldMapOffsetScale_IsSet ? _data.Slice(_WorldMapOffsetScaleLocation, 4).Float() : default;
+        #endregion
+        #region WorldMapCellOffset
+        private int _WorldMapCellOffsetLocation => _ONAMLocation!.Value.Min + 0x4;
+        private bool _WorldMapCellOffset_IsSet => _ONAMLocation.HasValue;
+        public P3Float WorldMapCellOffset => _WorldMapCellOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_WorldMapCellOffsetLocation, 12)) : default;
         #endregion
         #region DistantLodMultiplier
         private int? _DistantLodMultiplierLocation;
@@ -5510,7 +5764,24 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FlagsLocation;
         public Worldspace.Flag Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag);
         #endregion
-        public IWorldspaceObjectBoundsGetter? ObjectBounds { get; private set; }
+        private RangeInt32? _NAM0Location;
+        public Worldspace.NAM0DataType NAM0DataTypeState { get; private set; }
+        #region ObjectBoundsMin
+        private int _ObjectBoundsMinLocation => _NAM0Location!.Value.Min;
+        public partial P2Float GetObjectBoundsMinCustom();
+        public P2Float ObjectBoundsMin => GetObjectBoundsMinCustom();
+        protected int ObjectBoundsMinEndingPos;
+        partial void CustomObjectBoundsMinEndPos();
+        #endregion
+        private RangeInt32? _NAM9Location;
+        public Worldspace.NAM9DataType NAM9DataTypeState { get; private set; }
+        #region ObjectBoundsMax
+        private int _ObjectBoundsMaxLocation => _NAM9Location!.Value.Min;
+        public partial P2Float GetObjectBoundsMaxCustom();
+        public P2Float ObjectBoundsMax => GetObjectBoundsMaxCustom();
+        protected int ObjectBoundsMaxEndingPos;
+        partial void CustomObjectBoundsMaxEndPos();
+        #endregion
         #region Music
         private int? _MusicLocation;
         public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
@@ -5721,8 +5992,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _MapOffsetLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Worldspace_FieldIndex.MapOffset;
+                    _ONAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Worldspace_FieldIndex.WorldMapCellOffset;
                 }
                 case RecordTypeInts.NAMA:
                 {
@@ -5735,13 +6006,14 @@ namespace Mutagen.Bethesda.Skyrim
                     return (int)Worldspace_FieldIndex.Flags;
                 }
                 case RecordTypeInts.NAM0:
+                {
+                    _NAM0Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Worldspace_FieldIndex.ObjectBoundsMin;
+                }
                 case RecordTypeInts.NAM9:
                 {
-                    this.ObjectBounds = WorldspaceObjectBoundsBinaryOverlay.WorldspaceObjectBoundsFactory(
-                        stream: stream,
-                        package: _package,
-                        parseParams: parseParams);
-                    return (int)Worldspace_FieldIndex.ObjectBounds;
+                    _NAM9Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Worldspace_FieldIndex.ObjectBoundsMax;
                 }
                 case RecordTypeInts.ZNAM:
                 {

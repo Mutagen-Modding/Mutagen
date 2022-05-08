@@ -4,12 +4,10 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -36,6 +34,20 @@ public partial class Worldspace
 
 partial class WorldspaceBinaryCreateTranslation
 {
+    public static partial void FillBinaryObjectBoundsMinCustom(MutagenFrame frame, IWorldspaceInternal item)
+    {
+        item.ObjectBoundsMin = new P2Float(
+            frame.ReadFloat() / 4096f,
+            frame.ReadFloat() / 4096f);
+    }
+
+    public static partial void FillBinaryObjectBoundsMaxCustom(MutagenFrame frame, IWorldspaceInternal item)
+    {
+        item.ObjectBoundsMax = new P2Float(
+            frame.ReadFloat() / 4096f,
+            frame.ReadFloat() / 4096f);
+    }
+
     public static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
     {
         try
@@ -102,6 +114,20 @@ partial class WorldspaceBinaryCreateTranslation
 
 partial class WorldspaceBinaryWriteTranslation
 {
+    public static partial void WriteBinaryObjectBoundsMinCustom(MutagenWriter writer, IWorldspaceGetter item)
+    {
+        var min = item.ObjectBoundsMin;
+        writer.Write(min.X * 4096f);
+        writer.Write(min.Y * 4096f);
+    }
+
+    public static partial void WriteBinaryObjectBoundsMaxCustom(MutagenWriter writer, IWorldspaceGetter item)
+    {
+        var max = item.ObjectBoundsMax;
+        writer.Write(max.X * 4096f);
+        writer.Write(max.Y * 4096f);
+    }
+
     public static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj)
     {
         try
@@ -138,6 +164,18 @@ partial class WorldspaceBinaryWriteTranslation
 
 partial class WorldspaceBinaryOverlay
 {
+    public partial P2Float GetObjectBoundsMinCustom() => _NAM0Location.HasValue
+        ? new P2Float(
+            _data.Slice(_NAM0Location.Value.Min).Float() / 4096f,
+            _data.Slice(_NAM0Location.Value.Min + 4).Float() / 4096f)
+        : default;
+
+    public partial P2Float GetObjectBoundsMaxCustom() => _NAM9Location.HasValue
+        ? new P2Float(
+            _data.Slice(_NAM9Location.Value.Min).Float() / 4096f,
+            _data.Slice(_NAM9Location.Value.Min + 4).Float() / 4096f)
+        : default;
+
     private ReadOnlyMemorySlice<byte>? _grupData;
 
     private int? _TopCellLocation;

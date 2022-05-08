@@ -751,9 +751,6 @@
     <Compile Include="Records\Major Records\Worldspace.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WorldspaceObjectBounds.cs">
-      <DependentUpon>Worldspace.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\WorldspaceParent.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
@@ -1854,12 +1851,6 @@
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\WorldspaceMap_Generated.cs">
-      <DependentUpon>Worldspace.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorldspaceMapOffset_Generated.cs">
-      <DependentUpon>Worldspace.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorldspaceObjectBounds_Generated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AssociationType_Generated.cs">

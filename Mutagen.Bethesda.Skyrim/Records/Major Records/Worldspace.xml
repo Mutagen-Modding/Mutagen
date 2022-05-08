@@ -18,10 +18,24 @@
       <String name="MapImage" recordType="ICON" />
       <RefDirect name="CloudModel" refName="Model" />
       <RefDirect name="MapData" refName="WorldspaceMap" />
-      <RefDirect name="MapOffset" refName="WorldspaceMapOffset" nullable="False" />
+      <Data recordType="ONAM">
+        <Fields>
+          <Float name="WorldMapOffsetScale" />
+          <P3Float name="WorldMapCellOffset" />
+        </Fields>
+      </Data>
       <Float name="DistantLodMultiplier" recordType="NAMA" />
       <Enum name="Flags" enumName="Worldspace.Flag" byteLength="1" recordType="DATA" nullable="False" />
-      <RefDirect name="ObjectBounds" refName="WorldspaceObjectBounds" />
+      <Data recordType="NAM0" >
+        <Fields>
+          <P2Float name="ObjectBoundsMin" binary="Custom" />
+        </Fields>
+      </Data>
+      <Data recordType="NAM9" >
+        <Fields>
+          <P2Float name="ObjectBoundsMax" binary="Custom" />
+        </Fields>
+      </Data>
       <FormLink name="Music" refName="MusicType" recordType="ZNAM" />
       <String name="CanopyShadow" recordType="NNAM" />
       <String name="WaterNoiseTexture" recordType="XNAM" />
@@ -96,18 +110,6 @@
       <Float name="CameraMinHeight" />
       <Float name="CameraMaxHeight" />
       <Float name="CameraInitialPitch" />
-    </Fields>
-  </Object>
-  <Object name="WorldspaceMapOffset" objType="Subrecord" recordType="ONAM" GUID="c89bb33f-7638-41bb-8dab-2721e26c1f63" ID="344">
-    <Fields>
-      <Float name="Scale" />
-      <P3Float name="CellOffset" />
-    </Fields>
-  </Object>
-  <Object name="WorldspaceObjectBounds" objType="Subrecord" GUID="5863982b-d963-4fd8-a231-eb09b921d6ab" ID="345">
-    <Fields>
-      <P2Float name="Min" recordType="NAM0" nullable="False" binary="Custom" />
-      <P2Float name="Max" recordType="NAM9" nullable="False" binary="Custom" />
     </Fields>
   </Object>
 </Loqui>
