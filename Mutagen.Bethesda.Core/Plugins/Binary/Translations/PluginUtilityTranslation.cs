@@ -248,7 +248,14 @@ internal static class PluginUtilityTranslation
                 nextRecordType: subMeta.RecordType,
                 contentLength: subMeta.ContentLength,
                 translationParams: translationParams);
-            if (!parsed.KeepParsing) break;
+            if (!parsed.KeepParsing)
+            {
+                if (lastParsed.LengthOverride.HasValue)
+                {
+                    frame.Position -= frame.MetaData.Constants.SubConstants.HeaderLength + 4;
+                }
+                break;
+            }
             if (frame.Position < finalPos)
             {
                 frame.Position = finalPos;

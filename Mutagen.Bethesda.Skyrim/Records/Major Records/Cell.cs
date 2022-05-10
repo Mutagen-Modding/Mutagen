@@ -316,7 +316,7 @@ partial class CellBinaryWriteTranslation
 
 partial class CellBinaryOverlay
 {
-    static readonly RecordTriggerSpecs TypicalPlacedTypes = new RecordTriggerSpecs(
+    static readonly RecordTriggerSpecs TypicalPlacedTypes = new(
         RecordCollection.Factory(
             RecordTypes.ACHR,
             RecordTypes.REFR,

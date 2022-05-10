@@ -525,6 +525,15 @@
     <Compile Include="Records\Major Records\WeatherSound.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Worldspace.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceParent.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceSubBlock.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\ProtocolDefinition_Fallout4.cs" />
     <Compile Include="Records\Fallout4MajorRecord.cs">
       <DependentUpon>Fallout4MajorRecord.xml</DependentUpon>
@@ -1685,14 +1694,59 @@
     <Compile Include="Records\Major Records\PowerGridConnection_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\WorldspaceMaxHeight_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceParent_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceLandDefaults_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceMap_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldDefaultLevelData_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceBlock_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceSubBlock_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Landscape_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceGridReference_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceReference_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BaseLayer_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AlphaLayer_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LayerHeader_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LandscapeVertexHeightMap_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LandscapeMPCD_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.46.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.46.0" />
+    <PackageReference Include="Loqui" Version="2.46.0.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.46.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

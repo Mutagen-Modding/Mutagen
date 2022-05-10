@@ -63,6 +63,7 @@
         <UInt32 />
       </List>
       <RefList name="CombinedMeshReferences" refName="CellCombinedMeshReference" binary="NoGeneration" />
+      <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
       <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="UnknownGroupData" binary="NoGeneration" />

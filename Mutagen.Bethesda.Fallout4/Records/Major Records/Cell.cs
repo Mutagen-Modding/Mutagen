@@ -251,6 +251,17 @@ partial class CellBinaryCreateTranslation
                     translationParams: null));
             return true;
         }
+        else if (nextHeader.Equals(RecordTypes.LAND))
+        {
+            if (obj.Landscape != null)
+            {
+                throw new ArgumentException("Had more than one landscape");
+            }
+            obj.Landscape = Landscape.CreateFromBinary(
+                frame.SpawnWithLength(majorMeta.TotalLength),
+                translationParams: null);
+            return true;
+        }
         return false;
     }
 }
@@ -281,10 +292,17 @@ partial class CellBinaryWriteTranslation
     {
         try
         {
+            if (obj.FormKey.ID == 0xDB41)
+            {
+                int wer = 23;
+                wer++;
+            }
             var navMeshes = obj.NavigationMeshes;
+            var landscape = obj.Landscape;
             if ((obj.Persistent?.Count ?? 0) == 0
                 && (obj.Temporary?.Count ?? 0) == 0
-                && navMeshes.Count == 0) return;
+                && navMeshes.Count == 0
+                && landscape == null) return;
             using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
             {
                 FormKeyBinaryTranslation.Instance.Write(
@@ -310,7 +328,8 @@ partial class CellBinaryWriteTranslation
                     }
                 }
                 if (obj.Temporary?.Count > 0
-                    || navMeshes.Count > 0)
+                    || navMeshes.Count > 0
+                    || landscape != null)
                 {
                     using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                     {
@@ -320,6 +339,7 @@ partial class CellBinaryWriteTranslation
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
                         writer.Write(obj.TemporaryTimestamp);
                         writer.Write(obj.TemporaryUnknownGroupData);
+                        landscape?.WriteToBinary(writer);
                         foreach (var navMesh in navMeshes)
                         {
                             navMesh.WriteToBinary(writer);
@@ -346,11 +366,7 @@ partial class CellBinaryWriteTranslation
 
 partial class CellBinaryOverlay
 {
-    public IReadOnlyList<uint> CombinedMeshes => throw new NotImplementedException();
-
-    public IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences => throw new NotImplementedException();
-
-    static readonly RecordTriggerSpecs TypicalPlacedTypes = new RecordTriggerSpecs(
+    static readonly RecordTriggerSpecs TypicalPlacedTypes = new(
         RecordCollection.Factory(
             RecordTypes.ACHR,
             RecordTypes.REFR,
@@ -371,6 +387,9 @@ partial class CellBinaryOverlay
 
     public int UnknownGroupData => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
+    private int? _landscapeLocation;
+    public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new OverlayStream(_grupData!.Value.Slice(_landscapeLocation!.Value), _package), _package) : default;
+
     public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedData) : 0;
 
     private int? _persistentLocation;
@@ -385,9 +404,33 @@ partial class CellBinaryOverlay
 
     public int TemporaryUnknownGroupData => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_temporaryLocation.Value + 20)) : 0;
 
+    public IReadOnlyList<uint> CombinedMeshes { get; private set; } = Array.Empty<uint>();
+
+    public IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences { get; private set; } = Array.Empty<ICellCombinedMeshReferenceGetter>();
+
     public partial ParseResult CombinedMeshLogicCustomParse(OverlayStream stream, int offset)
     {
-        throw new NotImplementedException();
+        stream.ReadSubrecordHeader(RecordTypes.XCRI);
+        var meshCount = stream.ReadUInt32();
+        var referencesCount = stream.ReadUInt32();
+        if (referencesCount % 2 != 0)
+        {
+            throw new MalformedDataException($"{RecordTypes.XCRI} reference count must be even");
+        }
+        referencesCount /= 2;
+        CombinedMeshes = BinaryOverlayList.FactoryByCount(
+            stream.ReadMemory(checked((int)(4 * meshCount))),
+            _package,
+            itemLength: 4,
+            count: meshCount,
+            (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
+        CombinedMeshReferences = BinaryOverlayList.FactoryByCount(
+            stream.ReadMemory(checked((int)(8 * referencesCount))),
+            _package,
+            itemLength: 8,
+            count: referencesCount,
+            (s, p) => CellCombinedMeshReferenceBinaryOverlay.CellCombinedMeshReferenceFactory(s, p));
+        return (int)Cell_FieldIndex.CombinedMeshReferences;
     }
 
     public static int[] ParseRecordLocations(OverlayStream stream, BinaryOverlayFactoryPackage package)
@@ -560,6 +603,10 @@ partial class CellBinaryOverlay
                                                 constants: _package.MetaData.Constants.MajorConstants,
                                                 trigger: recType,
                                                 skipHeader: false));
+                                        break;
+                                    case RecordTypeInts.LAND:
+                                        _landscapeLocation = checked((int)stream.Position);
+                                        stream.Position += (int)majorMeta.TotalLength;
                                         break;
                                     default:
                                         throw new NotImplementedException();

@@ -29,8 +29,8 @@
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.16" />
-    <PackageReference Include="Loqui" Version="2.46.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.46.0" />
+    <PackageReference Include="Loqui" Version="2.46.0.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.46.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -591,6 +591,11 @@
     <Compile Include="Translations\Binary\P2FloatBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\P2Int16BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\P2IntBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\P2UInt8BinaryTranslation.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Translations\Binary\P3FloatBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\P3Int16BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\P3IntBinaryTranslation.cs" />

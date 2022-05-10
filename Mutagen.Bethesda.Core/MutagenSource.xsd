@@ -445,6 +445,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="additive" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to clear and call Add, rather than SetTo
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

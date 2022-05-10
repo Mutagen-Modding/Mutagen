@@ -147,6 +147,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TintTemplateOption
 - Tree
 - Weapon
+- Worldspace
 ### IObjectBounded
 - AcousticSpace
 - Activator
@@ -571,3 +572,5 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 - IWeightValue
+### Worldspace
+- INamed

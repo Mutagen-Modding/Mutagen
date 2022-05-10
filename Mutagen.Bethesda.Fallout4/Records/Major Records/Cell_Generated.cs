@@ -384,6 +384,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
+        #region Landscape
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Landscape? _Landscape;
+        public Landscape? Landscape
+        {
+            get => _Landscape;
+            set => _Landscape = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILandscapeGetter? ICellGetter.Landscape => this.Landscape;
+        #endregion
         #region NavigationMeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<NavigationMesh> _NavigationMeshes = new ExtendedList<NavigationMesh>();
@@ -501,6 +512,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PhysicsReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.CombinedMeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.CombinedMeshReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>());
+                this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(initialValue, new Landscape.Mask<TItem>(initialValue));
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
                 this.Timestamp = initialValue;
                 this.UnknownGroupData = initialValue;
@@ -551,6 +563,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem PhysicsReferences,
                 TItem CombinedMeshes,
                 TItem CombinedMeshReferences,
+                TItem Landscape,
                 TItem NavigationMeshes,
                 TItem Timestamp,
                 TItem UnknownGroupData,
@@ -600,6 +613,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PhysicsReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PhysicsReferences, Enumerable.Empty<(int Index, TItem Value)>());
                 this.CombinedMeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CombinedMeshes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.CombinedMeshReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>(CombinedMeshReferences, Enumerable.Empty<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>());
+                this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(Landscape, new Landscape.Mask<TItem>(Landscape));
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
                 this.Timestamp = Timestamp;
                 this.UnknownGroupData = UnknownGroupData;
@@ -652,6 +666,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PhysicsReferences;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CombinedMeshes;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>? CombinedMeshReferences;
+            public MaskItem<TItem, Landscape.Mask<TItem>?>? Landscape { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>? NavigationMeshes;
             public TItem Timestamp;
             public TItem UnknownGroupData;
@@ -706,6 +721,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.PhysicsReferences, rhs.PhysicsReferences)) return false;
                 if (!object.Equals(this.CombinedMeshes, rhs.CombinedMeshes)) return false;
                 if (!object.Equals(this.CombinedMeshReferences, rhs.CombinedMeshReferences)) return false;
+                if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
                 if (!object.Equals(this.NavigationMeshes, rhs.NavigationMeshes)) return false;
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
                 if (!object.Equals(this.UnknownGroupData, rhs.UnknownGroupData)) return false;
@@ -752,6 +768,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.PhysicsReferences);
                 hash.Add(this.CombinedMeshes);
                 hash.Add(this.CombinedMeshReferences);
+                hash.Add(this.Landscape);
                 hash.Add(this.NavigationMeshes);
                 hash.Add(this.Timestamp);
                 hash.Add(this.UnknownGroupData);
@@ -867,6 +884,11 @@ namespace Mutagen.Bethesda.Fallout4
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
+                }
+                if (Landscape != null)
+                {
+                    if (!eval(this.Landscape.Overall)) return false;
+                    if (this.Landscape.Specific != null && !this.Landscape.Specific.All(eval)) return false;
                 }
                 if (this.NavigationMeshes != null)
                 {
@@ -1015,6 +1037,11 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (Landscape != null)
+                {
+                    if (eval(this.Landscape.Overall)) return true;
+                    if (this.Landscape.Specific != null && this.Landscape.Specific.Any(eval)) return true;
+                }
                 if (this.NavigationMeshes != null)
                 {
                     if (eval(this.NavigationMeshes.Overall)) return true;
@@ -1157,6 +1184,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                obj.Landscape = this.Landscape == null ? null : new MaskItem<R, Landscape.Mask<R>?>(eval(this.Landscape.Overall), this.Landscape.Specific?.Translate(eval));
                 if (NavigationMeshes != null)
                 {
                     obj.NavigationMeshes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>?>(eval(this.NavigationMeshes.Overall), Enumerable.Empty<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>());
@@ -1422,6 +1450,10 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
+                    if (printMask?.Landscape?.Overall ?? true)
+                    {
+                        Landscape?.Print(sb);
+                    }
                     if ((printMask?.NavigationMeshes?.Overall ?? true)
                         && NavigationMeshes is {} NavigationMeshesItem)
                     {
@@ -1546,6 +1578,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PhysicsReferences;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CombinedMeshes;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>? CombinedMeshReferences;
+            public MaskItem<Exception?, Landscape.ErrorMask?>? Landscape;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>? NavigationMeshes;
             public Exception? Timestamp;
             public Exception? UnknownGroupData;
@@ -1627,6 +1660,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return CombinedMeshes;
                     case Cell_FieldIndex.CombinedMeshReferences:
                         return CombinedMeshReferences;
+                    case Cell_FieldIndex.Landscape:
+                        return Landscape;
                     case Cell_FieldIndex.NavigationMeshes:
                         return NavigationMeshes;
                     case Cell_FieldIndex.Timestamp:
@@ -1750,6 +1785,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Cell_FieldIndex.CombinedMeshReferences:
                         this.CombinedMeshReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.Landscape:
+                        this.Landscape = new MaskItem<Exception?, Landscape.ErrorMask?>(ex, null);
                         break;
                     case Cell_FieldIndex.NavigationMeshes:
                         this.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(ex, null);
@@ -1885,6 +1923,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Cell_FieldIndex.CombinedMeshReferences:
                         this.CombinedMeshReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>)obj;
                         break;
+                    case Cell_FieldIndex.Landscape:
+                        this.Landscape = (MaskItem<Exception?, Landscape.ErrorMask?>?)obj;
+                        break;
                     case Cell_FieldIndex.NavigationMeshes:
                         this.NavigationMeshes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>)obj;
                         break;
@@ -1953,6 +1994,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (PhysicsReferences != null) return true;
                 if (CombinedMeshes != null) return true;
                 if (CombinedMeshReferences != null) return true;
+                if (Landscape != null) return true;
                 if (NavigationMeshes != null) return true;
                 if (Timestamp != null) return true;
                 if (UnknownGroupData != null) return true;
@@ -2138,6 +2180,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                Landscape?.Print(sb);
                 if (NavigationMeshes is {} NavigationMeshesItem)
                 {
                     sb.AppendLine("NavigationMeshes =>");
@@ -2250,6 +2293,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PhysicsReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PhysicsReferences?.Overall, rhs.PhysicsReferences?.Overall), ExceptionExt.Combine(this.PhysicsReferences?.Specific, rhs.PhysicsReferences?.Specific));
                 ret.CombinedMeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CombinedMeshes?.Overall, rhs.CombinedMeshes?.Overall), ExceptionExt.Combine(this.CombinedMeshes?.Specific, rhs.CombinedMeshes?.Specific));
                 ret.CombinedMeshReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>(ExceptionExt.Combine(this.CombinedMeshReferences?.Overall, rhs.CombinedMeshReferences?.Overall), ExceptionExt.Combine(this.CombinedMeshReferences?.Specific, rhs.CombinedMeshReferences?.Specific));
+                ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
                 ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.UnknownGroupData = this.UnknownGroupData.Combine(rhs.UnknownGroupData);
@@ -2313,6 +2357,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool PhysicsReferences;
             public bool CombinedMeshes;
             public CellCombinedMeshReference.TranslationMask? CombinedMeshReferences;
+            public Landscape.TranslationMask? Landscape;
             public NavigationMesh.TranslationMask? NavigationMeshes;
             public bool Timestamp;
             public bool UnknownGroupData;
@@ -2402,6 +2447,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((PhysicsReferences, null));
                 ret.Add((CombinedMeshes, null));
                 ret.Add((CombinedMeshReferences == null ? DefaultOn : !CombinedMeshReferences.GetCrystal().CopyNothing, CombinedMeshReferences?.GetCrystal()));
+                ret.Add((Landscape != null ? Landscape.OnOverall : DefaultOn, Landscape?.GetCrystal()));
                 ret.Add((NavigationMeshes == null ? DefaultOn : !NavigationMeshes.GetCrystal().CopyNothing, NavigationMeshes?.GetCrystal()));
                 ret.Add((Timestamp, null));
                 ret.Add((UnknownGroupData, null));
@@ -2630,6 +2676,7 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; set; }
         new ExtendedList<UInt32> CombinedMeshes { get; }
         new ExtendedList<CellCombinedMeshReference> CombinedMeshReferences { get; }
+        new Landscape? Landscape { get; set; }
         new ExtendedList<NavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }
         new Int32 UnknownGroupData { get; set; }
@@ -2703,6 +2750,7 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; }
         IReadOnlyList<UInt32> CombinedMeshes { get; }
         IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences { get; }
+        ILandscapeGetter? Landscape { get; }
         IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; }
         Int32 Timestamp { get; }
         Int32 UnknownGroupData { get; }
@@ -3124,15 +3172,16 @@ namespace Mutagen.Bethesda.Fallout4
         PhysicsReferences = 35,
         CombinedMeshes = 36,
         CombinedMeshReferences = 37,
-        NavigationMeshes = 38,
-        Timestamp = 39,
-        UnknownGroupData = 40,
-        PersistentTimestamp = 41,
-        PersistentUnknownGroupData = 42,
-        Persistent = 43,
-        TemporaryTimestamp = 44,
-        TemporaryUnknownGroupData = 45,
-        Temporary = 46,
+        Landscape = 38,
+        NavigationMeshes = 39,
+        Timestamp = 40,
+        UnknownGroupData = 41,
+        PersistentTimestamp = 42,
+        PersistentUnknownGroupData = 43,
+        Persistent = 44,
+        TemporaryTimestamp = 45,
+        TemporaryUnknownGroupData = 46,
+        Temporary = 47,
     }
     #endregion
 
@@ -3150,9 +3199,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "90df0b0f-867c-4255-9a63-282384024c7c";
 
-        public const ushort AdditionalFieldCount = 41;
+        public const ushort AdditionalFieldCount = 42;
 
-        public const ushort FieldCount = 47;
+        public const ushort FieldCount = 48;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -3216,6 +3265,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.XGDR,
                 RecordTypes.XPRI,
                 RecordTypes.XCRI,
+                RecordTypes.LAND,
                 RecordTypes.NAVM,
                 RecordTypes.NVNM,
                 RecordTypes.XXXX,
@@ -3323,6 +3373,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.PhysicsReferences = null;
             item.CombinedMeshes.Clear();
             item.CombinedMeshReferences.Clear();
+            item.Landscape = null;
             item.NavigationMeshes.Clear();
             item.Timestamp = default;
             item.UnknownGroupData = default;
@@ -3365,6 +3416,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.GodRays.Relink(mapping);
             obj.PhysicsReferences?.RemapLinks(mapping);
             obj.CombinedMeshReferences.RemapLinks(mapping);
+            obj.Landscape?.RemapLinks(mapping);
             obj.NavigationMeshes.RemapLinks(mapping);
             obj.Persistent.RemapLinks(mapping);
             obj.Temporary.RemapLinks(mapping);
@@ -3402,6 +3454,10 @@ namespace Mutagen.Bethesda.Fallout4
             ICellInternal obj,
             HashSet<FormKey> keys)
         {
+            if (obj.Landscape != null && keys.Contains(obj.Landscape.FormKey))
+            {
+                obj.Landscape = null;
+            }
             obj.NavigationMeshes.Remove(keys);
             obj.Persistent.Remove(keys);
             obj.Temporary.Remove(keys);
@@ -3427,6 +3483,17 @@ namespace Mutagen.Bethesda.Fallout4
                 case "CellCombinedMeshReference":
                 case "ICellCombinedMeshReferenceGetter":
                 case "ICellCombinedMeshReference":
+                    break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.Landscape is {} Landscapeitem)
+                        {
+                            Landscapeitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
                     break;
                 case "NavigationMesh":
                 case "INavigationMeshGetter":
@@ -3640,6 +3707,11 @@ namespace Mutagen.Bethesda.Fallout4
             ret.CombinedMeshReferences = item.CombinedMeshReferences.CollectionEqualsHelper(
                 rhs.CombinedMeshReferences,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Landscape = EqualsMaskHelper.EqualsHelper(
+                item.Landscape,
+                rhs.Landscape,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.NavigationMeshes = item.NavigationMeshes.CollectionEqualsHelper(
                 rhs.NavigationMeshes,
@@ -3893,6 +3965,11 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+            }
+            if ((printMask?.Landscape?.Overall ?? true)
+                && item.Landscape is {} LandscapeItem)
+            {
+                LandscapeItem?.Print(sb, "Landscape");
             }
             if (printMask?.NavigationMeshes?.Overall ?? true)
             {
@@ -4160,6 +4237,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.CombinedMeshReferences.SequenceEqual(rhs.CombinedMeshReferences, (l, r) => ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Cell_FieldIndex.CombinedMeshReferences)))) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Landscape, rhs.Landscape, out var lhsLandscape, out var rhsLandscape, out var isLandscapeEqual))
+                {
+                    if (!((LandscapeCommon)((ILandscapeGetter)lhsLandscape).CommonInstance()!).Equals(lhsLandscape, rhsLandscape, crystal?.GetSubCrystal((int)Cell_FieldIndex.Landscape))) return false;
+                }
+                else if (!isLandscapeEqual) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
             {
                 if (!lhs.NavigationMeshes.SequenceEqual(rhs.NavigationMeshes, (l, r) => ((NavigationMeshCommon)((INavigationMeshGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Cell_FieldIndex.NavigationMeshes)))) return false;
@@ -4304,6 +4389,10 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.PhysicsReferences);
             hash.Add(item.CombinedMeshes);
             hash.Add(item.CombinedMeshReferences);
+            if (item.Landscape is {} Landscapeitem)
+            {
+                hash.Add(Landscapeitem);
+            }
             hash.Add(item.NavigationMeshes);
             hash.Add(item.Timestamp);
             hash.Add(item.UnknownGroupData);
@@ -4415,6 +4504,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return FormLinkInformation.Factory(item);
             }
+            if (obj.Landscape is {} LandscapeItems)
+            {
+                foreach (var item in LandscapeItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in obj.NavigationMeshes.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -4434,6 +4530,17 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellGetter obj)
         {
+            if ((obj.Landscape != null))
+            {
+                if (obj.Landscape is {} Landscapeitem)
+                {
+                    yield return Landscapeitem;
+                    foreach (var item in Landscapeitem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
+                }
+            }
             foreach (var subItem in obj.NavigationMeshes)
             {
                 yield return subItem;
@@ -4488,6 +4595,21 @@ namespace Mutagen.Bethesda.Fallout4
                 case "CellCombinedMeshReference":
                 case "ICellCombinedMeshReferenceGetter":
                 case "ICellCombinedMeshReference":
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.Landscape is {} Landscapeitem)
+                        {
+                            yield return Landscapeitem;
+                            foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
                     yield break;
                 case "NavigationMesh":
                 case "INavigationMeshGetter":
@@ -4613,6 +4735,30 @@ namespace Mutagen.Bethesda.Fallout4
                 getOrAddAsOverride: getOrAddAsOverride,
                 duplicateInto: duplicateInto,
                 parent: parent);
+            {
+                if (obj.Landscape is {} CellLandscapeitem)
+                {
+                    yield return new ModContext<IFallout4Mod, IFallout4ModGetter, ILandscapeInternal, ILandscapeGetter>(
+                        modKey: modKey,
+                        record: CellLandscapeitem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            if (baseRec.Landscape != null) return baseRec.Landscape;
+                            var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = dupRec;
+                            return dupRec;
+                        });
+                }
+            }
             foreach (var subItem in obj.NavigationMeshes)
             {
                 yield return new ModContext<IFallout4Mod, IFallout4ModGetter, INavigationMeshInternal, INavigationMeshGetter>(
@@ -4731,6 +4877,35 @@ namespace Mutagen.Bethesda.Fallout4
                 case "CellCombinedMeshReference":
                 case "ICellCombinedMeshReferenceGetter":
                 case "ICellCombinedMeshReference":
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.Landscape is {} CellLandscapeitem)
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, ILandscapeInternal, ILandscapeGetter>(
+                                modKey: modKey,
+                                record: CellLandscapeitem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    if (baseRec.Landscape != null) return baseRec.Landscape;
+                                    var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
+                                    baseRec.Landscape = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                                    baseRec.Landscape = dupRec;
+                                    return dupRec;
+                                });
+                        }
+                    }
                     yield break;
                 case "NavigationMesh":
                 case "INavigationMeshGetter":
@@ -5419,6 +5594,32 @@ namespace Mutagen.Bethesda.Fallout4
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
+                try
+                {
+                    if(rhs.Landscape is {} rhsLandscape)
+                    {
+                        item.Landscape = (Landscape)rhsLandscape.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape),
+                            errorMask: errorMask);
+                    }
+                    else
+                    {
+                        item.Landscape = default;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

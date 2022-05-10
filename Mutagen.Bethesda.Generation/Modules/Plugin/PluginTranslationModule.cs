@@ -64,6 +64,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         this._typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>(expectedLen: 2);
         this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>(expectedLen: 4);
         this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>(expectedLen: 8);
+        this._typeGenerations[typeof(P2UInt8Type)] = new PointBinaryTranslationGeneration<P2UInt8>(expectedLen: 2);
         this._typeGenerations[typeof(P3UInt8Type)] = new PointBinaryTranslationGeneration<P3UInt8>(expectedLen: 3);
         this._typeGenerations[typeof(P3UInt16Type)] = new PointBinaryTranslationGeneration<P3UInt16>(expectedLen: 6);
         this._typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
@@ -1282,7 +1283,14 @@ public class PluginTranslationModule : BinaryTranslationModule
         await toDo();
         if (dataSet != null)
         {
-            sb.AppendLine($"return (int){dataSet.SubFields.Last(f => f.IntegrateField && f.Enabled).IndexEnumName};");
+            if (doublesPotential)
+            {
+                sb.AppendLine($"return new {nameof(ParseResult)}((int){dataSet.SubFields.Last(f => f.IntegrateField && f.Enabled).IndexEnumName}, {nextRecAccessor});");
+            }
+            else
+            {
+                sb.AppendLine($"return (int){dataSet.SubFields.Last(f => f.IntegrateField && f.Enabled).IndexEnumName};");
+            }
         }
         else if (field.Field is CustomLogic)
         {
@@ -1605,12 +1613,30 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
     }
 
+    private bool NeedsClear(ObjectGeneration obj)
+    {
+        foreach (var item in obj.IterateFields(includeBaseClass: true))
+        {
+            if (item is ListType l
+                && (bool)(l.CustomData?.GetOrDefault(PluginListBinaryTranslationGeneration.Additive) ?? false))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, StructuredStringBuilder sb, Accessor accessor)
     {
         var data = obj.GetObjectData();
 
         bool typelessStruct = obj.IsTypelessStruct();
         ObjectType objType = obj.GetObjectType();
+
+        if (NeedsClear(obj))
+        {
+            sb.AppendLine($"{accessor}.Clear();");
+        }
 
         if (await obj.IsMajorRecord())
         {

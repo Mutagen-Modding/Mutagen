@@ -1,17 +1,17 @@
+using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System.Buffers.Binary;
-using Mutagen.Bethesda.Plugins.Binary.Headers;
-using Mutagen.Bethesda.Skyrim.Internals;
 
-namespace Mutagen.Bethesda.Skyrim;
+namespace Mutagen.Bethesda.Fallout4;
 
-public partial class Worldspace
+partial class Worldspace
 {
     [Flags]
     public enum MajorFlag
@@ -175,7 +175,7 @@ partial class WorldspaceBinaryOverlay
             _data.Slice(_NAM9Location.Value.Min).Float() / 4096f,
             _data.Slice(_NAM9Location.Value.Min + 4).Float() / 4096f)
         : default;
-
+    
     private ReadOnlyMemorySlice<byte>? _grupData;
 
     private int? _topCellLocation;

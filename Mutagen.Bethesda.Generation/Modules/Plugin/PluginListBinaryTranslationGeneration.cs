@@ -24,6 +24,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
     public const string NullIfCounterZero = "NullIfCounterZero";
     public const string AllowNoCounter = "AllowNoCounter";
     public const string EndMarker = "EndMarker";
+    public const string Additive = "Additive";
 
     public override void Load(ObjectGeneration obj, TypeGeneration field, XElement node)
     {
@@ -34,6 +35,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         listType.CustomData[NullIfCounterZero] = node.GetAttribute("nullIfCounterZero", false);
         listType.CustomData[AllowNoCounter] = node.GetAttribute("allowNoCounter", true);
         listType.CustomData[EndMarker] = node.GetAttribute("endMarker", null);
+        listType.CustomData[Additive] = node.GetAttribute("additive", false);
         var asyncItem = node.GetAttribute<bool>("asyncItems", false);
         if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
         {
@@ -1067,12 +1069,6 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         var subExpLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
         switch (listBinaryType)
         {
-            case ListBinaryType.SubTrigger:
-                break;
-            case ListBinaryType.Trigger:
-                break;
-            case ListBinaryType.CounterRecord:
-                break;
             case ListBinaryType.PrependCount:
             {
                 var len = (byte)list.CustomData[CounterByteLength];
@@ -1110,6 +1106,9 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                     sb.AppendLine($"ret.{typeGen.Name}EndingPos = ret._data.Length;");
                 }
                 break;
+            case ListBinaryType.SubTrigger:
+            case ListBinaryType.Trigger:
+            case ListBinaryType.CounterRecord:
             default:
                 break;
         }
@@ -1117,28 +1116,39 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
 
     public void WrapSet(StructuredStringBuilder sb, Accessor accessor, ListType list, Action<StructuredStringBuilder> a)
     {
+        var additive = (bool)list.CustomData[Additive];
         if (list.Nullable)
         {
-            sb.AppendLine($"{accessor} = ");
-            using (sb.IncreaseDepth())
+            if (additive)
             {
-                a(sb);
-                if (list.CustomData.TryGetValue(NullIfCounterZero, out var val)
-                    && (bool)val)
+                using (var f = sb.Call($"({accessor} = ({accessor} ?? new())).AddRange"))
                 {
-
-                    sb.AppendLine($".CastExtendedListIfAny<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>();");
+                    f.Add(subSb => a(subSb));
                 }
-                else
+            }
+            else
+            {
+                sb.AppendLine($"{accessor} = ");
+                using (sb.IncreaseDepth())
                 {
-                    sb.AppendLine($".CastExtendedList<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>();");
+                    a(sb);
+                    if (list.CustomData.TryGetValue(NullIfCounterZero, out var val)
+                        && (bool)val)
+                    {
+
+                        sb.AppendLine($".CastExtendedListIfAny<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>();");
+                    }
+                    else
+                    {
+                        sb.AppendLine($".CastExtendedList<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>();");
+                    }
                 }
             }
         }
         else
         {
             using (var args = sb.Call(
-                       $"{accessor}.SetTo"))
+                       $"{accessor}.{(additive ? "AddRange" : "SetTo")}"))
             {
                 args.Add(subFg => a(subFg));
             }

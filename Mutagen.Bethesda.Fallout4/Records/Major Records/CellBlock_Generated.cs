@@ -1251,6 +1251,15 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     obj.SubBlocks.RemoveWhere(i => i.Cells.Count == 0);
                     break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "NavigationMesh":
                 case "INavigationMeshGetter":
                 case "INavigationMesh":
@@ -1619,6 +1628,18 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
                     foreach (var subItem in obj.SubBlocks)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))

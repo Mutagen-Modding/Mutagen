@@ -62,6 +62,7 @@
           <GenericSpecification Definition="Fallout4.CellBlock" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Group name="Worldspaces" refName="Worldspace" />
       <!--			<Group name="VoiceTypes" refName="VoiceType" />-->
       <!--			<Group name="Quests" refName="Quest" />-->
       <!--			<Group name="MaterialTypes" refName="MaterialType" />-->

@@ -46,6 +46,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.REFR, ProcessPlacedObject);
         AddDynamicProcessing(RecordTypes.NAVM, ProcessNavmeshes);
         AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
+        AddDynamicProcessing(RecordTypes.WRLD, ProcessWorldspaces);
     }
 
     private void ProcessGameSettings(
@@ -279,6 +280,28 @@ public class Fallout4Processor : Processor
             int offset = 8;
             ProcessBool(xown, fileOffset, ref offset, 4, 1);
         }
+        var removed = 0;
+        var xwpgs = majorFrame.FindEnumerateSubrecords(RecordTypes.XWPG).ToArray();
+        if (xwpgs.Length > 1)
+        {
+            var first = xwpgs[0];
+            var firstAmount = first.AsUInt32();
+            for (int i = 1; i < xwpgs.Length; i++)
+            {
+                var following = xwpgs[i];
+                var amount = following.AsUInt32();
+                firstAmount += amount;
+                _instructions.SetRemove(RangeInt64.FromLength(fileOffset + following.Location, following.TotalLength));
+                removed += following.TotalLength;
+            }
+            byte[] b = new byte[4];
+            BinaryPrimitives.WriteUInt32LittleEndian(b.AsSpan(), firstAmount);
+            _instructions.SetSubstitution(fileOffset + first.Location + first.HeaderLength, b);
+        }
+        ProcessLengths(
+            majorFrame,
+            removed,
+            fileOffset);
     }
 
     private void ProcessNavmeshes(
@@ -290,6 +313,17 @@ public class Fallout4Processor : Processor
             var vertexCount = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(nvnm.Content.Slice(16)));
             var loc = 20;
             ProcessZeroFloats(nvnm, fileOffset, ref loc, vertexCount * 3);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.MNAM, out var mnam))
+        {
+            int loc = 0;
+            while (loc < mnam.ContentLength)
+            {
+                long offset = fileOffset + mnam.Location + mnam.HeaderLength + loc;
+                ProcessFormIDOverflow(mnam.Content.Slice(loc, 4), ref offset);
+                var count = mnam.Content.Slice(loc + 4, 2).UInt16();
+                loc += 4 + 2 + count * 2;
+            }
         }
     }
 
@@ -322,6 +356,17 @@ public class Fallout4Processor : Processor
         {
             int offset = 8;
             ProcessBool(xown, fileOffset, ref offset, 4, 1);
+        }
+    }
+
+    private void ProcessWorldspaces(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.ONAM, out var onam))
+        {
+            ProcessZeroFloats(onam, fileOffset);
         }
     }
 
@@ -393,6 +438,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "REGN", "RDMP" },
                     new RecordType[] { "CELL", "FULL" },
                     new RecordType[] { "REFR", "FULL" },
+                    new RecordType[] { "WRLD", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

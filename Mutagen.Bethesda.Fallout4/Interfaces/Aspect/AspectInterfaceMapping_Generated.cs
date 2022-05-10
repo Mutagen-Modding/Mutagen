@@ -158,6 +158,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
                 Weapon_Registration.Instance,
+                Worldspace_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -229,6 +230,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
                 Weapon_Registration.Instance,
+                Worldspace_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -272,6 +274,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
                 Weapon_Registration.Instance,
+                Worldspace_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -318,6 +321,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
                 Weapon_Registration.Instance,
+                Worldspace_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

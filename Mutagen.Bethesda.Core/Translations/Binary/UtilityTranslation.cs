@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Translations.Binary;
 public static class UtilityTranslation
 {
     private static readonly byte[] _Zeros = new byte[8];
-    public static ReadOnlyMemorySlice<byte> Zeros => new ReadOnlyMemorySlice<byte>(_Zeros);
+    public static ReadOnlyMemorySlice<byte> Zeros => new(_Zeros);
 
     public delegate bool BinarySubParseDelegate<TWriter, TItem>(
         TWriter reader,

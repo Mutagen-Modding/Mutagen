@@ -78,7 +78,7 @@
         <Interface>ILinkedReference</Interface>
       </FormLink>
       <RefList name="SplineConnections" refName="SplineLink" />
-      <RefList name="PowerGridConnections" refName="PowerGridConnection" counterRecType="XWPG" />
+      <RefList name="PowerGridConnections" refName="PowerGridConnection" counterRecType="XWPG" additive="true" />
       <ByteArray name="XCVR" recordType="XCVR" />
       <ByteArray name="XCVL" recordType="XCVL" />
       <FormLink name="CurrentZoneReference" recordType="XCZR">

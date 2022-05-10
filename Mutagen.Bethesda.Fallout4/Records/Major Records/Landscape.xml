@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Landscape" recordType="LAND" objType="Record" baseClass="Fallout4MajorRecord" GUID="94773e0a-2752-4998-8ef2-03e0095cc966" ID="514">
+    <Fields>
+      <ByteArray name="DATA" recordType="DATA" />
+      <Array2d name="VertexNormals" recordType="VNML" fixedWidth="33" fixedHeight="33">
+        <P3UInt8 />
+      </Array2d>
+      <RefDirect name="VertexHeightMap" refName="LandscapeVertexHeightMap" />
+      <Array2d name="VertexColors" recordType="VCLR" fixedWidth="33" fixedHeight="33">
+        <P3UInt8 />
+      </Array2d>
+      <RefList name="Layers" refName="BaseLayer" />
+      <List name="Textures" recordType="VTEX">
+        <FormLink refName="LandscapeTexture" />
+      </List>
+      <RefList name="MPCDs" refName="LandscapeMPCD" />
+    </Fields>
+  </Object>
+  <Object name="BaseLayer" objType="Subrecord" GUID="af7341e2-b802-425e-899b-361022db95dc" ID="517">
+    <Fields>
+      <RefDirect name="Header" refName="LayerHeader" />
+    </Fields>
+  </Object>
+  <Object name="AlphaLayer" objType="Subrecord" baseClass="BaseLayer" GUID="41c6e2ac-e08d-4344-87be-02d3a6fb1e33" ID="518">
+    <Fields>
+      <ByteArray name="AlphaLayerData" recordType="VTXT" />
+    </Fields>
+    <BaseRecordTypeOverrides>
+      <Mapping From="BTXT" To="ATXT" />
+    </BaseRecordTypeOverrides>
+  </Object>
+  <Object name="LayerHeader" recordType="BTXT" objType="Subrecord" GUID="2b790a33-5c87-492a-8e18-c37e07ec53b9" ID="519">
+    <Fields>
+      <FormLink name="Texture" refName="LandscapeTexture" />
+      <Enum name="Quadrant" enumName="Quadrant" byteLength="1" />
+      <UInt8 name="Unused" />
+      <UInt16 name="LayerNumber" />
+    </Fields>
+  </Object>
+  <Object name="LandscapeVertexHeightMap" recordType="VHGT" objType="Subrecord" GUID="27f8e45b-9b03-4c5f-a54c-1f6067bdf897" ID="520">
+    <Fields>
+      <Float name="Offset" />
+      <Array2d name="HeightMap" fixedWidth="33" fixedHeight="33">
+        <UInt8 />
+      </Array2d>
+      <P3UInt8 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="LandscapeMPCD" recordType="MPCD" objType="Subrecord" GUID="c05c991d-cd3f-4e32-af36-741bdd6dec62" ID="521">
+    <Fields>
+      <ByteArray name="MPCD" />
+    </Fields>
+  </Object>
+</Loqui>

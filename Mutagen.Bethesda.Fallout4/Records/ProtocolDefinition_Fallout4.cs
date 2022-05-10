@@ -381,7 +381,22 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             PlacedObjectMapMarker_Registration.Instance,
             SplineLink_Registration.Instance,
             PowerGridConnection_Registration.Instance,
-            NavmeshWaypoint_Registration.Instance
+            NavmeshWaypoint_Registration.Instance,
+            WorldspaceMaxHeight_Registration.Instance,
+            WorldspaceParent_Registration.Instance,
+            WorldspaceLandDefaults_Registration.Instance,
+            WorldspaceMap_Registration.Instance,
+            WorldDefaultLevelData_Registration.Instance,
+            WorldspaceBlock_Registration.Instance,
+            WorldspaceSubBlock_Registration.Instance,
+            Landscape_Registration.Instance,
+            WorldspaceGridReference_Registration.Instance,
+            WorldspaceReference_Registration.Instance,
+            BaseLayer_Registration.Instance,
+            AlphaLayer_Registration.Instance,
+            LayerHeader_Registration.Instance,
+            LandscapeVertexHeightMap_Registration.Instance,
+            LandscapeMPCD_Registration.Instance
         );
     }
 }

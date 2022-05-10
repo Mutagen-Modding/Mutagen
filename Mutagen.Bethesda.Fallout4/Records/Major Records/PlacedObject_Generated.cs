@@ -4636,6 +4636,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
+            item.Clear();
             PluginUtilityTranslation.MajorRecordParse<IPlacedObjectInternal>(
                 record: item,
                 frame: frame,
@@ -8150,15 +8151,14 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XWPN:
                 case RecordTypeInts.XWPG:
                 {
-                    item.PowerGridConnections = 
+                    (item.PowerGridConnections = (item.PowerGridConnections ?? new())).AddRange(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PowerGridConnection>.Instance.ParsePerItem(
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.XWPG,
                             triggeringRecord: PowerGridConnection_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: PowerGridConnection.TryCreateFromBinary)
-                        .CastExtendedList<PowerGridConnection>();
+                            transl: PowerGridConnection.TryCreateFromBinary));
                     return (int)PlacedObject_FieldIndex.PowerGridConnections;
                 }
                 case RecordTypeInts.XCVR:

@@ -151,11 +151,11 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.XCMO,
             RecordTypes.XCIM,
             RecordTypes.XGDR,
-            RecordTypes.XPRI
+            RecordTypes.XPRI,
+            RecordTypes.XCRI
         );
         ret.StopMarkers.Add(RecordTypes.CELL, new[]
         {
-            RecordTypes.XCRI,
             RecordTypes.NAVM,
             RecordTypes.NVNM,
             RecordTypes.ONAM,
@@ -355,6 +355,7 @@ public class Fallout4PassthroughTest : PassthroughTest
         );
         ret.SetGroupAlignment(
             (int)GroupTypeEnum.CellTemporaryChildren,
+            RecordTypes.LAND,
             RecordTypes.NAVM);
         return ret;
     }

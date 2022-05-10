@@ -38,21 +38,24 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class CellSubBlock :
-        ICellSubBlock,
-        IEquatable<ICellSubBlockGetter>,
-        ILoquiObjectSetter<CellSubBlock>
+    public partial class WorldspaceBlock :
+        IEquatable<IWorldspaceBlockGetter>,
+        ILoquiObjectSetter<WorldspaceBlock>,
+        IWorldspaceBlock
     {
         #region Ctor
-        public CellSubBlock()
+        public WorldspaceBlock()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region BlockNumber
-        public Int32 BlockNumber { get; set; } = default;
+        #region BlockNumberY
+        public Int16 BlockNumberY { get; set; } = default;
+        #endregion
+        #region BlockNumberX
+        public Int16 BlockNumberX { get; set; } = default;
         #endregion
         #region GroupType
         public GroupTypeEnum GroupType { get; set; } = default;
@@ -63,17 +66,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         public Int32 Unknown { get; set; } = default;
         #endregion
-        #region Cells
+        #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Cell> _Cells = new ExtendedList<Cell>();
-        public ExtendedList<Cell> Cells
+        private ExtendedList<WorldspaceSubBlock> _Items = new ExtendedList<WorldspaceSubBlock>();
+        public ExtendedList<WorldspaceSubBlock> Items
         {
-            get => this._Cells;
-            init => this._Cells = value;
+            get => this._Items;
+            init => this._Items = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ICellGetter> ICellSubBlockGetter.Cells => _Cells;
+        IReadOnlyList<IWorldspaceSubBlockGetter> IWorldspaceBlockGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -84,7 +87,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellSubBlockMixIn.Print(
+            WorldspaceBlockMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -95,16 +98,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellSubBlockGetter rhs) return false;
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IWorldspaceBlockGetter rhs) return false;
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ICellSubBlockGetter? obj)
+        public bool Equals(IWorldspaceBlockGetter? obj)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -116,25 +119,28 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.BlockNumber = initialValue;
+                this.BlockNumberY = initialValue;
+                this.BlockNumberX = initialValue;
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
                 this.Unknown = initialValue;
-                this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>());
             }
 
             public Mask(
-                TItem BlockNumber,
+                TItem BlockNumberY,
+                TItem BlockNumberX,
                 TItem GroupType,
                 TItem LastModified,
                 TItem Unknown,
-                TItem Cells)
+                TItem Items)
             {
-                this.BlockNumber = BlockNumber;
+                this.BlockNumberY = BlockNumberY;
+                this.BlockNumberX = BlockNumberX;
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
                 this.Unknown = Unknown;
-                this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(Cells, Enumerable.Empty<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -146,11 +152,12 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem BlockNumber;
+            public TItem BlockNumberY;
+            public TItem BlockNumberX;
             public TItem GroupType;
             public TItem LastModified;
             public TItem Unknown;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>? Cells;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>? Items;
             #endregion
 
             #region Equals
@@ -163,21 +170,23 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.BlockNumber, rhs.BlockNumber)) return false;
+                if (!object.Equals(this.BlockNumberY, rhs.BlockNumberY)) return false;
+                if (!object.Equals(this.BlockNumberX, rhs.BlockNumberX)) return false;
                 if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
                 if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Cells, rhs.Cells)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.BlockNumber);
+                hash.Add(this.BlockNumberY);
+                hash.Add(this.BlockNumberX);
                 hash.Add(this.GroupType);
                 hash.Add(this.LastModified);
                 hash.Add(this.Unknown);
-                hash.Add(this.Cells);
+                hash.Add(this.Items);
                 return hash.ToHashCode();
             }
 
@@ -186,16 +195,17 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.BlockNumber)) return false;
+                if (!eval(this.BlockNumberY)) return false;
+                if (!eval(this.BlockNumberX)) return false;
                 if (!eval(this.GroupType)) return false;
                 if (!eval(this.LastModified)) return false;
                 if (!eval(this.Unknown)) return false;
-                if (this.Cells != null)
+                if (this.Items != null)
                 {
-                    if (!eval(this.Cells.Overall)) return false;
-                    if (this.Cells.Specific != null)
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
                     {
-                        foreach (var item in this.Cells.Specific)
+                        foreach (var item in this.Items.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -209,16 +219,17 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.BlockNumber)) return true;
+                if (eval(this.BlockNumberY)) return true;
+                if (eval(this.BlockNumberX)) return true;
                 if (eval(this.GroupType)) return true;
                 if (eval(this.LastModified)) return true;
                 if (eval(this.Unknown)) return true;
-                if (this.Cells != null)
+                if (this.Items != null)
                 {
-                    if (eval(this.Cells.Overall)) return true;
-                    if (this.Cells.Specific != null)
+                    if (eval(this.Items.Overall)) return true;
+                    if (this.Items.Specific != null)
                     {
-                        foreach (var item in this.Cells.Specific)
+                        foreach (var item in this.Items.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -232,27 +243,28 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new CellSubBlock.Mask<R>();
+                var ret = new WorldspaceBlock.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.BlockNumber = eval(this.BlockNumber);
+                obj.BlockNumberY = eval(this.BlockNumberY);
+                obj.BlockNumberX = eval(this.BlockNumberX);
                 obj.GroupType = eval(this.GroupType);
                 obj.LastModified = eval(this.LastModified);
                 obj.Unknown = eval(this.Unknown);
-                if (Cells != null)
+                if (Items != null)
                 {
-                    obj.Cells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell.Mask<R>?>>?>(eval(this.Cells.Overall), Enumerable.Empty<MaskItemIndexed<R, Cell.Mask<R>?>>());
-                    if (Cells.Specific != null)
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>());
+                    if (Items.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, Cell.Mask<R>?>>();
-                        obj.Cells.Specific = l;
-                        foreach (var item in Cells.Specific)
+                        var l = new List<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific)
                         {
-                            MaskItemIndexed<R, Cell.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Cell.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -264,21 +276,25 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(CellSubBlock.Mask<bool>? printMask = null)
+            public string Print(WorldspaceBlock.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, CellSubBlock.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WorldspaceBlock.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(CellSubBlock.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(WorldspaceBlock.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.BlockNumber ?? true)
+                    if (printMask?.BlockNumberY ?? true)
                     {
-                        sb.AppendItem(BlockNumber, "BlockNumber");
+                        sb.AppendItem(BlockNumberY, "BlockNumberY");
+                    }
+                    if (printMask?.BlockNumberX ?? true)
+                    {
+                        sb.AppendItem(BlockNumberX, "BlockNumberX");
                     }
                     if (printMask?.GroupType ?? true)
                     {
@@ -292,16 +308,16 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Unknown, "Unknown");
                     }
-                    if ((printMask?.Cells?.Overall ?? true)
-                        && Cells is {} CellsItem)
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items is {} ItemsItem)
                     {
-                        sb.AppendLine("Cells =>");
+                        sb.AppendLine("Items =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(CellsItem.Overall);
-                            if (CellsItem.Specific != null)
+                            sb.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
                             {
-                                foreach (var subItem in CellsItem.Specific)
+                                foreach (var subItem in ItemsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -335,29 +351,32 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public Exception? BlockNumber;
+            public Exception? BlockNumberY;
+            public Exception? BlockNumberX;
             public Exception? GroupType;
             public Exception? LastModified;
             public Exception? Unknown;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>? Cells;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceSubBlock.ErrorMask?>>?>? Items;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
+                WorldspaceBlock_FieldIndex enu = (WorldspaceBlock_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellSubBlock_FieldIndex.BlockNumber:
-                        return BlockNumber;
-                    case CellSubBlock_FieldIndex.GroupType:
+                    case WorldspaceBlock_FieldIndex.BlockNumberY:
+                        return BlockNumberY;
+                    case WorldspaceBlock_FieldIndex.BlockNumberX:
+                        return BlockNumberX;
+                    case WorldspaceBlock_FieldIndex.GroupType:
                         return GroupType;
-                    case CellSubBlock_FieldIndex.LastModified:
+                    case WorldspaceBlock_FieldIndex.LastModified:
                         return LastModified;
-                    case CellSubBlock_FieldIndex.Unknown:
+                    case WorldspaceBlock_FieldIndex.Unknown:
                         return Unknown;
-                    case CellSubBlock_FieldIndex.Cells:
-                        return Cells;
+                    case WorldspaceBlock_FieldIndex.Items:
+                        return Items;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -365,23 +384,26 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
+                WorldspaceBlock_FieldIndex enu = (WorldspaceBlock_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellSubBlock_FieldIndex.BlockNumber:
-                        this.BlockNumber = ex;
+                    case WorldspaceBlock_FieldIndex.BlockNumberY:
+                        this.BlockNumberY = ex;
                         break;
-                    case CellSubBlock_FieldIndex.GroupType:
+                    case WorldspaceBlock_FieldIndex.BlockNumberX:
+                        this.BlockNumberX = ex;
+                        break;
+                    case WorldspaceBlock_FieldIndex.GroupType:
                         this.GroupType = ex;
                         break;
-                    case CellSubBlock_FieldIndex.LastModified:
+                    case WorldspaceBlock_FieldIndex.LastModified:
                         this.LastModified = ex;
                         break;
-                    case CellSubBlock_FieldIndex.Unknown:
+                    case WorldspaceBlock_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case CellSubBlock_FieldIndex.Cells:
-                        this.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(ex, null);
+                    case WorldspaceBlock_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceSubBlock.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -390,23 +412,26 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
+                WorldspaceBlock_FieldIndex enu = (WorldspaceBlock_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellSubBlock_FieldIndex.BlockNumber:
-                        this.BlockNumber = (Exception?)obj;
+                    case WorldspaceBlock_FieldIndex.BlockNumberY:
+                        this.BlockNumberY = (Exception?)obj;
                         break;
-                    case CellSubBlock_FieldIndex.GroupType:
+                    case WorldspaceBlock_FieldIndex.BlockNumberX:
+                        this.BlockNumberX = (Exception?)obj;
+                        break;
+                    case WorldspaceBlock_FieldIndex.GroupType:
                         this.GroupType = (Exception?)obj;
                         break;
-                    case CellSubBlock_FieldIndex.LastModified:
+                    case WorldspaceBlock_FieldIndex.LastModified:
                         this.LastModified = (Exception?)obj;
                         break;
-                    case CellSubBlock_FieldIndex.Unknown:
+                    case WorldspaceBlock_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case CellSubBlock_FieldIndex.Cells:
-                        this.Cells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>)obj;
+                    case WorldspaceBlock_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceSubBlock.ErrorMask?>>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -416,11 +441,12 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (BlockNumber != null) return true;
+                if (BlockNumberY != null) return true;
+                if (BlockNumberX != null) return true;
                 if (GroupType != null) return true;
                 if (LastModified != null) return true;
                 if (Unknown != null) return true;
-                if (Cells != null) return true;
+                if (Items != null) return true;
                 return false;
             }
             #endregion
@@ -447,7 +473,10 @@ namespace Mutagen.Bethesda.Fallout4
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(BlockNumber, "BlockNumber");
+                    sb.AppendItem(BlockNumberY, "BlockNumberY");
+                }
+                {
+                    sb.AppendItem(BlockNumberX, "BlockNumberX");
                 }
                 {
                     sb.AppendItem(GroupType, "GroupType");
@@ -458,15 +487,15 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Unknown, "Unknown");
                 }
-                if (Cells is {} CellsItem)
+                if (Items is {} ItemsItem)
                 {
-                    sb.AppendLine("Cells =>");
+                    sb.AppendLine("Items =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(CellsItem.Overall);
-                        if (CellsItem.Specific != null)
+                        sb.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
                         {
-                            foreach (var subItem in CellsItem.Specific)
+                            foreach (var subItem in ItemsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -484,11 +513,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.BlockNumber = this.BlockNumber.Combine(rhs.BlockNumber);
+                ret.BlockNumberY = this.BlockNumberY.Combine(rhs.BlockNumberY);
+                ret.BlockNumberX = this.BlockNumberX.Combine(rhs.BlockNumberX);
                 ret.GroupType = this.GroupType.Combine(rhs.GroupType);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), ExceptionExt.Combine(this.Cells?.Specific, rhs.Cells?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceSubBlock.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -512,11 +542,12 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool BlockNumber;
+            public bool BlockNumberY;
+            public bool BlockNumberX;
             public bool GroupType;
             public bool LastModified;
             public bool Unknown;
-            public Cell.TranslationMask? Cells;
+            public WorldspaceSubBlock.TranslationMask? Items;
             #endregion
 
             #region Ctors
@@ -526,7 +557,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.BlockNumber = defaultOn;
+                this.BlockNumberY = defaultOn;
+                this.BlockNumberX = defaultOn;
                 this.GroupType = defaultOn;
                 this.LastModified = defaultOn;
                 this.Unknown = defaultOn;
@@ -545,11 +577,12 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((BlockNumber, null));
+                ret.Add((BlockNumberY, null));
+                ret.Add((BlockNumberX, null));
                 ret.Add((GroupType, null));
                 ret.Add((LastModified, null));
                 ret.Add((Unknown, null));
-                ret.Add((Cells == null ? DefaultOn : !Cells.GetCrystal().CopyNothing, Cells?.GetCrystal()));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -561,9 +594,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = (RecordType)Cell.GrupRecordType;
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellSubBlockCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockSetterCommon.Instance.RemapLinks(this, mapping);
+        public static readonly RecordType GrupRecordType = (RecordType)WorldspaceSubBlock.GrupRecordType;
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceBlockCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceBlockSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -602,25 +635,25 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => CellSubBlockBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WorldspaceBlockBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((CellSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static CellSubBlock CreateFromBinary(
+        public static WorldspaceBlock CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new CellSubBlock();
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WorldspaceBlock();
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -631,7 +664,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out CellSubBlock item,
+            out WorldspaceBlock item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -646,36 +679,37 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static CellSubBlock GetNew()
+        internal static WorldspaceBlock GetNew()
         {
-            return new CellSubBlock();
+            return new WorldspaceBlock();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ICellSubBlock :
-        ICellSubBlockGetter,
+    public partial interface IWorldspaceBlock :
         IFormLinkContainer,
-        ILoquiObjectSetter<ICellSubBlock>,
-        IMajorRecordEnumerable
+        ILoquiObjectSetter<IWorldspaceBlock>,
+        IMajorRecordEnumerable,
+        IWorldspaceBlockGetter
     {
-        new Int32 BlockNumber { get; set; }
+        new Int16 BlockNumberY { get; set; }
+        new Int16 BlockNumberX { get; set; }
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
         new Int32 Unknown { get; set; }
-        new ExtendedList<Cell> Cells { get; }
+        new ExtendedList<WorldspaceSubBlock> Items { get; }
     }
 
-    public partial interface ICellSubBlockGetter :
+    public partial interface IWorldspaceBlockGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ICellSubBlockGetter>,
+        ILoquiObject<IWorldspaceBlockGetter>,
         IMajorRecordGetterEnumerable
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -684,54 +718,55 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => CellSubBlock_Registration.Instance;
-        Int32 BlockNumber { get; }
+        static ILoquiRegistration StaticRegistration => WorldspaceBlock_Registration.Instance;
+        Int16 BlockNumberY { get; }
+        Int16 BlockNumberX { get; }
         GroupTypeEnum GroupType { get; }
         Int32 LastModified { get; }
         Int32 Unknown { get; }
-        IReadOnlyList<ICellGetter> Cells { get; }
+        IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class CellSubBlockMixIn
+    public static partial class WorldspaceBlockMixIn
     {
-        public static void Clear(this ICellSubBlock item)
+        public static void Clear(this IWorldspaceBlock item)
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static CellSubBlock.Mask<bool> GetEqualsMask(
-            this ICellSubBlockGetter item,
-            ICellSubBlockGetter rhs,
+        public static WorldspaceBlock.Mask<bool> GetEqualsMask(
+            this IWorldspaceBlockGetter item,
+            IWorldspaceBlockGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ICellSubBlockGetter item,
+            this IWorldspaceBlockGetter item,
             string? name = null,
-            CellSubBlock.Mask<bool>? printMask = null)
+            WorldspaceBlock.Mask<bool>? printMask = null)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).Print(
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ICellSubBlockGetter item,
+            this IWorldspaceBlockGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            CellSubBlock.Mask<bool>? printMask = null)
+            WorldspaceBlock.Mask<bool>? printMask = null)
         {
-            ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).Print(
+            ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -739,21 +774,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this ICellSubBlockGetter item,
-            ICellSubBlockGetter rhs,
-            CellSubBlock.TranslationMask? equalsMask = null)
+            this IWorldspaceBlockGetter item,
+            IWorldspaceBlockGetter rhs,
+            WorldspaceBlock.TranslationMask? equalsMask = null)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).Equals(
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ICellSubBlock lhs,
-            ICellSubBlockGetter rhs)
+            this IWorldspaceBlock lhs,
+            IWorldspaceBlockGetter rhs)
         {
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -762,11 +797,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this ICellSubBlock lhs,
-            ICellSubBlockGetter rhs,
-            CellSubBlock.TranslationMask? copyMask = null)
+            this IWorldspaceBlock lhs,
+            IWorldspaceBlockGetter rhs,
+            WorldspaceBlock.TranslationMask? copyMask = null)
         {
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -775,28 +810,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this ICellSubBlock lhs,
-            ICellSubBlockGetter rhs,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? copyMask = null)
+            this IWorldspaceBlock lhs,
+            IWorldspaceBlockGetter rhs,
+            out WorldspaceBlock.ErrorMask errorMask,
+            WorldspaceBlock.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = CellSubBlock.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceBlock.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ICellSubBlock lhs,
-            ICellSubBlockGetter rhs,
+            this IWorldspaceBlock lhs,
+            IWorldspaceBlockGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -804,32 +839,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static CellSubBlock DeepCopy(
-            this ICellSubBlockGetter item,
-            CellSubBlock.TranslationMask? copyMask = null)
+        public static WorldspaceBlock DeepCopy(
+            this IWorldspaceBlockGetter item,
+            WorldspaceBlock.TranslationMask? copyMask = null)
         {
-            return ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static CellSubBlock DeepCopy(
-            this ICellSubBlockGetter item,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? copyMask = null)
+        public static WorldspaceBlock DeepCopy(
+            this IWorldspaceBlockGetter item,
+            out WorldspaceBlock.ErrorMask errorMask,
+            WorldspaceBlock.TranslationMask? copyMask = null)
         {
-            return ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static CellSubBlock DeepCopy(
-            this ICellSubBlockGetter item,
+        public static WorldspaceBlock DeepCopy(
+            this IWorldspaceBlockGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -837,18 +872,18 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this ICellSubBlockGetter obj)
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IWorldspaceBlockGetter obj)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
-            this ICellSubBlockGetter obj,
+            this IWorldspaceBlockGetter obj,
             bool throwIfUnknown = true)
             where TMajor : class, IMajorRecordQueryableGetter
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: throwIfUnknown)
@@ -857,11 +892,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
-            this ICellSubBlockGetter obj,
+            this IWorldspaceBlockGetter obj,
             Type type,
             bool throwIfUnknown = true)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -869,16 +904,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this ICellSubBlock obj)
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IWorldspaceBlock obj)
         {
-            return ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+            return ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellSubBlock obj)
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceBlock obj)
             where TMajor : class, IMajorRecordQueryable
         {
-            return ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+            return ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: true)
@@ -887,11 +922,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             Type? type,
             bool throwIfUnknown = true)
         {
-            return ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
+            return ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -900,46 +935,46 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             FormKey key)
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys);
         }
 
         [DebuggerStepThrough]
         public static void Remove(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             IEnumerable<FormKey> keys)
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
         }
 
         [DebuggerStepThrough]
         public static void Remove(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             HashSet<FormKey> keys)
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys);
         }
 
         [DebuggerStepThrough]
         public static void Remove(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             FormKey key,
             Type type,
             bool throwIfUnknown = true)
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys,
                 type: type,
@@ -948,12 +983,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             IEnumerable<FormKey> keys,
             Type type,
             bool throwIfUnknown = true)
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet(),
                 type: type,
@@ -962,12 +997,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             HashSet<FormKey> keys,
             Type type,
             bool throwIfUnknown = true)
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys,
                 type: type,
@@ -976,14 +1011,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<TMajor>(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             TMajor record,
             bool throwIfUnknown = true)
             where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(record.FormKey);
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -992,12 +1027,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<TMajor>(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             IEnumerable<TMajor> records,
             bool throwIfUnknown = true)
             where TMajor : IMajorRecordGetter
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: records.Select(m => m.FormKey).ToHashSet(),
                 type: typeof(TMajor),
@@ -1006,14 +1041,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<TMajor>(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             FormKey key,
             bool throwIfUnknown = true)
             where TMajor : IMajorRecordGetter
         {
             var keys = new HashSet<FormKey>();
             keys.Add(key);
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -1022,12 +1057,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<TMajor>(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             IEnumerable<FormKey> keys,
             bool throwIfUnknown = true)
             where TMajor : IMajorRecordGetter
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet(),
                 type: typeof(TMajor),
@@ -1036,12 +1071,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         [DebuggerStepThrough]
         public static void Remove<TMajor>(
-            this ICellSubBlock obj,
+            this IWorldspaceBlock obj,
             HashSet<FormKey> keys,
             bool throwIfUnknown = true)
             where TMajor : IMajorRecordGetter
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys,
                 type: typeof(TMajor),
@@ -1052,11 +1087,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ICellSubBlock item,
+            this IWorldspaceBlock item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -1072,51 +1107,52 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum CellSubBlock_FieldIndex
+    internal enum WorldspaceBlock_FieldIndex
     {
-        BlockNumber = 0,
-        GroupType = 1,
-        LastModified = 2,
-        Unknown = 3,
-        Cells = 4,
+        BlockNumberY = 0,
+        BlockNumberX = 1,
+        GroupType = 2,
+        LastModified = 3,
+        Unknown = 4,
+        Items = 5,
     }
     #endregion
 
     #region Registration
-    internal partial class CellSubBlock_Registration : ILoquiRegistration
+    internal partial class WorldspaceBlock_Registration : ILoquiRegistration
     {
-        public static readonly CellSubBlock_Registration Instance = new CellSubBlock_Registration();
+        public static readonly WorldspaceBlock_Registration Instance = new WorldspaceBlock_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 454,
+            msgID: 512,
             version: 0);
 
-        public const string GUID = "8132428c-2328-4f95-8861-0238c3fb04a7";
+        public const string GUID = "53e6ac99-7e8e-4977-990a-1e6b486f3dba";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(CellSubBlock.Mask<>);
+        public static readonly Type MaskType = typeof(WorldspaceBlock.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(CellSubBlock.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WorldspaceBlock.ErrorMask);
 
-        public static readonly Type ClassType = typeof(CellSubBlock);
+        public static readonly Type ClassType = typeof(WorldspaceBlock);
 
-        public static readonly Type GetterType = typeof(ICellSubBlockGetter);
+        public static readonly Type GetterType = typeof(IWorldspaceBlockGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ICellSubBlock);
+        public static readonly Type SetterType = typeof(IWorldspaceBlock);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.CellSubBlock";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.WorldspaceBlock";
 
-        public const string Name = "CellSubBlock";
+        public const string Name = "WorldspaceBlock";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -1125,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
-        public static readonly Type BinaryWriteTranslation = typeof(CellSubBlockBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBlockBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1158,38 +1194,39 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class CellSubBlockSetterCommon
+    internal partial class WorldspaceBlockSetterCommon
     {
-        public static readonly CellSubBlockSetterCommon Instance = new CellSubBlockSetterCommon();
+        public static readonly WorldspaceBlockSetterCommon Instance = new WorldspaceBlockSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ICellSubBlock item)
+        public void Clear(IWorldspaceBlock item)
         {
             ClearPartial();
-            item.BlockNumber = default;
+            item.BlockNumberY = default;
+            item.BlockNumberX = default;
             item.GroupType = default;
             item.LastModified = default;
             item.Unknown = default;
-            item.Cells.Clear();
+            item.Items.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(ICellSubBlock obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IWorldspaceBlock obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Cells.RemapLinks(mapping);
+            obj.Items.RemapLinks(mapping);
         }
         
-        public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellSubBlock obj)
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IWorldspaceBlock obj)
         {
-            foreach (var item in CellSubBlockCommon.Instance.EnumerateMajorRecords(obj))
+            foreach (var item in WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
             }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
-            ICellSubBlock obj,
+            IWorldspaceBlock obj,
             Type? type,
             bool throwIfUnknown)
         {
@@ -1198,26 +1235,26 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
-            ICellSubBlock obj,
+            IWorldspaceBlock obj,
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in CellSubBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            foreach (var item in WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
         }
         
         public void Remove(
-            ICellSubBlock obj,
+            IWorldspaceBlock obj,
             HashSet<FormKey> keys)
         {
-            obj.Cells.Remove(keys);
-            obj.Cells.ForEach(i => i.Remove(keys));
+            obj.Items.ForEach(i => i.Remove(keys));
+            obj.Items.RemoveWhere(i => i.Items.Count == 0);
         }
         
         public void Remove(
-            ICellSubBlock obj,
+            IWorldspaceBlock obj,
             HashSet<FormKey> keys,
             Type type,
             bool throwIfUnknown)
@@ -1230,24 +1267,32 @@ namespace Mutagen.Bethesda.Fallout4
                 case "Fallout4MajorRecord":
                 case "IMajorRecordGetter":
                 case "IFallout4MajorRecordGetter":
-                    if (!CellSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
+                    break;
+                case "WorldspaceSubBlock":
+                case "IWorldspaceSubBlockGetter":
+                case "IWorldspaceSubBlock":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
-                    obj.Cells.RemoveWhere(i => keys.Contains(i.FormKey));
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
+                    obj.Items.RemoveWhere(i => i.Items.Count == 0);
                     break;
                 case "Landscape":
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
@@ -1256,7 +1301,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "INavigationMeshGetter":
                 case "INavigationMesh":
                 case "INavigationMeshInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
@@ -1265,7 +1310,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
@@ -1274,7 +1319,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
@@ -1315,49 +1360,49 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IPlacedMissileGetter":
                 case "IPlacedMissile":
                 case "IPlacedMissileInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
                 case "ILocationTargetable":
                 case "ILocationTargetableGetter":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
                 case "IPlaced":
                 case "IPlacedGetter":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
                 case "ILinkedReference":
                 case "ILinkedReferenceGetter":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
@@ -1378,7 +1423,7 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ICellSubBlock item,
+            IWorldspaceBlock item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -1386,24 +1431,24 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: CellSubBlockBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: CellSubBlockBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: WorldspaceBlockBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: WorldspaceBlockBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class CellSubBlockCommon
+    internal partial class WorldspaceBlockCommon
     {
-        public static readonly CellSubBlockCommon Instance = new CellSubBlockCommon();
+        public static readonly WorldspaceBlockCommon Instance = new WorldspaceBlockCommon();
 
-        public CellSubBlock.Mask<bool> GetEqualsMask(
-            ICellSubBlockGetter item,
-            ICellSubBlockGetter rhs,
+        public WorldspaceBlock.Mask<bool> GetEqualsMask(
+            IWorldspaceBlockGetter item,
+            IWorldspaceBlockGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CellSubBlock.Mask<bool>(false);
-            ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WorldspaceBlock.Mask<bool>(false);
+            ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1412,26 +1457,27 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            ICellSubBlockGetter item,
-            ICellSubBlockGetter rhs,
-            CellSubBlock.Mask<bool> ret,
+            IWorldspaceBlockGetter item,
+            IWorldspaceBlockGetter rhs,
+            WorldspaceBlock.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.BlockNumber = item.BlockNumber == rhs.BlockNumber;
+            ret.BlockNumberY = item.BlockNumberY == rhs.BlockNumberY;
+            ret.BlockNumberX = item.BlockNumberX == rhs.BlockNumberX;
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified == rhs.LastModified;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Cells = item.Cells.CollectionEqualsHelper(
-                rhs.Cells,
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
         }
         
         public string Print(
-            ICellSubBlockGetter item,
+            IWorldspaceBlockGetter item,
             string? name = null,
-            CellSubBlock.Mask<bool>? printMask = null)
+            WorldspaceBlock.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1443,18 +1489,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            ICellSubBlockGetter item,
+            IWorldspaceBlockGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            CellSubBlock.Mask<bool>? printMask = null)
+            WorldspaceBlock.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"CellSubBlock =>");
+                sb.AppendLine($"WorldspaceBlock =>");
             }
             else
             {
-                sb.AppendLine($"{name} (CellSubBlock) =>");
+                sb.AppendLine($"{name} (WorldspaceBlock) =>");
             }
             using (sb.Brace())
             {
@@ -1466,13 +1512,17 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            ICellSubBlockGetter item,
+            IWorldspaceBlockGetter item,
             StructuredStringBuilder sb,
-            CellSubBlock.Mask<bool>? printMask = null)
+            WorldspaceBlock.Mask<bool>? printMask = null)
         {
-            if (printMask?.BlockNumber ?? true)
+            if (printMask?.BlockNumberY ?? true)
             {
-                sb.AppendItem(item.BlockNumber, "BlockNumber");
+                sb.AppendItem(item.BlockNumberY, "BlockNumberY");
+            }
+            if (printMask?.BlockNumberX ?? true)
+            {
+                sb.AppendItem(item.BlockNumberX, "BlockNumberX");
             }
             if (printMask?.GroupType ?? true)
             {
@@ -1486,12 +1536,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Unknown, "Unknown");
             }
-            if (printMask?.Cells?.Overall ?? true)
+            if (printMask?.Items?.Overall ?? true)
             {
-                sb.AppendLine("Cells =>");
+                sb.AppendLine("Items =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Cells)
+                    foreach (var subItem in item.Items)
                     {
                         using (sb.Brace())
                         {
@@ -1504,42 +1554,47 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            ICellSubBlockGetter? lhs,
-            ICellSubBlockGetter? rhs,
+            IWorldspaceBlockGetter? lhs,
+            IWorldspaceBlockGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.BlockNumber) ?? true))
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.BlockNumberY) ?? true))
             {
-                if (lhs.BlockNumber != rhs.BlockNumber) return false;
+                if (lhs.BlockNumberY != rhs.BlockNumberY) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.GroupType) ?? true))
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.BlockNumberX) ?? true))
+            {
+                if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.GroupType) ?? true))
             {
                 if (lhs.GroupType != rhs.GroupType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.LastModified) ?? true))
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Cells) ?? true))
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Cells.SequenceEqual(rhs.Cells, (l, r) => ((CellCommon)((ICellGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)CellSubBlock_FieldIndex.Cells)))) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)WorldspaceBlock_FieldIndex.Items)))) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ICellSubBlockGetter item)
+        public virtual int GetHashCode(IWorldspaceBlockGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.BlockNumber);
+            hash.Add(item.BlockNumberY);
+            hash.Add(item.BlockNumberX);
             hash.Add(item.GroupType);
             hash.Add(item.LastModified);
             hash.Add(item.Unknown);
-            hash.Add(item.Cells);
+            hash.Add(item.Items);
             return hash.ToHashCode();
         }
         
@@ -1548,24 +1603,23 @@ namespace Mutagen.Bethesda.Fallout4
         
         public object GetNew()
         {
-            return CellSubBlock.GetNew();
+            return WorldspaceBlock.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellSubBlockGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceBlockGetter obj)
         {
-            foreach (var item in obj.Cells.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Items.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellSubBlockGetter obj)
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IWorldspaceBlockGetter obj)
         {
-            foreach (var subItem in obj.Cells)
+            foreach (var subItem in obj.Items)
             {
-                yield return subItem;
                 foreach (var item in subItem.EnumerateMajorRecords())
                 {
                     yield return item;
@@ -1574,7 +1628,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
-            ICellSubBlockGetter obj,
+            IWorldspaceBlockGetter obj,
             Type? type,
             bool throwIfUnknown)
         {
@@ -1583,7 +1637,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
-            ICellSubBlockGetter obj,
+            IWorldspaceBlockGetter obj,
             Type type,
             bool throwIfUnknown)
         {
@@ -1593,7 +1647,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "MajorRecord":
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
-                    if (!CellSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -1606,16 +1660,23 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
+                case "WorldspaceSubBlock":
+                case "IWorldspaceSubBlockGetter":
+                case "IWorldspaceSubBlock":
+                    foreach (var subItem in obj.Items)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
                         {
                             yield return item;
@@ -1626,12 +1687,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
                         {
                             yield return item;
@@ -1642,12 +1699,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case "INavigationMeshGetter":
                 case "INavigationMesh":
                 case "INavigationMeshInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
                         {
                             yield return item;
@@ -1658,12 +1711,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
                         {
                             yield return item;
@@ -1674,12 +1723,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
                         {
                             yield return item;
@@ -1690,12 +1735,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
-                    foreach (var subItem in obj.Cells)
+                    foreach (var subItem in obj.Items)
                     {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
                         {
                             yield return item;
@@ -1725,46 +1766,50 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class CellSubBlockSetterTranslationCommon
+    internal partial class WorldspaceBlockSetterTranslationCommon
     {
-        public static readonly CellSubBlockSetterTranslationCommon Instance = new CellSubBlockSetterTranslationCommon();
+        public static readonly WorldspaceBlockSetterTranslationCommon Instance = new WorldspaceBlockSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ICellSubBlock item,
-            ICellSubBlockGetter rhs,
+            IWorldspaceBlock item,
+            IWorldspaceBlockGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.BlockNumber) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.BlockNumberY) ?? true))
             {
-                item.BlockNumber = rhs.BlockNumber;
+                item.BlockNumberY = rhs.BlockNumberY;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.GroupType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.BlockNumberX) ?? true))
+            {
+                item.BlockNumberX = rhs.BlockNumberX;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.GroupType) ?? true))
             {
                 item.GroupType = rhs.GroupType;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.LastModified) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.LastModified) ?? true))
             {
                 item.LastModified = rhs.LastModified;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Cells) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.Items) ?? true))
             {
-                errorMask?.PushIndex((int)CellSubBlock_FieldIndex.Cells);
+                errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.Items);
                 try
                 {
-                    item.Cells.SetTo(
-                        rhs.Cells
+                    item.Items.SetTo(
+                        rhs.Items
                         .Select(r =>
                         {
-                            return (Cell)r.DeepCopy(
-                                copyMask: default(TranslationCrystal),
-                                errorMask: errorMask);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         }));
                 }
                 catch (Exception ex)
@@ -1781,12 +1826,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public CellSubBlock DeepCopy(
-            ICellSubBlockGetter item,
-            CellSubBlock.TranslationMask? copyMask = null)
+        public WorldspaceBlock DeepCopy(
+            IWorldspaceBlockGetter item,
+            WorldspaceBlock.TranslationMask? copyMask = null)
         {
-            CellSubBlock ret = (CellSubBlock)((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).GetNew();
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceBlock ret = (WorldspaceBlock)((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1795,30 +1840,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public CellSubBlock DeepCopy(
-            ICellSubBlockGetter item,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? copyMask = null)
+        public WorldspaceBlock DeepCopy(
+            IWorldspaceBlockGetter item,
+            out WorldspaceBlock.ErrorMask errorMask,
+            WorldspaceBlock.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            CellSubBlock ret = (CellSubBlock)((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).GetNew();
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceBlock ret = (WorldspaceBlock)((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = CellSubBlock.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceBlock.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public CellSubBlock DeepCopy(
-            ICellSubBlockGetter item,
+        public WorldspaceBlock DeepCopy(
+            IWorldspaceBlockGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            CellSubBlock ret = (CellSubBlock)((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).GetNew();
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceBlock ret = (WorldspaceBlock)((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceBlockSetterTranslationCommon)((IWorldspaceBlockGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1834,27 +1879,27 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class CellSubBlock
+    public partial class WorldspaceBlock
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => CellSubBlock_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => CellSubBlockCommon.Instance;
+        protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return CellSubBlockSetterCommon.Instance;
+            return WorldspaceBlockSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => CellSubBlockSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WorldspaceBlockSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ICellSubBlockGetter.CommonInstance() => this.CommonInstance();
+        object IWorldspaceBlockGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ICellSubBlockGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IWorldspaceBlockGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ICellSubBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWorldspaceBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1865,15 +1910,16 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class CellSubBlockBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class WorldspaceBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CellSubBlockBinaryWriteTranslation Instance = new CellSubBlockBinaryWriteTranslation();
+        public readonly static WorldspaceBlockBinaryWriteTranslation Instance = new WorldspaceBlockBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            ICellSubBlockGetter item,
+            IWorldspaceBlockGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.BlockNumber);
+            writer.Write(item.BlockNumberY);
+            writer.Write(item.BlockNumberX);
             EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.GroupType,
@@ -1883,33 +1929,26 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void WriteRecordTypes(
-            ICellSubBlockGetter item,
+            IWorldspaceBlockGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ICellGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWorldspaceSubBlockGetter>.Instance.Write(
                 writer: writer,
-                items: item.Cells,
-                transl: (MutagenWriter subWriter, ICellGetter subItem, TypedWriteParams? conv) =>
+                items: item.Items,
+                transl: (MutagenWriter subWriter, IWorldspaceSubBlockGetter subItem, TypedWriteParams? conv) =>
                 {
-                    try
-                    {
-                        var Item = subItem;
-                        ((CellBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: subWriter,
-                            translationParams: conv);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw RecordException.Enrich(ex, subItem);
-                    }
+                    var Item = subItem;
+                    ((WorldspaceSubBlockBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
                 });
         }
 
         public void Write(
             MutagenWriter writer,
-            ICellSubBlockGetter item,
+            IWorldspaceBlockGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Group(
@@ -1932,22 +1971,23 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ICellSubBlockGetter)item,
+                item: (IWorldspaceBlockGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class CellSubBlockBinaryCreateTranslation
+    internal partial class WorldspaceBlockBinaryCreateTranslation
     {
-        public readonly static CellSubBlockBinaryCreateTranslation Instance = new CellSubBlockBinaryCreateTranslation();
+        public readonly static WorldspaceBlockBinaryCreateTranslation Instance = new WorldspaceBlockBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ICellSubBlock item,
+            IWorldspaceBlock item,
             MutagenFrame frame)
         {
-            item.BlockNumber = frame.ReadInt32();
+            item.BlockNumberY = frame.ReadInt16();
+            item.BlockNumberX = frame.ReadInt16();
             item.GroupType = EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
@@ -1956,7 +1996,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            ICellSubBlock item,
+            IWorldspaceBlock item,
             MutagenFrame frame,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
@@ -1966,15 +2006,16 @@ namespace Mutagen.Bethesda.Fallout4
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.CELL:
+                case RecordTypeInts.GRUP:
                 {
-                    item.Cells.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Cell>.Instance.Parse(
+                    item.Items.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WorldspaceSubBlock>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Cell_Registration.TriggerSpecs,
+                            triggeringRecord: RecordTypes.GRUP,
+                            thread: frame.MetaData.Parallel,
                             translationParams: translationParams,
-                            transl: Cell.TryCreateFromBinary));
-                    return (int)CellSubBlock_FieldIndex.Cells;
+                            transl: WorldspaceSubBlock.TryCreateFromBinary));
+                    return (int)WorldspaceBlock_FieldIndex.Items;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
@@ -1988,14 +2029,14 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class CellSubBlockBinaryTranslationMixIn
+    public static class WorldspaceBlockBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ICellSubBlockGetter item,
+            this IWorldspaceBlockGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((CellSubBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((WorldspaceBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -2008,30 +2049,30 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class CellSubBlockBinaryOverlay :
+    internal partial class WorldspaceBlockBinaryOverlay :
         PluginBinaryOverlay,
-        ICellSubBlockGetter
+        IWorldspaceBlockGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => CellSubBlock_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => CellSubBlockCommon.Instance;
+        protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => CellSubBlockSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WorldspaceBlockSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ICellSubBlockGetter.CommonInstance() => this.CommonInstance();
+        object IWorldspaceBlockGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ICellSubBlockGetter.CommonSetterInstance() => null;
+        object? IWorldspaceBlockGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ICellSubBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWorldspaceBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellSubBlockCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceBlockCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -2039,38 +2080,32 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => CellSubBlockBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WorldspaceBlockBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((CellSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
+        public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
-        #region Cells
-        partial void CellsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = ListExt.Empty<WorldspaceSubBlockBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected CellSubBlockBinaryOverlay(
+        protected WorldspaceBlockBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2080,12 +2115,12 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static CellSubBlockBinaryOverlay CellSubBlockFactory(
+        public static WorldspaceBlockBinaryOverlay WorldspaceBlockFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new CellSubBlockBinaryOverlay(
+            var ret = new WorldspaceBlockBinaryOverlay(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetGroupHeader().TotalLength));
@@ -2095,7 +2130,7 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset);
-            ret.FillMajorRecords(
+            ret.FillGroupRecordsForWrapper(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
@@ -2104,12 +2139,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static CellSubBlockBinaryOverlay CellSubBlockFactory(
+        public static WorldspaceBlockBinaryOverlay WorldspaceBlockFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return CellSubBlockFactory(
+            return WorldspaceBlockFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -2127,15 +2162,19 @@ namespace Mutagen.Bethesda.Fallout4
             type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.CELL:
+                case RecordTypeInts.GRUP:
                 {
-                    CellsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
-                    return (int)CellSubBlock_FieldIndex.Cells;
+                    this.Items = BinaryOverlayList.FactoryByArray<WorldspaceSubBlockBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => WorldspaceSubBlockBinaryOverlay.WorldspaceSubBlockFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: type,
+                            constants: _package.MetaData.Constants.GroupConstants,
+                            skipHeader: false));
+                    return (int)WorldspaceBlock_FieldIndex.Items;
                 }
                 default:
                     return default(int?);
@@ -2147,7 +2186,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellSubBlockMixIn.Print(
+            WorldspaceBlockMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -2158,16 +2197,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellSubBlockGetter rhs) return false;
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IWorldspaceBlockGetter rhs) return false;
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ICellSubBlockGetter? obj)
+        public bool Equals(IWorldspaceBlockGetter? obj)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -8,13 +8,14 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -37,36 +38,41 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class Placement :
-        IEquatable<IPlacementGetter>,
-        ILoquiObjectSetter<Placement>,
-        IPlacement
+    /// <summary>
+    /// Implemented by: [AlphaLayer]
+    /// </summary>
+    public partial class BaseLayer :
+        IBaseLayer,
+        IEquatable<IBaseLayerGetter>,
+        ILoquiObjectSetter<BaseLayer>
     {
         #region Ctor
-        public Placement()
+        public BaseLayer()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Position
-        public P3Float Position { get; set; } = default;
-        #endregion
-        #region Rotation
-        public P3Float Rotation { get; set; } = default;
-        #endregion
-        #region Scale
-        public Single Scale { get; set; } = default;
+        #region Header
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private LayerHeader? _Header;
+        public LayerHeader? Header
+        {
+            get => _Header;
+            set => _Header = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILayerHeaderGetter? IBaseLayerGetter.Header => this.Header;
         #endregion
 
         #region To String
 
-        public void Print(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacementMixIn.Print(
+            BaseLayerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -77,16 +83,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlacementGetter rhs) return false;
-            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IBaseLayerGetter rhs) return false;
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IPlacementGetter? obj)
+        public bool Equals(IBaseLayerGetter? obj)
         {
-            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -96,21 +102,9 @@ namespace Mutagen.Bethesda.Fallout4
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem initialValue)
+            public Mask(TItem Header)
             {
-                this.Position = initialValue;
-                this.Rotation = initialValue;
-                this.Scale = initialValue;
-            }
-
-            public Mask(
-                TItem Position,
-                TItem Rotation,
-                TItem Scale)
-            {
-                this.Position = Position;
-                this.Rotation = Rotation;
-                this.Scale = Scale;
+                this.Header = new MaskItem<TItem, LayerHeader.Mask<TItem>?>(Header, new LayerHeader.Mask<TItem>(Header));
             }
 
             #pragma warning disable CS8618
@@ -122,9 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem Position;
-            public TItem Rotation;
-            public TItem Scale;
+            public MaskItem<TItem, LayerHeader.Mask<TItem>?>? Header { get; set; }
             #endregion
 
             #region Equals
@@ -137,38 +129,38 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Position, rhs.Position)) return false;
-                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
-                if (!object.Equals(this.Scale, rhs.Scale)) return false;
+                if (!object.Equals(this.Header, rhs.Header)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Position);
-                hash.Add(this.Rotation);
-                hash.Add(this.Scale);
+                hash.Add(this.Header);
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public bool All(Func<TItem, bool> eval)
+            public virtual bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Position)) return false;
-                if (!eval(this.Rotation)) return false;
-                if (!eval(this.Scale)) return false;
+                if (Header != null)
+                {
+                    if (!eval(this.Header.Overall)) return false;
+                    if (this.Header.Specific != null && !this.Header.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
 
             #region Any
-            public bool Any(Func<TItem, bool> eval)
+            public virtual bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Position)) return true;
-                if (eval(this.Rotation)) return true;
-                if (eval(this.Scale)) return true;
+                if (Header != null)
+                {
+                    if (eval(this.Header.Overall)) return true;
+                    if (this.Header.Specific != null && this.Header.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -176,45 +168,35 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Placement.Mask<R>();
+                var ret = new BaseLayer.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Position = eval(this.Position);
-                obj.Rotation = eval(this.Rotation);
-                obj.Scale = eval(this.Scale);
+                obj.Header = this.Header == null ? null : new MaskItem<R, LayerHeader.Mask<R>?>(eval(this.Header.Overall), this.Header.Specific?.Translate(eval));
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Placement.Mask<bool>? printMask = null)
+            public string Print(BaseLayer.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Placement.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BaseLayer.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Placement.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(BaseLayer.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Position ?? true)
+                    if (printMask?.Header?.Overall ?? true)
                     {
-                        sb.AppendItem(Position, "Position");
-                    }
-                    if (printMask?.Rotation ?? true)
-                    {
-                        sb.AppendItem(Rotation, "Rotation");
-                    }
-                    if (printMask?.Scale ?? true)
-                    {
-                        sb.AppendItem(Scale, "Scale");
+                        Header?.Print(sb);
                     }
                 }
             }
@@ -240,72 +222,52 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public Exception? Position;
-            public Exception? Rotation;
-            public Exception? Scale;
+            public MaskItem<Exception?, LayerHeader.ErrorMask?>? Header;
             #endregion
 
             #region IErrorMask
-            public object? GetNthMask(int index)
+            public virtual object? GetNthMask(int index)
             {
-                Placement_FieldIndex enu = (Placement_FieldIndex)index;
+                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
                 switch (enu)
                 {
-                    case Placement_FieldIndex.Position:
-                        return Position;
-                    case Placement_FieldIndex.Rotation:
-                        return Rotation;
-                    case Placement_FieldIndex.Scale:
-                        return Scale;
+                    case BaseLayer_FieldIndex.Header:
+                        return Header;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public void SetNthException(int index, Exception ex)
+            public virtual void SetNthException(int index, Exception ex)
             {
-                Placement_FieldIndex enu = (Placement_FieldIndex)index;
+                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
                 switch (enu)
                 {
-                    case Placement_FieldIndex.Position:
-                        this.Position = ex;
-                        break;
-                    case Placement_FieldIndex.Rotation:
-                        this.Rotation = ex;
-                        break;
-                    case Placement_FieldIndex.Scale:
-                        this.Scale = ex;
+                    case BaseLayer_FieldIndex.Header:
+                        this.Header = new MaskItem<Exception?, LayerHeader.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public void SetNthMask(int index, object obj)
+            public virtual void SetNthMask(int index, object obj)
             {
-                Placement_FieldIndex enu = (Placement_FieldIndex)index;
+                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
                 switch (enu)
                 {
-                    case Placement_FieldIndex.Position:
-                        this.Position = (Exception?)obj;
-                        break;
-                    case Placement_FieldIndex.Rotation:
-                        this.Rotation = (Exception?)obj;
-                        break;
-                    case Placement_FieldIndex.Scale:
-                        this.Scale = (Exception?)obj;
+                    case BaseLayer_FieldIndex.Header:
+                        this.Header = (MaskItem<Exception?, LayerHeader.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public bool IsInError()
+            public virtual bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Position != null) return true;
-                if (Rotation != null) return true;
-                if (Scale != null) return true;
+                if (Header != null) return true;
                 return false;
             }
             #endregion
@@ -313,7 +275,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public void Print(StructuredStringBuilder sb, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -329,17 +291,9 @@ namespace Mutagen.Bethesda.Fallout4
                     PrintFillInternal(sb);
                 }
             }
-            protected void PrintFillInternal(StructuredStringBuilder sb)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
-                {
-                    sb.AppendItem(Position, "Position");
-                }
-                {
-                    sb.AppendItem(Rotation, "Rotation");
-                }
-                {
-                    sb.AppendItem(Scale, "Scale");
-                }
+                Header?.Print(sb);
             }
             #endregion
 
@@ -348,9 +302,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Position = this.Position.Combine(rhs.Position);
-                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
-                ret.Scale = this.Scale.Combine(rhs.Scale);
+                ret.Header = this.Header.Combine(rhs.Header, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -374,9 +326,7 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Position;
-            public bool Rotation;
-            public bool Scale;
+            public LayerHeader.TranslationMask? Header;
             #endregion
 
             #region Ctors
@@ -386,9 +336,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Position = defaultOn;
-                this.Rotation = defaultOn;
-                this.Scale = defaultOn;
             }
 
             #endregion
@@ -402,11 +349,9 @@ namespace Mutagen.Bethesda.Fallout4
                 return _crystal;
             }
 
-            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Position, null));
-                ret.Add((Rotation, null));
-                ret.Add((Scale, null));
+                ret.Add((Header != null ? Header.OnOverall : DefaultOn, Header?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -417,27 +362,32 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BaseLayerCommon.Instance.EnumerateFormLinks(this);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BaseLayerSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PlacementBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((PlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static Placement CreateFromBinary(
+        public static BaseLayer CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new Placement();
-            ((PlacementSetterCommon)((IPlacementGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new BaseLayer();
+            ((BaseLayerSetterCommon)((IBaseLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -448,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Placement item,
+            out BaseLayer item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -463,33 +413,37 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((PlacementSetterCommon)((IPlacementGetter)this).CommonSetterInstance()!).Clear(this);
+            ((BaseLayerSetterCommon)((IBaseLayerGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static Placement GetNew()
+        internal static BaseLayer GetNew()
         {
-            return new Placement();
+            return new BaseLayer();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IPlacement :
-        ILoquiObjectSetter<IPlacement>,
-        IPlacementGetter,
-        IPositionRotation
+    /// <summary>
+    /// Implemented by: [AlphaLayer]
+    /// </summary>
+    public partial interface IBaseLayer :
+        IBaseLayerGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IBaseLayer>
     {
-        new P3Float Position { get; set; }
-        new P3Float Rotation { get; set; }
-        new Single Scale { get; set; }
+        new LayerHeader? Header { get; set; }
     }
 
-    public partial interface IPlacementGetter :
+    /// <summary>
+    /// Implemented by: [AlphaLayer]
+    /// </summary>
+    public partial interface IBaseLayerGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IPlacementGetter>,
-        IPositionRotationGetter
+        IFormLinkContainerGetter,
+        ILoquiObject<IBaseLayerGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -497,52 +451,50 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => Placement_Registration.Instance;
-        P3Float Position { get; }
-        P3Float Rotation { get; }
-        Single Scale { get; }
+        static ILoquiRegistration StaticRegistration => BaseLayer_Registration.Instance;
+        ILayerHeaderGetter? Header { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class PlacementMixIn
+    public static partial class BaseLayerMixIn
     {
-        public static void Clear(this IPlacement item)
+        public static void Clear(this IBaseLayer item)
         {
-            ((PlacementSetterCommon)((IPlacementGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Placement.Mask<bool> GetEqualsMask(
-            this IPlacementGetter item,
-            IPlacementGetter rhs,
+        public static BaseLayer.Mask<bool> GetEqualsMask(
+            this IBaseLayerGetter item,
+            IBaseLayerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IPlacementGetter item,
+            this IBaseLayerGetter item,
             string? name = null,
-            Placement.Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
-            return ((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).Print(
+            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IPlacementGetter item,
+            this IBaseLayerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Placement.Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
-            ((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).Print(
+            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -550,21 +502,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IPlacementGetter item,
-            IPlacementGetter rhs,
-            Placement.TranslationMask? equalsMask = null)
+            this IBaseLayerGetter item,
+            IBaseLayerGetter rhs,
+            BaseLayer.TranslationMask? equalsMask = null)
         {
-            return ((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).Equals(
+            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IPlacement lhs,
-            IPlacementGetter rhs)
+            this IBaseLayer lhs,
+            IBaseLayerGetter rhs)
         {
-            ((PlacementSetterTranslationCommon)((IPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -573,11 +525,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IPlacement lhs,
-            IPlacementGetter rhs,
-            Placement.TranslationMask? copyMask = null)
+            this IBaseLayer lhs,
+            IBaseLayerGetter rhs,
+            BaseLayer.TranslationMask? copyMask = null)
         {
-            ((PlacementSetterTranslationCommon)((IPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -586,28 +538,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IPlacement lhs,
-            IPlacementGetter rhs,
-            out Placement.ErrorMask errorMask,
-            Placement.TranslationMask? copyMask = null)
+            this IBaseLayer lhs,
+            IBaseLayerGetter rhs,
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlacementSetterTranslationCommon)((IPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Placement.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IPlacement lhs,
-            IPlacementGetter rhs,
+            this IBaseLayer lhs,
+            IBaseLayerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PlacementSetterTranslationCommon)((IPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -615,32 +567,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static Placement DeepCopy(
-            this IPlacementGetter item,
-            Placement.TranslationMask? copyMask = null)
+        public static BaseLayer DeepCopy(
+            this IBaseLayerGetter item,
+            BaseLayer.TranslationMask? copyMask = null)
         {
-            return ((PlacementSetterTranslationCommon)((IPlacementGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Placement DeepCopy(
-            this IPlacementGetter item,
-            out Placement.ErrorMask errorMask,
-            Placement.TranslationMask? copyMask = null)
+        public static BaseLayer DeepCopy(
+            this IBaseLayerGetter item,
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? copyMask = null)
         {
-            return ((PlacementSetterTranslationCommon)((IPlacementGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Placement DeepCopy(
-            this IPlacementGetter item,
+        public static BaseLayer DeepCopy(
+            this IBaseLayerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PlacementSetterTranslationCommon)((IPlacementGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -648,11 +600,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IPlacement item,
+            this IBaseLayer item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((PlacementSetterCommon)((IPlacementGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -668,49 +620,47 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum Placement_FieldIndex
+    internal enum BaseLayer_FieldIndex
     {
-        Position = 0,
-        Rotation = 1,
-        Scale = 2,
+        Header = 0,
     }
     #endregion
 
     #region Registration
-    internal partial class Placement_Registration : ILoquiRegistration
+    internal partial class BaseLayer_Registration : ILoquiRegistration
     {
-        public static readonly Placement_Registration Instance = new Placement_Registration();
+        public static readonly BaseLayer_Registration Instance = new BaseLayer_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 199,
+            msgID: 517,
             version: 0);
 
-        public const string GUID = "caddd826-3213-4e45-b983-17447ba30c77";
+        public const string GUID = "af7341e2-b802-425e-899b-361022db95dc";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(Placement.Mask<>);
+        public static readonly Type MaskType = typeof(BaseLayer.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Placement.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(BaseLayer.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Placement);
+        public static readonly Type ClassType = typeof(BaseLayer);
 
-        public static readonly Type GetterType = typeof(IPlacementGetter);
+        public static readonly Type GetterType = typeof(IBaseLayerGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPlacement);
+        public static readonly Type SetterType = typeof(IBaseLayer);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.Placement";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.BaseLayer";
 
-        public const string Name = "Placement";
+        public const string Name = "BaseLayer";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -718,7 +668,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(PlacementBinaryWriteTranslation);
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(
+                RecordTypes.BTXT,
+                RecordTypes.ATXT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
+        public static readonly Type BinaryWriteTranslation = typeof(BaseLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -751,30 +709,29 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class PlacementSetterCommon
+    internal partial class BaseLayerSetterCommon
     {
-        public static readonly PlacementSetterCommon Instance = new PlacementSetterCommon();
+        public static readonly BaseLayerSetterCommon Instance = new BaseLayerSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IPlacement item)
+        public virtual void Clear(IBaseLayer item)
         {
             ClearPartial();
-            item.Position = default;
-            item.Rotation = default;
-            item.Scale = default;
+            item.Header = null;
         }
         
         #region Mutagen
-        public void RemapLinks(IPlacement obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IBaseLayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Header?.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IPlacement item,
+            IBaseLayer item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -782,23 +739,24 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PlacementBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: BaseLayerBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: BaseLayerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class PlacementCommon
+    internal partial class BaseLayerCommon
     {
-        public static readonly PlacementCommon Instance = new PlacementCommon();
+        public static readonly BaseLayerCommon Instance = new BaseLayerCommon();
 
-        public Placement.Mask<bool> GetEqualsMask(
-            IPlacementGetter item,
-            IPlacementGetter rhs,
+        public BaseLayer.Mask<bool> GetEqualsMask(
+            IBaseLayerGetter item,
+            IBaseLayerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Placement.Mask<bool>(false);
-            ((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new BaseLayer.Mask<bool>(false);
+            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -807,21 +765,23 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IPlacementGetter item,
-            IPlacementGetter rhs,
-            Placement.Mask<bool> ret,
+            IBaseLayerGetter item,
+            IBaseLayerGetter rhs,
+            BaseLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Position = item.Position.Equals(rhs.Position);
-            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
-            ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
+            ret.Header = EqualsMaskHelper.EqualsHelper(
+                item.Header,
+                rhs.Header,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
         }
         
         public string Print(
-            IPlacementGetter item,
+            IBaseLayerGetter item,
             string? name = null,
-            Placement.Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -833,18 +793,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IPlacementGetter item,
+            IBaseLayerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Placement.Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Placement =>");
+                sb.AppendLine($"BaseLayer =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Placement) =>");
+                sb.AppendLine($"{name} (BaseLayer) =>");
             }
             using (sb.Brace())
             {
@@ -856,106 +816,117 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IPlacementGetter item,
+            IBaseLayerGetter item,
             StructuredStringBuilder sb,
-            Placement.Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
-            if (printMask?.Position ?? true)
+            if ((printMask?.Header?.Overall ?? true)
+                && item.Header is {} HeaderItem)
             {
-                sb.AppendItem(item.Position, "Position");
-            }
-            if (printMask?.Rotation ?? true)
-            {
-                sb.AppendItem(item.Rotation, "Rotation");
-            }
-            if (printMask?.Scale ?? true)
-            {
-                sb.AppendItem(item.Scale, "Scale");
+                HeaderItem?.Print(sb, "Header");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPlacementGetter? lhs,
-            IPlacementGetter? rhs,
+            IBaseLayerGetter? lhs,
+            IBaseLayerGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Placement_FieldIndex.Position) ?? true))
+            if ((crystal?.GetShouldTranslate((int)BaseLayer_FieldIndex.Header) ?? true))
             {
-                if (!lhs.Position.Equals(rhs.Position)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Placement_FieldIndex.Rotation) ?? true))
-            {
-                if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Placement_FieldIndex.Scale) ?? true))
-            {
-                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Header, rhs.Header, out var lhsHeader, out var rhsHeader, out var isHeaderEqual))
+                {
+                    if (!((LayerHeaderCommon)((ILayerHeaderGetter)lhsHeader).CommonInstance()!).Equals(lhsHeader, rhsHeader, crystal?.GetSubCrystal((int)BaseLayer_FieldIndex.Header))) return false;
+                }
+                else if (!isHeaderEqual) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IPlacementGetter item)
+        public virtual int GetHashCode(IBaseLayerGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Position);
-            hash.Add(item.Rotation);
-            hash.Add(item.Scale);
+            if (item.Header is {} Headeritem)
+            {
+                hash.Add(Headeritem);
+            }
             return hash.ToHashCode();
         }
         
         #endregion
         
         
-        public object GetNew()
+        public virtual object GetNew()
         {
-            return Placement.GetNew();
+            return BaseLayer.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacementGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBaseLayerGetter obj)
         {
+            if (obj.Header is {} HeaderItems)
+            {
+                foreach (var item in HeaderItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class PlacementSetterTranslationCommon
+    internal partial class BaseLayerSetterTranslationCommon
     {
-        public static readonly PlacementSetterTranslationCommon Instance = new PlacementSetterTranslationCommon();
+        public static readonly BaseLayerSetterTranslationCommon Instance = new BaseLayerSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
-            IPlacement item,
-            IPlacementGetter rhs,
+        public virtual void DeepCopyIn(
+            IBaseLayer item,
+            IBaseLayerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.Position) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Header) ?? true))
             {
-                item.Position = rhs.Position;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.Rotation) ?? true))
-            {
-                item.Rotation = rhs.Rotation;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.Scale) ?? true))
-            {
-                item.Scale = rhs.Scale;
+                errorMask?.PushIndex((int)BaseLayer_FieldIndex.Header);
+                try
+                {
+                    if(rhs.Header is {} rhsHeader)
+                    {
+                        item.Header = rhsHeader.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)BaseLayer_FieldIndex.Header));
+                    }
+                    else
+                    {
+                        item.Header = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
         #endregion
         
-        public Placement DeepCopy(
-            IPlacementGetter item,
-            Placement.TranslationMask? copyMask = null)
+        public BaseLayer DeepCopy(
+            IBaseLayerGetter item,
+            BaseLayer.TranslationMask? copyMask = null)
         {
-            Placement ret = (Placement)((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).GetNew();
-            ((PlacementSetterTranslationCommon)((IPlacementGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -964,30 +935,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public Placement DeepCopy(
-            IPlacementGetter item,
-            out Placement.ErrorMask errorMask,
-            Placement.TranslationMask? copyMask = null)
+        public BaseLayer DeepCopy(
+            IBaseLayerGetter item,
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Placement ret = (Placement)((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).GetNew();
-            ((PlacementSetterTranslationCommon)((IPlacementGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Placement.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Placement DeepCopy(
-            IPlacementGetter item,
+        public BaseLayer DeepCopy(
+            IBaseLayerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Placement ret = (Placement)((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).GetNew();
-            ((PlacementSetterTranslationCommon)((IPlacementGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1003,27 +974,27 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Placement
+    public partial class BaseLayer
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Placement_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => Placement_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BaseLayer_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PlacementCommon.Instance;
+        protected virtual object CommonInstance() => BaseLayerCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterInstance()
+        protected virtual object CommonSetterInstance()
         {
-            return PlacementSetterCommon.Instance;
+            return BaseLayerSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PlacementSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPlacementGetter.CommonInstance() => this.CommonInstance();
+        object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IPlacementGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IBaseLayerGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IPlacementGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1034,59 +1005,81 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class PlacementBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class BaseLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PlacementBinaryWriteTranslation Instance = new PlacementBinaryWriteTranslation();
+        public readonly static BaseLayerBinaryWriteTranslation Instance = new BaseLayerBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IPlacementGetter item,
-            MutagenWriter writer)
+        public static void WriteRecordTypes(
+            IBaseLayerGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
         {
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Position);
-            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Rotation);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Scale);
+            if (item.Header is {} HeaderItem)
+            {
+                ((LayerHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
+                    item: HeaderItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
         }
 
-        public void Write(
+        public virtual void Write(
             MutagenWriter writer,
-            IPlacementGetter item,
+            IBaseLayerGetter item,
             TypedWriteParams? translationParams = null)
         {
-            WriteEmbedded(
+            WriteRecordTypes(
                 item: item,
-                writer: writer);
+                writer: writer,
+                translationParams: translationParams);
         }
 
-        public void Write(
+        public virtual void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IPlacementGetter)item,
+                item: (IBaseLayerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class PlacementBinaryCreateTranslation
+    internal partial class BaseLayerBinaryCreateTranslation
     {
-        public readonly static PlacementBinaryCreateTranslation Instance = new PlacementBinaryCreateTranslation();
+        public readonly static BaseLayerBinaryCreateTranslation Instance = new BaseLayerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IPlacement item,
+            IBaseLayer item,
             MutagenFrame frame)
         {
-            item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IBaseLayer item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BTXT:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BaseLayer_FieldIndex.Header) return ParseResult.Stop;
+                    item.Header = Mutagen.Bethesda.Fallout4.LayerHeader.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)BaseLayer_FieldIndex.Header;
+                }
+                default:
+                    return ParseResult.Stop;
+            }
         }
 
     }
@@ -1095,14 +1088,14 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class PlacementBinaryTranslationMixIn
+    public static class BaseLayerBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IPlacementGetter item,
+            this IBaseLayerGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((PlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((BaseLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1115,53 +1108,55 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class PlacementBinaryOverlay :
+    internal partial class BaseLayerBinaryOverlay :
         PluginBinaryOverlay,
-        IPlacementGetter
+        IBaseLayerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Placement_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => Placement_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BaseLayer_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PlacementCommon.Instance;
+        protected virtual object CommonInstance() => BaseLayerCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PlacementSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPlacementGetter.CommonInstance() => this.CommonInstance();
+        object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IPlacementGetter.CommonSetterInstance() => null;
+        object? IBaseLayerGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IPlacementGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BaseLayerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PlacementBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((PlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
-        public P3Float Rotation => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0xC));
-        public Single Scale => _data.Slice(0x18, 0x4).Float();
+        #region Header
+        private RangeInt32? _HeaderLocation;
+        public ILayerHeaderGetter? Header => _HeaderLocation.HasValue ? LayerHeaderBinaryOverlay.LayerHeaderFactory(new OverlayStream(_data.Slice(_HeaderLocation!.Value.Min), _package), _package) : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected PlacementBinaryOverlay(
+        protected BaseLayerBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1171,41 +1166,64 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PlacementBinaryOverlay PlacementFactory(
+        public static BaseLayerBinaryOverlay BaseLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new PlacementBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x1C),
+            var ret = new BaseLayerBinaryOverlay(
+                bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            stream.Position += 0x1C;
-            ret.CustomFactoryEnd(
+            ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: offset);
+                offset: offset,
+                parseParams: parseParams,
+                fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PlacementBinaryOverlay PlacementFactory(
+        public static BaseLayerBinaryOverlay BaseLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return PlacementFactory(
+            return BaseLayerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
         }
 
+        public virtual ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BTXT:
+                {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BaseLayer_FieldIndex.Header) return ParseResult.Stop;
+                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)BaseLayer_FieldIndex.Header;
+                }
+                default:
+                    return ParseResult.Stop;
+            }
+        }
         #region To String
 
-        public void Print(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacementMixIn.Print(
+            BaseLayerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1216,16 +1234,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlacementGetter rhs) return false;
-            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IBaseLayerGetter rhs) return false;
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IPlacementGetter? obj)
+        public bool Equals(IBaseLayerGetter? obj)
         {
-            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
