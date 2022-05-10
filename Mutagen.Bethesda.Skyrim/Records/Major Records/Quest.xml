@@ -31,7 +31,7 @@
   <Object name="QuestAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="9b79d88c-6b07-459c-959e-f6c5d1318ea8" ID="360">
     <Fields>
       <Break />
-      <UInt8 name="Unknown" />
+      <UInt8 name="ExtraBindDataVersion" default="2" />
       <CustomLogic name="FragmentCount" byteLength="2" />
       <String name="FileName" binaryType="PrependLengthUShort" binary="Custom" />
       <RefList name="Fragments" refName="QuestScriptFragment" binary="Custom" />

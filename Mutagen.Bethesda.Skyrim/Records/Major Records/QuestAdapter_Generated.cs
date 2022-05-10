@@ -55,8 +55,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Versioning
         public QuestAdapter.VersioningBreaks Versioning { get; set; } = default;
         #endregion
-        #region Unknown
-        public Byte Unknown { get; set; } = default;
+        #region ExtraBindDataVersion
+        public readonly static Byte _ExtraBindDataVersion_Default = 2;
+        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
         #endregion
         #region FileName
         public String FileName { get; set; } = string.Empty;
@@ -131,7 +132,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Versioning = initialValue;
-                this.Unknown = initialValue;
+                this.ExtraBindDataVersion = initialValue;
                 this.FileName = initialValue;
                 this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>());
@@ -142,7 +143,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ObjectFormat,
                 TItem Scripts,
                 TItem Versioning,
-                TItem Unknown,
+                TItem ExtraBindDataVersion,
                 TItem FileName,
                 TItem Fragments,
                 TItem Aliases)
@@ -152,7 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Scripts: Scripts)
             {
                 this.Versioning = Versioning;
-                this.Unknown = Unknown;
+                this.ExtraBindDataVersion = ExtraBindDataVersion;
                 this.FileName = FileName;
                 this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(Fragments, Enumerable.Empty<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>());
@@ -168,7 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Versioning;
-            public TItem Unknown;
+            public TItem ExtraBindDataVersion;
             public TItem FileName;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>? Fragments;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>? Aliases;
@@ -186,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.ExtraBindDataVersion, rhs.ExtraBindDataVersion)) return false;
                 if (!object.Equals(this.FileName, rhs.FileName)) return false;
                 if (!object.Equals(this.Fragments, rhs.Fragments)) return false;
                 if (!object.Equals(this.Aliases, rhs.Aliases)) return false;
@@ -196,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.Versioning);
-                hash.Add(this.Unknown);
+                hash.Add(this.ExtraBindDataVersion);
                 hash.Add(this.FileName);
                 hash.Add(this.Fragments);
                 hash.Add(this.Aliases);
@@ -211,7 +212,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Versioning)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.ExtraBindDataVersion)) return false;
                 if (!eval(this.FileName)) return false;
                 if (this.Fragments != null)
                 {
@@ -246,7 +247,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Versioning)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.ExtraBindDataVersion)) return true;
                 if (eval(this.FileName)) return true;
                 if (this.Fragments != null)
                 {
@@ -288,7 +289,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Versioning = eval(this.Versioning);
-                obj.Unknown = eval(this.Unknown);
+                obj.ExtraBindDataVersion = eval(this.ExtraBindDataVersion);
                 obj.FileName = eval(this.FileName);
                 if (Fragments != null)
                 {
@@ -342,9 +343,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Versioning, "Versioning");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.ExtraBindDataVersion ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                     }
                     if (printMask?.FileName ?? true)
                     {
@@ -400,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Exception? Versioning;
-            public Exception? Unknown;
+            public Exception? ExtraBindDataVersion;
             public Exception? FileName;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>? Fragments;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestFragmentAlias.ErrorMask?>>?>? Aliases;
@@ -414,8 +415,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case QuestAdapter_FieldIndex.Versioning:
                         return Versioning;
-                    case QuestAdapter_FieldIndex.Unknown:
-                        return Unknown;
+                    case QuestAdapter_FieldIndex.ExtraBindDataVersion:
+                        return ExtraBindDataVersion;
                     case QuestAdapter_FieldIndex.FileName:
                         return FileName;
                     case QuestAdapter_FieldIndex.Fragments:
@@ -435,8 +436,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestAdapter_FieldIndex.Versioning:
                         this.Versioning = ex;
                         break;
-                    case QuestAdapter_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case QuestAdapter_FieldIndex.ExtraBindDataVersion:
+                        this.ExtraBindDataVersion = ex;
                         break;
                     case QuestAdapter_FieldIndex.FileName:
                         this.FileName = ex;
@@ -461,8 +462,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestAdapter_FieldIndex.Versioning:
                         this.Versioning = (Exception?)obj;
                         break;
-                    case QuestAdapter_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case QuestAdapter_FieldIndex.ExtraBindDataVersion:
+                        this.ExtraBindDataVersion = (Exception?)obj;
                         break;
                     case QuestAdapter_FieldIndex.FileName:
                         this.FileName = (Exception?)obj;
@@ -483,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Versioning != null) return true;
-                if (Unknown != null) return true;
+                if (ExtraBindDataVersion != null) return true;
                 if (FileName != null) return true;
                 if (Fragments != null) return true;
                 if (Aliases != null) return true;
@@ -517,7 +518,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Versioning, "Versioning");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                 }
                 {
                     sb.AppendItem(FileName, "FileName");
@@ -567,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.ExtraBindDataVersion = this.ExtraBindDataVersion.Combine(rhs.ExtraBindDataVersion);
                 ret.FileName = this.FileName.Combine(rhs.FileName);
                 ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
                 ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestFragmentAlias.ErrorMask?>>?>(ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
@@ -594,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Versioning;
-            public bool Unknown;
+            public bool ExtraBindDataVersion;
             public bool FileName;
             public QuestScriptFragment.TranslationMask? Fragments;
             public QuestFragmentAlias.TranslationMask? Aliases;
@@ -607,7 +608,7 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.Versioning = defaultOn;
-                this.Unknown = defaultOn;
+                this.ExtraBindDataVersion = defaultOn;
                 this.FileName = defaultOn;
             }
 
@@ -617,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Versioning, null));
-                ret.Add((Unknown, null));
+                ret.Add((ExtraBindDataVersion, null));
                 ret.Add((FileName, null));
                 ret.Add((Fragments == null ? DefaultOn : !Fragments.GetCrystal().CopyNothing, Fragments?.GetCrystal()));
                 ret.Add((Aliases == null ? DefaultOn : !Aliases.GetCrystal().CopyNothing, Aliases?.GetCrystal()));
@@ -704,7 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
         IQuestAdapterGetter
     {
         new QuestAdapter.VersioningBreaks Versioning { get; set; }
-        new Byte Unknown { get; set; }
+        new Byte ExtraBindDataVersion { get; set; }
         new String FileName { get; set; }
         new ExtendedList<QuestScriptFragment> Fragments { get; }
         new ExtendedList<QuestFragmentAlias> Aliases { get; }
@@ -718,7 +719,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration StaticRegistration => QuestAdapter_Registration.Instance;
         QuestAdapter.VersioningBreaks Versioning { get; }
-        Byte Unknown { get; }
+        Byte ExtraBindDataVersion { get; }
         String FileName { get; }
         IReadOnlyList<IQuestScriptFragmentGetter> Fragments { get; }
         IReadOnlyList<IQuestFragmentAliasGetter> Aliases { get; }
@@ -870,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim
         ObjectFormat = 1,
         Scripts = 2,
         Versioning = 3,
-        Unknown = 4,
+        ExtraBindDataVersion = 4,
         FileName = 5,
         Fragments = 6,
         Aliases = 7,
@@ -969,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Versioning = default;
-            item.Unknown = default;
+            item.ExtraBindDataVersion = QuestAdapter._ExtraBindDataVersion_Default;
             item.FileName = string.Empty;
             item.Fragments.Clear();
             item.Aliases.Clear();
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.ExtraBindDataVersion = item.ExtraBindDataVersion == rhs.ExtraBindDataVersion;
             ret.FileName = string.Equals(item.FileName, rhs.FileName);
             ret.Fragments = item.Fragments.CollectionEqualsHelper(
                 rhs.Fragments,
@@ -1110,9 +1111,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Versioning, "Versioning");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.ExtraBindDataVersion ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.ExtraBindDataVersion, "ExtraBindDataVersion");
             }
             if (printMask?.FileName ?? true)
             {
@@ -1175,9 +1176,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.ExtraBindDataVersion) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.ExtraBindDataVersion != rhs.ExtraBindDataVersion) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.FileName) ?? true))
             {
@@ -1209,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.Versioning);
-            hash.Add(item.Unknown);
+            hash.Add(item.ExtraBindDataVersion);
             hash.Add(item.FileName);
             hash.Add(item.Fragments);
             hash.Add(item.Aliases);
@@ -1271,9 +1272,9 @@ namespace Mutagen.Bethesda.Skyrim
                 item.Versioning = rhs.Versioning;
             }
             if (rhs.Versioning.HasFlag(QuestAdapter.VersioningBreaks.Break0)) return;
-            if ((copyMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.ExtraBindDataVersion) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.ExtraBindDataVersion = rhs.ExtraBindDataVersion;
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.FileName) ?? true))
             {
@@ -1440,7 +1441,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer);
             if (!item.Versioning.HasFlag(QuestAdapter.VersioningBreaks.Break0))
             {
-                writer.Write(item.Unknown);
+                writer.Write(item.ExtraBindDataVersion);
                 QuestAdapterBinaryWriteTranslation.WriteBinaryFragmentCount(
                     writer: writer,
                     item: item);
@@ -1565,7 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item.Versioning |= QuestAdapter.VersioningBreaks.Break0;
                 return;
             }
-            item.Unknown = frame.ReadUInt8();
+            item.ExtraBindDataVersion = frame.ReadUInt8();
             QuestAdapterBinaryCreateTranslation.FillBinaryFragmentCountCustom(
                 frame: frame,
                 item: item);
@@ -1642,7 +1643,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public QuestAdapter.VersioningBreaks Versioning { get; private set; }
-        public Byte Unknown => _data.Span[ScriptsEndingPos + 0x0];
+        public Byte ExtraBindDataVersion => _data.Span[ScriptsEndingPos + 0x0];
         #region FragmentCount
         partial void FragmentCountCustomParse(
             OverlayStream stream,
