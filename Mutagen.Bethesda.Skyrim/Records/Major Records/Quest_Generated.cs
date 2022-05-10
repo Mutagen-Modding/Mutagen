@@ -138,10 +138,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region ObjectWindowFilter
-        public String? ObjectWindowFilter { get; set; }
+        #region Filter
+        public String? Filter { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IQuestGetter.ObjectWindowFilter => this.ObjectWindowFilter;
+        String? IQuestGetter.Filter => this.Filter;
         #endregion
         #region DialogConditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = initialValue;
                 this.Event = initialValue;
                 this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ObjectWindowFilter = initialValue;
+                this.Filter = initialValue;
                 this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Type,
                 TItem Event,
                 TItem TextDisplayGlobals,
-                TItem ObjectWindowFilter,
+                TItem Filter,
                 TItem DialogConditions,
                 TItem UnusedConditions,
                 TItem Stages,
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = Type;
                 this.Event = Event;
                 this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ObjectWindowFilter = ObjectWindowFilter;
+                this.Filter = Filter;
                 this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(UnusedConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Type;
             public TItem Event;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? TextDisplayGlobals;
-            public TItem ObjectWindowFilter;
+            public TItem Filter;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? DialogConditions;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? UnusedConditions;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>? Stages;
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.Event, rhs.Event)) return false;
                 if (!object.Equals(this.TextDisplayGlobals, rhs.TextDisplayGlobals)) return false;
-                if (!object.Equals(this.ObjectWindowFilter, rhs.ObjectWindowFilter)) return false;
+                if (!object.Equals(this.Filter, rhs.Filter)) return false;
                 if (!object.Equals(this.DialogConditions, rhs.DialogConditions)) return false;
                 if (!object.Equals(this.UnusedConditions, rhs.UnusedConditions)) return false;
                 if (!object.Equals(this.Stages, rhs.Stages)) return false;
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Type);
                 hash.Add(this.Event);
                 hash.Add(this.TextDisplayGlobals);
-                hash.Add(this.ObjectWindowFilter);
+                hash.Add(this.Filter);
                 hash.Add(this.DialogConditions);
                 hash.Add(this.UnusedConditions);
                 hash.Add(this.Stages);
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.ObjectWindowFilter)) return false;
+                if (!eval(this.Filter)) return false;
                 if (this.DialogConditions != null)
                 {
                     if (!eval(this.DialogConditions.Overall)) return false;
@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.ObjectWindowFilter)) return true;
+                if (eval(this.Filter)) return true;
                 if (this.DialogConditions != null)
                 {
                     if (eval(this.DialogConditions.Overall)) return true;
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.ObjectWindowFilter = eval(this.ObjectWindowFilter);
+                obj.Filter = eval(this.Filter);
                 if (DialogConditions != null)
                 {
                     obj.DialogConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.DialogConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
@@ -770,9 +770,9 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.ObjectWindowFilter ?? true)
+                    if (printMask?.Filter ?? true)
                     {
-                        sb.AppendItem(ObjectWindowFilter, "ObjectWindowFilter");
+                        sb.AppendItem(Filter, "Filter");
                     }
                     if ((printMask?.DialogConditions?.Overall ?? true)
                         && DialogConditions is {} DialogConditionsItem)
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Type;
             public Exception? Event;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? TextDisplayGlobals;
-            public Exception? ObjectWindowFilter;
+            public Exception? Filter;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? DialogConditions;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? UnusedConditions;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>? Stages;
@@ -931,8 +931,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Event;
                     case Quest_FieldIndex.TextDisplayGlobals:
                         return TextDisplayGlobals;
-                    case Quest_FieldIndex.ObjectWindowFilter:
-                        return ObjectWindowFilter;
+                    case Quest_FieldIndex.Filter:
+                        return Filter;
                     case Quest_FieldIndex.DialogConditions:
                         return DialogConditions;
                     case Quest_FieldIndex.UnusedConditions:
@@ -984,8 +984,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Quest_FieldIndex.TextDisplayGlobals:
                         this.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Quest_FieldIndex.ObjectWindowFilter:
-                        this.ObjectWindowFilter = ex;
+                    case Quest_FieldIndex.Filter:
+                        this.Filter = ex;
                         break;
                     case Quest_FieldIndex.DialogConditions:
                         this.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
@@ -1046,8 +1046,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Quest_FieldIndex.TextDisplayGlobals:
                         this.TextDisplayGlobals = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Quest_FieldIndex.ObjectWindowFilter:
-                        this.ObjectWindowFilter = (Exception?)obj;
+                    case Quest_FieldIndex.Filter:
+                        this.Filter = (Exception?)obj;
                         break;
                     case Quest_FieldIndex.DialogConditions:
                         this.DialogConditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Type != null) return true;
                 if (Event != null) return true;
                 if (TextDisplayGlobals != null) return true;
-                if (ObjectWindowFilter != null) return true;
+                if (Filter != null) return true;
                 if (DialogConditions != null) return true;
                 if (UnusedConditions != null) return true;
                 if (Stages != null) return true;
@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 {
-                    sb.AppendItem(ObjectWindowFilter, "ObjectWindowFilter");
+                    sb.AppendItem(Filter, "Filter");
                 }
                 if (DialogConditions is {} DialogConditionsItem)
                 {
@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.Event = this.Event.Combine(rhs.Event);
                 ret.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.TextDisplayGlobals?.Overall, rhs.TextDisplayGlobals?.Overall), ExceptionExt.Combine(this.TextDisplayGlobals?.Specific, rhs.TextDisplayGlobals?.Specific));
-                ret.ObjectWindowFilter = this.ObjectWindowFilter.Combine(rhs.ObjectWindowFilter);
+                ret.Filter = this.Filter.Combine(rhs.Filter);
                 ret.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogConditions?.Overall, rhs.DialogConditions?.Overall), ExceptionExt.Combine(this.DialogConditions?.Specific, rhs.DialogConditions?.Specific));
                 ret.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.UnusedConditions?.Overall, rhs.UnusedConditions?.Overall), ExceptionExt.Combine(this.UnusedConditions?.Specific, rhs.UnusedConditions?.Specific));
                 ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Type;
             public bool Event;
             public bool TextDisplayGlobals;
-            public bool ObjectWindowFilter;
+            public bool Filter;
             public Condition.TranslationMask? DialogConditions;
             public Condition.TranslationMask? UnusedConditions;
             public QuestStage.TranslationMask? Stages;
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = defaultOn;
                 this.Event = defaultOn;
                 this.TextDisplayGlobals = defaultOn;
-                this.ObjectWindowFilter = defaultOn;
+                this.Filter = defaultOn;
                 this.Description = defaultOn;
                 this.DNAMDataTypeState = defaultOn;
             }
@@ -1362,7 +1362,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Type, null));
                 ret.Add((Event, null));
                 ret.Add((TextDisplayGlobals, null));
-                ret.Add((ObjectWindowFilter, null));
+                ret.Add((Filter, null));
                 ret.Add((DialogConditions == null ? DefaultOn : !DialogConditions.GetCrystal().CopyNothing, DialogConditions?.GetCrystal()));
                 ret.Add((UnusedConditions == null ? DefaultOn : !UnusedConditions.GetCrystal().CopyNothing, UnusedConditions?.GetCrystal()));
                 ret.Add((Stages == null ? DefaultOn : !Stages.GetCrystal().CopyNothing, Stages?.GetCrystal()));
@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Quest.TypeEnum Type { get; set; }
         new RecordType? Event { get; set; }
         new ExtendedList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
-        new String? ObjectWindowFilter { get; set; }
+        new String? Filter { get; set; }
         new ExtendedList<Condition> DialogConditions { get; }
         new ExtendedList<Condition> UnusedConditions { get; }
         new ExtendedList<QuestStage> Stages { get; }
@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim
         Quest.TypeEnum Type { get; }
         RecordType? Event { get; }
         IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
-        String? ObjectWindowFilter { get; }
+        String? Filter { get; }
         IReadOnlyList<IConditionGetter> DialogConditions { get; }
         IReadOnlyList<IConditionGetter> UnusedConditions { get; }
         IReadOnlyList<IQuestStageGetter> Stages { get; }
@@ -1762,7 +1762,7 @@ namespace Mutagen.Bethesda.Skyrim
         Type = 12,
         Event = 13,
         TextDisplayGlobals = 14,
-        ObjectWindowFilter = 15,
+        Filter = 15,
         DialogConditions = 16,
         UnusedConditions = 17,
         Stages = 18,
@@ -1846,6 +1846,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ANAM,
                 RecordTypes.ALST,
                 RecordTypes.ALLS,
+                RecordTypes.ALED,
                 RecordTypes.ALID,
                 RecordTypes.ALFI,
                 RecordTypes.ALFL,
@@ -1874,8 +1875,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ALSP,
                 RecordTypes.ALFC,
                 RecordTypes.ALPC,
-                RecordTypes.VTCK,
-                RecordTypes.ALED);
+                RecordTypes.VTCK);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
@@ -1929,7 +1929,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Type = default;
             item.Event = default;
             item.TextDisplayGlobals.Clear();
-            item.ObjectWindowFilter = default;
+            item.Filter = default;
             item.DialogConditions.Clear();
             item.UnusedConditions.Clear();
             item.Stages.Clear();
@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.TextDisplayGlobals,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ObjectWindowFilter = string.Equals(item.ObjectWindowFilter, rhs.ObjectWindowFilter);
+            ret.Filter = string.Equals(item.Filter, rhs.Filter);
             ret.DialogConditions = item.DialogConditions.CollectionEqualsHelper(
                 rhs.DialogConditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2166,10 +2166,10 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.ObjectWindowFilter ?? true)
-                && item.ObjectWindowFilter is {} ObjectWindowFilterItem)
+            if ((printMask?.Filter ?? true)
+                && item.Filter is {} FilterItem)
             {
-                sb.AppendItem(ObjectWindowFilterItem, "ObjectWindowFilter");
+                sb.AppendItem(FilterItem, "Filter");
             }
             if (printMask?.DialogConditions?.Overall ?? true)
             {
@@ -2338,9 +2338,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.TextDisplayGlobals.SequenceEqualNullable(rhs.TextDisplayGlobals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.ObjectWindowFilter) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Filter) ?? true))
             {
-                if (!string.Equals(lhs.ObjectWindowFilter, rhs.ObjectWindowFilter)) return false;
+                if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DialogConditions) ?? true))
             {
@@ -2416,9 +2416,9 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(Eventitem);
             }
             hash.Add(item.TextDisplayGlobals);
-            if (item.ObjectWindowFilter is {} ObjectWindowFilteritem)
+            if (item.Filter is {} Filteritem)
             {
-                hash.Add(ObjectWindowFilteritem);
+                hash.Add(Filteritem);
             }
             hash.Add(item.DialogConditions);
             hash.Add(item.UnusedConditions);
@@ -2640,9 +2640,9 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.ObjectWindowFilter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Filter) ?? true))
             {
-                item.ObjectWindowFilter = rhs.ObjectWindowFilter;
+                item.Filter = rhs.Filter;
             }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogConditions) ?? true))
             {
@@ -2981,7 +2981,7 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ObjectWindowFilter,
+                item: item.Filter,
                 header: translationParams.ConvertToCustom(RecordTypes.FLTR),
                 binaryType: StringBinaryType.NullTerminate);
             QuestBinaryWriteTranslation.WriteBinaryDialogConditions(
@@ -3209,10 +3209,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.FLTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectWindowFilter = StringBinaryTranslation.Instance.Parse(
+                    item.Filter = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Quest_FieldIndex.ObjectWindowFilter;
+                    return (int)Quest_FieldIndex.Filter;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -3391,9 +3391,9 @@ namespace Mutagen.Bethesda.Skyrim
         public RecordType? Event => _EventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = ListExt.Empty<IFormLinkGetter<IGlobalGetter>>();
-        #region ObjectWindowFilter
-        private int? _ObjectWindowFilterLocation;
-        public String? ObjectWindowFilter => _ObjectWindowFilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectWindowFilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Filter
+        private int? _FilterLocation;
+        public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region DialogConditions
         partial void DialogConditionsCustomParse(
@@ -3522,8 +3522,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.FLTR:
                 {
-                    _ObjectWindowFilterLocation = (stream.Position - offset);
-                    return (int)Quest_FieldIndex.ObjectWindowFilter;
+                    _FilterLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.Filter;
                 }
                 case RecordTypeInts.CTDA:
                 {

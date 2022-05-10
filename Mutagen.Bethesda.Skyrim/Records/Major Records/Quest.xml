@@ -17,7 +17,7 @@
       <List name="TextDisplayGlobals">
         <FormLink recordType="QTGL" refName="Global" />
       </List>
-      <String name="ObjectWindowFilter" recordType="FLTR" />
+      <String name="Filter" recordType="FLTR" />
       <RefList name="DialogConditions" refName="Condition" binary="Custom" />
       <CustomLogic name="UnusedConditionsLogic" recordType="NEXT" />
       <RefList name="UnusedConditions" refName="Condition" binary="NoGeneration" />
