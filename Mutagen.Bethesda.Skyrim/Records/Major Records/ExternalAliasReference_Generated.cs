@@ -60,10 +60,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IExternalAliasReferenceGetter.Quest => this.Quest;
         #endregion
-        #region AliasIndex
-        public Int32? AliasIndex { get; set; }
+        #region AliasID
+        public Int32? AliasID { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IExternalAliasReferenceGetter.AliasIndex => this.AliasIndex;
+        Int32? IExternalAliasReferenceGetter.AliasID => this.AliasID;
         #endregion
 
         #region To String
@@ -105,15 +105,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Quest = initialValue;
-                this.AliasIndex = initialValue;
+                this.AliasID = initialValue;
             }
 
             public Mask(
                 TItem Quest,
-                TItem AliasIndex)
+                TItem AliasID)
             {
                 this.Quest = Quest;
-                this.AliasIndex = AliasIndex;
+                this.AliasID = AliasID;
             }
 
             #pragma warning disable CS8618
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Quest;
-            public TItem AliasIndex;
+            public TItem AliasID;
             #endregion
 
             #region Equals
@@ -140,14 +140,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Quest, rhs.Quest)) return false;
-                if (!object.Equals(this.AliasIndex, rhs.AliasIndex)) return false;
+                if (!object.Equals(this.AliasID, rhs.AliasID)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Quest);
-                hash.Add(this.AliasIndex);
+                hash.Add(this.AliasID);
                 return hash.ToHashCode();
             }
 
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Quest)) return false;
-                if (!eval(this.AliasIndex)) return false;
+                if (!eval(this.AliasID)) return false;
                 return true;
             }
             #endregion
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Quest)) return true;
-                if (eval(this.AliasIndex)) return true;
+                if (eval(this.AliasID)) return true;
                 return false;
             }
             #endregion
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Quest = eval(this.Quest);
-                obj.AliasIndex = eval(this.AliasIndex);
+                obj.AliasID = eval(this.AliasID);
             }
             #endregion
 
@@ -205,9 +205,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Quest, "Quest");
                     }
-                    if (printMask?.AliasIndex ?? true)
+                    if (printMask?.AliasID ?? true)
                     {
-                        sb.AppendItem(AliasIndex, "AliasIndex");
+                        sb.AppendItem(AliasID, "AliasID");
                     }
                 }
             }
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Quest;
-            public Exception? AliasIndex;
+            public Exception? AliasID;
             #endregion
 
             #region IErrorMask
@@ -245,8 +245,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case ExternalAliasReference_FieldIndex.Quest:
                         return Quest;
-                    case ExternalAliasReference_FieldIndex.AliasIndex:
-                        return AliasIndex;
+                    case ExternalAliasReference_FieldIndex.AliasID:
+                        return AliasID;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -260,8 +260,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ExternalAliasReference_FieldIndex.Quest:
                         this.Quest = ex;
                         break;
-                    case ExternalAliasReference_FieldIndex.AliasIndex:
-                        this.AliasIndex = ex;
+                    case ExternalAliasReference_FieldIndex.AliasID:
+                        this.AliasID = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -276,8 +276,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ExternalAliasReference_FieldIndex.Quest:
                         this.Quest = (Exception?)obj;
                         break;
-                    case ExternalAliasReference_FieldIndex.AliasIndex:
-                        this.AliasIndex = (Exception?)obj;
+                    case ExternalAliasReference_FieldIndex.AliasID:
+                        this.AliasID = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Quest != null) return true;
-                if (AliasIndex != null) return true;
+                if (AliasID != null) return true;
                 return false;
             }
             #endregion
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Quest, "Quest");
                 }
                 {
-                    sb.AppendItem(AliasIndex, "AliasIndex");
+                    sb.AppendItem(AliasID, "AliasID");
                 }
             }
             #endregion
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.AliasIndex = this.AliasIndex.Combine(rhs.AliasIndex);
+                ret.AliasID = this.AliasID.Combine(rhs.AliasID);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Quest;
-            public bool AliasIndex;
+            public bool AliasID;
             #endregion
 
             #region Ctors
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Quest = defaultOn;
-                this.AliasIndex = defaultOn;
+                this.AliasID = defaultOn;
             }
 
             #endregion
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Quest, null));
-                ret.Add((AliasIndex, null));
+                ret.Add((AliasID, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IExternalAliasReference>
     {
         new IFormLinkNullable<IQuestGetter> Quest { get; set; }
-        new Int32? AliasIndex { get; set; }
+        new Int32? AliasID { get; set; }
     }
 
     public partial interface IExternalAliasReferenceGetter :
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ExternalAliasReference_Registration.Instance;
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
-        Int32? AliasIndex { get; }
+        Int32? AliasID { get; }
 
     }
 
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
     internal enum ExternalAliasReference_FieldIndex
     {
         Quest = 0,
-        AliasIndex = 1,
+        AliasID = 1,
     }
     #endregion
 
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Quest.Clear();
-            item.AliasIndex = default;
+            item.AliasID = default;
         }
         
         #region Mutagen
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (rhs == null) return;
             ret.Quest = item.Quest.Equals(rhs.Quest);
-            ret.AliasIndex = item.AliasIndex == rhs.AliasIndex;
+            ret.AliasID = item.AliasID == rhs.AliasID;
         }
         
         public string Print(
@@ -850,10 +850,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
-            if ((printMask?.AliasIndex ?? true)
-                && item.AliasIndex is {} AliasIndexItem)
+            if ((printMask?.AliasID ?? true)
+                && item.AliasID is {} AliasIDItem)
             {
-                sb.AppendItem(AliasIndexItem, "AliasIndex");
+                sb.AppendItem(AliasIDItem, "AliasID");
             }
         }
         
@@ -868,9 +868,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasIndex) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasID) ?? true))
             {
-                if (lhs.AliasIndex != rhs.AliasIndex) return false;
+                if (lhs.AliasID != rhs.AliasID) return false;
             }
             return true;
         }
@@ -879,9 +879,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.Quest);
-            if (item.AliasIndex is {} AliasIndexitem)
+            if (item.AliasID is {} AliasIDitem)
             {
-                hash.Add(AliasIndexitem);
+                hash.Add(AliasIDitem);
             }
             return hash.ToHashCode();
         }
@@ -923,9 +923,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasID) ?? true))
             {
-                item.AliasIndex = rhs.AliasIndex;
+                item.AliasID = rhs.AliasID;
             }
         }
         
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.ALEQ));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.AliasIndex,
+                item: item.AliasID,
                 header: translationParams.ConvertToCustom(RecordTypes.ALEA));
         }
 
@@ -1089,10 +1089,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ALEA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasReference_FieldIndex.AliasID) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasIndex = frame.ReadInt32();
-                    return (int)ExternalAliasReference_FieldIndex.AliasIndex;
+                    item.AliasID = frame.ReadInt32();
+                    return (int)ExternalAliasReference_FieldIndex.AliasID;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1167,9 +1167,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _QuestLocation;
         public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
-        #region AliasIndex
-        private int? _AliasIndexLocation;
-        public Int32? AliasIndex => _AliasIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AliasIndexLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #region AliasID
+        private int? _AliasIDLocation;
+        public Int32? AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1236,9 +1236,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ALEA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
-                    _AliasIndexLocation = (stream.Position - offset);
-                    return (int)ExternalAliasReference_FieldIndex.AliasIndex;
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasReference_FieldIndex.AliasID) return ParseResult.Stop;
+                    _AliasIDLocation = (stream.Position - offset);
+                    return (int)ExternalAliasReference_FieldIndex.AliasID;
                 }
                 default:
                     return ParseResult.Stop;

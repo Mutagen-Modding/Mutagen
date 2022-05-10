@@ -91,7 +91,7 @@
     <Fields>
       <Data recordType="QSTA">
         <Fields>
-          <Int32 name="AliasIndex" />
+          <Int32 name="AliasID" />
           <Enum name="Flags" enumName="Quest.TargetFlag" byteLength="4" />
         </Fields>
       </Data>
@@ -108,7 +108,7 @@
       <Enum name="Type" enumName="QuestAlias.TypeEnum" binary="NoGeneration" />
       <String name="Name" recordType="ALID" />
       <Enum name="Flags" enumName="QuestAlias.Flag" byteLength="4" recordType="FNAM" />
-      <Int32 name="AliasIndexToForceIntoWhenFilled" recordType="ALFI" />
+      <Int32 name="AliasIDToForceIntoWhenFilled" recordType="ALFI" />
       <FormLink name="SpecificLocation" refName="Location" recordType="ALFL" />
       <FormLink name="ForcedReference" recordType="ALFR">
         <Interface>IPlaced</Interface>
@@ -145,7 +145,7 @@
   </Object>
   <Object name="LocationAliasReference" objType="Subrecord" GUID="f2506ee5-0e90-44a0-a252-ef13849c1e03" ID="368">
     <Fields>
-      <Int32 name="AliasIndex" recordType="ALFA" />
+      <Int32 name="AliasID" recordType="ALFA" />
       <FormLink name="Keyword" refName="Keyword" recordType="KNAM" />
       <FormLink name="RefType" refName="LocationReferenceType" recordType="ALRT" />
     </Fields>
@@ -153,7 +153,7 @@
   <Object name="ExternalAliasReference" objType="Subrecord" GUID="3e3c80ae-76fb-4c4a-bbd6-3ebbc337a6d7" ID="369">
     <Fields>
       <FormLink name="Quest" refName="Quest" recordType="ALEQ" />
-      <Int32 name="AliasIndex" recordType="ALEA" />
+      <Int32 name="AliasID" recordType="ALEA" />
     </Fields>
   </Object>
   <Object name="CreateReferenceToObject" objType="Subrecord" GUID="e41a23e7-3945-4c1a-b550-a51f7d5de2ba" ID="370">
@@ -161,7 +161,7 @@
       <FormLink name="Object" refName="SkyrimMajorRecord" recordType="ALCO" nullable="False" />
       <Data recordType="ALCA">
         <Fields>
-          <Int16 name="AliasIndex" />
+          <Int16 name="AliasID" />
           <Enum name="Create" enumName="CreateReferenceToObject.CreateEnum" byteLength="2" />
         </Fields>
       </Data>
@@ -170,7 +170,7 @@
   </Object>
   <Object name="FindMatchingRefNearAlias" objType="Subrecord" GUID="f5e4d3aa-8dc5-4459-a604-a180731efc42" ID="371">
     <Fields>
-      <Int16 name="AliasIndex" recordType="ALNA" binary="Custom" />
+      <Int16 name="AliasID" recordType="ALNA" binary="Custom" />
       <Enum name="Type" enumName="FindMatchingRefNearAlias.TypeEnum" byteLength="4" recordType="ALNT" />
     </Fields>
   </Object>

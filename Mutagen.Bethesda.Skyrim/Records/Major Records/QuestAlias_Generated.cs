@@ -81,10 +81,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         QuestAlias.Flag? IQuestAliasGetter.Flags => this.Flags;
         #endregion
-        #region AliasIndexToForceIntoWhenFilled
-        public Int32? AliasIndexToForceIntoWhenFilled { get; set; }
+        #region AliasIDToForceIntoWhenFilled
+        public Int32? AliasIDToForceIntoWhenFilled { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IQuestAliasGetter.AliasIndexToForceIntoWhenFilled => this.AliasIndexToForceIntoWhenFilled;
+        Int32? IQuestAliasGetter.AliasIDToForceIntoWhenFilled => this.AliasIDToForceIntoWhenFilled;
         #endregion
         #region SpecificLocation
         private readonly IFormLinkNullable<ILocationGetter> _SpecificLocation = new FormLinkNullable<ILocationGetter>();
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = initialValue;
                 this.Name = initialValue;
                 this.Flags = initialValue;
-                this.AliasIndexToForceIntoWhenFilled = initialValue;
+                this.AliasIDToForceIntoWhenFilled = initialValue;
                 this.SpecificLocation = initialValue;
                 this.ForcedReference = initialValue;
                 this.UniqueActor = initialValue;
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Type,
                 TItem Name,
                 TItem Flags,
-                TItem AliasIndexToForceIntoWhenFilled,
+                TItem AliasIDToForceIntoWhenFilled,
                 TItem SpecificLocation,
                 TItem ForcedReference,
                 TItem UniqueActor,
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = Type;
                 this.Name = Name;
                 this.Flags = Flags;
-                this.AliasIndexToForceIntoWhenFilled = AliasIndexToForceIntoWhenFilled;
+                this.AliasIDToForceIntoWhenFilled = AliasIDToForceIntoWhenFilled;
                 this.SpecificLocation = SpecificLocation;
                 this.ForcedReference = ForcedReference;
                 this.UniqueActor = UniqueActor;
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Type;
             public TItem Name;
             public TItem Flags;
-            public TItem AliasIndexToForceIntoWhenFilled;
+            public TItem AliasIDToForceIntoWhenFilled;
             public TItem SpecificLocation;
             public TItem ForcedReference;
             public TItem UniqueActor;
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.AliasIndexToForceIntoWhenFilled, rhs.AliasIndexToForceIntoWhenFilled)) return false;
+                if (!object.Equals(this.AliasIDToForceIntoWhenFilled, rhs.AliasIDToForceIntoWhenFilled)) return false;
                 if (!object.Equals(this.SpecificLocation, rhs.SpecificLocation)) return false;
                 if (!object.Equals(this.ForcedReference, rhs.ForcedReference)) return false;
                 if (!object.Equals(this.UniqueActor, rhs.UniqueActor)) return false;
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Type);
                 hash.Add(this.Name);
                 hash.Add(this.Flags);
-                hash.Add(this.AliasIndexToForceIntoWhenFilled);
+                hash.Add(this.AliasIDToForceIntoWhenFilled);
                 hash.Add(this.SpecificLocation);
                 hash.Add(this.ForcedReference);
                 hash.Add(this.UniqueActor);
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Type)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.AliasIndexToForceIntoWhenFilled)) return false;
+                if (!eval(this.AliasIDToForceIntoWhenFilled)) return false;
                 if (!eval(this.SpecificLocation)) return false;
                 if (!eval(this.ForcedReference)) return false;
                 if (!eval(this.UniqueActor)) return false;
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Type)) return true;
                 if (eval(this.Name)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.AliasIndexToForceIntoWhenFilled)) return true;
+                if (eval(this.AliasIDToForceIntoWhenFilled)) return true;
                 if (eval(this.SpecificLocation)) return true;
                 if (eval(this.ForcedReference)) return true;
                 if (eval(this.UniqueActor)) return true;
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Type = eval(this.Type);
                 obj.Name = eval(this.Name);
                 obj.Flags = eval(this.Flags);
-                obj.AliasIndexToForceIntoWhenFilled = eval(this.AliasIndexToForceIntoWhenFilled);
+                obj.AliasIDToForceIntoWhenFilled = eval(this.AliasIDToForceIntoWhenFilled);
                 obj.SpecificLocation = eval(this.SpecificLocation);
                 obj.ForcedReference = eval(this.ForcedReference);
                 obj.UniqueActor = eval(this.UniqueActor);
@@ -925,9 +925,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.AliasIndexToForceIntoWhenFilled ?? true)
+                    if (printMask?.AliasIDToForceIntoWhenFilled ?? true)
                     {
-                        sb.AppendItem(AliasIndexToForceIntoWhenFilled, "AliasIndexToForceIntoWhenFilled");
+                        sb.AppendItem(AliasIDToForceIntoWhenFilled, "AliasIDToForceIntoWhenFilled");
                     }
                     if (printMask?.SpecificLocation ?? true)
                     {
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Type;
             public Exception? Name;
             public Exception? Flags;
-            public Exception? AliasIndexToForceIntoWhenFilled;
+            public Exception? AliasIDToForceIntoWhenFilled;
             public Exception? SpecificLocation;
             public Exception? ForcedReference;
             public Exception? UniqueActor;
@@ -1172,8 +1172,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Name;
                     case QuestAlias_FieldIndex.Flags:
                         return Flags;
-                    case QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled:
-                        return AliasIndexToForceIntoWhenFilled;
+                    case QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled:
+                        return AliasIDToForceIntoWhenFilled;
                     case QuestAlias_FieldIndex.SpecificLocation:
                         return SpecificLocation;
                     case QuestAlias_FieldIndex.ForcedReference:
@@ -1236,8 +1236,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestAlias_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled:
-                        this.AliasIndexToForceIntoWhenFilled = ex;
+                    case QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled:
+                        this.AliasIDToForceIntoWhenFilled = ex;
                         break;
                     case QuestAlias_FieldIndex.SpecificLocation:
                         this.SpecificLocation = ex;
@@ -1321,8 +1321,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestAlias_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled:
-                        this.AliasIndexToForceIntoWhenFilled = (Exception?)obj;
+                    case QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled:
+                        this.AliasIDToForceIntoWhenFilled = (Exception?)obj;
                         break;
                     case QuestAlias_FieldIndex.SpecificLocation:
                         this.SpecificLocation = (Exception?)obj;
@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Type != null) return true;
                 if (Name != null) return true;
                 if (Flags != null) return true;
-                if (AliasIndexToForceIntoWhenFilled != null) return true;
+                if (AliasIDToForceIntoWhenFilled != null) return true;
                 if (SpecificLocation != null) return true;
                 if (ForcedReference != null) return true;
                 if (UniqueActor != null) return true;
@@ -1455,7 +1455,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(AliasIndexToForceIntoWhenFilled, "AliasIndexToForceIntoWhenFilled");
+                    sb.AppendItem(AliasIDToForceIntoWhenFilled, "AliasIDToForceIntoWhenFilled");
                 }
                 {
                     sb.AppendItem(SpecificLocation, "SpecificLocation");
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.AliasIndexToForceIntoWhenFilled = this.AliasIndexToForceIntoWhenFilled.Combine(rhs.AliasIndexToForceIntoWhenFilled);
+                ret.AliasIDToForceIntoWhenFilled = this.AliasIDToForceIntoWhenFilled.Combine(rhs.AliasIDToForceIntoWhenFilled);
                 ret.SpecificLocation = this.SpecificLocation.Combine(rhs.SpecificLocation);
                 ret.ForcedReference = this.ForcedReference.Combine(rhs.ForcedReference);
                 ret.UniqueActor = this.UniqueActor.Combine(rhs.UniqueActor);
@@ -1665,7 +1665,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Type;
             public bool Name;
             public bool Flags;
-            public bool AliasIndexToForceIntoWhenFilled;
+            public bool AliasIDToForceIntoWhenFilled;
             public bool SpecificLocation;
             public bool ForcedReference;
             public bool UniqueActor;
@@ -1699,7 +1699,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = defaultOn;
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
-                this.AliasIndexToForceIntoWhenFilled = defaultOn;
+                this.AliasIDToForceIntoWhenFilled = defaultOn;
                 this.SpecificLocation = defaultOn;
                 this.ForcedReference = defaultOn;
                 this.UniqueActor = defaultOn;
@@ -1732,7 +1732,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Type, null));
                 ret.Add((Name, null));
                 ret.Add((Flags, null));
-                ret.Add((AliasIndexToForceIntoWhenFilled, null));
+                ret.Add((AliasIDToForceIntoWhenFilled, null));
                 ret.Add((SpecificLocation, null));
                 ret.Add((ForcedReference, null));
                 ret.Add((UniqueActor, null));
@@ -1841,7 +1841,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new String? Name { get; set; }
         new QuestAlias.Flag? Flags { get; set; }
-        new Int32? AliasIndexToForceIntoWhenFilled { get; set; }
+        new Int32? AliasIDToForceIntoWhenFilled { get; set; }
         new IFormLinkNullable<ILocationGetter> SpecificLocation { get; set; }
         new IFormLinkNullable<IPlacedGetter> ForcedReference { get; set; }
         new IFormLinkNullable<INpcGetter> UniqueActor { get; set; }
@@ -1892,7 +1892,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? Name { get; }
         #endregion
         QuestAlias.Flag? Flags { get; }
-        Int32? AliasIndexToForceIntoWhenFilled { get; }
+        Int32? AliasIDToForceIntoWhenFilled { get; }
         IFormLinkNullableGetter<ILocationGetter> SpecificLocation { get; }
         IFormLinkNullableGetter<IPlacedGetter> ForcedReference { get; }
         IFormLinkNullableGetter<INpcGetter> UniqueActor { get; }
@@ -2091,7 +2091,7 @@ namespace Mutagen.Bethesda.Skyrim
         Type = 1,
         Name = 2,
         Flags = 3,
-        AliasIndexToForceIntoWhenFilled = 4,
+        AliasIDToForceIntoWhenFilled = 4,
         SpecificLocation = 5,
         ForcedReference = 6,
         UniqueActor = 7,
@@ -2248,7 +2248,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Type = default;
             item.Name = default;
             item.Flags = default;
-            item.AliasIndexToForceIntoWhenFilled = default;
+            item.AliasIDToForceIntoWhenFilled = default;
             item.SpecificLocation.Clear();
             item.ForcedReference.Clear();
             item.UniqueActor.Clear();
@@ -2342,7 +2342,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Type = item.Type == rhs.Type;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.AliasIndexToForceIntoWhenFilled = item.AliasIndexToForceIntoWhenFilled == rhs.AliasIndexToForceIntoWhenFilled;
+            ret.AliasIDToForceIntoWhenFilled = item.AliasIDToForceIntoWhenFilled == rhs.AliasIDToForceIntoWhenFilled;
             ret.SpecificLocation = item.SpecificLocation.Equals(rhs.SpecificLocation);
             ret.ForcedReference = item.ForcedReference.Equals(rhs.ForcedReference);
             ret.UniqueActor = item.UniqueActor.Equals(rhs.UniqueActor);
@@ -2463,10 +2463,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.AliasIndexToForceIntoWhenFilled ?? true)
-                && item.AliasIndexToForceIntoWhenFilled is {} AliasIndexToForceIntoWhenFilledItem)
+            if ((printMask?.AliasIDToForceIntoWhenFilled ?? true)
+                && item.AliasIDToForceIntoWhenFilled is {} AliasIDToForceIntoWhenFilledItem)
             {
-                sb.AppendItem(AliasIndexToForceIntoWhenFilledItem, "AliasIndexToForceIntoWhenFilled");
+                sb.AppendItem(AliasIDToForceIntoWhenFilledItem, "AliasIDToForceIntoWhenFilled");
             }
             if (printMask?.SpecificLocation ?? true)
             {
@@ -2640,9 +2640,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled) ?? true))
+            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled) ?? true))
             {
-                if (lhs.AliasIndexToForceIntoWhenFilled != rhs.AliasIndexToForceIntoWhenFilled) return false;
+                if (lhs.AliasIDToForceIntoWhenFilled != rhs.AliasIDToForceIntoWhenFilled) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpecificLocation) ?? true))
             {
@@ -2760,9 +2760,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(Flagsitem);
             }
-            if (item.AliasIndexToForceIntoWhenFilled is {} AliasIndexToForceIntoWhenFilleditem)
+            if (item.AliasIDToForceIntoWhenFilled is {} AliasIDToForceIntoWhenFilleditem)
             {
-                hash.Add(AliasIndexToForceIntoWhenFilleditem);
+                hash.Add(AliasIDToForceIntoWhenFilleditem);
             }
             hash.Add(item.SpecificLocation);
             hash.Add(item.ForcedReference);
@@ -2936,9 +2936,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled) ?? true))
             {
-                item.AliasIndexToForceIntoWhenFilled = rhs.AliasIndexToForceIntoWhenFilled;
+                item.AliasIDToForceIntoWhenFilled = rhs.AliasIDToForceIntoWhenFilled;
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpecificLocation) ?? true))
             {
@@ -3364,7 +3364,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.AliasIndexToForceIntoWhenFilled,
+                item: item.AliasIDToForceIntoWhenFilled,
                 header: translationParams.ConvertToCustom(RecordTypes.ALFI));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3596,8 +3596,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ALFI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasIndexToForceIntoWhenFilled = frame.ReadInt32();
-                    return (int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled;
+                    item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    return (int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
@@ -3854,9 +3854,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FlagsLocation;
         public QuestAlias.Flag? Flags => _FlagsLocation.HasValue ? (QuestAlias.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(QuestAlias.Flag?);
         #endregion
-        #region AliasIndexToForceIntoWhenFilled
-        private int? _AliasIndexToForceIntoWhenFilledLocation;
-        public Int32? AliasIndexToForceIntoWhenFilled => _AliasIndexToForceIntoWhenFilledLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AliasIndexToForceIntoWhenFilledLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #region AliasIDToForceIntoWhenFilled
+        private int? _AliasIDToForceIntoWhenFilledLocation;
+        public Int32? AliasIDToForceIntoWhenFilled => _AliasIDToForceIntoWhenFilledLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AliasIDToForceIntoWhenFilledLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region SpecificLocation
         private int? _SpecificLocationLocation;
@@ -3993,8 +3993,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ALFI:
                 {
-                    _AliasIndexToForceIntoWhenFilledLocation = (stream.Position - offset);
-                    return (int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled;
+                    _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    return (int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {

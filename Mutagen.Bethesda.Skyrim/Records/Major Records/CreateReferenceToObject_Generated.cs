@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object;
         #endregion
-        #region AliasIndex
-        public Int16 AliasIndex { get; set; } = default;
+        #region AliasID
+        public Int16 AliasID { get; set; } = default;
         #endregion
         #region Create
         public CreateReferenceToObject.CreateEnum Create { get; set; } = default;
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Object = initialValue;
-                this.AliasIndex = initialValue;
+                this.AliasID = initialValue;
                 this.Create = initialValue;
                 this.Level = initialValue;
                 this.ALCADataTypeState = initialValue;
@@ -120,13 +120,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public Mask(
                 TItem Object,
-                TItem AliasIndex,
+                TItem AliasID,
                 TItem Create,
                 TItem Level,
                 TItem ALCADataTypeState)
             {
                 this.Object = Object;
-                this.AliasIndex = AliasIndex;
+                this.AliasID = AliasID;
                 this.Create = Create;
                 this.Level = Level;
                 this.ALCADataTypeState = ALCADataTypeState;
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Object;
-            public TItem AliasIndex;
+            public TItem AliasID;
             public TItem Create;
             public TItem Level;
             public TItem ALCADataTypeState;
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Object, rhs.Object)) return false;
-                if (!object.Equals(this.AliasIndex, rhs.AliasIndex)) return false;
+                if (!object.Equals(this.AliasID, rhs.AliasID)) return false;
                 if (!object.Equals(this.Create, rhs.Create)) return false;
                 if (!object.Equals(this.Level, rhs.Level)) return false;
                 if (!object.Equals(this.ALCADataTypeState, rhs.ALCADataTypeState)) return false;
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.Object);
-                hash.Add(this.AliasIndex);
+                hash.Add(this.AliasID);
                 hash.Add(this.Create);
                 hash.Add(this.Level);
                 hash.Add(this.ALCADataTypeState);
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Object)) return false;
-                if (!eval(this.AliasIndex)) return false;
+                if (!eval(this.AliasID)) return false;
                 if (!eval(this.Create)) return false;
                 if (!eval(this.Level)) return false;
                 if (!eval(this.ALCADataTypeState)) return false;
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Object)) return true;
-                if (eval(this.AliasIndex)) return true;
+                if (eval(this.AliasID)) return true;
                 if (eval(this.Create)) return true;
                 if (eval(this.Level)) return true;
                 if (eval(this.ALCADataTypeState)) return true;
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Object = eval(this.Object);
-                obj.AliasIndex = eval(this.AliasIndex);
+                obj.AliasID = eval(this.AliasID);
                 obj.Create = eval(this.Create);
                 obj.Level = eval(this.Level);
                 obj.ALCADataTypeState = eval(this.ALCADataTypeState);
@@ -239,9 +239,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Object, "Object");
                     }
-                    if (printMask?.AliasIndex ?? true)
+                    if (printMask?.AliasID ?? true)
                     {
-                        sb.AppendItem(AliasIndex, "AliasIndex");
+                        sb.AppendItem(AliasID, "AliasID");
                     }
                     if (printMask?.Create ?? true)
                     {
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Object;
-            public Exception? AliasIndex;
+            public Exception? AliasID;
             public Exception? Create;
             public Exception? Level;
             public Exception? ALCADataTypeState;
@@ -294,8 +294,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case CreateReferenceToObject_FieldIndex.Object:
                         return Object;
-                    case CreateReferenceToObject_FieldIndex.AliasIndex:
-                        return AliasIndex;
+                    case CreateReferenceToObject_FieldIndex.AliasID:
+                        return AliasID;
                     case CreateReferenceToObject_FieldIndex.Create:
                         return Create;
                     case CreateReferenceToObject_FieldIndex.Level:
@@ -315,8 +315,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case CreateReferenceToObject_FieldIndex.Object:
                         this.Object = ex;
                         break;
-                    case CreateReferenceToObject_FieldIndex.AliasIndex:
-                        this.AliasIndex = ex;
+                    case CreateReferenceToObject_FieldIndex.AliasID:
+                        this.AliasID = ex;
                         break;
                     case CreateReferenceToObject_FieldIndex.Create:
                         this.Create = ex;
@@ -340,8 +340,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case CreateReferenceToObject_FieldIndex.Object:
                         this.Object = (Exception?)obj;
                         break;
-                    case CreateReferenceToObject_FieldIndex.AliasIndex:
-                        this.AliasIndex = (Exception?)obj;
+                    case CreateReferenceToObject_FieldIndex.AliasID:
+                        this.AliasID = (Exception?)obj;
                         break;
                     case CreateReferenceToObject_FieldIndex.Create:
                         this.Create = (Exception?)obj;
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Object != null) return true;
-                if (AliasIndex != null) return true;
+                if (AliasID != null) return true;
                 if (Create != null) return true;
                 if (Level != null) return true;
                 if (ALCADataTypeState != null) return true;
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Object, "Object");
                 }
                 {
-                    sb.AppendItem(AliasIndex, "AliasIndex");
+                    sb.AppendItem(AliasID, "AliasID");
                 }
                 {
                     sb.AppendItem(Create, "Create");
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Object = this.Object.Combine(rhs.Object);
-                ret.AliasIndex = this.AliasIndex.Combine(rhs.AliasIndex);
+                ret.AliasID = this.AliasID.Combine(rhs.AliasID);
                 ret.Create = this.Create.Combine(rhs.Create);
                 ret.Level = this.Level.Combine(rhs.Level);
                 ret.ALCADataTypeState = this.ALCADataTypeState.Combine(rhs.ALCADataTypeState);
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Object;
-            public bool AliasIndex;
+            public bool AliasID;
             public bool Create;
             public bool Level;
             public bool ALCADataTypeState;
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Object = defaultOn;
-                this.AliasIndex = defaultOn;
+                this.AliasID = defaultOn;
                 this.Create = defaultOn;
                 this.Level = defaultOn;
                 this.ALCADataTypeState = defaultOn;
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Object, null));
-                ret.Add((AliasIndex, null));
+                ret.Add((AliasID, null));
                 ret.Add((Create, null));
                 ret.Add((Level, null));
                 ret.Add((ALCADataTypeState, null));
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ICreateReferenceToObject>
     {
         new IFormLink<ISkyrimMajorRecordGetter> Object { get; set; }
-        new Int16 AliasIndex { get; set; }
+        new Int16 AliasID { get; set; }
         new CreateReferenceToObject.CreateEnum Create { get; set; }
         new Level Level { get; set; }
         new CreateReferenceToObject.ALCADataType ALCADataTypeState { get; set; }
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => CreateReferenceToObject_Registration.Instance;
         IFormLinkGetter<ISkyrimMajorRecordGetter> Object { get; }
-        Int16 AliasIndex { get; }
+        Int16 AliasID { get; }
         CreateReferenceToObject.CreateEnum Create { get; }
         Level Level { get; }
         CreateReferenceToObject.ALCADataType ALCADataTypeState { get; }
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim
     internal enum CreateReferenceToObject_FieldIndex
     {
         Object = 0,
-        AliasIndex = 1,
+        AliasID = 1,
         Create = 2,
         Level = 3,
         ALCADataTypeState = 4,
@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Object.Clear();
-            item.AliasIndex = default;
+            item.AliasID = default;
             item.Create = default;
             item.Level = default;
             item.ALCADataTypeState = default;
@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (rhs == null) return;
             ret.Object = item.Object.Equals(rhs.Object);
-            ret.AliasIndex = item.AliasIndex == rhs.AliasIndex;
+            ret.AliasID = item.AliasID == rhs.AliasID;
             ret.Create = item.Create == rhs.Create;
             ret.Level = item.Level == rhs.Level;
             ret.ALCADataTypeState = item.ALCADataTypeState == rhs.ALCADataTypeState;
@@ -969,9 +969,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Object.FormKey, "Object");
             }
-            if (printMask?.AliasIndex ?? true)
+            if (printMask?.AliasID ?? true)
             {
-                sb.AppendItem(item.AliasIndex, "AliasIndex");
+                sb.AppendItem(item.AliasID, "AliasID");
             }
             if (printMask?.Create ?? true)
             {
@@ -998,9 +998,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Object.Equals(rhs.Object)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasIndex) ?? true))
+            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasID) ?? true))
             {
-                if (lhs.AliasIndex != rhs.AliasIndex) return false;
+                if (lhs.AliasID != rhs.AliasID) return false;
             }
             if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Create) ?? true))
             {
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.Object);
-            hash.Add(item.AliasIndex);
+            hash.Add(item.AliasID);
             hash.Add(item.Create);
             hash.Add(item.Level);
             hash.Add(item.ALCADataTypeState);
@@ -1062,9 +1062,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Object.SetTo(rhs.Object.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasID) ?? true))
             {
-                item.AliasIndex = rhs.AliasIndex;
+                item.AliasID = rhs.AliasID;
             }
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Create) ?? true))
             {
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.ALCO));
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ALCA)))
             {
-                writer.Write(item.AliasIndex);
+                writer.Write(item.AliasID);
                 EnumBinaryTranslation<CreateReferenceToObject.CreateEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Create,
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.AliasIndex = dataFrame.ReadInt16();
+                    item.AliasID = dataFrame.ReadInt16();
                     item.Create = EnumBinaryTranslation<CreateReferenceToObject.CreateEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 2);
@@ -1349,10 +1349,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         private RangeInt32? _ALCALocation;
         public CreateReferenceToObject.ALCADataType ALCADataTypeState { get; private set; }
-        #region AliasIndex
-        private int _AliasIndexLocation => _ALCALocation!.Value.Min;
-        private bool _AliasIndex_IsSet => _ALCALocation.HasValue;
-        public Int16 AliasIndex => _AliasIndex_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_AliasIndexLocation, 2)) : default;
+        #region AliasID
+        private int _AliasIDLocation => _ALCALocation!.Value.Min;
+        private bool _AliasID_IsSet => _ALCALocation.HasValue;
+        public Int16 AliasID => _AliasID_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_AliasIDLocation, 2)) : default;
         #endregion
         #region Create
         private int _CreateLocation => _ALCALocation!.Value.Min + 0x2;
