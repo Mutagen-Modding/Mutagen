@@ -48,20 +48,11 @@ partial class QuestAliasBinaryCreateTranslation
         var subMeta = frame.ReadSubrecordHeader();
         item.Type = subMeta.RecordTypeInt switch
         {
-            // ALST
-            0x54534C41 => QuestAlias.TypeEnum.Reference,
-            // ALLS
-            0x534C4C41 => QuestAlias.TypeEnum.Location,
+            RecordTypeInts.ALST => QuestAlias.TypeEnum.Reference,
+            RecordTypeInts.ALLS => QuestAlias.TypeEnum.Location,
             _ => throw new NotImplementedException(),
         };
         item.ID = frame.ReadUInt32();
-        return lastParsed;
-    }
-
-    public static partial ParseResult FillBinaryEndCustom(MutagenFrame frame, IQuestAlias item, PreviousParse lastParsed)
-    {
-        // Skip
-        frame.ReadSubrecord();
         return lastParsed;
     }
 }
@@ -81,11 +72,6 @@ partial class QuestAliasBinaryWriteTranslation
             writer.Write(item.ID);
         }
     }
-
-    public static partial void WriteBinaryEndCustom(MutagenWriter writer, IQuestAliasGetter item)
-    {
-        using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { }
-    }
 }
 
 partial class QuestAliasBinaryOverlay
@@ -104,19 +90,11 @@ partial class QuestAliasBinaryOverlay
         var subMeta = stream.ReadSubrecordHeader();
         this.Type = subMeta.RecordTypeInt switch
         {
-            // ALST
-            0x54534C41 => QuestAlias.TypeEnum.Reference,
-            // ALLS
-            0x534C4C41 => QuestAlias.TypeEnum.Location,
+            RecordTypeInts.ALST => QuestAlias.TypeEnum.Reference,
+            RecordTypeInts.ALLS => QuestAlias.TypeEnum.Location,
             _ => throw new NotImplementedException(),
         };
         this.ID = stream.ReadUInt32();
-        return lastParsed;
-    }
-
-    public partial ParseResult EndCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
-    {
-        stream.ReadSubrecord();
         return lastParsed;
     }
 }

@@ -98,7 +98,7 @@
       <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
     </Fields>
   </Object>
-  <Object name="QuestAlias" objType="Subrecord" GUID="68186d42-9951-43a6-9668-f21dc08c463c" ID="367">
+  <Object name="QuestAlias" objType="Subrecord" endMarkerType="ALED" GUID="68186d42-9951-43a6-9668-f21dc08c463c" ID="367">
     <Fields>
       <CustomLogic name="IDParse">
         <RecordType>ALST</RecordType>
@@ -141,7 +141,6 @@
       <FormLink name="VoiceTypes" recordType="VTCK" >
         <Interface>IAliasVoiceType</Interface>
       </FormLink>
-      <CustomLogic name="End" recordType="ALED" />
     </Fields>
   </Object>
   <Object name="LocationAliasReference" objType="Subrecord" GUID="f2506ee5-0e90-44a0-a252-ef13849c1e03" ID="368">

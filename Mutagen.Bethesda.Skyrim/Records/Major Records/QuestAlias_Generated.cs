@@ -2166,6 +2166,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.ALST,
                 RecordTypes.ALLS,
+                RecordTypes.ALED,
                 RecordTypes.ALID,
                 RecordTypes.FNAM,
                 RecordTypes.ALFI,
@@ -2198,8 +2199,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ALSP,
                 RecordTypes.ALFC,
                 RecordTypes.ALPC,
-                RecordTypes.VTCK,
-                RecordTypes.ALED);
+                RecordTypes.VTCK);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestAliasBinaryWriteTranslation);
@@ -3503,9 +3503,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.VoiceTypes,
                 header: translationParams.ConvertToCustom(RecordTypes.VTCK));
-            QuestAliasBinaryWriteTranslation.WriteBinaryEnd(
-                writer: writer,
-                item: item);
+            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public static partial void WriteBinaryIDParseCustom(
@@ -3517,19 +3515,6 @@ namespace Mutagen.Bethesda.Skyrim
             IQuestAliasGetter item)
         {
             WriteBinaryIDParseCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryEndCustom(
-            MutagenWriter writer,
-            IQuestAliasGetter item);
-
-        public static void WriteBinaryEnd(
-            MutagenWriter writer,
-            IQuestAliasGetter item)
-        {
-            WriteBinaryEndCustom(
                 writer: writer,
                 item: item);
         }
@@ -3772,12 +3757,10 @@ namespace Mutagen.Bethesda.Skyrim
                     item.VoiceTypes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.VoiceTypes;
                 }
-                case RecordTypeInts.ALED:
+                case RecordTypeInts.ALED: // End Marker
                 {
-                    return QuestAliasBinaryCreateTranslation.FillBinaryEndCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    frame.ReadSubrecord();
+                    return ParseResult.Stop;
                 }
                 default:
                     return ParseResult.Stop;
@@ -3785,11 +3768,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static partial ParseResult FillBinaryIDParseCustom(
-            MutagenFrame frame,
-            IQuestAlias item,
-            PreviousParse lastParsed);
-
-        public static partial ParseResult FillBinaryEndCustom(
             MutagenFrame frame,
             IQuestAlias item,
             PreviousParse lastParsed);
@@ -3936,12 +3914,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region VoiceTypes
         private int? _VoiceTypesLocation;
         public IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes => _VoiceTypesLocation.HasValue ? new FormLinkNullable<IAliasVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceTypesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAliasVoiceTypeGetter>.Null;
-        #endregion
-        #region End
-        public partial ParseResult EndCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4193,12 +4165,10 @@ namespace Mutagen.Bethesda.Skyrim
                     _VoiceTypesLocation = (stream.Position - offset);
                     return (int)QuestAlias_FieldIndex.VoiceTypes;
                 }
-                case RecordTypeInts.ALED:
+                case RecordTypeInts.ALED: // End Marker
                 {
-                    return EndCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
+                    stream.ReadSubrecord();
+                    return ParseResult.Stop;
                 }
                 default:
                     return ParseResult.Stop;
