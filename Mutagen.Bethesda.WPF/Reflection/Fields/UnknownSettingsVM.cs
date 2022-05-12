@@ -1,5 +1,4 @@
 using Newtonsoft.Json.Linq;
-using System;
 using System.Text.Json;
 
 namespace Mutagen.Bethesda.WPF.Reflection.Fields;

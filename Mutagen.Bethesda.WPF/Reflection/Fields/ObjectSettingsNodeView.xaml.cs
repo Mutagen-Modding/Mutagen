@@ -4,7 +4,6 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
-using System;
 
 namespace  Mutagen.Bethesda.WPF.Reflection.Fields;
 

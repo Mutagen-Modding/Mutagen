@@ -1,8 +1,6 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using System;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Fallout4;
 

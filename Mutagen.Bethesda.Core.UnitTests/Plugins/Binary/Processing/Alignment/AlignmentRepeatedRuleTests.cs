@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.IO;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Binary.Streams;

@@ -1,5 +1,4 @@
 using Loqui.Generation;
-using Loqui;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
 using Noggog;

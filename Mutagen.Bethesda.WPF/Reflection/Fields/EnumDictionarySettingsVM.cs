@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Mutagen.Bethesda.WPF.Reflection.Fields;
 
 public class EnumDictionarySettingsVM : ADictionarySettingsVM

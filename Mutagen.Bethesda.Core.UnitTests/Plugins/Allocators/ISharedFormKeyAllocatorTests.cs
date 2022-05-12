@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Concurrent;
 using System.Data;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;

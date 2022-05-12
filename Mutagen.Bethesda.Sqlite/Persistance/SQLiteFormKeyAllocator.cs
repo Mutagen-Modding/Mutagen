@@ -1,9 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Mutagen.Bethesda.Plugins.Records;
-using System;
 using System.Data;
-using System.IO;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Plugins.Allocators;
 

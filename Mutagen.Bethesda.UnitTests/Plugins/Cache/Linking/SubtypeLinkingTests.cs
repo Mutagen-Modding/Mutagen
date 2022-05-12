@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Mutagen.Bethesda.Plugins.Cache;
+﻿using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Noggog;

@@ -1,6 +1,5 @@
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
-using System.Linq;
 using Xunit;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;

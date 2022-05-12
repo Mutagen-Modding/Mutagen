@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Mutagen.Bethesda.Fallout4;
 
 internal partial class ScriptFragmentsIndexedBinaryOverlay

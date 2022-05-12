@@ -1,6 +1,5 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using System;
 
 namespace Mutagen.Bethesda.Skyrim;
 

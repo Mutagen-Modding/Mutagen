@@ -1,5 +1,4 @@
-﻿using System;
-using Loqui;
+﻿using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;

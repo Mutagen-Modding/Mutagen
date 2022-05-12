@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using FluentAssertions;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Testing;
 using Xunit;

@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Concurrent;
 using System.IO.Abstractions;
-using System.Linq;
 using AutoFixture.Xunit2;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;

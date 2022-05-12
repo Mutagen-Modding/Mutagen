@@ -1,6 +1,5 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Noggog;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Oblivion;
 

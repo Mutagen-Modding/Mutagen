@@ -1,7 +1,6 @@
 using System.Xml.Linq;
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;

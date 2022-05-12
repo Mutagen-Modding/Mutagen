@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Translations.Binary;
-using System;
 using Mutagen.Bethesda.Fallout4.Internals;
 
 namespace Mutagen.Bethesda.Fallout4;

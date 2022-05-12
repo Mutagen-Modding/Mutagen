@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.IO.Abstractions;
-using System.Linq;
+﻿using System.IO.Abstractions;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order;

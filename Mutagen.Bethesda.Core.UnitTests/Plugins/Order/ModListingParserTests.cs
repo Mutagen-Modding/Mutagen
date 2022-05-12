@@ -1,6 +1,5 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order;
-using System;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing;
 using Xunit;

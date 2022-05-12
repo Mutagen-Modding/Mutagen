@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Skyrim.Internals;

@@ -1,8 +1,6 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Noggog;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 

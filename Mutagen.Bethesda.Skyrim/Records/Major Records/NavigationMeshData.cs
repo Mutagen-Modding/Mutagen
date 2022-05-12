@@ -5,7 +5,6 @@ using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System.Buffers.Binary;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Skyrim;
 

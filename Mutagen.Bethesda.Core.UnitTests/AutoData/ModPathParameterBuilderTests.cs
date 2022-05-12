@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using AutoFixture.Kernel;
+﻿using AutoFixture.Kernel;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;

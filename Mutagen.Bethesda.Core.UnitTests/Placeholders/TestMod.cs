@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Plugins;

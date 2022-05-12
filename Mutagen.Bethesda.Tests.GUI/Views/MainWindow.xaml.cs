@@ -2,8 +2,6 @@
 using MahApps.Metro.Controls;
 using Noggog;
 using Noggog.WPF;
-using System;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests.GUI.Views;
 

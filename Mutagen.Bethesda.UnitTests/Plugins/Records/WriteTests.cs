@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;
-using System;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Xunit;
 

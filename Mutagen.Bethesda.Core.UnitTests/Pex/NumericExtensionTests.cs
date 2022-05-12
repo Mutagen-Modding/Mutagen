@@ -1,4 +1,3 @@
-using System;
 using Mutagen.Bethesda.Pex;
 using Xunit;
 

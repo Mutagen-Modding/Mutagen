@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;

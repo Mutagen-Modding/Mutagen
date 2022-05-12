@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Mutagen.Bethesda.Skyrim;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
 partial class APerkEffectBinaryOverlay
 {

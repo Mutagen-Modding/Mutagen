@@ -1,8 +1,6 @@
 using DynamicData;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.WPF.Reflection.Fields;
-using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reflection;
 using Mutagen.Bethesda.Plugins.Order;

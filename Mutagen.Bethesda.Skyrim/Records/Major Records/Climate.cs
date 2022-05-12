@@ -1,6 +1,5 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
-using System;
 
 namespace Mutagen.Bethesda.Skyrim;
 

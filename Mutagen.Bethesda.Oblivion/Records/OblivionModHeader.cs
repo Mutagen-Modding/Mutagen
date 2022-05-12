@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System;
 using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Oblivion;

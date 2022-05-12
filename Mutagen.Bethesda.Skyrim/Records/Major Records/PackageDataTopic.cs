@@ -1,6 +1,4 @@
 ﻿using Noggog;
-using System;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Skyrim;
 

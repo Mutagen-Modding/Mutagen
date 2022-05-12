@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records.Internals;

@@ -3,8 +3,6 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
-using System;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Skyrim;
 

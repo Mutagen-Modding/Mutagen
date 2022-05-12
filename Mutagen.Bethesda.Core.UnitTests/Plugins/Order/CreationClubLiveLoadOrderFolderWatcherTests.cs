@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.IO.Abstractions.TestingHelpers;
-using System.Linq;
+﻿using System.IO.Abstractions.TestingHelpers;
 using System.Reactive;
 using AutoFixture.Xunit2;
 using DynamicData;

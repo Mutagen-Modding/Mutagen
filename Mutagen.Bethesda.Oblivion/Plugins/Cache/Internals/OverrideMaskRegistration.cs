@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Loqui;
+﻿using Loqui;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
 
 namespace Mutagen.Bethesda.Oblivion;

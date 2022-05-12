@@ -1,8 +1,6 @@
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
-using System;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Xunit;
 using Path = System.IO.Path;

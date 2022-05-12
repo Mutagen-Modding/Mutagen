@@ -1,5 +1,4 @@
-﻿using System;
-using Mutagen.Bethesda.Skyrim;
+﻿using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Xunit;
 

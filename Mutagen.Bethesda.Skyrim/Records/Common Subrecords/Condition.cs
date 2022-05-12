@@ -6,9 +6,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 using System.Diagnostics;
 using static Mutagen.Bethesda.Skyrim.Condition;
 

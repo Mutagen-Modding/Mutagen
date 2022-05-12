@@ -1546,7 +1546,6 @@
     <Compile Include="Records\Major Records\CellLighting_Generated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\Link\IComplexLocation_Generated.cs" />
     <Compile Include="Records\Common Subrecords\Ownership_Generated.cs">
       <DependentUpon>Ownership.xml</DependentUpon>
     </Compile>

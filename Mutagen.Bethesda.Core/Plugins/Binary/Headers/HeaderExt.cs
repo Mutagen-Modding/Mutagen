@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Records.Internals;

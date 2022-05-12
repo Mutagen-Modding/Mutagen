@@ -2,9 +2,6 @@ using DynamicData.Binding;
 using Noggog.WPF;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests.GUI;
 

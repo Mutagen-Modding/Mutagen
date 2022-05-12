@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Generation.Modules.Aspects;
 using Noggog;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
-using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog.StructuredStrings;

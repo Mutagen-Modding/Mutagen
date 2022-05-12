@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.Buffers.Binary;
 using System.Collections;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Fallout4;

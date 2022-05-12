@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using Mutagen.Bethesda.Pex;
 using Mutagen.Bethesda.Plugins.Binary.Translations;

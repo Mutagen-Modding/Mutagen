@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mutagen.Bethesda.Oblivion;
+﻿namespace Mutagen.Bethesda.Oblivion;
 
 public partial class RegionObject
 {

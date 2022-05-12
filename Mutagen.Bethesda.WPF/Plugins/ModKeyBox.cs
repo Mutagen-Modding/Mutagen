@@ -2,8 +2,6 @@ using ReactiveUI;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System;
-using System.Collections.Generic;
 using Noggog;
 using System.IO;
 using Noggog.WPF;

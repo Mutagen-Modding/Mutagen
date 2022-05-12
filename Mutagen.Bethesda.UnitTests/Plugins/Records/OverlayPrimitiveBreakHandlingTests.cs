@@ -1,4 +1,3 @@
-using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Skyrim;

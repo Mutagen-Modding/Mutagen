@@ -1,4 +1,3 @@
-using System;
 using static Mutagen.Bethesda.Skyrim.Phoneme;
 
 namespace Mutagen.Bethesda.Skyrim;

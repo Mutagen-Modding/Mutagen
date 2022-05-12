@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Utility;
 using System.Text;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
-using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing;
 

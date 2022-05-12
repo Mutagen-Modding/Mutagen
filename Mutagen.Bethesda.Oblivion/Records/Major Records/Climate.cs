@@ -1,4 +1,3 @@
-using System;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 

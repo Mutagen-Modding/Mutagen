@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Xunit;

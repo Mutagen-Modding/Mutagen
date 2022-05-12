@@ -4,9 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Fallout4.Internals;
 
 namespace Mutagen.Bethesda.Fallout4;

@@ -1,5 +1,4 @@
 using System.Xml.Linq;
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Noggog;

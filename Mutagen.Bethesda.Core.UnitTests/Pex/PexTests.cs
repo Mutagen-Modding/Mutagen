@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Pex;
 using Noggog;

@@ -2,7 +2,6 @@ using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
-using System.Linq;
 using Mutagen.Bethesda.Plugins;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Cache;

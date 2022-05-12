@@ -1,5 +1,4 @@
-﻿using Loqui;
-using Loqui.Generation;
+﻿using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins;

@@ -1,4 +1,3 @@
-using Loqui;
 using Loqui.Generation;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;

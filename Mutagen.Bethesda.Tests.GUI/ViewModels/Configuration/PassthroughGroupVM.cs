@@ -3,8 +3,6 @@ using Noggog;
 using Noggog.WPF;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
 
 namespace Mutagen.Bethesda.Tests.GUI;

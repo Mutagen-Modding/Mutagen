@@ -6,8 +6,6 @@ using Mutagen.Bethesda.WPF.Reflection;
 using Noggog;
 using Noggog.WPF;
 using ReactiveUI.Fody.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Mutagen.Bethesda.Environments;
 

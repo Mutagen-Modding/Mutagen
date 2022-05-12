@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using System;
 using System.Buffers.Binary;
 using static Mutagen.Bethesda.Skyrim.PackageScriptFragmentsBinaryCreateTranslation;
 

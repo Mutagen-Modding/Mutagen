@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Noggog;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Skyrim;
 

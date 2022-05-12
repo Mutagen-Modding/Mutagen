@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Oblivion;
-using System.Linq;
 using Mutagen.Bethesda.Testing;
 using Xunit;
 

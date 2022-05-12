@@ -2,8 +2,6 @@ using DynamicData;
 using DynamicData.Binding;
 using Noggog.WPF;
 using ReactiveUI;
-using System;
-using System.Linq;
 using System.Reactive.Linq;
 using Noggog;
 

@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings.DI;

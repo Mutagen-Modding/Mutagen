@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;

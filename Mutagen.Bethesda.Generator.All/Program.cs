@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Oblivion.Generator;
 using Mutagen.Bethesda.Fallout4.Generator;
 using Mutagen.Bethesda.Pex.Generator;
 using Mutagen.Bethesda.Skyrim.Generator;
-using System;
 using System.Diagnostics;
 
 ContainerBuilder builder = new();

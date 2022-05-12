@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mutagen.Bethesda.Fallout4;
+﻿namespace Mutagen.Bethesda.Fallout4;
 
 public static class ObjectModProperty
 {

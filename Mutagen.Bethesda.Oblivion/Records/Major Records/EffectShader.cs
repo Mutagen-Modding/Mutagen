@@ -1,5 +1,3 @@
-using System;
-
 namespace Mutagen.Bethesda.Oblivion;
 
 public partial class EffectShader

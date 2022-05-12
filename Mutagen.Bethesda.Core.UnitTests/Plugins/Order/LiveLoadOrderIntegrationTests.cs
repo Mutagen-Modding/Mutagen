@@ -2,9 +2,7 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
-using System;
 using System.IO.Abstractions.TestingHelpers;
-using System.Linq;
 using System.Reactive.Concurrency;
 using AutoFixture.Xunit2;
 using Mutagen.Bethesda.Environments.DI;

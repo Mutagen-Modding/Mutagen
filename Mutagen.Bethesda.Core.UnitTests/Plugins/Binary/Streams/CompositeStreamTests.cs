@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using Xunit;

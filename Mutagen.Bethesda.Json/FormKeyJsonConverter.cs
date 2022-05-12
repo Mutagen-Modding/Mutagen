@@ -1,6 +1,5 @@
 using Mutagen.Bethesda.Plugins;
 using Newtonsoft.Json;
-using System;
 using Noggog;
 
 namespace Mutagen.Bethesda.Json;
