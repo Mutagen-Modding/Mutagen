@@ -130,7 +130,7 @@ public class MutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public bool TryResolve(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
+    public bool TryResolve(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
     {
         return TryResolve(formLink.FormKey, formLink.Type, out majorRec, target);
     }
@@ -176,7 +176,7 @@ public class MutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IMajorRecordGetter Resolve(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IMajorRecordGetter Resolve(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return Resolve(formLink.FormKey, formLink.Type, target);
     }
@@ -270,7 +270,7 @@ public class MutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordGetter> ResolveAll(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IEnumerable<IMajorRecordGetter> ResolveAll(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveAll(formLink.FormKey, formLink.Type, target);
     }
@@ -395,7 +395,7 @@ public class MutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public bool TryResolveSimpleContext(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec,
+    public bool TryResolveSimpleContext(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec,
         ResolveTarget target = ResolveTarget.Winner)
     {
         return TryResolveSimpleContext(formLink.FormKey, formLink.Type, out majorRec, target);
@@ -445,7 +445,7 @@ public class MutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IModContext<IMajorRecordGetter> ResolveSimpleContext(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IModContext<IMajorRecordGetter> ResolveSimpleContext(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveSimpleContext(formLink.FormKey, formLink.Type, target);
     }
@@ -573,7 +573,7 @@ public class MutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveAllSimpleContexts(formLink.FormKey, formLink.Type, target);
     }
@@ -713,7 +713,7 @@ public class MutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public bool TryResolveIdentifier(IFormLinkGetter formLink, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
+    public bool TryResolveIdentifier(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
     {
         return TryResolveIdentifier(formLink.FormKey, formLink.Type, out editorId, target);
     }
@@ -991,7 +991,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public bool TryResolve(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
+    public bool TryResolve(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
     {
         return TryResolve(formLink.FormKey, formLink.Type, out majorRec, target);
     }
@@ -1035,7 +1035,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public IMajorRecordGetter Resolve(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IMajorRecordGetter Resolve(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return Resolve(formLink.FormKey, formLink.Type, target);
     }
@@ -1173,7 +1173,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public bool TryResolveContext(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
+    public bool TryResolveContext(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
     {
         return TryResolveContext(formLink.FormKey, formLink.Type, out majorRec, target);
     }
@@ -1219,7 +1219,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveContext(formLink.FormKey, formLink.Type, target);
     }
@@ -1298,7 +1298,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordGetter> ResolveAll(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IEnumerable<IMajorRecordGetter> ResolveAll(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveAll(formLink.FormKey, formLink.Type, target);
     }
@@ -1384,7 +1384,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public bool TryResolveSimpleContext(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec,
+    public bool TryResolveSimpleContext(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec,
         ResolveTarget target = ResolveTarget.Winner)
     {
         return TryResolveSimpleContext(formLink.FormKey, formLink.Type, out majorRec, target);
@@ -1427,7 +1427,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public IModContext<IMajorRecordGetter> ResolveSimpleContext(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IModContext<IMajorRecordGetter> ResolveSimpleContext(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveSimpleContext(formLink.FormKey, formLink.Type, target);
     }
@@ -1469,7 +1469,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveAllContexts(formLink.FormKey, formLink.Type, target);
     }
@@ -1568,7 +1568,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner)
+    public IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveAllContexts(formLink.FormKey, formLink.Type, target);
     }
@@ -1701,7 +1701,7 @@ public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMod
     }
 
     /// <inheritdoc />
-    public bool TryResolveIdentifier(IFormLinkGetter formLink, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
+    public bool TryResolveIdentifier(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
     {
         return TryResolveIdentifier(formLink.FormKey, formLink.Type, out editorId, target);
     }

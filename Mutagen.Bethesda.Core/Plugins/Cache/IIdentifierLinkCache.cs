@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Cache;
@@ -71,7 +71,7 @@ public interface IIdentifierLinkCache : IDisposable
     ///   - A setter type is requested from a getter only object.
     /// </exception>
     /// <returns>True if a matching record was found</returns>
-    bool TryResolveIdentifier(IFormLinkGetter formLink, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner);
+    bool TryResolveIdentifier(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>

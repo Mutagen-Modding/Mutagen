@@ -109,7 +109,7 @@ public interface ILinkCache : IIdentifierLinkCache
     ///   - A setter type is requested from a getter only object.
     /// </exception>
     /// <returns>True if a matching record was found</returns>
-    bool TryResolve(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner);
+    bool TryResolve(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -286,7 +286,7 @@ public interface ILinkCache : IIdentifierLinkCache
     /// <exception cref="MissingRecordException">
     /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
     /// </exception>
-    IMajorRecordGetter Resolve(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
+    IMajorRecordGetter Resolve(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -486,7 +486,7 @@ public interface ILinkCache : IIdentifierLinkCache
     ///   - A setter type is requested from a getter only object.
     /// </exception>
     /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
-    IEnumerable<IMajorRecordGetter> ResolveAll(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
+    IEnumerable<IMajorRecordGetter> ResolveAll(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Iterates all records that match the FormKey relative to the source the package was attached to.<br />
@@ -599,7 +599,7 @@ public interface ILinkCache : IIdentifierLinkCache
     ///   - A setter type is requested from a getter only object.
     /// </exception>
     /// <returns>True if a matching record was found</returns>
-    bool TryResolveSimpleContext(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
+    bool TryResolveSimpleContext(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -691,7 +691,7 @@ public interface ILinkCache : IIdentifierLinkCache
     /// <exception cref="MissingRecordException">
     /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
     /// </exception>
-    IModContext<IMajorRecordGetter> ResolveSimpleContext(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
+    IModContext<IMajorRecordGetter> ResolveSimpleContext(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -802,7 +802,7 @@ public interface ILinkCache : IIdentifierLinkCache
     ///   - A setter type is requested from a getter only object.
     /// </exception>
     /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
-    IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
+    IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
@@ -956,7 +956,7 @@ public interface ILinkCache<TMod, TModGetter> : ILinkCache
     ///   - A setter type is requested from a getter only object.
     /// </exception>
     /// <returns>True if a matching record was found</returns>
-    bool TryResolveContext(IFormLinkGetter formLink, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
+    bool TryResolveContext(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -1048,7 +1048,7 @@ public interface ILinkCache<TMod, TModGetter> : ILinkCache
     /// <exception cref="MissingRecordException">
     /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
     /// </exception>
-    IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
+    IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> ResolveContext(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -1165,7 +1165,7 @@ public interface ILinkCache<TMod, TModGetter> : ILinkCache
     ///   - A setter type is requested from a getter only object.
     /// </exception>
     /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
-    IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(IFormLinkGetter formLink, ResolveTarget target = ResolveTarget.Winner);
+    IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
     /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
