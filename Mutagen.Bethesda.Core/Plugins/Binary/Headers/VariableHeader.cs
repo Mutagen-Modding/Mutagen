@@ -5,7 +5,7 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 
 /// <summary>
-/// A ref struct that overlays on top of bytes that is able to retrive basic header data on demand
+/// A ref struct that overlays on top of bytes that is able to retrieve basic header data on demand
 /// utilizing a given constants object to define the lengths
 /// </summary>
 public readonly struct VariableHeader

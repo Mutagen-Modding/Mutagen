@@ -272,7 +272,7 @@ public ref struct MajorRecordHeaderWritable
 }
 
 /// <summary>
-/// A struct that overlays on top of bytes that is able to retrive Major Record header and content data on demand.
+/// A struct that overlays on top of bytes that is able to retrieve Major Record header and content data on demand.
 /// </summary>
 public readonly struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
 {
@@ -404,7 +404,7 @@ public readonly struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
 }
 
 /// <summary>
-/// A struct that overlays on top of bytes that is able to retrive Major Record data on demand.
+/// A struct that overlays on top of bytes that is able to retrieve Major Record data on demand.
 /// In addition, it keeps track of its location relative to its parent MajorRecordFrame
 /// </summary>
 public readonly struct MajorRecordPinFrame

@@ -7,7 +7,7 @@ using System.Collections;
 namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 
 /// <summary>
-/// A struct that overlays on top of bytes that is able to retrive Group header data on demand.
+/// A struct that overlays on top of bytes that is able to retrieve Group header data on demand.
 /// </summary>
 public readonly struct GroupHeader
 {
@@ -103,7 +103,7 @@ public readonly struct GroupHeader
 }
 
 /// <summary>
-/// A struct that overlays on top of bytes that is able to retrive Group data on demand.
+/// A struct that overlays on top of bytes that is able to retrieve Group data on demand.
 /// </summary>
 public readonly struct GroupFrame : IEnumerable<MajorRecordPinFrame>
 {

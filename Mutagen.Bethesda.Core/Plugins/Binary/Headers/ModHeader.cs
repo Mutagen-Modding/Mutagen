@@ -6,7 +6,7 @@ using System.Collections;
 namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 
 /// <summary>
-/// A ref struct that overlays on top of bytes that is able to retrive Mod header data on demand.
+/// A ref struct that overlays on top of bytes that is able to retrieve Mod header data on demand.
 /// </summary>
 public readonly struct ModHeader
 {
@@ -71,7 +71,7 @@ public readonly struct ModHeader
 }
 
 /// <summary>
-/// A struct that overlays on top of bytes that is able to retrive Mod Record header and content data on demand.
+/// A struct that overlays on top of bytes that is able to retrieve Mod Record header and content data on demand.
 /// </summary>
 public readonly struct ModHeaderFrame : IEnumerable<SubrecordPinFrame>
 {
