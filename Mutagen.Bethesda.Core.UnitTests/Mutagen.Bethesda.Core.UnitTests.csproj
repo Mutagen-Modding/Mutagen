@@ -91,6 +91,9 @@
         <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\OffsetSubrecords">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Plugins\Analysis\SkyrimTypical.esp">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Pex\Actor.pex">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
