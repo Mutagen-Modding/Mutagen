@@ -106,9 +106,8 @@ public static class RecordLocator
         RecordType? grupRecOverride,
         bool checkOverallGrupType)
     {
-        var grupLoc = reader.Position;
-        GroupHeader groupMeta = reader.GetGroupHeader();
-        fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FromLength(reader.Position, groupMeta.TotalLength), groupMeta.ContainedRecordType));
+        var groupMeta = reader.GetGroupHeader();
+        fileLocs.GrupLocations.Add(new GroupLocationMarker(groupMeta));
         var grupRec = grupRecOverride ?? groupMeta.ContainedRecordType;
 
         if (checkOverallGrupType
@@ -131,7 +130,7 @@ public static class RecordLocator
                     var grup = frame.GetGroupHeader(checkIsGroup: false);
                     if (IsSubLevelGRUP(grup))
                     {
-                        parentGroupLocations.Push(grupLoc);
+                        parentGroupLocations.Push(groupMeta.Location);
                         HandleSubLevelGRUP(
                             frame: frame,
                             fileLocs: fileLocs,
@@ -159,7 +158,7 @@ public static class RecordLocator
                 }
                 if (interest?.IsInterested(targetRec) ?? true)
                 {
-                    parentGroupLocations.Push(grupLoc);
+                    parentGroupLocations.Push(groupMeta.Location);
                     var pos = reader.Position;
                     var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences!, majorRecordMeta.FormID.Raw);
 
@@ -193,9 +192,8 @@ public static class RecordLocator
         RecordInterest? interest,
         Stack<long> parentGroupLocations)
     {
-        var grupLoc = frame.Position;
-        GroupHeader groupMeta = frame.GetGroupHeader();
-        fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FromLength(grupLoc, groupMeta.TotalLength), groupMeta.ContainedRecordType));
+        var groupMeta = frame.GetGroupHeader();
+        fileLocs.GrupLocations.Add(new GroupLocationMarker(groupMeta));
         var grupType = groupMeta.GroupType;
         if (grupType == frame.MetaData.Constants.GroupConstants.World.TopGroupType
             || grupType == frame.MetaData.Constants.GroupConstants.Topic?.TopGroupType
@@ -212,7 +210,7 @@ public static class RecordLocator
         }
         else if (frame.MetaData.Constants.GroupConstants.World.CellGroupTypes.Contains(grupType))
         {
-            parentGroupLocations.Push(grupLoc);
+            parentGroupLocations.Push(groupMeta.Location);
             HandleCells(
                 frame: frame.SpawnWithLength(groupMeta.TotalLength),
                 fileLocs: fileLocs,
@@ -230,7 +228,7 @@ public static class RecordLocator
                 fileLocs: fileLocs,
                 parentGroupLocations: parentGroupLocations,
                 nesting: nesting,
-                parentGroupLoc: grupLoc,
+                parentGroupLoc: groupMeta.Location,
                 interest: interest);
         }
         else
@@ -248,13 +246,12 @@ public static class RecordLocator
         frame.Reader.Position += fileLocs.MetaData.GroupConstants.HeaderLength;
         while (!frame.Complete)
         {
-            var grupLoc = frame.Position;
             var groupMeta = frame.GetGroupHeader();
             if (!groupMeta.IsGroup)
             {
                 throw new ArgumentException();
             }
-            fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FromLength(grupLoc, groupMeta.TotalLength), groupMeta.ContainedRecordType));
+            fileLocs.GrupLocations.Add(new GroupLocationMarker(groupMeta));
             if (frame.MetaData.Constants.GroupConstants.World.CellSubGroupTypes.Contains(groupMeta.GroupType))
             {
                 ParseTopLevelGRUP(
@@ -296,15 +293,14 @@ public static class RecordLocator
             frame.Reader.Position += fileLocs.MetaData.GroupConstants.HeaderLength;
             while (!frame.Complete)
             {
-                var grupLoc = frame.Position;
                 var groupMeta = frame.GetGroupHeader();
-                fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FromLength(grupLoc, groupMeta.TotalLength), groupMeta.ContainedRecordType));
+                fileLocs.GrupLocations.Add(new GroupLocationMarker(groupMeta));
                 var targetNesting = nesting.Underneath.FirstOrDefault(x => x.GroupType == groupMeta.GroupType);
                 if (targetNesting == null)
                 {
                     throw new NotImplementedException();
                 }
-                HandleNesting(frame, fileLocs, interest, grupLoc, targetNesting, parentGroupLocations);
+                HandleNesting(frame, fileLocs, interest, groupMeta.Location, targetNesting, parentGroupLocations);
             }
             parentGroupLocations.Pop();
         }
