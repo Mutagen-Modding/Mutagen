@@ -1226,7 +1226,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<INpcSoundTypeGetter> Types { get; private set; } = ListExt.Empty<NpcSoundTypeBinaryOverlay>();
+        public IReadOnlyList<INpcSoundTypeGetter> Types { get; private set; } = Array.Empty<NpcSoundTypeBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

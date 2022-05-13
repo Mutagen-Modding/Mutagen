@@ -3059,7 +3059,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = ListExt.Empty<RelationBinaryOverlay>();
+        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<RelationBinaryOverlay>();
         #region Flags
         private int? _FlagsLocation;
         public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Faction.FactionFlag);
@@ -3092,7 +3092,7 @@ namespace Mutagen.Bethesda.Fallout4
         private RangeInt32? _CrimeValuesLocation;
         public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new OverlayStream(_data.Slice(_CrimeValuesLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<RankBinaryOverlay>();
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
         public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VendorBuySellListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;

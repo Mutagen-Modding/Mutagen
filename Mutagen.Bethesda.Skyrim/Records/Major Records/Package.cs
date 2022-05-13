@@ -504,9 +504,9 @@ partial class PackageBinaryWriteTranslation
 
 partial class PackageBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
 
-    public IReadOnlyList<IPackageBranchGetter> ProcedureTree { get; private set; } = ListExt.Empty<IPackageBranchGetter>();
+    public IReadOnlyList<IPackageBranchGetter> ProcedureTree { get; private set; } = Array.Empty<IPackageBranchGetter>();
 
     private readonly Dictionary<sbyte, APackageData> _packageData = new Dictionary<sbyte, APackageData>();
     public IReadOnlyDictionary<sbyte, IAPackageDataGetter> Data => _packageData.Covariant<sbyte, APackageData, IAPackageDataGetter>();

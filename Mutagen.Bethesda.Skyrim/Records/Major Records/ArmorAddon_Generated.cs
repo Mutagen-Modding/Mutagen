@@ -2858,7 +2858,7 @@ namespace Mutagen.Bethesda.Skyrim
         private IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? _TextureSwapListOverlay;
         public IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList => _TextureSwapListOverlay;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = ListExt.Empty<IFormLinkGetter<IRaceGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = Array.Empty<IFormLinkGetter<IRaceGetter>>();
         #region FootstepSound
         private int? _FootstepSoundLocation;
         public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;

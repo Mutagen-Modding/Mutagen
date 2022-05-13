@@ -5103,7 +5103,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
         public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _data.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = ListExt.Empty<IFormLinkGetter<IMagicEffectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = Array.Empty<IFormLinkGetter<IMagicEffectGetter>>();
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
         #region Description
         private int? _DescriptionLocation;

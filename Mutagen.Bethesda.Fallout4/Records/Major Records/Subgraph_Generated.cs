@@ -1772,9 +1772,9 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _BehaviorGraphLocation;
         public String? BehaviorGraph => _BehaviorGraphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> ActorKeywords { get; private set; } = ListExt.Empty<IFormLinkGetter<IKeywordGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> TargetKeywords { get; private set; } = ListExt.Empty<IFormLinkGetter<IKeywordGetter>>();
-        public IReadOnlyList<String> AnimationPaths { get; private set; } = ListExt.Empty<String>();
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> ActorKeywords { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> TargetKeywords { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
+        public IReadOnlyList<String> AnimationPaths { get; private set; } = Array.Empty<String>();
         #region Role
         partial void RoleCustomParse(
             OverlayStream stream,

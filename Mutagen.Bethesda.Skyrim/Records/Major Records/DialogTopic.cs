@@ -240,7 +240,7 @@ partial class DialogTopicBinaryWriteTranslation
 
 partial class DialogTopicBinaryOverlay
 {
-    public IReadOnlyList<IDialogResponsesGetter> Responses { get; private set; } = ListExt.Empty<IDialogResponsesGetter>();
+    public IReadOnlyList<IDialogResponsesGetter> Responses { get; private set; } = Array.Empty<IDialogResponsesGetter>();
 
     private ReadOnlyMemorySlice<byte>? _grupData;
 

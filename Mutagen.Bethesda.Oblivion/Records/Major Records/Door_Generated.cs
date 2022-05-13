@@ -2123,7 +2123,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _FlagsLocation;
         public Door.DoorFlag? Flags => _FlagsLocation.HasValue ? (Door.DoorFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Door.DoorFlag?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; private set; } = ListExt.Empty<IFormLinkGetter<IPlaceGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; private set; } = Array.Empty<IFormLinkGetter<IPlaceGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

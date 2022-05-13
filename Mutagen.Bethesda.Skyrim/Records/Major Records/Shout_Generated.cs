@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IShoutWordGetter> WordsOfPower { get; private set; } = ListExt.Empty<ShoutWordBinaryOverlay>();
+        public IReadOnlyList<IShoutWordGetter> WordsOfPower { get; private set; } = Array.Empty<ShoutWordBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

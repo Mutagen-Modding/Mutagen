@@ -2136,7 +2136,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordType type,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<String> Textures { get; private set; } = ListExt.Empty<String>();
+        public IReadOnlyList<String> Textures { get; private set; } = Array.Empty<String>();
         #region BlendOperation
         private int? _BlendOperationLocation;
         public BlendOperation? BlendOperation => _BlendOperationLocation.HasValue ? (BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BlendOperationLocation!.Value, _package.MetaData.Constants)) : default(BlendOperation?);

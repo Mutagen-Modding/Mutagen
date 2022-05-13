@@ -3390,7 +3390,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _EventLocation;
         public RecordType? Event => _EventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = ListExt.Empty<IFormLinkGetter<IGlobalGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
         #region Filter
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -3408,14 +3408,14 @@ namespace Mutagen.Bethesda.Skyrim
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = ListExt.Empty<QuestStageBinaryOverlay>();
-        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = ListExt.Empty<QuestObjectiveBinaryOverlay>();
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<QuestStageBinaryOverlay>();
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<QuestObjectiveBinaryOverlay>();
         #region NextAliasID
         public partial ParseResult NextAliasIDCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = ListExt.Empty<QuestAliasBinaryOverlay>();
+        public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = Array.Empty<QuestAliasBinaryOverlay>();
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);

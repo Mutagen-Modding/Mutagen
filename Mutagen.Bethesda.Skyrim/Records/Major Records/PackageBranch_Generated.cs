@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FlagsLocation;
         public PackageBranch.Flag? Flags => _FlagsLocation.HasValue ? (PackageBranch.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(PackageBranch.Flag?);
         #endregion
-        public IReadOnlyList<Byte> DataInputIndices { get; private set; } = ListExt.Empty<Byte>();
+        public IReadOnlyList<Byte> DataInputIndices { get; private set; } = Array.Empty<Byte>();
         #region FlagsOverride
         partial void FlagsOverrideCustomParse(
             OverlayStream stream,
@@ -2137,7 +2137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom();
         public IPackageFlagsOverrideGetter? FlagsOverride => GetFlagsOverrideCustom();
         #endregion
-        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> Unknown { get; private set; } = ListExt.Empty<ReadOnlyMemorySlice<Byte>>();
+        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> Unknown { get; private set; } = Array.Empty<ReadOnlyMemorySlice<Byte>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

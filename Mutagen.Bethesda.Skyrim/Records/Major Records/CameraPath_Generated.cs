@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = ListExt.Empty<IFormLinkGetter<ICameraPathGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = Array.Empty<IFormLinkGetter<ICameraPathGetter>>();
         #region Zoom
         partial void ZoomCustomParse(
             OverlayStream stream,
@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim
         public partial CameraPath.ZoomType GetZoomCustom();
         public CameraPath.ZoomType Zoom => GetZoomCustom();
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = ListExt.Empty<IFormLinkGetter<ICameraShotGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = Array.Empty<IFormLinkGetter<ICameraShotGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

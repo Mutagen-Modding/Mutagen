@@ -9842,7 +9842,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _Unknown_IsSet => _ACBSLocation.HasValue;
         public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
         #endregion
-        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
         private int? _DeathItemLocation;
         public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
@@ -9885,7 +9885,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AttackRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = ListExt.Empty<AttackBinaryOverlay>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<AttackBinaryOverlay>();
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
         public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
@@ -9978,7 +9978,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _NoSlowApproach_IsSet => _AIDTLocation.HasValue;
         public Boolean NoSlowApproach => _NoSlowApproach_IsSet ? _data.Slice(_NoSlowApproachLocation, 4)[0] >= 1 : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLinkGetter<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
@@ -10032,7 +10032,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _Unused_IsSet => _DNAMLocation.HasValue;
         public Byte Unused => _Unused_IsSet ? _data.Span[_UnusedLocation] : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = ListExt.Empty<IFormLinkGetter<IHeadPartGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
         #region HairColor
         private int? _HairColorLocation;
         public IFormLinkNullableGetter<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
@@ -10115,9 +10115,9 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<INpcFaceTintingLayerGetter> FaceTintingLayers { get; private set; } = ListExt.Empty<NpcFaceTintingLayerBinaryOverlay>();
+        public IReadOnlyList<INpcFaceTintingLayerGetter> FaceTintingLayers { get; private set; } = Array.Empty<NpcFaceTintingLayerBinaryOverlay>();
         public INpcBodyMorphRegionValuesGetter? BodyMorphRegionValues { get; private set; }
-        public IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; private set; } = ListExt.Empty<NpcFaceMorphBinaryOverlay>();
+        public IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<NpcFaceMorphBinaryOverlay>();
         #region FacialMorphIntensity
         private int? _FacialMorphIntensityLocation;
         public Single? FacialMorphIntensity => _FacialMorphIntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacialMorphIntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);

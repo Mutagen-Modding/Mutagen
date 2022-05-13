@@ -5680,7 +5680,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = ListExt.Empty<WorldspaceGridReferenceBinaryOverlay>();
+        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = Array.Empty<WorldspaceGridReferenceBinaryOverlay>();
         #region MaxHeight
         private int? _MaxHeightLengthOverride;
         private RangeInt32? _MaxHeightLocation;

@@ -8230,8 +8230,8 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLinkGetter<IStaticGetter>>();
+        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<WeatherSoundBinaryOverlay>();
+        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = Array.Empty<IFormLinkGetter<IStaticGetter>>();
         private RangeInt32? _IMSPLocation;
         public Weather.IMSPDataType IMSPDataTypeState { get; private set; }
         #region ImageSpaceSunrise

@@ -495,9 +495,9 @@ partial class PerkBinaryWriteTranslation
 
 partial class PerkBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
 
-    public IReadOnlyList<IAPerkEffectGetter> Effects { get; private set; } = ListExt.Empty<IAPerkEffectGetter>();
+    public IReadOnlyList<IAPerkEffectGetter> Effects { get; private set; } = Array.Empty<IAPerkEffectGetter>();
 
     partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

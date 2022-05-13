@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _DataLocation;
         public IEnchantmentDataGetter? Data => _DataLocation.HasValue ? EnchantmentDataBinaryOverlay.EnchantmentDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<EffectBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

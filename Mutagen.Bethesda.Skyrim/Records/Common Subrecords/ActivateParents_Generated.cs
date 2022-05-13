@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FlagsLocation;
         public ActivateParents.Flag Flags => _FlagsLocation.HasValue ? (ActivateParents.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(ActivateParents.Flag);
         #endregion
-        public IReadOnlyList<IActivateParentGetter> Parents { get; private set; } = ListExt.Empty<ActivateParentBinaryOverlay>();
+        public IReadOnlyList<IActivateParentGetter> Parents { get; private set; } = Array.Empty<ActivateParentBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         #region AnimationGroupSection
         private int? _AnimationGroupSectionLocation;
         public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => _AnimationGroupSectionLocation.HasValue ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationGroupSectionLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);

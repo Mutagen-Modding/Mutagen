@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Fallout4
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
-        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = ListExt.Empty<WorldspaceSubBlockBinaryOverlay>();
+        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = Array.Empty<WorldspaceSubBlockBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -2339,7 +2339,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _WorldspaceLocation;
         public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
+        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = Array.Empty<RegionAreaBinaryOverlay>();
         #region RegionAreaLogic
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,

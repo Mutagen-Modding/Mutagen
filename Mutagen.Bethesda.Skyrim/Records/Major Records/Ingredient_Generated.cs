@@ -3172,7 +3172,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _Flags_IsSet => _ENITLocation.HasValue;
         public Ingredient.Flag Flags => _Flags_IsSet ? (Ingredient.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<EffectBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

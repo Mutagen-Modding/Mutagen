@@ -2608,11 +2608,11 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _PreviousTopicLocation;
         public IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogTopicGetter>>();
-        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = ListExt.Empty<DialogResponseBinaryOverlay>();
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogTopicGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogTopicGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<DialogResponseBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
         #region Script
         private IScriptFieldsGetter? _Script;
         public IScriptFieldsGetter Script => _Script ?? new ScriptFields();

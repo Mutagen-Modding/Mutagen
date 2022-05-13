@@ -54,7 +54,7 @@ public class MasterReferenceCollection : IMasterReferenceCollection
     public static IMasterReferenceReader Empty { get; } = new MasterReferenceCollection(ModKey.Null);
 
     /// <inheritdoc />
-    public IReadOnlyList<IMasterReferenceGetter> Masters { get; private set; } = ListExt.Empty<IMasterReferenceGetter>();
+    public IReadOnlyList<IMasterReferenceGetter> Masters { get; private set; } = Array.Empty<IMasterReferenceGetter>();
         
     /// <inheritdoc />
     public ModKey CurrentMod { get; }

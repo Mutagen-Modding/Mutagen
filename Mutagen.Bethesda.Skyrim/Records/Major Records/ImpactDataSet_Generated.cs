@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(IImpactDataSet);
 
 
-        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = ListExt.Empty<ImpactDataBinaryOverlay>();
+        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = Array.Empty<ImpactDataBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -74,7 +74,7 @@ partial class QuestAliasBinaryWriteTranslation
 
 partial class QuestAliasBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
     public uint ID { get; private set; }
     public QuestAlias.TypeEnum Type { get; private set; }
 

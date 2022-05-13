@@ -612,7 +612,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 default:
                     if (data.HasTrigger)
                     {
-                        sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = ListExt.Empty<{typeName}>();")}");
+                        sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = Array.Empty<{typeName}>();")}");
                     }
                     else
                     {
@@ -623,7 +623,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         }
         else if (data.HasTrigger)
         {
-            sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = ListExt.Empty<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>();")}");
+            sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = Array.Empty<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>();")}");
         }
         else
         {

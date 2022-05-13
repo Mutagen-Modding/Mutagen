@@ -8337,7 +8337,7 @@ namespace Mutagen.Bethesda.Fallout4
         private RangeInt32? _LightingLocation;
         public IPlacedObjectLightingGetter? Lighting => _LightingLocation.HasValue ? PlacedObjectLightingBinaryOverlay.PlacedObjectLightingFactory(new OverlayStream(_data.Slice(_LightingLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = ListExt.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = Array.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
         #region Alpha
         private RangeInt32? _AlphaLocation;
         public IAlphaGetter? Alpha => _AlphaLocation.HasValue ? AlphaBinaryOverlay.AlphaFactory(new OverlayStream(_data.Slice(_AlphaLocation!.Value.Min), _package), _package) : default;
@@ -8461,7 +8461,7 @@ namespace Mutagen.Bethesda.Fallout4
         private RangeInt32? _EnableParentLocation;
         public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = ListExt.Empty<LinkedReferencesBinaryOverlay>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<LinkedReferencesBinaryOverlay>();
         public IPatrolGetter? Patrol { get; private set; }
         #region Action
         private int? _ActionLocation;
@@ -8484,7 +8484,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AttachRefLocation;
         public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => _AttachRefLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttachRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
         #endregion
-        public IReadOnlyList<ISplineLinkGetter> SplineConnections { get; private set; } = ListExt.Empty<SplineLinkBinaryOverlay>();
+        public IReadOnlyList<ISplineLinkGetter> SplineConnections { get; private set; } = Array.Empty<SplineLinkBinaryOverlay>();
         public IReadOnlyList<IPowerGridConnectionGetter>? PowerGridConnections { get; private set; }
         #region XCVR
         private int? _XCVRLocation;

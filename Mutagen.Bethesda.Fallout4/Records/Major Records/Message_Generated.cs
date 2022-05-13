@@ -2176,7 +2176,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _ShortTitleLocation;
         public ITranslatedStringGetter? ShortTitle => _ShortTitleLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortTitleLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = ListExt.Empty<MessageButtonBinaryOverlay>();
+        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = Array.Empty<MessageButtonBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

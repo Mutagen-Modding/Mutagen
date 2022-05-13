@@ -1923,7 +1923,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = ListExt.Empty<CellSubBlockBinaryOverlay>();
+        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = Array.Empty<CellSubBlockBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

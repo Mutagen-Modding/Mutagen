@@ -3923,7 +3923,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _ConfigurationLocation;
         public INpcConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new OverlayStream(_data.Slice(_ConfigurationLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
         private int? _DeathItemLocation;
         public IFormLinkNullableGetter<IItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
@@ -3932,17 +3932,17 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _RaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<ISpellRecordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         #region Script
         private int? _ScriptLocation;
         public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
-        public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
+        public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = Array.Empty<ItemEntryBinaryOverlay>();
         #region AIData
         private RangeInt32? _AIDataLocation;
         public IAIDataGetter? AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new OverlayStream(_data.Slice(_AIDataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = ListExt.Empty<IFormLinkGetter<IAIPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = Array.Empty<IFormLinkGetter<IAIPackageGetter>>();
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Class
         private int? _ClassLocation;

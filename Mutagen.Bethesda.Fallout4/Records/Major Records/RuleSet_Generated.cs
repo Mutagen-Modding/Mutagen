@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IReadOnlyList<IRuleNameGetter> Names { get; private set; } = ListExt.Empty<RuleNameBinaryOverlay>();
+        public IReadOnlyList<IRuleNameGetter> Names { get; private set; } = Array.Empty<RuleNameBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

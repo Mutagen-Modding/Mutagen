@@ -2636,17 +2636,17 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public INeckFatAdjustmentsScaleGetter? NeckFatAdjustmentsScale { get; private set; }
-        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = ListExt.Empty<HeadPartReferenceBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = ListExt.Empty<IFormLinkGetter<INpcGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = ListExt.Empty<IFormLinkGetter<IColorRecordGetter>>();
-        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = ListExt.Empty<IFormLinkGetter<ITextureSetGetter>>();
+        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = Array.Empty<HeadPartReferenceBinaryOverlay>();
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = Array.Empty<IFormLinkGetter<INpcGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = Array.Empty<IFormLinkGetter<IColorRecordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = Array.Empty<IFormLinkGetter<ITextureSetGetter>>();
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
         public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
-        public IReadOnlyList<ITintGroupGetter> TintLayers { get; private set; } = ListExt.Empty<TintGroupBinaryOverlay>();
-        public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = ListExt.Empty<MorphGroupBinaryOverlay>();
-        public IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; private set; } = ListExt.Empty<FaceMorphBinaryOverlay>();
+        public IReadOnlyList<ITintGroupGetter> TintLayers { get; private set; } = Array.Empty<TintGroupBinaryOverlay>();
+        public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = Array.Empty<MorphGroupBinaryOverlay>();
+        public IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<FaceMorphBinaryOverlay>();
         #region MaleWrinkleMapPath
         private int? _MaleWrinkleMapPathLocation;
         public String? MaleWrinkleMapPath => _MaleWrinkleMapPathLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaleWrinkleMapPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);

@@ -3340,8 +3340,8 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FavorCostLocation;
         public Single? FavorCost => _FavorCostLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FavorCostLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = ListExt.Empty<WaterReflectionBinaryOverlay>();
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = ListExt.Empty<LinkedReferencesBinaryOverlay>();
+        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = Array.Empty<WaterReflectionBinaryOverlay>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<LinkedReferencesBinaryOverlay>();
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region EnableParent
         private RangeInt32? _EnableParentLocation;

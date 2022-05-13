@@ -3675,7 +3675,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>> Armature { get; private set; } = ListExt.Empty<IFormLinkGetter<IArmorAddonGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>> Armature { get; private set; } = Array.Empty<IFormLinkGetter<IArmorAddonGetter>>();
         private RangeInt32? _DATALocation;
         public Armor.DATADataType DATADataTypeState { get; private set; }
         #region Value

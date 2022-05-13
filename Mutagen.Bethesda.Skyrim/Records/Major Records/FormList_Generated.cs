@@ -1528,7 +1528,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(IFormList);
 
 
-        public IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; private set; } = ListExt.Empty<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; private set; } = Array.Empty<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

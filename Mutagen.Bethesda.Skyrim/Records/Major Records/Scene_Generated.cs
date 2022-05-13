@@ -2756,9 +2756,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FlagsLocation;
         public Scene.Flag? Flags => _FlagsLocation.HasValue ? (Scene.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Scene.Flag?);
         #endregion
-        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = ListExt.Empty<ScenePhaseBinaryOverlay>();
-        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = ListExt.Empty<SceneActorBinaryOverlay>();
-        public IReadOnlyList<ISceneActionGetter> Actions { get; private set; } = ListExt.Empty<SceneActionBinaryOverlay>();
+        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = Array.Empty<ScenePhaseBinaryOverlay>();
+        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = Array.Empty<SceneActorBinaryOverlay>();
+        public IReadOnlyList<ISceneActionGetter> Actions { get; private set; } = Array.Empty<SceneActionBinaryOverlay>();
         public IScenePhaseUnusedDataGetter? Unused { get; private set; }
         public IScenePhaseUnusedDataGetter? Unused2 { get; private set; }
         #region Quest

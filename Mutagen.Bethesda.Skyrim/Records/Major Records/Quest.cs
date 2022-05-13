@@ -101,8 +101,8 @@ partial class QuestBinaryWriteTranslation
 
 partial class QuestBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = ListExt.Empty<IConditionGetter>();
-    public IReadOnlyList<IConditionGetter> UnusedConditions { get; private set; } = ListExt.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = Array.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> UnusedConditions { get; private set; } = Array.Empty<IConditionGetter>();
 
     partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

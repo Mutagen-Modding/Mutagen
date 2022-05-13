@@ -1,4 +1,4 @@
-﻿using System.Buffers.Binary;
+using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Noggog;
 
@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Fallout4;
 
 partial class PreferredPathingBinaryOverlay
 {
-    public IReadOnlyList<INavmeshSetGetter> NavmeshSets { get; private set; } = ListExt.Empty<NavmeshSetBinaryOverlay>();
+    public IReadOnlyList<INavmeshSetGetter> NavmeshSets { get; private set; } = Array.Empty<NavmeshSetBinaryOverlay>();
 
     partial void CustomNavmeshSetsEndPos()
     {

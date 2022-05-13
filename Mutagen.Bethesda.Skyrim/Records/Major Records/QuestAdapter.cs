@@ -88,9 +88,9 @@ partial class QuestAdapterBinaryOverlay
     private string _filename = string.Empty;
     public partial String GetFileNameCustom(int location) => _filename;
 
-    public IReadOnlyList<IQuestScriptFragmentGetter> Fragments { get; private set; } = ListExt.Empty<IQuestScriptFragmentGetter>();
+    public IReadOnlyList<IQuestScriptFragmentGetter> Fragments { get; private set; } = Array.Empty<IQuestScriptFragmentGetter>();
 
-    public IReadOnlyList<IQuestFragmentAliasGetter> Aliases { get; private set; } = ListExt.Empty<IQuestFragmentAliasGetter>();
+    public IReadOnlyList<IQuestFragmentAliasGetter> Aliases { get; private set; } = Array.Empty<IQuestFragmentAliasGetter>();
 
     partial void CustomFileNameEndPos()
     {

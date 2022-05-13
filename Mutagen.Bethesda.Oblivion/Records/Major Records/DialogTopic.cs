@@ -86,7 +86,7 @@ partial class DialogTopicBinaryOverlay
 
     public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData.Value).LastModifiedData) : 0;
 
-    public IReadOnlyList<IDialogItemGetter> Items { get; private set; } = ListExt.Empty<IDialogItemGetter>();
+    public IReadOnlyList<IDialogItemGetter> Items { get; private set; } = Array.Empty<IDialogItemGetter>();
 
     partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
     {

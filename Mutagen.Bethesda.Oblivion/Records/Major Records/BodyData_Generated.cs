@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IBodyPartGetter> BodyParts { get; private set; } = ListExt.Empty<BodyPartBinaryOverlay>();
+        public IReadOnlyList<IBodyPartGetter> BodyParts { get; private set; } = Array.Empty<BodyPartBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

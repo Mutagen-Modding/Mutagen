@@ -1479,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _Unknown_IsSet => _INDXLocation.HasValue;
         public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
         #endregion
-        public IReadOnlyList<IQuestLogEntryGetter> LogEntries { get; private set; } = ListExt.Empty<QuestLogEntryBinaryOverlay>();
+        public IReadOnlyList<IQuestLogEntryGetter> LogEntries { get; private set; } = Array.Empty<QuestLogEntryBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

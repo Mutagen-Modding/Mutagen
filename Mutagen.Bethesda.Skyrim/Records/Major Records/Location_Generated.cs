@@ -5346,9 +5346,9 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; private set; }
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; private set; }
-        public IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
-        public IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
-        public IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
+        public IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; private set; } = Array.Empty<LocationCoordinateBinaryOverlay>();
+        public IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; private set; } = Array.Empty<LocationCoordinateBinaryOverlay>();
+        public IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; private set; } = Array.Empty<LocationCoordinateBinaryOverlay>();
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; private set; }
         public IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; private set; }

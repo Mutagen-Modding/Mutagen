@@ -3035,12 +3035,12 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FavorLevelLocation;
         public FavorLevel? FavorLevel => _FavorLevelLocation.HasValue ? (FavorLevel)HeaderTranslation.ExtractSubrecordMemory(_data, _FavorLevelLocation!.Value, _package.MetaData.Constants)[0] : default(FavorLevel?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IDialogGetter>> LinkTo { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogGetter>> LinkTo { get; private set; } = Array.Empty<IFormLinkGetter<IDialogGetter>>();
         #region ResponseData
         private int? _ResponseDataLocation;
         public IFormLinkNullableGetter<IDialogResponsesGetter> ResponseData => _ResponseDataLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ResponseDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
         #endregion
-        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = ListExt.Empty<DialogResponseBinaryOverlay>();
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<DialogResponseBinaryOverlay>();
         #region Conditions
         partial void ConditionsCustomParse(
             OverlayStream stream,
@@ -3049,7 +3049,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; private set; } = ListExt.Empty<DialogResponsesUnknownDataBinaryOverlay>();
+        public IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; private set; } = Array.Empty<DialogResponsesUnknownDataBinaryOverlay>();
         #region Prompt
         private int? _PromptLocation;
         public ITranslatedStringGetter? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);

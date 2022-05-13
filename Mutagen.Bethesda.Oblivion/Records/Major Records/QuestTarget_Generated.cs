@@ -1308,7 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion
         private IQuestTargetDataGetter? _Data => _DataLocation.HasValue ? QuestTargetDataBinaryOverlay.QuestTargetDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public IQuestTargetDataGetter Data => _Data ?? new QuestTargetData();
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

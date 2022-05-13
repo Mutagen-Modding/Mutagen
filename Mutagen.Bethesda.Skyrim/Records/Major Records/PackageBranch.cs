@@ -39,7 +39,7 @@ partial class PackageBranchBinaryWriteTranslation
 
 partial class PackageBranchBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
 
     public IPackageFlagsOverrideGetter? FlagsOverrideUnused { get; private set; }
 

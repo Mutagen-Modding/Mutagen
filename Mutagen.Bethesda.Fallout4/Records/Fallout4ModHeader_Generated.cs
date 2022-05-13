@@ -2541,13 +2541,13 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
+        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<MasterReferenceBinaryOverlay>();
         public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms { get; private set; }
         #region Screenshot
         private int? _ScreenshotLocation;
         public ReadOnlyMemorySlice<Byte>? Screenshot => _ScreenshotLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScreenshotLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = ListExt.Empty<TransientTypeBinaryOverlay>();
+        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = Array.Empty<TransientTypeBinaryOverlay>();
         #region INTV
         private int? _INTVLocation;
         public ReadOnlyMemorySlice<Byte>? INTV => _INTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _INTVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);

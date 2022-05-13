@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<ITintTemplateOptionGetter> Options { get; private set; } = ListExt.Empty<TintTemplateOptionBinaryOverlay>();
+        public IReadOnlyList<ITintTemplateOptionGetter> Options { get; private set; } = Array.Empty<TintTemplateOptionBinaryOverlay>();
         #region CategoryIndex
         private int? _CategoryIndexLocation;
         public UInt32? CategoryIndex => _CategoryIndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CategoryIndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);

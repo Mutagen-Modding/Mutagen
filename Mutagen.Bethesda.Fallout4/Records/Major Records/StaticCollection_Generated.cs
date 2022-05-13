@@ -2225,7 +2225,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IStaticPartGetter> Parts { get; private set; } = ListExt.Empty<StaticPartBinaryOverlay>();
+        public IReadOnlyList<IStaticPartGetter> Parts { get; private set; } = Array.Empty<StaticPartBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1792,7 +1792,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _NavMeshVersionLocation;
         public UInt32? NavMeshVersion => _NavMeshVersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NavMeshVersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; private set; } = ListExt.Empty<NavigationMapInfoBinaryOverlay>();
+        public IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; private set; } = Array.Empty<NavigationMapInfoBinaryOverlay>();
         #region PreferredPathing
         private RangeInt32? _PreferredPathingLocation;
         public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(new OverlayStream(_data.Slice(_PreferredPathingLocation!.Value.Min), _package), _package) : default;

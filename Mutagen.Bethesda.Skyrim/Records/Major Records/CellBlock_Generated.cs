@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
-        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = ListExt.Empty<CellSubBlockBinaryOverlay>();
+        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = Array.Empty<CellSubBlockBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

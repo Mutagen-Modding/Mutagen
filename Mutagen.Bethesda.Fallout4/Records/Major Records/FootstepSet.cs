@@ -92,15 +92,15 @@ partial class FootstepSetBinaryWriteTranslation
 
 partial class FootstepSetBinaryOverlay
 {
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
     public partial ParseResult CountCustomParse(OverlayStream stream, int offset)
     {

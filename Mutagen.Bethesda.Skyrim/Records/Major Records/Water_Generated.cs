@@ -5583,7 +5583,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<String> UnusedNoisemaps { get; private set; } = ListExt.Empty<String>();
+        public IReadOnlyList<String> UnusedNoisemaps { get; private set; } = Array.Empty<String>();
         #region Opacity
         private int? _OpacityLocation;
         public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OpacityLocation.Value, _package.MetaData.Constants)[0] : default(Byte);

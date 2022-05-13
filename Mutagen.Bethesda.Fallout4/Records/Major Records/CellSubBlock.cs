@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Fallout4;
 
 partial class CellSubBlockBinaryOverlay
 {
-    public IReadOnlyList<ICellGetter> Cells { get; private set; } = ListExt.Empty<ICellGetter>();
+    public IReadOnlyList<ICellGetter> Cells { get; private set; } = Array.Empty<ICellGetter>();
 
     partial void CellsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

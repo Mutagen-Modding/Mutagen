@@ -40,7 +40,7 @@ partial class PatrolBinaryWriteTranslation
 
 partial class PatrolBinaryOverlay
 {
-    public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = ListExt.Empty<IATopicReferenceGetter>();
+    public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = Array.Empty<IATopicReferenceGetter>();
 
     public partial ParseResult PatrolScriptMarkerCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {

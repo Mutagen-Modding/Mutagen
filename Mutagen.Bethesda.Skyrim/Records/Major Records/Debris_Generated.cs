@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(IDebris);
 
 
-        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = ListExt.Empty<DebrisModelBinaryOverlay>();
+        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = Array.Empty<DebrisModelBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

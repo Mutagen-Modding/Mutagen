@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = ListExt.Empty<RelationBinaryOverlay>();
+        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<RelationBinaryOverlay>();
         #region Flags
         private int? _FlagsLocation;
         public Faction.FactionFlag? Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Faction.FactionFlag?);
@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _CrimeGoldMultiplierLocation;
         public Single? CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeGoldMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<RankBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

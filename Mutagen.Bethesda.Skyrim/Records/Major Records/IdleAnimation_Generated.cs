@@ -2216,7 +2216,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _AnimationEventLocation;
         public String? AnimationEvent => _AnimationEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = ListExt.Empty<IFormLinkGetter<IIdleRelationGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = Array.Empty<IFormLinkGetter<IIdleRelationGetter>>();
         private RangeInt32? _DATALocation;
         public IdleAnimation.DATADataType DATADataTypeState { get; private set; }
         #region LoopingSecondsMin

@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DisplayTextLocation;
         public ITranslatedStringGetter? DisplayText => _DisplayTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayTextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; private set; } = ListExt.Empty<QuestObjectiveTargetBinaryOverlay>();
+        public IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; private set; } = Array.Empty<QuestObjectiveTargetBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

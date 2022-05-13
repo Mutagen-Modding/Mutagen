@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _DataLocation;
         public IDestructableDataGetter? Data => _DataLocation.HasValue ? DestructableDataBinaryOverlay.DestructableDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = ListExt.Empty<DestructionStageBinaryOverlay>();
+        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = Array.Empty<DestructionStageBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

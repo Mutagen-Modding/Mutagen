@@ -112,7 +112,7 @@ partial class PackageIdlesBinaryWriteTranslation
 
 partial class PackageIdlesBinaryOverlay
 {
-    public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; private set; } = ListExt.Empty<IFormLinkGetter<IIdleAnimationGetter>>();
+    public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; private set; } = Array.Empty<IFormLinkGetter<IIdleAnimationGetter>>();
 
     private float _timerSetting;
     public partial Single GetTimerSettingCustom() => _timerSetting;
