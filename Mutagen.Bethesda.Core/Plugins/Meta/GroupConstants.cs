@@ -5,6 +5,11 @@ public record GroupWorldConstants(int TopGroupType, int[] CellGroupTypes, int[] 
 public record GroupTopicConstants(int TopGroupType);
 public record GroupQuestConstants(int TopGroupType);
 
+public record GroupNesting(int GroupType, params GroupNesting[] Underneath)
+{
+    public RecordType? ContainedRecordType { get; init; }
+}
+
 public record GroupConstants : RecordHeaderConstants
 {
     public GroupCellConstants Cell { get; init; }
@@ -12,6 +17,7 @@ public record GroupConstants : RecordHeaderConstants
     public GroupTopicConstants? Topic { get; init; }
     public GroupQuestConstants? Quest { get; init; }
     public IReadOnlyCollection<int> HasSubGroups { get; }
+    public GroupNesting[] Nesting { get; init; }
 
     public GroupConstants(
         ObjectType type, 
@@ -20,12 +26,14 @@ public record GroupConstants : RecordHeaderConstants
         GroupCellConstants cell,
         GroupWorldConstants world,
         GroupTopicConstants? topic,
-        int[] hasSubGroups) 
+        int[] hasSubGroups,
+        GroupNesting[] nesting) 
         : base(type, headerLength, lengthLength)
     {
         Cell = cell;
         World = world;
         Topic = topic;
         HasSubGroups = hasSubGroups.ToHashSet();
+        Nesting = nesting;
     }
 }

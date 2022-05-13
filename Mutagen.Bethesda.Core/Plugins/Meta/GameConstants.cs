@@ -88,7 +88,10 @@ public record GameConstants
                 CellGroupTypes: new[] { 2, 4 },
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
-            hasSubGroups: new int[] { 1, 2, 4, 6, 7 }),
+            hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
+            new GroupNesting[]
+            {
+            }),
         majorConstants: new MajorRecordConstants(
             headerLength: 20,
             lengthLength: 4,
@@ -118,7 +121,18 @@ public record GameConstants
                 CellGroupTypes: new[] { 2, 4 },
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
-            hasSubGroups: new int[] { 1, 2, 4, 6, 7 }),
+            hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
+            new GroupNesting[]
+            {
+                new GroupNesting(
+                    // Blocks: new[] { 2, 3 },
+                    GroupType: 6,
+                    new GroupNesting(8),
+                    new GroupNesting(9))
+                {
+                    ContainedRecordType = new("CELL")
+                }
+            }),
         majorConstants: new MajorRecordConstants(
             headerLength: 24,
             lengthLength: 4,
@@ -168,7 +182,10 @@ public record GameConstants
                 CellGroupTypes: new[] { 2, 4 },
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
-            hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 })
+            hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 },
+            new GroupNesting[]
+            {
+            })
         {
             Quest = new GroupQuestConstants(10)
         },
