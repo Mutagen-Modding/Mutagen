@@ -416,7 +416,7 @@ public readonly struct MajorRecordPinFrame
 
     /// <summary>
     /// Location of the major record relative to the parent GroupFrame's data.<br/>
-    /// E.g., relative to the position of the RecordType of the parent MajorRecord.
+    /// E.g., relative to the position of the start of the parent Group
     /// </summary>
     public int Location { get; }
 

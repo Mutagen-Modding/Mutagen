@@ -192,10 +192,10 @@ public static class StreamHeaderMixIn
     /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
     /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
     /// <returns>A GroupHeader struct</returns>
-    public static GroupHeader GetGroupHeader<TStream>(this TStream stream, GameConstants constants, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static GroupPinHeader GetGroupHeader<TStream>(this TStream stream, GameConstants constants, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IBinaryReadStream
     {
-        var ret = new GroupHeader(constants, stream.GetMemory(constants.GroupConstants.HeaderLength, offset, readSafe: readSafe));
+        var ret = new GroupPinHeader(constants, stream.GetMemory(constants.GroupConstants.HeaderLength, offset, readSafe: readSafe), pinLocation: stream.Position);
         if (checkIsGroup && !ret.IsGroup)
         {
             throw new ArgumentException("Read in data that was not a GRUP");
@@ -217,10 +217,11 @@ public static class StreamHeaderMixIn
     /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
     /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
     /// <returns>A GroupHeader struct</returns>
-    public static GroupHeader ReadGroupHeader<TStream>(this TStream stream, GameConstants constants, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static GroupPinHeader ReadGroupHeader<TStream>(this TStream stream, GameConstants constants, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IBinaryReadStream
     {
-        var ret = new GroupHeader(constants, stream.ReadMemory(constants.GroupConstants.HeaderLength, offset, readSafe: readSafe));
+        var loc = stream.Position;
+        var ret = new GroupPinHeader(constants, stream.ReadMemory(constants.GroupConstants.HeaderLength, offset, readSafe: readSafe), pinLocation: loc);
         if (checkIsGroup && !ret.IsGroup)
         {
             throw new ArgumentException("Read in data that was not a GRUP");
@@ -242,7 +243,7 @@ public static class StreamHeaderMixIn
     /// </param>
     /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
     /// <returns>True if GroupHeader was retrieved</returns>
-    public static bool TryGetGroupHeader<TStream>(this TStream stream, GameConstants constants, out GroupHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static bool TryGetGroupHeader<TStream>(this TStream stream, GameConstants constants, out GroupPinHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IBinaryReadStream
     {
         if (stream.Remaining < constants.GroupConstants.HeaderLength + offset)
@@ -268,11 +269,13 @@ public static class StreamHeaderMixIn
     /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
     /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
     /// <returns>A GroupFrame struct</returns>
-    public static GroupFrame GetGroup<TStream>(this TStream stream, GameConstants constants, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static GroupPinFrame GetGroup<TStream>(this TStream stream, GameConstants constants, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IBinaryReadStream
     {
         var meta = GetGroupHeader(stream, constants, offset: offset, readSafe: readSafe, checkIsGroup: checkIsGroup);
-        return new GroupFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe));
+        return new GroupPinFrame(
+            new GroupFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe)),
+            pinLocation: stream.Position);
     }
 
     /// <summary>
@@ -289,7 +292,7 @@ public static class StreamHeaderMixIn
     /// </param>
     /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
     /// <returns>True if GroupFrame was retrieved</returns>
-    public static bool TryGetGroup<TStream>(this TStream stream, GameConstants constants, out GroupFrame frame, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static bool TryGetGroup<TStream>(this TStream stream, GameConstants constants, out GroupPinFrame frame, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IBinaryReadStream
     {
         if (!TryGetGroupHeader(stream, constants, out var meta, offset: offset, checkIsGroup: checkIsGroup, readSafe: false))
@@ -297,7 +300,9 @@ public static class StreamHeaderMixIn
             frame = default;
             return false;
         }
-        frame = new GroupFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        frame = new GroupPinFrame(
+            new GroupFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe)),
+            pinLocation: stream.Position);
         return true;
     }
 
@@ -315,7 +320,7 @@ public static class StreamHeaderMixIn
     /// </param>
     /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
     /// <returns>True if GroupHeader was retrieved</returns>
-    public static bool TryReadGroupHeader<TStream>(this TStream stream, GameConstants constants, out GroupHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static bool TryReadGroupHeader<TStream>(this TStream stream, GameConstants constants, out GroupPinHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IBinaryReadStream
     {
         if (stream.Remaining < constants.GroupConstants.HeaderLength)
@@ -345,11 +350,14 @@ public static class StreamHeaderMixIn
     /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
     /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
     /// <returns>A GroupFrame struct</returns>
-    public static GroupFrame ReadGroup<TStream>(this TStream stream, GameConstants constants, bool readSafe = true, bool checkIsGroup = true)
+    public static GroupPinFrame ReadGroup<TStream>(this TStream stream, GameConstants constants, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IBinaryReadStream
     {
+        var loc = stream.Position;
         var meta = GetGroupHeader(stream, constants, offset: 0, readSafe: readSafe, checkIsGroup: checkIsGroup);
-        return new GroupFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        return new GroupPinFrame(
+            new GroupFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe)),
+            pinLocation: loc);
     }
 
     /// <summary>
@@ -365,15 +373,19 @@ public static class StreamHeaderMixIn
     /// </param>
     /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
     /// <returns>True if GroupHeader was retrieved</returns>
-    public static bool TryReadGroup<TStream>(this TStream stream, GameConstants constants, out GroupFrame frame, bool readSafe = true, bool checkIsGroup = true)
+    public static bool TryReadGroup<TStream>(this TStream stream, GameConstants constants, out GroupPinFrame frame, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IBinaryReadStream
     {
+        var loc = stream.Position;
         if (!TryGetGroupHeader(stream, constants, out var meta, offset: 0, checkIsGroup: checkIsGroup, readSafe: false))
         {
             frame = default;
             return false;
         }
-        frame = new GroupFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+
+        frame = new GroupPinFrame(
+            new GroupFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe)),
+            pinLocation: loc);
         return true;
     }
 
@@ -1105,7 +1117,7 @@ public static class StreamHeaderMixIn
     /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
     /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
     /// <returns>A GroupHeader struct</returns>
-    public static GroupHeader GetGroupHeader<TStream>(this TStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static GroupPinHeader GetGroupHeader<TStream>(this TStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IMutagenReadStream
     {
         return GetGroupHeader(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe, checkIsGroup: checkIsGroup);
@@ -1124,7 +1136,7 @@ public static class StreamHeaderMixIn
     /// </param>
     /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
     /// <returns>True if GroupHeader was retrieved</returns>
-    public static bool TryGetGroupHeader<TStream>(this TStream stream, out GroupHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static bool TryGetGroupHeader<TStream>(this TStream stream, out GroupPinHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IMutagenReadStream
     {
         return TryGetGroupHeader(stream, stream.MetaData.Constants, out header, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
@@ -1143,7 +1155,7 @@ public static class StreamHeaderMixIn
     /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
     /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
     /// <returns>A GroupFrame struct</returns>
-    public static GroupFrame GetGroup<TStream>(this TStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static GroupPinFrame GetGroup<TStream>(this TStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IMutagenReadStream
     {
         return GetGroup(stream, stream.MetaData.Constants, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
@@ -1162,7 +1174,7 @@ public static class StreamHeaderMixIn
     /// </param>
     /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
     /// <returns>True if GroupFrame was retrieved</returns>
-    public static bool TryGetGroup<TStream>(this TStream stream, out GroupFrame frame, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static bool TryGetGroup<TStream>(this TStream stream, out GroupPinFrame frame, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IMutagenReadStream
     {
         return TryGetGroup(stream, stream.MetaData.Constants, out frame, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
@@ -1181,7 +1193,7 @@ public static class StreamHeaderMixIn
     /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
     /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
     /// <returns>A GroupHeader struct</returns>
-    public static GroupHeader ReadGroupHeader<TStream>(this TStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static GroupPinHeader ReadGroupHeader<TStream>(this TStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IMutagenReadStream
     {
         return ReadGroupHeader(stream, stream.MetaData.Constants, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
@@ -1200,7 +1212,7 @@ public static class StreamHeaderMixIn
     /// </param>
     /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
     /// <returns>True if GroupHeader was retrieved</returns>
-    public static bool TryReadGroupHeader<TStream>(this TStream stream, out GroupHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+    public static bool TryReadGroupHeader<TStream>(this TStream stream, out GroupPinHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IMutagenReadStream
     {
         return TryReadGroupHeader(stream, stream.MetaData.Constants, out header, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
@@ -1218,7 +1230,7 @@ public static class StreamHeaderMixIn
     /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
     /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
     /// <returns>A GroupFrame struct</returns>
-    public static GroupFrame ReadGroup<TStream>(this TStream stream, bool readSafe = true, bool checkIsGroup = true)
+    public static GroupPinFrame ReadGroup<TStream>(this TStream stream, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IMutagenReadStream
     {
         return ReadGroup(stream, stream.MetaData.Constants, checkIsGroup: checkIsGroup, readSafe: readSafe);
@@ -1236,7 +1248,7 @@ public static class StreamHeaderMixIn
     /// </param>
     /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
     /// <returns>True if GroupHeader was retrieved</returns>
-    public static bool TryReadGroup<TStream>(this TStream stream, out GroupFrame frame, bool readSafe = true, bool checkIsGroup = true)
+    public static bool TryReadGroup<TStream>(this TStream stream, out GroupPinFrame frame, bool readSafe = true, bool checkIsGroup = true)
         where TStream : IMutagenReadStream
     {
         return TryReadGroup(stream, stream.MetaData.Constants, out frame, checkIsGroup: checkIsGroup, readSafe: readSafe);
