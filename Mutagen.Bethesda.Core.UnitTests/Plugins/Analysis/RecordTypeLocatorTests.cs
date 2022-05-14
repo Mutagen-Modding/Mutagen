@@ -19,7 +19,10 @@ public class RecordTypeLocatorTests
             FormKey.Factory("039850:SkyrimTypical.esp"),
             FormKey.Factory("0C6974:SkyrimTypical.esp"),
             FormKey.Factory("039861:SkyrimTypical.esp"),
+            FormKey.Factory("0580A2:SkyrimTypical.esp"),
             FormKey.Factory("0204C7:SkyrimTypical.esp"),
+            FormKey.Factory("0243E0:SkyrimTypical.esp"),
+            FormKey.Factory("0C27CA:SkyrimTypical.esp"),
             FormKey.Factory("0204F2:SkyrimTypical.esp"),
             FormKey.Factory("020532:SkyrimTypical.esp"),
             FormKey.Factory("000E42:SkyrimTypical.esp"),
@@ -33,39 +36,48 @@ public class RecordTypeLocatorTests
             0x261,
             0x2C3,
             0x31B,
-            0x426,
-            0x43E,
-            0x456,
-            0x4C5,
-            0x4DD,
-            0x523,
-            0x585);
+            0x3CA,
+            0x4D5,
+            0x533,
+            0x54B,
+            0x5A3,
+            0x5BB,
+            0x62A,
+            0x642,
+            0x688,
+            0x6EA);
         locs.GrupLocations.Values.Should().Equal(
             new GroupLocationMarker(new RangeInt64(80, 364), new("AMMO"), 0),
-            new GroupLocationMarker(new RangeInt64(365, 794), new("CELL"), 0),
-            new GroupLocationMarker(new RangeInt64(389, 794), new(0), 2),
+            new GroupLocationMarker(new RangeInt64(365, 969), new("CELL"), 0),
+            new GroupLocationMarker(new RangeInt64(389, 969), new(0), 2),
             new GroupLocationMarker(new RangeInt64(413, 794), new(0), 3),
             new GroupLocationMarker(new RangeInt64(585, 794), new(0x39850), 6),
             new GroupLocationMarker(new RangeInt64(609, 706), new(0x39850), 8),
             new GroupLocationMarker(new RangeInt64(707, 794), new(0x39850), 9),
-            new GroupLocationMarker(new RangeInt64(795, 1314), new("WRLD"), 0),
-            new GroupLocationMarker(new RangeInt64(1062, 1314), new(0x204C7), 1),
-            new GroupLocationMarker(new RangeInt64(1086, 1314), new(0x1FFFF), 4),
-            new GroupLocationMarker(new RangeInt64(1110, 1314), new(0x5FFFC), 5),
-            new GroupLocationMarker(new RangeInt64(1221, 1314), new(0x204F2), 6),
-            new GroupLocationMarker(new RangeInt64(1245, 1314), new(0x204F2), 9),
-            new GroupLocationMarker(new RangeInt64(1315, 1567), new("DIAL"), 0),
-            new GroupLocationMarker(new RangeInt64(1413, 1567), new(0xE42), 7));
+            new GroupLocationMarker(new RangeInt64(795, 969), new(0x1), 3),
+            new GroupLocationMarker(new RangeInt64(970, 1671), new("WRLD"), 0),
+            new GroupLocationMarker(new RangeInt64(1237, 1671), new(0x204C7), 1),
+            new GroupLocationMarker(new RangeInt64(1331, 1442), new(0x243E0), 6),
+            new GroupLocationMarker(new RangeInt64(1355, 1442), new(0x243E0), 8),
+            new GroupLocationMarker(new RangeInt64(1443, 1671), new(0x1FFFF), 4),
+            new GroupLocationMarker(new RangeInt64(1467, 1671), new(0x5FFFC), 5),
+            new GroupLocationMarker(new RangeInt64(1578, 1671), new(0x204F2), 6),
+            new GroupLocationMarker(new RangeInt64(1602, 1671), new(0x204F2), 9),
+            new GroupLocationMarker(new RangeInt64(1672, 1924), new("DIAL"), 0),
+            new GroupLocationMarker(new RangeInt64(1770, 1924), new(0xE42), 7));
         locs.ListedRecords.Keys.Should().Equal(
             0x68,
             0x1B5,
             0x279,
             0x2DB,
             0x333,
-            0x46E,
-            0x4F5,
-            0x53B,
-            0x59D);
+            0x3E2,
+            0x4ED,
+            0x563,
+            0x5D3,
+            0x65A,
+            0x6A0,
+            0x702);
         locs.ListedRecords.Values.Should().Equal(
             new RecordLocationMarker(
                 FormKey.Factory("034182:SkyrimTypical.esp"), 
@@ -84,24 +96,36 @@ public class RecordTypeLocatorTests
                 new RangeInt64(731, 794),
                 new RecordType("REFR")),
             new RecordLocationMarker(
+                FormKey.Factory("0580A2:SkyrimTypical.esp"), 
+                new RangeInt64(819, 969),
+                new RecordType("CELL")),
+            new RecordLocationMarker(
                 FormKey.Factory("0204C7:SkyrimTypical.esp"), 
-                new RangeInt64(819, 1061),
+                new RangeInt64(994, 1236),
                 new RecordType("WRLD")),
             new RecordLocationMarker(
+                FormKey.Factory("0243E0:SkyrimTypical.esp"), 
+                new RangeInt64(1261, 1330),
+                new RecordType("CELL")),
+            new RecordLocationMarker(
+                FormKey.Factory("0C27CA:SkyrimTypical.esp"), 
+                new RangeInt64(1379, 1442),
+                new RecordType("REFR")),
+            new RecordLocationMarker(
                 FormKey.Factory("0204F2:SkyrimTypical.esp"), 
-                new RangeInt64(1134, 1220),
+                new RangeInt64(1491, 1577),
                 new RecordType("CELL")),
             new RecordLocationMarker(
                 FormKey.Factory("020532:SkyrimTypical.esp"), 
-                new RangeInt64(1269, 1314),
+                new RangeInt64(1626, 1671),
                 new RecordType("LAND")),
             new RecordLocationMarker(
                 FormKey.Factory("000E42:SkyrimTypical.esp"), 
-                new RangeInt64(1339, 1412),
+                new RangeInt64(1696, 1769),
                 new RecordType("DIAL")),
             new RecordLocationMarker(
                 FormKey.Factory("000E45:SkyrimTypical.esp"), 
-                new RangeInt64(1437, 1567),
+                new RangeInt64(1794, 1924),
                 new RecordType("INFO")));
     }
 }
