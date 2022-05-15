@@ -18,9 +18,11 @@ public static class ModRecordSorter
         while (!inputStream.Complete)
         {
             long noRecordLength;
-            foreach (var grupLoc in RecordLocator.IterateBaseGroupLocations(locatorStream))
+            inputStream.ReadModHeaderFrame();
+            while (inputStream.Complete)
             {
-                noRecordLength = grupLoc.Value - inputStream.Position;
+                var grupLoc = inputStream.Position;
+                noRecordLength = grupLoc - inputStream.Position;
                 inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
 
                 // If complete overall, return
@@ -32,7 +34,7 @@ public static class ModRecordSorter
                 using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
                 {
                     inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.GroupConstants.HeaderLength);
-                    locatorStream.Position = grupLoc.Value;
+                    locatorStream.Position = grupLoc;
                     foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
                     {
                         MajorRecordHeader majorMeta = inputStream.GetMajorRecordHeader();

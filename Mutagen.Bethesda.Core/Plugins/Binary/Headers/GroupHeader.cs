@@ -98,9 +98,15 @@ public readonly struct GroupHeader
     /// </summary>
     public bool IsTopLevel => GroupType == 0;
 
+    /// <summary>
+    /// Whether this group type is allowed to contain subgroups
+    /// </summary>
+    public bool CanHaveSubGroups => Meta.GroupConstants.CanHaveSubGroups(GroupType);
+
     /// <inheritdoc/>
     public override string ToString() => $"{RecordType} ({ContainedRecordType}) => 0x{ContentLength:X}";
 }
+
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrieve Group header data on demand.
 /// In addition, it keeps track of its location relative to its parent stream
@@ -217,6 +223,11 @@ public readonly struct GroupPinHeader
     /// True if GroupType is marked as top level. (GroupType == 0)
     /// </summary>
     public bool IsTopLevel => GroupType == 0;
+
+    /// <summary>
+    /// Whether this group type is allowed to contain subgroups
+    /// </summary>
+    public bool CanHaveSubGroups => Meta.GroupConstants.CanHaveSubGroups(GroupType);
 
     /// <inheritdoc/>
     public override string ToString() => $"{RecordType} ({ContainedRecordType}) => 0x{ContentLength:X} @ {Location.ToString()}";
@@ -348,6 +359,11 @@ public readonly struct GroupFrame : IEnumerable<MajorRecordPinFrame>
     /// True if GroupType is marked as top level. (GroupType == 0)
     /// </summary>
     public bool IsTopLevel => Header.IsTopLevel;
+
+    /// <summary>
+    /// Whether this group type is allowed to contain subgroups
+    /// </summary>
+    public bool CanHaveSubGroups => Meta.GroupConstants.CanHaveSubGroups(GroupType);
     #endregion
 }
 
@@ -490,6 +506,11 @@ public readonly struct GroupPinFrame : IEnumerable<MajorRecordPinFrame>
     /// True if GroupType is marked as top level. (GroupType == 0)
     /// </summary>
     public bool IsTopLevel => Frame.Header.IsTopLevel;
+
+    /// <summary>
+    /// Whether this group type is allowed to contain subgroups
+    /// </summary>
+    public bool CanHaveSubGroups => Meta.GroupConstants.CanHaveSubGroups(GroupType);
     #endregion
 
     public static implicit operator GroupHeader(GroupPinFrame pin)

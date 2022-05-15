@@ -91,6 +91,27 @@ public record GameConstants
             hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
             new GroupNesting[]
             {
+                new GroupNesting(2,
+                    new GroupNesting(RecordTypes.CELL, 3,
+                        new GroupNesting(6,
+                            new GroupNesting(8),
+                            new GroupNesting(9),
+                            new GroupNesting(10)))),
+                new GroupNesting(GroupType: 7),
+                new GroupNesting(
+                    RecordTypes.CELL, GroupType: 1,
+                    new GroupNesting(
+                        GroupType: 6,
+                        new GroupNesting(8),
+                        new GroupNesting(9),
+                        new GroupNesting(10)),
+                    new GroupNesting(4,
+                        new GroupNesting(RecordTypes.CELL, 5,
+                            new GroupNesting(
+                                GroupType: 6,
+                                new GroupNesting(8),
+                                new GroupNesting(9),
+                                new GroupNesting(10))))),
             }),
         majorConstants: new MajorRecordConstants(
             headerLength: 20,
@@ -124,14 +145,24 @@ public record GameConstants
             hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
             new GroupNesting[]
             {
+                new GroupNesting(2,
+                    new GroupNesting(RecordTypes.CELL, 3,
+                        new GroupNesting(6,
+                            new GroupNesting(8),
+                            new GroupNesting(9)))),
+                new GroupNesting(GroupType: 7),
                 new GroupNesting(
-                    // Blocks: new[] { 2, 3 },
-                    GroupType: 6,
-                    new GroupNesting(8),
-                    new GroupNesting(9))
-                {
-                    ContainedRecordType = new("CELL")
-                }
+                    RecordTypes.CELL, GroupType: 1,
+                    new GroupNesting(
+                        GroupType: 6,
+                        new GroupNesting(8),
+                        new GroupNesting(9)),
+                    new GroupNesting(4,
+                        new GroupNesting(RecordTypes.CELL, 5,
+                            new GroupNesting(
+                                GroupType: 6,
+                                new GroupNesting(8),
+                                new GroupNesting(9))))),
             }),
         majorConstants: new MajorRecordConstants(
             headerLength: 24,
@@ -185,6 +216,25 @@ public record GameConstants
             hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 },
             new GroupNesting[]
             {
+                new GroupNesting(2,
+                    new GroupNesting(RecordTypes.CELL, 3,
+                        new GroupNesting(6,
+                            new GroupNesting(8),
+                            new GroupNesting(9)))),
+                new GroupNesting(GroupType: 7),
+                new GroupNesting(GroupType: 10),
+                new GroupNesting(
+                    RecordTypes.CELL, GroupType: 1,
+                    new GroupNesting(
+                        GroupType: 6,
+                        new GroupNesting(8),
+                        new GroupNesting(9)),
+                    new GroupNesting(4,
+                        new GroupNesting(RecordTypes.CELL, 5,
+                            new GroupNesting(
+                                GroupType: 6,
+                                new GroupNesting(8),
+                                new GroupNesting(9))))),
             })
         {
             Quest = new GroupQuestConstants(10)

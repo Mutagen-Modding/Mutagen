@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Plugins.Analysis;
 
 public class RecordLocatorResults
 {
-    private readonly Dictionary<FormKey, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)>
+    private readonly Dictionary<FormKey, (RangeInt64 Range, IEnumerable<GroupLocationMarker> GroupPositions, RecordType Record)>
         _fromFormKeys;
 
     private readonly SortingListDictionary<long, RecordLocationMarker> _fromStart;
@@ -128,6 +128,6 @@ public class RecordLocatorResults
 
     public IEnumerable<long> GetContainingGroupLocations(FormKey formKey)
     {
-        return _fromFormKeys[formKey].GroupPositions;
+        return _fromFormKeys[formKey].GroupPositions.Select(x => x.Location.Min);
     }
 }

@@ -33,13 +33,6 @@ public class Locators
     }
 
     [Benchmark]
-    public object BaseGRUPIterator()
-    {
-        stream.Position = 0;
-        return RecordLocator.IterateBaseGroupLocations(stream);
-    }
-
-    [Benchmark]
     public object GetFileLocations()
     {
         stream.Position = 0;

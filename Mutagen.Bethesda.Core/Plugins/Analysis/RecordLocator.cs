@@ -1,19 +1,31 @@
+using System.Collections.Immutable;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Analysis;
 
-public static class RecordLocator
+public class RecordLocator
 {
+    private readonly FileLocationConstructor _locs;
+    private readonly RecordInterest? _interest;
+    private ImmutableStack<GroupLocationMarker> _parentGroupLocations = ImmutableStack<GroupLocationMarker>.Empty;
+    
+    private RecordLocator(FileLocationConstructor locs, RecordInterest? interest)
+    {
+        _locs = locs;
+        _interest = interest;
+    }
+
     #region Get File Locations
+    
     internal class FileLocationConstructor
     {
-        public Dictionary<FormKey, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)> FromFormKeys = new();
+        public Dictionary<FormKey, (RangeInt64 Range, IEnumerable<GroupLocationMarker> GroupPositions, RecordType Record)> FromFormKeys = new();
         public List<long> FromStartPositions = new();
         public List<long> FromEndPositions = new();
         public List<RecordLocationMarker> FormKeys = new();
@@ -31,11 +43,10 @@ public static class RecordLocator
         public void Add(
             FormKey formKey,
             RecordType record,
-            Stack<long> parentGrupLocations,
+            ImmutableStack<GroupLocationMarker> parentGrupLocations,
             RangeInt64 section)
         {
-            var grupArr = parentGrupLocations.ToArray();
-            FromFormKeys[formKey] = (section, grupArr, record);
+            FromFormKeys[formKey] = (section, parentGrupLocations, record);
             FromStartPositions.Add(section.Min);
             FromEndPositions.Add(section.Max);
             FormKeys.Add(new(formKey, section, record));
@@ -57,16 +68,6 @@ public static class RecordLocator
         return GetLocations(stream, interest);
     }
 
-    private static void SkipHeader(IMutagenReadStream reader)
-    {
-        if (!reader.TryReadModHeader(out var header))
-        {
-            reader.Position = reader.Length;
-            return;
-        }
-        reader.Position += header.ContentLength;
-    }
-
     public static RecordLocatorResults GetLocations(
         IMutagenReadStream reader,
         RecordInterest? interest = null,
@@ -76,261 +77,208 @@ public static class RecordLocator
         {
             AdditionalCriteria = additionalCriteria,
         };
-        SkipHeader(reader);
+        var locator = new RecordLocator(ret, interest);
+        return locator.Locate(new MutagenFrame(reader));
+    }
 
-        HashSet<RecordType>? remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest!.InterestingTypes!);
-        Stack<long> grupPositions = new Stack<long>();
-        while (!reader.Complete
-               && (remainingTypes?.Count ?? 1) > 0)
+    private RecordLocatorResults Locate(MutagenFrame reader)
+    {
+        reader.ReadModHeaderFrame();
+
+        while (!reader.Complete)
         {
-            var parsed = ParseTopLevelGRUP(
-                reader: reader,
-                fileLocs: ret,
-                interest: interest,
+            var groupHeader = reader.GetGroupHeader();
+            if (groupHeader.GroupType != 0)
+            {
+                throw new MalformedDataException($"Unexpected group type at top level: {groupHeader.GroupType}");
+            }
+
+            PushGroup(groupHeader);
+            ParseTopLevelGroup(
+                reader: reader.SpawnWithLength(groupHeader.TotalLength),
+                groupPin: groupHeader,
                 grupRecOverride: null,
-                checkOverallGrupType: true,
-                parentGroupLocations: grupPositions);
-            if (parsed.HasValue)
-            {
-                remainingTypes?.Remove(parsed.Value);
-            }
+                nesting: null,
+                checkOverallGrupType: true);
+            _parentGroupLocations = _parentGroupLocations.Pop();
         }
-        return new RecordLocatorResults(ret);
+
+        return new RecordLocatorResults(_locs);
     }
 
-    private static RecordType? ParseTopLevelGRUP(
-        IMutagenReadStream reader,
-        FileLocationConstructor fileLocs,
-        RecordInterest? interest,
-        Stack<long> parentGroupLocations,
-        RecordType? grupRecOverride,
-        bool checkOverallGrupType)
+    private bool CheckForInitialGroup(
+        MutagenFrame reader,
+        GroupPinHeader groupPin,
+        GroupNesting? nesting)
     {
-        var groupMeta = reader.GetGroupHeader();
-        fileLocs.GrupLocations.Add(new GroupLocationMarker(groupMeta));
-        var grupRec = grupRecOverride ?? groupMeta.ContainedRecordType;
-
-        if (checkOverallGrupType
-            && (!interest?.IsInterested(grupRec) ?? false))
-        { // Skip
-            reader.Position += groupMeta.TotalLength;
-            return null;
-        }
-
-        reader.Position += groupMeta.HeaderLength;
-
-        using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + groupMeta.ContentLength))
+        var parsedAny = false;
+        while (reader.TryGetGroupHeader(out var initialNestedGroup))
         {
-            while (!frame.Complete)
+            var nestedGroupType = initialNestedGroup.GroupType;
+            var nextNexting = nesting?.Underneath.FirstOrDefault(x => x.GroupType == nestedGroupType) 
+                              ?? reader.MetaData.Constants.GroupConstants.TryGetNesting(nestedGroupType);
+            if (nextNexting != null)
             {
-                MajorRecordHeader majorRecordMeta = frame.GetMajorRecordHeader();
-                var targetRec = majorRecordMeta.RecordType;
-                if (targetRec != grupRec)
-                {
-                    var grup = frame.GetGroupHeader(checkIsGroup: false);
-                    if (IsSubLevelGRUP(grup))
-                    {
-                        parentGroupLocations.Push(groupMeta.Location);
-                        HandleSubLevelGRUP(
-                            frame: frame,
-                            fileLocs: fileLocs,
-                            parentGrup: grup,
-                            parentGroupLocations: parentGroupLocations,
-                            interest: interest);
-                        parentGroupLocations.Pop();
-                        continue;
-                    }
-                    else if (checkOverallGrupType)
-                    {
-                        throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
-                    }
-                }
-                var recLength = majorRecordMeta.ContentLength;
-                if (fileLocs.AdditionalCriteria != null)
-                {
-                    var pos = reader.Position;
-                    if (!fileLocs.AdditionalCriteria(reader, targetRec, recLength))
-                    {
-                        reader.Position = pos + majorRecordMeta.TotalLength;
-                        continue;
-                    }
-                    reader.Position = pos;
-                }
-                if (interest?.IsInterested(targetRec) ?? true)
-                {
-                    parentGroupLocations.Push(groupMeta.Location);
-                    var pos = reader.Position;
-                    var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences!, majorRecordMeta.FormID.Raw);
-
-                    fileLocs.Add(
-                        formKey: currentFormKey,
-                        record: targetRec,
-                        parentGrupLocations: parentGroupLocations,
-                        section: new RangeInt64(pos, pos + majorRecordMeta.TotalLength - 1));
-                    parentGroupLocations.Pop();
-                }
-                reader.Position += majorRecordMeta.TotalLength;
-            }
-        }
-
-        return grupRec;
-    }
-
-    private static bool IsSubLevelGRUP(GroupHeader groupMeta)
-    {
-        if (!groupMeta.IsGroup)
-        {
-            return false;
-        }
-        return groupMeta.Meta.GroupConstants.HasSubGroups.Contains(groupMeta.GroupType);
-    }
-
-    private static void HandleSubLevelGRUP(
-        MutagenFrame frame,
-        GroupHeader parentGrup,
-        FileLocationConstructor fileLocs,
-        RecordInterest? interest,
-        Stack<long> parentGroupLocations)
-    {
-        var groupMeta = frame.GetGroupHeader();
-        fileLocs.GrupLocations.Add(new GroupLocationMarker(groupMeta));
-        var grupType = groupMeta.GroupType;
-        if (grupType == frame.MetaData.Constants.GroupConstants.World.TopGroupType
-            || grupType == frame.MetaData.Constants.GroupConstants.Topic?.TopGroupType
-            || grupType == frame.MetaData.Constants.GroupConstants.Quest?.TopGroupType)
-        {
-            ParseTopLevelGRUP(
-                reader: frame.Reader,
-                fileLocs: fileLocs,
-                interest: interest,
-                parentGroupLocations: parentGroupLocations,
-                checkOverallGrupType: false,
-                grupRecOverride: null);
-            return;
-        }
-        else if (frame.MetaData.Constants.GroupConstants.World.CellGroupTypes.Contains(grupType))
-        {
-            parentGroupLocations.Push(groupMeta.Location);
-            HandleCells(
-                frame: frame.SpawnWithLength(groupMeta.TotalLength),
-                fileLocs: fileLocs,
-                parentGroupLocations: parentGroupLocations,
-                interest: interest);
-            parentGroupLocations.Pop();
-            return;
-        }
-
-        var nesting = frame.MetaData.Constants.GroupConstants.Nesting.FirstOrDefault(r => r.GroupType == parentGrup.GroupType);
-        if (nesting != null)
-        {
-            HandleNesting(
-                frame: frame.SpawnWithLength(groupMeta.TotalLength),
-                fileLocs: fileLocs,
-                parentGroupLocations: parentGroupLocations,
-                nesting: nesting,
-                parentGroupLoc: groupMeta.Location,
-                interest: interest);
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    private static void HandleCells(
-        MutagenFrame frame,
-        FileLocationConstructor fileLocs,
-        RecordInterest? interest,
-        Stack<long> parentGroupLocations)
-    {
-        frame.Reader.Position += fileLocs.MetaData.GroupConstants.HeaderLength;
-        while (!frame.Complete)
-        {
-            var groupMeta = frame.GetGroupHeader();
-            if (!groupMeta.IsGroup)
-            {
-                throw new ArgumentException();
-            }
-            fileLocs.GrupLocations.Add(new GroupLocationMarker(groupMeta));
-            if (frame.MetaData.Constants.GroupConstants.World.CellSubGroupTypes.Contains(groupMeta.GroupType))
-            {
-                ParseTopLevelGRUP(
-                    reader: frame.Reader,
-                    fileLocs: fileLocs,
-                    interest: interest,
-                    parentGroupLocations: parentGroupLocations,
-                    grupRecOverride: RecordTypes.CELL,
-                    checkOverallGrupType: true);
+                HandleGroup(
+                    reader.SpawnWithLength(initialNestedGroup.TotalLength),
+                    initialNestedGroup,
+                    nextNexting);
             }
             else
             {
-                throw new NotImplementedException();
+                throw new MalformedDataException($"Encountered nested group, but it was not registered: {initialNestedGroup.GroupType} was underneath {groupPin.GroupType}");
+            }
+
+            parsedAny = true;
+        }
+
+        return parsedAny;
+    }
+
+    private void ParseTopLevelGroup(
+        MutagenFrame reader,
+        GroupPinHeader groupPin,
+        RecordType? grupRecOverride,
+        GroupNesting? nesting,
+        bool checkOverallGrupType)
+    {
+        var grupRec = grupRecOverride ?? groupPin.ContainedRecordType;
+
+        if (checkOverallGrupType
+            && (!_interest?.IsInterested(grupRec) ?? false))
+        { // Skip
+            reader.Position += groupPin.TotalLength;
+            return;
+        }
+
+        reader.Position += groupPin.HeaderLength;
+
+        if (CheckForInitialGroup(reader, groupPin, nesting)) return;
+
+        using var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + groupPin.ContentLength);
+        
+        bool registered = false;
+        while (!frame.Complete)
+        {
+            MajorRecordHeader majorRecordMeta = frame.GetMajorRecordHeader();
+            var targetRec = majorRecordMeta.RecordType;
+            if (targetRec != grupRec)
+            {
+                if (frame.TryGetGroupHeader(out var followupNestedGroup)
+                    && followupNestedGroup.CanHaveSubGroups)
+                {
+                    var nestedGroupType = followupNestedGroup.GroupType;
+                    var nextNexting = nesting?.Underneath.FirstOrDefault(x => x.GroupType == nestedGroupType) 
+                                      ?? reader.MetaData.Constants.GroupConstants.TryGetNesting(nestedGroupType);
+                    if (nextNexting == null)
+                    {
+                        throw new MalformedDataException($"Encountered nested group, but it was not registered: {followupNestedGroup.GroupType} was underneath {groupPin.GroupType}");
+                    }
+                    HandleGroup(
+                        frame: frame.SpawnWithLength(followupNestedGroup.TotalLength),
+                        groupPin: followupNestedGroup,
+                        nesting: nextNexting);
+                    continue;
+                }
+                else if (checkOverallGrupType)
+                {
+                    throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
+                }
+            }
+            var recLength = majorRecordMeta.ContentLength;
+            if (_locs.AdditionalCriteria != null)
+            {
+                var pos = reader.Position;
+                if (!_locs.AdditionalCriteria(reader, targetRec, recLength))
+                {
+                    reader.Position = pos + majorRecordMeta.TotalLength;
+                    continue;
+                }
+                reader.Position = pos;
+            }
+            if (_interest?.IsInterested(targetRec) ?? true)
+            {
+                var pos = reader.Position;
+                var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences!, majorRecordMeta.FormID.Raw);
+
+                _locs.Add(
+                    formKey: currentFormKey,
+                    record: targetRec,
+                    parentGrupLocations: _parentGroupLocations,
+                    section: new RangeInt64(pos, pos + majorRecordMeta.TotalLength - 1));
+
+                if (!registered)
+                {
+                    RegisterGroupLocations();
+                    registered = true;
+                }
+            }
+            reader.Position += majorRecordMeta.TotalLength;
+        }
+    }
+
+    private void RegisterGroupLocations()
+    {
+        foreach (var location in _parentGroupLocations)
+        {
+            if (!location.Registered)
+            {
+                _locs.GrupLocations.Add(location);
+                location.Registered = true;
             }
         }
     }
 
-    private static void HandleNesting(
-        MutagenFrame frame,
-        FileLocationConstructor fileLocs,
-        RecordInterest? interest,
-        long parentGroupLoc,
-        GroupNesting nesting,
-        Stack<long> parentGroupLocations)
+    private void PushGroup(GroupPinHeader groupPin)
     {
-        if (nesting.Underneath.Length == 0)
+        var register = new GroupLocationMarker(groupPin);
+        _parentGroupLocations = _parentGroupLocations.Push(register);
+        if (_interest == null)
         {
-            ParseTopLevelGRUP(
-                reader: frame.Reader,
-                fileLocs: fileLocs,
-                interest: interest,
-                parentGroupLocations: parentGroupLocations,
-                grupRecOverride: nesting.ContainedRecordType,
-                checkOverallGrupType: nesting.ContainedRecordType != null);
+            _locs.GrupLocations.Add(register);
+        }
+    }
+
+    private void HandleGroup(
+        MutagenFrame frame,
+        GroupPinHeader groupPin,
+        GroupNesting nesting)
+    {
+        PushGroup(groupPin);
+        if (nesting.Underneath.Length == 0
+            || nesting.TopLevelRecordType.HasValue)
+        {
+            ParseTopLevelGroup(
+                reader: frame,
+                grupRecOverride: null,
+                nesting: nesting,
+                groupPin: groupPin,
+                checkOverallGrupType: false);
         }
         else
         {
-            parentGroupLocations.Push(parentGroupLoc);
-            frame.Reader.Position += fileLocs.MetaData.GroupConstants.HeaderLength;
+            frame.Position += _locs.MetaData.GroupConstants.HeaderLength;
             while (!frame.Complete)
             {
                 var groupMeta = frame.GetGroupHeader();
-                fileLocs.GrupLocations.Add(new GroupLocationMarker(groupMeta));
                 var targetNesting = nesting.Underneath.FirstOrDefault(x => x.GroupType == groupMeta.GroupType);
                 if (targetNesting == null)
                 {
-                    throw new NotImplementedException();
+                    throw new MalformedDataException($"Encountered nested group, but it was not registered: {groupMeta.GroupType} was underneath {groupPin.GroupType}");
                 }
-                HandleNesting(frame, fileLocs, interest, groupMeta.Location, targetNesting, parentGroupLocations);
+                HandleGroup(frame.SpawnWithLength(groupMeta.TotalLength), groupMeta, targetNesting);
             }
-            parentGroupLocations.Pop();
         }
+        _parentGroupLocations = _parentGroupLocations.Pop();
     }
     #endregion
 
     #region Base GRUP Iterator
-    public static IEnumerable<KeyValuePair<RecordType, long>> IterateBaseGroupLocations(
-        IMutagenReadStream reader)
-    {
-        SkipHeader(reader);
-        while (!reader.Complete)
-        {
-            GroupHeader groupMeta = reader.GetGroupHeader();
-            if (!groupMeta.IsGroup)
-            {
-                throw new DataMisalignedException("Group was not read in where expected: 0x" + reader.Position.ToString("X"));
-            }
-            var pos = reader.Position + groupMeta.TotalLength;
-            yield return new KeyValuePair<RecordType, long>(groupMeta.ContainedRecordType, reader.Position);
-            reader.Position = pos;
-        }
-    }
-
     public static IEnumerable<(FormKey FormKey, long Position)> ParseTopLevelGRUP(
         IMutagenReadStream reader,
         bool checkOverallGrupType = true)
     {
         var groupMeta = reader.GetGroupHeader();
-        var grupLoc = reader.Position;
         var targetRec = groupMeta.ContainedRecordType;
         if (!groupMeta.IsGroup)
         {
@@ -348,7 +296,7 @@ public static class RecordLocator
                 if (majorMeta.RecordType != targetRec)
                 {
                     var subGroupMeta = reader.GetGroupHeader();
-                    if (IsSubLevelGRUP(subGroupMeta))
+                    if (subGroupMeta.CanHaveSubGroups)
                     {
                         reader.Position += subGroupMeta.TotalLength;
                         continue;
