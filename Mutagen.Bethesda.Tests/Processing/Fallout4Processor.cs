@@ -300,7 +300,7 @@ public class Fallout4Processor : Processor
         }
         ProcessLengths(
             majorFrame,
-            removed,
+            -removed,
             fileOffset);
     }
 
