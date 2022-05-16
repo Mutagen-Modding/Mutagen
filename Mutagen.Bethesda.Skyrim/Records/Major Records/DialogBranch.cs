@@ -9,4 +9,10 @@ public partial class DialogBranch
         Blocking = 0x02,
         Exclusive = 0x04,
     }
+
+    public enum CategoryType
+    {
+        Player,
+        Command
+    }
 }

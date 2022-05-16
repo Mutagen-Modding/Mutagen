@@ -64,10 +64,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IQuestGetter> IDialogBranchGetter.Quest => this.Quest;
         #endregion
-        #region TNAM
-        public Int32? TNAM { get; set; }
+        #region Category
+        public DialogBranch.CategoryType? Category { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IDialogBranchGetter.TNAM => this.TNAM;
+        DialogBranch.CategoryType? IDialogBranchGetter.Category => this.Category;
         #endregion
         #region Flags
         public DialogBranch.Flag? Flags { get; set; }
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Quest = initialValue;
-                this.TNAM = initialValue;
+                this.Category = initialValue;
                 this.Flags = initialValue;
                 this.StartingTopic = initialValue;
             }
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormVersion,
                 TItem Version2,
                 TItem Quest,
-                TItem TNAM,
+                TItem Category,
                 TItem Flags,
                 TItem StartingTopic)
             : base(
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2)
             {
                 this.Quest = Quest;
-                this.TNAM = TNAM;
+                this.Category = Category;
                 this.Flags = Flags;
                 this.StartingTopic = StartingTopic;
             }
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Quest;
-            public TItem TNAM;
+            public TItem Category;
             public TItem Flags;
             public TItem StartingTopic;
             #endregion
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Quest, rhs.Quest)) return false;
-                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
+                if (!object.Equals(this.Category, rhs.Category)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.StartingTopic, rhs.StartingTopic)) return false;
                 return true;
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.Quest);
-                hash.Add(this.TNAM);
+                hash.Add(this.Category);
                 hash.Add(this.Flags);
                 hash.Add(this.StartingTopic);
                 hash.Add(base.GetHashCode());
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Quest)) return false;
-                if (!eval(this.TNAM)) return false;
+                if (!eval(this.Category)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.StartingTopic)) return false;
                 return true;
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Quest)) return true;
-                if (eval(this.TNAM)) return true;
+                if (eval(this.Category)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.StartingTopic)) return true;
                 return false;
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Quest = eval(this.Quest);
-                obj.TNAM = eval(this.TNAM);
+                obj.Category = eval(this.Category);
                 obj.Flags = eval(this.Flags);
                 obj.StartingTopic = eval(this.StartingTopic);
             }
@@ -246,9 +246,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Quest, "Quest");
                     }
-                    if (printMask?.TNAM ?? true)
+                    if (printMask?.Category ?? true)
                     {
-                        sb.AppendItem(TNAM, "TNAM");
+                        sb.AppendItem(Category, "Category");
                     }
                     if (printMask?.Flags ?? true)
                     {
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Exception? Quest;
-            public Exception? TNAM;
+            public Exception? Category;
             public Exception? Flags;
             public Exception? StartingTopic;
             #endregion
@@ -283,8 +283,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case DialogBranch_FieldIndex.Quest:
                         return Quest;
-                    case DialogBranch_FieldIndex.TNAM:
-                        return TNAM;
+                    case DialogBranch_FieldIndex.Category:
+                        return Category;
                     case DialogBranch_FieldIndex.Flags:
                         return Flags;
                     case DialogBranch_FieldIndex.StartingTopic:
@@ -302,8 +302,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case DialogBranch_FieldIndex.Quest:
                         this.Quest = ex;
                         break;
-                    case DialogBranch_FieldIndex.TNAM:
-                        this.TNAM = ex;
+                    case DialogBranch_FieldIndex.Category:
+                        this.Category = ex;
                         break;
                     case DialogBranch_FieldIndex.Flags:
                         this.Flags = ex;
@@ -325,8 +325,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case DialogBranch_FieldIndex.Quest:
                         this.Quest = (Exception?)obj;
                         break;
-                    case DialogBranch_FieldIndex.TNAM:
-                        this.TNAM = (Exception?)obj;
+                    case DialogBranch_FieldIndex.Category:
+                        this.Category = (Exception?)obj;
                         break;
                     case DialogBranch_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
@@ -344,7 +344,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Quest != null) return true;
-                if (TNAM != null) return true;
+                if (Category != null) return true;
                 if (Flags != null) return true;
                 if (StartingTopic != null) return true;
                 return false;
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Quest, "Quest");
                 }
                 {
-                    sb.AppendItem(TNAM, "TNAM");
+                    sb.AppendItem(Category, "Category");
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
+                ret.Category = this.Category.Combine(rhs.Category);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.StartingTopic = this.StartingTopic.Combine(rhs.StartingTopic);
                 return ret;
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Quest;
-            public bool TNAM;
+            public bool Category;
             public bool Flags;
             public bool StartingTopic;
             #endregion
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.Quest = defaultOn;
-                this.TNAM = defaultOn;
+                this.Category = defaultOn;
                 this.Flags = defaultOn;
                 this.StartingTopic = defaultOn;
             }
@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Quest, null));
-                ret.Add((TNAM, null));
+                ret.Add((Category, null));
                 ret.Add((Flags, null));
                 ret.Add((StartingTopic, null));
             }
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new IFormLink<IQuestGetter> Quest { get; set; }
-        new Int32? TNAM { get; set; }
+        new DialogBranch.CategoryType? Category { get; set; }
         new DialogBranch.Flag? Flags { get; set; }
         new IFormLinkNullable<IDialogTopicGetter> StartingTopic { get; set; }
     }
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration StaticRegistration => DialogBranch_Registration.Instance;
         IFormLinkGetter<IQuestGetter> Quest { get; }
-        Int32? TNAM { get; }
+        DialogBranch.CategoryType? Category { get; }
         DialogBranch.Flag? Flags { get; }
         IFormLinkNullableGetter<IDialogTopicGetter> StartingTopic { get; }
 
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim
         FormVersion = 4,
         Version2 = 5,
         Quest = 6,
-        TNAM = 7,
+        Category = 7,
         Flags = 8,
         StartingTopic = 9,
     }
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Quest.Clear();
-            item.TNAM = default;
+            item.Category = default;
             item.Flags = default;
             item.StartingTopic.Clear();
             base.Clear(item);
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (rhs == null) return;
             ret.Quest = item.Quest.Equals(rhs.Quest);
-            ret.TNAM = item.TNAM == rhs.TNAM;
+            ret.Category = item.Category == rhs.Category;
             ret.Flags = item.Flags == rhs.Flags;
             ret.StartingTopic = item.StartingTopic.Equals(rhs.StartingTopic);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1035,10 +1035,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Quest.FormKey, "Quest");
             }
-            if ((printMask?.TNAM ?? true)
-                && item.TNAM is {} TNAMItem)
+            if ((printMask?.Category ?? true)
+                && item.Category is {} CategoryItem)
             {
-                sb.AppendItem(TNAMItem, "TNAM");
+                sb.AppendItem(CategoryItem, "Category");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
@@ -1101,9 +1101,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.TNAM) ?? true))
+            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.Category) ?? true))
             {
-                if (lhs.TNAM != rhs.TNAM) return false;
+                if (lhs.Category != rhs.Category) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.Flags) ?? true))
             {
@@ -1142,9 +1142,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.Quest);
-            if (item.TNAM is {} TNAMitem)
+            if (item.Category is {} Categoryitem)
             {
-                hash.Add(TNAMitem);
+                hash.Add(Categoryitem);
             }
             if (item.Flags is {} Flagsitem)
             {
@@ -1263,9 +1263,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Quest.SetTo(rhs.Quest.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.TNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Category) ?? true))
             {
-                item.TNAM = rhs.TNAM;
+                item.Category = rhs.Category;
             }
             if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Flags) ?? true))
             {
@@ -1436,9 +1436,10 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.Quest,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM));
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.TNAM,
+            EnumBinaryTranslation<DialogBranch.CategoryType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Category,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             EnumBinaryTranslation<DialogBranch.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1549,8 +1550,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = frame.ReadInt32();
-                    return (int)DialogBranch_FieldIndex.TNAM;
+                    item.Category = EnumBinaryTranslation<DialogBranch.CategoryType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)DialogBranch_FieldIndex.Category;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -1628,9 +1631,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _QuestLocation;
         public IFormLinkGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
         #endregion
-        #region TNAM
-        private int? _TNAMLocation;
-        public Int32? TNAM => _TNAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TNAMLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #region Category
+        private int? _CategoryLocation;
+        public DialogBranch.CategoryType? Category => _CategoryLocation.HasValue ? (DialogBranch.CategoryType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CategoryLocation!.Value, _package.MetaData.Constants)) : default(DialogBranch.CategoryType?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -1713,8 +1716,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = (stream.Position - offset);
-                    return (int)DialogBranch_FieldIndex.TNAM;
+                    _CategoryLocation = (stream.Position - offset);
+                    return (int)DialogBranch_FieldIndex.Category;
                 }
                 case RecordTypeInts.DNAM:
                 {

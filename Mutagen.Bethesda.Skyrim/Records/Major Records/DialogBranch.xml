@@ -3,7 +3,7 @@
   <Object name="DialogBranch" recordType="DLBR" objType="Record" baseClass="SkyrimMajorRecord" GUID="84dcef28-d603-4bf3-90e2-bc5ac1a36ff2" ID="349">
     <Fields>
       <FormLink name="Quest" refName="Quest" recordType="QNAM" nullable="False" />
-      <Int32 name="TNAM" recordType="TNAM" />
+      <Enum name="Category" enumName="DialogBranch.CategoryType" byteLength="4" recordType="TNAM" />
       <Enum name="Flags" enumName="DialogBranch.Flag" byteLength="4" recordType="DNAM" />
       <FormLink name="StartingTopic" recordType="SNAM" refName="DialogTopic" />
     </Fields>
