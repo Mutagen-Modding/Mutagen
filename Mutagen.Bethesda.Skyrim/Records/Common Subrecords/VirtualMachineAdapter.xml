@@ -83,7 +83,7 @@
   </Object>
   <Object name="ScriptFragment" objType="Subrecord" GUID="602e4f3f-6487-4203-8fcb-44bf6ce5d9cf" ID="354">
     <Fields>
-      <Int8 name="Unknown" />
+      <Int8 name="ExtraBindDataVersion" default="2" />
       <String name="ScriptName" binaryType="PrependLengthUShort" />
       <String name="FragmentName" binaryType="PrependLengthUShort" />
     </Fields>
@@ -99,7 +99,7 @@
   </Object>
   <Object name="ScriptFragments" objType="Subrecord" GUID="6564bb4d-ec2c-4a03-b6dd-5cca0e1b4b11" ID="428">
     <Fields>
-      <Int8 name="Unknown" />
+      <Int8 name="ExtraBindDataVersion" default="2" />
       <CustomLogic name="Flags" />
       <String name="FileName" binaryType="PrependLengthUShort" binary="NoGeneration" />
       <RefDirect name="OnBegin" nullable="True" binary="NoGeneration" refName="ScriptFragment" />

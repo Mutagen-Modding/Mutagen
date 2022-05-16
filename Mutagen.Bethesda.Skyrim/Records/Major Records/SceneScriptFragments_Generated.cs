@@ -110,13 +110,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem Unknown,
+                TItem ExtraBindDataVersion,
                 TItem FileName,
                 TItem OnBegin,
                 TItem OnEnd,
                 TItem PhaseFragments)
             : base(
-                Unknown: Unknown,
+                ExtraBindDataVersion: ExtraBindDataVersion,
                 FileName: FileName,
                 OnBegin: OnBegin,
                 OnEnd: OnEnd)
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Field Index
     internal enum SceneScriptFragments_FieldIndex
     {
-        Unknown = 0,
+        ExtraBindDataVersion = 0,
         FileName = 1,
         OnBegin = 2,
         OnEnd = 3,
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             switch (index)
             {
-                case ScriptFragments_FieldIndex.Unknown:
+                case ScriptFragments_FieldIndex.ExtraBindDataVersion:
                     return (SceneScriptFragments_FieldIndex)((int)index);
                 case ScriptFragments_FieldIndex.FileName:
                     return (SceneScriptFragments_FieldIndex)((int)index);
