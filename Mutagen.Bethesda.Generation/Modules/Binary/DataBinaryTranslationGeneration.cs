@@ -131,10 +131,13 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 }
                 if (length.CurLength == null)
                 {
-                    sb.AppendLine($"protected int {length.Field.Name}EndingPos;");
                     if (fieldData.BinaryOverlayFallback == BinaryGenerationType.Custom)
                     {
                         sb.AppendLine($"partial void Custom{length.Field.Name}EndPos();");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"protected int {length.Field.Name}EndingPos;");
                     }
                 }
             }

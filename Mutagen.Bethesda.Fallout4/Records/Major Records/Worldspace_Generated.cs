@@ -5877,7 +5877,6 @@ namespace Mutagen.Bethesda.Fallout4
         private int _ObjectBoundsMinLocation => _NAM0Location!.Value.Min;
         public partial P2Float GetObjectBoundsMinCustom();
         public P2Float ObjectBoundsMin => GetObjectBoundsMinCustom();
-        protected int ObjectBoundsMinEndingPos;
         partial void CustomObjectBoundsMinEndPos();
         #endregion
         private RangeInt32? _NAM9Location;
@@ -5886,7 +5885,6 @@ namespace Mutagen.Bethesda.Fallout4
         private int _ObjectBoundsMaxLocation => _NAM9Location!.Value.Min;
         public partial P2Float GetObjectBoundsMaxCustom();
         public P2Float ObjectBoundsMax => GetObjectBoundsMaxCustom();
-        protected int ObjectBoundsMaxEndingPos;
         partial void CustomObjectBoundsMaxEndPos();
         #endregion
         #region Music
