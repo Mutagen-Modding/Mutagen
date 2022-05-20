@@ -98,8 +98,7 @@ public class RecordLocator
                 reader: reader.SpawnWithLength(groupHeader.TotalLength),
                 groupPin: groupHeader,
                 grupRecOverride: null,
-                nesting: null,
-                checkOverallGrupType: true);
+                nesting: null);
             _parentGroupLocations = _parentGroupLocations.Pop();
         }
 
@@ -135,21 +134,18 @@ public class RecordLocator
         return parsedAny;
     }
 
+    private bool IsInterested(RecordType grupRec)
+    {
+        return _interest?.IsInterested(grupRec) ?? true;
+    }
+
     private void ParseTopLevelGroup(
         MutagenFrame reader,
         GroupPinHeader groupPin,
         RecordType? grupRecOverride,
-        GroupNesting? nesting,
-        bool checkOverallGrupType)
+        GroupNesting? nesting)
     {
         var grupRec = grupRecOverride ?? groupPin.ContainedRecordType;
-
-        if (checkOverallGrupType
-            && (!_interest?.IsInterested(grupRec) ?? false))
-        { // Skip
-            reader.Position += groupPin.TotalLength;
-            return;
-        }
 
         reader.Position += groupPin.HeaderLength;
 
@@ -180,10 +176,6 @@ public class RecordLocator
                         nesting: nextNexting);
                     continue;
                 }
-                else if (checkOverallGrupType)
-                {
-                    throw new ArgumentException($"Target Record {targetRec} at {frame.Position} did not match its containing GRUP: {grupRec}");
-                }
             }
             var recLength = majorRecordMeta.ContentLength;
             if (_locs.AdditionalCriteria != null)
@@ -196,7 +188,7 @@ public class RecordLocator
                 }
                 reader.Position = pos;
             }
-            if (_interest?.IsInterested(targetRec) ?? true)
+            if (IsInterested(targetRec))
             {
                 var pos = reader.Position;
                 var currentFormKey = FormKey.Factory(reader.MetaData.MasterReferences!, majorRecordMeta.FormID.Raw);
@@ -252,8 +244,7 @@ public class RecordLocator
                 reader: frame,
                 grupRecOverride: null,
                 nesting: nesting,
-                groupPin: groupPin,
-                checkOverallGrupType: false);
+                groupPin: groupPin);
         }
         else
         {

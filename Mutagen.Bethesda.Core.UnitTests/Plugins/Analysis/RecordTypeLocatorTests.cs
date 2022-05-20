@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Utility;
@@ -146,8 +146,31 @@ public class RecordTypeLocatorTests
             0x68);
         locs.ListedRecords.Values.Should().Equal(
             new RecordLocationMarker(
-                FormKey.Factory("034182:SkyrimTypical.esp"), 
+                FormKey.Factory("034182:SkyrimTypical.esp"),
                 new RangeInt64(104, 364),
                 new RecordType("AMMO")));
+    }
+
+    [Fact]
+    public void DeepInterest()
+    {
+        var stream = TestDataPathing.GetReadFrame("Plugins/Analysis/SkyrimTypical.esp", GameRelease.SkyrimSE);
+        var locs = RecordLocator.GetLocations(stream,
+            new RecordInterest("INFO"));
+        locs.FormKeys.Should().Equal(
+            FormKey.Factory("000E45:SkyrimTypical.esp"));
+        locs.GrupLocations.Keys.Should().Equal(
+            0x688,
+            0x6EA);
+        locs.GrupLocations.Values.Should().Equal(
+            new GroupLocationMarker(new RangeInt64(1672, 1924), new("DIAL"), 0),
+            new GroupLocationMarker(new RangeInt64(1770, 1924), new(0xE42), 7));
+        locs.ListedRecords.Keys.Should().Equal(
+            0x702);
+        locs.ListedRecords.Values.Should().Equal(
+            new RecordLocationMarker(
+                FormKey.Factory("000E45:SkyrimTypical.esp"),
+                new RangeInt64(1794, 1924),
+                new RecordType("INFO")));
     }
 }
