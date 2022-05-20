@@ -114,6 +114,7 @@ namespace Mutagen.Bethesda.Fallout4
             _NavigationMeshInfoMaps_Object = new Fallout4Group<NavigationMeshInfoMap>(this);
             _Worldspaces_Object = new Fallout4Group<Worldspace>(this);
             _Quests_Object = new Fallout4Group<Quest>(this);
+            _IdleAnimations_Object = new Fallout4Group<IdleAnimation>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -525,6 +526,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IQuestGetter> IFallout4ModGetter.Quests => _Quests_Object;
         #endregion
+        #region IdleAnimations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<IdleAnimation> _IdleAnimations_Object;
+        public Fallout4Group<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IIdleAnimationGetter> IFallout4ModGetter.IdleAnimations => _IdleAnimations_Object;
+        #endregion
 
         #region To String
 
@@ -622,6 +630,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Cells = new MaskItem<TItem, Fallout4ListGroup.Mask<TItem>?>(initialValue, new Fallout4ListGroup.Mask<TItem>(initialValue));
                 this.Worldspaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Quests = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.IdleAnimations = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -682,7 +691,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem NavigationMeshInfoMaps,
                 TItem Cells,
                 TItem Worldspaces,
-                TItem Quests)
+                TItem Quests,
+                TItem IdleAnimations)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -742,6 +752,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Cells = new MaskItem<TItem, Fallout4ListGroup.Mask<TItem>?>(Cells, new Fallout4ListGroup.Mask<TItem>(Cells));
                 this.Worldspaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Worldspaces, new Fallout4Group.Mask<TItem>(Worldspaces));
                 this.Quests = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Quests, new Fallout4Group.Mask<TItem>(Quests));
+                this.IdleAnimations = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(IdleAnimations, new Fallout4Group.Mask<TItem>(IdleAnimations));
             }
 
             #pragma warning disable CS8618
@@ -811,6 +822,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4ListGroup.Mask<TItem>?>? Cells { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Worldspaces { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Quests { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? IdleAnimations { get; set; }
             #endregion
 
             #region Equals
@@ -881,6 +893,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Cells, rhs.Cells)) return false;
                 if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
+                if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -944,6 +957,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Cells);
                 hash.Add(this.Worldspaces);
                 hash.Add(this.Quests);
+                hash.Add(this.IdleAnimations);
                 return hash.ToHashCode();
             }
 
@@ -1242,6 +1256,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Quests.Overall)) return false;
                     if (this.Quests.Specific != null && !this.Quests.Specific.All(eval)) return false;
                 }
+                if (IdleAnimations != null)
+                {
+                    if (!eval(this.IdleAnimations.Overall)) return false;
+                    if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1539,6 +1558,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Quests.Overall)) return true;
                     if (this.Quests.Specific != null && this.Quests.Specific.Any(eval)) return true;
                 }
+                if (IdleAnimations != null)
+                {
+                    if (eval(this.IdleAnimations.Overall)) return true;
+                    if (this.IdleAnimations.Specific != null && this.IdleAnimations.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1611,6 +1635,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Cells = this.Cells == null ? null : new MaskItem<R, Fallout4ListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
                 obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
                 obj.Quests = this.Quests == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
+                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1861,6 +1886,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Quests?.Print(sb);
                     }
+                    if (printMask?.IdleAnimations?.Overall ?? true)
+                    {
+                        IdleAnimations?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1943,6 +1972,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4ListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Quest.ErrorMask>?>? Quests;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
             #endregion
 
             #region IErrorMask
@@ -2067,6 +2097,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Worldspaces;
                     case Fallout4Mod_FieldIndex.Quests:
                         return Quests;
+                    case Fallout4Mod_FieldIndex.IdleAnimations:
+                        return IdleAnimations;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2250,6 +2282,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Quests:
                         this.Quests = new MaskItem<Exception?, Fallout4Group.ErrorMask<Quest.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = new MaskItem<Exception?, Fallout4Group.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2435,6 +2470,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Quests:
                         this.Quests = (MaskItem<Exception?, Fallout4Group.ErrorMask<Quest.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = (MaskItem<Exception?, Fallout4Group.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2501,6 +2539,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Cells != null) return true;
                 if (Worldspaces != null) return true;
                 if (Quests != null) return true;
+                if (IdleAnimations != null) return true;
                 return false;
             }
             #endregion
@@ -2584,6 +2623,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Cells?.Print(sb);
                 Worldspaces?.Print(sb);
                 Quests?.Print(sb);
+                IdleAnimations?.Print(sb);
             }
             #endregion
 
@@ -2650,6 +2690,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Cells = this.Cells.Combine(rhs.Cells, (l, r) => l.Combine(r));
                 ret.Worldspaces = this.Worldspaces.Combine(rhs.Worldspaces, (l, r) => l.Combine(r));
                 ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
+                ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2731,6 +2772,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4ListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
             public Fallout4Group.TranslationMask<Worldspace.TranslationMask>? Worldspaces;
             public Fallout4Group.TranslationMask<Quest.TranslationMask>? Quests;
+            public Fallout4Group.TranslationMask<IdleAnimation.TranslationMask>? IdleAnimations;
             #endregion
 
             #region Ctors
@@ -2813,6 +2855,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Cells != null ? Cells.OnOverall : DefaultOn, Cells?.GetCrystal()));
                 ret.Add((Worldspaces != null ? Worldspaces.OnOverall : DefaultOn, Worldspaces?.GetCrystal()));
                 ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
+                ret.Add((IdleAnimations != null ? IdleAnimations.OnOverall : DefaultOn, IdleAnimations?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2910,6 +2953,7 @@ namespace Mutagen.Bethesda.Fallout4
             _NavigationMeshInfoMaps_Object = new Fallout4Group<NavigationMeshInfoMap>(this);
             _Worldspaces_Object = new Fallout4Group<Worldspace>(this);
             _Quests_Object = new Fallout4Group<Quest>(this);
+            _IdleAnimations_Object = new Fallout4Group<IdleAnimation>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3147,6 +3191,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Quests.RecordCache.Set(rhsMod.Quests.RecordCache.Items);
             }
+            if (mask?.IdleAnimations ?? true)
+            {
+                this.IdleAnimations.RecordCache.Set(rhsMod.IdleAnimations.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3214,6 +3262,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Cells.Records.Count > 0 ? 1 : default(uint);
             count += Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
             count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
+            count += IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3522,6 +3571,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4ListGroup<CellBlock> Cells { get; }
         new Fallout4Group<Worldspace> Worldspaces { get; }
         new Fallout4Group<Quest> Quests { get; }
+        new Fallout4Group<IdleAnimation> IdleAnimations { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3598,6 +3648,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4ListGroupGetter<ICellBlockGetter> Cells { get; }
         IFallout4GroupGetter<IWorldspaceGetter> Worldspaces { get; }
         IFallout4GroupGetter<IQuestGetter> Quests { get; }
+        IFallout4GroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
 
     }
 
@@ -4226,6 +4277,7 @@ namespace Mutagen.Bethesda.Fallout4
         Cells = 55,
         Worldspaces = 56,
         Quests = 57,
+        IdleAnimations = 58,
     }
     #endregion
 
@@ -4243,9 +4295,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 58;
+        public const ushort AdditionalFieldCount = 59;
 
-        public const ushort FieldCount = 58;
+        public const ushort FieldCount = 59;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4370,6 +4422,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.NavigationMeshInfoMaps.Clear();
             item.Worldspaces.Clear();
             item.Quests.Clear();
+            item.IdleAnimations.Clear();
         }
         
         #region Mutagen
@@ -4427,6 +4480,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Cells.RemapLinks(mapping);
             obj.Worldspaces.RemapLinks(mapping);
             obj.Quests.RemapLinks(mapping);
+            obj.IdleAnimations.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -4518,6 +4572,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Cells.Remove(keys);
             obj.Worldspaces.Remove(keys);
             obj.Quests.Remove(keys);
+            obj.IdleAnimations.Remove(keys);
         }
         
         public void Remove(
@@ -5029,6 +5084,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    obj.IdleAnimations.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -5188,6 +5251,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IObjectId":
                 case "IObjectIdGetter":
@@ -5507,6 +5571,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Cells = MaskItemExt.Factory(item.Cells.GetEqualsMask(rhs.Cells, include), include);
             ret.Worldspaces = MaskItemExt.Factory(item.Worldspaces.GetEqualsMask(rhs.Worldspaces, include), include);
             ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
+            ret.IdleAnimations = MaskItemExt.Factory(item.IdleAnimations.GetEqualsMask(rhs.IdleAnimations, include), include);
         }
         
         public string Print(
@@ -5782,6 +5847,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Quests?.Overall ?? true)
             {
                 item.Quests?.Print(sb, "Quests");
+            }
+            if (printMask?.IdleAnimations?.Overall ?? true)
+            {
+                item.IdleAnimations?.Print(sb, "IdleAnimations");
             }
         }
         
@@ -6256,6 +6325,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isQuestsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.IdleAnimations) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
+                {
+                    if (!object.Equals(lhsIdleAnimations, rhsIdleAnimations)) return false;
+                }
+                else if (!isIdleAnimationsEqual) return false;
+            }
             return true;
         }
         
@@ -6320,6 +6397,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Cells);
             hash.Add(item.Worldspaces);
             hash.Add(item.Quests);
+            hash.Add(item.IdleAnimations);
             return hash.ToHashCode();
         }
         
@@ -6622,6 +6700,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IQuest":
                 case "IQuestInternal":
                     return obj.Quests;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    return obj.IdleAnimations;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -6646,7 +6729,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[57];
+            Stream[] outputStreams = new Stream[58];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -6705,6 +6788,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteCellsParallel(item.Cells, 54, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 55, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteQuestsParallel(item.Quests, 56, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 57, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6960,6 +7044,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.IdleAnimations.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -7190,6 +7278,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.Quests.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7728,6 +7820,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IQuest":
                 case "IQuestInternal":
                     foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -8406,6 +8507,15 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, IdleAnimation, IIdleAnimationGetter>(
+                srcGroup: obj.IdleAnimations,
+                type: typeof(IIdleAnimationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleAnimations,
+                groupGetter: (m) => m.IdleAnimations))
+            {
+                yield return item;
             }
         }
         
@@ -9218,6 +9328,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.Quests,
                         groupGetter: (m) => m.Quests))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, IdleAnimation, IIdleAnimationGetter>(
+                        srcGroup: obj.IdleAnimations,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleAnimations,
+                        groupGetter: (m) => m.IdleAnimations))
                     {
                         yield return item;
                     }
@@ -10676,6 +10800,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.IdleAnimations) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.IdleAnimations);
+                try
+                {
+                    item.IdleAnimations.DeepCopyIn(
+                        rhs: rhs.IdleAnimations,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.IdleAnimations));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -10823,6 +10967,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Cells;
         public bool Worldspaces;
         public bool Quests;
+        public bool IdleAnimations;
         public GroupMask()
         {
         }
@@ -10885,6 +11030,7 @@ namespace Mutagen.Bethesda.Fallout4
             Cells = defaultValue;
             Worldspaces = defaultValue;
             Quests = defaultValue;
+            IdleAnimations = defaultValue;
         }
     }
 
@@ -11539,6 +11685,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
                         item: QuestsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.IdleAnimations ?? true)
+            {
+                var IdleAnimationsItem = item.IdleAnimations;
+                if (IdleAnimationsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
+                        item: IdleAnimationsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -12407,6 +12564,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.Quests;
                 }
+                case RecordTypeInts.IDLE:
+                {
+                    if (importMask?.IdleAnimations ?? true)
+                    {
+                        item.IdleAnimations.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.IdleAnimations;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -12855,6 +13026,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? Fallout4GroupBinaryOverlay<IQuestGetter>.Fallout4GroupFactory(_data, _QuestsLocations, _package) : default;
         public IFallout4GroupGetter<IQuestGetter> Quests => _Quests ?? new Fallout4Group<Quest>(this);
         #endregion
+        #region IdleAnimations
+        private List<RangeInt64>? _IdleAnimationsLocations;
+        private IFallout4GroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? Fallout4GroupBinaryOverlay<IIdleAnimationGetter>.Fallout4GroupFactory(_data, _IdleAnimationsLocations, _package) : default;
+        public IFallout4GroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new Fallout4Group<IdleAnimation>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -13283,6 +13459,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _QuestsLocations ??= new();
                     _QuestsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Quests;
+                }
+                case RecordTypeInts.IDLE:
+                {
+                    _IdleAnimationsLocations ??= new();
+                    _IdleAnimationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.IdleAnimations;
                 }
                 default:
                     return default(int?);
