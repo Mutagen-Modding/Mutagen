@@ -193,7 +193,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         triggeringRecord = translationParams.ConvertToCustom(triggeringRecord);
         while (!reader.Complete && !reader.Reader.Complete)
         {
-            var header = reader.Reader.GetVariableHeader();
+            var header = reader.Reader.GetVariableHeader(subRecords: false);
             if (header.RecordType != triggeringRecord) break;
             if (!IsLoqui)
             {

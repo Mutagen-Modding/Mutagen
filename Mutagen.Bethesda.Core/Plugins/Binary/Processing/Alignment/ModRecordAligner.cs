@@ -250,7 +250,7 @@ public static class ModRecordAligner
                 RecordType? lastType = null;
                 while (!frame.Complete)
                 {
-                    var variable = inputStream.GetVariableHeader();
+                    var variable = inputStream.GetVariableHeader(subRecords: false);
                     if (variable.IsGroup && lastType.HasValue)
                     {
                         var bytes = inputStream.ReadMemory(checked((int)variable.TotalLength));

@@ -449,7 +449,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         var startingPos = stream.Position;
         while (!stream.Complete)
         {
-            var varMeta = constants.GetVariableMeta(stream);
+            var varMeta = stream.GetVariableHeader(subRecords: constants.LengthLength == 2);
             var recType = parseParams.ConvertToStandard(varMeta.RecordType);
             var index = trigger.AllRecordTypes.IndexOf(recType);
             if (index != -1)

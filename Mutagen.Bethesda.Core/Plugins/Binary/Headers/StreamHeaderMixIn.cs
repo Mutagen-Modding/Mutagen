@@ -925,15 +925,20 @@ public static class StreamHeaderMixIn
     /// </summary>
     /// <param name="stream">Source stream</param>
     /// <param name="constants">Constants to use for alignment and measurements</param>
+    /// <param name="subRecords">Whether the target record is expected to be subrecords</param>
     /// <param name="readSafe">
     /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
     /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
     /// If true, extra data copies may occur depending on the underling stream type.
     /// </param>
     /// <returns>A VariableHeader struct</returns>
-    public static VariableHeader GetVariableHeader<TStream>(this TStream stream, GameConstants constants, bool readSafe = true)
+    public static VariableHeader GetVariableHeader<TStream>(this TStream stream, GameConstants constants, bool subRecords, bool readSafe = true)
         where TStream : IBinaryReadStream
     {
+        if (subRecords)
+        {
+            return constants.SubConstants.VariableMeta(stream.GetMemory(constants.SubConstants.HeaderLength, readSafe: readSafe));
+        }
         RecordType rec = new RecordType(stream.GetInt32());
         if (rec == Constants.Group)
         {
@@ -950,15 +955,20 @@ public static class StreamHeaderMixIn
     /// </summary>
     /// <param name="stream">Source stream</param>
     /// <param name="constants">Constants to use for alignment and measurements</param>
+    /// <param name="subRecords">Whether the target record is expected to be subrecords</param>
     /// <param name="readSafe">
     /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
     /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
     /// If true, extra data copies may occur depending on the underling stream type.
     /// </param>
     /// <returns>A VariableHeader struct</returns>
-    public static VariableHeader ReadVariableHeader<TStream>(this TStream stream, GameConstants constants, bool readSafe = true)
+    public static VariableHeader ReadVariableHeader<TStream>(this TStream stream, GameConstants constants, bool subRecords, bool readSafe = true)
         where TStream : IBinaryReadStream
     {
+        if (subRecords)
+        {
+            return constants.GroupConstants.VariableMeta(stream.GetMemory(constants.SubConstants.HeaderLength, readSafe: readSafe));
+        }
         RecordType rec = new RecordType(stream.GetInt32());
         if (rec == Constants.Group)
         {
@@ -1661,32 +1671,34 @@ public static class StreamHeaderMixIn
     /// Attempts to retrieve a VariableHeader struct, without progressing its position.
     /// </summary>
     /// <param name="stream">Source stream</param>
+    /// <param name="subRecords">Whether the target record is expected to be subrecords</param>
     /// <param name="readSafe">
     /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
     /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
     /// If true, extra data copies may occur depending on the underling stream type.
     /// </param>
     /// <returns>A VariableHeader struct</returns>
-    public static VariableHeader GetVariableHeader<TStream>(this TStream stream, bool readSafe = true)
+    public static VariableHeader GetVariableHeader<TStream>(this TStream stream, bool subRecords, bool readSafe = true)
         where TStream : IMutagenReadStream
     {
-        return GetVariableHeader(stream, stream.MetaData.Constants, readSafe: readSafe);
+        return GetVariableHeader(stream, stream.MetaData.Constants, subRecords: subRecords, readSafe: readSafe);
     }
 
     /// <summary>
     /// Attempts to retrieve a VariableHeader struct, progressing its position.
     /// </summary>
     /// <param name="stream">Source stream</param>
+    /// <param name="subRecords">Whether the target record is expected to be subrecords</param>
     /// <param name="readSafe">
     /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
     /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
     /// If true, extra data copies may occur depending on the underling stream type.
     /// </param>
     /// <returns>A VariableHeader struct</returns>
-    public static VariableHeader ReadVariableHeader<TStream>(this TStream stream, bool readSafe = true)
+    public static VariableHeader ReadVariableHeader<TStream>(this TStream stream, bool subRecords, bool readSafe = true)
         where TStream : IMutagenReadStream
     {
-        return ReadVariableHeader(stream, stream.MetaData.Constants, readSafe: readSafe);
+        return ReadVariableHeader(stream, stream.MetaData.Constants, subRecords: subRecords, readSafe: readSafe);
     }
     #endregion
 }

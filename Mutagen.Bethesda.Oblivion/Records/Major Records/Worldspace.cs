@@ -147,7 +147,7 @@ partial class WorldspaceBinaryOverlay
             for (int i = 0; i < 3; i++)
             {
                 if (stream.Complete) return;
-                var varMeta = stream.GetVariableHeader();
+                var varMeta = stream.GetVariableHeader(subRecords: false);
                 switch (varMeta.RecordTypeInt)
                 {
                     case RecordTypeInts.ROAD:
