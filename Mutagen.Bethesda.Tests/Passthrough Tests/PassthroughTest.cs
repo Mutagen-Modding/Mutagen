@@ -34,7 +34,7 @@ public abstract class PassthroughTest
     public Target Target { get; }
     public ModPath ExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_NormalExport"));
     public ModPath ObservableExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_ObservableExport"));
-    public ModPath TrimmedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Trimmed"));
+    public ModPath TrimmedFileName(DirectoryPath path) => Settings.Trimming.Enabled ? new(ModKey, Path.Combine(path, $"{Nickname}_Trimmed")) : FilePath;
     public ModPath MergedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Merged"));
     public ModPath UncompressedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Uncompressed"));
     public ModPath AlignedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Aligned"));
