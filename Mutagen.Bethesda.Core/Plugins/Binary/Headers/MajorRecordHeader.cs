@@ -108,7 +108,133 @@ public readonly struct MajorRecordHeader
     }
 
     /// <inheritdoc/>
-    public override string ToString() => $"{RecordType.ToString()} =>0x{ContentLength.ToString("X")}";
+    public override string ToString() => $"{RecordType} ({FormID}) [0x{ContentLength:X}]";
+
+    public MajorRecordPinHeader Pin(int loc) => new(this, loc);
+}
+
+/// <summary>
+/// A struct that overlays on top of bytes that is able to retrieve Major Record header data on demand.
+/// In addition, it keeps track of its location relative to its parent GroupFrame
+/// </summary>
+public readonly struct MajorRecordPinHeader
+{
+    /// <summary>
+    /// Game metadata to use as reference for alignment
+    /// </summary>
+    public GameConstants Meta { get; }
+        
+    /// <summary>
+    /// Bytes overlaid onto
+    /// </summary>
+    public ReadOnlyMemorySlice<byte> HeaderData { get; }
+
+    /// <summary>
+    /// Location of the major record relative to the parent GroupFrame's data.<br/>
+    /// E.g., relative to the position of the start of the parent Group
+    /// </summary>
+    public int Location { get; }
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="meta">Game metadata to use as reference for alignment</param>
+    /// <param name="span">Span to overlay on, aligned to the start of the Major Record's header</param>
+    /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
+    public MajorRecordPinHeader(GameConstants meta, ReadOnlyMemorySlice<byte> span, int pinLocation)
+    {
+        Meta = meta;
+        HeaderData = span.Slice(0, meta.MajorConstants.HeaderLength);
+        Location = pinLocation;
+    }
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="header">Existing MajorRecordHeader struct</param>
+    /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
+    public MajorRecordPinHeader(MajorRecordHeader header, int pinLocation)
+    {
+        Meta = header.Meta;
+        HeaderData = header.HeaderData;
+        Location = pinLocation;
+    }
+
+    /// <summary>
+    /// Game release associated with header
+    /// </summary>
+    public GameRelease Release => Meta.Release;
+        
+    /// <summary>
+    /// The length that the header itself takes
+    /// </summary>
+    public byte HeaderLength => Meta.MajorConstants.HeaderLength;
+        
+    /// <summary>
+    /// RecordType of the header
+    /// </summary>
+    public RecordType RecordType => new(BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(0, 4)));
+        
+    /// <summary>
+    /// The length of the content of the MajorRecord, excluding the header bytes.
+    /// </summary>
+    public uint ContentLength => BinaryPrimitives.ReadUInt32LittleEndian(HeaderData.Slice(4, Meta.MajorConstants.LengthLength));
+
+    /// <summary>
+    /// The integer representing a Major Record's flags enum.
+    /// Since each game has its own flag Enum, this field is offered as an int that should
+    /// be casted to the appropriate enum for use.
+    /// </summary>
+    public int MajorRecordFlags => BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(8, 4));
+
+    /// <summary>
+    /// FormID of the Major Record
+    /// </summary>
+    public FormID FormID => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(HeaderData.Slice(12, 4)));
+
+    /// <summary>
+    /// Version control of the Major Record
+    /// </summary>
+    public int VersionControl => BinaryPrimitives.ReadInt32LittleEndian(HeaderData.Slice(16, 4));
+
+    /// <summary>
+    /// Total length of the Major Record, including the header and its content.
+    /// </summary>
+    public long TotalLength => HeaderLength + ContentLength;
+        
+    /// <summary>
+    /// Whether the compression flag is on
+    /// </summary>
+    public bool IsCompressed => (MajorRecordFlags & Constants.CompressedFlag) > 0;
+
+    /// <summary>
+    /// Returns the Form Version of the Major Record
+    /// </summary>
+    public short? FormVersion
+    {
+        get
+        {
+            if (!Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+            return BinaryPrimitives.ReadInt16LittleEndian(
+                HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value));
+        }
+    }
+
+    /// <summary>
+    /// Returns the second Version Control of the Major Record
+    /// </summary>
+    public short? VersionControl2
+    {
+        get
+        {
+            if (!Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+            return BinaryPrimitives.ReadInt16LittleEndian(
+                HeaderData.Slice(Meta.MajorConstants.FormVersionLocationOffset.Value + 2));
+        }
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => $"{RecordType} ({FormID}) [0x{ContentLength:X}] @ 0x{Location:X}";
 }
 
 /// <summary>
@@ -268,7 +394,7 @@ public ref struct MajorRecordHeaderWritable
     }
 
     /// <inheritdoc/>
-    public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")}";
+    public override string ToString() => $"{RecordType} ({FormID}) [0x{ContentLength:X}]";
 }
 
 /// <summary>
@@ -405,7 +531,7 @@ public readonly struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
 
 /// <summary>
 /// A struct that overlays on top of bytes that is able to retrieve Major Record data on demand.
-/// In addition, it keeps track of its location relative to its parent MajorRecordFrame
+/// In addition, it keeps track of its location relative to its parent GroupFrame
 /// </summary>
 public readonly struct MajorRecordPinFrame
 {
@@ -445,7 +571,7 @@ public readonly struct MajorRecordPinFrame
     }
 
     /// <inheritdoc/>
-    public override string ToString() => $"{Frame.ToString()} @ {Location.ToString()}";
+    public override string ToString() => $"{Frame} @ 0x{Location:X}";
 
     #region Header Forwarding
     /// <summary>

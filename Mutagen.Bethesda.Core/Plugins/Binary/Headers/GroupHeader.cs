@@ -104,7 +104,7 @@ public readonly struct GroupHeader
     public bool CanHaveSubGroups => Meta.GroupConstants.CanHaveSubGroups(GroupType);
 
     /// <inheritdoc/>
-    public override string ToString() => $"{RecordType} ({ContainedRecordType}) => 0x{ContentLength:X}";
+    public override string ToString() => $"{RecordType} ({ContainedRecordType}) [0x{ContentLength:X}]";
 }
 
 /// <summary>
@@ -230,7 +230,7 @@ public readonly struct GroupPinHeader
     public bool CanHaveSubGroups => Meta.GroupConstants.CanHaveSubGroups(GroupType);
 
     /// <inheritdoc/>
-    public override string ToString() => $"{RecordType} ({ContainedRecordType}) => 0x{ContentLength:X} @ {Location.ToString()}";
+    public override string ToString() => $"{RecordType} ({ContainedRecordType}) [0x{ContentLength:X}] @ 0x{Location:X}";
 
     public static implicit operator GroupHeader(GroupPinHeader frame)
     {
@@ -417,7 +417,7 @@ public readonly struct GroupPinFrame : IEnumerable<MajorRecordPinFrame>
     }
         
     /// <inheritdoc/>
-    public override string ToString() => $"{Frame.ToString()} @ {Location.ToString()}";
+    public override string ToString() => $"{Frame.ToString()} => 0x{ContentLength:X} @ 0x{Location:X}";
 
     /// <inheritdoc/>
     public IEnumerator<MajorRecordPinFrame> GetEnumerator() => HeaderExt.EnumerateRecords(Frame).GetEnumerator();

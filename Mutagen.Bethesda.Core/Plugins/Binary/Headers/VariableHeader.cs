@@ -82,5 +82,5 @@ public readonly struct VariableHeader
     public long ContentLength => Constants.HeaderIncludedInLength ? RecordLength - HeaderLength : RecordLength;
 
     /// <inheritdoc/>
-    public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")}";
+    public override string ToString() => $"{RecordType} [0x{ContentLength:X}]";
 }

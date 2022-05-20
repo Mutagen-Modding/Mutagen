@@ -61,7 +61,9 @@ public readonly struct SubrecordHeader
     public int TotalLength => HeaderLength + ContentLength;
 
     /// <inheritdoc/>
-    public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength:X}";
+    public override string ToString() => $"{RecordType.ToString()} [0x{ContentLength:X}]";
+
+    public SubrecordPinHeader Pin(int location) => new SubrecordPinHeader(this, location);
 }
 
 /// <summary>
@@ -147,7 +149,7 @@ public readonly struct SubrecordPinHeader
     public int TotalLength => HeaderLength + ContentLength;
 
     /// <inheritdoc/>
-    public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")} @ {Location.ToString()}";
+    public override string ToString() => $"{RecordType} [0x{ContentLength:X}] @ 0x{Location:X}";
 
     public static implicit operator SubrecordHeader(SubrecordPinHeader frame)
     {
@@ -218,7 +220,7 @@ public readonly struct SubrecordFrame
     }
 
     /// <inheritdoc/>
-    public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength:X}";
+    public override string ToString() => $"{RecordType} [0x{ContentLength:X}]";
 
     #region Header Forwarding
     /// <summary>
@@ -335,7 +337,7 @@ public readonly struct SubrecordPinFrame
     }
 
     /// <inheritdoc/>
-    public override string ToString() => $"{Frame.ToString()} @ {Location.ToString()}";
+    public override string ToString() => $"{Frame.ToString()} => 0x{ContentLength:X} @ 0x{Location:X}";
 
     #region Forwarding
     /// <summary>
