@@ -8812,16 +8812,30 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLIB:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.ActivateParents)
                     {
-                        case 0:
-                            _LeveledItemBaseObjectLocation = (stream.Position - offset);
-                            return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, type);
-                        case 1:
-                            _LocationRefTypeLocation = (stream.Position - offset);
-                            return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, type);
-                        default:
-                            throw new NotImplementedException();
+                        _LeveledItemBaseObjectLocation = (stream.Position - offset);
+                        return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.NavigationDoorLink)
+                    {
+                        _LocationRefTypeLocation = (stream.Position - offset);
+                        return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                _LeveledItemBaseObjectLocation = (stream.Position - offset);
+                                return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, type);
+                            case 1:
+                                _LocationRefTypeLocation = (stream.Position - offset);
+                                return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.XLCM:

@@ -1389,22 +1389,41 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.WLEV:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        case 0:
-                            if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
-                            _WLEVLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                            return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, type);
-                        case 1:
-                            _DataLocation = (stream.Position - offset);
-                            _DataLengthOverride = lastParsed.LengthOverride;
-                            if (lastParsed.LengthOverride.HasValue)
-                            {
-                                stream.Position += lastParsed.LengthOverride.Value;
-                            }
-                            return new ParseResult((int)WorldDefaultLevelData_FieldIndex.Data, type);
-                        default:
-                            throw new NotImplementedException();
+                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
+                        _WLEVLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                        return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize)
+                    {
+                        _DataLocation = (stream.Position - offset);
+                        _DataLengthOverride = lastParsed.LengthOverride;
+                        if (lastParsed.LengthOverride.HasValue)
+                        {
+                            stream.Position += lastParsed.LengthOverride.Value;
+                        }
+                        return new ParseResult((int)WorldDefaultLevelData_FieldIndex.Data, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
+                                _WLEVLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                                return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, type);
+                            case 1:
+                                _DataLocation = (stream.Position - offset);
+                                _DataLengthOverride = lastParsed.LengthOverride;
+                                if (lastParsed.LengthOverride.HasValue)
+                                {
+                                    stream.Position += lastParsed.LengthOverride.Value;
+                                }
+                                return new ParseResult((int)WorldDefaultLevelData_FieldIndex.Data, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.XXXX:

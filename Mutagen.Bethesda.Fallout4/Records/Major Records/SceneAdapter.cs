@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Fallout4;
@@ -26,8 +27,7 @@ partial class SceneAdapterBinaryOverlay
     public partial ISceneScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
     {
         if (this.ScriptsEndingPos == _data.Length) return null;
-        return SceneScriptFragmentsBinaryOverlay.SceneScriptFragmentsFactory(
-            _data.Slice(this.ScriptsEndingPos),
-            _package);
+        return SceneScriptFragmentsBinaryCreateTranslation.ReadFragments(frame: new MutagenFrame(
+            new OverlayStream(_data.Slice(ScriptsEndingPos), _package)), objectFormat: ObjectFormat);
     }
 }

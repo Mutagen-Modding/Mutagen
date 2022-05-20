@@ -44,7 +44,7 @@
           <UInt8 name="ResponseNumber" />
           <FormLink name="Sound" refName="SoundDescriptor" />
           <UInt8 name="Unknown" />
-          <UInt16 name="InterruptPercentage" />
+          <UInt16 name="InterruptPercentage" binaryOverlay="Custom" />
           <Int32 name="CameraTargetAlias" />
           <Int32 name="CameraLocationAlias" />
         </Fields>

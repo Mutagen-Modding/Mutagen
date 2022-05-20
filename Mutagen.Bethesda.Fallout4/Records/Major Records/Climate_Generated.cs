@@ -2322,10 +2322,7 @@ namespace Mutagen.Bethesda.Fallout4
         partial void MoonAndPhaseLengthCustomParse(
             OverlayStream stream,
             int offset);
-        protected int MoonAndPhaseLengthEndingPos;
         #endregion
-        protected int MoonsEndingPos;
-        protected int PhaseLengthEndingPos;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

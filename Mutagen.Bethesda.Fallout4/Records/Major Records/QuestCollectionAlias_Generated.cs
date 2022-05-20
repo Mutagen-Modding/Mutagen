@@ -670,13 +670,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ALCS;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var triggers = RecordCollection.Factory(RecordTypes.ALCS);
             var all = RecordCollection.Factory(
                 RecordTypes.ALCS,
                 RecordTypes.ALMI);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestCollectionAliasBinaryWriteTranslation);
         #region Interface
@@ -1150,7 +1152,6 @@ namespace Mutagen.Bethesda.Fallout4
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.ALCS:
-                case RecordTypeInts.ALMI:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestCollectionAlias_FieldIndex.Collection) return ParseResult.Stop;
                     item.Collection.SetTo(
@@ -1269,7 +1270,6 @@ namespace Mutagen.Bethesda.Fallout4
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ALCS:
-                case RecordTypeInts.ALMI:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestCollectionAlias_FieldIndex.Collection) return ParseResult.Stop;
                     this.Collection = this.ParseRepeatedTypelessSubrecord<CollectionAliasBinaryOverlay>(

@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
@@ -92,12 +93,16 @@ partial class QuestAdapterBinaryOverlay
 
     private IScriptEntryGetter? _scriptEntry;
 
-    partial void CustomScriptEndPos()
+    partial void CustomFactoryEnd(
+            OverlayStream stream,
+            int finalPos,
+            int offset)
     {
         var frame = new MutagenFrame(
             new MutagenInterfaceReadStream(
-                new BinaryMemoryReadStream(_data.Slice(ScriptsEndingPos)),
+                new BinaryMemoryReadStream(_data.Slice(ScriptsEndingPos + 1)),
                 _package.MetaData));
+        if (frame.Complete) return;
         var count = frame.ReadUInt16();
         _scriptEntry = AVirtualMachineAdapterBinaryCreateTranslation.ReadEntry(frame, this.ObjectFormat);
         Fragments =
@@ -125,6 +130,6 @@ partial class QuestAdapterBinaryOverlay
 
     public partial IScriptEntryGetter GetScriptCustom(int location)
     {
-        return _scriptEntry ?? throw new MalformedDataException("Expected script to have been parsed, but wasnt");
+        return _scriptEntry ?? new ScriptEntry();
     }
 }

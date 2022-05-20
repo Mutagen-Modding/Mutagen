@@ -2170,16 +2170,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region InterruptPercentage
         private int _InterruptPercentageLocation => _TRDALocation!.Value.Min + 0xA;
-        private bool _InterruptPercentage_IsSet => _TRDALocation.HasValue;
-        public UInt16 InterruptPercentage => _InterruptPercentage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_InterruptPercentageLocation, 2)) : default;
+        public partial UInt16 GetInterruptPercentageCustom();
+        public UInt16 InterruptPercentage => GetInterruptPercentageCustom();
+        partial void CustomInterruptPercentageEndPos();
         #endregion
         #region CameraTargetAlias
-        private int _CameraTargetAliasLocation => _TRDALocation!.Value.Min + 0xC;
+        private int _CameraTargetAliasLocation => InterruptPercentageEndingPos;
         private bool _CameraTargetAlias_IsSet => _TRDALocation.HasValue;
         public Int32 CameraTargetAlias => _CameraTargetAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_CameraTargetAliasLocation, 4)) : default;
         #endregion
         #region CameraLocationAlias
-        private int _CameraLocationAliasLocation => _TRDALocation!.Value.Min + 0x10;
+        private int _CameraLocationAliasLocation => InterruptPercentageEndingPos + 0x4;
         private bool _CameraLocationAlias_IsSet => _TRDALocation.HasValue;
         public Int32 CameraLocationAlias => _CameraLocationAlias_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_CameraLocationAliasLocation, 4)) : default;
         #endregion

@@ -648,6 +648,46 @@ public class PluginTranslationModule : BinaryTranslationModule
         await base.GenerateInTranslationCreateClass(obj, sb);
     }
 
+    private Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>> DoubleUsages(
+        List<(int, int, TypeGeneration Field)> fields)
+    {
+        var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>>();
+        TypeGeneration? lastIntegratedField = null;
+        foreach (var field in fields)
+        {
+            var doIt = () =>
+            {
+                var fieldData = field.Field.GetFieldData();
+                if (fieldData.GenerationTypes.Count() > 1) return;
+                foreach (var gen in fieldData.GenerationTypes)
+                {
+                    if (gen.Key.Count() > 1) continue;
+                    LoquiType loqui = gen.Value as LoquiType;
+                    if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
+                    doubleUsages.GetOrAdd(gen.Key.First()).Add((field.Item1, field.Item2, field.Field, lastIntegratedField));
+                }
+            };
+            doIt();
+            if (field.Field.IntegrateField)
+            {
+                lastIntegratedField = field.Field;
+            }
+            else if (field.Field is DataType d)
+            {
+                lastIntegratedField = d.IterateFields().Select(f => f.Field).Last();
+            }
+        }
+        foreach (var item in doubleUsages.ToList())
+        {
+            if (item.Value.Count <= 1)
+            {
+                doubleUsages.Remove(item.Key);
+            }
+        }
+
+        return doubleUsages;
+    }
+
     private async Task GenerateCreateExtras(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
@@ -773,39 +813,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fields.Add(field);
                     }
 
-                    var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>>();
-                    TypeGeneration? lastIntegratedField = null;
-                    foreach (var field in fields)
-                    {
-                        var doIt = () =>
-                        {
-                            var fieldData = field.Field.GetFieldData();
-                            if (fieldData.GenerationTypes.Count() > 1) return;
-                            foreach (var gen in fieldData.GenerationTypes)
-                            {
-                                if (gen.Key.Count() > 1) continue;
-                                LoquiType loqui = gen.Value as LoquiType;
-                                if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
-                                doubleUsages.GetOrAdd(gen.Key.First()).Add((field.Item1, field.Item2, field.Field, lastIntegratedField));
-                            }
-                        };
-                        doIt();
-                        if (field.Field.IntegrateField)
-                        {
-                            lastIntegratedField = field.Field;
-                        }
-                        else if (field.Field is DataType d)
-                        {
-                            lastIntegratedField = d.IterateFields().Select(f => f.Field).Last();
-                        }
-                    }
-                    foreach (var item in doubleUsages.ToList())
-                    {
-                        if (item.Value.Count <= 1)
-                        {
-                            doubleUsages.Remove(item.Key);
-                        }
-                    }
+                    var doubleUsages = DoubleUsages(fields);
 
                     foreach (var field in fields)
                     {
@@ -1429,7 +1437,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         var fieldData = field.Field.GetFieldData();
                         if (!fieldData.HasTrigger
-                            || fieldData.GenerationTypes.Count() == 0) continue;
+                            || !fieldData.GenerationTypes.Any()) continue;
                         if (fieldData.BinaryOverlayFallback == BinaryGenerationType.NoGeneration) continue;
                         if (field.Field.Derivative && fieldData.BinaryOverlayFallback != BinaryGenerationType.Custom) continue;
                         if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
@@ -1441,26 +1449,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fields.Add(field);
                     }
 
-                    var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration)>>();
-                    foreach (var field in fields)
-                    {
-                        var fieldData = field.Field.GetFieldData();
-                        if (fieldData.GenerationTypes.Count() > 1) continue;
-                        foreach (var gen in fieldData.GenerationTypes)
-                        {
-                            if (gen.Key.Count() > 1) continue;
-                            LoquiType loqui = gen.Value as LoquiType;
-                            if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
-                            doubleUsages.GetOrAdd(gen.Key.First()).Add(field);
-                        }
-                    }
-                    foreach (var item in doubleUsages.ToList())
-                    {
-                        if (item.Value.Count <= 1)
-                        {
-                            doubleUsages.Remove(item.Key);
-                        }
-                    }
+                    var doubleUsages = DoubleUsages(fields);
 
                     foreach (var field in fields)
                     {
@@ -1474,7 +1463,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             LoquiType loqui = gen.Value as LoquiType;
                             if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
 
-                            List<(int, int, TypeGeneration Field)> doubles = null;
+                            List<(int, int, TypeGeneration Field, TypeGeneration? LastIntegratedField)> doubles = null;
                             if (gen.Key.Count() == 1)
                             {
                                 if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
@@ -1539,73 +1528,151 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                                 else
                                 {
-                                    sb.AppendLine($"switch (recordParseCount?.GetOrAdd(type) ?? 0)");
-                                    using (sb.CurlyBrace())
+                                    bool first = true;
+                                    foreach (var doublesField in doubles)
                                     {
-                                        int count = 0;
-                                        foreach (var doublesField in doubles)
+                                        if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                         {
-                                            if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
+                                            throw new ArgumentException("Unsupported type generator: " +
+                                                                        doublesField.Field);
+                                        }
+
+                                        var doublesFieldData = doublesField.Field.GetFieldData();
+                                        
+                                        using (var i = sb.If(ands: false, first: first))
+                                        {
+                                            if (first)
                                             {
-                                                throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
+                                                i.Add("!lastParsed.ParsedIndex.HasValue");
+                                                first = false;
                                             }
-                                            var doublesFieldData = doublesField.Field.GetFieldData();
-                                            sb.AppendLine($"case {count++}:");
-                                            using (sb.IncreaseDepth())
+
+                                            if (doublesField.LastIntegratedField != null)
                                             {
-                                                await GenerateLastParsedShortCircuit(
-                                                    obj: obj,
-                                                    sb: sb,
-                                                    field: doublesField,
-                                                    doublesPotential: true,
-                                                    lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
-                                                    nextRecAccessor: "type",
-                                                    toDo: async () =>
-                                                    {
-                                                        string recConverter = "parseParams";
-                                                        if (doublesFieldData.RecordTypeConverter != null
-                                                            && doublesFieldData.RecordTypeConverter.FromConversions.Count > 0)
-                                                        {
-                                                            recConverter = $"{obj.RegistrationName}.{doublesField.Field.Name}Converter";
-                                                        }
-                                                        await doubleGen.GenerateWrapperRecordTypeParse(
-                                                            sb: sb,
-                                                            objGen: obj,
-                                                            typeGen: doublesField.Field,
-                                                            locationAccessor: "(stream.Position - offset)",
-                                                            packageAccessor: "_package",
-                                                            converterAccessor: recConverter);
-                                                        if (obj.GetObjectType() == ObjectType.Mod
-                                                            && doublesField.Field.Name == "ModHeader")
-                                                        {
-                                                            using (var args = sb.Call(
-                                                                       $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo"))
-                                                            {
-                                                                args.Add(subFg =>
-                                                                {
-                                                                    subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
-                                                                    using (subFg.IncreaseDepth())
-                                                                    {
-                                                                        subFg.AppendLine($"master => new {nameof(MasterReference)}()");
-                                                                        using (subFg.CurlyBrace(appendParenthesis: true))
-                                                                        {
-                                                                            subFg.AppendLine("Master = master.Master,");
-                                                                            subFg.AppendLine("FileSize = master.FileSize,");
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-                                                    });
+                                                i.Add(
+                                                    $"lastParsed.ParsedIndex.Value <= {doublesField.LastIntegratedField.IndexEnumInt}");
                                             }
                                         }
-                                        sb.AppendLine($"default:");
-                                        using (sb.IncreaseDepth())
+
+                                        using (sb.CurlyBrace())
                                         {
-                                            sb.AppendLine($"throw new NotImplementedException();");
+                                            await GenerateLastParsedShortCircuit(
+                                                obj: obj,
+                                                sb: sb,
+                                                field: (doublesField.Item1, doublesField.Item2,
+                                                    doublesField.Field),
+                                                doublesPotential: true,
+                                                lastRequiredIndex: obj.GetObjectData()
+                                                    .GetLastRequiredFieldIndexToUse(),
+                                                nextRecAccessor: "type",
+                                                toDo: async () =>
+                                                {
+                                                    string recConverter = "parseParams";
+                                                    if (doublesFieldData.RecordTypeConverter != null
+                                                        && doublesFieldData.RecordTypeConverter.FromConversions
+                                                            .Count > 0)
+                                                    {
+                                                        recConverter =
+                                                            $"{obj.RegistrationName}.{doublesField.Field.Name}Converter";
+                                                    }
+
+                                                    await doubleGen.GenerateWrapperRecordTypeParse(
+                                                        sb: sb,
+                                                        objGen: obj,
+                                                        typeGen: doublesField.Field,
+                                                        locationAccessor: "(stream.Position - offset)",
+                                                        packageAccessor: "_package",
+                                                        converterAccessor: recConverter);
+                                                });
                                         }
                                     }
-                                    doubles.Clear();
+
+                                    sb.AppendLine("else");
+                                    using (sb.CurlyBrace())
+                                    {
+                                        sb.AppendLine($"switch (recordParseCount?.GetOrAdd(type) ?? 0)");
+                                        using (sb.CurlyBrace())
+                                        {
+                                            int count = 0;
+                                            foreach (var doublesField in doubles)
+                                            {
+                                                if (!this.TryGetTypeGeneration(doublesField.Field.GetType(),
+                                                        out var doubleGen))
+                                                {
+                                                    throw new ArgumentException("Unsupported type generator: " +
+                                                        doublesField.Field);
+                                                }
+
+                                                var doublesFieldData = doublesField.Field.GetFieldData();
+                                                sb.AppendLine($"case {count++}:");
+                                                using (sb.IncreaseDepth())
+                                                {
+                                                    await GenerateLastParsedShortCircuit(
+                                                        obj: obj,
+                                                        sb: sb,
+                                                        field: (doublesField.Item1, doublesField.Item2,
+                                                            doublesField.Field),
+                                                        doublesPotential: true,
+                                                        lastRequiredIndex: obj.GetObjectData()
+                                                            .GetLastRequiredFieldIndexToUse(),
+                                                        nextRecAccessor: "type",
+                                                        toDo: async () =>
+                                                        {
+                                                            string recConverter = "parseParams";
+                                                            if (doublesFieldData.RecordTypeConverter != null
+                                                                && doublesFieldData.RecordTypeConverter.FromConversions
+                                                                    .Count > 0)
+                                                            {
+                                                                recConverter =
+                                                                    $"{obj.RegistrationName}.{doublesField.Field.Name}Converter";
+                                                            }
+
+                                                            await doubleGen.GenerateWrapperRecordTypeParse(
+                                                                sb: sb,
+                                                                objGen: obj,
+                                                                typeGen: doublesField.Field,
+                                                                locationAccessor: "(stream.Position - offset)",
+                                                                packageAccessor: "_package",
+                                                                converterAccessor: recConverter);
+                                                            if (obj.GetObjectType() == ObjectType.Mod
+                                                                && doublesField.Field.Name == "ModHeader")
+                                                            {
+                                                                using (var args = sb.Call(
+                                                                           $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo"))
+                                                                {
+                                                                    args.Add(subFg =>
+                                                                    {
+                                                                        subFg.AppendLine(
+                                                                            "this.ModHeader.MasterReferences.Select(");
+                                                                        using (subFg.IncreaseDepth())
+                                                                        {
+                                                                            subFg.AppendLine(
+                                                                                $"master => new {nameof(MasterReference)}()");
+                                                                            using (subFg.CurlyBrace(
+                                                                                appendParenthesis: true))
+                                                                            {
+                                                                                subFg.AppendLine(
+                                                                                    "Master = master.Master,");
+                                                                                subFg.AppendLine(
+                                                                                    "FileSize = master.FileSize,");
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                        });
+                                                }
+                                            }
+
+                                            sb.AppendLine($"default:");
+                                            using (sb.IncreaseDepth())
+                                            {
+                                                sb.AppendLine($"throw new NotImplementedException();");
+                                            }
+                                        }
+
+                                        doubles.Clear();
+                                    }
                                 }
                             }
                         }

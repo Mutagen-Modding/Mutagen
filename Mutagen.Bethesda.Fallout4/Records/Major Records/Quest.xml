@@ -38,9 +38,9 @@
       <String name="SwfFile" recordType="SNAM" />
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="Unknown" binary="NoGeneration" />
-      <RefList name="Scenes" binary="NoGeneration" refName="Scene" />
-      <RefList name="DialogTopics" binary="NoGeneration" refName="DialogTopic" />
       <RefList name="DialogBranches" binary="NoGeneration" refName="DialogBranch" />
+      <RefList name="DialogTopics" binary="NoGeneration" refName="DialogTopic" />
+      <RefList name="Scenes" binary="NoGeneration" refName="Scene" />
     </Fields>
   </Object>
   <Object name="QuestAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="ac22ba38-9b50-49b1-99fd-c1b057879549" ID="522">
@@ -178,7 +178,7 @@
   </Object>
   <Object name="CollectionAlias" objType="Subrecord" baseClass="AQuestAlias" GUID="9d9b0a54-e7ff-4fe2-b89c-f24c187bb991" ID="533">
     <Fields>
-      <Int32 name="AliasID" recordType="ALCS" />
+      <Int32 name="AliasID" recordType="ALCS" nullable="False" />
       <UInt8 name="MaxInitialFillCount" recordType="ALMI" />
     </Fields>
   </Object>

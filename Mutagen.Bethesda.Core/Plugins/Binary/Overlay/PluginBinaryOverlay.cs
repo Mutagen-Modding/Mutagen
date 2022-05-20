@@ -442,6 +442,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordTriggerSpecs trigger,
         RecordHeaderConstants constants,
         bool skipHeader,
+        bool triggersAlwaysAreNewRecords = false,
         TypedParseParams? parseParams = null)
     {
         var ret = new List<int>();
@@ -455,7 +456,9 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             if (index != -1)
             {
                 // If new record isn't before one we've already parsed, just continue
-                if (lastParsed != null && lastParsed.Value < index)
+                if (!triggersAlwaysAreNewRecords 
+                    && lastParsed != null 
+                    && lastParsed.Value < index)
                 {
                     lastParsed = index;
                     stream.Position += (int)varMeta.TotalLength;
@@ -501,13 +504,15 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
 
     /// <summary>
     /// Finds locations of a number of records given by count that match a set of record types.
-    /// A new location is marked each time a record type that has already been encounterd is seen
+    /// A new location is marked each time a record type that has already been encountered is seen
     /// </summary>
     /// <param name="stream">Stream to read and progress</param>
     /// <param name="count">Number of expected records</param>
     /// <param name="trigger">Set of record types expected within one record</param>
     /// <param name="constants">Metadata for reference</param>
     /// <param name="skipHeader">Whether to skip the header in the return location values</param>
+    /// <param name="triggersAlwaysAreNewRecords">If false, RecordTypes that are triggers but not before the last parsed
+    /// RecordType in the order type will be considered part of the last section</param>
     /// <returns>Array of located positions relative to the stream's position at the start</returns>
     public static int[] ParseRecordLocationsByCount(
         OverlayStream stream,
@@ -515,14 +520,15 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordTriggerSpecs trigger,
         RecordHeaderConstants constants,
         bool skipHeader,
+        bool triggersAlwaysAreNewRecords = false,
         TypedParseParams? parseParams = null)
     {
-        return ParseRecordLocationsInternal(stream, count, trigger, constants, skipHeader, parseParams);
+        return ParseRecordLocationsInternal(stream, count, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, parseParams);
     }
 
     /// <summary>
     /// Finds locations of a number of records given by count that match a set of record types.
-    /// A new location is marked each time a record type that has already been encounterd is seen
+    /// A new location is marked each time a record type that has already been encountered is seen
     /// </summary>
     /// <param name="stream">Stream to read and progress</param>
     /// <param name="trigger">Set of record types expected within one record</param>
@@ -534,9 +540,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordTriggerSpecs trigger,
         RecordHeaderConstants constants,
         bool skipHeader,
+        bool triggersAlwaysAreNewRecords = false,
         TypedParseParams? parseParams = null)
     {
-        return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, parseParams);
+        return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, parseParams);
     }
 
     public static int[] ParseRecordLocations(

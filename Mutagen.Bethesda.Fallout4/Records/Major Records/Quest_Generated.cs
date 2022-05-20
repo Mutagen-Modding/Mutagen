@@ -258,17 +258,17 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         public Int32 Unknown { get; set; } = default;
         #endregion
-        #region Scenes
+        #region DialogBranches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Scene> _Scenes = new ExtendedList<Scene>();
-        public ExtendedList<Scene> Scenes
+        private ExtendedList<DialogBranch> _DialogBranches = new ExtendedList<DialogBranch>();
+        public ExtendedList<DialogBranch> DialogBranches
         {
-            get => this._Scenes;
-            init => this._Scenes = value;
+            get => this._DialogBranches;
+            init => this._DialogBranches = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ISceneGetter> IQuestGetter.Scenes => _Scenes;
+        IReadOnlyList<IDialogBranchGetter> IQuestGetter.DialogBranches => _DialogBranches;
         #endregion
 
         #endregion
@@ -286,17 +286,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region DialogBranches
+        #region Scenes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DialogBranch> _DialogBranches = new ExtendedList<DialogBranch>();
-        public ExtendedList<DialogBranch> DialogBranches
+        private ExtendedList<Scene> _Scenes = new ExtendedList<Scene>();
+        public ExtendedList<Scene> Scenes
         {
-            get => this._DialogBranches;
-            init => this._DialogBranches = value;
+            get => this._Scenes;
+            init => this._Scenes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IDialogBranchGetter> IQuestGetter.DialogBranches => _DialogBranches;
+        IReadOnlyList<ISceneGetter> IQuestGetter.Scenes => _Scenes;
         #endregion
 
         #endregion
@@ -350,9 +350,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SwfFile = initialValue;
                 this.Timestamp = initialValue;
                 this.Unknown = initialValue;
-                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
-                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
                 this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>());
+                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
+                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
                 this.DNAMDataTypeState = initialValue;
             }
 
@@ -385,9 +385,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem SwfFile,
                 TItem Timestamp,
                 TItem Unknown,
-                TItem Scenes,
-                TItem DialogTopics,
                 TItem DialogBranches,
+                TItem DialogTopics,
+                TItem Scenes,
                 TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -419,9 +419,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SwfFile = SwfFile;
                 this.Timestamp = Timestamp;
                 this.Unknown = Unknown;
-                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(Scenes, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
-                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(DialogTopics, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
                 this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(DialogBranches, Enumerable.Empty<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>());
+                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(DialogTopics, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
+                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(Scenes, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
@@ -456,9 +456,9 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem SwfFile;
             public TItem Timestamp;
             public TItem Unknown;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>? Scenes;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>? DialogTopics;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>? DialogBranches;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>? DialogTopics;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>? Scenes;
             public TItem DNAMDataTypeState;
             #endregion
 
@@ -495,9 +495,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.SwfFile, rhs.SwfFile)) return false;
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Scenes, rhs.Scenes)) return false;
-                if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
                 if (!object.Equals(this.DialogBranches, rhs.DialogBranches)) return false;
+                if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
+                if (!object.Equals(this.Scenes, rhs.Scenes)) return false;
                 if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -526,9 +526,9 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.SwfFile);
                 hash.Add(this.Timestamp);
                 hash.Add(this.Unknown);
-                hash.Add(this.Scenes);
-                hash.Add(this.DialogTopics);
                 hash.Add(this.DialogBranches);
+                hash.Add(this.DialogTopics);
+                hash.Add(this.Scenes);
                 hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -631,12 +631,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.SwfFile)) return false;
                 if (!eval(this.Timestamp)) return false;
                 if (!eval(this.Unknown)) return false;
-                if (this.Scenes != null)
+                if (this.DialogBranches != null)
                 {
-                    if (!eval(this.Scenes.Overall)) return false;
-                    if (this.Scenes.Specific != null)
+                    if (!eval(this.DialogBranches.Overall)) return false;
+                    if (this.DialogBranches.Specific != null)
                     {
-                        foreach (var item in this.Scenes.Specific)
+                        foreach (var item in this.DialogBranches.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -655,12 +655,12 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (this.DialogBranches != null)
+                if (this.Scenes != null)
                 {
-                    if (!eval(this.DialogBranches.Overall)) return false;
-                    if (this.DialogBranches.Specific != null)
+                    if (!eval(this.Scenes.Overall)) return false;
+                    if (this.Scenes.Specific != null)
                     {
-                        foreach (var item in this.DialogBranches.Specific)
+                        foreach (var item in this.Scenes.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -767,12 +767,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.SwfFile)) return true;
                 if (eval(this.Timestamp)) return true;
                 if (eval(this.Unknown)) return true;
-                if (this.Scenes != null)
+                if (this.DialogBranches != null)
                 {
-                    if (eval(this.Scenes.Overall)) return true;
-                    if (this.Scenes.Specific != null)
+                    if (eval(this.DialogBranches.Overall)) return true;
+                    if (this.DialogBranches.Specific != null)
                     {
-                        foreach (var item in this.Scenes.Specific)
+                        foreach (var item in this.DialogBranches.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -791,12 +791,12 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (this.DialogBranches != null)
+                if (this.Scenes != null)
                 {
-                    if (eval(this.DialogBranches.Overall)) return true;
-                    if (this.DialogBranches.Specific != null)
+                    if (eval(this.Scenes.Overall)) return true;
+                    if (this.Scenes.Specific != null)
                     {
-                        foreach (var item in this.DialogBranches.Specific)
+                        foreach (var item in this.Scenes.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -924,16 +924,16 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.SwfFile = eval(this.SwfFile);
                 obj.Timestamp = eval(this.Timestamp);
                 obj.Unknown = eval(this.Unknown);
-                if (Scenes != null)
+                if (DialogBranches != null)
                 {
-                    obj.Scenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Scene.Mask<R>?>>?>(eval(this.Scenes.Overall), Enumerable.Empty<MaskItemIndexed<R, Scene.Mask<R>?>>());
-                    if (Scenes.Specific != null)
+                    obj.DialogBranches = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogBranch.Mask<R>?>>?>(eval(this.DialogBranches.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogBranch.Mask<R>?>>());
+                    if (DialogBranches.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, Scene.Mask<R>?>>();
-                        obj.Scenes.Specific = l;
-                        foreach (var item in Scenes.Specific)
+                        var l = new List<MaskItemIndexed<R, DialogBranch.Mask<R>?>>();
+                        obj.DialogBranches.Specific = l;
+                        foreach (var item in DialogBranches.Specific)
                         {
-                            MaskItemIndexed<R, Scene.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Scene.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, DialogBranch.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DialogBranch.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -954,16 +954,16 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (DialogBranches != null)
+                if (Scenes != null)
                 {
-                    obj.DialogBranches = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogBranch.Mask<R>?>>?>(eval(this.DialogBranches.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogBranch.Mask<R>?>>());
-                    if (DialogBranches.Specific != null)
+                    obj.Scenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Scene.Mask<R>?>>?>(eval(this.Scenes.Overall), Enumerable.Empty<MaskItemIndexed<R, Scene.Mask<R>?>>());
+                    if (Scenes.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, DialogBranch.Mask<R>?>>();
-                        obj.DialogBranches.Specific = l;
-                        foreach (var item in DialogBranches.Specific)
+                        var l = new List<MaskItemIndexed<R, Scene.Mask<R>?>>();
+                        obj.Scenes.Specific = l;
+                        foreach (var item in Scenes.Specific)
                         {
-                            MaskItemIndexed<R, DialogBranch.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DialogBranch.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Scene.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Scene.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1168,16 +1168,16 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Unknown, "Unknown");
                     }
-                    if ((printMask?.Scenes?.Overall ?? true)
-                        && Scenes is {} ScenesItem)
+                    if ((printMask?.DialogBranches?.Overall ?? true)
+                        && DialogBranches is {} DialogBranchesItem)
                     {
-                        sb.AppendLine("Scenes =>");
+                        sb.AppendLine("DialogBranches =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ScenesItem.Overall);
-                            if (ScenesItem.Specific != null)
+                            sb.AppendItem(DialogBranchesItem.Overall);
+                            if (DialogBranchesItem.Specific != null)
                             {
-                                foreach (var subItem in ScenesItem.Specific)
+                                foreach (var subItem in DialogBranchesItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1206,16 +1206,16 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if ((printMask?.DialogBranches?.Overall ?? true)
-                        && DialogBranches is {} DialogBranchesItem)
+                    if ((printMask?.Scenes?.Overall ?? true)
+                        && Scenes is {} ScenesItem)
                     {
-                        sb.AppendLine("DialogBranches =>");
+                        sb.AppendLine("Scenes =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(DialogBranchesItem.Overall);
-                            if (DialogBranchesItem.Specific != null)
+                            sb.AppendItem(ScenesItem.Overall);
+                            if (ScenesItem.Specific != null)
                             {
-                                foreach (var subItem in DialogBranchesItem.Specific)
+                                foreach (var subItem in ScenesItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1262,9 +1262,9 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? SwfFile;
             public Exception? Timestamp;
             public Exception? Unknown;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>? Scenes;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>? DialogTopics;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>? DialogBranches;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>? DialogTopics;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>? Scenes;
             public Exception? DNAMDataTypeState;
             #endregion
 
@@ -1318,12 +1318,12 @@ namespace Mutagen.Bethesda.Fallout4
                         return Timestamp;
                     case Quest_FieldIndex.Unknown:
                         return Unknown;
-                    case Quest_FieldIndex.Scenes:
-                        return Scenes;
-                    case Quest_FieldIndex.DialogTopics:
-                        return DialogTopics;
                     case Quest_FieldIndex.DialogBranches:
                         return DialogBranches;
+                    case Quest_FieldIndex.DialogTopics:
+                        return DialogTopics;
+                    case Quest_FieldIndex.Scenes:
+                        return Scenes;
                     case Quest_FieldIndex.DNAMDataTypeState:
                         return DNAMDataTypeState;
                     default:
@@ -1402,14 +1402,14 @@ namespace Mutagen.Bethesda.Fallout4
                     case Quest_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case Quest_FieldIndex.Scenes:
-                        this.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(ex, null);
+                    case Quest_FieldIndex.DialogBranches:
+                        this.DialogBranches = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>(ex, null);
                         break;
                     case Quest_FieldIndex.DialogTopics:
                         this.DialogTopics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>(ex, null);
                         break;
-                    case Quest_FieldIndex.DialogBranches:
-                        this.DialogBranches = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>(ex, null);
+                    case Quest_FieldIndex.Scenes:
+                        this.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(ex, null);
                         break;
                     case Quest_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = ex;
@@ -1491,14 +1491,14 @@ namespace Mutagen.Bethesda.Fallout4
                     case Quest_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case Quest_FieldIndex.Scenes:
-                        this.Scenes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>)obj;
+                    case Quest_FieldIndex.DialogBranches:
+                        this.DialogBranches = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>)obj;
                         break;
                     case Quest_FieldIndex.DialogTopics:
                         this.DialogTopics = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>)obj;
                         break;
-                    case Quest_FieldIndex.DialogBranches:
-                        this.DialogBranches = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>)obj;
+                    case Quest_FieldIndex.Scenes:
+                        this.Scenes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>)obj;
                         break;
                     case Quest_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = (Exception?)obj;
@@ -1534,9 +1534,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (SwfFile != null) return true;
                 if (Timestamp != null) return true;
                 if (Unknown != null) return true;
-                if (Scenes != null) return true;
-                if (DialogTopics != null) return true;
                 if (DialogBranches != null) return true;
+                if (DialogTopics != null) return true;
+                if (Scenes != null) return true;
                 if (DNAMDataTypeState != null) return true;
                 return false;
             }
@@ -1720,15 +1720,15 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Unknown, "Unknown");
                 }
-                if (Scenes is {} ScenesItem)
+                if (DialogBranches is {} DialogBranchesItem)
                 {
-                    sb.AppendLine("Scenes =>");
+                    sb.AppendLine("DialogBranches =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ScenesItem.Overall);
-                        if (ScenesItem.Specific != null)
+                        sb.AppendItem(DialogBranchesItem.Overall);
+                        if (DialogBranchesItem.Specific != null)
                         {
-                            foreach (var subItem in ScenesItem.Specific)
+                            foreach (var subItem in DialogBranchesItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1756,15 +1756,15 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (DialogBranches is {} DialogBranchesItem)
+                if (Scenes is {} ScenesItem)
                 {
-                    sb.AppendLine("DialogBranches =>");
+                    sb.AppendLine("Scenes =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(DialogBranchesItem.Overall);
-                        if (DialogBranchesItem.Specific != null)
+                        sb.AppendItem(ScenesItem.Overall);
+                        if (ScenesItem.Specific != null)
                         {
-                            foreach (var subItem in DialogBranchesItem.Specific)
+                            foreach (var subItem in ScenesItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1807,9 +1807,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.SwfFile = this.SwfFile.Combine(rhs.SwfFile);
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
-                ret.DialogTopics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), ExceptionExt.Combine(this.DialogTopics?.Specific, rhs.DialogTopics?.Specific));
                 ret.DialogBranches = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogBranches?.Overall, rhs.DialogBranches?.Overall), ExceptionExt.Combine(this.DialogBranches?.Specific, rhs.DialogBranches?.Specific));
+                ret.DialogTopics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), ExceptionExt.Combine(this.DialogTopics?.Specific, rhs.DialogTopics?.Specific));
+                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
@@ -1855,9 +1855,9 @@ namespace Mutagen.Bethesda.Fallout4
             public bool SwfFile;
             public bool Timestamp;
             public bool Unknown;
-            public Scene.TranslationMask? Scenes;
-            public DialogTopic.TranslationMask? DialogTopics;
             public DialogBranch.TranslationMask? DialogBranches;
+            public DialogTopic.TranslationMask? DialogTopics;
+            public Scene.TranslationMask? Scenes;
             public bool DNAMDataTypeState;
             #endregion
 
@@ -1913,9 +1913,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((SwfFile, null));
                 ret.Add((Timestamp, null));
                 ret.Add((Unknown, null));
-                ret.Add((Scenes == null ? DefaultOn : !Scenes.GetCrystal().CopyNothing, Scenes?.GetCrystal()));
-                ret.Add((DialogTopics == null ? DefaultOn : !DialogTopics.GetCrystal().CopyNothing, DialogTopics?.GetCrystal()));
                 ret.Add((DialogBranches == null ? DefaultOn : !DialogBranches.GetCrystal().CopyNothing, DialogBranches?.GetCrystal()));
+                ret.Add((DialogTopics == null ? DefaultOn : !DialogTopics.GetCrystal().CopyNothing, DialogTopics?.GetCrystal()));
+                ret.Add((Scenes == null ? DefaultOn : !Scenes.GetCrystal().CopyNothing, Scenes?.GetCrystal()));
                 ret.Add((DNAMDataTypeState, null));
             }
 
@@ -2130,9 +2130,9 @@ namespace Mutagen.Bethesda.Fallout4
         new String? SwfFile { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
-        new ExtendedList<Scene> Scenes { get; }
-        new ExtendedList<DialogTopic> DialogTopics { get; }
         new ExtendedList<DialogBranch> DialogBranches { get; }
+        new ExtendedList<DialogTopic> DialogTopics { get; }
+        new ExtendedList<Scene> Scenes { get; }
         new Quest.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
         new Quest.MajorFlag MajorFlags { get; set; }
@@ -2188,9 +2188,9 @@ namespace Mutagen.Bethesda.Fallout4
         String? SwfFile { get; }
         Int32 Timestamp { get; }
         Int32 Unknown { get; }
-        IReadOnlyList<ISceneGetter> Scenes { get; }
-        IReadOnlyList<IDialogTopicGetter> DialogTopics { get; }
         IReadOnlyList<IDialogBranchGetter> DialogBranches { get; }
+        IReadOnlyList<IDialogTopicGetter> DialogTopics { get; }
+        IReadOnlyList<ISceneGetter> Scenes { get; }
         Quest.DNAMDataType DNAMDataTypeState { get; }
 
         #region Mutagen
@@ -2594,9 +2594,9 @@ namespace Mutagen.Bethesda.Fallout4
         SwfFile = 25,
         Timestamp = 26,
         Unknown = 27,
-        Scenes = 28,
+        DialogBranches = 28,
         DialogTopics = 29,
-        DialogBranches = 30,
+        Scenes = 30,
         DNAMDataTypeState = 31,
     }
     #endregion
@@ -2678,13 +2678,40 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ALMI,
                 RecordTypes.GNAM,
                 RecordTypes.SNAM,
+                RecordTypes.DLBR,
+                RecordTypes.QNAM,
+                RecordTypes.TNAM,
+                RecordTypes.DIAL,
+                RecordTypes.PNAM,
+                RecordTypes.BNAM,
+                RecordTypes.KNAM,
+                RecordTypes.DATA,
+                RecordTypes.TIFC,
+                RecordTypes.INFO,
+                RecordTypes.TPIC,
+                RecordTypes.IOVR,
+                RecordTypes.TRDA,
+                RecordTypes.NAM1,
+                RecordTypes.NAM3,
+                RecordTypes.NAM4,
+                RecordTypes.NAM9,
+                RecordTypes.SRAF,
+                RecordTypes.WZMD,
+                RecordTypes.RNAM,
+                RecordTypes.TSCE,
+                RecordTypes.INTV,
+                RecordTypes.ALFA,
+                RecordTypes.ONAM,
+                RecordTypes.GREE,
+                RecordTypes.TIQS,
+                RecordTypes.INCC,
+                RecordTypes.MODQ,
+                RecordTypes.INAM,
                 RecordTypes.SCEN,
                 RecordTypes.HNAM,
                 RecordTypes.WNAM,
                 RecordTypes.SCQS,
                 RecordTypes.ALID,
-                RecordTypes.INAM,
-                RecordTypes.TNAM,
                 RecordTypes.STSC,
                 RecordTypes.LCEP,
                 RecordTypes.INTT,
@@ -2708,47 +2735,20 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.NNUS,
                 RecordTypes.NQUS,
                 RecordTypes.DTGT,
-                RecordTypes.PNAM,
-                RecordTypes.DATA,
                 RecordTypes.HTID,
                 RecordTypes.DMAX,
                 RecordTypes.DMIN,
                 RecordTypes.CRIS,
                 RecordTypes.DEMO,
                 RecordTypes.DEVA,
-                RecordTypes.ONAM,
                 RecordTypes.SCHR,
                 RecordTypes.SCDA,
                 RecordTypes.SCTX,
-                RecordTypes.QNAM,
                 RecordTypes.SCRO,
                 RecordTypes.VNAM,
                 RecordTypes.ACTV,
                 RecordTypes.KWDA,
-                RecordTypes.KSIZ,
-                RecordTypes.DIAL,
-                RecordTypes.BNAM,
-                RecordTypes.KNAM,
-                RecordTypes.TIFC,
-                RecordTypes.INFO,
-                RecordTypes.TPIC,
-                RecordTypes.IOVR,
-                RecordTypes.TRDA,
-                RecordTypes.NAM1,
-                RecordTypes.NAM3,
-                RecordTypes.NAM4,
-                RecordTypes.NAM9,
-                RecordTypes.SRAF,
-                RecordTypes.WZMD,
-                RecordTypes.RNAM,
-                RecordTypes.TSCE,
-                RecordTypes.INTV,
-                RecordTypes.ALFA,
-                RecordTypes.GREE,
-                RecordTypes.TIQS,
-                RecordTypes.INCC,
-                RecordTypes.MODQ,
-                RecordTypes.DLBR);
+                RecordTypes.KSIZ);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
@@ -2815,9 +2815,9 @@ namespace Mutagen.Bethesda.Fallout4
             item.SwfFile = default;
             item.Timestamp = default;
             item.Unknown = default;
-            item.Scenes.Clear();
-            item.DialogTopics.Clear();
             item.DialogBranches.Clear();
+            item.DialogTopics.Clear();
+            item.Scenes.Clear();
             item.DNAMDataTypeState = default;
             base.Clear(item);
         }
@@ -2846,9 +2846,9 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Objectives.RemapLinks(mapping);
             obj.Aliases.RemapLinks(mapping);
             obj.QuestGroup.Relink(mapping);
-            obj.Scenes.RemapLinks(mapping);
-            obj.DialogTopics.RemapLinks(mapping);
             obj.DialogBranches.RemapLinks(mapping);
+            obj.DialogTopics.RemapLinks(mapping);
+            obj.Scenes.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IQuestInternal obj)
@@ -2883,10 +2883,10 @@ namespace Mutagen.Bethesda.Fallout4
             IQuestInternal obj,
             HashSet<FormKey> keys)
         {
-            obj.Scenes.Remove(keys);
+            obj.DialogBranches.Remove(keys);
             obj.DialogTopics.Remove(keys);
             obj.DialogTopics.ForEach(i => i.Remove(keys));
-            obj.DialogBranches.Remove(keys);
+            obj.Scenes.Remove(keys);
         }
         
         public void Remove(
@@ -2940,11 +2940,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ICollectionAliasGetter":
                 case "ICollectionAlias":
                     break;
-                case "Scene":
-                case "ISceneGetter":
-                case "IScene":
-                case "ISceneInternal":
-                    obj.Scenes.RemoveWhere(i => keys.Contains(i.FormKey));
+                case "DialogBranch":
+                case "IDialogBranchGetter":
+                case "IDialogBranch":
+                case "IDialogBranchInternal":
+                    obj.DialogBranches.RemoveWhere(i => keys.Contains(i.FormKey));
                     break;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
@@ -2956,11 +2956,11 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "DialogBranch":
-                case "IDialogBranchGetter":
-                case "IDialogBranch":
-                case "IDialogBranchInternal":
-                    obj.DialogBranches.RemoveWhere(i => keys.Contains(i.FormKey));
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
+                    obj.Scenes.RemoveWhere(i => keys.Contains(i.FormKey));
                     break;
                 case "DialogResponses":
                 case "IDialogResponsesGetter":
@@ -3096,16 +3096,16 @@ namespace Mutagen.Bethesda.Fallout4
             ret.SwfFile = string.Equals(item.SwfFile, rhs.SwfFile);
             ret.Timestamp = item.Timestamp == rhs.Timestamp;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Scenes = item.Scenes.CollectionEqualsHelper(
-                rhs.Scenes,
+            ret.DialogBranches = item.DialogBranches.CollectionEqualsHelper(
+                rhs.DialogBranches,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.DialogTopics = item.DialogTopics.CollectionEqualsHelper(
                 rhs.DialogTopics,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DialogBranches = item.DialogBranches.CollectionEqualsHelper(
-                rhs.DialogBranches,
+            ret.Scenes = item.Scenes.CollectionEqualsHelper(
+                rhs.Scenes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
@@ -3312,12 +3312,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Unknown, "Unknown");
             }
-            if (printMask?.Scenes?.Overall ?? true)
+            if (printMask?.DialogBranches?.Overall ?? true)
             {
-                sb.AppendLine("Scenes =>");
+                sb.AppendLine("DialogBranches =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Scenes)
+                    foreach (var subItem in item.DialogBranches)
                     {
                         using (sb.Brace())
                         {
@@ -3340,12 +3340,12 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.DialogBranches?.Overall ?? true)
+            if (printMask?.Scenes?.Overall ?? true)
             {
-                sb.AppendLine("DialogBranches =>");
+                sb.AppendLine("Scenes =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.DialogBranches)
+                    foreach (var subItem in item.Scenes)
                     {
                         using (sb.Brace())
                         {
@@ -3498,17 +3498,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Scenes) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DialogBranches) ?? true))
             {
-                if (!lhs.Scenes.SequenceEqual(rhs.Scenes, (l, r) => ((SceneCommon)((ISceneGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Scenes)))) return false;
+                if (!lhs.DialogBranches.SequenceEqual(rhs.DialogBranches, (l, r) => ((DialogBranchCommon)((IDialogBranchGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.DialogBranches)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DialogTopics) ?? true))
             {
                 if (!lhs.DialogTopics.SequenceEqual(rhs.DialogTopics, (l, r) => ((DialogTopicCommon)((IDialogTopicGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.DialogTopics)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DialogBranches) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Scenes) ?? true))
             {
-                if (!lhs.DialogBranches.SequenceEqual(rhs.DialogBranches, (l, r) => ((DialogBranchCommon)((IDialogBranchGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.DialogBranches)))) return false;
+                if (!lhs.Scenes.SequenceEqual(rhs.Scenes, (l, r) => ((SceneCommon)((ISceneGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Scenes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -3582,9 +3582,9 @@ namespace Mutagen.Bethesda.Fallout4
             }
             hash.Add(item.Timestamp);
             hash.Add(item.Unknown);
-            hash.Add(item.Scenes);
-            hash.Add(item.DialogTopics);
             hash.Add(item.DialogBranches);
+            hash.Add(item.DialogTopics);
+            hash.Add(item.Scenes);
             hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -3661,7 +3661,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return QuestGroupInfo;
             }
-            foreach (var item in obj.Scenes.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.DialogBranches.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3669,7 +3669,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.DialogBranches.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Scenes.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3678,7 +3678,7 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IQuestGetter obj)
         {
-            foreach (var subItem in obj.Scenes)
+            foreach (var subItem in obj.DialogBranches)
             {
                 yield return subItem;
                 foreach (var item in subItem.EnumerateMajorRecords())
@@ -3694,7 +3694,7 @@ namespace Mutagen.Bethesda.Fallout4
                     yield return item;
                 }
             }
-            foreach (var subItem in obj.DialogBranches)
+            foreach (var subItem in obj.Scenes)
             {
                 yield return subItem;
                 foreach (var item in subItem.EnumerateMajorRecords())
@@ -3753,11 +3753,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAQuestAliasGetter":
                 case "IAQuestAlias":
                     yield break;
-                case "Scene":
-                case "ISceneGetter":
-                case "IScene":
-                case "ISceneInternal":
-                    foreach (var subItem in obj.Scenes)
+                case "DialogBranch":
+                case "IDialogBranchGetter":
+                case "IDialogBranch":
+                case "IDialogBranchInternal":
+                    foreach (var subItem in obj.DialogBranches)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
@@ -3785,11 +3785,11 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                     yield break;
-                case "DialogBranch":
-                case "IDialogBranchGetter":
-                case "IDialogBranch":
-                case "IDialogBranchInternal":
-                    foreach (var subItem in obj.DialogBranches)
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
+                    foreach (var subItem in obj.Scenes)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
@@ -3851,25 +3851,25 @@ namespace Mutagen.Bethesda.Fallout4
                 getOrAddAsOverride: getOrAddAsOverride,
                 duplicateInto: duplicateInto,
                 parent: parent);
-            foreach (var subItem in obj.Scenes)
+            foreach (var subItem in obj.DialogBranches)
             {
-                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, ISceneInternal, ISceneGetter>(
+                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IDialogBranchInternal, IDialogBranchGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
                     getOrAddAsOverride: (m, r) =>
                     {
                         var parent = getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey));
-                        var ret = parent.Scenes.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        var ret = parent.DialogBranches.FirstOrDefault(x => x.FormKey == r.FormKey);
                         if (ret != null) return ret;
-                        ret = (Scene)((ISceneGetter)r).DeepCopy();
-                        parent.Scenes.Add(ret);
+                        ret = (DialogBranch)((IDialogBranchGetter)r).DeepCopy();
+                        parent.DialogBranches.Add(ret);
                         return ret;
                     },
                     duplicateInto: (m, r, e) =>
                     {
-                        var dup = (Scene)((ISceneGetter)r).Duplicate(m.GetNextFormKey(e));
-                        getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).Scenes.Add(dup);
+                        var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogBranches.Add(dup);
                         return dup;
                     });
             }
@@ -3918,25 +3918,25 @@ namespace Mutagen.Bethesda.Fallout4
                     yield return item;
                 }
             }
-            foreach (var subItem in obj.DialogBranches)
+            foreach (var subItem in obj.Scenes)
             {
-                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IDialogBranchInternal, IDialogBranchGetter>(
+                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, ISceneInternal, ISceneGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
                     getOrAddAsOverride: (m, r) =>
                     {
                         var parent = getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey));
-                        var ret = parent.DialogBranches.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        var ret = parent.Scenes.FirstOrDefault(x => x.FormKey == r.FormKey);
                         if (ret != null) return ret;
-                        ret = (DialogBranch)((IDialogBranchGetter)r).DeepCopy();
-                        parent.DialogBranches.Add(ret);
+                        ret = (Scene)((ISceneGetter)r).DeepCopy();
+                        parent.Scenes.Add(ret);
                         return ret;
                     },
                     duplicateInto: (m, r, e) =>
                     {
-                        var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(m.GetNextFormKey(e));
-                        getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogBranches.Add(dup);
+                        var dup = (Scene)((ISceneGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).Scenes.Add(dup);
                         return dup;
                     });
             }
@@ -4005,31 +4005,31 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAQuestAliasGetter":
                 case "IAQuestAlias":
                     yield break;
-                case "Scene":
-                case "ISceneGetter":
-                case "IScene":
-                case "ISceneInternal":
-                    foreach (var subItem in obj.Scenes)
+                case "DialogBranch":
+                case "IDialogBranchGetter":
+                case "IDialogBranch":
+                case "IDialogBranchInternal":
+                    foreach (var subItem in obj.DialogBranches)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, ISceneInternal, ISceneGetter>(
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IDialogBranchInternal, IDialogBranchGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
                                     var parent = getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey));
-                                    var ret = parent.Scenes.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    var ret = parent.DialogBranches.FirstOrDefault(x => x.FormKey == r.FormKey);
                                     if (ret != null) return ret;
-                                    ret = (Scene)((ISceneGetter)r).DeepCopy();
-                                    parent.Scenes.Add(ret);
+                                    ret = (DialogBranch)((IDialogBranchGetter)r).DeepCopy();
+                                    parent.DialogBranches.Add(ret);
                                     return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
-                                    var dup = (Scene)((ISceneGetter)r).Duplicate(m.GetNextFormKey(e));
-                                    getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).Scenes.Add(dup);
+                                    var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogBranches.Add(dup);
                                     return dup;
                                 });
                         }
@@ -4090,31 +4090,31 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                     yield break;
-                case "DialogBranch":
-                case "IDialogBranchGetter":
-                case "IDialogBranch":
-                case "IDialogBranchInternal":
-                    foreach (var subItem in obj.DialogBranches)
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
+                    foreach (var subItem in obj.Scenes)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IDialogBranchInternal, IDialogBranchGetter>(
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, ISceneInternal, ISceneGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
                                     var parent = getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey));
-                                    var ret = parent.DialogBranches.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    var ret = parent.Scenes.FirstOrDefault(x => x.FormKey == r.FormKey);
                                     if (ret != null) return ret;
-                                    ret = (DialogBranch)((IDialogBranchGetter)r).DeepCopy();
-                                    parent.DialogBranches.Add(ret);
+                                    ret = (Scene)((ISceneGetter)r).DeepCopy();
+                                    parent.Scenes.Add(ret);
                                     return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
-                                    var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(m.GetNextFormKey(e));
-                                    getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogBranches.Add(dup);
+                                    var dup = (Scene)((ISceneGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).Scenes.Add(dup);
                                     return dup;
                                 });
                         }
@@ -4497,16 +4497,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Scenes) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogBranches) ?? true))
             {
-                errorMask?.PushIndex((int)Quest_FieldIndex.Scenes);
+                errorMask?.PushIndex((int)Quest_FieldIndex.DialogBranches);
                 try
                 {
-                    item.Scenes.SetTo(
-                        rhs.Scenes
+                    item.DialogBranches.SetTo(
+                        rhs.DialogBranches
                         .Select(r =>
                         {
-                            return (Scene)r.DeepCopy(
+                            return (DialogBranch)r.DeepCopy(
                                 copyMask: default(TranslationCrystal),
                                 errorMask: errorMask);
                         }));
@@ -4545,16 +4545,16 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogBranches) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Scenes) ?? true))
             {
-                errorMask?.PushIndex((int)Quest_FieldIndex.DialogBranches);
+                errorMask?.PushIndex((int)Quest_FieldIndex.Scenes);
                 try
                 {
-                    item.DialogBranches.SetTo(
-                        rhs.DialogBranches
+                    item.Scenes.SetTo(
+                        rhs.Scenes
                         .Select(r =>
                         {
-                            return (DialogBranch)r.DeepCopy(
+                            return (Scene)r.DeepCopy(
                                 copyMask: default(TranslationCrystal),
                                 errorMask: errorMask);
                         }));

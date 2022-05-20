@@ -335,7 +335,7 @@ public abstract class PassthroughTest
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
-                    using (var wrapper = await ImportBinaryOverlay(FilePath.Path))
+                    using (var wrapper = await ImportBinaryOverlay(trimmedPath))
                     {
                         doStrings = wrapper.UsingLocalization;
                         var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, wrapper.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
@@ -375,7 +375,7 @@ public abstract class PassthroughTest
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
-                    var copyIn = await ImportCopyIn(FilePath.Path);
+                    var copyIn = await ImportCopyIn(trimmedPath);
                     doStrings = copyIn.UsingLocalization;
                     var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, copyIn.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
                     copyIn.WriteToBinary(copyInPath, writeParam);

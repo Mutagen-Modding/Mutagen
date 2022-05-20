@@ -5127,10 +5127,10 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
-                case "Scene":
-                case "ISceneGetter":
-                case "IScene":
-                case "ISceneInternal":
+                case "DialogBranch":
+                case "IDialogBranchGetter":
+                case "IDialogBranch":
+                case "IDialogBranchInternal":
                     obj.Quests.Remove(
                         type: type,
                         keys: keys);
@@ -5151,10 +5151,10 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
-                case "DialogBranch":
-                case "IDialogBranchGetter":
-                case "IDialogBranch":
-                case "IDialogBranchInternal":
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
                     obj.Quests.Remove(
                         type: type,
                         keys: keys);
@@ -7810,10 +7810,10 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
-                case "Scene":
-                case "ISceneGetter":
-                case "IScene":
-                case "ISceneInternal":
+                case "DialogBranch":
+                case "IDialogBranchGetter":
+                case "IDialogBranch":
+                case "IDialogBranchInternal":
                     foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -7837,10 +7837,10 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
-                case "DialogBranch":
-                case "IDialogBranchGetter":
-                case "IDialogBranch":
-                case "IDialogBranchInternal":
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
                     foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -9396,10 +9396,10 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                     yield break;
-                case "Scene":
-                case "ISceneGetter":
-                case "IScene":
-                case "ISceneInternal":
+                case "DialogBranch":
+                case "IDialogBranchGetter":
+                case "IDialogBranch":
+                case "IDialogBranchInternal":
                     foreach (var groupItem in obj.Quests)
                     {
                         foreach (var item in QuestCommon.Instance.EnumerateMajorRecordContexts(
@@ -9456,10 +9456,10 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                     yield break;
-                case "DialogBranch":
-                case "IDialogBranchGetter":
-                case "IDialogBranch":
-                case "IDialogBranchInternal":
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
                     foreach (var groupItem in obj.Quests)
                     {
                         foreach (var item in QuestCommon.Instance.EnumerateMajorRecordContexts(

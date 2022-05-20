@@ -52,9 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region AliasID
-        public Int32? AliasID { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? ICollectionAliasGetter.AliasID => this.AliasID;
+        public Int32 AliasID { get; set; } = default;
         #endregion
         #region MaxInitialFillCount
         public Byte? MaxInitialFillCount { get; set; }
@@ -438,7 +436,7 @@ namespace Mutagen.Bethesda.Fallout4
         ICollectionAliasGetter,
         ILoquiObjectSetter<ICollectionAlias>
     {
-        new Int32? AliasID { get; set; }
+        new Int32 AliasID { get; set; }
         new Byte? MaxInitialFillCount { get; set; }
     }
 
@@ -448,7 +446,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<ICollectionAliasGetter>
     {
         static new ILoquiRegistration StaticRegistration => CollectionAlias_Registration.Instance;
-        Int32? AliasID { get; }
+        Int32 AliasID { get; }
         Byte? MaxInitialFillCount { get; }
 
     }
@@ -641,13 +639,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ALCS;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var triggers = RecordCollection.Factory(RecordTypes.ALCS);
             var all = RecordCollection.Factory(
                 RecordTypes.ALCS,
                 RecordTypes.ALMI);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CollectionAliasBinaryWriteTranslation);
         #region Interface
@@ -813,10 +813,9 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.AliasID ?? true)
-                && item.AliasID is {} AliasIDItem)
+            if (printMask?.AliasID ?? true)
             {
-                sb.AppendItem(AliasIDItem, "AliasID");
+                sb.AppendItem(item.AliasID, "AliasID");
             }
             if ((printMask?.MaxInitialFillCount ?? true)
                 && item.MaxInitialFillCount is {} MaxInitialFillCountItem)
@@ -867,10 +866,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(ICollectionAliasGetter item)
         {
             var hash = new HashCode();
-            if (item.AliasID is {} AliasIDitem)
-            {
-                hash.Add(AliasIDitem);
-            }
+            hash.Add(item.AliasID);
             if (item.MaxInitialFillCount is {} MaxInitialFillCountitem)
             {
                 hash.Add(MaxInitialFillCountitem);
@@ -1040,7 +1036,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.AliasID,
                 header: translationParams.ConvertToCustom(RecordTypes.ALCS));
@@ -1116,7 +1112,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ALMI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CollectionAlias_FieldIndex.MaxInitialFillCount) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaxInitialFillCount = frame.ReadUInt8();
                     return (int)CollectionAlias_FieldIndex.MaxInitialFillCount;
@@ -1172,7 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region AliasID
         private int? _AliasIDLocation;
-        public Int32? AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32 AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AliasIDLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         #region MaxInitialFillCount
         private int? _MaxInitialFillCountLocation;
@@ -1243,7 +1238,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ALMI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CollectionAlias_FieldIndex.MaxInitialFillCount) return ParseResult.Stop;
                     _MaxInitialFillCountLocation = (stream.Position - offset);
                     return (int)CollectionAlias_FieldIndex.MaxInitialFillCount;
                 }

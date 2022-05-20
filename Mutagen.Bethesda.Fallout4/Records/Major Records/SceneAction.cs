@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -132,9 +133,28 @@ partial class SceneActionBinaryWriteTranslation
 
 partial class SceneActionBinaryOverlay
 {
-    public partial IASceneActionTypeGetter GetTypeCustom()
+    private IASceneActionTypeGetter _type = null!;
+    public partial IASceneActionTypeGetter GetTypeCustom() => _type;
+
+    partial void TypeCustomParse(
+        OverlayStream stream,
+        long finalPos,
+        int offset)
     {
-        throw new NotImplementedException();
+        var loc = (stream.Position - offset);
+        var rec = _package.MetaData.Constants.Subrecord(_data.Slice(loc));
+        var type = rec.AsUInt16();
+        if (type == 4)
+        {
+            _type = new SceneActionStartScene();
+        }
+        else
+        {
+            _type = new SceneActionTypicalType()
+            {
+                Type = (SceneAction.TypeEnum)type
+            };
+        }
     }
 
     public partial ParseResult HTIDParsingCustomParse(
@@ -142,6 +162,18 @@ partial class SceneActionBinaryOverlay
         int offset,
         PreviousParse lastParsed)
     {
-        throw new NotImplementedException();
+        var subRec = stream.ReadSubrecord(RecordTypes.HTID);
+        switch (this.Type)
+        {
+            case SceneActionStartScene startScene:
+                startScene.EndSceneSayGreeting = true;
+                break;
+            case SceneActionTypicalType typical:
+                typical.PlaySound.SetTo(FormKeyBinaryTranslation.Instance.Parse(subRec.Content, stream.MetaData.MasterReferences));
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+        return lastParsed;
     }
 }

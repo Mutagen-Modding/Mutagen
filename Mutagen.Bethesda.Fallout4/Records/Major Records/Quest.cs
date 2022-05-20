@@ -1,9 +1,11 @@
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -78,9 +80,8 @@ partial class QuestBinaryCreateTranslation
 
     public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
     {
-        var nextHeader = frame.ReadSubrecord();
-        if (nextHeader.RecordType != RecordTypes.NEXT
-            || nextHeader.Content.Length != 0)
+        var nextHeader = frame.ReadSubrecord(RecordTypes.NEXT);
+        if (nextHeader.Content.Length != 0)
         {
             throw new ArgumentException("Unexpected NEXT header");
         }
@@ -273,10 +274,10 @@ partial class QuestBinaryWriteTranslation
                 writer.Write((int)GroupTypeEnum.QuestChildren);
                 writer.Write(obj.Timestamp);
                 writer.Write(obj.Unknown);
-                ListBinaryTranslation<ISceneGetter>.Instance.Write(
+                ListBinaryTranslation<IDialogBranchGetter>.Instance.Write(
                     writer: writer,
-                    items: scenes,
-                    transl: (MutagenWriter subWriter, ISceneGetter subItem) =>
+                    items: dialogBranches,
+                    transl: (MutagenWriter subWriter, IDialogBranchGetter subItem) =>
                     {
                         subItem.WriteToBinary(subWriter);
                     });
@@ -287,10 +288,10 @@ partial class QuestBinaryWriteTranslation
                     {
                         subItem.WriteToBinary(subWriter);
                     });
-                ListBinaryTranslation<IDialogBranchGetter>.Instance.Write(
+                ListBinaryTranslation<ISceneGetter>.Instance.Write(
                     writer: writer,
-                    items: dialogBranches,
-                    transl: (MutagenWriter subWriter, IDialogBranchGetter subItem) =>
+                    items: scenes,
+                    transl: (MutagenWriter subWriter, ISceneGetter subItem) =>
                     {
                         subItem.WriteToBinary(subWriter);
                     });
@@ -307,16 +308,19 @@ partial class QuestBinaryOverlay
 {
     public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = Array.Empty<IConditionGetter>();
     public IReadOnlyList<IConditionGetter> UnusedConditions { get; private set; } = Array.Empty<IConditionGetter>();
-    public IReadOnlyList<IAQuestAliasGetter> Aliases => throw new NotImplementedException();
-    public int Timestamp => throw new NotImplementedException();
+    public IReadOnlyList<IAQuestAliasGetter> Aliases { get; private set; } = Array.Empty<IAQuestAliasGetter>();
 
-    public int Unknown => throw new NotImplementedException();
+    private ReadOnlyMemorySlice<byte>? _grupData;
 
-    public IReadOnlyList<ISceneGetter> Scenes => throw new NotImplementedException();
+    public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData.Value).LastModifiedData) : 0;
 
-    public IReadOnlyList<IDialogTopicGetter> DialogTopics => throw new NotImplementedException();
+    public int Unknown => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
-    public IReadOnlyList<IDialogBranchGetter> DialogBranches => throw new NotImplementedException();
+    public IReadOnlyList<ISceneGetter> Scenes { get; private set; } = Array.Empty<ISceneGetter>();
+
+    public IReadOnlyList<IDialogTopicGetter> DialogTopics { get; private set; } = Array.Empty<IDialogTopicGetter>();
+
+    public IReadOnlyList<IDialogBranchGetter> DialogBranches { get; private set; } = Array.Empty<IDialogBranchGetter>();
 
     partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
@@ -325,9 +329,8 @@ partial class QuestBinaryOverlay
 
     public partial ParseResult UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
     {
-        var nextHeader = stream.ReadSubrecord();
-        if (nextHeader.RecordType != RecordTypes.NEXT
-            || nextHeader.Content.Length != 0)
+        var nextHeader = stream.ReadSubrecord(RecordTypes.NEXT);
+        if (nextHeader.Content.Length != 0)
         {
             throw new ArgumentException("Unexpected NEXT header");
         }
@@ -336,8 +339,164 @@ partial class QuestBinaryOverlay
         return null;
     }
 
+    public static RecordTriggerSpecs QuestAliasTriggerSpecs => _aliasTriggerSpecs.Value;
+    private static readonly Lazy<RecordTriggerSpecs> _aliasTriggerSpecs = new Lazy<RecordTriggerSpecs>(() =>
+    {
+        return new RecordTriggerSpecs(
+            RecordCollection.Factory(
+                RecordTypes.ALST,
+                RecordTypes.ALLS,
+                RecordTypes.ALCS,
+                RecordTypes.ALED,
+                RecordTypes.ALID,
+                RecordTypes.FNAM,
+                RecordTypes.ALFI,
+                RecordTypes.ALFL,
+                RecordTypes.ALFR,
+                RecordTypes.ALUA,
+                RecordTypes.ALFA,
+                RecordTypes.KNAM,
+                RecordTypes.ALRT,
+                RecordTypes.ALEQ,
+                RecordTypes.ALEA,
+                RecordTypes.ALCO,
+                RecordTypes.ALCA,
+                RecordTypes.ALCL,
+                RecordTypes.ALNA,
+                RecordTypes.ALNT,
+                RecordTypes.ALFE,
+                RecordTypes.ALFD,
+                RecordTypes.ALCC,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.CNTO,
+                RecordTypes.COCT,
+                RecordTypes.COED,
+                RecordTypes.SPOR,
+                RecordTypes.OCOR,
+                RecordTypes.GWOR,
+                RecordTypes.ECOR,
+                RecordTypes.ALLA,
+                RecordTypes.ALDN,
+                RecordTypes.ALFV,
+                RecordTypes.ALDI,
+                RecordTypes.ALSP,
+                RecordTypes.ALFC,
+                RecordTypes.ALPC,
+                RecordTypes.VTCK,
+                RecordTypes.ALMI),
+            RecordCollection.Factory(
+                RecordTypes.ALST,
+                RecordTypes.ALLS,
+                RecordTypes.ALCS));
+    });
+
     public partial ParseResult AliasParseCustomParse(OverlayStream stream, int offset)
     {
-        throw new NotImplementedException();
+        stream.TryReadSubrecord(RecordTypes.ANAM, out _);
+        var mem = stream.RemainingMemory;
+        var locs = ParseRecordLocations(
+            stream,
+            QuestAliasTriggerSpecs,
+            _package.MetaData.Constants.SubConstants,
+            skipHeader: false);
+        Aliases = BinaryOverlayList.FactoryByArray<IAQuestAliasGetter>(
+            mem,
+            _package,
+            locs: locs,
+            getter: (s, p) =>
+            {
+                var subRec = p.MetaData.Constants.Subrecord(s);
+                switch (subRec.RecordTypeInt)
+                {
+                    case RecordTypeInts.ALST:
+                        {
+                            var id = subRec.AsUInt32();
+                            var ret = QuestReferenceAliasBinaryOverlay.QuestReferenceAliasFactory(s.Slice(subRec.TotalLength), p);
+                            ret.ID = id;
+                            return ret;
+                        }
+                    case RecordTypeInts.ALLS:
+                        {
+                            var id = subRec.AsUInt32();
+                            var ret = QuestLocationAliasBinaryOverlay.QuestLocationAliasFactory(s.Slice(subRec.TotalLength), p);
+                            ret.ID = id;
+                            return ret;
+                        }
+                    case RecordTypeInts.ALCS:
+                        {
+                            return QuestCollectionAliasBinaryOverlay.QuestCollectionAliasFactory(s, p);
+                        }
+                    default:
+                        throw new NotImplementedException();
+                }
+            });
+        return (int)Quest_FieldIndex.Aliases;
+    }
+
+    public static RecordTriggerSpecs QuestSubGroupTriggerSpecs => _subGroupTriggerSpecs.Value;
+    private static readonly Lazy<RecordTriggerSpecs> _subGroupTriggerSpecs = new Lazy<RecordTriggerSpecs>(() =>
+    {
+        var triggers =
+            RecordCollection.Factory(
+                RecordTypes.DIAL,
+                RecordTypes.DLBR,
+                RecordTypes.SCEN);
+        var all =
+            RecordCollection.Factory(
+                RecordTypes.DIAL,
+                RecordTypes.DLBR,
+                RecordTypes.SCEN,
+                RecordTypes.GRUP);
+        return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+    });
+
+    partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
+    {
+        try
+        {
+            if (stream.Complete) return;
+            var startPos = stream.Position;
+            if (!stream.TryGetGroupHeader(out var groupMeta)) return;
+            if (groupMeta.GroupType != (int)GroupTypeEnum.QuestChildren) return;
+            this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
+            var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+            if (formKey != this.FormKey)
+            {
+                throw new ArgumentException("Quest children group did not match the FormID of the parent.");
+            }
+            var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
+            var locs = ParseRecordLocations(
+                    stream: new OverlayStream(contentSpan, _package),
+                    trigger: QuestSubGroupTriggerSpecs,
+                    constants: stream.MetaData.Constants.MajorConstants,
+                    triggersAlwaysAreNewRecords: true,
+                    skipHeader: false).Select(x => _package.MetaData.Constants.MajorRecordHeader(contentSpan.Slice(x)).Pin(x));
+
+            this.DialogBranches = BinaryOverlayList.FactoryByArray<IDialogBranchGetter>(
+                contentSpan,
+                _package,
+                getter: (s, p) => DialogBranchBinaryOverlay.DialogBranchFactory(new OverlayStream(s, p), p),
+                locs: locs.Where(s => s.RecordType == RecordTypes.DLBR).Select(x => x.Location).ToArray());
+
+            this.DialogTopics = BinaryOverlayList.FactoryByArray<IDialogTopicGetter>(
+                contentSpan,
+                _package,
+                getter: (s, p) => DialogTopicBinaryOverlay.DialogTopicFactory(new OverlayStream(s, p), p),
+                locs: locs.Where(s => s.RecordType == RecordTypes.DIAL).Select(x => x.Location).ToArray());
+
+            this.Scenes = BinaryOverlayList.FactoryByArray<ISceneGetter>(
+                contentSpan,
+                _package,
+                getter: (s, p) => SceneBinaryOverlay.SceneFactory(new OverlayStream(s, p), p),
+                locs: locs.Where(s => s.RecordType == RecordTypes.SCEN).Select(x => x.Location).ToArray());
+        }
+        catch (Exception ex)
+        {
+            throw RecordException.Enrich(ex, this);
+        }
     }
 }

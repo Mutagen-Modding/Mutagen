@@ -1884,16 +1884,29 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.HNAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        case 0:
-                            stream.ReadSubrecord();
-                            return new ParseResult(default(int?), type);
-                        case 1:
-                            stream.ReadSubrecord();
-                            return ParseResult.Stop;
-                        default:
-                            throw new NotImplementedException();
+                        stream.ReadSubrecord();
+                        return new ParseResult(default(int?), type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)ScenePhase_FieldIndex.PhaseSetParentQuestStage)
+                    {
+                        stream.ReadSubrecord();
+                        return ParseResult.Stop;
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                stream.ReadSubrecord();
+                                return new ParseResult(default(int?), type);
+                            case 1:
+                                stream.ReadSubrecord();
+                                return ParseResult.Stop;
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.NAM0:

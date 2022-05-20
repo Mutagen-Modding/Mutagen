@@ -5025,20 +5025,37 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.ANAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        case 0:
-                            if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
-                            TypeCustomParse(
-                                stream,
-                                finalPos,
-                                offset);
-                            return new ParseResult((int)SceneAction_FieldIndex.Type, type);
-                        case 1:
-                            stream.ReadSubrecord();
-                            return ParseResult.Stop;
-                        default:
-                            throw new NotImplementedException();
+                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                        TypeCustomParse(
+                            stream,
+                            finalPos,
+                            offset);
+                        return new ParseResult((int)SceneAction_FieldIndex.Type, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Unused)
+                    {
+                        stream.ReadSubrecord();
+                        return ParseResult.Stop;
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                                TypeCustomParse(
+                                    stream,
+                                    finalPos,
+                                    offset);
+                                return new ParseResult((int)SceneAction_FieldIndex.Type, type);
+                            case 1:
+                                stream.ReadSubrecord();
+                                return ParseResult.Stop;
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.NAM0:
@@ -5063,16 +5080,30 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Flags)
                     {
-                        case 0:
-                            _StartPhaseLocation = (stream.Position - offset);
-                            return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
-                        case 1:
-                            _TimerMaxSecondsLocation = (stream.Position - offset);
-                            return new ParseResult((int)SceneAction_FieldIndex.TimerMaxSeconds, type);
-                        default:
-                            throw new NotImplementedException();
+                        _StartPhaseLocation = (stream.Position - offset);
+                        return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.EndPhase)
+                    {
+                        _TimerMaxSecondsLocation = (stream.Position - offset);
+                        return new ParseResult((int)SceneAction_FieldIndex.TimerMaxSeconds, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                _StartPhaseLocation = (stream.Position - offset);
+                                return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
+                            case 1:
+                                _TimerMaxSecondsLocation = (stream.Position - offset);
+                                return new ParseResult((int)SceneAction_FieldIndex.TimerMaxSeconds, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.ENAM:
@@ -5130,16 +5161,30 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.VENC:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.PlayerQuestionResponse)
                     {
-                        case 0:
-                            _PlayerPositiveSubtypeLocation = (stream.Position - offset);
-                            return new ParseResult((int)SceneAction_FieldIndex.PlayerPositiveSubtype, type);
-                        case 1:
-                            _DialogueSubtypeLocation = (stream.Position - offset);
-                            return new ParseResult((int)SceneAction_FieldIndex.DialogueSubtype, type);
-                        default:
-                            throw new NotImplementedException();
+                        _PlayerPositiveSubtypeLocation = (stream.Position - offset);
+                        return new ParseResult((int)SceneAction_FieldIndex.PlayerPositiveSubtype, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds)
+                    {
+                        _DialogueSubtypeLocation = (stream.Position - offset);
+                        return new ParseResult((int)SceneAction_FieldIndex.DialogueSubtype, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                _PlayerPositiveSubtypeLocation = (stream.Position - offset);
+                                return new ParseResult((int)SceneAction_FieldIndex.PlayerPositiveSubtype, type);
+                            case 1:
+                                _DialogueSubtypeLocation = (stream.Position - offset);
+                                return new ParseResult((int)SceneAction_FieldIndex.DialogueSubtype, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.PLVD:
@@ -5216,25 +5261,48 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.DialogueTargetActorId)
                     {
-                        case 0:
-                            this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
-                                mem: stream.RemainingMemory,
-                                package: _package,
-                                getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
-                                locs: ParseRecordLocations(
-                                    stream: stream,
-                                    constants: _package.MetaData.Constants.SubConstants,
-                                    trigger: type,
-                                    skipHeader: true,
-                                    parseParams: parseParams));
-                            return new ParseResult((int)SceneAction_FieldIndex.Packages, type);
-                        case 1:
-                            _AnimArchTypeLocation = (stream.Position - offset);
-                            return new ParseResult((int)SceneAction_FieldIndex.AnimArchType, type);
-                        default:
-                            throw new NotImplementedException();
+                        this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
+                            mem: stream.RemainingMemory,
+                            package: _package,
+                            getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                            locs: ParseRecordLocations(
+                                stream: stream,
+                                constants: _package.MetaData.Constants.SubConstants,
+                                trigger: type,
+                                skipHeader: true,
+                                parseParams: parseParams));
+                        return new ParseResult((int)SceneAction_FieldIndex.Packages, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.DialogueSubtype)
+                    {
+                        _AnimArchTypeLocation = (stream.Position - offset);
+                        return new ParseResult((int)SceneAction_FieldIndex.AnimArchType, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
+                                    mem: stream.RemainingMemory,
+                                    package: _package,
+                                    getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                                    locs: ParseRecordLocations(
+                                        stream: stream,
+                                        constants: _package.MetaData.Constants.SubConstants,
+                                        trigger: type,
+                                        skipHeader: true,
+                                        parseParams: parseParams));
+                                return new ParseResult((int)SceneAction_FieldIndex.Packages, type);
+                            case 1:
+                                _AnimArchTypeLocation = (stream.Position - offset);
+                                return new ParseResult((int)SceneAction_FieldIndex.AnimArchType, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.DATA:
@@ -5244,25 +5312,48 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.HTID:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Topic)
                     {
-                        case 0:
-                            return HTIDParsingCustomParse(
-                                stream,
-                                offset,
-                                lastParsed: lastParsed);
-                        case 1:
-                            var subMeta = stream.ReadSubrecordHeader();
-                            var subLen = finalPos - stream.Position;
-                            this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
-                                mem: stream.RemainingMemory.Slice(0, subLen),
-                                package: _package,
-                                itemLength: 4,
-                                getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
-                            stream.Position += subLen;
-                            return new ParseResult((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds, type);
-                        default:
-                            throw new NotImplementedException();
+                        return HTIDParsingCustomParse(
+                            stream,
+                            offset,
+                            lastParsed: lastParsed);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.EmotionValue)
+                    {
+                        var subMeta = stream.ReadSubrecordHeader();
+                        var subLen = finalPos - stream.Position;
+                        this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
+                            mem: stream.RemainingMemory.Slice(0, subLen),
+                            package: _package,
+                            itemLength: 4,
+                            getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
+                        stream.Position += subLen;
+                        return new ParseResult((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                return HTIDParsingCustomParse(
+                                    stream,
+                                    offset,
+                                    lastParsed: lastParsed);
+                            case 1:
+                                var subMeta = stream.ReadSubrecordHeader();
+                                var subLen = finalPos - stream.Position;
+                                this.PlayerHeadTrackingActorIds = BinaryOverlayList.FactoryByStartIndex<Int32>(
+                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                    package: _package,
+                                    itemLength: 4,
+                                    getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
+                                stream.Position += subLen;
+                                return new ParseResult((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.DMAX:

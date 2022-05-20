@@ -359,16 +359,16 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.NAVM);
         ret.SetGroupAlignment(
             (int)GroupTypeEnum.QuestChildren,
-            RecordTypes.SCEN,
+            RecordTypes.DLBR,
             RecordTypes.DIAL,
-            RecordTypes.DLBR);
+            RecordTypes.SCEN);
         return ret;
     }
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)
     {
         return Fallout4ModBinaryOverlay.Fallout4ModFactory(
-            new ModPath(ModKey, FilePath.Path));
+            new ModPath(ModKey, path));
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path)

@@ -1,7 +1,5 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Binary.Translations;
-using System.Buffers.Binary;
 using static Mutagen.Bethesda.Fallout4.ScriptFragmentsBinaryCreateTranslation;
 
 namespace Mutagen.Bethesda.Fallout4;
@@ -63,11 +61,7 @@ partial class ScriptFragmentsBinaryWriteTranslation
 
 partial class ScriptFragmentsBinaryOverlay
 {
-    Flag Flags => (Flag)_data.Span.Slice(0x1, 0x1)[0];
-
     public IScriptEntryGetter Script => throw new NotImplementedException();
-
     public IScriptFragmentGetter? OnBegin => throw new NotImplementedException();
-
     public IScriptFragmentGetter? OnEnd => throw new NotImplementedException();
 }

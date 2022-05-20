@@ -60,7 +60,8 @@ partial class ScenePhaseBinaryOverlay
 
     partial void CompletionConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        stream.ReadSubrecord();
+        stream.ReadSubrecord(RecordTypes.NEXT);
         CompletionConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+        stream.ReadSubrecord(RecordTypes.NEXT);
     }
 }
