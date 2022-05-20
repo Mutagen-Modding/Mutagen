@@ -24,6 +24,7 @@ using FloatType = Mutagen.Bethesda.Generation.Fields.FloatType;
 using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 using PercentType = Mutagen.Bethesda.Generation.Fields.PercentType;
 using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
+using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -772,17 +773,30 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fields.Add(field);
                     }
 
-                    var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration)>>();
+                    var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>>();
+                    TypeGeneration? lastIntegratedField = null;
                     foreach (var field in fields)
                     {
-                        var fieldData = field.Field.GetFieldData();
-                        if (fieldData.GenerationTypes.Count() > 1) continue;
-                        foreach (var gen in fieldData.GenerationTypes)
+                        var doIt = () =>
                         {
-                            if (gen.Key.Count() > 1) continue;
-                            LoquiType loqui = gen.Value as LoquiType;
-                            if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
-                            doubleUsages.GetOrAdd(gen.Key.First()).Add(field);
+                            var fieldData = field.Field.GetFieldData();
+                            if (fieldData.GenerationTypes.Count() > 1) return;
+                            foreach (var gen in fieldData.GenerationTypes)
+                            {
+                                if (gen.Key.Count() > 1) continue;
+                                LoquiType loqui = gen.Value as LoquiType;
+                                if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
+                                doubleUsages.GetOrAdd(gen.Key.First()).Add((field.Item1, field.Item2, field.Field, lastIntegratedField));
+                            }
+                        };
+                        doIt();
+                        if (field.Field.IntegrateField)
+                        {
+                            lastIntegratedField = field.Field;
+                        }
+                        else if (field.Field is DataType d)
+                        {
+                            lastIntegratedField = d.IterateFields().Select(f => f.Field).Last();
                         }
                     }
                     foreach (var item in doubleUsages.ToList())
@@ -805,7 +819,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             LoquiType loqui = gen.Value as LoquiType;
                             if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
 
-                            List<(int, int, TypeGeneration Field)> doubles = null;
+                            List<(int, int, TypeGeneration Field, TypeGeneration? LastIntegratedField)> doubles = null;
                             if (gen.Key.Count() == 1)
                             {
                                 if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
@@ -853,52 +867,106 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                                 else
                                 {
-                                    sb.AppendLine($"switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)");
-                                    using (sb.CurlyBrace())
+                                    bool first = true;
+                                    foreach (var doublesField in doubles)
                                     {
-                                        int count = 0;
-                                        foreach (var doublesField in doubles)
+                                        if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                         {
-                                            if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
+                                            throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
+                                        }
+                                        using (var i = sb.If(ands: false, first: first))
+                                        {
+                                            if (first)
                                             {
-                                                throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
+                                                i.Add("!lastParsed.ParsedIndex.HasValue");
+                                                first = false;
                                             }
-                                            sb.AppendLine($"case {count++}:");
-                                            using (sb.IncreaseDepth())
+                                            if (doublesField.LastIntegratedField != null)
                                             {
-                                                await GenerateLastParsedShortCircuit(
-                                                    obj: obj,
-                                                    sb: sb,
-                                                    field: doublesField,
-                                                    doublesPotential: true,
-                                                    lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
-                                                    nextRecAccessor: "nextRecordType",
-                                                    toDo: async () =>
-                                                    {
-                                                        var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
-                                                        if (groupMask)
-                                                        {
-                                                            sb.AppendLine($"if (importMask?.{doublesField.Field.Name} ?? true)");
-                                                        }
-                                                        using (sb.CurlyBrace(doIt: groupMask))
-                                                        {
-                                                            await GenerateFillSnippet(obj, sb, doublesField.Field, doubleGen, ReaderMemberName);
-                                                        }
-                                                        if (groupMask)
-                                                        {
-                                                            sb.AppendLine("else");
-                                                            using (sb.CurlyBrace())
-                                                            {
-                                                                sb.AppendLine($"{ReaderMemberName}.Position += contentLength;");
-                                                            }
-                                                        }
-                                                    });
+                                                i.Add($"lastParsed.ParsedIndex.Value <= {doublesField.LastIntegratedField.IndexEnumInt}");
                                             }
                                         }
-                                        sb.AppendLine($"default:");
-                                        using (sb.IncreaseDepth())
+                                        using (sb.CurlyBrace())
                                         {
-                                            sb.AppendLine($"throw new NotImplementedException();");
+                                            await GenerateLastParsedShortCircuit(
+                                                obj: obj,
+                                                sb: sb,
+                                                field: (doublesField.Item1, doublesField.Item2, doublesField.Field),
+                                                doublesPotential: true,
+                                                lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
+                                                nextRecAccessor: "nextRecordType",
+                                                toDo: async () =>
+                                                {
+                                                    var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                                    if (groupMask)
+                                                    {
+                                                        sb.AppendLine($"if (importMask?.{doublesField.Field.Name} ?? true)");
+                                                    }
+                                                    using (sb.CurlyBrace(doIt: groupMask))
+                                                    {
+                                                        await GenerateFillSnippet(obj, sb, doublesField.Field, doubleGen, ReaderMemberName);
+                                                    }
+                                                    if (groupMask)
+                                                    {
+                                                        sb.AppendLine("else");
+                                                        using (sb.CurlyBrace())
+                                                        {
+                                                            sb.AppendLine($"{ReaderMemberName}.Position += contentLength;");
+                                                        }
+                                                    }
+                                                });
+                                        }
+                                    }
+                                    sb.AppendLine("else");
+                                    using (sb.CurlyBrace())
+                                    {
+                                        sb.AppendLine($"switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)");
+                                        using (sb.CurlyBrace())
+                                        {
+                                            int count = 0;
+                                            foreach (var doublesField in doubles)
+                                            {
+                                                if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
+                                                {
+                                                    throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
+                                                }
+                                                sb.AppendLine($"case {count++}:");
+                                                using (sb.IncreaseDepth())
+                                                {
+                                                    await GenerateLastParsedShortCircuit(
+                                                        obj: obj,
+                                                        sb: sb,
+                                                        field: (doublesField.Item1, doublesField.Item2, doublesField.Field),
+                                                        doublesPotential: true,
+                                                        lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
+                                                        nextRecAccessor: "nextRecordType",
+                                                        toDo: async () =>
+                                                        {
+                                                            var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                                            if (groupMask)
+                                                            {
+                                                                sb.AppendLine($"if (importMask?.{doublesField.Field.Name} ?? true)");
+                                                            }
+                                                            using (sb.CurlyBrace(doIt: groupMask))
+                                                            {
+                                                                await GenerateFillSnippet(obj, sb, doublesField.Field, doubleGen, ReaderMemberName);
+                                                            }
+                                                            if (groupMask)
+                                                            {
+                                                                sb.AppendLine("else");
+                                                                using (sb.CurlyBrace())
+                                                                {
+                                                                    sb.AppendLine($"{ReaderMemberName}.Position += contentLength;");
+                                                                }
+                                                            }
+                                                        });
+                                                }
+                                            }
+                                            sb.AppendLine($"default:");
+                                            using (sb.IncreaseDepth())
+                                            {
+                                                sb.AppendLine($"throw new NotImplementedException();");
+                                            }
                                         }
                                     }
                                     doubles.Clear();

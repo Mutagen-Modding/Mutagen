@@ -1693,16 +1693,29 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.HNAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        case 0:
-                            frame.ReadSubrecord();
-                            return new ParseResult(default(int?), nextRecordType);
-                        case 1:
-                            frame.ReadSubrecord();
-                            return ParseResult.Stop;
-                        default:
-                            throw new NotImplementedException();
+                        frame.ReadSubrecord();
+                        return new ParseResult(default(int?), nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)ScenePhase_FieldIndex.EditorWidth)
+                    {
+                        frame.ReadSubrecord();
+                        return ParseResult.Stop;
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.ReadSubrecord();
+                                return new ParseResult(default(int?), nextRecordType);
+                            case 1:
+                                frame.ReadSubrecord();
+                                return ParseResult.Stop;
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.NAM0:
@@ -1722,21 +1735,40 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)ScenePhase_FieldIndex.StartConditions)
                     {
-                        case 0:
-                            ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
-                                frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                                item: item);
-                            return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, nextRecordType);
-                        case 1:
-                            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
-                            item.Unused2 = Mutagen.Bethesda.Skyrim.ScenePhaseUnusedData.CreateFromBinary(
-                                frame: frame,
-                                translationParams: translationParams);
-                            return new ParseResult((int)ScenePhase_FieldIndex.Unused2, nextRecordType);
-                        default:
-                            throw new NotImplementedException();
+                        ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
+                            frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                            item: item);
+                        return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)ScenePhase_FieldIndex.Unused)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                        item.Unused2 = Mutagen.Bethesda.Skyrim.ScenePhaseUnusedData.CreateFromBinary(
+                            frame: frame,
+                            translationParams: translationParams);
+                        return new ParseResult((int)ScenePhase_FieldIndex.Unused2, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
+                                    frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                                    item: item);
+                                return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, nextRecordType);
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                                item.Unused2 = Mutagen.Bethesda.Skyrim.ScenePhaseUnusedData.CreateFromBinary(
+                                    frame: frame,
+                                    translationParams: translationParams);
+                                return new ParseResult((int)ScenePhase_FieldIndex.Unused2, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.SCHR:

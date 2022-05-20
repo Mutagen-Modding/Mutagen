@@ -1201,21 +1201,39 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.WLEV:
                 {
-                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        case 0:
-                            if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
-                            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            var dataFrame = frame.SpawnWithLength(contentLength);
-                            item.NorthwestCellCoords = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                            item.NorthwestCellSize = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                            return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, nextRecordType);
-                        case 1:
-                            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                            return new ParseResult((int)WorldDefaultLevelData_FieldIndex.Data, nextRecordType);
-                        default:
-                            throw new NotImplementedException();
+                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        var dataFrame = frame.SpawnWithLength(contentLength);
+                        item.NorthwestCellCoords = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                        item.NorthwestCellSize = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                        return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        return new ParseResult((int)WorldDefaultLevelData_FieldIndex.Data, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize) return ParseResult.Stop;
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                var dataFrame = frame.SpawnWithLength(contentLength);
+                                item.NorthwestCellCoords = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                                item.NorthwestCellSize = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                                return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, nextRecordType);
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                return new ParseResult((int)WorldDefaultLevelData_FieldIndex.Data, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.XXXX:

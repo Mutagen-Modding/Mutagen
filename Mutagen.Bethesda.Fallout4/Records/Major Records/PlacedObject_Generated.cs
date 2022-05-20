@@ -7987,18 +7987,34 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLIB:
                 {
-                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.ActivateParents)
                     {
-                        case 0:
-                            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                            return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, nextRecordType);
-                        case 1:
-                            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                            return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, nextRecordType);
-                        default:
-                            throw new NotImplementedException();
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.NavigationDoorLink)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, nextRecordType);
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.XLCM:

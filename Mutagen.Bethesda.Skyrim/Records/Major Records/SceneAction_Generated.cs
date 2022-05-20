@@ -2211,20 +2211,37 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ANAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        case 0:
-                            if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
-                            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.Type = EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
-                                reader: frame,
-                                length: contentLength);
-                            return new ParseResult((int)SceneAction_FieldIndex.Type, nextRecordType);
-                        case 1:
-                            frame.ReadSubrecord();
-                            return ParseResult.Stop;
-                        default:
-                            throw new NotImplementedException();
+                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.Type = EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            length: contentLength);
+                        return new ParseResult((int)SceneAction_FieldIndex.Type, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Unused)
+                    {
+                        frame.ReadSubrecord();
+                        return ParseResult.Stop;
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.Type = EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                                    reader: frame,
+                                    length: contentLength);
+                                return new ParseResult((int)SceneAction_FieldIndex.Type, nextRecordType);
+                            case 1:
+                                frame.ReadSubrecord();
+                                return ParseResult.Stop;
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.NAM0:
@@ -2263,18 +2280,34 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Flags)
                     {
-                        case 0:
-                            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.StartPhase = frame.ReadUInt32();
-                            return new ParseResult((int)SceneAction_FieldIndex.StartPhase, nextRecordType);
-                        case 1:
-                            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.TimerSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                            return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, nextRecordType);
-                        default:
-                            throw new NotImplementedException();
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.StartPhase = frame.ReadUInt32();
+                        return new ParseResult((int)SceneAction_FieldIndex.StartPhase, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.EndPhase)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.TimerSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.StartPhase = frame.ReadUInt32();
+                                return new ParseResult((int)SceneAction_FieldIndex.StartPhase, nextRecordType);
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.TimerSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.ENAM:
