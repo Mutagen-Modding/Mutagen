@@ -414,6 +414,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFormList :
+        IAliasVoiceType,
         IFallout4MajorRecordInternal,
         IFormListGetter,
         ILockList,
@@ -432,6 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.FLST)]
     public partial interface IFormListGetter :
         IFallout4MajorRecordGetter,
+        IAliasVoiceTypeGetter,
         IBinaryItem,
         ILockListGetter,
         ILoquiObject<IFormListGetter>,

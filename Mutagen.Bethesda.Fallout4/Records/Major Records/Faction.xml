@@ -22,6 +22,7 @@
     <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IRelatable</LinkInterface>
+    <LinkInterface>IAliasVoiceType</LinkInterface>
   </Object>
   <Object name="CrimeValues" objType="Subrecord" recordType="CRVA" GUID="77a3ccd4-90c4-4e3f-a3e4-792e1cea129e" ID="71">
     <Fields>

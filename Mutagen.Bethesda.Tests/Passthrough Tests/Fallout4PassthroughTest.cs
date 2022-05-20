@@ -357,6 +357,11 @@ public class Fallout4PassthroughTest : PassthroughTest
             (int)GroupTypeEnum.CellTemporaryChildren,
             RecordTypes.LAND,
             RecordTypes.NAVM);
+        ret.SetGroupAlignment(
+            (int)GroupTypeEnum.QuestChildren,
+            RecordTypes.SCEN,
+            RecordTypes.DIAL,
+            RecordTypes.DLBR);
         return ret;
     }
 

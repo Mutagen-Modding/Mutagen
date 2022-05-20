@@ -2,7 +2,7 @@ namespace Mutagen.Bethesda.Fallout4;
 
 internal partial class ScriptFragmentsIndexedBinaryOverlay
 {
-    public sbyte ExtraBindDataVersion => throw new NotImplementedException();
+    public byte ExtraBindDataVersion => throw new NotImplementedException();
 
     public IScriptEntryGetter Script => throw new NotImplementedException();
 

@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +55,193 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SceneAdapter? _VirtualMachineAdapter;
+        public SceneAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISceneAdapterGetter? ISceneGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Flags
+        public Scene.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Scene.Flag? ISceneGetter.Flags => this.Flags;
+        #endregion
+        #region Phases
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ScenePhase> _Phases = new ExtendedList<ScenePhase>();
+        public ExtendedList<ScenePhase> Phases
+        {
+            get => this._Phases;
+            init => this._Phases = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IScenePhaseGetter> ISceneGetter.Phases => _Phases;
+        #endregion
+
+        #endregion
+        #region Actors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<SceneActor> _Actors = new ExtendedList<SceneActor>();
+        public ExtendedList<SceneActor> Actors
+        {
+            get => this._Actors;
+            init => this._Actors = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISceneActorGetter> ISceneGetter.Actors => _Actors;
+        #endregion
+
+        #endregion
+        #region Actions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<SceneAction> _Actions = new ExtendedList<SceneAction>();
+        public ExtendedList<SceneAction> Actions
+        {
+            get => this._Actions;
+            init => this._Actions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISceneActionGetter> ISceneGetter.Actions => _Actions;
+        #endregion
+
+        #endregion
+        #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ScenePhaseUnusedData? _Unused;
+        public ScenePhaseUnusedData? Unused
+        {
+            get => _Unused;
+            set => _Unused = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IScenePhaseUnusedDataGetter? ISceneGetter.Unused => this.Unused;
+        #endregion
+        #region Unused2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ScenePhaseUnusedData? _Unused2;
+        public ScenePhaseUnusedData? Unused2
+        {
+            get => _Unused2;
+            set => _Unused2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IScenePhaseUnusedDataGetter? ISceneGetter.Unused2 => this.Unused2;
+        #endregion
+        #region Quest
+        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> ISceneGetter.Quest => this.Quest;
+        #endregion
+        #region LastActionIndex
+        public UInt32? LastActionIndex { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? ISceneGetter.LastActionIndex => this.LastActionIndex;
+        #endregion
+        #region VNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _VNAM;
+        public MemorySlice<Byte>? VNAM
+        {
+            get => this._VNAM;
+            set => this._VNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ISceneGetter.VNAM => this.VNAM;
+        #endregion
+        #region CameraDistanceOverride
+        public Single? CameraDistanceOverride { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ISceneGetter.CameraDistanceOverride => this.CameraDistanceOverride;
+        #endregion
+        #region DialogueDistanceOverride
+        public Single? DialogueDistanceOverride { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ISceneGetter.DialogueDistanceOverride => this.DialogueDistanceOverride;
+        #endregion
+        #region FovOverride
+        public Single? FovOverride { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ISceneGetter.FovOverride => this.FovOverride;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? ISceneGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> ISceneGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region SetParentQuestStage
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SceneSetParentQuestStage? _SetParentQuestStage;
+        public SceneSetParentQuestStage? SetParentQuestStage
+        {
+            get => _SetParentQuestStage;
+            set => _SetParentQuestStage = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISceneSetParentQuestStageGetter? ISceneGetter.SetParentQuestStage => this.SetParentQuestStage;
+        #endregion
+        #region Notes
+        public String? Notes { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ISceneGetter.Notes => this.Notes;
+        #endregion
+        #region Template
+        private readonly IFormLinkNullable<ISceneGetter> _Template = new FormLinkNullable<ISceneGetter>();
+        public IFormLinkNullable<ISceneGetter> Template
+        {
+            get => _Template;
+            set => _Template.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISceneGetter> ISceneGetter.Template => this.Template;
+        #endregion
+        #region Index
+        public UInt32? Index { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? ISceneGetter.Index => this.Index;
+        #endregion
 
         #region To String
 
@@ -78,6 +267,25 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, SceneAdapter.Mask<TItem>?>(initialValue, new SceneAdapter.Mask<TItem>(initialValue));
+                this.Flags = initialValue;
+                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>());
+                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>());
+                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>());
+                this.Unused = new MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>(initialValue, new ScenePhaseUnusedData.Mask<TItem>(initialValue));
+                this.Unused2 = new MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>(initialValue, new ScenePhaseUnusedData.Mask<TItem>(initialValue));
+                this.Quest = initialValue;
+                this.LastActionIndex = initialValue;
+                this.VNAM = initialValue;
+                this.CameraDistanceOverride = initialValue;
+                this.DialogueDistanceOverride = initialValue;
+                this.FovOverride = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.SetParentQuestStage = new MaskItem<TItem, SceneSetParentQuestStage.Mask<TItem>?>(initialValue, new SceneSetParentQuestStage.Mask<TItem>(initialValue));
+                this.Notes = initialValue;
+                this.Template = initialValue;
+                this.Index = initialValue;
             }
 
             public Mask(
@@ -86,7 +294,26 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem Flags,
+                TItem Phases,
+                TItem Actors,
+                TItem Actions,
+                TItem Unused,
+                TItem Unused2,
+                TItem Quest,
+                TItem LastActionIndex,
+                TItem VNAM,
+                TItem CameraDistanceOverride,
+                TItem DialogueDistanceOverride,
+                TItem FovOverride,
+                TItem Keywords,
+                TItem Conditions,
+                TItem SetParentQuestStage,
+                TItem Notes,
+                TItem Template,
+                TItem Index)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +322,25 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, SceneAdapter.Mask<TItem>?>(VirtualMachineAdapter, new SceneAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Flags = Flags;
+                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(Phases, Enumerable.Empty<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>());
+                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(Actors, Enumerable.Empty<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>());
+                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>?>(Actions, Enumerable.Empty<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>());
+                this.Unused = new MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>(Unused, new ScenePhaseUnusedData.Mask<TItem>(Unused));
+                this.Unused2 = new MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>(Unused2, new ScenePhaseUnusedData.Mask<TItem>(Unused2));
+                this.Quest = Quest;
+                this.LastActionIndex = LastActionIndex;
+                this.VNAM = VNAM;
+                this.CameraDistanceOverride = CameraDistanceOverride;
+                this.DialogueDistanceOverride = DialogueDistanceOverride;
+                this.FovOverride = FovOverride;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.SetParentQuestStage = new MaskItem<TItem, SceneSetParentQuestStage.Mask<TItem>?>(SetParentQuestStage, new SceneSetParentQuestStage.Mask<TItem>(SetParentQuestStage));
+                this.Notes = Notes;
+                this.Template = Template;
+                this.Index = Index;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +349,28 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, SceneAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>? Phases;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>? Actors;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>?>? Actions;
+            public MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>? Unused { get; set; }
+            public MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>? Unused2 { get; set; }
+            public TItem Quest;
+            public TItem LastActionIndex;
+            public TItem VNAM;
+            public TItem CameraDistanceOverride;
+            public TItem DialogueDistanceOverride;
+            public TItem FovOverride;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, SceneSetParentQuestStage.Mask<TItem>?>? SetParentQuestStage { get; set; }
+            public TItem Notes;
+            public TItem Template;
+            public TItem Index;
             #endregion
 
             #region Equals
@@ -116,11 +384,49 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Phases, rhs.Phases)) return false;
+                if (!object.Equals(this.Actors, rhs.Actors)) return false;
+                if (!object.Equals(this.Actions, rhs.Actions)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
+                if (!object.Equals(this.Quest, rhs.Quest)) return false;
+                if (!object.Equals(this.LastActionIndex, rhs.LastActionIndex)) return false;
+                if (!object.Equals(this.VNAM, rhs.VNAM)) return false;
+                if (!object.Equals(this.CameraDistanceOverride, rhs.CameraDistanceOverride)) return false;
+                if (!object.Equals(this.DialogueDistanceOverride, rhs.DialogueDistanceOverride)) return false;
+                if (!object.Equals(this.FovOverride, rhs.FovOverride)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.SetParentQuestStage, rhs.SetParentQuestStage)) return false;
+                if (!object.Equals(this.Notes, rhs.Notes)) return false;
+                if (!object.Equals(this.Template, rhs.Template)) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Flags);
+                hash.Add(this.Phases);
+                hash.Add(this.Actors);
+                hash.Add(this.Actions);
+                hash.Add(this.Unused);
+                hash.Add(this.Unused2);
+                hash.Add(this.Quest);
+                hash.Add(this.LastActionIndex);
+                hash.Add(this.VNAM);
+                hash.Add(this.CameraDistanceOverride);
+                hash.Add(this.DialogueDistanceOverride);
+                hash.Add(this.FovOverride);
+                hash.Add(this.Keywords);
+                hash.Add(this.Conditions);
+                hash.Add(this.SetParentQuestStage);
+                hash.Add(this.Notes);
+                hash.Add(this.Template);
+                hash.Add(this.Index);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +437,95 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Flags)) return false;
+                if (this.Phases != null)
+                {
+                    if (!eval(this.Phases.Overall)) return false;
+                    if (this.Phases.Specific != null)
+                    {
+                        foreach (var item in this.Phases.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Actors != null)
+                {
+                    if (!eval(this.Actors.Overall)) return false;
+                    if (this.Actors.Specific != null)
+                    {
+                        foreach (var item in this.Actors.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Actions != null)
+                {
+                    if (!eval(this.Actions.Overall)) return false;
+                    if (this.Actions.Specific != null)
+                    {
+                        foreach (var item in this.Actions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Unused != null)
+                {
+                    if (!eval(this.Unused.Overall)) return false;
+                    if (this.Unused.Specific != null && !this.Unused.Specific.All(eval)) return false;
+                }
+                if (Unused2 != null)
+                {
+                    if (!eval(this.Unused2.Overall)) return false;
+                    if (this.Unused2.Specific != null && !this.Unused2.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Quest)) return false;
+                if (!eval(this.LastActionIndex)) return false;
+                if (!eval(this.VNAM)) return false;
+                if (!eval(this.CameraDistanceOverride)) return false;
+                if (!eval(this.DialogueDistanceOverride)) return false;
+                if (!eval(this.FovOverride)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (SetParentQuestStage != null)
+                {
+                    if (!eval(this.SetParentQuestStage.Overall)) return false;
+                    if (this.SetParentQuestStage.Specific != null && !this.SetParentQuestStage.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Notes)) return false;
+                if (!eval(this.Template)) return false;
+                if (!eval(this.Index)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +534,95 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Flags)) return true;
+                if (this.Phases != null)
+                {
+                    if (eval(this.Phases.Overall)) return true;
+                    if (this.Phases.Specific != null)
+                    {
+                        foreach (var item in this.Phases.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Actors != null)
+                {
+                    if (eval(this.Actors.Overall)) return true;
+                    if (this.Actors.Specific != null)
+                    {
+                        foreach (var item in this.Actors.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Actions != null)
+                {
+                    if (eval(this.Actions.Overall)) return true;
+                    if (this.Actions.Specific != null)
+                    {
+                        foreach (var item in this.Actions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Unused != null)
+                {
+                    if (eval(this.Unused.Overall)) return true;
+                    if (this.Unused.Specific != null && this.Unused.Specific.Any(eval)) return true;
+                }
+                if (Unused2 != null)
+                {
+                    if (eval(this.Unused2.Overall)) return true;
+                    if (this.Unused2.Specific != null && this.Unused2.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Quest)) return true;
+                if (eval(this.LastActionIndex)) return true;
+                if (eval(this.VNAM)) return true;
+                if (eval(this.CameraDistanceOverride)) return true;
+                if (eval(this.DialogueDistanceOverride)) return true;
+                if (eval(this.FovOverride)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (SetParentQuestStage != null)
+                {
+                    if (eval(this.SetParentQuestStage.Overall)) return true;
+                    if (this.SetParentQuestStage.Specific != null && this.SetParentQuestStage.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Notes)) return true;
+                if (eval(this.Template)) return true;
+                if (eval(this.Index)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +638,94 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, SceneAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                if (Phases != null)
+                {
+                    obj.Phases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScenePhase.Mask<R>?>>?>(eval(this.Phases.Overall), Enumerable.Empty<MaskItemIndexed<R, ScenePhase.Mask<R>?>>());
+                    if (Phases.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ScenePhase.Mask<R>?>>();
+                        obj.Phases.Specific = l;
+                        foreach (var item in Phases.Specific)
+                        {
+                            MaskItemIndexed<R, ScenePhase.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ScenePhase.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Actors != null)
+                {
+                    obj.Actors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneActor.Mask<R>?>>?>(eval(this.Actors.Overall), Enumerable.Empty<MaskItemIndexed<R, SceneActor.Mask<R>?>>());
+                    if (Actors.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SceneActor.Mask<R>?>>();
+                        obj.Actors.Specific = l;
+                        foreach (var item in Actors.Specific)
+                        {
+                            MaskItemIndexed<R, SceneActor.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SceneActor.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Actions != null)
+                {
+                    obj.Actions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneAction.Mask<R>?>>?>(eval(this.Actions.Overall), Enumerable.Empty<MaskItemIndexed<R, SceneAction.Mask<R>?>>());
+                    if (Actions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SceneAction.Mask<R>?>>();
+                        obj.Actions.Specific = l;
+                        foreach (var item in Actions.Specific)
+                        {
+                            MaskItemIndexed<R, SceneAction.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SceneAction.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Unused = this.Unused == null ? null : new MaskItem<R, ScenePhaseUnusedData.Mask<R>?>(eval(this.Unused.Overall), this.Unused.Specific?.Translate(eval));
+                obj.Unused2 = this.Unused2 == null ? null : new MaskItem<R, ScenePhaseUnusedData.Mask<R>?>(eval(this.Unused2.Overall), this.Unused2.Specific?.Translate(eval));
+                obj.Quest = eval(this.Quest);
+                obj.LastActionIndex = eval(this.LastActionIndex);
+                obj.VNAM = eval(this.VNAM);
+                obj.CameraDistanceOverride = eval(this.CameraDistanceOverride);
+                obj.DialogueDistanceOverride = eval(this.DialogueDistanceOverride);
+                obj.FovOverride = eval(this.FovOverride);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.SetParentQuestStage = this.SetParentQuestStage == null ? null : new MaskItem<R, SceneSetParentQuestStage.Mask<R>?>(eval(this.SetParentQuestStage.Overall), this.SetParentQuestStage.Specific?.Translate(eval));
+                obj.Notes = eval(this.Notes);
+                obj.Template = eval(this.Template);
+                obj.Index = eval(this.Index);
             }
             #endregion
 
@@ -172,6 +744,159 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(Scene.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if ((printMask?.Phases?.Overall ?? true)
+                        && Phases is {} PhasesItem)
+                    {
+                        sb.AppendLine("Phases =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PhasesItem.Overall);
+                            if (PhasesItem.Specific != null)
+                            {
+                                foreach (var subItem in PhasesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Actors?.Overall ?? true)
+                        && Actors is {} ActorsItem)
+                    {
+                        sb.AppendLine("Actors =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ActorsItem.Overall);
+                            if (ActorsItem.Specific != null)
+                            {
+                                foreach (var subItem in ActorsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Actions?.Overall ?? true)
+                        && Actions is {} ActionsItem)
+                    {
+                        sb.AppendLine("Actions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ActionsItem.Overall);
+                            if (ActionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ActionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Unused?.Overall ?? true)
+                    {
+                        Unused?.Print(sb);
+                    }
+                    if (printMask?.Unused2?.Overall ?? true)
+                    {
+                        Unused2?.Print(sb);
+                    }
+                    if (printMask?.Quest ?? true)
+                    {
+                        sb.AppendItem(Quest, "Quest");
+                    }
+                    if (printMask?.LastActionIndex ?? true)
+                    {
+                        sb.AppendItem(LastActionIndex, "LastActionIndex");
+                    }
+                    if (printMask?.VNAM ?? true)
+                    {
+                        sb.AppendItem(VNAM, "VNAM");
+                    }
+                    if (printMask?.CameraDistanceOverride ?? true)
+                    {
+                        sb.AppendItem(CameraDistanceOverride, "CameraDistanceOverride");
+                    }
+                    if (printMask?.DialogueDistanceOverride ?? true)
+                    {
+                        sb.AppendItem(DialogueDistanceOverride, "DialogueDistanceOverride");
+                    }
+                    if (printMask?.FovOverride ?? true)
+                    {
+                        sb.AppendItem(FovOverride, "FovOverride");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.SetParentQuestStage?.Overall ?? true)
+                    {
+                        SetParentQuestStage?.Print(sb);
+                    }
+                    if (printMask?.Notes ?? true)
+                    {
+                        sb.AppendItem(Notes, "Notes");
+                    }
+                    if (printMask?.Template ?? true)
+                    {
+                        sb.AppendItem(Template, "Template");
+                    }
+                    if (printMask?.Index ?? true)
+                    {
+                        sb.AppendItem(Index, "Index");
+                    }
                 }
             }
             #endregion
@@ -182,12 +907,72 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, SceneAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhase.ErrorMask?>>?>? Phases;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneActor.ErrorMask?>>?>? Actors;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneAction.ErrorMask?>>?>? Actions;
+            public MaskItem<Exception?, ScenePhaseUnusedData.ErrorMask?>? Unused;
+            public MaskItem<Exception?, ScenePhaseUnusedData.ErrorMask?>? Unused2;
+            public Exception? Quest;
+            public Exception? LastActionIndex;
+            public Exception? VNAM;
+            public Exception? CameraDistanceOverride;
+            public Exception? DialogueDistanceOverride;
+            public Exception? FovOverride;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, SceneSetParentQuestStage.ErrorMask?>? SetParentQuestStage;
+            public Exception? Notes;
+            public Exception? Template;
+            public Exception? Index;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Scene_FieldIndex enu = (Scene_FieldIndex)index;
                 switch (enu)
                 {
+                    case Scene_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Scene_FieldIndex.Flags:
+                        return Flags;
+                    case Scene_FieldIndex.Phases:
+                        return Phases;
+                    case Scene_FieldIndex.Actors:
+                        return Actors;
+                    case Scene_FieldIndex.Actions:
+                        return Actions;
+                    case Scene_FieldIndex.Unused:
+                        return Unused;
+                    case Scene_FieldIndex.Unused2:
+                        return Unused2;
+                    case Scene_FieldIndex.Quest:
+                        return Quest;
+                    case Scene_FieldIndex.LastActionIndex:
+                        return LastActionIndex;
+                    case Scene_FieldIndex.VNAM:
+                        return VNAM;
+                    case Scene_FieldIndex.CameraDistanceOverride:
+                        return CameraDistanceOverride;
+                    case Scene_FieldIndex.DialogueDistanceOverride:
+                        return DialogueDistanceOverride;
+                    case Scene_FieldIndex.FovOverride:
+                        return FovOverride;
+                    case Scene_FieldIndex.Keywords:
+                        return Keywords;
+                    case Scene_FieldIndex.Conditions:
+                        return Conditions;
+                    case Scene_FieldIndex.SetParentQuestStage:
+                        return SetParentQuestStage;
+                    case Scene_FieldIndex.Notes:
+                        return Notes;
+                    case Scene_FieldIndex.Template:
+                        return Template;
+                    case Scene_FieldIndex.Index:
+                        return Index;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +983,63 @@ namespace Mutagen.Bethesda.Fallout4
                 Scene_FieldIndex enu = (Scene_FieldIndex)index;
                 switch (enu)
                 {
+                    case Scene_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, SceneAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Scene_FieldIndex.Phases:
+                        this.Phases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhase.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.Actors:
+                        this.Actors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneActor.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.Actions:
+                        this.Actions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneAction.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.Unused:
+                        this.Unused = new MaskItem<Exception?, ScenePhaseUnusedData.ErrorMask?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.Unused2:
+                        this.Unused2 = new MaskItem<Exception?, ScenePhaseUnusedData.ErrorMask?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.Quest:
+                        this.Quest = ex;
+                        break;
+                    case Scene_FieldIndex.LastActionIndex:
+                        this.LastActionIndex = ex;
+                        break;
+                    case Scene_FieldIndex.VNAM:
+                        this.VNAM = ex;
+                        break;
+                    case Scene_FieldIndex.CameraDistanceOverride:
+                        this.CameraDistanceOverride = ex;
+                        break;
+                    case Scene_FieldIndex.DialogueDistanceOverride:
+                        this.DialogueDistanceOverride = ex;
+                        break;
+                    case Scene_FieldIndex.FovOverride:
+                        this.FovOverride = ex;
+                        break;
+                    case Scene_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.SetParentQuestStage:
+                        this.SetParentQuestStage = new MaskItem<Exception?, SceneSetParentQuestStage.ErrorMask?>(ex, null);
+                        break;
+                    case Scene_FieldIndex.Notes:
+                        this.Notes = ex;
+                        break;
+                    case Scene_FieldIndex.Template:
+                        this.Template = ex;
+                        break;
+                    case Scene_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +1051,63 @@ namespace Mutagen.Bethesda.Fallout4
                 Scene_FieldIndex enu = (Scene_FieldIndex)index;
                 switch (enu)
                 {
+                    case Scene_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, SceneAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Scene_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Scene_FieldIndex.Phases:
+                        this.Phases = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhase.ErrorMask?>>?>)obj;
+                        break;
+                    case Scene_FieldIndex.Actors:
+                        this.Actors = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneActor.ErrorMask?>>?>)obj;
+                        break;
+                    case Scene_FieldIndex.Actions:
+                        this.Actions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneAction.ErrorMask?>>?>)obj;
+                        break;
+                    case Scene_FieldIndex.Unused:
+                        this.Unused = (MaskItem<Exception?, ScenePhaseUnusedData.ErrorMask?>?)obj;
+                        break;
+                    case Scene_FieldIndex.Unused2:
+                        this.Unused2 = (MaskItem<Exception?, ScenePhaseUnusedData.ErrorMask?>?)obj;
+                        break;
+                    case Scene_FieldIndex.Quest:
+                        this.Quest = (Exception?)obj;
+                        break;
+                    case Scene_FieldIndex.LastActionIndex:
+                        this.LastActionIndex = (Exception?)obj;
+                        break;
+                    case Scene_FieldIndex.VNAM:
+                        this.VNAM = (Exception?)obj;
+                        break;
+                    case Scene_FieldIndex.CameraDistanceOverride:
+                        this.CameraDistanceOverride = (Exception?)obj;
+                        break;
+                    case Scene_FieldIndex.DialogueDistanceOverride:
+                        this.DialogueDistanceOverride = (Exception?)obj;
+                        break;
+                    case Scene_FieldIndex.FovOverride:
+                        this.FovOverride = (Exception?)obj;
+                        break;
+                    case Scene_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Scene_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Scene_FieldIndex.SetParentQuestStage:
+                        this.SetParentQuestStage = (MaskItem<Exception?, SceneSetParentQuestStage.ErrorMask?>?)obj;
+                        break;
+                    case Scene_FieldIndex.Notes:
+                        this.Notes = (Exception?)obj;
+                        break;
+                    case Scene_FieldIndex.Template:
+                        this.Template = (Exception?)obj;
+                        break;
+                    case Scene_FieldIndex.Index:
+                        this.Index = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +1117,25 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Flags != null) return true;
+                if (Phases != null) return true;
+                if (Actors != null) return true;
+                if (Actions != null) return true;
+                if (Unused != null) return true;
+                if (Unused2 != null) return true;
+                if (Quest != null) return true;
+                if (LastActionIndex != null) return true;
+                if (VNAM != null) return true;
+                if (CameraDistanceOverride != null) return true;
+                if (DialogueDistanceOverride != null) return true;
+                if (FovOverride != null) return true;
+                if (Keywords != null) return true;
+                if (Conditions != null) return true;
+                if (SetParentQuestStage != null) return true;
+                if (Notes != null) return true;
+                if (Template != null) return true;
+                if (Index != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +1162,132 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                if (Phases is {} PhasesItem)
+                {
+                    sb.AppendLine("Phases =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PhasesItem.Overall);
+                        if (PhasesItem.Specific != null)
+                        {
+                            foreach (var subItem in PhasesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Actors is {} ActorsItem)
+                {
+                    sb.AppendLine("Actors =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ActorsItem.Overall);
+                        if (ActorsItem.Specific != null)
+                        {
+                            foreach (var subItem in ActorsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Actions is {} ActionsItem)
+                {
+                    sb.AppendLine("Actions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ActionsItem.Overall);
+                        if (ActionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ActionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Unused?.Print(sb);
+                Unused2?.Print(sb);
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                {
+                    sb.AppendItem(LastActionIndex, "LastActionIndex");
+                }
+                {
+                    sb.AppendItem(VNAM, "VNAM");
+                }
+                {
+                    sb.AppendItem(CameraDistanceOverride, "CameraDistanceOverride");
+                }
+                {
+                    sb.AppendItem(DialogueDistanceOverride, "DialogueDistanceOverride");
+                }
+                {
+                    sb.AppendItem(FovOverride, "FovOverride");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                SetParentQuestStage?.Print(sb);
+                {
+                    sb.AppendItem(Notes, "Notes");
+                }
+                {
+                    sb.AppendItem(Template, "Template");
+                }
+                {
+                    sb.AppendItem(Index, "Index");
+                }
             }
             #endregion
 
@@ -252,6 +1296,25 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Phases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhase.ErrorMask?>>?>(ExceptionExt.Combine(this.Phases?.Overall, rhs.Phases?.Overall), ExceptionExt.Combine(this.Phases?.Specific, rhs.Phases?.Specific));
+                ret.Actors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneActor.ErrorMask?>>?>(ExceptionExt.Combine(this.Actors?.Overall, rhs.Actors?.Overall), ExceptionExt.Combine(this.Actors?.Specific, rhs.Actors?.Specific));
+                ret.Actions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneAction.ErrorMask?>>?>(ExceptionExt.Combine(this.Actions?.Overall, rhs.Actions?.Overall), ExceptionExt.Combine(this.Actions?.Specific, rhs.Actions?.Specific));
+                ret.Unused = this.Unused.Combine(rhs.Unused, (l, r) => l.Combine(r));
+                ret.Unused2 = this.Unused2.Combine(rhs.Unused2, (l, r) => l.Combine(r));
+                ret.Quest = this.Quest.Combine(rhs.Quest);
+                ret.LastActionIndex = this.LastActionIndex.Combine(rhs.LastActionIndex);
+                ret.VNAM = this.VNAM.Combine(rhs.VNAM);
+                ret.CameraDistanceOverride = this.CameraDistanceOverride.Combine(rhs.CameraDistanceOverride);
+                ret.DialogueDistanceOverride = this.DialogueDistanceOverride.Combine(rhs.DialogueDistanceOverride);
+                ret.FovOverride = this.FovOverride.Combine(rhs.FovOverride);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.SetParentQuestStage = this.SetParentQuestStage.Combine(rhs.SetParentQuestStage, (l, r) => l.Combine(r));
+                ret.Notes = this.Notes.Combine(rhs.Notes);
+                ret.Template = this.Template.Combine(rhs.Template);
+                ret.Index = this.Index.Combine(rhs.Index);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +1336,72 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public SceneAdapter.TranslationMask? VirtualMachineAdapter;
+            public bool Flags;
+            public ScenePhase.TranslationMask? Phases;
+            public SceneActor.TranslationMask? Actors;
+            public SceneAction.TranslationMask? Actions;
+            public ScenePhaseUnusedData.TranslationMask? Unused;
+            public ScenePhaseUnusedData.TranslationMask? Unused2;
+            public bool Quest;
+            public bool LastActionIndex;
+            public bool VNAM;
+            public bool CameraDistanceOverride;
+            public bool DialogueDistanceOverride;
+            public bool FovOverride;
+            public bool Keywords;
+            public Condition.TranslationMask? Conditions;
+            public SceneSetParentQuestStage.TranslationMask? SetParentQuestStage;
+            public bool Notes;
+            public bool Template;
+            public bool Index;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Flags = defaultOn;
+                this.Quest = defaultOn;
+                this.LastActionIndex = defaultOn;
+                this.VNAM = defaultOn;
+                this.CameraDistanceOverride = defaultOn;
+                this.DialogueDistanceOverride = defaultOn;
+                this.FovOverride = defaultOn;
+                this.Keywords = defaultOn;
+                this.Notes = defaultOn;
+                this.Template = defaultOn;
+                this.Index = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((Phases == null ? DefaultOn : !Phases.GetCrystal().CopyNothing, Phases?.GetCrystal()));
+                ret.Add((Actors == null ? DefaultOn : !Actors.GetCrystal().CopyNothing, Actors?.GetCrystal()));
+                ret.Add((Actions == null ? DefaultOn : !Actions.GetCrystal().CopyNothing, Actions?.GetCrystal()));
+                ret.Add((Unused != null ? Unused.OnOverall : DefaultOn, Unused?.GetCrystal()));
+                ret.Add((Unused2 != null ? Unused2.OnOverall : DefaultOn, Unused2?.GetCrystal()));
+                ret.Add((Quest, null));
+                ret.Add((LastActionIndex, null));
+                ret.Add((VNAM, null));
+                ret.Add((CameraDistanceOverride, null));
+                ret.Add((DialogueDistanceOverride, null));
+                ret.Add((FovOverride, null));
+                ret.Add((Keywords, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((SetParentQuestStage != null ? SetParentQuestStage.OnOverall : DefaultOn, SetParentQuestStage?.GetCrystal()));
+                ret.Add((Notes, null));
+                ret.Add((Template, null));
+                ret.Add((Index, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +1413,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Scene_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SceneCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneSetterCommon.Instance.RemapLinks(this, mapping);
         public Scene(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -415,9 +1537,33 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IScene :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISceneInternal>,
         ISceneGetter
     {
+        new SceneAdapter? VirtualMachineAdapter { get; set; }
+        new Scene.Flag? Flags { get; set; }
+        new ExtendedList<ScenePhase> Phases { get; }
+        new ExtendedList<SceneActor> Actors { get; }
+        new ExtendedList<SceneAction> Actions { get; }
+        new ScenePhaseUnusedData? Unused { get; set; }
+        new ScenePhaseUnusedData? Unused2 { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
+        new UInt32? LastActionIndex { get; set; }
+        new MemorySlice<Byte>? VNAM { get; set; }
+        new Single? CameraDistanceOverride { get; set; }
+        new Single? DialogueDistanceOverride { get; set; }
+        new Single? FovOverride { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new SceneSetParentQuestStage? SetParentQuestStage { get; set; }
+        new String? Notes { get; set; }
+        new IFormLinkNullable<ISceneGetter> Template { get; set; }
+        new UInt32? Index { get; set; }
     }
 
     public partial interface ISceneInternal :
@@ -431,10 +1577,36 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ISceneGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISceneGetter>,
         IMapsToGetter<ISceneGetter>
     {
         static new ILoquiRegistration StaticRegistration => Scene_Registration.Instance;
+        ISceneAdapterGetter? VirtualMachineAdapter { get; }
+        Scene.Flag? Flags { get; }
+        IReadOnlyList<IScenePhaseGetter> Phases { get; }
+        IReadOnlyList<ISceneActorGetter> Actors { get; }
+        IReadOnlyList<ISceneActionGetter> Actions { get; }
+        IScenePhaseUnusedDataGetter? Unused { get; }
+        IScenePhaseUnusedDataGetter? Unused2 { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
+        UInt32? LastActionIndex { get; }
+        ReadOnlyMemorySlice<Byte>? VNAM { get; }
+        Single? CameraDistanceOverride { get; }
+        Single? DialogueDistanceOverride { get; }
+        Single? FovOverride { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        ISceneSetParentQuestStageGetter? SetParentQuestStage { get; }
+        String? Notes { get; }
+        IFormLinkNullableGetter<ISceneGetter> Template { get; }
+        UInt32? Index { get; }
 
     }
 
@@ -599,6 +1771,25 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        Flags = 7,
+        Phases = 8,
+        Actors = 9,
+        Actions = 10,
+        Unused = 11,
+        Unused2 = 12,
+        Quest = 13,
+        LastActionIndex = 14,
+        VNAM = 15,
+        CameraDistanceOverride = 16,
+        DialogueDistanceOverride = 17,
+        FovOverride = 18,
+        Keywords = 19,
+        Conditions = 20,
+        SetParentQuestStage = 21,
+        Notes = 22,
+        Template = 23,
+        Index = 24,
     }
     #endregion
 
@@ -616,9 +1807,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "4ede0e86-8f66-4dc0-819f-9e63a94fd469";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Scene.Mask<>);
 
@@ -648,8 +1839,72 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SCEN);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.SCEN);
+            var all = RecordCollection.Factory(
+                RecordTypes.SCEN,
+                RecordTypes.VMAD,
+                RecordTypes.FNAM,
+                RecordTypes.HNAM,
+                RecordTypes.NAM0,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.NEXT,
+                RecordTypes.WNAM,
+                RecordTypes.SCQS,
+                RecordTypes.ALID,
+                RecordTypes.LNAM,
+                RecordTypes.DNAM,
+                RecordTypes.ANAM,
+                RecordTypes.INAM,
+                RecordTypes.SNAM,
+                RecordTypes.ENAM,
+                RecordTypes.TNAM,
+                RecordTypes.STSC,
+                RecordTypes.LCEP,
+                RecordTypes.INTT,
+                RecordTypes.SSPN,
+                RecordTypes.CITC,
+                RecordTypes.PTOP,
+                RecordTypes.NTOP,
+                RecordTypes.NETO,
+                RecordTypes.QTOP,
+                RecordTypes.VENC,
+                RecordTypes.PLVD,
+                RecordTypes.JOUT,
+                RecordTypes.DALC,
+                RecordTypes.DTID,
+                RecordTypes.NPOT,
+                RecordTypes.NNGT,
+                RecordTypes.NNUT,
+                RecordTypes.NQUT,
+                RecordTypes.NPOS,
+                RecordTypes.NNGS,
+                RecordTypes.NNUS,
+                RecordTypes.NQUS,
+                RecordTypes.DTGT,
+                RecordTypes.PNAM,
+                RecordTypes.DATA,
+                RecordTypes.HTID,
+                RecordTypes.DMAX,
+                RecordTypes.DMIN,
+                RecordTypes.CRIS,
+                RecordTypes.DEMO,
+                RecordTypes.DEVA,
+                RecordTypes.ONAM,
+                RecordTypes.SCHR,
+                RecordTypes.SCDA,
+                RecordTypes.SCTX,
+                RecordTypes.QNAM,
+                RecordTypes.SCRO,
+                RecordTypes.VNAM,
+                RecordTypes.CNAM,
+                RecordTypes.ACTV,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.NNAM,
+                RecordTypes.XNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SceneBinaryWriteTranslation);
         #region Interface
@@ -693,6 +1948,25 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISceneInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Flags = default;
+            item.Phases.Clear();
+            item.Actors.Clear();
+            item.Actions.Clear();
+            item.Unused = null;
+            item.Unused2 = null;
+            item.Quest.Clear();
+            item.LastActionIndex = default;
+            item.VNAM = default;
+            item.CameraDistanceOverride = default;
+            item.DialogueDistanceOverride = default;
+            item.FovOverride = default;
+            item.Keywords = null;
+            item.Conditions.Clear();
+            item.SetParentQuestStage = null;
+            item.Notes = default;
+            item.Template.Clear();
+            item.Index = default;
             base.Clear(item);
         }
         
@@ -710,6 +1984,13 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IScene obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Phases.RemapLinks(mapping);
+            obj.Actions.RemapLinks(mapping);
+            obj.Quest.Relink(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.Template.Relink(mapping);
         }
         
         #endregion
@@ -778,6 +2059,56 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Phases = item.Phases.CollectionEqualsHelper(
+                rhs.Phases,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Actors = item.Actors.CollectionEqualsHelper(
+                rhs.Actors,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Actions = item.Actions.CollectionEqualsHelper(
+                rhs.Actions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unused = EqualsMaskHelper.EqualsHelper(
+                item.Unused,
+                rhs.Unused,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Unused2 = EqualsMaskHelper.EqualsHelper(
+                item.Unused2,
+                rhs.Unused2,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
+            ret.LastActionIndex = item.LastActionIndex == rhs.LastActionIndex;
+            ret.VNAM = MemorySliceExt.Equal(item.VNAM, rhs.VNAM);
+            ret.CameraDistanceOverride = item.CameraDistanceOverride.EqualsWithin(rhs.CameraDistanceOverride);
+            ret.DialogueDistanceOverride = item.DialogueDistanceOverride.EqualsWithin(rhs.DialogueDistanceOverride);
+            ret.FovOverride = item.FovOverride.EqualsWithin(rhs.FovOverride);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.SetParentQuestStage = EqualsMaskHelper.EqualsHelper(
+                item.SetParentQuestStage,
+                rhs.SetParentQuestStage,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Notes = string.Equals(item.Notes, rhs.Notes);
+            ret.Template = item.Template.Equals(rhs.Template);
+            ret.Index = item.Index == rhs.Index;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +2158,145 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
+            }
+            if (printMask?.Phases?.Overall ?? true)
+            {
+                sb.AppendLine("Phases =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Phases)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Actors?.Overall ?? true)
+            {
+                sb.AppendLine("Actors =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Actors)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Actions?.Overall ?? true)
+            {
+                sb.AppendLine("Actions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Actions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Unused?.Overall ?? true)
+                && item.Unused is {} UnusedItem)
+            {
+                UnusedItem?.Print(sb, "Unused");
+            }
+            if ((printMask?.Unused2?.Overall ?? true)
+                && item.Unused2 is {} Unused2Item)
+            {
+                Unused2Item?.Print(sb, "Unused2");
+            }
+            if (printMask?.Quest ?? true)
+            {
+                sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
+            }
+            if ((printMask?.LastActionIndex ?? true)
+                && item.LastActionIndex is {} LastActionIndexItem)
+            {
+                sb.AppendItem(LastActionIndexItem, "LastActionIndex");
+            }
+            if ((printMask?.VNAM ?? true)
+                && item.VNAM is {} VNAMItem)
+            {
+                sb.AppendLine($"VNAM => {SpanExt.ToHexString(VNAMItem)}");
+            }
+            if ((printMask?.CameraDistanceOverride ?? true)
+                && item.CameraDistanceOverride is {} CameraDistanceOverrideItem)
+            {
+                sb.AppendItem(CameraDistanceOverrideItem, "CameraDistanceOverride");
+            }
+            if ((printMask?.DialogueDistanceOverride ?? true)
+                && item.DialogueDistanceOverride is {} DialogueDistanceOverrideItem)
+            {
+                sb.AppendItem(DialogueDistanceOverrideItem, "DialogueDistanceOverride");
+            }
+            if ((printMask?.FovOverride ?? true)
+                && item.FovOverride is {} FovOverrideItem)
+            {
+                sb.AppendItem(FovOverrideItem, "FovOverride");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.SetParentQuestStage?.Overall ?? true)
+                && item.SetParentQuestStage is {} SetParentQuestStageItem)
+            {
+                SetParentQuestStageItem?.Print(sb, "SetParentQuestStage");
+            }
+            if ((printMask?.Notes ?? true)
+                && item.Notes is {} NotesItem)
+            {
+                sb.AppendItem(NotesItem, "Notes");
+            }
+            if (printMask?.Template ?? true)
+            {
+                sb.AppendItem(item.Template.FormKeyNullable, "Template");
+            }
+            if ((printMask?.Index ?? true)
+                && item.Index is {} IndexItem)
+            {
+                sb.AppendItem(IndexItem, "Index");
+            }
         }
         
         public static Scene_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +2345,98 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((SceneAdapterCommon)((ISceneAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Scene_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Phases) ?? true))
+            {
+                if (!lhs.Phases.SequenceEqual(rhs.Phases, (l, r) => ((ScenePhaseCommon)((IScenePhaseGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Phases)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Actors) ?? true))
+            {
+                if (!lhs.Actors.SequenceEqual(rhs.Actors, (l, r) => ((SceneActorCommon)((ISceneActorGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Actors)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Actions) ?? true))
+            {
+                if (!lhs.Actions.SequenceEqual(rhs.Actions, (l, r) => ((SceneActionCommon)((ISceneActionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Actions)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Unused) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Unused, rhs.Unused, out var lhsUnused, out var rhsUnused, out var isUnusedEqual))
+                {
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, crystal?.GetSubCrystal((int)Scene_FieldIndex.Unused))) return false;
+                }
+                else if (!isUnusedEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Unused2) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Unused2, rhs.Unused2, out var lhsUnused2, out var rhsUnused2, out var isUnused2Equal))
+                {
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused2).CommonInstance()!).Equals(lhsUnused2, rhsUnused2, crystal?.GetSubCrystal((int)Scene_FieldIndex.Unused2))) return false;
+                }
+                else if (!isUnused2Equal) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
+            {
+                if (lhs.LastActionIndex != rhs.LastActionIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.VNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.VNAM, rhs.VNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.CameraDistanceOverride) ?? true))
+            {
+                if (!lhs.CameraDistanceOverride.EqualsWithin(rhs.CameraDistanceOverride)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.DialogueDistanceOverride) ?? true))
+            {
+                if (!lhs.DialogueDistanceOverride.EqualsWithin(rhs.DialogueDistanceOverride)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.FovOverride) ?? true))
+            {
+                if (!lhs.FovOverride.EqualsWithin(rhs.FovOverride)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Conditions)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.SetParentQuestStage) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SetParentQuestStage, rhs.SetParentQuestStage, out var lhsSetParentQuestStage, out var rhsSetParentQuestStage, out var isSetParentQuestStageEqual))
+                {
+                    if (!((SceneSetParentQuestStageCommon)((ISceneSetParentQuestStageGetter)lhsSetParentQuestStage).CommonInstance()!).Equals(lhsSetParentQuestStage, rhsSetParentQuestStage, crystal?.GetSubCrystal((int)Scene_FieldIndex.SetParentQuestStage))) return false;
+                }
+                else if (!isSetParentQuestStageEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Notes) ?? true))
+            {
+                if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Template) ?? true))
+            {
+                if (!lhs.Template.Equals(rhs.Template)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
             return true;
         }
         
@@ -903,6 +2465,61 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(ISceneGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
+            hash.Add(item.Phases);
+            hash.Add(item.Actors);
+            hash.Add(item.Actions);
+            if (item.Unused is {} Unuseditem)
+            {
+                hash.Add(Unuseditem);
+            }
+            if (item.Unused2 is {} Unused2item)
+            {
+                hash.Add(Unused2item);
+            }
+            hash.Add(item.Quest);
+            if (item.LastActionIndex is {} LastActionIndexitem)
+            {
+                hash.Add(LastActionIndexitem);
+            }
+            if (item.VNAM is {} VNAMItem)
+            {
+                hash.Add(VNAMItem);
+            }
+            if (item.CameraDistanceOverride is {} CameraDistanceOverrideitem)
+            {
+                hash.Add(CameraDistanceOverrideitem);
+            }
+            if (item.DialogueDistanceOverride is {} DialogueDistanceOverrideitem)
+            {
+                hash.Add(DialogueDistanceOverrideitem);
+            }
+            if (item.FovOverride is {} FovOverrideitem)
+            {
+                hash.Add(FovOverrideitem);
+            }
+            hash.Add(item.Keywords);
+            hash.Add(item.Conditions);
+            if (item.SetParentQuestStage is {} SetParentQuestStageitem)
+            {
+                hash.Add(SetParentQuestStageitem);
+            }
+            if (item.Notes is {} Notesitem)
+            {
+                hash.Add(Notesitem);
+            }
+            hash.Add(item.Template);
+            if (item.Index is {} Indexitem)
+            {
+                hash.Add(Indexitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -931,6 +2548,42 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Phases.WhereCastable<IScenePhaseGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Actions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
+            {
+                yield return QuestInfo;
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.Template, out var TemplateInfo))
+            {
+                yield return TemplateInfo;
             }
             yield break;
         }
@@ -1006,6 +2659,280 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Scene_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Scene_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Phases) ?? true))
+            {
+                errorMask?.PushIndex((int)Scene_FieldIndex.Phases);
+                try
+                {
+                    item.Phases.SetTo(
+                        rhs.Phases
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Actors) ?? true))
+            {
+                errorMask?.PushIndex((int)Scene_FieldIndex.Actors);
+                try
+                {
+                    item.Actors.SetTo(
+                        rhs.Actors
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Actions) ?? true))
+            {
+                errorMask?.PushIndex((int)Scene_FieldIndex.Actions);
+                try
+                {
+                    item.Actions.SetTo(
+                        rhs.Actions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Unused) ?? true))
+            {
+                errorMask?.PushIndex((int)Scene_FieldIndex.Unused);
+                try
+                {
+                    if(rhs.Unused is {} rhsUnused)
+                    {
+                        item.Unused = rhsUnused.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Scene_FieldIndex.Unused));
+                    }
+                    else
+                    {
+                        item.Unused = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Unused2) ?? true))
+            {
+                errorMask?.PushIndex((int)Scene_FieldIndex.Unused2);
+                try
+                {
+                    if(rhs.Unused2 is {} rhsUnused2)
+                    {
+                        item.Unused2 = rhsUnused2.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Scene_FieldIndex.Unused2));
+                    }
+                    else
+                    {
+                        item.Unused2 = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
+            {
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
+            {
+                item.LastActionIndex = rhs.LastActionIndex;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.VNAM) ?? true))
+            {
+                if(rhs.VNAM is {} VNAMrhs)
+                {
+                    item.VNAM = VNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.VNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.CameraDistanceOverride) ?? true))
+            {
+                item.CameraDistanceOverride = rhs.CameraDistanceOverride;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.DialogueDistanceOverride) ?? true))
+            {
+                item.DialogueDistanceOverride = rhs.DialogueDistanceOverride;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.FovOverride) ?? true))
+            {
+                item.FovOverride = rhs.FovOverride;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Scene_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Scene_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.SetParentQuestStage) ?? true))
+            {
+                errorMask?.PushIndex((int)Scene_FieldIndex.SetParentQuestStage);
+                try
+                {
+                    if(rhs.SetParentQuestStage is {} rhsSetParentQuestStage)
+                    {
+                        item.SetParentQuestStage = rhsSetParentQuestStage.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Scene_FieldIndex.SetParentQuestStage));
+                    }
+                    else
+                    {
+                        item.SetParentQuestStage = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Notes) ?? true))
+            {
+                item.Notes = rhs.Notes;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Template) ?? true))
+            {
+                item.Template.SetTo(rhs.Template.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Index) ?? true))
+            {
+                item.Index = rhs.Index;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +3081,144 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static SceneBinaryWriteTranslation Instance = new SceneBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            ISceneGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((SceneAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            EnumBinaryTranslation<Scene.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IScenePhaseGetter>.Instance.Write(
+                writer: writer,
+                items: item.Phases,
+                transl: (MutagenWriter subWriter, IScenePhaseGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ScenePhaseBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISceneActorGetter>.Instance.Write(
+                writer: writer,
+                items: item.Actors,
+                transl: (MutagenWriter subWriter, ISceneActorGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((SceneActorBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISceneActionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Actions,
+                transl: (MutagenWriter subWriter, ISceneActionGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((SceneActionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.Unused is {} UnusedItem)
+            {
+                ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)UnusedItem).BinaryWriteTranslator).Write(
+                    item: UnusedItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Unused2 is {} Unused2Item)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
+                ((ScenePhaseUnusedDataBinaryWriteTranslation)((IBinaryItem)Unused2Item).BinaryWriteTranslator).Write(
+                    item: Unused2Item,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Quest,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LastActionIndex,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.VNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.VNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.CameraDistanceOverride,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.DialogueDistanceOverride,
+                header: translationParams.ConvertToCustom(RecordTypes.ACTV));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FovOverride,
+                header: translationParams.ConvertToCustom(RecordTypes.CRIS));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.SetParentQuestStage is {} SetParentQuestStageItem)
+            {
+                ((SceneSetParentQuestStageBinaryWriteTranslation)((IBinaryItem)SetParentQuestStageItem).BinaryWriteTranslator).Write(
+                    item: SetParentQuestStageItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Notes,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Template,
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Index,
+                header: translationParams.ConvertToCustom(RecordTypes.XNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             ISceneGetter item,
@@ -1168,10 +3233,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +3296,175 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            ISceneInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.SceneAdapter.CreateFromBinary(frame: frame);
+                    return (int)Scene_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Scene.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Scene_FieldIndex.Flags;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    item.Phases.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScenePhase>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: ScenePhase_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: ScenePhase.TryCreateFromBinary));
+                    return (int)Scene_FieldIndex.Phases;
+                }
+                case RecordTypeInts.ALID:
+                {
+                    item.Actors.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SceneActor>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: SceneActor_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: SceneActor.TryCreateFromBinary));
+                    return (int)Scene_FieldIndex.Actors;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    item.Actions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SceneAction>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: SceneAction_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: SceneAction.TryCreateFromBinary));
+                    return (int)Scene_FieldIndex.Actions;
+                }
+                case RecordTypeInts.SCHR:
+                case RecordTypeInts.SCDA:
+                case RecordTypeInts.SCTX:
+                case RecordTypeInts.QNAM:
+                case RecordTypeInts.SCRO:
+                {
+                    item.Unused = Mutagen.Bethesda.Fallout4.ScenePhaseUnusedData.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)Scene_FieldIndex.Unused;
+                }
+                case RecordTypeInts.NEXT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.Unused2 = Mutagen.Bethesda.Fallout4.ScenePhaseUnusedData.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)Scene_FieldIndex.Unused2;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Scene_FieldIndex.Quest;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LastActionIndex = frame.ReadUInt32();
+                    return (int)Scene_FieldIndex.LastActionIndex;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.VNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Scene_FieldIndex.VNAM;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CameraDistanceOverride = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Scene_FieldIndex.CameraDistanceOverride;
+                }
+                case RecordTypeInts.ACTV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DialogueDistanceOverride = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Scene_FieldIndex.DialogueDistanceOverride;
+                }
+                case RecordTypeInts.CRIS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FovOverride = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Scene_FieldIndex.FovOverride;
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Scene_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)Scene_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.SCQS:
+                {
+                    item.SetParentQuestStage = Mutagen.Bethesda.Fallout4.SceneSetParentQuestStage.CreateFromBinary(frame: frame);
+                    return (int)Scene_FieldIndex.SetParentQuestStage;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Notes = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Scene_FieldIndex.Notes;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Scene_FieldIndex.Template;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Index = frame.ReadUInt32();
+                    return (int)Scene_FieldIndex.Index;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1261,6 +3497,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SceneCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SceneBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +3512,71 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IScene);
 
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public ISceneAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? SceneAdapterBinaryOverlay.SceneAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Scene.Flag? Flags => _FlagsLocation.HasValue ? (Scene.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Scene.Flag?);
+        #endregion
+        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = Array.Empty<ScenePhaseBinaryOverlay>();
+        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = Array.Empty<SceneActorBinaryOverlay>();
+        public IReadOnlyList<ISceneActionGetter> Actions { get; private set; } = Array.Empty<SceneActionBinaryOverlay>();
+        public IScenePhaseUnusedDataGetter? Unused { get; private set; }
+        public IScenePhaseUnusedDataGetter? Unused2 { get; private set; }
+        #region Quest
+        private int? _QuestLocation;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        #endregion
+        #region LastActionIndex
+        private int? _LastActionIndexLocation;
+        public UInt32? LastActionIndex => _LastActionIndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LastActionIndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region VNAM
+        private int? _VNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? VNAM => _VNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region CameraDistanceOverride
+        private int? _CameraDistanceOverrideLocation;
+        public Single? CameraDistanceOverride => _CameraDistanceOverrideLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CameraDistanceOverrideLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region DialogueDistanceOverride
+        private int? _DialogueDistanceOverrideLocation;
+        public Single? DialogueDistanceOverride => _DialogueDistanceOverrideLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DialogueDistanceOverrideLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region FovOverride
+        private int? _FovOverrideLocation;
+        public Single? FovOverride => _FovOverrideLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FovOverrideLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region Conditions
+        partial void ConditionsCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed);
+        #endregion
+        #region SetParentQuestStage
+        private RangeInt32? _SetParentQuestStageLocation;
+        public ISceneSetParentQuestStageGetter? SetParentQuestStage => _SetParentQuestStageLocation.HasValue ? SceneSetParentQuestStageBinaryOverlay.SceneSetParentQuestStageFactory(new OverlayStream(_data.Slice(_SetParentQuestStageLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region Notes
+        private int? _NotesLocation;
+        public String? Notes => _NotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Template
+        private int? _TemplateLocation;
+        public IFormLinkNullableGetter<ISceneGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISceneGetter>.Null;
+        #endregion
+        #region Index
+        private int? _IndexLocation;
+        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +3631,159 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Scene_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.Flags;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    this.Phases = this.ParseRepeatedTypelessSubrecord<ScenePhaseBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: ScenePhase_Registration.TriggerSpecs,
+                        factory: ScenePhaseBinaryOverlay.ScenePhaseFactory);
+                    return (int)Scene_FieldIndex.Phases;
+                }
+                case RecordTypeInts.ALID:
+                {
+                    this.Actors = this.ParseRepeatedTypelessSubrecord<SceneActorBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: SceneActor_Registration.TriggerSpecs,
+                        factory: SceneActorBinaryOverlay.SceneActorFactory);
+                    return (int)Scene_FieldIndex.Actors;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    this.Actions = this.ParseRepeatedTypelessSubrecord<SceneActionBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: SceneAction_Registration.TriggerSpecs,
+                        factory: SceneActionBinaryOverlay.SceneActionFactory);
+                    return (int)Scene_FieldIndex.Actions;
+                }
+                case RecordTypeInts.SCHR:
+                case RecordTypeInts.SCDA:
+                case RecordTypeInts.SCTX:
+                case RecordTypeInts.QNAM:
+                case RecordTypeInts.SCRO:
+                {
+                    this.Unused = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)Scene_FieldIndex.Unused;
+                }
+                case RecordTypeInts.NEXT:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)Scene_FieldIndex.Unused2;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _QuestLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.Quest;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _LastActionIndexLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.LastActionIndex;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    _VNAMLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.VNAM;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _CameraDistanceOverrideLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.CameraDistanceOverride;
+                }
+                case RecordTypeInts.ACTV:
+                {
+                    _DialogueDistanceOverrideLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.DialogueDistanceOverride;
+                }
+                case RecordTypeInts.CRIS:
+                {
+                    _FovOverrideLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.FovOverride;
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Scene_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    ConditionsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return (int)Scene_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.SCQS:
+                {
+                    _SetParentQuestStageLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Scene_FieldIndex.SetParentQuestStage;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _NotesLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.Notes;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _TemplateLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.Template;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    _IndexLocation = (stream.Position - offset);
+                    return (int)Scene_FieldIndex.Index;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

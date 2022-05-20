@@ -15,27 +15,34 @@ partial class ScriptFragmentsBinaryCreateTranslation
         OnEnd = 0x02,
     }
 
-    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IScriptFragments item)
+    public static ScriptFragments ReadFragments(MutagenFrame frame, ushort objectFormat)
     {
+        var ret = new ScriptFragments();
+        FillFragments(frame, objectFormat, ret);
+        return ret;
+    }
+
+    public static void FillFragments(MutagenFrame frame, ushort objectFormat, IScriptFragments ret)
+    {
+        ret.ExtraBindDataVersion = frame.ReadUInt8();
         var flag = (Flag)frame.ReadUInt8();
-        item.FileName = StringBinaryTranslation.Instance.Parse(
-            reader: frame,
-            stringBinaryType: StringBinaryType.PrependLengthUShort);
+        ret.Script = AVirtualMachineAdapterBinaryCreateTranslation.ReadEntry(frame, objectFormat);
         if (flag.HasFlag(Flag.OnBegin))
         {
-            item.OnBegin = ScriptFragment.CreateFromBinary(frame);
+            ret.OnBegin = ScriptFragment.CreateFromBinary(frame);
         }
         if (flag.HasFlag(Flag.OnEnd))
         {
-            item.OnEnd = ScriptFragment.CreateFromBinary(frame);
+            ret.OnEnd = ScriptFragment.CreateFromBinary(frame);
         }
     }
 }
 
 partial class ScriptFragmentsBinaryWriteTranslation
 {
-    public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IScriptFragmentsGetter item)
+    public static void WriteFragments(MutagenWriter writer, IScriptFragmentsGetter item, ushort objectFormat)
     {
+        writer.Write(item.ExtraBindDataVersion);
         var begin = item.OnBegin;
         var end = item.OnEnd;
         Flag flag = default;
@@ -48,10 +55,7 @@ partial class ScriptFragmentsBinaryWriteTranslation
             flag |= Flag.OnEnd;
         }
         writer.Write((byte)flag);
-        StringBinaryTranslation.Instance.Write(
-            writer: writer,
-            item: item.FileName,
-            binaryType: StringBinaryType.PrependLengthUShort);
+        AVirtualMachineAdapterBinaryWriteTranslation.WriteEntry(writer, item.Script, objectFormat);
         begin?.WriteToBinary(writer);
         end?.WriteToBinary(writer);
     }
@@ -61,41 +65,9 @@ partial class ScriptFragmentsBinaryOverlay
 {
     Flag Flags => (Flag)_data.Span.Slice(0x1, 0x1)[0];
 
-    public string FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x2), lengthLength: 2, _package.MetaData.Encodings.NonTranslated);
+    public IScriptEntryGetter Script => throw new NotImplementedException();
 
-    public IScriptFragmentGetter? OnBegin { get; private set; }
+    public IScriptFragmentGetter? OnBegin => throw new NotImplementedException();
 
-    public IScriptFragmentGetter? OnEnd { get; private set; }
-
-    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
-    {
-        Initialize(stream);
-    }
-
-    protected void Initialize(OverlayStream stream)
-    {
-        var fileNameEnd = 0x2 + BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2)) + 2;
-        stream.Position = fileNameEnd;
-        int onBeginEnd;
-        if (Flags.HasFlag(Flag.OnBegin))
-        {
-            stream.Position = fileNameEnd;
-            OnBegin = ScriptFragmentBinaryOverlay.ScriptFragmentFactory(stream, _package);
-            onBeginEnd = stream.Position;
-        }
-        else
-        {
-            onBeginEnd = fileNameEnd;
-        }
-        if (Flags.HasFlag(Flag.OnEnd))
-        {
-            stream.Position = onBeginEnd;
-            OnEnd = ScriptFragmentBinaryOverlay.ScriptFragmentFactory(stream, _package);
-            FlagsEndingPos = stream.Position;
-        }
-        else
-        {
-            FlagsEndingPos = onBeginEnd;
-        }
-    }
+    public IScriptFragmentGetter? OnEnd => throw new NotImplementedException();
 }

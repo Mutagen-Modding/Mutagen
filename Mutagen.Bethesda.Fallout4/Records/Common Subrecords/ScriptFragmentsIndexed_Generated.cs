@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ExtraBindDataVersion
-        public readonly static SByte _ExtraBindDataVersion_Default = 3;
-        public SByte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
+        public readonly static Byte _ExtraBindDataVersion_Default = 3;
+        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
         #endregion
         #region Script
         public ScriptEntry Script { get; set; } = new ScriptEntry();
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IScriptFragmentsIndexed>,
         IScriptFragmentsIndexedGetter
     {
-        new SByte ExtraBindDataVersion { get; set; }
+        new Byte ExtraBindDataVersion { get; set; }
         new ScriptEntry Script { get; set; }
         new ExtendedList<ScriptFragmentIndexed> Fragments { get; }
     }
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ScriptFragmentsIndexed_Registration.Instance;
-        SByte ExtraBindDataVersion { get; }
+        Byte ExtraBindDataVersion { get; }
         IScriptEntryGetter Script { get; }
         IReadOnlyList<IScriptFragmentIndexedGetter> Fragments { get; }
 

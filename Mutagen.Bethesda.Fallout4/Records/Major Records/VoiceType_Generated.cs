@@ -461,6 +461,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IVoiceType :
+        IAliasVoiceType,
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IVoiceTypeInternal>,
         IVoiceTypeGetter
@@ -478,6 +479,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.VTYP)]
     public partial interface IVoiceTypeGetter :
         IFallout4MajorRecordGetter,
+        IAliasVoiceTypeGetter,
         IBinaryItem,
         ILoquiObject<IVoiceTypeGetter>,
         IMapsToGetter<IVoiceTypeGetter>

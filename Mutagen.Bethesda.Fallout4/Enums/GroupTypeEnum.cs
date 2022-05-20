@@ -15,5 +15,5 @@ public enum GroupTypeEnum
     TopicChildren = 7,
     CellPersistentChildren = 8,
     CellTemporaryChildren = 9,
-    QuestChildren = 10
+    QuestChildren = 10,
 }

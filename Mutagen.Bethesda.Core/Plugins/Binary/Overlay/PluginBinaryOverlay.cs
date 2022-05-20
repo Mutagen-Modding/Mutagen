@@ -274,7 +274,14 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 type: subMeta.RecordType,
                 lastParsed: lastParsed,
                 parseParams: parseParams);
-            if (!parsed.KeepParsing) break;
+            if (!parsed.KeepParsing)
+            {
+                if (lastParsed.LengthOverride.HasValue)
+                {
+                    stream.Position -= stream.MetaData.Constants.SubConstants.HeaderLength + 4;
+                }
+                break;
+            }
             if (minimumFinalPos > stream.Position)
             {
                 stream.Position = minimumFinalPos;

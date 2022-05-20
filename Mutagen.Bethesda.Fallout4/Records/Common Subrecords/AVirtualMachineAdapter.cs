@@ -37,12 +37,12 @@ partial class AVirtualMachineAdapterBinaryCreateTranslation
     public static ScriptEntry ReadEntry(MutagenFrame frame, ushort objectFormat)
     {
         var scriptName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
-        var scriptFlags = (ScriptEntry.Flag)frame.ReadUInt8();
         var entry = new ScriptEntry()
         {
             Name = scriptName,
-            Flags = scriptFlags,
         };
+        if (scriptName.IsNullOrEmpty()) return entry;
+        entry.Flags = (ScriptEntry.Flag)frame.ReadUInt8();
         FillProperties(frame, objectFormat, entry);
         return entry;
     }
@@ -223,7 +223,9 @@ partial class AVirtualMachineAdapterBinaryWriteTranslation
     {
         if (!isStruct)
         {
-            StringBinaryTranslation.Instance.Write(writer, entry.Name, StringBinaryType.PrependLengthUShort);
+            var name = entry.Name;
+            StringBinaryTranslation.Instance.Write(writer, name, StringBinaryType.PrependLengthUShort);
+            if (name.IsNullOrWhitespace()) return;
             writer.Write((byte)entry.Flags);
         }
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogBranch" recordType="DLBR" objType="Record" baseClass="Fallout4MajorRecord" GUID="84b314d4-d233-41fa-8e85-6bad02f41531" ID="542">
+    <Fields>
+      <FormLink name="Quest" refName="Quest" recordType="QNAM" nullable="False" />
+      <Enum name="Category" enumName="DialogBranch.CategoryType" byteLength="4" recordType="TNAM" />
+      <Enum name="Flags" enumName="DialogBranch.Flag" byteLength="4" recordType="DNAM" />
+      <FormLink name="StartingTopic" recordType="SNAM" refName="DialogTopic" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -221,8 +221,8 @@ public record GameConstants
                         new GroupNesting(6,
                             new GroupNesting(8),
                             new GroupNesting(9)))),
-                new GroupNesting(GroupType: 7),
-                new GroupNesting(GroupType: 10),
+                new GroupNesting(HasTopLevelRecordType: true, GroupType: 10,
+                    new GroupNesting(GroupType: 7)),
                 new GroupNesting(
                     HasTopLevelRecordType: true, GroupType: 1,
                     new GroupNesting(

@@ -10,7 +10,7 @@ partial class VirtualMachineAdapterIndexedBinaryCreateTranslation
     {
         var ret = new ScriptFragmentsIndexed()
         {
-            ExtraBindDataVersion = frame.ReadInt8()
+            ExtraBindDataVersion = frame.ReadUInt8()
         };
 
         ret.Script = ReadEntry(frame, objFormat);

@@ -363,6 +363,22 @@ public static class HeaderExt
     /// </summary>
     /// <param name="majorFrame">Frame to read from</param>
     /// <param name="type">Type to search for</param>
+    /// <returns>SubrecordHeader if found, otherwise null</returns>
+    public static SubrecordPinFrame? TryFindSubrecord(this MajorRecordFrame majorFrame, params RecordType[] type)
+    {
+        var find = RecordSpanExtensions.TryFindSubrecord(majorFrame.Content, majorFrame.Meta, type);
+        if (find == null)
+        {
+            return default;
+        }
+        return find.Value.Frame.Pin(find.Value.Location + majorFrame.HeaderLength);
+    }
+
+    /// <summary>
+    /// Iterates a MajorRecordFrame's subrecords and locates the first occurrence of the desired type
+    /// </summary>
+    /// <param name="majorFrame">Frame to read from</param>
+    /// <param name="type">Type to search for</param>
     /// <param name="offset">Offset within the Major Record's contents to start searching</param>
     /// <param name="pin">SubrecordPinFrame if found</param>
     /// <returns>True if matching subrecord is found</returns>

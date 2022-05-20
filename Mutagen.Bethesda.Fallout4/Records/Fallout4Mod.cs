@@ -134,7 +134,7 @@ partial class Fallout4ModCommon
         ParallelWriteParameters parallelWriteParameters)
     {
         var cache = group.RecordCache;
-        if (cache == null || cache.Count == 0) return;
+        if (cache.Count == 0) return;
         Stream[] streams = new Stream[cache.Count + 1];
         byte[] groupBytes = new byte[bundle.Constants.GroupConstants.HeaderLength];
         BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
@@ -278,5 +278,16 @@ partial class Fallout4ModCommon
         }
         PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
         streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+    }
+
+    
+    public static void WriteQuestsParallel(
+        IFallout4GroupGetter<IQuestGetter> group,
+        int targetIndex,
+        Stream[] streamDepositArray,
+        WritingBundle bundle,
+        ParallelWriteParameters parallelWriteParameters)
+    {
+        WriteGroupParallel(group, targetIndex, streamDepositArray, bundle, parallelWriteParameters);
     }
 }

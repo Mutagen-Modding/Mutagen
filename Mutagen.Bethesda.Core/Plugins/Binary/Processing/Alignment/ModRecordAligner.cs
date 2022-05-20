@@ -23,10 +23,11 @@ public static class ModRecordAligner
         // Always interested in parent record types 
         interest.InterestingTypes.Add("CELL"); 
         interest.InterestingTypes.Add("WRLD"); 
-        var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest);
+        interest.InterestingTypes.Add("QUST"); 
 
         using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode))
         {
+            var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest);
             var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedRules"));
             using var writer = new MutagenWriter(alignedMajorRecordsFile, gameMode);
             AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
@@ -35,6 +36,7 @@ public static class ModRecordAligner
 
         using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode))
         {
+            var fileLocs = RecordLocator.GetLocations(inputPath, gameMode);
             var alignedGroupsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedGroups"));
             using var writer = new MutagenWriter(alignedGroupsFile, gameMode);
             AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
@@ -43,7 +45,7 @@ public static class ModRecordAligner
 
         if (gameMode is GameRelease.Oblivion or GameRelease.Fallout4)
         {
-            fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest);
+            var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest);
             var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedCells"));
             using (var mutaReader = new MutagenBinaryReadStream(inputPath, gameMode))
             {
@@ -72,7 +74,7 @@ public static class ModRecordAligner
         if (gameMode is GameRelease.Oblivion)
         {
             var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedWorldspaces"));
-            fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest); 
+            var fileLocs = RecordLocator.GetLocations(inputPath, gameMode, interest); 
             using (var mutaReader = new MutagenBinaryReadStream(inputPath, gameMode)) 
             { 
                 using var writer = new MutagenWriter(alignedCellsFile, gameMode); 
@@ -243,21 +245,32 @@ public static class ModRecordAligner
  
             var storage = new Dictionary<RecordType, List<ReadOnlyMemorySlice<byte>>>(); 
             var rest = new List<ReadOnlyMemorySlice<byte>>(); 
-            using (var frame = MutagenFrame.ByLength(inputStream, groupMeta.ContentLength)) 
-            { 
-                while (!frame.Complete) 
-                { 
-                    var majorMeta = inputStream.GetMajorRecordHeader(); 
-                    var bytes = inputStream.ReadMemory(checked((int)majorMeta.TotalLength)); 
-                    var type = majorMeta.RecordType; 
-                    if (groupRules.Contains(type)) 
-                    { 
-                        storage.GetOrAdd(type).Add(bytes); 
-                    } 
-                    else 
-                    { 
-                        rest.Add(bytes); 
-                    } 
+            using (var frame = MutagenFrame.ByLength(inputStream, groupMeta.ContentLength))
+            {
+                RecordType? lastType = null;
+                while (!frame.Complete)
+                {
+                    var variable = inputStream.GetVariableHeader();
+                    if (variable.IsGroup && lastType.HasValue)
+                    {
+                        var bytes = inputStream.ReadMemory(checked((int)variable.TotalLength));
+                        storage.GetOrAdd(lastType.Value).Add(bytes); 
+                    }
+                    else
+                    {
+                        var majorMeta = inputStream.GetMajorRecordHeader(); 
+                        var bytes = inputStream.ReadMemory(checked((int)majorMeta.TotalLength)); 
+                        var type = majorMeta.RecordType;
+                        if (groupRules.Contains(type)) 
+                        { 
+                            storage.GetOrAdd(type).Add(bytes); 
+                        } 
+                        else
+                        { 
+                            rest.Add(bytes); 
+                        } 
+                        lastType = type;
+                    }
                 } 
             } 
             foreach (var rule in groupRules) 

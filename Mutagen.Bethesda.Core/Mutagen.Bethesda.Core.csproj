@@ -164,6 +164,7 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Plugins\Binary\Overlay\BinaryOverlayArray2d.cs" />
+    <Compile Include="Plugins\Binary\Overlay\ImmutableManyListWrapper.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
     <Compile Include="Plugins\Binary\Parameters\FormIDUniquenessOption.cs" />

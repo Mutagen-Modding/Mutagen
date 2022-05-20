@@ -226,6 +226,7 @@ public abstract class PassthroughTest
         var binaryOverlayPath = Path.Combine(tmp.Dir.Path, $"{Nickname}_BinaryOverlay");
         var copyInPath = Path.Combine(tmp.Dir.Path, $"{Nickname}_CopyIn");
         var strsProcessedPath = Path.Combine(tmp.Dir.Path, "Strings/Processed");
+        var trimmedPath = TrimmedFileName(tmp.Dir.Path);
 
         var masterRefs = MasterReferenceCollection.FromPath(new ModPath(ModKey, FilePath.Path), GameRelease);
 
@@ -243,7 +244,7 @@ public abstract class PassthroughTest
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
-                    var mod = await ImportBinary(FilePath.Path);
+                    var mod = await ImportBinary(trimmedPath.Path);
                     doStrings = mod.UsingLocalization;
 
                     foreach (var record in mod.EnumerateMajorRecords())
@@ -276,7 +277,7 @@ public abstract class PassthroughTest
                     toDo: async (o) =>
                     {
                         o.OnNext(FilePath.ToString());
-                        var mod = await ImportBinary(FilePath.Path);
+                        var mod = await ImportBinary(trimmedPath.Path);
                         doStrings = mod.UsingLocalization;
 
                         foreach (var record in mod.EnumerateMajorRecords())

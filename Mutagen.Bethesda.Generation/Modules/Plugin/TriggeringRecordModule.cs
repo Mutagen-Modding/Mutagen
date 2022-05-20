@@ -620,7 +620,6 @@ public class TriggeringRecordModule : GenerationModule
             if (field.IsEnumerable && !(field is ByteArrayType)) continue;
             LoquiType loqui = field as LoquiType;
             if (!field.Nullable 
-                && fieldData.Binary != BinaryGenerationType.Custom
                 && (field is not BoolType bt || !bt.BoolAsMarker.HasValue)
                 && !(field is CustomLogic))
             {

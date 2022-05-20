@@ -5,6 +5,10 @@ An interface would be defined such as 'IItem', which all Armor, Weapon, Ingredie
 
 A `FormLink<IItem>` could then point to all those record types by pointing to the interface instead.
 ## Interfaces to Concrete Classes
+### IAliasVoiceType
+- Faction
+- FormList
+- VoiceType
 ### IBindableEquipment
 - Armor
 ### IConstructible
@@ -219,6 +223,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaceableObject
 - IStaticObject
 ### Faction
+- IAliasVoiceType
 - IObjectId
 - IOwner
 - IRelatable
@@ -227,6 +232,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IRegionTarget
 - IStaticObject
 ### FormList
+- IAliasVoiceType
 - ILockList
 - IObjectId
 ### Furniture
@@ -350,6 +356,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaceableObject
 ### Tree
 - IRegionTarget
+### VoiceType
+- IAliasVoiceType
 ### Weapon
 - IFurnitureAssociation
 - IHarvestTarget

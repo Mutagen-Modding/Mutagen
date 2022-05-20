@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -22,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -53,6 +56,110 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IDialogTopicGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Priority
+        public Single Priority { get; set; } = default;
+        #endregion
+        #region Branch
+        private readonly IFormLinkNullable<IDialogBranchGetter> _Branch = new FormLinkNullable<IDialogBranchGetter>();
+        public IFormLinkNullable<IDialogBranchGetter> Branch
+        {
+            get => _Branch;
+            set => _Branch.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch;
+        #endregion
+        #region Quest
+        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
+        #endregion
+        #region Keyword
+        private readonly IFormLinkNullable<IKeywordGetter> _Keyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> Keyword
+        {
+            get => _Keyword;
+            set => _Keyword.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IDialogTopicGetter.Keyword => this.Keyword;
+        #endregion
+        #region TopicFlags
+        public DialogTopic.TopicFlag TopicFlags { get; set; } = default;
+        #endregion
+        #region Category
+        public DialogTopic.CategoryEnum Category { get; set; } = default;
+        #endregion
+        #region Subtype
+        public DialogTopic.SubtypeEnum Subtype { get; set; } = default;
+        #endregion
+        #region SubtypeName
+        public RecordType SubtypeName { get; set; } = RecordType.Null;
+        #endregion
+        #region Timestamp
+        public Int32 Timestamp { get; set; } = default;
+        #endregion
+        #region Unknown
+        public Int32 Unknown { get; set; } = default;
+        #endregion
+        #region Responses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<DialogResponses> _Responses = new ExtendedList<DialogResponses>();
+        public ExtendedList<DialogResponses> Responses
+        {
+            get => this._Responses;
+            init => this._Responses = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IDialogResponsesGetter> IDialogTopicGetter.Responses => _Responses;
+        #endregion
+
+        #endregion
+        #region DATADataTypeState
+        public DialogTopic.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +185,19 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Priority = initialValue;
+                this.Branch = initialValue;
+                this.Quest = initialValue;
+                this.Keyword = initialValue;
+                this.TopicFlags = initialValue;
+                this.Category = initialValue;
+                this.Subtype = initialValue;
+                this.SubtypeName = initialValue;
+                this.Timestamp = initialValue;
+                this.Unknown = initialValue;
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +206,20 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem Priority,
+                TItem Branch,
+                TItem Quest,
+                TItem Keyword,
+                TItem TopicFlags,
+                TItem Category,
+                TItem Subtype,
+                TItem SubtypeName,
+                TItem Timestamp,
+                TItem Unknown,
+                TItem Responses,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +228,19 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.Priority = Priority;
+                this.Branch = Branch;
+                this.Quest = Quest;
+                this.Keyword = Keyword;
+                this.TopicFlags = TopicFlags;
+                this.Category = Category;
+                this.Subtype = Subtype;
+                this.SubtypeName = SubtypeName;
+                this.Timestamp = Timestamp;
+                this.Unknown = Unknown;
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +249,22 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem Priority;
+            public TItem Branch;
+            public TItem Quest;
+            public TItem Keyword;
+            public TItem TopicFlags;
+            public TItem Category;
+            public TItem Subtype;
+            public TItem SubtypeName;
+            public TItem Timestamp;
+            public TItem Unknown;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>? Responses;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +278,37 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Priority, rhs.Priority)) return false;
+                if (!object.Equals(this.Branch, rhs.Branch)) return false;
+                if (!object.Equals(this.Quest, rhs.Quest)) return false;
+                if (!object.Equals(this.Keyword, rhs.Keyword)) return false;
+                if (!object.Equals(this.TopicFlags, rhs.TopicFlags)) return false;
+                if (!object.Equals(this.Category, rhs.Category)) return false;
+                if (!object.Equals(this.Subtype, rhs.Subtype)) return false;
+                if (!object.Equals(this.SubtypeName, rhs.SubtypeName)) return false;
+                if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Responses, rhs.Responses)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Priority);
+                hash.Add(this.Branch);
+                hash.Add(this.Quest);
+                hash.Add(this.Keyword);
+                hash.Add(this.TopicFlags);
+                hash.Add(this.Category);
+                hash.Add(this.Subtype);
+                hash.Add(this.SubtypeName);
+                hash.Add(this.Timestamp);
+                hash.Add(this.Unknown);
+                hash.Add(this.Responses);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +319,30 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Priority)) return false;
+                if (!eval(this.Branch)) return false;
+                if (!eval(this.Quest)) return false;
+                if (!eval(this.Keyword)) return false;
+                if (!eval(this.TopicFlags)) return false;
+                if (!eval(this.Category)) return false;
+                if (!eval(this.Subtype)) return false;
+                if (!eval(this.SubtypeName)) return false;
+                if (!eval(this.Timestamp)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (this.Responses != null)
+                {
+                    if (!eval(this.Responses.Overall)) return false;
+                    if (this.Responses.Specific != null)
+                    {
+                        foreach (var item in this.Responses.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +351,30 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Priority)) return true;
+                if (eval(this.Branch)) return true;
+                if (eval(this.Quest)) return true;
+                if (eval(this.Keyword)) return true;
+                if (eval(this.TopicFlags)) return true;
+                if (eval(this.Category)) return true;
+                if (eval(this.Subtype)) return true;
+                if (eval(this.SubtypeName)) return true;
+                if (eval(this.Timestamp)) return true;
+                if (eval(this.Unknown)) return true;
+                if (this.Responses != null)
+                {
+                    if (eval(this.Responses.Overall)) return true;
+                    if (this.Responses.Specific != null)
+                    {
+                        foreach (var item in this.Responses.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +390,33 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Priority = eval(this.Priority);
+                obj.Branch = eval(this.Branch);
+                obj.Quest = eval(this.Quest);
+                obj.Keyword = eval(this.Keyword);
+                obj.TopicFlags = eval(this.TopicFlags);
+                obj.Category = eval(this.Category);
+                obj.Subtype = eval(this.Subtype);
+                obj.SubtypeName = eval(this.SubtypeName);
+                obj.Timestamp = eval(this.Timestamp);
+                obj.Unknown = eval(this.Unknown);
+                if (Responses != null)
+                {
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponses.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponses.Mask<R>?>>());
+                    if (Responses.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, DialogResponses.Mask<R>?>>();
+                        obj.Responses.Specific = l;
+                        foreach (var item in Responses.Specific)
+                        {
+                            MaskItemIndexed<R, DialogResponses.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DialogResponses.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -172,6 +435,73 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(DialogTopic.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Priority ?? true)
+                    {
+                        sb.AppendItem(Priority, "Priority");
+                    }
+                    if (printMask?.Branch ?? true)
+                    {
+                        sb.AppendItem(Branch, "Branch");
+                    }
+                    if (printMask?.Quest ?? true)
+                    {
+                        sb.AppendItem(Quest, "Quest");
+                    }
+                    if (printMask?.Keyword ?? true)
+                    {
+                        sb.AppendItem(Keyword, "Keyword");
+                    }
+                    if (printMask?.TopicFlags ?? true)
+                    {
+                        sb.AppendItem(TopicFlags, "TopicFlags");
+                    }
+                    if (printMask?.Category ?? true)
+                    {
+                        sb.AppendItem(Category, "Category");
+                    }
+                    if (printMask?.Subtype ?? true)
+                    {
+                        sb.AppendItem(Subtype, "Subtype");
+                    }
+                    if (printMask?.SubtypeName ?? true)
+                    {
+                        sb.AppendItem(SubtypeName, "SubtypeName");
+                    }
+                    if (printMask?.Timestamp ?? true)
+                    {
+                        sb.AppendItem(Timestamp, "Timestamp");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
+                    }
+                    if ((printMask?.Responses?.Overall ?? true)
+                        && Responses is {} ResponsesItem)
+                    {
+                        sb.AppendLine("Responses =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ResponsesItem.Overall);
+                            if (ResponsesItem.Specific != null)
+                            {
+                                foreach (var subItem in ResponsesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +512,54 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? Priority;
+            public Exception? Branch;
+            public Exception? Quest;
+            public Exception? Keyword;
+            public Exception? TopicFlags;
+            public Exception? Category;
+            public Exception? Subtype;
+            public Exception? SubtypeName;
+            public Exception? Timestamp;
+            public Exception? Unknown;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>? Responses;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogTopic_FieldIndex.Name:
+                        return Name;
+                    case DialogTopic_FieldIndex.Priority:
+                        return Priority;
+                    case DialogTopic_FieldIndex.Branch:
+                        return Branch;
+                    case DialogTopic_FieldIndex.Quest:
+                        return Quest;
+                    case DialogTopic_FieldIndex.Keyword:
+                        return Keyword;
+                    case DialogTopic_FieldIndex.TopicFlags:
+                        return TopicFlags;
+                    case DialogTopic_FieldIndex.Category:
+                        return Category;
+                    case DialogTopic_FieldIndex.Subtype:
+                        return Subtype;
+                    case DialogTopic_FieldIndex.SubtypeName:
+                        return SubtypeName;
+                    case DialogTopic_FieldIndex.Timestamp:
+                        return Timestamp;
+                    case DialogTopic_FieldIndex.Unknown:
+                        return Unknown;
+                    case DialogTopic_FieldIndex.Responses:
+                        return Responses;
+                    case DialogTopic_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +570,45 @@ namespace Mutagen.Bethesda.Fallout4
                 DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogTopic_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Priority:
+                        this.Priority = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Branch:
+                        this.Branch = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Quest:
+                        this.Quest = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Keyword:
+                        this.Keyword = ex;
+                        break;
+                    case DialogTopic_FieldIndex.TopicFlags:
+                        this.TopicFlags = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Category:
+                        this.Category = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Subtype:
+                        this.Subtype = ex;
+                        break;
+                    case DialogTopic_FieldIndex.SubtypeName:
+                        this.SubtypeName = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Timestamp:
+                        this.Timestamp = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case DialogTopic_FieldIndex.Responses:
+                        this.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(ex, null);
+                        break;
+                    case DialogTopic_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +620,45 @@ namespace Mutagen.Bethesda.Fallout4
                 DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogTopic_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Priority:
+                        this.Priority = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Branch:
+                        this.Branch = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Quest:
+                        this.Quest = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Keyword:
+                        this.Keyword = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.TopicFlags:
+                        this.TopicFlags = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Category:
+                        this.Category = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Subtype:
+                        this.Subtype = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.SubtypeName:
+                        this.SubtypeName = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Timestamp:
+                        this.Timestamp = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case DialogTopic_FieldIndex.Responses:
+                        this.Responses = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>)obj;
+                        break;
+                    case DialogTopic_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +668,19 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Priority != null) return true;
+                if (Branch != null) return true;
+                if (Quest != null) return true;
+                if (Keyword != null) return true;
+                if (TopicFlags != null) return true;
+                if (Category != null) return true;
+                if (Subtype != null) return true;
+                if (SubtypeName != null) return true;
+                if (Timestamp != null) return true;
+                if (Unknown != null) return true;
+                if (Responses != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +707,60 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Priority, "Priority");
+                }
+                {
+                    sb.AppendItem(Branch, "Branch");
+                }
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                {
+                    sb.AppendItem(Keyword, "Keyword");
+                }
+                {
+                    sb.AppendItem(TopicFlags, "TopicFlags");
+                }
+                {
+                    sb.AppendItem(Category, "Category");
+                }
+                {
+                    sb.AppendItem(Subtype, "Subtype");
+                }
+                {
+                    sb.AppendItem(SubtypeName, "SubtypeName");
+                }
+                {
+                    sb.AppendItem(Timestamp, "Timestamp");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                if (Responses is {} ResponsesItem)
+                {
+                    sb.AppendLine("Responses =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ResponsesItem.Overall);
+                        if (ResponsesItem.Specific != null)
+                        {
+                            foreach (var subItem in ResponsesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +769,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Priority = this.Priority.Combine(rhs.Priority);
+                ret.Branch = this.Branch.Combine(rhs.Branch);
+                ret.Quest = this.Quest.Combine(rhs.Quest);
+                ret.Keyword = this.Keyword.Combine(rhs.Keyword);
+                ret.TopicFlags = this.TopicFlags.Combine(rhs.TopicFlags);
+                ret.Category = this.Category.Combine(rhs.Category);
+                ret.Subtype = this.Subtype.Combine(rhs.Subtype);
+                ret.SubtypeName = this.SubtypeName.Combine(rhs.SubtypeName);
+                ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +803,61 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Priority;
+            public bool Branch;
+            public bool Quest;
+            public bool Keyword;
+            public bool TopicFlags;
+            public bool Category;
+            public bool Subtype;
+            public bool SubtypeName;
+            public bool Timestamp;
+            public bool Unknown;
+            public DialogResponses.TranslationMask? Responses;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Priority = defaultOn;
+                this.Branch = defaultOn;
+                this.Quest = defaultOn;
+                this.Keyword = defaultOn;
+                this.TopicFlags = defaultOn;
+                this.Category = defaultOn;
+                this.Subtype = defaultOn;
+                this.SubtypeName = defaultOn;
+                this.Timestamp = defaultOn;
+                this.Unknown = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Priority, null));
+                ret.Add((Branch, null));
+                ret.Add((Quest, null));
+                ret.Add((Keyword, null));
+                ret.Add((TopicFlags, null));
+                ret.Add((Category, null));
+                ret.Add((Subtype, null));
+                ret.Add((SubtypeName, null));
+                ret.Add((Timestamp, null));
+                ret.Add((Unknown, null));
+                ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
+                ret.Add((DATADataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +869,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogTopicCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogTopic(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -335,6 +913,44 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IDialogTopic);
 
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [Flags]
+        public enum DATADataType
+        {
+        }
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -416,8 +1032,30 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IDialogTopic :
         IDialogTopicGetter,
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<IDialogTopicInternal>
+        IFormLinkContainer,
+        ILoquiObjectSetter<IDialogTopicInternal>,
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new Single Priority { get; set; }
+        new IFormLinkNullable<IDialogBranchGetter> Branch { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IKeywordGetter> Keyword { get; set; }
+        new DialogTopic.TopicFlag TopicFlags { get; set; }
+        new DialogTopic.CategoryEnum Category { get; set; }
+        new DialogTopic.SubtypeEnum Subtype { get; set; }
+        new RecordType SubtypeName { get; set; }
+        new Int32 Timestamp { get; set; }
+        new Int32 Unknown { get; set; }
+        new ExtendedList<DialogResponses> Responses { get; }
+        new DialogTopic.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IDialogTopicInternal :
@@ -431,10 +1069,34 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IDialogTopicGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IDialogTopicGetter>,
-        IMapsToGetter<IDialogTopicGetter>
+        IMajorRecordGetterEnumerable,
+        IMapsToGetter<IDialogTopicGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => DialogTopic_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        Single Priority { get; }
+        IFormLinkNullableGetter<IDialogBranchGetter> Branch { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IKeywordGetter> Keyword { get; }
+        DialogTopic.TopicFlag TopicFlags { get; }
+        DialogTopic.CategoryEnum Category { get; }
+        DialogTopic.SubtypeEnum Subtype { get; }
+        RecordType SubtypeName { get; }
+        Int32 Timestamp { get; }
+        Int32 Unknown { get; }
+        IReadOnlyList<IDialogResponsesGetter> Responses { get; }
+        DialogTopic.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -556,6 +1218,218 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Mutagen
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IDialogTopicGetter obj)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this IDialogTopicGetter obj,
+            bool throwIfUnknown = true)
+            where TMajor : class, IMajorRecordQueryableGetter
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            this IDialogTopicGetter obj,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecordGetter)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IDialogTopicInternal obj)
+        {
+            return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IDialogTopicInternal obj)
+            where TMajor : class, IMajorRecordQueryable
+        {
+            return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: true)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
+            this IDialogTopicInternal obj,
+            Type? type,
+            bool throwIfUnknown = true)
+        {
+            return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecord)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IDialogTopicInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IDialogTopicInternal obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
         public static DialogTopic Duplicate(
             this IDialogTopicGetter item,
             FormKey formKey,
@@ -599,6 +1473,19 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        Priority = 7,
+        Branch = 8,
+        Quest = 9,
+        Keyword = 10,
+        TopicFlags = 11,
+        Category = 12,
+        Subtype = 13,
+        SubtypeName = 14,
+        Timestamp = 15,
+        Unknown = 16,
+        Responses = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -616,9 +1503,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "6a26c9a6-9cd4-4df5-a158-bcdfa4977cd6";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(DialogTopic.Mask<>);
 
@@ -648,8 +1535,50 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.DIAL);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.DIAL);
+            var all = RecordCollection.Factory(
+                RecordTypes.DIAL,
+                RecordTypes.FULL,
+                RecordTypes.PNAM,
+                RecordTypes.BNAM,
+                RecordTypes.QNAM,
+                RecordTypes.KNAM,
+                RecordTypes.DATA,
+                RecordTypes.SNAM,
+                RecordTypes.TIFC,
+                RecordTypes.INFO,
+                RecordTypes.VMAD,
+                RecordTypes.ENAM,
+                RecordTypes.TPIC,
+                RecordTypes.DNAM,
+                RecordTypes.GNAM,
+                RecordTypes.IOVR,
+                RecordTypes.TRDA,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.NAM4,
+                RecordTypes.LNAM,
+                RecordTypes.TNAM,
+                RecordTypes.NAM9,
+                RecordTypes.SRAF,
+                RecordTypes.WZMD,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.RNAM,
+                RecordTypes.ANAM,
+                RecordTypes.TSCE,
+                RecordTypes.INTV,
+                RecordTypes.ALFA,
+                RecordTypes.ONAM,
+                RecordTypes.GREE,
+                RecordTypes.TIQS,
+                RecordTypes.NAM0,
+                RecordTypes.INCC,
+                RecordTypes.MODQ,
+                RecordTypes.INAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface
@@ -693,6 +1622,19 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDialogTopicInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Priority = default;
+            item.Branch.Clear();
+            item.Quest.Clear();
+            item.Keyword.Clear();
+            item.TopicFlags = default;
+            item.Category = default;
+            item.Subtype = default;
+            item.SubtypeName = RecordType.Null;
+            item.Timestamp = default;
+            item.Unknown = default;
+            item.Responses.Clear();
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -710,6 +1652,80 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IDialogTopic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Branch.Relink(mapping);
+            obj.Quest.Relink(mapping);
+            obj.Keyword.Relink(mapping);
+            obj.Responses.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(IDialogTopicInternal obj)
+        {
+            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return (item as IMajorRecord)!;
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IDialogTopicInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IDialogTopicInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            {
+                yield return item;
+            }
+        }
+        
+        public void Remove(
+            IDialogTopicInternal obj,
+            HashSet<FormKey> keys)
+        {
+            obj.Responses.Remove(keys);
+        }
+        
+        public void Remove(
+            IDialogTopicInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout4MajorRecord":
+                case "Fallout4MajorRecord":
+                case "IMajorRecordGetter":
+                case "IFallout4MajorRecordGetter":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    obj.Responses.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
         }
         
         #endregion
@@ -726,6 +1742,9 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams,
                 fillStructs: DialogTopicBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DialogTopicBinaryCreateTranslation.FillBinaryRecordTypes);
+            DialogTopicBinaryCreateTranslation.CustomBinaryEndImportPublic(
+                frame: frame,
+                obj: item);
         }
         
         public override void CopyInFromBinary(
@@ -778,6 +1797,22 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Priority = item.Priority.EqualsWithin(rhs.Priority);
+            ret.Branch = item.Branch.Equals(rhs.Branch);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
+            ret.Keyword = item.Keyword.Equals(rhs.Keyword);
+            ret.TopicFlags = item.TopicFlags == rhs.TopicFlags;
+            ret.Category = item.Category == rhs.Category;
+            ret.Subtype = item.Subtype == rhs.Subtype;
+            ret.SubtypeName = item.SubtypeName == rhs.SubtypeName;
+            ret.Timestamp = item.Timestamp == rhs.Timestamp;
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Responses = item.Responses.CollectionEqualsHelper(
+                rhs.Responses,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1862,69 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Priority ?? true)
+            {
+                sb.AppendItem(item.Priority, "Priority");
+            }
+            if (printMask?.Branch ?? true)
+            {
+                sb.AppendItem(item.Branch.FormKeyNullable, "Branch");
+            }
+            if (printMask?.Quest ?? true)
+            {
+                sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
+            }
+            if (printMask?.Keyword ?? true)
+            {
+                sb.AppendItem(item.Keyword.FormKeyNullable, "Keyword");
+            }
+            if (printMask?.TopicFlags ?? true)
+            {
+                sb.AppendItem(item.TopicFlags, "TopicFlags");
+            }
+            if (printMask?.Category ?? true)
+            {
+                sb.AppendItem(item.Category, "Category");
+            }
+            if (printMask?.Subtype ?? true)
+            {
+                sb.AppendItem(item.Subtype, "Subtype");
+            }
+            if (printMask?.SubtypeName ?? true)
+            {
+                sb.AppendItem(item.SubtypeName, "SubtypeName");
+            }
+            if (printMask?.Timestamp ?? true)
+            {
+                sb.AppendItem(item.Timestamp, "Timestamp");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.Responses?.Overall ?? true)
+            {
+                sb.AppendLine("Responses =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Responses)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public static DialogTopic_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1973,58 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
+            {
+                if (!lhs.Priority.EqualsWithin(rhs.Priority)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
+            {
+                if (!lhs.Branch.Equals(rhs.Branch)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Keyword) ?? true))
+            {
+                if (!lhs.Keyword.Equals(rhs.Keyword)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
+            {
+                if (lhs.TopicFlags != rhs.TopicFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
+            {
+                if (lhs.Category != rhs.Category) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
+            {
+                if (lhs.Subtype != rhs.Subtype) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
+            {
+                if (lhs.SubtypeName != rhs.SubtypeName) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
+            {
+                if (lhs.Timestamp != rhs.Timestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
+            {
+                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponsesCommon)((IDialogResponsesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogTopic_FieldIndex.Responses)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
@@ -903,6 +2053,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IDialogTopicGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Priority);
+            hash.Add(item.Branch);
+            hash.Add(item.Quest);
+            hash.Add(item.Keyword);
+            hash.Add(item.TopicFlags);
+            hash.Add(item.Category);
+            hash.Add(item.Subtype);
+            hash.Add(item.SubtypeName);
+            hash.Add(item.Timestamp);
+            hash.Add(item.Unknown);
+            hash.Add(item.Responses);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -932,7 +2098,245 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            if (FormLinkInformation.TryFactory(obj.Branch, out var BranchInfo))
+            {
+                yield return BranchInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
+            {
+                yield return QuestInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Keyword, out var KeywordInfo))
+            {
+                yield return KeywordInfo;
+            }
+            foreach (var item in obj.Responses.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             yield break;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IDialogTopicGetter obj)
+        {
+            foreach (var subItem in obj.Responses)
+            {
+                yield return subItem;
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IDialogTopicGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IDialogTopicGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout4MajorRecord":
+                case "Fallout4MajorRecord":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IFallout4MajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var subItem in obj.Responses)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent,
+            Func<IFallout4Mod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<IFallout4Mod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+        {
+            var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            foreach (var subItem in obj.Responses)
+            {
+                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IDialogResponsesInternal, IDialogResponsesGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey));
+                        var ret = parent.Responses.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
+                        parent.Responses.Add(ret);
+                        return ret;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
+                        return dup;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown,
+            Func<IFallout4Mod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<IFallout4Mod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+        {
+            var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout4MajorRecord":
+                case "Fallout4MajorRecord":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IFallout4MajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var subItem in obj.Responses)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IDialogResponsesInternal, IDialogResponsesGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey));
+                                    var ret = parent.Responses.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
+                                    parent.Responses.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IDialogTopicGetter, IFallout4Mod, IFallout4ModGetter>(
+                        GameCategory.Fallout4,
+                        obj,
+                        type,
+                        linkCache,
+                        (lk, t, b) => this.EnumerateMajorRecordContexts(obj, lk, t, modKey, parent, b, getOrAddAsOverride, duplicateInto),
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
         }
         
         #region Duplicate
@@ -1006,6 +2410,78 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
+            {
+                item.Priority = rhs.Priority;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
+            {
+                item.Branch.SetTo(rhs.Branch.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
+            {
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Keyword) ?? true))
+            {
+                item.Keyword.SetTo(rhs.Keyword.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
+            {
+                item.TopicFlags = rhs.TopicFlags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
+            {
+                item.Category = rhs.Category;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
+            {
+                item.Subtype = rhs.Subtype;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
+            {
+                item.SubtypeName = rhs.SubtypeName;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
+            {
+                item.Timestamp = rhs.Timestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
+            {
+                errorMask?.PushIndex((int)DialogTopic_FieldIndex.Responses);
+                try
+                {
+                    item.Responses.SetTo(
+                        rhs.Responses
+                        .Select(r =>
+                        {
+                            return (DialogResponses)r.DeepCopy(
+                                copyMask: default(TranslationCrystal),
+                                errorMask: errorMask);
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +2630,95 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static DialogTopicBinaryWriteTranslation Instance = new DialogTopicBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IDialogTopicGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IDialogTopicGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Priority,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM),
+                multiplier: 50f);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Branch,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Quest,
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Keyword,
+                header: translationParams.ConvertToCustom(RecordTypes.KNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.TopicFlags,
+                    length: 1);
+                EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Category,
+                    length: 1);
+                EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Subtype,
+                    length: 2);
+            }
+            RecordTypeBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.SubtypeName,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            DialogTopicBinaryWriteTranslation.WriteBinaryInfoCount(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryInfoCountCustom(
+            MutagenWriter writer,
+            IDialogTopicGetter item);
+
+        public static void WriteBinaryInfoCount(
+            MutagenWriter writer,
+            IDialogTopicGetter item)
+        {
+            WriteBinaryInfoCountCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            IDialogTopicGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            IDialogTopicGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             IDialogTopicGetter item,
@@ -1165,19 +2730,24 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
                     throw RecordException.Enrich(ex, item);
                 }
             }
+            CustomBinaryEndExportInternal(
+                writer: writer,
+                obj: item);
         }
 
         public override void Write(
@@ -1229,6 +2799,106 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IDialogTopicInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)DialogTopic_FieldIndex.Name;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        multiplier: 50f);
+                    return (int)DialogTopic_FieldIndex.Priority;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Branch.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogTopic_FieldIndex.Branch;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogTopic_FieldIndex.Quest;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogTopic_FieldIndex.Keyword;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    return (int)DialogTopic_FieldIndex.Subtype;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SubtypeName = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)DialogTopic_FieldIndex.SubtypeName;
+                }
+                case RecordTypeInts.TIFC:
+                {
+                    return DialogTopicBinaryCreateTranslation.FillBinaryInfoCountCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        public static partial ParseResult FillBinaryInfoCountCustom(
+            MutagenFrame frame,
+            IDialogTopicInternal item);
+
+        public static partial void CustomBinaryEndImport(
+            MutagenFrame frame,
+            IDialogTopicInternal obj);
+        public static void CustomBinaryEndImportPublic(
+            MutagenFrame frame,
+            IDialogTopicInternal obj)
+        {
+            CustomBinaryEndImport(
+                frame: frame,
+                obj: obj);
+        }
     }
 
 }
@@ -1261,6 +2931,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogTopicCommon.Instance.EnumerateFormLinks(this);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogTopicBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,7 +2952,65 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IDialogTopic);
 
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Priority
+        private int? _PriorityLocation;
+        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PriorityLocation.Value, _package.MetaData.Constants).Float() * 50f : default;
+        #endregion
+        #region Branch
+        private int? _BranchLocation;
+        public IFormLinkNullableGetter<IDialogBranchGetter> Branch => _BranchLocation.HasValue ? new FormLinkNullable<IDialogBranchGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogBranchGetter>.Null;
+        #endregion
+        #region Quest
+        private int? _QuestLocation;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        #endregion
+        #region Keyword
+        private int? _KeywordLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        private RangeInt32? _DATALocation;
+        public DialogTopic.DATADataType DATADataTypeState { get; private set; }
+        #region TopicFlags
+        private int _TopicFlagsLocation => _DATALocation!.Value.Min;
+        private bool _TopicFlags_IsSet => _DATALocation.HasValue;
+        public DialogTopic.TopicFlag TopicFlags => _TopicFlags_IsSet ? (DialogTopic.TopicFlag)_data.Span.Slice(_TopicFlagsLocation, 0x1)[0] : default;
+        #endregion
+        #region Category
+        private int _CategoryLocation => _DATALocation!.Value.Min + 0x1;
+        private bool _Category_IsSet => _DATALocation.HasValue;
+        public DialogTopic.CategoryEnum Category => _Category_IsSet ? (DialogTopic.CategoryEnum)_data.Span.Slice(_CategoryLocation, 0x1)[0] : default;
+        #endregion
+        #region Subtype
+        private int _SubtypeLocation => _DATALocation!.Value.Min + 0x2;
+        private bool _Subtype_IsSet => _DATALocation.HasValue;
+        public DialogTopic.SubtypeEnum Subtype => _Subtype_IsSet ? (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_SubtypeLocation, 0x2)) : default;
+        #endregion
+        #region SubtypeName
+        private int? _SubtypeNameLocation;
+        public RecordType SubtypeName => _SubtypeNameLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SubtypeNameLocation.Value, _package.MetaData.Constants))) : RecordType.Null;
+        #endregion
+        #region InfoCount
+        public partial ParseResult InfoCountCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
         partial void CustomFactoryEnd(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        partial void CustomEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
@@ -1296,6 +3031,7 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
+            var origStream = stream;
             stream = Decompression.DecompressStream(stream);
             var ret = new DialogTopicBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -1315,6 +3051,10 @@ namespace Mutagen.Bethesda.Fallout4
                 offset: offset,
                 parseParams: parseParams,
                 fill: ret.FillRecordType);
+            ret.CustomEnd(
+                stream: origStream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 
@@ -1329,6 +3069,69 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Name;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _PriorityLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Priority;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _BranchLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Branch;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    _QuestLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Quest;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    _KeywordLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.Keyword;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)DialogTopic_FieldIndex.Subtype;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _SubtypeNameLocation = (stream.Position - offset);
+                    return (int)DialogTopic_FieldIndex.SubtypeName;
+                }
+                case RecordTypeInts.TIFC:
+                {
+                    return InfoCountCustomParse(
+                        stream,
+                        offset);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

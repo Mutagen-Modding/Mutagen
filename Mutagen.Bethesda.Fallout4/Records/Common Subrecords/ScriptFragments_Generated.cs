@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -37,6 +38,9 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [SceneScriptFragments]
+    /// </summary>
     public partial class ScriptFragments :
         IEquatable<IScriptFragmentsGetter>,
         ILoquiObjectSetter<ScriptFragments>,
@@ -50,11 +54,14 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
-        #region Unknown
-        public SByte Unknown { get; set; } = default;
+        #region ExtraBindDataVersion
+        public readonly static Byte _ExtraBindDataVersion_Default = 3;
+        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
         #endregion
-        #region FileName
-        public String FileName { get; set; } = string.Empty;
+        #region Script
+        public ScriptEntry Script { get; set; } = new ScriptEntry();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IScriptEntryGetter IScriptFragmentsGetter.Script => Script;
         #endregion
         #region OnBegin
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,7 +88,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void Print(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
@@ -117,20 +124,20 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Unknown = initialValue;
-                this.FileName = initialValue;
+                this.ExtraBindDataVersion = initialValue;
+                this.Script = new MaskItem<TItem, ScriptEntry.Mask<TItem>?>(initialValue, new ScriptEntry.Mask<TItem>(initialValue));
                 this.OnBegin = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(initialValue, new ScriptFragment.Mask<TItem>(initialValue));
                 this.OnEnd = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(initialValue, new ScriptFragment.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                TItem Unknown,
-                TItem FileName,
+                TItem ExtraBindDataVersion,
+                TItem Script,
                 TItem OnBegin,
                 TItem OnEnd)
             {
-                this.Unknown = Unknown;
-                this.FileName = FileName;
+                this.ExtraBindDataVersion = ExtraBindDataVersion;
+                this.Script = new MaskItem<TItem, ScriptEntry.Mask<TItem>?>(Script, new ScriptEntry.Mask<TItem>(Script));
                 this.OnBegin = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(OnBegin, new ScriptFragment.Mask<TItem>(OnBegin));
                 this.OnEnd = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(OnEnd, new ScriptFragment.Mask<TItem>(OnEnd));
             }
@@ -144,8 +151,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem Unknown;
-            public TItem FileName;
+            public TItem ExtraBindDataVersion;
+            public MaskItem<TItem, ScriptEntry.Mask<TItem>?>? Script { get; set; }
             public MaskItem<TItem, ScriptFragment.Mask<TItem>?>? OnBegin { get; set; }
             public MaskItem<TItem, ScriptFragment.Mask<TItem>?>? OnEnd { get; set; }
             #endregion
@@ -160,8 +167,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.FileName, rhs.FileName)) return false;
+                if (!object.Equals(this.ExtraBindDataVersion, rhs.ExtraBindDataVersion)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
                 if (!object.Equals(this.OnBegin, rhs.OnBegin)) return false;
                 if (!object.Equals(this.OnEnd, rhs.OnEnd)) return false;
                 return true;
@@ -169,8 +176,8 @@ namespace Mutagen.Bethesda.Fallout4
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown);
-                hash.Add(this.FileName);
+                hash.Add(this.ExtraBindDataVersion);
+                hash.Add(this.Script);
                 hash.Add(this.OnBegin);
                 hash.Add(this.OnEnd);
                 return hash.ToHashCode();
@@ -179,10 +186,14 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region All
-            public bool All(Func<TItem, bool> eval)
+            public virtual bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.FileName)) return false;
+                if (!eval(this.ExtraBindDataVersion)) return false;
+                if (Script != null)
+                {
+                    if (!eval(this.Script.Overall)) return false;
+                    if (this.Script.Specific != null && !this.Script.Specific.All(eval)) return false;
+                }
                 if (OnBegin != null)
                 {
                     if (!eval(this.OnBegin.Overall)) return false;
@@ -198,10 +209,14 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Any
-            public bool Any(Func<TItem, bool> eval)
+            public virtual bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Unknown)) return true;
-                if (eval(this.FileName)) return true;
+                if (eval(this.ExtraBindDataVersion)) return true;
+                if (Script != null)
+                {
+                    if (eval(this.Script.Overall)) return true;
+                    if (this.Script.Specific != null && this.Script.Specific.Any(eval)) return true;
+                }
                 if (OnBegin != null)
                 {
                     if (eval(this.OnBegin.Overall)) return true;
@@ -226,8 +241,8 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Unknown = eval(this.Unknown);
-                obj.FileName = eval(this.FileName);
+                obj.ExtraBindDataVersion = eval(this.ExtraBindDataVersion);
+                obj.Script = this.Script == null ? null : new MaskItem<R, ScriptEntry.Mask<R>?>(eval(this.Script.Overall), this.Script.Specific?.Translate(eval));
                 obj.OnBegin = this.OnBegin == null ? null : new MaskItem<R, ScriptFragment.Mask<R>?>(eval(this.OnBegin.Overall), this.OnBegin.Specific?.Translate(eval));
                 obj.OnEnd = this.OnEnd == null ? null : new MaskItem<R, ScriptFragment.Mask<R>?>(eval(this.OnEnd.Overall), this.OnEnd.Specific?.Translate(eval));
             }
@@ -248,13 +263,13 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(ScriptFragments.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.ExtraBindDataVersion ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                     }
-                    if (printMask?.FileName ?? true)
+                    if (printMask?.Script?.Overall ?? true)
                     {
-                        sb.AppendItem(FileName, "FileName");
+                        Script?.Print(sb);
                     }
                     if (printMask?.OnBegin?.Overall ?? true)
                     {
@@ -288,22 +303,22 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public Exception? Unknown;
-            public Exception? FileName;
+            public Exception? ExtraBindDataVersion;
+            public MaskItem<Exception?, ScriptEntry.ErrorMask?>? Script;
             public MaskItem<Exception?, ScriptFragment.ErrorMask?>? OnBegin;
             public MaskItem<Exception?, ScriptFragment.ErrorMask?>? OnEnd;
             #endregion
 
             #region IErrorMask
-            public object? GetNthMask(int index)
+            public virtual object? GetNthMask(int index)
             {
                 ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptFragments_FieldIndex.Unknown:
-                        return Unknown;
-                    case ScriptFragments_FieldIndex.FileName:
-                        return FileName;
+                    case ScriptFragments_FieldIndex.ExtraBindDataVersion:
+                        return ExtraBindDataVersion;
+                    case ScriptFragments_FieldIndex.Script:
+                        return Script;
                     case ScriptFragments_FieldIndex.OnBegin:
                         return OnBegin;
                     case ScriptFragments_FieldIndex.OnEnd:
@@ -313,16 +328,16 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
 
-            public void SetNthException(int index, Exception ex)
+            public virtual void SetNthException(int index, Exception ex)
             {
                 ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptFragments_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case ScriptFragments_FieldIndex.ExtraBindDataVersion:
+                        this.ExtraBindDataVersion = ex;
                         break;
-                    case ScriptFragments_FieldIndex.FileName:
-                        this.FileName = ex;
+                    case ScriptFragments_FieldIndex.Script:
+                        this.Script = new MaskItem<Exception?, ScriptEntry.ErrorMask?>(ex, null);
                         break;
                     case ScriptFragments_FieldIndex.OnBegin:
                         this.OnBegin = new MaskItem<Exception?, ScriptFragment.ErrorMask?>(ex, null);
@@ -335,16 +350,16 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
 
-            public void SetNthMask(int index, object obj)
+            public virtual void SetNthMask(int index, object obj)
             {
                 ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptFragments_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case ScriptFragments_FieldIndex.ExtraBindDataVersion:
+                        this.ExtraBindDataVersion = (Exception?)obj;
                         break;
-                    case ScriptFragments_FieldIndex.FileName:
-                        this.FileName = (Exception?)obj;
+                    case ScriptFragments_FieldIndex.Script:
+                        this.Script = (MaskItem<Exception?, ScriptEntry.ErrorMask?>?)obj;
                         break;
                     case ScriptFragments_FieldIndex.OnBegin:
                         this.OnBegin = (MaskItem<Exception?, ScriptFragment.ErrorMask?>?)obj;
@@ -357,11 +372,11 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
 
-            public bool IsInError()
+            public virtual bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown != null) return true;
-                if (FileName != null) return true;
+                if (ExtraBindDataVersion != null) return true;
+                if (Script != null) return true;
                 if (OnBegin != null) return true;
                 if (OnEnd != null) return true;
                 return false;
@@ -371,7 +386,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public void Print(StructuredStringBuilder sb, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -387,14 +402,12 @@ namespace Mutagen.Bethesda.Fallout4
                     PrintFillInternal(sb);
                 }
             }
-            protected void PrintFillInternal(StructuredStringBuilder sb)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                 }
-                {
-                    sb.AppendItem(FileName, "FileName");
-                }
+                Script?.Print(sb);
                 OnBegin?.Print(sb);
                 OnEnd?.Print(sb);
             }
@@ -405,8 +418,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.FileName = this.FileName.Combine(rhs.FileName);
+                ret.ExtraBindDataVersion = this.ExtraBindDataVersion.Combine(rhs.ExtraBindDataVersion);
+                ret.Script = this.Script.Combine(rhs.Script, (l, r) => l.Combine(r));
                 ret.OnBegin = this.OnBegin.Combine(rhs.OnBegin, (l, r) => l.Combine(r));
                 ret.OnEnd = this.OnEnd.Combine(rhs.OnEnd, (l, r) => l.Combine(r));
                 return ret;
@@ -432,8 +445,8 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Unknown;
-            public bool FileName;
+            public bool ExtraBindDataVersion;
+            public ScriptEntry.TranslationMask? Script;
             public ScriptFragment.TranslationMask? OnBegin;
             public ScriptFragment.TranslationMask? OnEnd;
             #endregion
@@ -445,8 +458,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Unknown = defaultOn;
-                this.FileName = defaultOn;
+                this.ExtraBindDataVersion = defaultOn;
             }
 
             #endregion
@@ -460,10 +472,10 @@ namespace Mutagen.Bethesda.Fallout4
                 return _crystal;
             }
 
-            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Unknown, null));
-                ret.Add((FileName, null));
+                ret.Add((ExtraBindDataVersion, null));
+                ret.Add((Script != null ? Script.OnOverall : DefaultOn, Script?.GetCrystal()));
                 ret.Add((OnBegin != null ? OnBegin.OnOverall : DefaultOn, OnBegin?.GetCrystal()));
                 ret.Add((OnEnd != null ? OnEnd.OnOverall : DefaultOn, OnEnd?.GetCrystal()));
             }
@@ -476,9 +488,14 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptFragmentsCommon.Instance.EnumerateFormLinks(this);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFragmentsSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
@@ -534,19 +551,27 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [SceneScriptFragments]
+    /// </summary>
     public partial interface IScriptFragments :
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptFragments>,
         IScriptFragmentsGetter
     {
-        new SByte Unknown { get; set; }
-        new String FileName { get; set; }
+        new Byte ExtraBindDataVersion { get; set; }
+        new ScriptEntry Script { get; set; }
         new ScriptFragment? OnBegin { get; set; }
         new ScriptFragment? OnEnd { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [SceneScriptFragments]
+    /// </summary>
     public partial interface IScriptFragmentsGetter :
         ILoquiObject,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IScriptFragmentsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -556,8 +581,8 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ScriptFragments_Registration.Instance;
-        SByte Unknown { get; }
-        String FileName { get; }
+        Byte ExtraBindDataVersion { get; }
+        IScriptEntryGetter Script { get; }
         IScriptFragmentGetter? OnBegin { get; }
         IScriptFragmentGetter? OnEnd { get; }
 
@@ -729,8 +754,8 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum ScriptFragments_FieldIndex
     {
-        Unknown = 0,
-        FileName = 1,
+        ExtraBindDataVersion = 0,
+        Script = 1,
         OnBegin = 2,
         OnEnd = 3,
     }
@@ -817,11 +842,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void ClearPartial();
         
-        public void Clear(IScriptFragments item)
+        public virtual void Clear(IScriptFragments item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.FileName = string.Empty;
+            item.ExtraBindDataVersion = ScriptFragments._ExtraBindDataVersion_Default;
+            item.Script.Clear();
             item.OnBegin = null;
             item.OnEnd = null;
         }
@@ -829,6 +854,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public void RemapLinks(IScriptFragments obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Script.RemapLinks(mapping);
         }
         
         #endregion
@@ -874,8 +900,8 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.FileName = string.Equals(item.FileName, rhs.FileName);
+            ret.ExtraBindDataVersion = item.ExtraBindDataVersion == rhs.ExtraBindDataVersion;
+            ret.Script = MaskItemExt.Factory(item.Script.GetEqualsMask(rhs.Script, include), include);
             ret.OnBegin = EqualsMaskHelper.EqualsHelper(
                 item.OnBegin,
                 rhs.OnBegin,
@@ -930,13 +956,13 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             ScriptFragments.Mask<bool>? printMask = null)
         {
-            if (printMask?.Unknown ?? true)
+            if (printMask?.ExtraBindDataVersion ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.ExtraBindDataVersion, "ExtraBindDataVersion");
             }
-            if (printMask?.FileName ?? true)
+            if (printMask?.Script?.Overall ?? true)
             {
-                sb.AppendItem(item.FileName, "FileName");
+                item.Script?.Print(sb, "Script");
             }
             if ((printMask?.OnBegin?.Overall ?? true)
                 && item.OnBegin is {} OnBeginItem)
@@ -957,13 +983,17 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.ExtraBindDataVersion) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.ExtraBindDataVersion != rhs.ExtraBindDataVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.FileName) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Script) ?? true))
             {
-                if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Script, rhs.Script, out var lhsScript, out var rhsScript, out var isScriptEqual))
+                {
+                    if (!((ScriptEntryCommon)((IScriptEntryGetter)lhsScript).CommonInstance()!).Equals(lhsScript, rhsScript, crystal?.GetSubCrystal((int)ScriptFragments_FieldIndex.Script))) return false;
+                }
+                else if (!isScriptEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnBegin) ?? true))
             {
@@ -987,8 +1017,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IScriptFragmentsGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unknown);
-            hash.Add(item.FileName);
+            hash.Add(item.ExtraBindDataVersion);
+            hash.Add(item.Script);
             if (item.OnBegin is {} OnBeginitem)
             {
                 hash.Add(OnBeginitem);
@@ -1003,7 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
         
-        public object GetNew()
+        public virtual object GetNew()
         {
             return ScriptFragments.GetNew();
         }
@@ -1011,6 +1041,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptFragmentsGetter obj)
         {
+            if (obj.Script is IFormLinkContainerGetter ScriptlinkCont)
+            {
+                foreach (var item in ScriptlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1022,20 +1059,38 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly ScriptFragmentsSetterTranslationCommon Instance = new ScriptFragmentsSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
+        public virtual void DeepCopyIn(
             IScriptFragments item,
             IScriptFragmentsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.ExtraBindDataVersion) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.ExtraBindDataVersion = rhs.ExtraBindDataVersion;
             }
-            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.FileName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Script) ?? true))
             {
-                item.FileName = rhs.FileName;
+                errorMask?.PushIndex((int)ScriptFragments_FieldIndex.Script);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Script) ?? true))
+                    {
+                        item.Script = rhs.Script.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.Script),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnBegin) ?? true))
             {
@@ -1153,14 +1208,14 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
         public static ILoquiRegistration StaticRegistration => ScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptFragmentsCommon.Instance;
+        protected virtual object CommonInstance() => ScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterInstance()
+        protected virtual object CommonSetterInstance()
         {
             return ScriptFragmentsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
         object IScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
@@ -1185,26 +1240,10 @@ namespace Mutagen.Bethesda.Fallout4
             IScriptFragmentsGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Unknown);
-            ScriptFragmentsBinaryWriteTranslation.WriteBinaryFlags(
-                writer: writer,
-                item: item);
+            writer.Write(item.ExtraBindDataVersion);
         }
 
-        public static partial void WriteBinaryFlagsCustom(
-            MutagenWriter writer,
-            IScriptFragmentsGetter item);
-
-        public static void WriteBinaryFlags(
-            MutagenWriter writer,
-            IScriptFragmentsGetter item)
-        {
-            WriteBinaryFlagsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public void Write(
+        public virtual void Write(
             MutagenWriter writer,
             IScriptFragmentsGetter item,
             TypedWriteParams? translationParams = null)
@@ -1214,7 +1253,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer);
         }
 
-        public void Write(
+        public virtual void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams? translationParams = null)
@@ -1235,15 +1274,8 @@ namespace Mutagen.Bethesda.Fallout4
             IScriptFragments item,
             MutagenFrame frame)
         {
-            item.Unknown = frame.ReadInt8();
-            ScriptFragmentsBinaryCreateTranslation.FillBinaryFlagsCustom(
-                frame: frame,
-                item: item);
+            item.ExtraBindDataVersion = frame.ReadUInt8();
         }
-
-        public static partial void FillBinaryFlagsCustom(
-            MutagenFrame frame,
-            IScriptFragments item);
 
     }
 
@@ -1280,9 +1312,9 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
         public static ILoquiRegistration StaticRegistration => ScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptFragmentsCommon.Instance;
+        protected virtual object CommonInstance() => ScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
         object IScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
@@ -1294,8 +1326,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptFragmentsCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
@@ -1308,13 +1341,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];
-        #region Flags
-        partial void FlagsCustomParse(
-            OverlayStream stream,
-            int offset);
-        protected int FlagsEndingPos;
-        #endregion
+        public Byte ExtraBindDataVersion => _data.Span[0x0];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1337,7 +1364,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? parseParams = null)
         {
             var ret = new ScriptFragmentsBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                bytes: stream.RemainingMemory.Slice(0, 0x1),
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x1;
@@ -1361,7 +1388,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void Print(
+        public virtual void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {

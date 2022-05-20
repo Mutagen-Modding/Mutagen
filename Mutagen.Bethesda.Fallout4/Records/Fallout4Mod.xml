@@ -63,13 +63,7 @@
         </Direct>
       </Ref>
       <Group name="Worldspaces" refName="Worldspace" />
-      <!--			<Group name="VoiceTypes" refName="VoiceType" />-->
-      <!--			<Group name="Quests" refName="Quest" />-->
-      <!--			<Group name="MaterialTypes" refName="MaterialType" />-->
-      <!--			<Group name="ArmorAddons" refName="ArmorAddon" />-->
-      <!--			<Group name="Messages" refName="Message" />-->
-      <!--			<Group name="MusicTypes" refName="MusicType" />-->
-      <!--			<Group name="MusicTracks" refName="MusicTrack" />-->
+      <Group name="Quests" refName="Quest" />
     </Fields>
   </Object>
 </Loqui>

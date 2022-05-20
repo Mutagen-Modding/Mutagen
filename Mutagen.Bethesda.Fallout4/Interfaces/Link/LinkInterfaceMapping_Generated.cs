@@ -174,6 +174,13 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Race_Registration.Instance,
         });
         dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)] with { Setter = false };
+        dict[typeof(IAliasVoiceType)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Faction_Registration.Instance,
+            FormList_Registration.Instance,
+            VoiceType_Registration.Instance,
+        });
+        dict[typeof(IAliasVoiceTypeGetter)] = dict[typeof(IAliasVoiceType)] with { Setter = false };
         dict[typeof(IRegionTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Flora_Registration.Instance,

@@ -8501,7 +8501,10 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => _AttachRefLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttachRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
         #endregion
         public IReadOnlyList<ISplineLinkGetter> SplineConnections { get; private set; } = Array.Empty<SplineLinkBinaryOverlay>();
-        public IReadOnlyList<IPowerGridConnectionGetter>? PowerGridConnections { get; private set; }
+        #region PowerGridConnections
+        private ImmutableManyListWrapper<IPowerGridConnectionGetter>? _additivePowerGridConnections;
+        public IReadOnlyList<IPowerGridConnectionGetter>? PowerGridConnections => _additivePowerGridConnections;
+        #endregion
         #region XCVR
         private int? _XCVRLocation;
         public ReadOnlyMemorySlice<Byte>? XCVR => _XCVRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XCVRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -8969,7 +8972,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XWPN:
                 case RecordTypeInts.XWPG:
                 {
-                    this.PowerGridConnections = BinaryOverlayList.FactoryByCountPerItem<PowerGridConnectionBinaryOverlay>(
+                    _additivePowerGridConnections ??= new();
+                    var PowerGridConnectionsTmp = BinaryOverlayList.FactoryByCountPerItem<PowerGridConnectionBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         itemLength: 0xC,
@@ -8978,6 +8982,7 @@ namespace Mutagen.Bethesda.Fallout4
                         trigger: RecordTypes.XWPN,
                         getter: (s, p) => PowerGridConnectionBinaryOverlay.PowerGridConnectionFactory(s, p),
                         skipHeader: false);
+                    _additivePowerGridConnections.AddList(PowerGridConnectionsTmp);
                     return (int)PlacedObject_FieldIndex.PowerGridConnections;
                 }
                 case RecordTypeInts.XCVR:

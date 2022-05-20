@@ -874,6 +874,37 @@ public abstract class Processor
         ModifyParentGroupLengths(amount, formKey);
     }
 
+    public void CleanEmptyQuestGroups(
+        IMutagenReadStream stream,
+        FormKey formKey,
+        long fileOffset)
+    {
+        List<RangeInt64> removes = new List<RangeInt64>();
+        stream.Position = fileOffset;
+        // Skip Major Record
+        var majorHeader = stream.ReadMajorRecordHeader();
+        stream.Position += majorHeader.ContentLength;
+        var blockGroupPos = stream.Position;
+        if (!stream.TryReadGroupHeader(out var blockGroup)) return;
+        var blockGrupType = blockGroup.GroupType;
+        if (blockGrupType != stream.MetaData.Constants.GroupConstants.Quest.TopGroupType) return;
+        if (blockGroup.ContentLength == 0)
+        {
+            removes.Add(RangeInt64.FromLength(blockGroupPos, blockGroup.HeaderLength));
+        }
+
+        if (removes.Count == 0) return;
+
+        int amount = 0;
+        foreach (var remove in removes)
+        {
+            _instructions.SetRemove(
+                section: remove);
+            amount -= (int)remove.Width;
+        }
+        ModifyParentGroupLengths(amount, formKey);
+    }
+
     protected bool DynamicMove(
         MajorRecordFrame majorFrame,
         long fileOffset,

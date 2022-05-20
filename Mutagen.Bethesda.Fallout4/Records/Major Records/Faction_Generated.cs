@@ -1317,6 +1317,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFaction :
+        IAliasVoiceType,
         IFactionGetter,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -1360,6 +1361,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.FACT)]
     public partial interface IFactionGetter :
         IFallout4MajorRecordGetter,
+        IAliasVoiceTypeGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IFactionGetter>,
