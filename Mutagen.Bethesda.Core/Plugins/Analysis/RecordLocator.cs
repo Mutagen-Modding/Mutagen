@@ -246,7 +246,7 @@ public class RecordLocator
     {
         PushGroup(groupPin);
         if (nesting.Underneath.Length == 0
-            || nesting.TopLevelRecordType.HasValue)
+            || nesting.HasTopLevelRecordType)
         {
             ParseTopLevelGroup(
                 reader: frame,

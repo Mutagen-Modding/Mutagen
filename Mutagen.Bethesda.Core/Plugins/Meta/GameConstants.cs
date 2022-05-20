@@ -92,21 +92,21 @@ public record GameConstants
             new GroupNesting[]
             {
                 new GroupNesting(2,
-                    new GroupNesting(RecordTypes.CELL, 3,
+                    new GroupNesting(HasTopLevelRecordType: true, 3,
                         new GroupNesting(6,
                             new GroupNesting(8),
                             new GroupNesting(9),
                             new GroupNesting(10)))),
                 new GroupNesting(GroupType: 7),
                 new GroupNesting(
-                    RecordTypes.CELL, GroupType: 1,
+                    HasTopLevelRecordType: true, GroupType: 1,
                     new GroupNesting(
                         GroupType: 6,
                         new GroupNesting(8),
                         new GroupNesting(9),
                         new GroupNesting(10)),
                     new GroupNesting(4,
-                        new GroupNesting(RecordTypes.CELL, 5,
+                        new GroupNesting(HasTopLevelRecordType: true, 5,
                             new GroupNesting(
                                 GroupType: 6,
                                 new GroupNesting(8),
@@ -146,19 +146,19 @@ public record GameConstants
             new GroupNesting[]
             {
                 new GroupNesting(2,
-                    new GroupNesting(RecordTypes.CELL, 3,
+                    new GroupNesting(HasTopLevelRecordType: true, 3,
                         new GroupNesting(6,
                             new GroupNesting(8),
                             new GroupNesting(9)))),
                 new GroupNesting(GroupType: 7),
                 new GroupNesting(
-                    RecordTypes.CELL, GroupType: 1,
+                    HasTopLevelRecordType: true, GroupType: 1,
                     new GroupNesting(
                         GroupType: 6,
                         new GroupNesting(8),
                         new GroupNesting(9)),
                     new GroupNesting(4,
-                        new GroupNesting(RecordTypes.CELL, 5,
+                        new GroupNesting(HasTopLevelRecordType: true, 5,
                             new GroupNesting(
                                 GroupType: 6,
                                 new GroupNesting(8),
@@ -217,20 +217,20 @@ public record GameConstants
             new GroupNesting[]
             {
                 new GroupNesting(2,
-                    new GroupNesting(RecordTypes.CELL, 3,
+                    new GroupNesting(HasTopLevelRecordType: true, 3,
                         new GroupNesting(6,
                             new GroupNesting(8),
                             new GroupNesting(9)))),
                 new GroupNesting(GroupType: 7),
                 new GroupNesting(GroupType: 10),
                 new GroupNesting(
-                    RecordTypes.CELL, GroupType: 1,
+                    HasTopLevelRecordType: true, GroupType: 1,
                     new GroupNesting(
                         GroupType: 6,
                         new GroupNesting(8),
                         new GroupNesting(9)),
                     new GroupNesting(4,
-                        new GroupNesting(RecordTypes.CELL, 5,
+                        new GroupNesting(HasTopLevelRecordType: true, 5,
                             new GroupNesting(
                                 GroupType: 6,
                                 new GroupNesting(8),

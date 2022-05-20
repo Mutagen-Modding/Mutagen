@@ -10,12 +10,12 @@ public record GroupQuestConstants(int TopGroupType);
 
 public record GroupNesting(int GroupType, params GroupNesting[] Underneath)
 {
-    public RecordType? TopLevelRecordType { get; init; }
+    public bool HasTopLevelRecordType { get; init; }
 
-    public GroupNesting(RecordType TopLevelRecordType, int GroupType, params GroupNesting[] Underneath)
+    public GroupNesting(bool HasTopLevelRecordType, int GroupType, params GroupNesting[] Underneath)
         : this(GroupType, Underneath)
     {
-        this.TopLevelRecordType = TopLevelRecordType;
+        this.HasTopLevelRecordType = HasTopLevelRecordType;
     }
 }
 
