@@ -495,84 +495,84 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region ImageSpaceSunrise
-        private readonly IFormLink<IImageSpaceAdapterGetter> _ImageSpaceSunrise = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> ImageSpaceSunrise
+        private readonly IFormLink<IImageSpaceGetter> _ImageSpaceSunrise = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> ImageSpaceSunrise
         {
             get => _ImageSpaceSunrise;
             set => _ImageSpaceSunrise.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherGetter.ImageSpaceSunrise => this.ImageSpaceSunrise;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherGetter.ImageSpaceSunrise => this.ImageSpaceSunrise;
         #endregion
         #region ImageSpaceDay
-        private readonly IFormLink<IImageSpaceAdapterGetter> _ImageSpaceDay = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> ImageSpaceDay
+        private readonly IFormLink<IImageSpaceGetter> _ImageSpaceDay = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> ImageSpaceDay
         {
             get => _ImageSpaceDay;
             set => _ImageSpaceDay.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherGetter.ImageSpaceDay => this.ImageSpaceDay;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherGetter.ImageSpaceDay => this.ImageSpaceDay;
         #endregion
         #region ImageSpaceSunset
-        private readonly IFormLink<IImageSpaceAdapterGetter> _ImageSpaceSunset = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> ImageSpaceSunset
+        private readonly IFormLink<IImageSpaceGetter> _ImageSpaceSunset = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> ImageSpaceSunset
         {
             get => _ImageSpaceSunset;
             set => _ImageSpaceSunset.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherGetter.ImageSpaceSunset => this.ImageSpaceSunset;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherGetter.ImageSpaceSunset => this.ImageSpaceSunset;
         #endregion
         #region ImageSpaceNight
-        private readonly IFormLink<IImageSpaceAdapterGetter> _ImageSpaceNight = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> ImageSpaceNight
+        private readonly IFormLink<IImageSpaceGetter> _ImageSpaceNight = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> ImageSpaceNight
         {
             get => _ImageSpaceNight;
             set => _ImageSpaceNight.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherGetter.ImageSpaceNight => this.ImageSpaceNight;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherGetter.ImageSpaceNight => this.ImageSpaceNight;
         #endregion
         #region ImageSpaceEarlySunrise
-        private readonly IFormLink<IImageSpaceAdapterGetter> _ImageSpaceEarlySunrise = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> ImageSpaceEarlySunrise
+        private readonly IFormLink<IImageSpaceGetter> _ImageSpaceEarlySunrise = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> ImageSpaceEarlySunrise
         {
             get => _ImageSpaceEarlySunrise;
             set => _ImageSpaceEarlySunrise.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherGetter.ImageSpaceEarlySunrise => this.ImageSpaceEarlySunrise;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherGetter.ImageSpaceEarlySunrise => this.ImageSpaceEarlySunrise;
         #endregion
         #region ImageSpaceLateSunrise
-        private readonly IFormLink<IImageSpaceAdapterGetter> _ImageSpaceLateSunrise = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> ImageSpaceLateSunrise
+        private readonly IFormLink<IImageSpaceGetter> _ImageSpaceLateSunrise = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> ImageSpaceLateSunrise
         {
             get => _ImageSpaceLateSunrise;
             set => _ImageSpaceLateSunrise.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherGetter.ImageSpaceLateSunrise => this.ImageSpaceLateSunrise;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherGetter.ImageSpaceLateSunrise => this.ImageSpaceLateSunrise;
         #endregion
         #region ImageSpaceEarlySunset
-        private readonly IFormLink<IImageSpaceAdapterGetter> _ImageSpaceEarlySunset = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> ImageSpaceEarlySunset
+        private readonly IFormLink<IImageSpaceGetter> _ImageSpaceEarlySunset = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> ImageSpaceEarlySunset
         {
             get => _ImageSpaceEarlySunset;
             set => _ImageSpaceEarlySunset.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherGetter.ImageSpaceEarlySunset => this.ImageSpaceEarlySunset;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherGetter.ImageSpaceEarlySunset => this.ImageSpaceEarlySunset;
         #endregion
         #region ImageSpaceLateSunset
-        private readonly IFormLink<IImageSpaceAdapterGetter> _ImageSpaceLateSunset = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> ImageSpaceLateSunset
+        private readonly IFormLink<IImageSpaceGetter> _ImageSpaceLateSunset = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> ImageSpaceLateSunset
         {
             get => _ImageSpaceLateSunset;
             set => _ImageSpaceLateSunset.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherGetter.ImageSpaceLateSunset => this.ImageSpaceLateSunset;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherGetter.ImageSpaceLateSunset => this.ImageSpaceLateSunset;
         #endregion
         #region GodRays
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4023,14 +4023,14 @@ namespace Mutagen.Bethesda.Fallout4
         new Percent WindTurbulance { get; set; }
         new ExtendedList<WeatherSound> Sounds { get; }
         new ExtendedList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; }
-        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceSunrise { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceDay { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceSunset { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceNight { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceEarlySunrise { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceLateSunrise { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceEarlySunset { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceLateSunset { get; set; }
+        new IFormLink<IImageSpaceGetter> ImageSpaceSunrise { get; set; }
+        new IFormLink<IImageSpaceGetter> ImageSpaceDay { get; set; }
+        new IFormLink<IImageSpaceGetter> ImageSpaceSunset { get; set; }
+        new IFormLink<IImageSpaceGetter> ImageSpaceNight { get; set; }
+        new IFormLink<IImageSpaceGetter> ImageSpaceEarlySunrise { get; set; }
+        new IFormLink<IImageSpaceGetter> ImageSpaceLateSunrise { get; set; }
+        new IFormLink<IImageSpaceGetter> ImageSpaceEarlySunset { get; set; }
+        new IFormLink<IImageSpaceGetter> ImageSpaceLateSunset { get; set; }
         new WeatherGodRays? GodRays { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
         new Model? Aurora { get; set; }
@@ -4123,14 +4123,14 @@ namespace Mutagen.Bethesda.Fallout4
         Percent WindTurbulance { get; }
         IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
         IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceSunrise { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceDay { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceSunset { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceNight { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceEarlySunrise { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceLateSunrise { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceEarlySunset { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceLateSunset { get; }
+        IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunrise { get; }
+        IFormLinkGetter<IImageSpaceGetter> ImageSpaceDay { get; }
+        IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunset { get; }
+        IFormLinkGetter<IImageSpaceGetter> ImageSpaceNight { get; }
+        IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunrise { get; }
+        IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunrise { get; }
+        IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunset { get; }
+        IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunset { get; }
         IWeatherGodRaysGetter? GodRays { get; }
         IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors { get; }
         IModelGetter? Aurora { get; }
@@ -8237,42 +8237,42 @@ namespace Mutagen.Bethesda.Fallout4
         #region ImageSpaceSunrise
         private int _ImageSpaceSunriseLocation => _IMSPLocation!.Value.Min;
         private bool _ImageSpaceSunrise_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceSunrise => _ImageSpaceSunrise_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceSunriseLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunrise => _ImageSpaceSunrise_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceSunriseLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceDay
         private int _ImageSpaceDayLocation => _IMSPLocation!.Value.Min + 0x4;
         private bool _ImageSpaceDay_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceDay => _ImageSpaceDay_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceDayLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceDay => _ImageSpaceDay_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceDayLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceSunset
         private int _ImageSpaceSunsetLocation => _IMSPLocation!.Value.Min + 0x8;
         private bool _ImageSpaceSunset_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceSunset => _ImageSpaceSunset_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceSunsetLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceSunset => _ImageSpaceSunset_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceSunsetLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceNight
         private int _ImageSpaceNightLocation => _IMSPLocation!.Value.Min + 0xC;
         private bool _ImageSpaceNight_IsSet => _IMSPLocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceNight => _ImageSpaceNight_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceNightLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceNight => _ImageSpaceNight_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceNightLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceEarlySunrise
         private int _ImageSpaceEarlySunriseLocation => _IMSPLocation!.Value.Min + 0x10;
         private bool _ImageSpaceEarlySunrise_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceEarlySunrise => _ImageSpaceEarlySunrise_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceEarlySunriseLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunrise => _ImageSpaceEarlySunrise_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceEarlySunriseLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceLateSunrise
         private int _ImageSpaceLateSunriseLocation => _IMSPLocation!.Value.Min + 0x14;
         private bool _ImageSpaceLateSunrise_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceLateSunrise => _ImageSpaceLateSunrise_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceLateSunriseLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunrise => _ImageSpaceLateSunrise_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceLateSunriseLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceEarlySunset
         private int _ImageSpaceEarlySunsetLocation => _IMSPLocation!.Value.Min + 0x18;
         private bool _ImageSpaceEarlySunset_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceEarlySunset => _ImageSpaceEarlySunset_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceEarlySunsetLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunset => _ImageSpaceEarlySunset_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceEarlySunsetLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceLateSunset
         private int _ImageSpaceLateSunsetLocation => _IMSPLocation!.Value.Min + 0x1C;
         private bool _ImageSpaceLateSunset_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceLateSunset => _ImageSpaceLateSunset_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceLateSunsetLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunset => _ImageSpaceLateSunset_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceLateSunsetLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region GodRays
         private RangeInt32? _GodRaysLocation;
