@@ -2117,7 +2117,8 @@ namespace Mutagen.Bethesda.Fallout4
                         getter: (s, p, recConv) => CellSubBlockBinaryOverlay.CellSubBlockFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: RecordTypes.GRUP,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.GroupConstants,
                             skipHeader: false));
                     return (int)CellBlock_FieldIndex.SubBlocks;

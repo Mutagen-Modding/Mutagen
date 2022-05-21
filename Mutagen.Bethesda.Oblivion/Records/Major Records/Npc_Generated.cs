@@ -4078,7 +4078,8 @@ namespace Mutagen.Bethesda.Oblivion
                         getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: RankPlacement_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Npc_FieldIndex.Factions;
@@ -4121,7 +4122,8 @@ namespace Mutagen.Bethesda.Oblivion
                         getter: (s, p, recConv) => ItemEntryBinaryOverlay.ItemEntryFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: ItemEntry_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Npc_FieldIndex.Items;

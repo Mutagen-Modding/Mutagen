@@ -1741,7 +1741,8 @@ namespace Mutagen.Bethesda.Oblivion
                         getter: (s, p, recConv) => LoadScreenLocationBinaryOverlay.LoadScreenLocationFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: LoadScreenLocation_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)LoadScreen_FieldIndex.Locations;

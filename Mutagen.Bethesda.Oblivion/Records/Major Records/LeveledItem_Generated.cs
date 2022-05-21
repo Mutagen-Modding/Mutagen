@@ -1779,7 +1779,8 @@ namespace Mutagen.Bethesda.Oblivion
                         getter: (s, p, recConv) => LeveledItemEntryBinaryOverlay.LeveledItemEntryFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: LeveledItemEntry_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)LeveledItem_FieldIndex.Entries;

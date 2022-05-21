@@ -3201,7 +3201,8 @@ namespace Mutagen.Bethesda.Skyrim
                         getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: Relation_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Faction_FieldIndex.Relations;

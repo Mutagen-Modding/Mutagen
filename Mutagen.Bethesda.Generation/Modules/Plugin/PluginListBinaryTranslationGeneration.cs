@@ -791,7 +791,8 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                            $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
-                                    subArgs.Add("trigger: type");
+                                    subArgs.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
+                                    subArgs.Add($"triggersAlwaysAreNewRecords: true");
                                     switch (loqui.TargetObjectGeneration.GetObjectType())
                                     {
                                         case ObjectType.Subrecord:

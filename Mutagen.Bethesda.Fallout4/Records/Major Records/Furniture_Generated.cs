@@ -5098,7 +5098,8 @@ namespace Mutagen.Bethesda.Fallout4
                         getter: (s, p, recConv) => FurnitureMarkerEntryPointsBinaryOverlay.FurnitureMarkerEntryPointsFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: FurnitureMarkerEntryPoints_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Furniture_FieldIndex.MarkerEntryPoints;

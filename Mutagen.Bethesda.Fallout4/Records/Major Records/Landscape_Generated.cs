@@ -2627,7 +2627,8 @@ namespace Mutagen.Bethesda.Fallout4
                         getter: (s, p, recConv) => LandscapeMPCDBinaryOverlay.LandscapeMPCDFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: LandscapeMPCD_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Landscape_FieldIndex.MPCDs;

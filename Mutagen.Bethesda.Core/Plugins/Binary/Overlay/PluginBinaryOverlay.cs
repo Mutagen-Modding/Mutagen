@@ -303,7 +303,9 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordType trigger,
         RecordHeaderConstants constants,
         bool skipHeader,
-        TypedParseParams? parseParams = null)
+        TypedParseParams? parseParams = null,
+        // Not needed, just for generation simplification
+        bool triggersAlwaysAreNewRecords = false)
     {
         List<int> ret = new List<int>();
         var startingPos = stream.Position;

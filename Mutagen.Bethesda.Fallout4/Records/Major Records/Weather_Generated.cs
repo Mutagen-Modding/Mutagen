@@ -8475,7 +8475,8 @@ namespace Mutagen.Bethesda.Fallout4
                         getter: (s, p, recConv) => WeatherSoundBinaryOverlay.WeatherSoundFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: WeatherSound_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Weather_FieldIndex.Sounds;

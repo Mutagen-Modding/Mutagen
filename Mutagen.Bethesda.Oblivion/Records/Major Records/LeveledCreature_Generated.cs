@@ -1896,7 +1896,8 @@ namespace Mutagen.Bethesda.Oblivion
                         getter: (s, p, recConv) => LeveledCreatureEntryBinaryOverlay.LeveledCreatureEntryFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: LeveledCreatureEntry_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)LeveledCreature_FieldIndex.Entries;

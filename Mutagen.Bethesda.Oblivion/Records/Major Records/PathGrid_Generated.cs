@@ -2072,7 +2072,8 @@ namespace Mutagen.Bethesda.Oblivion
                         getter: (s, p, recConv) => PointToReferenceMappingBinaryOverlay.PointToReferenceMappingFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: PointToReferenceMapping_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)PathGrid_FieldIndex.PointToReferenceMappings;

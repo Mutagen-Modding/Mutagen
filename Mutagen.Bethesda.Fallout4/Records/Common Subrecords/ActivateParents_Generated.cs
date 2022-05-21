@@ -1352,7 +1352,8 @@ namespace Mutagen.Bethesda.Fallout4
                         getter: (s, p, recConv) => ActivateParentBinaryOverlay.ActivateParentFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: ActivateParent_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)ActivateParents_FieldIndex.Parents;

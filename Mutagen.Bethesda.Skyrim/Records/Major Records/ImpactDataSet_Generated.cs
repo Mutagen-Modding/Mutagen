@@ -1603,7 +1603,8 @@ namespace Mutagen.Bethesda.Skyrim
                         getter: (s, p, recConv) => ImpactDataBinaryOverlay.ImpactDataFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: ImpactData_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)ImpactDataSet_FieldIndex.Impacts;
