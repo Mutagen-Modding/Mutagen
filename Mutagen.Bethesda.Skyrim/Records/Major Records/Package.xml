@@ -180,7 +180,7 @@
   </Object>
   <Object name="PackageEvent" objType="Subrecord" GUID="097ee8cc-5081-463f-ae70-7e8921899f9e" ID="386">
     <Fields>
-      <FormLink name="Idle" refName="IdleAnimation" recordType="INAM" />
+      <FormLink name="Idle" refName="IdleAnimation" recordType="INAM" nullable="False" />
       <ByteArray name="SCHR" recordType="SCHR" />
       <ByteArray name="SCDA" recordType="SCDA" />
       <ByteArray name="SCTX" recordType="SCTX" />

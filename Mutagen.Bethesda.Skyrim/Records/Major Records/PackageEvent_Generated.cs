@@ -52,14 +52,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Idle
-        private readonly IFormLinkNullable<IIdleAnimationGetter> _Idle = new FormLinkNullable<IIdleAnimationGetter>();
-        public IFormLinkNullable<IIdleAnimationGetter> Idle
+        private readonly IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
+        public IFormLink<IIdleAnimationGetter> Idle
         {
             get => _Idle;
             set => _Idle.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle;
+        IFormLinkGetter<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle;
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageEvent>,
         IPackageEventGetter
     {
-        new IFormLinkNullable<IIdleAnimationGetter> Idle { get; set; }
+        new IFormLink<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCDA { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PackageEvent_Registration.Instance;
-        IFormLinkNullableGetter<IIdleAnimationGetter> Idle { get; }
+        IFormLinkGetter<IIdleAnimationGetter> Idle { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCDA { get; }
         ReadOnlyMemorySlice<Byte>? SCTX { get; }
@@ -991,9 +991,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.INAM;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var triggers = RecordCollection.Factory(RecordTypes.INAM);
             var all = RecordCollection.Factory(
                 RecordTypes.INAM,
                 RecordTypes.SCHR,
@@ -1002,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.QNAM,
                 RecordTypes.TNAM,
                 RecordTypes.PDTO);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageEventBinaryWriteTranslation);
         #region Interface
@@ -1162,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (printMask?.Idle ?? true)
             {
-                sb.AppendItem(item.Idle.FormKeyNullable, "Idle");
+                sb.AppendItem(item.Idle.FormKey, "Idle");
             }
             if ((printMask?.SCHR ?? true)
                 && item.SCHR is {} SCHRItem)
@@ -1282,10 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageEventGetter obj)
         {
-            if (FormLinkInformation.TryFactory(obj.Idle, out var IdleInfo))
-            {
-                yield return IdleInfo;
-            }
+            yield return FormLinkInformation.Factory(obj.Idle);
             foreach (var item in obj.Topics.WhereCastable<IATopicReferenceGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
@@ -1311,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
             {
-                item.Idle.SetTo(rhs.Idle.FormKeyNullable);
+                item.Idle.SetTo(rhs.Idle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
             {
@@ -1489,7 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Idle,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
@@ -1586,42 +1585,36 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.SCHR) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.SCDA) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCDA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.SCDA;
                 }
                 case RecordTypeInts.SCTX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.SCTX) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCTX = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.QNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.QNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.TNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.PDTO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.Topics) return ParseResult.Stop;
                     PackageEventBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
@@ -1702,7 +1695,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Idle
         private int? _IdleLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkGetter<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;
@@ -1797,37 +1790,31 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.SCHR) return ParseResult.Stop;
                     _SCHRLocation = (stream.Position - offset);
                     return (int)PackageEvent_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCDA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.SCDA) return ParseResult.Stop;
                     _SCDALocation = (stream.Position - offset);
                     return (int)PackageEvent_FieldIndex.SCDA;
                 }
                 case RecordTypeInts.SCTX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.SCTX) return ParseResult.Stop;
                     _SCTXLocation = (stream.Position - offset);
                     return (int)PackageEvent_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.QNAM) return ParseResult.Stop;
                     _QNAMLocation = (stream.Position - offset);
                     return (int)PackageEvent_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.TNAM) return ParseResult.Stop;
                     _TNAMLocation = (stream.Position - offset);
                     return (int)PackageEvent_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.PDTO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageEvent_FieldIndex.Topics) return ParseResult.Stop;
                     TopicsCustomParse(
                         stream: stream,
                         finalPos: finalPos,
