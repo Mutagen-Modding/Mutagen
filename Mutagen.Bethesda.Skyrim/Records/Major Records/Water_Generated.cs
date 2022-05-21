@@ -157,14 +157,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISpellGetter> IWaterGetter.Spell => this.Spell;
         #endregion
         #region ImageSpace
-        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
+        private readonly IFormLinkNullable<IImageSpaceGetter> _ImageSpace = new FormLinkNullable<IImageSpaceGetter>();
+        public IFormLinkNullable<IImageSpaceGetter> ImageSpace
         {
             get => _ImageSpace;
             set => _ImageSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IWaterGetter.ImageSpace => this.ImageSpace;
+        IFormLinkNullableGetter<IImageSpaceGetter> IWaterGetter.ImageSpace => this.ImageSpace;
         #endregion
         #region DamagePerSecond
         public UInt16? DamagePerSecond { get; set; }
@@ -2915,7 +2915,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IMaterialTypeGetter> Material { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
         new IFormLinkNullable<ISpellGetter> Spell { get; set; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
+        new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new UInt16? DamagePerSecond { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
         new Single SpecularSunPower { get; set; }
@@ -3010,7 +3010,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMaterialTypeGetter> Material { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound { get; }
         IFormLinkNullableGetter<ISpellGetter> Spell { get; }
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace { get; }
+        IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         UInt16? DamagePerSecond { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
         Single SpecularSunPower { get; }
@@ -5610,7 +5610,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceGetter>.Null;
         #endregion
         #region DamagePerSecond
         private int? _DamagePerSecondLocation;

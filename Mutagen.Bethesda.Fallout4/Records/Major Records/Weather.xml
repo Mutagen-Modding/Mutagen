@@ -97,15 +97,15 @@
       </List>
       <Data recordType="IMSP">
         <Fields>
-          <FormLink name="ImageSpaceSunrise" refName="ImageSpaceAdapter" />
-          <FormLink name="ImageSpaceDay" refName="ImageSpaceAdapter" />
-          <FormLink name="ImageSpaceSunset" refName="ImageSpaceAdapter" />
-          <FormLink name="ImageSpaceNight" refName="ImageSpaceAdapter" />
+          <FormLink name="ImageSpaceSunrise" refName="ImageSpace" />
+          <FormLink name="ImageSpaceDay" refName="ImageSpace" />
+          <FormLink name="ImageSpaceSunset" refName="ImageSpace" />
+          <FormLink name="ImageSpaceNight" refName="ImageSpace" />
           <Break />
-          <FormLink name="ImageSpaceEarlySunrise" refName="ImageSpaceAdapter" />
-          <FormLink name="ImageSpaceLateSunrise" refName="ImageSpaceAdapter" />
-          <FormLink name="ImageSpaceEarlySunset" refName="ImageSpaceAdapter" />
-          <FormLink name="ImageSpaceLateSunset" refName="ImageSpaceAdapter" />
+          <FormLink name="ImageSpaceEarlySunrise" refName="ImageSpace" />
+          <FormLink name="ImageSpaceLateSunrise" refName="ImageSpace" />
+          <FormLink name="ImageSpaceEarlySunset" refName="ImageSpace" />
+          <FormLink name="ImageSpaceLateSunset" refName="ImageSpace" />
         </Fields>
       </Data>
       <RefDirect name="GodRays" refName="WeatherGodRays" />

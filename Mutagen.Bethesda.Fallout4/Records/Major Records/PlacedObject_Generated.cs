@@ -160,14 +160,14 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ILightGetter> IPlacedObjectGetter.LightingTemplate => this.LightingTemplate;
         #endregion
         #region ImageSpace
-        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
+        private readonly IFormLinkNullable<IImageSpaceGetter> _ImageSpace = new FormLinkNullable<IImageSpaceGetter>();
+        public IFormLinkNullable<IImageSpaceGetter> ImageSpace
         {
             get => _ImageSpace;
             set => _ImageSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IPlacedObjectGetter.ImageSpace => this.ImageSpace;
+        IFormLinkNullableGetter<IImageSpaceGetter> IPlacedObjectGetter.ImageSpace => this.ImageSpace;
         #endregion
         #region LinkedRooms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3934,7 +3934,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Bounding? OcclusionPlane { get; set; }
         new Int16 Unknown { get; set; }
         new IFormLinkNullable<ILightGetter> LightingTemplate { get; set; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
+        new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         new Boolean IsMultiBoundPrimitive { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
@@ -4036,7 +4036,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBoundingGetter? OcclusionPlane { get; }
         Int16 Unknown { get; }
         IFormLinkNullableGetter<ILightGetter> LightingTemplate { get; }
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace { get; }
+        IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         Boolean IsMultiBoundPrimitive { get; }
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }

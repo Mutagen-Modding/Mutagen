@@ -12,7 +12,7 @@
       <FormLink name="Material" refName="MaterialType" recordType="TNAM" />
       <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
       <FormLink name="Spell" refName="Spell" recordType="XNAM" />
-      <FormLink name="ImageSpace" refName="ImageSpaceAdapter" recordType="INAM" />
+      <FormLink name="ImageSpace" refName="ImageSpace" recordType="INAM" />
       <UInt16 name="DamagePerSecond" recordType="DATA" />
       <Data recordType="DNAM" >
         <Fields>
