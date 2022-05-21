@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<APackageData>
     {
         #region Ctor
-        public APackageData()
+        internal APackageData()
         {
             CustomCtor();
         }

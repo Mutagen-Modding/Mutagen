@@ -57,7 +57,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="APackageData" objType="Subrecord" GUID="88e8ac4c-9592-4956-9154-3e8d115ec0f9" ID="374">
+  <Object name="APackageData" ctorPermission="internal" objType="Subrecord" GUID="88e8ac4c-9592-4956-9154-3e8d115ec0f9" ID="374">
     <Fields>
       <String name="Name" recordType="BNAM" binary="NoGeneration" nullable="True" />
       <Enum name="Flags" enumName="APackageData.Flag" recordType="PNAM" nullable="True" binary="NoGeneration" />
