@@ -2568,17 +2568,31 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ANAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        case 0:
-                            if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
-                            _TypeLocation = (stream.Position - offset);
-                            return new ParseResult((int)SceneAction_FieldIndex.Type, type);
-                        case 1:
-                            stream.ReadSubrecord();
-                            return ParseResult.Stop;
-                        default:
-                            throw new NotImplementedException();
+                        if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                        _TypeLocation = (stream.Position - offset);
+                        return new ParseResult((int)SceneAction_FieldIndex.Type, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Unused)
+                    {
+                        stream.ReadSubrecord();
+                        return ParseResult.Stop;
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
+                                _TypeLocation = (stream.Position - offset);
+                                return new ParseResult((int)SceneAction_FieldIndex.Type, type);
+                            case 1:
+                                stream.ReadSubrecord();
+                                return ParseResult.Stop;
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.NAM0:
@@ -2608,16 +2622,30 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Flags)
                     {
-                        case 0:
-                            _StartPhaseLocation = (stream.Position - offset);
-                            return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
-                        case 1:
-                            _TimerSecondsLocation = (stream.Position - offset);
-                            return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, type);
-                        default:
-                            throw new NotImplementedException();
+                        _StartPhaseLocation = (stream.Position - offset);
+                        return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.EndPhase)
+                    {
+                        _TimerSecondsLocation = (stream.Position - offset);
+                        return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                _StartPhaseLocation = (stream.Position - offset);
+                                return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
+                            case 1:
+                                _TimerSecondsLocation = (stream.Position - offset);
+                                return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.ENAM:

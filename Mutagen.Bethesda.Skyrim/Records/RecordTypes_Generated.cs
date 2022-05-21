@@ -355,6 +355,7 @@ public partial class RecordTypes
     public static readonly RecordType PKDT = new(0x54444B50);
     public static readonly RecordType PKID = new(0x44494B50);
     public static readonly RecordType PLCN = new(0x4E434C50);
+    public static readonly RecordType PLDT = new(0x54444C50);
     public static readonly RecordType PLVD = new(0x44564C50);
     public static readonly RecordType PMIS = new(0x53494D50);
     public static readonly RecordType PNAM = new(0x4D414E50);

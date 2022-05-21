@@ -2133,6 +2133,7 @@ namespace Mutagen.Bethesda.Skyrim
             var triggers = RecordCollection.Factory(RecordTypes.PACK);
             var all = RecordCollection.Factory(
                 RecordTypes.PACK,
+                RecordTypes.PLDT,
                 RecordTypes.VMAD,
                 RecordTypes.PKDT,
                 RecordTypes.PSDT,

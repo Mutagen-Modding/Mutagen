@@ -1954,16 +1954,29 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.HNAM:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue)
                     {
-                        case 0:
-                            stream.ReadSubrecord();
-                            return new ParseResult(default(int?), type);
-                        case 1:
-                            stream.ReadSubrecord();
-                            return ParseResult.Stop;
-                        default:
-                            throw new NotImplementedException();
+                        stream.ReadSubrecord();
+                        return new ParseResult(default(int?), type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)ScenePhase_FieldIndex.EditorWidth)
+                    {
+                        stream.ReadSubrecord();
+                        return ParseResult.Stop;
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                stream.ReadSubrecord();
+                                return new ParseResult(default(int?), type);
+                            case 1:
+                                stream.ReadSubrecord();
+                                return ParseResult.Stop;
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.NAM0:
@@ -1983,25 +1996,48 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)ScenePhase_FieldIndex.StartConditions)
                     {
-                        case 0:
-                            CompletionConditionsCustomParse(
-                                stream: stream,
-                                finalPos: finalPos,
-                                offset: offset,
-                                type: type,
-                                lastParsed: lastParsed);
-                            return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, type);
-                        case 1:
-                            stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
-                            this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
-                                stream: stream,
-                                package: _package,
-                                parseParams: parseParams);
-                            return new ParseResult((int)ScenePhase_FieldIndex.Unused2, type);
-                        default:
-                            throw new NotImplementedException();
+                        CompletionConditionsCustomParse(
+                            stream: stream,
+                            finalPos: finalPos,
+                            offset: offset,
+                            type: type,
+                            lastParsed: lastParsed);
+                        return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)ScenePhase_FieldIndex.Unused)
+                    {
+                        stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                        this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
+                            stream: stream,
+                            package: _package,
+                            parseParams: parseParams);
+                        return new ParseResult((int)ScenePhase_FieldIndex.Unused2, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                CompletionConditionsCustomParse(
+                                    stream: stream,
+                                    finalPos: finalPos,
+                                    offset: offset,
+                                    type: type,
+                                    lastParsed: lastParsed);
+                                return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, type);
+                            case 1:
+                                stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                                this.Unused2 = ScenePhaseUnusedDataBinaryOverlay.ScenePhaseUnusedDataFactory(
+                                    stream: stream,
+                                    package: _package,
+                                    parseParams: parseParams);
+                                return new ParseResult((int)ScenePhase_FieldIndex.Unused2, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
                 case RecordTypeInts.SCHR:

@@ -138,7 +138,7 @@ partial class PackageBinaryCreateTranslation
                 case RecordTypeInts.TPIC:
                 case RecordTypeInts.PTDA:
                 case RecordTypeInts.PDTO:
-                case 0x54444C50: // PLDT
+                case RecordTypeInts.PLDT:
                     // Skip
                     break;
                 default:
@@ -289,7 +289,7 @@ partial class PackageBinaryCreateTranslation
                         throw new ArgumentException("Encountered target for a non-target data package");
                     }
                     break;
-                case 0x54444C50: // PLDT
+                case RecordTypeInts.PLDT:
                     if (lastPackage == null)
                     {
                         throw new ArgumentException("Package data came before index");
@@ -338,7 +338,7 @@ partial class PackageBinaryCreateTranslation
             switch (subRecord.RecordTypeInt)
             {
                 case RecordTypeInts.UNAM:
-                    lastPackage = dict.GetOrAdd((sbyte)subRecord.Content[0]);
+                    lastPackage = dict.GetOrAdd((sbyte)subRecord.Content[0], () => new APackageData());
                     break;
                 case RecordTypeInts.BNAM:
                     lastPackage!.Name = BinaryStringUtility.ProcessWholeToZString(subRecord.Content, stream.MetaData.Encodings.NonTranslated);

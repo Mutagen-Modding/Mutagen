@@ -50,8 +50,9 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Unknown
-        public SByte Unknown { get; set; } = default;
+        #region ExtraBindDataVersion
+        public readonly static Byte _ExtraBindDataVersion_Default = 2;
+        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
         #endregion
         #region FileName
         public String FileName { get; set; } = string.Empty;
@@ -128,7 +129,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Unknown = initialValue;
+                this.ExtraBindDataVersion = initialValue;
                 this.FileName = initialValue;
                 this.OnBegin = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(initialValue, new ScriptFragment.Mask<TItem>(initialValue));
                 this.OnEnd = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(initialValue, new ScriptFragment.Mask<TItem>(initialValue));
@@ -136,13 +137,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem Unknown,
+                TItem ExtraBindDataVersion,
                 TItem FileName,
                 TItem OnBegin,
                 TItem OnEnd,
                 TItem OnChange)
             {
-                this.Unknown = Unknown;
+                this.ExtraBindDataVersion = ExtraBindDataVersion;
                 this.FileName = FileName;
                 this.OnBegin = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(OnBegin, new ScriptFragment.Mask<TItem>(OnBegin));
                 this.OnEnd = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(OnEnd, new ScriptFragment.Mask<TItem>(OnEnd));
@@ -158,7 +159,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Unknown;
+            public TItem ExtraBindDataVersion;
             public TItem FileName;
             public MaskItem<TItem, ScriptFragment.Mask<TItem>?>? OnBegin { get; set; }
             public MaskItem<TItem, ScriptFragment.Mask<TItem>?>? OnEnd { get; set; }
@@ -175,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.ExtraBindDataVersion, rhs.ExtraBindDataVersion)) return false;
                 if (!object.Equals(this.FileName, rhs.FileName)) return false;
                 if (!object.Equals(this.OnBegin, rhs.OnBegin)) return false;
                 if (!object.Equals(this.OnEnd, rhs.OnEnd)) return false;
@@ -185,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown);
+                hash.Add(this.ExtraBindDataVersion);
                 hash.Add(this.FileName);
                 hash.Add(this.OnBegin);
                 hash.Add(this.OnEnd);
@@ -198,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.ExtraBindDataVersion)) return false;
                 if (!eval(this.FileName)) return false;
                 if (OnBegin != null)
                 {
@@ -222,7 +223,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Unknown)) return true;
+                if (eval(this.ExtraBindDataVersion)) return true;
                 if (eval(this.FileName)) return true;
                 if (OnBegin != null)
                 {
@@ -253,7 +254,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Unknown = eval(this.Unknown);
+                obj.ExtraBindDataVersion = eval(this.ExtraBindDataVersion);
                 obj.FileName = eval(this.FileName);
                 obj.OnBegin = this.OnBegin == null ? null : new MaskItem<R, ScriptFragment.Mask<R>?>(eval(this.OnBegin.Overall), this.OnBegin.Specific?.Translate(eval));
                 obj.OnEnd = this.OnEnd == null ? null : new MaskItem<R, ScriptFragment.Mask<R>?>(eval(this.OnEnd.Overall), this.OnEnd.Specific?.Translate(eval));
@@ -276,9 +277,9 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(PackageScriptFragments.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.ExtraBindDataVersion ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                     }
                     if (printMask?.FileName ?? true)
                     {
@@ -320,7 +321,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Unknown;
+            public Exception? ExtraBindDataVersion;
             public Exception? FileName;
             public MaskItem<Exception?, ScriptFragment.ErrorMask?>? OnBegin;
             public MaskItem<Exception?, ScriptFragment.ErrorMask?>? OnEnd;
@@ -333,8 +334,8 @@ namespace Mutagen.Bethesda.Skyrim
                 PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageScriptFragments_FieldIndex.Unknown:
-                        return Unknown;
+                    case PackageScriptFragments_FieldIndex.ExtraBindDataVersion:
+                        return ExtraBindDataVersion;
                     case PackageScriptFragments_FieldIndex.FileName:
                         return FileName;
                     case PackageScriptFragments_FieldIndex.OnBegin:
@@ -353,8 +354,8 @@ namespace Mutagen.Bethesda.Skyrim
                 PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageScriptFragments_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case PackageScriptFragments_FieldIndex.ExtraBindDataVersion:
+                        this.ExtraBindDataVersion = ex;
                         break;
                     case PackageScriptFragments_FieldIndex.FileName:
                         this.FileName = ex;
@@ -378,8 +379,8 @@ namespace Mutagen.Bethesda.Skyrim
                 PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageScriptFragments_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case PackageScriptFragments_FieldIndex.ExtraBindDataVersion:
+                        this.ExtraBindDataVersion = (Exception?)obj;
                         break;
                     case PackageScriptFragments_FieldIndex.FileName:
                         this.FileName = (Exception?)obj;
@@ -401,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown != null) return true;
+                if (ExtraBindDataVersion != null) return true;
                 if (FileName != null) return true;
                 if (OnBegin != null) return true;
                 if (OnEnd != null) return true;
@@ -432,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                 }
                 {
                     sb.AppendItem(FileName, "FileName");
@@ -448,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.ExtraBindDataVersion = this.ExtraBindDataVersion.Combine(rhs.ExtraBindDataVersion);
                 ret.FileName = this.FileName.Combine(rhs.FileName);
                 ret.OnBegin = this.OnBegin.Combine(rhs.OnBegin, (l, r) => l.Combine(r));
                 ret.OnEnd = this.OnEnd.Combine(rhs.OnEnd, (l, r) => l.Combine(r));
@@ -476,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Unknown;
+            public bool ExtraBindDataVersion;
             public bool FileName;
             public ScriptFragment.TranslationMask? OnBegin;
             public ScriptFragment.TranslationMask? OnEnd;
@@ -490,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Unknown = defaultOn;
+                this.ExtraBindDataVersion = defaultOn;
                 this.FileName = defaultOn;
             }
 
@@ -507,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Unknown, null));
+                ret.Add((ExtraBindDataVersion, null));
                 ret.Add((FileName, null));
                 ret.Add((OnBegin != null ? OnBegin.OnOverall : DefaultOn, OnBegin?.GetCrystal()));
                 ret.Add((OnEnd != null ? OnEnd.OnOverall : DefaultOn, OnEnd?.GetCrystal()));
@@ -584,7 +585,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageScriptFragments>,
         IPackageScriptFragmentsGetter
     {
-        new SByte Unknown { get; set; }
+        new Byte ExtraBindDataVersion { get; set; }
         new String FileName { get; set; }
         new ScriptFragment? OnBegin { get; set; }
         new ScriptFragment? OnEnd { get; set; }
@@ -603,7 +604,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PackageScriptFragments_Registration.Instance;
-        SByte Unknown { get; }
+        Byte ExtraBindDataVersion { get; }
         String FileName { get; }
         IScriptFragmentGetter? OnBegin { get; }
         IScriptFragmentGetter? OnEnd { get; }
@@ -777,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Field Index
     internal enum PackageScriptFragments_FieldIndex
     {
-        Unknown = 0,
+        ExtraBindDataVersion = 0,
         FileName = 1,
         OnBegin = 2,
         OnEnd = 3,
@@ -869,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IPackageScriptFragments item)
         {
             ClearPartial();
-            item.Unknown = default;
+            item.ExtraBindDataVersion = PackageScriptFragments._ExtraBindDataVersion_Default;
             item.FileName = string.Empty;
             item.OnBegin = null;
             item.OnEnd = null;
@@ -924,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.ExtraBindDataVersion = item.ExtraBindDataVersion == rhs.ExtraBindDataVersion;
             ret.FileName = string.Equals(item.FileName, rhs.FileName);
             ret.OnBegin = EqualsMaskHelper.EqualsHelper(
                 item.OnBegin,
@@ -985,9 +986,9 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             PackageScriptFragments.Mask<bool>? printMask = null)
         {
-            if (printMask?.Unknown ?? true)
+            if (printMask?.ExtraBindDataVersion ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.ExtraBindDataVersion, "ExtraBindDataVersion");
             }
             if (printMask?.FileName ?? true)
             {
@@ -1017,9 +1018,9 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.ExtraBindDataVersion) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.ExtraBindDataVersion != rhs.ExtraBindDataVersion) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.FileName) ?? true))
             {
@@ -1055,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IPackageScriptFragmentsGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unknown);
+            hash.Add(item.ExtraBindDataVersion);
             hash.Add(item.FileName);
             if (item.OnBegin is {} OnBeginitem)
             {
@@ -1101,9 +1102,9 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.ExtraBindDataVersion) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.ExtraBindDataVersion = rhs.ExtraBindDataVersion;
             }
             if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.FileName) ?? true))
             {
@@ -1283,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
             IPackageScriptFragmentsGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Unknown);
+            writer.Write(item.ExtraBindDataVersion);
             PackageScriptFragmentsBinaryWriteTranslation.WriteBinaryFlagsParse(
                 writer: writer,
                 item: item);
@@ -1333,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim
             IPackageScriptFragments item,
             MutagenFrame frame)
         {
-            item.Unknown = frame.ReadInt8();
+            item.ExtraBindDataVersion = frame.ReadUInt8();
             PackageScriptFragmentsBinaryCreateTranslation.FillBinaryFlagsParseCustom(
                 frame: frame,
                 item: item);
@@ -1406,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];
+        public Byte ExtraBindDataVersion => _data.Span[0x0];
         #region FlagsParse
         partial void FlagsParseCustomParse(
             OverlayStream stream,

@@ -46,6 +46,7 @@
       <RefDirect name="OnEnd" refName="PackageEvent" markerType="POEA" />
       <RefDirect name="OnChange" refName="PackageEvent" markerType="POCA" />
     </Fields>
+    <AdditionalContainedRecordType>PLDT</AdditionalContainedRecordType>
   </Object>
   <Object name="PackageIdles" objType="Subrecord" GUID="a26ac911-8b7d-4045-9454-3ab37481a795" ID="394">
     <Fields>
@@ -195,7 +196,7 @@
   </Object>
   <Object name="PackageScriptFragments" objType="Subrecord" GUID="2ec19b11-bd07-4dcc-beb4-826dfc1de531" ID="353">
     <Fields>
-      <Int8 name="Unknown" />
+      <UInt8 name="ExtraBindDataVersion" default="2" />
       <CustomLogic name="FlagsParse" />
       <String name="FileName" binaryType="PrependLengthUShort" binary="NoGeneration" />
       <RefDirect name="OnBegin" nullable="True" binary="NoGeneration" refName="ScriptFragment" />

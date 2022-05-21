@@ -353,6 +353,7 @@ public partial class RecordTypeInts
     public const int PKDT = 0x54444B50;
     public const int PKID = 0x44494B50;
     public const int PLCN = 0x4E434C50;
+    public const int PLDT = 0x54444C50;
     public const int PLVD = 0x44564C50;
     public const int PMIS = 0x53494D50;
     public const int PNAM = 0x4D414E50;
