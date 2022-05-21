@@ -80,7 +80,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)] with { Setter = false };
-        dict[typeof(IStaticObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        dict[typeof(IStaticTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Activator_Registration.Instance,
             Ammunition_Registration.Instance,
@@ -96,7 +96,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Terminal_Registration.Instance,
             Weapon_Registration.Instance,
         });
-        dict[typeof(IStaticObjectGetter)] = dict[typeof(IStaticObject)] with { Setter = false };
+        dict[typeof(IStaticTargetGetter)] = dict[typeof(IStaticTarget)] with { Setter = false };
         dict[typeof(IDamageTypeTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ActorValueInformation_Registration.Instance,
@@ -273,6 +273,12 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             SoundMarker_Registration.Instance,
         });
         dict[typeof(ISoundGetter)] = dict[typeof(ISound)] with { Setter = false };
+        dict[typeof(IStaticObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Static_Registration.Instance,
+            StaticCollection_Registration.Instance,
+        });
+        dict[typeof(IStaticObjectGetter)] = dict[typeof(IStaticObject)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

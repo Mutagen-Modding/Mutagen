@@ -461,7 +461,10 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             PackageRoot_Registration.Instance,
             PackageTargetInterruptData_Registration.Instance,
             PackageTargetKeyword_Registration.Instance,
-            PackageTargetUnknown_Registration.Instance
+            PackageTargetUnknown_Registration.Instance,
+            LoadScreen_Registration.Instance,
+            LoadScreenRotation_Registration.Instance,
+            LoadScreenZoom_Registration.Instance
         );
     }
 }

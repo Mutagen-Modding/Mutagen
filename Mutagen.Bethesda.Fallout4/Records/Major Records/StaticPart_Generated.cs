@@ -52,14 +52,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Static
-        private readonly IFormLinkNullable<IStaticObjectGetter> _Static = new FormLinkNullable<IStaticObjectGetter>();
-        public IFormLinkNullable<IStaticObjectGetter> Static
+        private readonly IFormLinkNullable<IStaticTargetGetter> _Static = new FormLinkNullable<IStaticTargetGetter>();
+        public IFormLinkNullable<IStaticTargetGetter> Static
         {
             get => _Static;
             set => _Static.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IStaticObjectGetter> IStaticPartGetter.Static => this.Static;
+        IFormLinkNullableGetter<IStaticTargetGetter> IStaticPartGetter.Static => this.Static;
         #endregion
         #region Placements
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IStaticPart>,
         IStaticPartGetter
     {
-        new IFormLinkNullable<IStaticObjectGetter> Static { get; set; }
+        new IFormLinkNullable<IStaticTargetGetter> Static { get; set; }
         new ExtendedList<StaticPlacement>? Placements { get; set; }
     }
 
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => StaticPart_Registration.Instance;
-        IFormLinkNullableGetter<IStaticObjectGetter> Static { get; }
+        IFormLinkNullableGetter<IStaticTargetGetter> Static { get; }
         IReadOnlyList<IStaticPlacementGetter>? Placements { get; }
 
     }
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Static
         private int? _StaticLocation;
-        public IFormLinkNullableGetter<IStaticObjectGetter> Static => _StaticLocation.HasValue ? new FormLinkNullable<IStaticObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticObjectGetter>.Null;
+        public IFormLinkNullableGetter<IStaticTargetGetter> Static => _StaticLocation.HasValue ? new FormLinkNullable<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticTargetGetter>.Null;
         #endregion
         public IReadOnlyList<IStaticPlacementGetter>? Placements { get; private set; }
         partial void CustomFactoryEnd(

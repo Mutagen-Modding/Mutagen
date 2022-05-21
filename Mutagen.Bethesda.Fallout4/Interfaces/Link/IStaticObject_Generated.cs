@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [Activator, Ammunition, Book, Container, Door, Flora, Furniture, Ingestible, MiscItem, MovableStatic, Static, Terminal, Weapon]
+    /// Implemented by: [Static, StaticCollection]
     /// </summary>
     public partial interface IStaticObject :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [Activator, Ammunition, Book, Container, Door, Flora, Furniture, Ingestible, MiscItem, MovableStatic, Static, Terminal, Weapon]
+    /// Implemented by: [Static, StaticCollection]
     /// </summary>
     public partial interface IStaticObjectGetter : IFallout4MajorRecordGetter
     {

@@ -32,7 +32,7 @@
       <ByteArray name="ModelInfo" recordType="NAM2" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
-    <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>

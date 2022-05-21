@@ -276,6 +276,7 @@ public partial class RecordTypeInts
     public const int LLCT = 0x54434C4C;
     public const int LLKC = 0x434B4C4C;
     public const int LNAM = 0x4D414E4C;
+    public const int LSCR = 0x5243534C;
     public const int LTEX = 0x5845544C;
     public const int LTMP = 0x504D544C;
     public const int LTPC = 0x4350544C;

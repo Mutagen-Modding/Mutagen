@@ -36,7 +36,7 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
-    <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>

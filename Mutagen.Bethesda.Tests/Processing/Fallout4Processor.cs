@@ -932,6 +932,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "ALCH", "DESC", "DNAM" },
                     new RecordType[] { "TERM", "WNAM", "NAM0", "ITXT", "RNAM", "UNAM", "BTXT" },
                     new RecordType[] { "QUST", "CNAM" },
+                    new RecordType[] { "LSCR", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]

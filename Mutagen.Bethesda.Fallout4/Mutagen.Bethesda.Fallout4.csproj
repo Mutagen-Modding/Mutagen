@@ -355,6 +355,9 @@
     <Compile Include="Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LoadScreen.cs">
+      <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LockData.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -2066,6 +2069,16 @@
     </Compile>
     <Compile Include="Records\Major Records\PackageTargetUnknown_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LoadScreen_Generated.cs">
+      <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IStaticTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\LoadScreenRotation_Generated.cs">
+      <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LoadScreenZoom_Generated.cs">
+      <DependentUpon>LoadScreen.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

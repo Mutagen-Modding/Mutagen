@@ -278,6 +278,7 @@ public partial class RecordTypes
     public static readonly RecordType LLCT = new(0x54434C4C);
     public static readonly RecordType LLKC = new(0x434B4C4C);
     public static readonly RecordType LNAM = new(0x4D414E4C);
+    public static readonly RecordType LSCR = new(0x5243534C);
     public static readonly RecordType LTEX = new(0x5845544C);
     public static readonly RecordType LTMP = new(0x504D544C);
     public static readonly RecordType LTPC = new(0x4350544C);

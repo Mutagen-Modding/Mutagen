@@ -25,7 +25,7 @@
       <RefList name="BodyTexts" counterRecType="BSIZ" refName="TerminalBodyText" allowNoCounter="false" />
       <RefList name="MenuItems" refName="TerminalMenuItem" counterRecType="ISIZ" allowNoCounter="false" />
     </Fields>
-    <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <AdditionalContainedRecordType>MNAM</AdditionalContainedRecordType>
   </Object>

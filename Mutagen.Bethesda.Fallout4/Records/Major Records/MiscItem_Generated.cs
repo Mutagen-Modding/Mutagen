@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectId,
         IPlaceableObject,
         IScripted,
-        IStaticObject,
+        IStaticTarget,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectIdGetter,
         IPlaceableObjectGetter,
         IScriptedGetter,
-        IStaticObjectGetter,
+        IStaticTargetGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

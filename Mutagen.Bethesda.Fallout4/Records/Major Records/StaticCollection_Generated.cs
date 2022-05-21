@@ -859,6 +859,7 @@ namespace Mutagen.Bethesda.Fallout4
         IPlaceableObject,
         IScripted,
         IStaticCollectionGetter,
+        IStaticObject,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -907,6 +908,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundedGetter,
         IPlaceableObjectGetter,
         IScriptedGetter,
+        IStaticObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

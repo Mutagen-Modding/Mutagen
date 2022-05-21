@@ -30,7 +30,7 @@
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
-    <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
   <Object name="MiscItemComponent" objType="Subrecord" GUID="2b777f92-de56-4260-a32d-5c28592a7fe8" ID="170">

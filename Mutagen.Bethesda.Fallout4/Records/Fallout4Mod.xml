@@ -67,6 +67,7 @@
       <Group name="IdleAnimations" refName="IdleAnimation" />
       <Group name="Packages" refName="Package" />
       <Group name="CombatStyles" refName="CombatStyle" />
+      <Group name="LoadScreens" refName="LoadScreen" />
     </Fields>
   </Object>
 </Loqui>

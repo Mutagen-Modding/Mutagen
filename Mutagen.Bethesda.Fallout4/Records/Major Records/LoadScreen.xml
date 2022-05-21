@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LoadScreen" recordType="LSCR" majorFlag="true" baseClass="Fallout4MajorRecord" objType="Record" GUID="16c96df6-c448-4de1-8141-3f79df8bcf64" ID="588">
+    <Fields>
+      <String name="Description" recordType="DESC" translated="Normal" nullable="False" />
+      <RefList name="Conditions" refName="Condition" />
+      <FormLink name="LoadingScreenNif" recordType="NNAM" nullable="False">
+        <Interface>IStaticObject</Interface>
+      </FormLink>
+      <FormLink name="Transform" refName="Transform" recordType="TNAM" />
+      <RefDirect name="Rotation" refName="LoadScreenRotation" recordType="ONAM" />
+      <RefDirect name="Zoom" refName="LoadScreenZoom" recordType="ZNAM" />
+      <String name="CameraPath" recordType="MOD2" />
+    </Fields>
+  </Object>
+  <Object name="LoadScreenRotation" objType="Subrecord" GUID="45afc61f-73a7-4faf-8cab-67543ab864df" ID="589">
+    <Fields>
+      <Int16 name="Min" />
+      <Int16 name="Max" />
+    </Fields>
+  </Object>
+  <Object name="LoadScreenZoom" objType="Subrecord" GUID="f45b2d98-f038-4da3-bf96-80eb7e46dc22" ID="590">
+    <Fields>
+      <Float name="Min" />
+      <Float name="Max" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -102,7 +102,7 @@
       <Enum name="MeleeSpeed" recordType="MASE" enumName="Weapon.MeleeSpeeds" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
-    <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IFurnitureAssociation</LinkInterface>

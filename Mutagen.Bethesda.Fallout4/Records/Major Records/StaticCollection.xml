@@ -11,11 +11,12 @@
       <RefList name="Parts" refName="StaticPart" />
     </Fields>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
   <Object name="StaticPart" objType="Subrecord" GUID="24d0a7c0-8933-4abb-9d66-c56a3ce655fa" ID="198">
     <Fields>
       <FormLink name="Static" recordType="ONAM" >
-        <Interface>IStaticObject</Interface>
+        <Interface>IStaticTarget</Interface>
       </FormLink>
       <RefList name="Placements" refName="StaticPlacement" recordType="DATA" />
     </Fields>

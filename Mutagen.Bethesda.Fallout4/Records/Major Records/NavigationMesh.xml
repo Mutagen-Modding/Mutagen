@@ -5,7 +5,7 @@
       <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
       <FormLink name="ONAM" recordType="ONAM">
         <!-- Best Guess -->
-        <Interface>IStaticObject</Interface>
+        <Interface>IStaticTarget</Interface>
       </FormLink>
       <ByteArray name="NNAM" recordType="NNAM" />
       <RefList name="PreCutMapEntries" refName="PreCutMapEntry" recordType="MNAM" />

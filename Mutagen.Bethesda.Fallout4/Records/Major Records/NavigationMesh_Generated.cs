@@ -66,14 +66,14 @@ namespace Mutagen.Bethesda.Fallout4
         INavmeshGeometryGetter? INavigationMeshGetter.NavmeshGeometry => this.NavmeshGeometry;
         #endregion
         #region ONAM
-        private readonly IFormLinkNullable<IStaticObjectGetter> _ONAM = new FormLinkNullable<IStaticObjectGetter>();
-        public IFormLinkNullable<IStaticObjectGetter> ONAM
+        private readonly IFormLinkNullable<IStaticTargetGetter> _ONAM = new FormLinkNullable<IStaticTargetGetter>();
+        public IFormLinkNullable<IStaticTargetGetter> ONAM
         {
             get => _ONAM;
             set => _ONAM.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IStaticObjectGetter> INavigationMeshGetter.ONAM => this.ONAM;
+        IFormLinkNullableGetter<IStaticTargetGetter> INavigationMeshGetter.ONAM => this.ONAM;
         #endregion
         #region NNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Fallout4
         INavigationMeshGetter
     {
         new NavmeshGeometry? NavmeshGeometry { get; set; }
-        new IFormLinkNullable<IStaticObjectGetter> ONAM { get; set; }
+        new IFormLinkNullable<IStaticTargetGetter> ONAM { get; set; }
         new MemorySlice<Byte>? NNAM { get; set; }
         new ExtendedList<PreCutMapEntry>? PreCutMapEntries { get; set; }
         #region Mutagen
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         static new ILoquiRegistration StaticRegistration => NavigationMesh_Registration.Instance;
         INavmeshGeometryGetter? NavmeshGeometry { get; }
-        IFormLinkNullableGetter<IStaticObjectGetter> ONAM { get; }
+        IFormLinkNullableGetter<IStaticTargetGetter> ONAM { get; }
         ReadOnlyMemorySlice<Byte>? NNAM { get; }
         IReadOnlyList<IPreCutMapEntryGetter>? PreCutMapEntries { get; }
 
@@ -1836,7 +1836,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ONAM
         private int? _ONAMLocation;
-        public IFormLinkNullableGetter<IStaticObjectGetter> ONAM => _ONAMLocation.HasValue ? new FormLinkNullable<IStaticObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ONAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticObjectGetter>.Null;
+        public IFormLinkNullableGetter<IStaticTargetGetter> ONAM => _ONAMLocation.HasValue ? new FormLinkNullable<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ONAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticTargetGetter>.Null;
         #endregion
         #region NNAM
         private int? _NNAMLocation;

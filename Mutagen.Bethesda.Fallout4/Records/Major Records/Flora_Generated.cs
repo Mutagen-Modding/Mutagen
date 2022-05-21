@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Fallout4
         IPlaceableObject,
         IRegionTarget,
         IScripted,
-        IStaticObject,
+        IStaticTarget,
         ITranslatedNamedRequired
     {
         /// <summary>
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Fallout4
         IPlaceableObjectGetter,
         IRegionTargetGetter,
         IScriptedGetter,
-        IStaticObjectGetter,
+        IStaticTargetGetter,
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Flora_Registration.Instance;
