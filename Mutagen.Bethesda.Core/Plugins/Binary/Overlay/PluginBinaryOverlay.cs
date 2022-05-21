@@ -454,51 +454,90 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         {
             var varMeta = stream.GetVariableHeader(subRecords: constants.LengthLength == 2);
             var recType = parseParams.ConvertToStandard(varMeta.RecordType);
-            var index = trigger.AllRecordTypes.IndexOf(recType);
-            if (index != -1)
+            if (triggersAlwaysAreNewRecords)
             {
-                // If new record isn't before one we've already parsed, just continue
-                if (!triggersAlwaysAreNewRecords 
-                    && lastParsed != null 
-                    && lastParsed.Value < index)
+                if (trigger.AllRecordTypes.Contains(recType))
                 {
-                    lastParsed = index;
-                    stream.Position += (int)varMeta.TotalLength;
-                    continue;
-                }
-
-                // Otherwise mark as a new record location
-                if (trigger.AllAreTriggers
-                    || trigger.TriggeringRecordTypes.Contains(recType))
-                {
-                    if (skipHeader)
+                    // mark as a new record location
+                    if (trigger.AllAreTriggers
+                        || trigger.TriggeringRecordTypes.Contains(recType))
                     {
-                        stream.Position += varMeta.HeaderLength;
-                        ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.ContentLength;
+                        if (skipHeader)
+                        {
+                            stream.Position += varMeta.HeaderLength;
+                            ret.Add(stream.Position - startingPos);
+                            stream.Position += (int)varMeta.ContentLength;
+                        }
+                        else
+                        {
+                            ret.Add(stream.Position - startingPos);
+                            stream.Position += (int)varMeta.TotalLength;
+                        }
                     }
                     else
                     {
-                        ret.Add(stream.Position - startingPos);
                         stream.Position += (int)varMeta.TotalLength;
                     }
                 }
+                else if (count.HasValue && ret.Count == count)
+                {
+                    break;
+                }
                 else
                 {
-                    stream.Position += (int)varMeta.TotalLength;
+                    // Unexpected count
+                    // Analyzer should warn about this, rather than Mutagen breaking
+                    break;
                 }
-
-                lastParsed = index;
-            }
-            else if (count.HasValue && ret.Count == count)
-            {
-                break;
             }
             else
             {
-                // Unexpected count
-                // Analyzer should warn about this, rather than Mutagen breaking
-                break;
+                var index = trigger.AllRecordTypes.IndexOf(recType);
+                if (index != -1)
+                {
+                    // If new record isn't before one we've already parsed, just continue
+                    if (!triggersAlwaysAreNewRecords
+                        && lastParsed != null
+                        && lastParsed.Value < index)
+                    {
+                        lastParsed = index;
+                        stream.Position += (int)varMeta.TotalLength;
+                        continue;
+                    }
+
+                    // Otherwise mark as a new record location
+                    if (trigger.AllAreTriggers
+                        || trigger.TriggeringRecordTypes.Contains(recType))
+                    {
+                        if (skipHeader)
+                        {
+                            stream.Position += varMeta.HeaderLength;
+                            ret.Add(stream.Position - startingPos);
+                            stream.Position += (int)varMeta.ContentLength;
+                        }
+                        else
+                        {
+                            ret.Add(stream.Position - startingPos);
+                            stream.Position += (int)varMeta.TotalLength;
+                        }
+                    }
+                    else
+                    {
+                        stream.Position += (int)varMeta.TotalLength;
+                    }
+
+                    lastParsed = index;
+                }
+                else if (count.HasValue && ret.Count == count)
+                {
+                    break;
+                }
+                else
+                {
+                    // Unexpected count
+                    // Analyzer should warn about this, rather than Mutagen breaking
+                    break;
+                }
             }
         }
         return ret.ToArray();
