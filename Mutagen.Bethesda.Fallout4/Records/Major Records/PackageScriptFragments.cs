@@ -1,25 +1,26 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using static Mutagen.Bethesda.Fallout4.ScriptFragmentsBinaryCreateTranslation;
+using static Mutagen.Bethesda.Fallout4.PackageScriptFragmentsBinaryCreateTranslation;
 
 namespace Mutagen.Bethesda.Fallout4;
 
-partial class ScriptFragmentsBinaryCreateTranslation
+partial class PackageScriptFragmentsBinaryCreateTranslation
 {
     [Flags]
     public enum Flag
     {
         OnBegin = 0x01,
         OnEnd = 0x02,
+        OnChange = 0x04,
     }
 
-    public static ScriptFragments ReadFragments(MutagenFrame frame, ushort objectFormat)
+    public static PackageScriptFragments ReadFragments(MutagenFrame frame, ushort objectFormat)
     {
-        var ret = new ScriptFragments();
+        var ret = new PackageScriptFragments();
         FillFragments(frame, objectFormat, ret);
         return ret;
     }
 
-    public static void FillFragments(MutagenFrame frame, ushort objectFormat, IScriptFragments ret)
+    public static void FillFragments(MutagenFrame frame, ushort objectFormat, IPackageScriptFragments ret)
     {
         ret.ExtraBindDataVersion = frame.ReadUInt8();
         var flag = (Flag)frame.ReadUInt8();
@@ -32,16 +33,21 @@ partial class ScriptFragmentsBinaryCreateTranslation
         {
             ret.OnEnd = ScriptFragment.CreateFromBinary(frame);
         }
+        if (flag.HasFlag(Flag.OnChange))
+        {
+            ret.OnChange = ScriptFragment.CreateFromBinary(frame);
+        }
     }
 }
 
-partial class ScriptFragmentsBinaryWriteTranslation
+partial class PackageScriptFragmentsBinaryWriteTranslation
 {
-    public static void WriteFragments(MutagenWriter writer, IScriptFragmentsGetter item, ushort objectFormat)
+    public static void WriteFragments(MutagenWriter writer, IPackageScriptFragmentsGetter item, ushort objectFormat)
     {
         writer.Write(item.ExtraBindDataVersion);
         var begin = item.OnBegin;
         var end = item.OnEnd;
+        var change = item.OnChange;
         Flag flag = default;
         if (begin != null)
         {
@@ -51,16 +57,22 @@ partial class ScriptFragmentsBinaryWriteTranslation
         {
             flag |= Flag.OnEnd;
         }
+        if (change != null)
+        {
+            flag |= Flag.OnChange;
+        }
         writer.Write((byte)flag);
         AVirtualMachineAdapterBinaryWriteTranslation.WriteEntry(writer, item.Script, objectFormat);
         begin?.WriteToBinary(writer);
         end?.WriteToBinary(writer);
+        change?.WriteToBinary(writer);
     }
 }
 
-partial class ScriptFragmentsBinaryOverlay
+partial class PackageScriptFragmentsBinaryOverlay
 {
     public IScriptEntryGetter Script => throw new NotImplementedException();
     public IScriptFragmentGetter? OnBegin => throw new NotImplementedException();
     public IScriptFragmentGetter? OnEnd => throw new NotImplementedException();
+    public IScriptFragmentGetter? OnChange => throw new NotImplementedException();
 }

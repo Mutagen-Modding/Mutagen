@@ -436,7 +436,32 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             SceneActionTypicalType_Registration.Instance,
             SceneActionStartScene_Registration.Instance,
             StartScene_Registration.Instance,
-            SceneCamera_Registration.Instance
+            SceneCamera_Registration.Instance,
+            PackageAdapter_Registration.Instance,
+            PackageScriptFragments_Registration.Instance,
+            PackageIdles_Registration.Instance,
+            APackageData_Registration.Instance,
+            PackageBranch_Registration.Instance,
+            PackageEvent_Registration.Instance,
+            PackageDataBool_Registration.Instance,
+            PackageDataInt_Registration.Instance,
+            PackageDataFloat_Registration.Instance,
+            PackageDataObjectList_Registration.Instance,
+            PackageDataLocation_Registration.Instance,
+            PackageDataTarget_Registration.Instance,
+            PackageDataTopic_Registration.Instance,
+            APackageTarget_Registration.Instance,
+            PackageTargetSpecificReference_Registration.Instance,
+            PackageTargetObjectID_Registration.Instance,
+            PackageTargetObjectType_Registration.Instance,
+            PackageTargetReference_Registration.Instance,
+            PackageTargetAlias_Registration.Instance,
+            PackageTargetSelf_Registration.Instance,
+            PackageFlagsOverride_Registration.Instance,
+            PackageRoot_Registration.Instance,
+            PackageTargetInterruptData_Registration.Instance,
+            PackageTargetKeyword_Registration.Instance,
+            PackageTargetUnknown_Registration.Instance
         );
     }
 }

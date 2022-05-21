@@ -65,6 +65,7 @@
       <Group name="Worldspaces" refName="Worldspace" />
       <Group name="Quests" refName="Quest" />
       <Group name="IdleAnimations" refName="IdleAnimation" />
+      <Group name="Packages" refName="Package" />
     </Fields>
   </Object>
 </Loqui>

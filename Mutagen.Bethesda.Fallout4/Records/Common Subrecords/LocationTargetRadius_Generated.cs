@@ -51,6 +51,9 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public LocationTargetRadius.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region Radius
         public UInt32 Radius { get; set; } = default;
         #endregion
@@ -96,16 +99,19 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Target = new MaskItem<TItem, ALocationTarget.Mask<TItem>?>(initialValue, new ALocationTarget.Mask<TItem>(initialValue));
                 this.Radius = initialValue;
                 this.CollectionIndex = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Target,
                 TItem Radius,
                 TItem CollectionIndex)
             {
+                this.Versioning = Versioning;
                 this.Target = new MaskItem<TItem, ALocationTarget.Mask<TItem>?>(Target, new ALocationTarget.Mask<TItem>(Target));
                 this.Radius = Radius;
                 this.CollectionIndex = CollectionIndex;
@@ -120,6 +126,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
+            public TItem Versioning;
             public MaskItem<TItem, ALocationTarget.Mask<TItem>?>? Target { get; set; }
             public TItem Radius;
             public TItem CollectionIndex;
@@ -135,6 +142,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Target, rhs.Target)) return false;
                 if (!object.Equals(this.Radius, rhs.Radius)) return false;
                 if (!object.Equals(this.CollectionIndex, rhs.CollectionIndex)) return false;
@@ -143,6 +151,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Target);
                 hash.Add(this.Radius);
                 hash.Add(this.CollectionIndex);
@@ -154,6 +163,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (Target != null)
                 {
                     if (!eval(this.Target.Overall)) return false;
@@ -168,6 +178,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (Target != null)
                 {
                     if (eval(this.Target.Overall)) return true;
@@ -189,6 +200,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Target = this.Target == null ? null : new MaskItem<R, ALocationTarget.Mask<R>?>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
                 obj.Radius = eval(this.Radius);
                 obj.CollectionIndex = eval(this.CollectionIndex);
@@ -210,6 +222,10 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(LocationTargetRadius.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Target?.Overall ?? true)
                     {
                         Target?.Print(sb);
@@ -246,6 +262,7 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public MaskItem<Exception?, ALocationTarget.ErrorMask?>? Target;
             public Exception? Radius;
             public Exception? CollectionIndex;
@@ -257,6 +274,8 @@ namespace Mutagen.Bethesda.Fallout4
                 LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
                 switch (enu)
                 {
+                    case LocationTargetRadius_FieldIndex.Versioning:
+                        return Versioning;
                     case LocationTargetRadius_FieldIndex.Target:
                         return Target;
                     case LocationTargetRadius_FieldIndex.Radius:
@@ -273,6 +292,9 @@ namespace Mutagen.Bethesda.Fallout4
                 LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
                 switch (enu)
                 {
+                    case LocationTargetRadius_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case LocationTargetRadius_FieldIndex.Target:
                         this.Target = new MaskItem<Exception?, ALocationTarget.ErrorMask?>(ex, null);
                         break;
@@ -292,6 +314,9 @@ namespace Mutagen.Bethesda.Fallout4
                 LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
                 switch (enu)
                 {
+                    case LocationTargetRadius_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case LocationTargetRadius_FieldIndex.Target:
                         this.Target = (MaskItem<Exception?, ALocationTarget.ErrorMask?>?)obj;
                         break;
@@ -309,6 +334,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Target != null) return true;
                 if (Radius != null) return true;
                 if (CollectionIndex != null) return true;
@@ -337,6 +363,9 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
                 Target?.Print(sb);
                 {
                     sb.AppendItem(Radius, "Radius");
@@ -352,6 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Target = this.Target.Combine(rhs.Target, (l, r) => l.Combine(r));
                 ret.Radius = this.Radius.Combine(rhs.Radius);
                 ret.CollectionIndex = this.CollectionIndex.Combine(rhs.CollectionIndex);
@@ -378,6 +408,7 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public ALocationTarget.TranslationMask? Target;
             public bool Radius;
             public bool CollectionIndex;
@@ -390,6 +421,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.Radius = defaultOn;
                 this.CollectionIndex = defaultOn;
             }
@@ -407,6 +439,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Target != null ? Target.OnOverall : DefaultOn, Target?.GetCrystal()));
                 ret.Add((Radius, null));
                 ret.Add((CollectionIndex, null));
@@ -421,6 +454,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationTargetRadiusCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetRadiusSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -488,6 +526,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILocationTargetRadiusGetter,
         ILoquiObjectSetter<ILocationTargetRadius>
     {
+        new LocationTargetRadius.VersioningBreaks Versioning { get; set; }
         new ALocationTarget Target { get; set; }
         new UInt32 Radius { get; set; }
         new UInt32 CollectionIndex { get; set; }
@@ -506,6 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LocationTargetRadius_Registration.Instance;
+        LocationTargetRadius.VersioningBreaks Versioning { get; }
         IALocationTargetGetter Target { get; }
         UInt32 Radius { get; }
         UInt32 CollectionIndex { get; }
@@ -678,9 +718,10 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum LocationTargetRadius_FieldIndex
     {
-        Target = 0,
-        Radius = 1,
-        CollectionIndex = 2,
+        Versioning = 0,
+        Target = 1,
+        Radius = 2,
+        CollectionIndex = 3,
     }
     #endregion
 
@@ -698,9 +739,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "80c7f692-a7fd-4829-abc3-8c8e06c031da";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(LocationTargetRadius.Mask<>);
 
@@ -768,6 +809,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILocationTargetRadius item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.Target.Clear();
             item.Radius = default;
             item.CollectionIndex = default;
@@ -822,6 +864,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Target = MaskItemExt.Factory(item.Target.GetEqualsMask(rhs.Target, include), include);
             ret.Radius = item.Radius == rhs.Radius;
             ret.CollectionIndex = item.CollectionIndex == rhs.CollectionIndex;
@@ -869,6 +912,10 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             LocationTargetRadius.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Target?.Overall ?? true)
             {
                 item.Target?.Print(sb, "Target");
@@ -890,6 +937,10 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((crystal?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Target) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Target, rhs.Target, out var lhsTarget, out var rhsTarget, out var isTargetEqual))
@@ -912,6 +963,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(ILocationTargetRadiusGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Target);
             hash.Add(item.Radius);
             hash.Add(item.CollectionIndex);
@@ -954,6 +1006,10 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Target) ?? true))
             {
                 errorMask?.PushIndex((int)LocationTargetRadius_FieldIndex.Target);
@@ -980,6 +1036,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Radius = rhs.Radius;
             }
+            if (rhs.Versioning.HasFlag(LocationTargetRadius.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.CollectionIndex) ?? true))
             {
                 item.CollectionIndex = rhs.CollectionIndex;
@@ -1084,7 +1141,10 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item);
             writer.Write(item.Radius);
-            writer.Write(item.CollectionIndex);
+            if (!item.Versioning.HasFlag(LocationTargetRadius.VersioningBreaks.Break0))
+            {
+                writer.Write(item.CollectionIndex);
+            }
         }
 
         public static partial void WriteBinaryTargetCustom(
@@ -1135,6 +1195,11 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame,
                 item: item);
             item.Radius = frame.ReadUInt32();
+            if (frame.Complete)
+            {
+                item.Versioning |= LocationTargetRadius.VersioningBreaks.Break0;
+                return;
+            }
             item.CollectionIndex = frame.ReadUInt32();
         }
 
@@ -1206,12 +1271,13 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
+        public LocationTargetRadius.VersioningBreaks Versioning { get; private set; }
         #region Target
         public partial IALocationTargetGetter GetTargetCustom(int location);
         public IALocationTargetGetter Target => GetTargetCustom(location: 0x0);
         #endregion
         public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public UInt32 CollectionIndex => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
+        public UInt32 CollectionIndex => _data.Length <= 0xC ? default : BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1231,13 +1297,17 @@ namespace Mutagen.Bethesda.Fallout4
         public static LocationTargetRadiusBinaryOverlay LocationTargetRadiusFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
+            int finalPos,
             TypedParseParams? parseParams = null)
         {
             var ret = new LocationTargetRadiusBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x10),
+                bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
                 package: package);
             int offset = stream.Position;
-            stream.Position += 0x10;
+            if (ret._data.Length <= 0xC)
+            {
+                ret.Versioning |= LocationTargetRadius.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1253,6 +1323,7 @@ namespace Mutagen.Bethesda.Fallout4
             return LocationTargetRadiusFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
+                finalPos: slice.Length,
                 parseParams: parseParams);
         }
 

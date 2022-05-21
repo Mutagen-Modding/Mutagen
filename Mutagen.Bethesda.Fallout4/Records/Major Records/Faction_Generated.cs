@@ -3274,6 +3274,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.VendorLocation = LocationTargetRadiusBinaryOverlay.LocationTargetRadiusFactory(
                         stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         parseParams: parseParams);
                     return (int)Faction_FieldIndex.VendorLocation;
                 }

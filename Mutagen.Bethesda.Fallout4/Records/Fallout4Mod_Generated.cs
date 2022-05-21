@@ -115,6 +115,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Worldspaces_Object = new Fallout4Group<Worldspace>(this);
             _Quests_Object = new Fallout4Group<Quest>(this);
             _IdleAnimations_Object = new Fallout4Group<IdleAnimation>(this);
+            _Packages_Object = new Fallout4Group<Package>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -533,6 +534,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IIdleAnimationGetter> IFallout4ModGetter.IdleAnimations => _IdleAnimations_Object;
         #endregion
+        #region Packages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Package> _Packages_Object;
+        public Fallout4Group<Package> Packages => _Packages_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IPackageGetter> IFallout4ModGetter.Packages => _Packages_Object;
+        #endregion
 
         #region To String
 
@@ -631,6 +639,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Worldspaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Quests = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.IdleAnimations = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Packages = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -692,7 +701,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Cells,
                 TItem Worldspaces,
                 TItem Quests,
-                TItem IdleAnimations)
+                TItem IdleAnimations,
+                TItem Packages)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -753,6 +763,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Worldspaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Worldspaces, new Fallout4Group.Mask<TItem>(Worldspaces));
                 this.Quests = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Quests, new Fallout4Group.Mask<TItem>(Quests));
                 this.IdleAnimations = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(IdleAnimations, new Fallout4Group.Mask<TItem>(IdleAnimations));
+                this.Packages = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Packages, new Fallout4Group.Mask<TItem>(Packages));
             }
 
             #pragma warning disable CS8618
@@ -823,6 +834,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Worldspaces { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Quests { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? IdleAnimations { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Packages { get; set; }
             #endregion
 
             #region Equals
@@ -894,6 +906,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
                 if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
+                if (!object.Equals(this.Packages, rhs.Packages)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -958,6 +971,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Worldspaces);
                 hash.Add(this.Quests);
                 hash.Add(this.IdleAnimations);
+                hash.Add(this.Packages);
                 return hash.ToHashCode();
             }
 
@@ -1261,6 +1275,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.IdleAnimations.Overall)) return false;
                     if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.All(eval)) return false;
                 }
+                if (Packages != null)
+                {
+                    if (!eval(this.Packages.Overall)) return false;
+                    if (this.Packages.Specific != null && !this.Packages.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1563,6 +1582,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.IdleAnimations.Overall)) return true;
                     if (this.IdleAnimations.Specific != null && this.IdleAnimations.Specific.Any(eval)) return true;
                 }
+                if (Packages != null)
+                {
+                    if (eval(this.Packages.Overall)) return true;
+                    if (this.Packages.Specific != null && this.Packages.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1636,6 +1660,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
                 obj.Quests = this.Quests == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
                 obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
+                obj.Packages = this.Packages == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Packages.Overall), this.Packages.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1890,6 +1915,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         IdleAnimations?.Print(sb);
                     }
+                    if (printMask?.Packages?.Overall ?? true)
+                    {
+                        Packages?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1973,6 +2002,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Quest.ErrorMask>?>? Quests;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Package.ErrorMask>?>? Packages;
             #endregion
 
             #region IErrorMask
@@ -2099,6 +2129,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Quests;
                     case Fallout4Mod_FieldIndex.IdleAnimations:
                         return IdleAnimations;
+                    case Fallout4Mod_FieldIndex.Packages:
+                        return Packages;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2285,6 +2317,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.IdleAnimations:
                         this.IdleAnimations = new MaskItem<Exception?, Fallout4Group.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Packages:
+                        this.Packages = new MaskItem<Exception?, Fallout4Group.ErrorMask<Package.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2473,6 +2508,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.IdleAnimations:
                         this.IdleAnimations = (MaskItem<Exception?, Fallout4Group.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Packages:
+                        this.Packages = (MaskItem<Exception?, Fallout4Group.ErrorMask<Package.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2540,6 +2578,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Worldspaces != null) return true;
                 if (Quests != null) return true;
                 if (IdleAnimations != null) return true;
+                if (Packages != null) return true;
                 return false;
             }
             #endregion
@@ -2624,6 +2663,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Worldspaces?.Print(sb);
                 Quests?.Print(sb);
                 IdleAnimations?.Print(sb);
+                Packages?.Print(sb);
             }
             #endregion
 
@@ -2691,6 +2731,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Worldspaces = this.Worldspaces.Combine(rhs.Worldspaces, (l, r) => l.Combine(r));
                 ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
                 ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
+                ret.Packages = this.Packages.Combine(rhs.Packages, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2773,6 +2814,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Worldspace.TranslationMask>? Worldspaces;
             public Fallout4Group.TranslationMask<Quest.TranslationMask>? Quests;
             public Fallout4Group.TranslationMask<IdleAnimation.TranslationMask>? IdleAnimations;
+            public Fallout4Group.TranslationMask<Package.TranslationMask>? Packages;
             #endregion
 
             #region Ctors
@@ -2856,6 +2898,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Worldspaces != null ? Worldspaces.OnOverall : DefaultOn, Worldspaces?.GetCrystal()));
                 ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
                 ret.Add((IdleAnimations != null ? IdleAnimations.OnOverall : DefaultOn, IdleAnimations?.GetCrystal()));
+                ret.Add((Packages != null ? Packages.OnOverall : DefaultOn, Packages?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2954,6 +2997,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Worldspaces_Object = new Fallout4Group<Worldspace>(this);
             _Quests_Object = new Fallout4Group<Quest>(this);
             _IdleAnimations_Object = new Fallout4Group<IdleAnimation>(this);
+            _Packages_Object = new Fallout4Group<Package>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3195,6 +3239,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.IdleAnimations.RecordCache.Set(rhsMod.IdleAnimations.RecordCache.Items);
             }
+            if (mask?.Packages ?? true)
+            {
+                this.Packages.RecordCache.Set(rhsMod.Packages.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3263,6 +3311,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
             count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
             count += IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Packages.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3572,6 +3621,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Worldspace> Worldspaces { get; }
         new Fallout4Group<Quest> Quests { get; }
         new Fallout4Group<IdleAnimation> IdleAnimations { get; }
+        new Fallout4Group<Package> Packages { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3649,6 +3699,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IWorldspaceGetter> Worldspaces { get; }
         IFallout4GroupGetter<IQuestGetter> Quests { get; }
         IFallout4GroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
+        IFallout4GroupGetter<IPackageGetter> Packages { get; }
 
     }
 
@@ -4278,6 +4329,7 @@ namespace Mutagen.Bethesda.Fallout4
         Worldspaces = 56,
         Quests = 57,
         IdleAnimations = 58,
+        Packages = 59,
     }
     #endregion
 
@@ -4295,9 +4347,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 59;
+        public const ushort AdditionalFieldCount = 60;
 
-        public const ushort FieldCount = 59;
+        public const ushort FieldCount = 60;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4423,6 +4475,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Worldspaces.Clear();
             item.Quests.Clear();
             item.IdleAnimations.Clear();
+            item.Packages.Clear();
         }
         
         #region Mutagen
@@ -4481,6 +4534,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Worldspaces.RemapLinks(mapping);
             obj.Quests.RemapLinks(mapping);
             obj.IdleAnimations.RemapLinks(mapping);
+            obj.Packages.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -4573,6 +4627,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Worldspaces.Remove(keys);
             obj.Quests.Remove(keys);
             obj.IdleAnimations.Remove(keys);
+            obj.Packages.Remove(keys);
         }
         
         public void Remove(
@@ -5092,6 +5147,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    obj.Packages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -5572,6 +5635,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Worldspaces = MaskItemExt.Factory(item.Worldspaces.GetEqualsMask(rhs.Worldspaces, include), include);
             ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
             ret.IdleAnimations = MaskItemExt.Factory(item.IdleAnimations.GetEqualsMask(rhs.IdleAnimations, include), include);
+            ret.Packages = MaskItemExt.Factory(item.Packages.GetEqualsMask(rhs.Packages, include), include);
         }
         
         public string Print(
@@ -5851,6 +5915,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.IdleAnimations?.Overall ?? true)
             {
                 item.IdleAnimations?.Print(sb, "IdleAnimations");
+            }
+            if (printMask?.Packages?.Overall ?? true)
+            {
+                item.Packages?.Print(sb, "Packages");
             }
         }
         
@@ -6333,6 +6401,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isIdleAnimationsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Packages) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Packages, rhs.Packages, out var lhsPackages, out var rhsPackages, out var isPackagesEqual))
+                {
+                    if (!object.Equals(lhsPackages, rhsPackages)) return false;
+                }
+                else if (!isPackagesEqual) return false;
+            }
             return true;
         }
         
@@ -6398,6 +6474,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Worldspaces);
             hash.Add(item.Quests);
             hash.Add(item.IdleAnimations);
+            hash.Add(item.Packages);
             return hash.ToHashCode();
         }
         
@@ -6705,6 +6782,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
                     return obj.IdleAnimations;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    return obj.Packages;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -6729,7 +6811,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[58];
+            Stream[] outputStreams = new Stream[59];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -6789,6 +6871,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 55, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteQuestsParallel(item.Quests, 56, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 57, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Packages, 58, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7048,6 +7131,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.Packages.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -7282,6 +7369,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.IdleAnimations.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Packages.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7829,6 +7920,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
                     foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    foreach (var item in obj.Packages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -8514,6 +8614,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.IdleAnimations,
                 groupGetter: (m) => m.IdleAnimations))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Package, IPackageGetter>(
+                srcGroup: obj.Packages,
+                type: typeof(IPackageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Packages,
+                groupGetter: (m) => m.Packages))
             {
                 yield return item;
             }
@@ -9342,6 +9451,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.IdleAnimations,
                         groupGetter: (m) => m.IdleAnimations))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Package, IPackageGetter>(
+                        srcGroup: obj.Packages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Packages,
+                        groupGetter: (m) => m.Packages))
                     {
                         yield return item;
                     }
@@ -10820,6 +10943,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Packages) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Packages);
+                try
+                {
+                    item.Packages.DeepCopyIn(
+                        rhs: rhs.Packages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Packages));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -10968,6 +11111,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Worldspaces;
         public bool Quests;
         public bool IdleAnimations;
+        public bool Packages;
         public GroupMask()
         {
         }
@@ -11031,6 +11175,7 @@ namespace Mutagen.Bethesda.Fallout4
             Worldspaces = defaultValue;
             Quests = defaultValue;
             IdleAnimations = defaultValue;
+            Packages = defaultValue;
         }
     }
 
@@ -11696,6 +11841,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
                         item: IdleAnimationsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Packages ?? true)
+            {
+                var PackagesItem = item.Packages;
+                if (PackagesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)PackagesItem).BinaryWriteTranslator).Write<IPackageGetter>(
+                        item: PackagesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -12578,6 +12734,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.IdleAnimations;
                 }
+                case RecordTypeInts.PACK:
+                {
+                    if (importMask?.Packages ?? true)
+                    {
+                        item.Packages.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Packages;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -13031,6 +13201,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? Fallout4GroupBinaryOverlay<IIdleAnimationGetter>.Fallout4GroupFactory(_data, _IdleAnimationsLocations, _package) : default;
         public IFallout4GroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new Fallout4Group<IdleAnimation>(this);
         #endregion
+        #region Packages
+        private List<RangeInt64>? _PackagesLocations;
+        private IFallout4GroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? Fallout4GroupBinaryOverlay<IPackageGetter>.Fallout4GroupFactory(_data, _PackagesLocations, _package) : default;
+        public IFallout4GroupGetter<IPackageGetter> Packages => _Packages ?? new Fallout4Group<Package>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -13465,6 +13640,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _IdleAnimationsLocations ??= new();
                     _IdleAnimationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.IdleAnimations;
+                }
+                case RecordTypeInts.PACK:
+                {
+                    _PackagesLocations ??= new();
+                    _PackagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Packages;
                 }
                 default:
                     return default(int?);

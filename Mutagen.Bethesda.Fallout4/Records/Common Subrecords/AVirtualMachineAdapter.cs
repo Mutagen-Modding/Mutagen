@@ -5,24 +5,6 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Fallout4;
 
-public partial class AVirtualMachineAdapter
-{
-    [Flags]
-    public enum FragmentFlag
-    {
-        OnBegin = 0x01,
-        OnEnd = 0x02,
-    }
-
-    [Flags]
-    public enum FragmentChangeFlag
-    {
-        OnBegin = 0x01,
-        OnEnd = 0x02,
-        OnChange = 0x04,
-    }
-}
-
 partial class AVirtualMachineAdapterBinaryCreateTranslation
 {
     public static IEnumerable<ScriptEntry> ReadEntries(MutagenFrame frame, ushort objectFormat)
