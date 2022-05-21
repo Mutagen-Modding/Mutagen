@@ -464,7 +464,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             PackageTargetUnknown_Registration.Instance,
             LoadScreen_Registration.Instance,
             LoadScreenRotation_Registration.Instance,
-            LoadScreenZoom_Registration.Instance
+            LoadScreenZoom_Registration.Instance,
+            AnimatedObject_Registration.Instance
         );
     }
 }

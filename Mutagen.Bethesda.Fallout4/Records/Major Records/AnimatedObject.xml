@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AnimatedObject" recordType="ANIO" objType="Record" baseClass="Fallout4MajorRecord" GUID="63647a85-5ce5-4658-978d-1bad9edd43f7" ID="591">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <String name="UnloadEvent" recordType="BNAM" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -68,6 +68,7 @@
       <Group name="Packages" refName="Package" />
       <Group name="CombatStyles" refName="CombatStyle" />
       <Group name="LoadScreens" refName="LoadScreen" />
+      <Group name="AnimatedObjects" refName="AnimatedObject" />
     </Fields>
   </Object>
 </Loqui>

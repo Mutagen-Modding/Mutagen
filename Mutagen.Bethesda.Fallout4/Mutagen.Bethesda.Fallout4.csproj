@@ -2065,6 +2065,9 @@
     <Compile Include="Records\Major Records\LoadScreenZoom_Generated.cs">
       <DependentUpon>LoadScreen.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AnimatedObject_Generated.cs">
+      <DependentUpon>AnimatedObject.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

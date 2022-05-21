@@ -52,6 +52,7 @@ public partial class RecordTypes
     public static readonly RecordType AMDL = new(0x4C444D41);
     public static readonly RecordType AMMO = new(0x4F4D4D41);
     public static readonly RecordType ANAM = new(0x4D414E41);
+    public static readonly RecordType ANIO = new(0x4F494E41);
     public static readonly RecordType AORU = new(0x55524F41);
     public static readonly RecordType APPR = new(0x52505041);
     public static readonly RecordType ARMA = new(0x414D5241);

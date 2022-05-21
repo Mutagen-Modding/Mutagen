@@ -84,6 +84,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 Activator_Registration.Instance,
                 Ammunition_Registration.Instance,
+                AnimatedObject_Registration.Instance,
                 ArmorModel_Registration.Instance,
                 ArtObject_Registration.Instance,
                 BodyData_Registration.Instance,

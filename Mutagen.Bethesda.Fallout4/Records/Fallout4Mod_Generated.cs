@@ -118,6 +118,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Packages_Object = new Fallout4Group<Package>(this);
             _CombatStyles_Object = new Fallout4Group<CombatStyle>(this);
             _LoadScreens_Object = new Fallout4Group<LoadScreen>(this);
+            _AnimatedObjects_Object = new Fallout4Group<AnimatedObject>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -557,6 +558,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<ILoadScreenGetter> IFallout4ModGetter.LoadScreens => _LoadScreens_Object;
         #endregion
+        #region AnimatedObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<AnimatedObject> _AnimatedObjects_Object;
+        public Fallout4Group<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IAnimatedObjectGetter> IFallout4ModGetter.AnimatedObjects => _AnimatedObjects_Object;
+        #endregion
 
         #region To String
 
@@ -658,6 +666,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Packages = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.CombatStyles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.LoadScreens = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.AnimatedObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -722,7 +731,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem IdleAnimations,
                 TItem Packages,
                 TItem CombatStyles,
-                TItem LoadScreens)
+                TItem LoadScreens,
+                TItem AnimatedObjects)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -786,6 +796,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Packages = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Packages, new Fallout4Group.Mask<TItem>(Packages));
                 this.CombatStyles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CombatStyles, new Fallout4Group.Mask<TItem>(CombatStyles));
                 this.LoadScreens = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LoadScreens, new Fallout4Group.Mask<TItem>(LoadScreens));
+                this.AnimatedObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AnimatedObjects, new Fallout4Group.Mask<TItem>(AnimatedObjects));
             }
 
             #pragma warning disable CS8618
@@ -859,6 +870,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Packages { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CombatStyles { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LoadScreens { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AnimatedObjects { get; set; }
             #endregion
 
             #region Equals
@@ -933,6 +945,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Packages, rhs.Packages)) return false;
                 if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
                 if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
+                if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1000,6 +1013,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Packages);
                 hash.Add(this.CombatStyles);
                 hash.Add(this.LoadScreens);
+                hash.Add(this.AnimatedObjects);
                 return hash.ToHashCode();
             }
 
@@ -1318,6 +1332,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.LoadScreens.Overall)) return false;
                     if (this.LoadScreens.Specific != null && !this.LoadScreens.Specific.All(eval)) return false;
                 }
+                if (AnimatedObjects != null)
+                {
+                    if (!eval(this.AnimatedObjects.Overall)) return false;
+                    if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1635,6 +1654,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.LoadScreens.Overall)) return true;
                     if (this.LoadScreens.Specific != null && this.LoadScreens.Specific.Any(eval)) return true;
                 }
+                if (AnimatedObjects != null)
+                {
+                    if (eval(this.AnimatedObjects.Overall)) return true;
+                    if (this.AnimatedObjects.Specific != null && this.AnimatedObjects.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1711,6 +1735,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Packages = this.Packages == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Packages.Overall), this.Packages.Specific?.Translate(eval));
                 obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
                 obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
+                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1977,6 +2002,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         LoadScreens?.Print(sb);
                     }
+                    if (printMask?.AnimatedObjects?.Overall ?? true)
+                    {
+                        AnimatedObjects?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2063,6 +2092,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Package.ErrorMask>?>? Packages;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
             #endregion
 
             #region IErrorMask
@@ -2195,6 +2225,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return CombatStyles;
                     case Fallout4Mod_FieldIndex.LoadScreens:
                         return LoadScreens;
+                    case Fallout4Mod_FieldIndex.AnimatedObjects:
+                        return AnimatedObjects;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2390,6 +2422,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.LoadScreens:
                         this.LoadScreens = new MaskItem<Exception?, Fallout4Group.ErrorMask<LoadScreen.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = new MaskItem<Exception?, Fallout4Group.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2587,6 +2622,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.LoadScreens:
                         this.LoadScreens = (MaskItem<Exception?, Fallout4Group.ErrorMask<LoadScreen.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = (MaskItem<Exception?, Fallout4Group.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2657,6 +2695,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Packages != null) return true;
                 if (CombatStyles != null) return true;
                 if (LoadScreens != null) return true;
+                if (AnimatedObjects != null) return true;
                 return false;
             }
             #endregion
@@ -2744,6 +2783,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Packages?.Print(sb);
                 CombatStyles?.Print(sb);
                 LoadScreens?.Print(sb);
+                AnimatedObjects?.Print(sb);
             }
             #endregion
 
@@ -2814,6 +2854,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Packages = this.Packages.Combine(rhs.Packages, (l, r) => l.Combine(r));
                 ret.CombatStyles = this.CombatStyles.Combine(rhs.CombatStyles, (l, r) => l.Combine(r));
                 ret.LoadScreens = this.LoadScreens.Combine(rhs.LoadScreens, (l, r) => l.Combine(r));
+                ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2899,6 +2940,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Package.TranslationMask>? Packages;
             public Fallout4Group.TranslationMask<CombatStyle.TranslationMask>? CombatStyles;
             public Fallout4Group.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
+            public Fallout4Group.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
             #endregion
 
             #region Ctors
@@ -2985,6 +3027,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Packages != null ? Packages.OnOverall : DefaultOn, Packages?.GetCrystal()));
                 ret.Add((CombatStyles != null ? CombatStyles.OnOverall : DefaultOn, CombatStyles?.GetCrystal()));
                 ret.Add((LoadScreens != null ? LoadScreens.OnOverall : DefaultOn, LoadScreens?.GetCrystal()));
+                ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3086,6 +3129,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Packages_Object = new Fallout4Group<Package>(this);
             _CombatStyles_Object = new Fallout4Group<CombatStyle>(this);
             _LoadScreens_Object = new Fallout4Group<LoadScreen>(this);
+            _AnimatedObjects_Object = new Fallout4Group<AnimatedObject>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3339,6 +3383,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.LoadScreens.RecordCache.Set(rhsMod.LoadScreens.RecordCache.Items);
             }
+            if (mask?.AnimatedObjects ?? true)
+            {
+                this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3410,6 +3458,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Packages.RecordCache.Count > 0 ? 1 : default(uint);
             count += CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
             count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3722,6 +3771,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Package> Packages { get; }
         new Fallout4Group<CombatStyle> CombatStyles { get; }
         new Fallout4Group<LoadScreen> LoadScreens { get; }
+        new Fallout4Group<AnimatedObject> AnimatedObjects { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3802,6 +3852,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IPackageGetter> Packages { get; }
         IFallout4GroupGetter<ICombatStyleGetter> CombatStyles { get; }
         IFallout4GroupGetter<ILoadScreenGetter> LoadScreens { get; }
+        IFallout4GroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
 
     }
 
@@ -4434,6 +4485,7 @@ namespace Mutagen.Bethesda.Fallout4
         Packages = 59,
         CombatStyles = 60,
         LoadScreens = 61,
+        AnimatedObjects = 62,
     }
     #endregion
 
@@ -4451,9 +4503,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 62;
+        public const ushort AdditionalFieldCount = 63;
 
-        public const ushort FieldCount = 62;
+        public const ushort FieldCount = 63;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4582,6 +4634,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Packages.Clear();
             item.CombatStyles.Clear();
             item.LoadScreens.Clear();
+            item.AnimatedObjects.Clear();
         }
         
         #region Mutagen
@@ -4642,6 +4695,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.IdleAnimations.RemapLinks(mapping);
             obj.Packages.RemapLinks(mapping);
             obj.LoadScreens.RemapLinks(mapping);
+            obj.AnimatedObjects.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -4737,6 +4791,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Packages.Remove(keys);
             obj.CombatStyles.Remove(keys);
             obj.LoadScreens.Remove(keys);
+            obj.AnimatedObjects.Remove(keys);
         }
         
         public void Remove(
@@ -5280,6 +5335,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    obj.AnimatedObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -5768,6 +5831,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Packages = MaskItemExt.Factory(item.Packages.GetEqualsMask(rhs.Packages, include), include);
             ret.CombatStyles = MaskItemExt.Factory(item.CombatStyles.GetEqualsMask(rhs.CombatStyles, include), include);
             ret.LoadScreens = MaskItemExt.Factory(item.LoadScreens.GetEqualsMask(rhs.LoadScreens, include), include);
+            ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
         }
         
         public string Print(
@@ -6059,6 +6123,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.LoadScreens?.Overall ?? true)
             {
                 item.LoadScreens?.Print(sb, "LoadScreens");
+            }
+            if (printMask?.AnimatedObjects?.Overall ?? true)
+            {
+                item.AnimatedObjects?.Print(sb, "AnimatedObjects");
             }
         }
         
@@ -6565,6 +6633,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLoadScreensEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AnimatedObjects, rhs.AnimatedObjects, out var lhsAnimatedObjects, out var rhsAnimatedObjects, out var isAnimatedObjectsEqual))
+                {
+                    if (!object.Equals(lhsAnimatedObjects, rhsAnimatedObjects)) return false;
+                }
+                else if (!isAnimatedObjectsEqual) return false;
+            }
             return true;
         }
         
@@ -6633,6 +6709,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Packages);
             hash.Add(item.CombatStyles);
             hash.Add(item.LoadScreens);
+            hash.Add(item.AnimatedObjects);
             return hash.ToHashCode();
         }
         
@@ -6955,6 +7032,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
                     return obj.LoadScreens;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    return obj.AnimatedObjects;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -6979,7 +7061,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[61];
+            Stream[] outputStreams = new Stream[62];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -7042,6 +7124,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.Packages, 58, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.CombatStyles, 59, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LoadScreens, 60, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 61, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7309,6 +7392,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.AnimatedObjects.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -7555,6 +7642,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.LoadScreens.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8129,6 +8220,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
                     foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -8841,6 +8941,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.LoadScreens,
                 groupGetter: (m) => m.LoadScreens))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                srcGroup: obj.AnimatedObjects,
+                type: typeof(IAnimatedObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AnimatedObjects,
+                groupGetter: (m) => m.AnimatedObjects))
             {
                 yield return item;
             }
@@ -9711,6 +9820,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.LoadScreens,
                         groupGetter: (m) => m.LoadScreens))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                        srcGroup: obj.AnimatedObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AnimatedObjects,
+                        groupGetter: (m) => m.AnimatedObjects))
                     {
                         yield return item;
                     }
@@ -11249,6 +11372,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.AnimatedObjects);
+                try
+                {
+                    item.AnimatedObjects.DeepCopyIn(
+                        rhs: rhs.AnimatedObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.AnimatedObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -11400,6 +11543,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Packages;
         public bool CombatStyles;
         public bool LoadScreens;
+        public bool AnimatedObjects;
         public GroupMask()
         {
         }
@@ -11466,6 +11610,7 @@ namespace Mutagen.Bethesda.Fallout4
             Packages = defaultValue;
             CombatStyles = defaultValue;
             LoadScreens = defaultValue;
+            AnimatedObjects = defaultValue;
         }
     }
 
@@ -12164,6 +12309,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
                         item: LoadScreensItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AnimatedObjects ?? true)
+            {
+                var AnimatedObjectsItem = item.AnimatedObjects;
+                if (AnimatedObjectsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
+                        item: AnimatedObjectsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -13088,6 +13244,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.LoadScreens;
                 }
+                case RecordTypeInts.ANIO:
+                {
+                    if (importMask?.AnimatedObjects ?? true)
+                    {
+                        item.AnimatedObjects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.AnimatedObjects;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -13556,6 +13726,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? Fallout4GroupBinaryOverlay<ILoadScreenGetter>.Fallout4GroupFactory(_data, _LoadScreensLocations, _package) : default;
         public IFallout4GroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new Fallout4Group<LoadScreen>(this);
         #endregion
+        #region AnimatedObjects
+        private List<RangeInt64>? _AnimatedObjectsLocations;
+        private IFallout4GroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? Fallout4GroupBinaryOverlay<IAnimatedObjectGetter>.Fallout4GroupFactory(_data, _AnimatedObjectsLocations, _package) : default;
+        public IFallout4GroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new Fallout4Group<AnimatedObject>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -14008,6 +14183,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _LoadScreensLocations ??= new();
                     _LoadScreensLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.LoadScreens;
+                }
+                case RecordTypeInts.ANIO:
+                {
+                    _AnimatedObjectsLocations ??= new();
+                    _AnimatedObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.AnimatedObjects;
                 }
                 default:
                     return default(int?);

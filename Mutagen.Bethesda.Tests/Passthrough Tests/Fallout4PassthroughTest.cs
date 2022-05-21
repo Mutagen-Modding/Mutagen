@@ -353,6 +353,14 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.DATA,
             RecordTypes.MNAM
         );
+        ret.AddAlignments(
+            RecordTypes.ANIO,
+            RecordTypes.EDID,
+            RecordTypes.MODL,
+            RecordTypes.MODC,
+            RecordTypes.MODT,
+            RecordTypes.MODS,
+            RecordTypes.BNAM);
         ret.SetGroupAlignment(
             (int)GroupTypeEnum.CellTemporaryChildren,
             RecordTypes.LAND,

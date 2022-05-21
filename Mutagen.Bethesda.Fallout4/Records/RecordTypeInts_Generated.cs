@@ -50,6 +50,7 @@ public partial class RecordTypeInts
     public const int AMDL = 0x4C444D41;
     public const int AMMO = 0x4F4D4D41;
     public const int ANAM = 0x4D414E41;
+    public const int ANIO = 0x4F494E41;
     public const int AORU = 0x55524F41;
     public const int APPR = 0x52505041;
     public const int ARMA = 0x414D5241;

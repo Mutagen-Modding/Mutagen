@@ -52,6 +52,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IModeled
 - Activator
 - Ammunition
+- AnimatedObject
 - ArmorModel
 - ArtObject
 - BodyData
@@ -274,6 +275,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IWeightValue
+### AnimatedObject
+- IModeled
 ### APackageData
 - INamed
 ### APlacedTrap
