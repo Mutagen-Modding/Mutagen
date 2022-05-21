@@ -38,7 +38,7 @@
   <Object name="TerminalBodyText" objType="Subrecord" GUID="7d1bab97-5ccd-43fc-9e54-9602f1e5a3a8" ID="432">
     <Fields>
       <String name="Text" translated="DL" recordType="BTXT" nullable="False" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
   <Object name="TerminalMenuItem" objType="Subrecord" GUID="5c3241c0-0af2-47d2-9277-b4b3d314e700" ID="433">
@@ -50,7 +50,7 @@
       <String name="DisplayText" translated="DL" recordType="UNAM" />
       <String name="ImageFile" recordType="VNAM" />
       <FormLink name="Submenu" recordType="TNAM" refName="Terminal" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
 </Loqui>

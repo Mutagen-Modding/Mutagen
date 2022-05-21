@@ -500,8 +500,6 @@ partial class PackageBinaryWriteTranslation
 
 partial class PackageBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-
     public IReadOnlyList<IPackageBranchGetter> ProcedureTree { get; private set; } = Array.Empty<IPackageBranchGetter>();
 
     private readonly Dictionary<sbyte, APackageData> _packageData = new Dictionary<sbyte, APackageData>();
@@ -544,10 +542,5 @@ partial class PackageBinaryOverlay
             factory: PackageBranchBinaryOverlay.PackageBranchFactory);
         PackageBinaryCreateTranslation.AbsorbPackageData(
             new MutagenInterfaceReadStream(stream, _package.MetaData), _packageData);
-    }
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
     }
 }

@@ -2210,14 +2210,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DescriptionLocation;
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
         public IFormLinkGetter<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
@@ -2320,12 +2313,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)LoadScreen_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.NNAM:

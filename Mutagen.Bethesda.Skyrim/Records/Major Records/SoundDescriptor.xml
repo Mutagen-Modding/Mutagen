@@ -10,7 +10,7 @@
       </List>
       <FormLink name="OutputModel" recordType="ONAM" refName="SoundOutputModel" />
       <String name="String" recordType="FNAM" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <RefDirect name="LoopAndRumble" refName="SoundLoopAndRumble" />
       <Data recordType="BNAM">
         <Fields>

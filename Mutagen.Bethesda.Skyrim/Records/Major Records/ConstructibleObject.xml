@@ -3,7 +3,7 @@
   <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="SkyrimMajorRecord" GUID="5fae010b-21e8-4528-b78f-1a4efb2cdd60" ID="237">
     <Fields>
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <FormLink name="CreatedObject" recordType="CNAM" >
         <Interface>IConstructible</Interface>
       </FormLink>

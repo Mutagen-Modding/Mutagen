@@ -1464,14 +1464,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _StartPhaseForSceneLocation;
         public String? StartPhaseForScene => _StartPhaseForSceneLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _StartPhaseForSceneLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1551,12 +1544,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CITC:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StartScene_FieldIndex.Conditions) return ParseResult.Stop;
-                    ConditionsCustomParse(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
                         stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
                     return (int)StartScene_FieldIndex.Conditions;
                 }
                 default:

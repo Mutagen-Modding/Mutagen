@@ -1286,14 +1286,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _TextLocation;
         public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1359,12 +1352,17 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)TerminalBodyText_FieldIndex.Conditions;
                 }
                 default:

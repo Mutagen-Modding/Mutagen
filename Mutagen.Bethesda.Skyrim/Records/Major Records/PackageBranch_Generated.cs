@@ -2111,14 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _BranchTypeLocation;
         public String BranchType => _BranchTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         public IPackageRootGetter? Root { get; private set; }
         #region ProcedureType
         private int? _ProcedureTypeLocation;
@@ -2204,12 +2197,15 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    ConditionsCustomParse(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
                         stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
                     return (int)PackageBranch_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.PRCB:

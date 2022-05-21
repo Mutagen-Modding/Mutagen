@@ -25,7 +25,7 @@
           <Int32 name="ScheduleDurationInMinutes" />
         </Fields>
       </Data>
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <RefDirect name="IdleAnimations" refName="PackageIdles" />
       <FormLink name="CombatStyle" recordType="CNAM" refName="CombatStyle" />
       <FormLink name="OwnerQuest" recordType="QNAM" refName="Quest" />
@@ -172,7 +172,7 @@
   <Object name="PackageBranch" objType="Subrecord" GUID="d99f4310-289f-40d5-89d9-67c4d74f349c" ID="566">
     <Fields>
       <String name="BranchType" recordType="ANAM" nullable="False" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" nullable="False" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" nullable="False" />
       <RefDirect name="Root" recordType="PRCB" refName="PackageRoot" />
       <String name="ProcedureType" recordType="PNAM" />
       <Enum name="Flags" enumName="PackageBranch.Flag" byteLength="4" recordType="FNAM" />

@@ -196,9 +196,6 @@ partial class RaceBinaryCreateTranslation
 
 partial class RaceBinaryOverlay
 {
-    private readonly ICollectionGetter<RecordType> BoneRecordTypes = new CollectionGetterWrapper<RecordType>(
-        new HashSet<RecordType>(new[]{ RecordTypes.BSMB, RecordTypes.BSMS, RecordTypes.BMMP}));
-
     public bool ExportingExtraNam2 { get; private set; }
 
     private int? _faceFxPhonemesLoc;

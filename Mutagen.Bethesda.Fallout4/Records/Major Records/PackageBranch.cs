@@ -1,8 +1,6 @@
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -38,17 +36,10 @@ partial class PackageBranchBinaryWriteTranslation
 
 partial class PackageBranchBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-
     public IPackageFlagsOverrideGetter? FlagsOverrideUnused { get; private set; }
 
     private IPackageFlagsOverrideGetter? _flagsOverride;
     public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom() => _flagsOverride;
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
-    }
 
     partial void FlagsOverrideCustomParse(OverlayStream stream, long finalPos, int offset)
     {

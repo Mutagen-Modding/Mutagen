@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Exceptions;
 using Noggog;
 using System.Diagnostics.CodeAnalysis;
 

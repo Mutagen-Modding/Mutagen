@@ -1,7 +1,3 @@
-using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary.Overlay;
-using Mutagen.Bethesda.Plugins.Binary.Translations;
-
 namespace Mutagen.Bethesda.Skyrim;
 
 public partial class Faction
@@ -22,15 +18,5 @@ public partial class Faction
         Vendor = 0x0_4000,
         CanBeOwner = 0x0_8000,
         IgnoreWerewolf = 0x1_0000,
-    }
-}
-
-partial class FactionBinaryOverlay
-{
-    public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
     }
 }

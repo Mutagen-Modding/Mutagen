@@ -2397,14 +2397,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IMusicTrackLoopDataGetter? LoopData => _LoopDataLocation.HasValue ? MusicTrackLoopDataBinaryOverlay.MusicTrackLoopDataFactory(new OverlayStream(_data.Slice(_LoopDataLocation!.Value.Min), _package), _package) : default;
         #endregion
         public IReadOnlyList<Single>? CuePoints { get; private set; }
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IMusicTrackGetter>>? Tracks { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2517,12 +2510,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    ConditionsCustomParse(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
                         stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
                     return (int)MusicTrack_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.SNAM:

@@ -362,7 +362,7 @@
       </Data>
       <String name="Name" recordType="TTGP" translated="Normal" />
       <Enum name="Flags" enumName="TintTemplateOption.Flag" byteLength="2" recordType="TTEF" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <List name="Textures">
         <String recordType="TTET" />
       </List>

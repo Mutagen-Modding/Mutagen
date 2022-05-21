@@ -74,14 +74,8 @@ partial class QuestAliasBinaryWriteTranslation
 
 partial class QuestAliasBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
     public uint ID { get; private set; }
     public QuestAlias.TypeEnum Type { get; private set; }
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
-    }
 
     public partial ParseResult IDParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {

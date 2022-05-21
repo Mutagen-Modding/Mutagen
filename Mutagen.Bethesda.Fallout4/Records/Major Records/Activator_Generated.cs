@@ -3748,14 +3748,7 @@ namespace Mutagen.Bethesda.Fallout4
         private RangeInt32? _RadioReceiverLocation;
         public IRadioReceiverGetter? RadioReceiver => _RadioReceiverLocation.HasValue ? RadioReceiverBinaryOverlay.RadioReceiverFactory(new OverlayStream(_data.Slice(_RadioReceiverLocation!.Value.Min), _package), _package) : default;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         #region NavmeshGeometry
         private int? _NavmeshGeometryLengthOverride;
         private RangeInt32? _NavmeshGeometryLocation;
@@ -3950,12 +3943,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    ConditionsCustomParse(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
                         stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
                     return (int)Activator_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.NVNM:

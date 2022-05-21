@@ -1,6 +1,5 @@
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
-using Noggog;
 
 namespace Mutagen.Bethesda.Fallout4;
 

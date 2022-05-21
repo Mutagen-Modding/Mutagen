@@ -1,7 +1,5 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
-using System;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Fallout4;
 

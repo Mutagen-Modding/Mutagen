@@ -1654,14 +1654,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _PreviousSiblingLocation;
         public IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling => _PreviousSiblingLocation.HasValue ? new FormLinkNullable<IAStoryManagerNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousSiblingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAStoryManagerNodeGetter>.Null;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1704,12 +1697,15 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    ConditionsCustomParse(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
                         stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
                     return (int)AStoryManagerNode_FieldIndex.Conditions;
                 }
                 default:

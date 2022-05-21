@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Noggog;
 
 namespace Mutagen.Bethesda.Fallout4;
 

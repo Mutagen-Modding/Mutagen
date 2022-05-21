@@ -2613,14 +2613,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         public IIconsGetter? Icons { get; private set; }
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         private RangeInt32? _DATALocation;
         public Perk.DATADataType DATADataTypeState { get; private set; }
         #region Trait
@@ -2751,12 +2744,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)Perk_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DATA:

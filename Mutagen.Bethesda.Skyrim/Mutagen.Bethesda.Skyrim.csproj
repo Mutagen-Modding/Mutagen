@@ -133,9 +133,6 @@
     <Compile Include="Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\Effect.cs">
-      <DependentUpon>Effect.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\EnableParent.cs">
       <DependentUpon>EnableParent.xml</DependentUpon>
     </Compile>
@@ -261,9 +258,6 @@
     </Compile>
     <Compile Include="Records\Major Records\CombatStyle.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ConstructibleObject.cs">
-      <DependentUpon>ConstructibleObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Container.cs">
       <DependentUpon>Container.xml</DependentUpon>
@@ -457,9 +451,6 @@
     <Compile Include="Records\Major Records\Message.cs">
       <DependentUpon>Message.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MessageButton.cs">
-      <DependentUpon>Message.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>
@@ -544,9 +535,6 @@
     <Compile Include="Records\Major Records\PerkAdapter.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PerkCondition.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PerkEntryPointModifyActorValue.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
@@ -628,13 +616,7 @@
     <Compile Include="Records\Major Records\QuestObjective.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\QuestObjectiveTarget.cs">
-      <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\QuestStage.cs">
-      <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\QuestTarget.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Race.cs">

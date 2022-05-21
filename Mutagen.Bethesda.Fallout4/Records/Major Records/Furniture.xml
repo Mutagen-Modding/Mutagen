@@ -18,7 +18,7 @@
       <FormLink name="DrinkingWater" refName="Water" recordType="WNAM" />
       <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
       <Enum name="Flags" enumName="Furniture.Flag" recordType="FNAM" binary="Custom" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
       <CustomLogic name="Flags2" recordType="MNAM" />
       <Data recordType="WBDT">

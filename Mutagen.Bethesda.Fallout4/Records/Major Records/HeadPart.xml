@@ -13,7 +13,7 @@
       <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
       <FormLink name="Color" refName="ColorRecord" recordType="CNAM" />
       <FormLink name="ValidRaces" recordType="RNAM" refName="FormList" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
   <Object name="Part" objType="Subrecord" GUID="6d524f60-b1cd-4686-a4e0-3728a857c341" ID="81">

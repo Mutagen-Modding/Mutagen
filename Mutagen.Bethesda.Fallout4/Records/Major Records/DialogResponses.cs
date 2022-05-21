@@ -1,7 +1,3 @@
-using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary.Overlay;
-using Mutagen.Bethesda.Plugins.Binary.Translations;
-
 namespace Mutagen.Bethesda.Fallout4;
 
 partial class DialogResponses
@@ -50,15 +46,5 @@ partial class DialogResponses
         Low = 1,
         Normal = 2,
         Force = 4,
-    }
-}
-
-partial class DialogResponsesBinaryOverlay
-{
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
     }
 }

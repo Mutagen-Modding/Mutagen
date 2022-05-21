@@ -3108,14 +3108,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new OverlayStream(_data.Slice(_VendorValuesLocation!.Value.Min), _package), _package) : default;
         #endregion
         public ILocationTargetRadiusGetter? VendorLocation { get; private set; }
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3282,12 +3275,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    ConditionsCustomParse(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
                         stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
                     return (int)Faction_FieldIndex.Conditions;
                 }
                 default:

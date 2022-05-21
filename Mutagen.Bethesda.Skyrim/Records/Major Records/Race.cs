@@ -130,10 +130,6 @@ partial class RaceBinaryOverlay
     private int? _faceFxPhonemesLoc;
     public IFaceFxPhonemesGetter FaceFxPhonemes => GetFaceFx();
 
-    partial void ExtraNAM2CustomParse(OverlayStream stream, int offset)
-    {
-    }
-
     private int? _bipedObjectNamesLoc;
     public IReadOnlyDictionary<BipedObject, string> BipedObjectNames
     {

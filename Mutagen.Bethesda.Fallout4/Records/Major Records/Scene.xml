@@ -18,7 +18,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <RefDirect name="SetParentQuestStage" refName="SceneSetParentQuestStage" />
       <String name="Notes" recordType="NNAM" />
       <FormLink name="Template" refName="Scene" recordType="TNAM" />
@@ -149,7 +149,7 @@
       <FormLink name="Scene" refName="Scene" recordType="LCEP" />
       <UInt16 name="PhaseIndex" recordType="INTT" />
       <String name="StartPhaseForScene" recordType="SSPN" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
     </Fields>
   </Object>
   <Object name="SceneCamera" objType="Subrecord" recordType="CRIS" GUID="c35a639b-86d4-4678-b2a2-f49e3f7bae66" ID="561">

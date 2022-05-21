@@ -1410,14 +1410,7 @@ namespace Mutagen.Bethesda.Fallout4
         private RangeInt32? _DataLocation;
         public IEffectDataGetter? Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1490,12 +1483,17 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Conditions) return ParseResult.Stop;
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)Effect_FieldIndex.Conditions;
                 }
                 default:

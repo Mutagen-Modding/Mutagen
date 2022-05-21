@@ -10,7 +10,7 @@
       <FormLink name="DialogGroup" recordType="GNAM" refName="DialogResponses" />
       <String name="OverrideFileName" recordType="IOVR" />
       <RefList name="Responses" refName="DialogResponse" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <String name="Prompt" recordType="RNAM" translated="Normal" />
       <FormLink name="Speaker" recordType="ANAM" refName="Npc" />
       <FormLink name="StartScene" recordType="TSCE" refName="Scene" />

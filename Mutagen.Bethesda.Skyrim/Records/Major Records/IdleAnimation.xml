@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="IdleAnimation" recordType="IDLE" baseClass="SkyrimMajorRecord" objType="Record" GUID="bf69327e-265b-487b-8e17-3a2a13dd3f74" ID="236">
     <Fields>
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <String name="Filename" recordType="DNAM" />
       <String name="AnimationEvent" recordType="ENAM" />
       <List name="RelatedIdles" recordType="ANAM" nullable="False" >

@@ -39,17 +39,10 @@ partial class PackageBranchBinaryWriteTranslation
 
 partial class PackageBranchBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-
     public IPackageFlagsOverrideGetter? FlagsOverrideUnused { get; private set; }
 
     private IPackageFlagsOverrideGetter? _flagsOverride;
     public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom() => _flagsOverride;
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
-    }
 
     partial void FlagsOverrideCustomParse(OverlayStream stream, long finalPos, int offset)
     {

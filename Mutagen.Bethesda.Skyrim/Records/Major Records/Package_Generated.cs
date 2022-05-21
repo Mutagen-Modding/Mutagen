@@ -3947,14 +3947,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
         public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_ScheduleDurationInMinutesLocation, 4)) : default;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         #region Unknown4
         private int? _Unknown4Location;
         public Int32? Unknown4 => _Unknown4Location.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown4Location.Value, _package.MetaData.Constants)) : default(Int32?);
@@ -4070,12 +4063,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)Package_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.IDLB:

@@ -118,9 +118,6 @@
     <Compile Include="Records\Common Subrecords\Destructible.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\Effect.cs">
-      <DependentUpon>Effect.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ExtraData.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
@@ -400,9 +397,6 @@
     <Compile Include="Records\Major Records\Message.cs">
       <DependentUpon>Message.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MessageButton.cs">
-      <DependentUpon>Message.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>
@@ -547,9 +541,6 @@
     <Compile Include="Records\Major Records\QuestObjective.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\QuestObjectiveTarget.cs">
-      <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\QuestReferenceAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
@@ -604,9 +595,6 @@
     <Compile Include="Records\Major Records\ShaderParticleGeometry.cs">
       <DependentUpon>ShaderParticleGeometry.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\StartScene.cs">
-      <DependentUpon>Scene.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Static.cs">
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>
@@ -623,9 +611,6 @@
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Terminal.cs">
-      <DependentUpon>Terminal.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\TerminalBodyText.cs">
       <DependentUpon>Terminal.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\TerminalMenuItem.cs">

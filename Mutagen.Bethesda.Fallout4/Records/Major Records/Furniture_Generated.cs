@@ -4805,14 +4805,7 @@ namespace Mutagen.Bethesda.Fallout4
         public partial Furniture.Flag? GetFlagsCustom();
         public Furniture.Flag? Flags => GetFlagsCustom();
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region Flags2
         public partial ParseResult Flags2CustomParse(
@@ -5038,12 +5031,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    ConditionsCustomParse(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
                         stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
                     return (int)Furniture_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.CNTO:

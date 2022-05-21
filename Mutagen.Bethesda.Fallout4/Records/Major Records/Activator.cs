@@ -1,7 +1,3 @@
-using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary.Overlay;
-using Mutagen.Bethesda.Plugins.Binary.Translations;
-
 namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Activator
@@ -35,15 +31,5 @@ public partial class Activator
         NoDisplacement = 0x01,
         IgnoredBySandbox = 0x02, 
         IsARadio = 0x10,
-    }
-}
-
-internal partial class ActivatorBinaryOverlay
-{
-    public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
     }
 }

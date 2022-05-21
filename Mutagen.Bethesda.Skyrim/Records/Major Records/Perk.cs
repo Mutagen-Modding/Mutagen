@@ -28,11 +28,6 @@ public partial class Perk
 
 partial class PerkBinaryCreateTranslation
 {
-    static void FillBinaryConditionsCustom(MutagenFrame frame, IPerkInternal item)
-    {
-        ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
-    }
-
     public static IEnumerable<APerkEffect> ParseEffects(IMutagenReadStream stream)
     {
         while (stream.TryReadSubrecord(RecordTypes.PRKE, out var prkeFrame))
@@ -318,11 +313,6 @@ partial class PerkBinaryCreateTranslation
 
 partial class PerkBinaryWriteTranslation
 {
-    static void WriteBinaryConditionsCustom(MutagenWriter writer, IPerkGetter item)
-    {
-        ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
-    }
-
     public static partial void WriteBinaryEffectsCustom(MutagenWriter writer, IPerkGetter item)
     {
         foreach (var effect in item.Effects)
@@ -495,14 +485,7 @@ partial class PerkBinaryWriteTranslation
 
 partial class PerkBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-
     public IReadOnlyList<IAPerkEffectGetter> Effects { get; private set; } = Array.Empty<IAPerkEffectGetter>();
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
-    }
 
     partial void EffectsCustomParse(
         OverlayStream stream,

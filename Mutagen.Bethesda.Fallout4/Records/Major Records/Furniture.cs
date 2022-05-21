@@ -321,13 +321,6 @@ partial class FurnitureBinaryOverlay
         _enabledEntryPoints = FurnitureBinaryCreateTranslation.ParseBinaryEnabledEntryPointsCustom(stream);
     }
 
-    public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
-    }
-
     partial void MarkerParametersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         FurnitureBinaryCreateTranslation.FillBinaryMarkers(new MutagenFrame(stream), GetNthMarker);

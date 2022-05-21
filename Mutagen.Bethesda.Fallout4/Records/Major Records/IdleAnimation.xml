@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="IdleAnimation" recordType="IDLE" baseClass="Fallout4MajorRecord" objType="Record" GUID="62b9bc11-4e8a-46aa-ad46-be6516201220" ID="232">
     <Fields>
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <String name="BehaviorGraph" recordType="DNAM" />
       <String name="AnimationEvent" recordType="ENAM" />
       <List name="RelatedIdles" recordType="ANAM" nullable="False">

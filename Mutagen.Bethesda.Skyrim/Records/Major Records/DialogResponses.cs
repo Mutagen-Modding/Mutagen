@@ -1,8 +1,3 @@
-using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary.Overlay;
-using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Noggog;
-
 namespace Mutagen.Bethesda.Skyrim;
 
 public partial class DialogResponses
@@ -29,15 +24,5 @@ public partial class DialogResponses
         RequiresPostProcessing = 0x1000,
         AudioOutputOverride = 0x2000,
         SpendsFavorPoints = 0x4000,
-    }
-}
-    
-partial class DialogResponsesBinaryOverlay
-{
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
     }
 }

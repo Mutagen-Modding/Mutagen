@@ -2033,14 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(ICameraPath);
 
 
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
         public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = Array.Empty<IFormLinkGetter<ICameraPathGetter>>();
         #region Zoom
         partial void ZoomCustomParse(
@@ -2119,12 +2112,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.CTDA:
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)CameraPath_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.ANAM:

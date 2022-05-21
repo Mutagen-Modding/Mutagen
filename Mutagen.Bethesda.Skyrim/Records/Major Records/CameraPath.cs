@@ -51,13 +51,6 @@ partial class CameraPathBinaryWriteTranslation
 
 partial class CameraPathBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-
-    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-    {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
-    }
-
     int? _zoomLoc;
     public partial CameraPath.ZoomType GetZoomCustom() => _zoomLoc.HasValue ? (CameraPath.ZoomType)(HeaderTranslation.ExtractSubrecordMemory(_data, _zoomLoc.Value, _package.MetaData.Constants)[0] % 128) : default;
 

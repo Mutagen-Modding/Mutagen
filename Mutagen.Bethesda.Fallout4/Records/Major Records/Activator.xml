@@ -23,7 +23,7 @@
       <Enum name="Flags" byteLength="2" enumName="Activator.Flag" recordType="FNAM" />
       <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
       <RefDirect name="RadioReceiver" refName="RadioReceiver" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
       <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
