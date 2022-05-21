@@ -111,6 +111,13 @@ public partial class RecordTypeInts
     public const int CS2H = 0x48325343;
     public const int CS2K = 0x4B325343;
     public const int CSCR = 0x52435343;
+    public const int CSCV = 0x56435343;
+    public const int CSFL = 0x4C465343;
+    public const int CSGD = 0x44475343;
+    public const int CSLR = 0x524C5343;
+    public const int CSMD = 0x444D5343;
+    public const int CSME = 0x454D5343;
+    public const int CSRA = 0x41525343;
     public const int CSTY = 0x59545343;
     public const int CTDA = 0x41445443;
     public const int CUSD = 0x44535543;

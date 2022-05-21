@@ -1,5 +1,80 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="Fallout4MajorRecord" GUID="f0309e97-d6cd-4bf1-8365-bd51a94e5c36" ID="343">
+  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="f0309e97-d6cd-4bf1-8365-bd51a94e5c36" ID="343">
+    <Fields>
+      <Data recordType="CSGD">
+        <Fields>
+          <Float name="OffensiveMult" />
+          <Float name="DefensiveMult" />
+          <Float name="GroupOffensiveMult" />
+          <Float name="EquipmentScoreMultMelee" />
+          <Float name="EquipmentScoreMultMagic" />
+          <Float name="EquipmentScoreMultRanged" />
+          <Float name="EquipmentScoreMultShout" />
+          <Float name="EquipmentScoreMultUnarmed" />
+          <Float name="EquipmentScoreMultStaff" />
+          <Float name="AvoidThreatChance" />
+          <Float name="DodgeThreadChance" />
+          <Float name="EvadeThreatChance" />
+        </Fields>
+      </Data>
+      <ByteArray name="CSMD" recordType="CSMD" />
+      <Data recordType="CSME">
+        <Fields>
+          <Float name="MeleeAttackStaggeredMult" />
+          <Float name="MeleePowerAttackStaggeredMult" />
+          <Float name="MeleePowerAttackBlockingMult" />
+          <Float name="MeleeBashMult" />
+          <Float name="MeleeBashRecoilMult" />
+          <Float name="MeleeBashAttackMult" />
+          <Float name="MeleeBashPowerAttackMult" />
+          <Float name="MeleeSpecialAttackMult" />
+          <Float name="MeleeBlockWhenStaggeredMult" />
+          <Break />
+          <Float name="MeleeAttackWhenStaggeredMult" />
+        </Fields>
+      </Data>
+      <Float name="RangedAccuracyMult" recordType="CSRA" />
+      <Data recordType="CSCR">
+        <Fields>
+          <Float name="CloseRangeDuelingCircleMult" />
+          <Float name="CloseRangeDuelingFallbackMult" />
+          <Float name="CloseRangeFlankDistance" />
+          <Float name="CloseRangeFlankingStalkTime" />
+          <Float name="CloseRangeChargeDistance" />
+          <Float name="CloseRangeChargingThrowProbability" />
+          <Float name="CloseRangeChargingSprintFastProbability" />
+          <Float name="CloseRangeChargingSideswipeProbability" />
+          <Float name="CloseRangeChargingDisengageProbability" />
+          <UInt32 name="CloseRangeChargingThrowMaxTargets" />
+          <Float name="CloseRangeFlankingVariance" />
+        </Fields>
+      </Data>
+      <Data recordType="CSLR">
+        <Fields>
+          <Float name="LongRangeStrafeMult" />
+          <Float name="LongRangeAdjustRangeMult" />
+          <Float name="LongRangeCrouchMult" />
+          <Break />
+          <Float name="LongRangeWaitMult" />
+          <Break />
+          <Float name="LongRangeRangeMult" />
+        </Fields>
+      </Data>
+      <Float name="CoverSearchDistanceMult" recordType="CSCV" />
+      <Data recordType="CSFL">
+        <Fields>
+          <Float name="HoverChance" />
+          <Float name="DiveBombChance" />
+          <Float name="GroundAttackChance" />
+          <Float name="HoverTime" />
+          <Float name="GroundAttackTime" />
+          <Float name="PerchAttackChance" />
+          <Float name="PerchAttackTime" />
+          <Float name="FlyingAttackChance" />
+        </Fields>
+      </Data>
+      <Enum name="Flags" enumName="CombatStyle.Flag" recordType="DATA" />
+    </Fields>
   </Object>
 </Loqui>

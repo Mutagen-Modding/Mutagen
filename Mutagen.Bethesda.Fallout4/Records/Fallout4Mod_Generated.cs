@@ -116,6 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Quests_Object = new Fallout4Group<Quest>(this);
             _IdleAnimations_Object = new Fallout4Group<IdleAnimation>(this);
             _Packages_Object = new Fallout4Group<Package>(this);
+            _CombatStyles_Object = new Fallout4Group<CombatStyle>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -541,6 +542,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IPackageGetter> IFallout4ModGetter.Packages => _Packages_Object;
         #endregion
+        #region CombatStyles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<CombatStyle> _CombatStyles_Object;
+        public Fallout4Group<CombatStyle> CombatStyles => _CombatStyles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ICombatStyleGetter> IFallout4ModGetter.CombatStyles => _CombatStyles_Object;
+        #endregion
 
         #region To String
 
@@ -640,6 +648,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Quests = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.IdleAnimations = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Packages = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.CombatStyles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -702,7 +711,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Worldspaces,
                 TItem Quests,
                 TItem IdleAnimations,
-                TItem Packages)
+                TItem Packages,
+                TItem CombatStyles)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -764,6 +774,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Quests = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Quests, new Fallout4Group.Mask<TItem>(Quests));
                 this.IdleAnimations = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(IdleAnimations, new Fallout4Group.Mask<TItem>(IdleAnimations));
                 this.Packages = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Packages, new Fallout4Group.Mask<TItem>(Packages));
+                this.CombatStyles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CombatStyles, new Fallout4Group.Mask<TItem>(CombatStyles));
             }
 
             #pragma warning disable CS8618
@@ -835,6 +846,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Quests { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? IdleAnimations { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Packages { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CombatStyles { get; set; }
             #endregion
 
             #region Equals
@@ -907,6 +919,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
                 if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
                 if (!object.Equals(this.Packages, rhs.Packages)) return false;
+                if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -972,6 +985,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Quests);
                 hash.Add(this.IdleAnimations);
                 hash.Add(this.Packages);
+                hash.Add(this.CombatStyles);
                 return hash.ToHashCode();
             }
 
@@ -1280,6 +1294,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Packages.Overall)) return false;
                     if (this.Packages.Specific != null && !this.Packages.Specific.All(eval)) return false;
                 }
+                if (CombatStyles != null)
+                {
+                    if (!eval(this.CombatStyles.Overall)) return false;
+                    if (this.CombatStyles.Specific != null && !this.CombatStyles.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1587,6 +1606,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Packages.Overall)) return true;
                     if (this.Packages.Specific != null && this.Packages.Specific.Any(eval)) return true;
                 }
+                if (CombatStyles != null)
+                {
+                    if (eval(this.CombatStyles.Overall)) return true;
+                    if (this.CombatStyles.Specific != null && this.CombatStyles.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1661,6 +1685,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Quests = this.Quests == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
                 obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
                 obj.Packages = this.Packages == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Packages.Overall), this.Packages.Specific?.Translate(eval));
+                obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1919,6 +1944,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Packages?.Print(sb);
                     }
+                    if (printMask?.CombatStyles?.Overall ?? true)
+                    {
+                        CombatStyles?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2003,6 +2032,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Quest.ErrorMask>?>? Quests;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Package.ErrorMask>?>? Packages;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
             #endregion
 
             #region IErrorMask
@@ -2131,6 +2161,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return IdleAnimations;
                     case Fallout4Mod_FieldIndex.Packages:
                         return Packages;
+                    case Fallout4Mod_FieldIndex.CombatStyles:
+                        return CombatStyles;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2320,6 +2352,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Packages:
                         this.Packages = new MaskItem<Exception?, Fallout4Group.ErrorMask<Package.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.CombatStyles:
+                        this.CombatStyles = new MaskItem<Exception?, Fallout4Group.ErrorMask<CombatStyle.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2511,6 +2546,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Packages:
                         this.Packages = (MaskItem<Exception?, Fallout4Group.ErrorMask<Package.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.CombatStyles:
+                        this.CombatStyles = (MaskItem<Exception?, Fallout4Group.ErrorMask<CombatStyle.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2579,6 +2617,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Quests != null) return true;
                 if (IdleAnimations != null) return true;
                 if (Packages != null) return true;
+                if (CombatStyles != null) return true;
                 return false;
             }
             #endregion
@@ -2664,6 +2703,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Quests?.Print(sb);
                 IdleAnimations?.Print(sb);
                 Packages?.Print(sb);
+                CombatStyles?.Print(sb);
             }
             #endregion
 
@@ -2732,6 +2772,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
                 ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
                 ret.Packages = this.Packages.Combine(rhs.Packages, (l, r) => l.Combine(r));
+                ret.CombatStyles = this.CombatStyles.Combine(rhs.CombatStyles, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2815,6 +2856,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Quest.TranslationMask>? Quests;
             public Fallout4Group.TranslationMask<IdleAnimation.TranslationMask>? IdleAnimations;
             public Fallout4Group.TranslationMask<Package.TranslationMask>? Packages;
+            public Fallout4Group.TranslationMask<CombatStyle.TranslationMask>? CombatStyles;
             #endregion
 
             #region Ctors
@@ -2899,6 +2941,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
                 ret.Add((IdleAnimations != null ? IdleAnimations.OnOverall : DefaultOn, IdleAnimations?.GetCrystal()));
                 ret.Add((Packages != null ? Packages.OnOverall : DefaultOn, Packages?.GetCrystal()));
+                ret.Add((CombatStyles != null ? CombatStyles.OnOverall : DefaultOn, CombatStyles?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2998,6 +3041,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Quests_Object = new Fallout4Group<Quest>(this);
             _IdleAnimations_Object = new Fallout4Group<IdleAnimation>(this);
             _Packages_Object = new Fallout4Group<Package>(this);
+            _CombatStyles_Object = new Fallout4Group<CombatStyle>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3243,6 +3287,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Packages.RecordCache.Set(rhsMod.Packages.RecordCache.Items);
             }
+            if (mask?.CombatStyles ?? true)
+            {
+                this.CombatStyles.RecordCache.Set(rhsMod.CombatStyles.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3312,6 +3360,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
             count += IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
             count += Packages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3622,6 +3671,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Quest> Quests { get; }
         new Fallout4Group<IdleAnimation> IdleAnimations { get; }
         new Fallout4Group<Package> Packages { get; }
+        new Fallout4Group<CombatStyle> CombatStyles { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3700,6 +3750,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IQuestGetter> Quests { get; }
         IFallout4GroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
         IFallout4GroupGetter<IPackageGetter> Packages { get; }
+        IFallout4GroupGetter<ICombatStyleGetter> CombatStyles { get; }
 
     }
 
@@ -4330,6 +4381,7 @@ namespace Mutagen.Bethesda.Fallout4
         Quests = 57,
         IdleAnimations = 58,
         Packages = 59,
+        CombatStyles = 60,
     }
     #endregion
 
@@ -4347,9 +4399,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 60;
+        public const ushort AdditionalFieldCount = 61;
 
-        public const ushort FieldCount = 60;
+        public const ushort FieldCount = 61;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4476,6 +4528,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Quests.Clear();
             item.IdleAnimations.Clear();
             item.Packages.Clear();
+            item.CombatStyles.Clear();
         }
         
         #region Mutagen
@@ -4628,6 +4681,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Quests.Remove(keys);
             obj.IdleAnimations.Remove(keys);
             obj.Packages.Remove(keys);
+            obj.CombatStyles.Remove(keys);
         }
         
         public void Remove(
@@ -5155,6 +5209,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    obj.CombatStyles.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -5636,6 +5698,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
             ret.IdleAnimations = MaskItemExt.Factory(item.IdleAnimations.GetEqualsMask(rhs.IdleAnimations, include), include);
             ret.Packages = MaskItemExt.Factory(item.Packages.GetEqualsMask(rhs.Packages, include), include);
+            ret.CombatStyles = MaskItemExt.Factory(item.CombatStyles.GetEqualsMask(rhs.CombatStyles, include), include);
         }
         
         public string Print(
@@ -5919,6 +5982,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Packages?.Overall ?? true)
             {
                 item.Packages?.Print(sb, "Packages");
+            }
+            if (printMask?.CombatStyles?.Overall ?? true)
+            {
+                item.CombatStyles?.Print(sb, "CombatStyles");
             }
         }
         
@@ -6409,6 +6476,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isPackagesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CombatStyles) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CombatStyles, rhs.CombatStyles, out var lhsCombatStyles, out var rhsCombatStyles, out var isCombatStylesEqual))
+                {
+                    if (!object.Equals(lhsCombatStyles, rhsCombatStyles)) return false;
+                }
+                else if (!isCombatStylesEqual) return false;
+            }
             return true;
         }
         
@@ -6475,6 +6550,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Quests);
             hash.Add(item.IdleAnimations);
             hash.Add(item.Packages);
+            hash.Add(item.CombatStyles);
             return hash.ToHashCode();
         }
         
@@ -6787,6 +6863,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IPackage":
                 case "IPackageInternal":
                     return obj.Packages;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    return obj.CombatStyles;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -6811,7 +6892,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[59];
+            Stream[] outputStreams = new Stream[60];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -6872,6 +6953,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteQuestsParallel(item.Quests, 56, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 57, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Packages, 58, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 59, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7373,6 +7455,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.Packages.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CombatStyles.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7929,6 +8015,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IPackage":
                 case "IPackageInternal":
                     foreach (var item in obj.Packages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -8623,6 +8718,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.Packages,
                 groupGetter: (m) => m.Packages))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, CombatStyle, ICombatStyleGetter>(
+                srcGroup: obj.CombatStyles,
+                type: typeof(ICombatStyleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CombatStyles,
+                groupGetter: (m) => m.CombatStyles))
             {
                 yield return item;
             }
@@ -9465,6 +9569,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.Packages,
                         groupGetter: (m) => m.Packages))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, CombatStyle, ICombatStyleGetter>(
+                        srcGroup: obj.CombatStyles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CombatStyles,
+                        groupGetter: (m) => m.CombatStyles))
                     {
                         yield return item;
                     }
@@ -10963,6 +11081,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CombatStyles) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.CombatStyles);
+                try
+                {
+                    item.CombatStyles.DeepCopyIn(
+                        rhs: rhs.CombatStyles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.CombatStyles));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -11112,6 +11250,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Quests;
         public bool IdleAnimations;
         public bool Packages;
+        public bool CombatStyles;
         public GroupMask()
         {
         }
@@ -11176,6 +11315,7 @@ namespace Mutagen.Bethesda.Fallout4
             Quests = defaultValue;
             IdleAnimations = defaultValue;
             Packages = defaultValue;
+            CombatStyles = defaultValue;
         }
     }
 
@@ -11852,6 +11992,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)PackagesItem).BinaryWriteTranslator).Write<IPackageGetter>(
                         item: PackagesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CombatStyles ?? true)
+            {
+                var CombatStylesItem = item.CombatStyles;
+                if (CombatStylesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
+                        item: CombatStylesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -12748,6 +12899,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.Packages;
                 }
+                case RecordTypeInts.CSTY:
+                {
+                    if (importMask?.CombatStyles ?? true)
+                    {
+                        item.CombatStyles.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.CombatStyles;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -13206,6 +13371,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? Fallout4GroupBinaryOverlay<IPackageGetter>.Fallout4GroupFactory(_data, _PackagesLocations, _package) : default;
         public IFallout4GroupGetter<IPackageGetter> Packages => _Packages ?? new Fallout4Group<Package>(this);
         #endregion
+        #region CombatStyles
+        private List<RangeInt64>? _CombatStylesLocations;
+        private IFallout4GroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? Fallout4GroupBinaryOverlay<ICombatStyleGetter>.Fallout4GroupFactory(_data, _CombatStylesLocations, _package) : default;
+        public IFallout4GroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new Fallout4Group<CombatStyle>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -13646,6 +13816,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _PackagesLocations ??= new();
                     _PackagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Packages;
+                }
+                case RecordTypeInts.CSTY:
+                {
+                    _CombatStylesLocations ??= new();
+                    _CombatStylesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.CombatStyles;
                 }
                 default:
                     return default(int?);

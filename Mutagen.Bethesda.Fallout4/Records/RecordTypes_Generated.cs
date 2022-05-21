@@ -113,6 +113,13 @@ public partial class RecordTypes
     public static readonly RecordType CS2H = new(0x48325343);
     public static readonly RecordType CS2K = new(0x4B325343);
     public static readonly RecordType CSCR = new(0x52435343);
+    public static readonly RecordType CSCV = new(0x56435343);
+    public static readonly RecordType CSFL = new(0x4C465343);
+    public static readonly RecordType CSGD = new(0x44475343);
+    public static readonly RecordType CSLR = new(0x524C5343);
+    public static readonly RecordType CSMD = new(0x444D5343);
+    public static readonly RecordType CSME = new(0x454D5343);
+    public static readonly RecordType CSRA = new(0x41525343);
     public static readonly RecordType CSTY = new(0x59545343);
     public static readonly RecordType CTDA = new(0x41445443);
     public static readonly RecordType CUSD = new(0x44535543);
