@@ -45,6 +45,8 @@ This example snippet would print all the unique Weapon EditorIDs from the load o
 
 Check out the [Wiki](https://github.com/Mutagen-Modding/Mutagen/wiki) for more detailed explainations of Mutagen's API, and more typical use cases and examples.
 
+Also be sure to check out the [Big Cheat Sheet](https://github.com/Mutagen-Modding/Mutagen/wiki/Big-Cheat-Sheet)
+
 ## Seeing Mutagen in Action
 ### Synthesis
 [Synthesis](https://github.com/Mutagen-Modding/Synthesis) is a patcher pipeline built on top of Mutagen, and it already has a [large library](https://github.com/Mutagen-Modding/Synthesis/network/dependents?package_id=UGFja2FnZS0xMzg1MjY1MjYz) of example patchers to study and get inspiration from.
