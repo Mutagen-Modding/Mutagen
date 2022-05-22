@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -22,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -31,6 +34,7 @@ using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -53,6 +57,296 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IWaterGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Opacity
+        public Byte Opacity { get; set; } = default;
+        #endregion
+        #region Flags
+        public Water.Flag Flags { get; set; } = default;
+        #endregion
+        #region Material
+        private readonly IFormLinkNullable<IMaterialTypeGetter> _Material = new FormLinkNullable<IMaterialTypeGetter>();
+        public IFormLinkNullable<IMaterialTypeGetter> Material
+        {
+            get => _Material;
+            set => _Material.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMaterialTypeGetter> IWaterGetter.Material => this.Material;
+        #endregion
+        #region OpenSound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _OpenSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound
+        {
+            get => _OpenSound;
+            set => _OpenSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IWaterGetter.OpenSound => this.OpenSound;
+        #endregion
+        #region ConsumeSpell
+        private readonly IFormLinkNullable<ISpellGetter> _ConsumeSpell = new FormLinkNullable<ISpellGetter>();
+        public IFormLinkNullable<ISpellGetter> ConsumeSpell
+        {
+            get => _ConsumeSpell;
+            set => _ConsumeSpell.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISpellGetter> IWaterGetter.ConsumeSpell => this.ConsumeSpell;
+        #endregion
+        #region ContactSpell
+        private readonly IFormLinkNullable<ISpellGetter> _ContactSpell = new FormLinkNullable<ISpellGetter>();
+        public IFormLinkNullable<ISpellGetter> ContactSpell
+        {
+            get => _ContactSpell;
+            set => _ContactSpell.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISpellGetter> IWaterGetter.ContactSpell => this.ContactSpell;
+        #endregion
+        #region ImageSpace
+        private readonly IFormLinkNullable<IImageSpaceGetter> _ImageSpace = new FormLinkNullable<IImageSpaceGetter>();
+        public IFormLinkNullable<IImageSpaceGetter> ImageSpace
+        {
+            get => _ImageSpace;
+            set => _ImageSpace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceGetter> IWaterGetter.ImageSpace => this.ImageSpace;
+        #endregion
+        #region DATA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _DATA;
+        public MemorySlice<Byte>? DATA
+        {
+            get => this._DATA;
+            set => this._DATA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWaterGetter.DATA => this.DATA;
+        #endregion
+        #region FogDepthAmount
+        public Single FogDepthAmount { get; set; } = default;
+        #endregion
+        #region FogShallowColor
+        public Color FogShallowColor { get; set; } = default;
+        #endregion
+        #region FogDeepColor
+        public Color FogDeepColor { get; set; } = default;
+        #endregion
+        #region FogColorShallowRange
+        public Single FogColorShallowRange { get; set; } = default;
+        #endregion
+        #region FogColorDeepRange
+        public Single FogColorDeepRange { get; set; } = default;
+        #endregion
+        #region FogShallowAlpha
+        public Single FogShallowAlpha { get; set; } = default;
+        #endregion
+        #region FogDeepAlpha
+        public Single FogDeepAlpha { get; set; } = default;
+        #endregion
+        #region FogAlphaShallowRange
+        public Single FogAlphaShallowRange { get; set; } = default;
+        #endregion
+        #region FogAlphaDeepRange
+        public Single FogAlphaDeepRange { get; set; } = default;
+        #endregion
+        #region FogUnderwaterColor
+        public Color FogUnderwaterColor { get; set; } = default;
+        #endregion
+        #region FogUnderwaterAmount
+        public Single FogUnderwaterAmount { get; set; } = default;
+        #endregion
+        #region FogUnderwaterNear
+        public Single FogUnderwaterNear { get; set; } = default;
+        #endregion
+        #region FogUnderwaterFar
+        public Single FogUnderwaterFar { get; set; } = default;
+        #endregion
+        #region PhysicalNormalMagnitude
+        public Single PhysicalNormalMagnitude { get; set; } = default;
+        #endregion
+        #region PhysicalShallowNormalFalloff
+        public Single PhysicalShallowNormalFalloff { get; set; } = default;
+        #endregion
+        #region PhysicalDeepNormalFalloff
+        public Single PhysicalDeepNormalFalloff { get; set; } = default;
+        #endregion
+        #region PhysicalReflectivityAmount
+        public Single PhysicalReflectivityAmount { get; set; } = default;
+        #endregion
+        #region PhysicalFresnelAmount
+        public Single PhysicalFresnelAmount { get; set; } = default;
+        #endregion
+        #region PhysicalSurfaceEffectFalloff
+        public Single PhysicalSurfaceEffectFalloff { get; set; } = default;
+        #endregion
+        #region PhysicalDisplacementSimulatorForce
+        public Single PhysicalDisplacementSimulatorForce { get; set; } = default;
+        #endregion
+        #region PhysicalDisplacementSimulatorVelocity
+        public Single PhysicalDisplacementSimulatorVelocity { get; set; } = default;
+        #endregion
+        #region PhysicalDisplacementSimulatorFalloff
+        public Single PhysicalDisplacementSimulatorFalloff { get; set; } = default;
+        #endregion
+        #region PhysicalDisplacementSimulatorDampener
+        public Single PhysicalDisplacementSimulatorDampener { get; set; } = default;
+        #endregion
+        #region PhysicalDisplacementSimulatorStartingSize
+        public Single PhysicalDisplacementSimulatorStartingSize { get; set; } = default;
+        #endregion
+        #region PhysicalReflectionColor
+        public Color PhysicalReflectionColor { get; set; } = default;
+        #endregion
+        #region SpecularSunSpecularPower
+        public Single SpecularSunSpecularPower { get; set; } = default;
+        #endregion
+        #region SpecularSunSpecularMagnitude
+        public Single SpecularSunSpecularMagnitude { get; set; } = default;
+        #endregion
+        #region SpecularSunSparklePower
+        public Single SpecularSunSparklePower { get; set; } = default;
+        #endregion
+        #region SpecularSunSparkleMagnitude
+        public Single SpecularSunSparkleMagnitude { get; set; } = default;
+        #endregion
+        #region SpecularInteriorSpecularRadius
+        public Single SpecularInteriorSpecularRadius { get; set; } = default;
+        #endregion
+        #region SpecularInteriorSpecularBrightness
+        public Single SpecularInteriorSpecularBrightness { get; set; } = default;
+        #endregion
+        #region SpecularInteriorSpecularPower
+        public Single SpecularInteriorSpecularPower { get; set; } = default;
+        #endregion
+        #region SiltAmount
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _SiltAmount;
+        public Single SiltAmount
+        {
+            get => this._SiltAmount;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._SiltAmount = value;
+            }
+        }
+        #endregion
+        #region SiltLightColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _SiltLightColor;
+        public Color SiltLightColor
+        {
+            get => this._SiltLightColor;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._SiltLightColor = value;
+            }
+        }
+        #endregion
+        #region SiltDarkColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _SiltDarkColor;
+        public Color SiltDarkColor
+        {
+            get => this._SiltDarkColor;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._SiltDarkColor = value;
+            }
+        }
+        #endregion
+        #region ScreenSpaceReflections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Boolean _ScreenSpaceReflections;
+        public Boolean ScreenSpaceReflections
+        {
+            get => this._ScreenSpaceReflections;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._ScreenSpaceReflections = value;
+            }
+        }
+        #endregion
+        #region NoiseLayerOne
+        public WaterNoiseProperties NoiseLayerOne { get; set; } = new WaterNoiseProperties();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWaterNoisePropertiesGetter IWaterGetter.NoiseLayerOne => NoiseLayerOne;
+        #endregion
+        #region NoiseLayerTwo
+        public WaterNoiseProperties NoiseLayerTwo { get; set; } = new WaterNoiseProperties();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWaterNoisePropertiesGetter IWaterGetter.NoiseLayerTwo => NoiseLayerTwo;
+        #endregion
+        #region NoiseLayerThree
+        public WaterNoiseProperties NoiseLayerThree { get; set; } = new WaterNoiseProperties();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWaterNoisePropertiesGetter IWaterGetter.NoiseLayerThree => NoiseLayerThree;
+        #endregion
+        #region GNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _GNAM;
+        public MemorySlice<Byte>? GNAM
+        {
+            get => this._GNAM;
+            set => this._GNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWaterGetter.GNAM => this.GNAM;
+        #endregion
+        #region LinearVelocity
+        public P3Float? LinearVelocity { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IWaterGetter.LinearVelocity => this.LinearVelocity;
+        #endregion
+        #region AngularVelocity
+        public P3Float? AngularVelocity { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IWaterGetter.AngularVelocity => this.AngularVelocity;
+        #endregion
+        #region DNAMDataTypeState
+        public Water.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +372,58 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Opacity = initialValue;
+                this.Flags = initialValue;
+                this.Material = initialValue;
+                this.OpenSound = initialValue;
+                this.ConsumeSpell = initialValue;
+                this.ContactSpell = initialValue;
+                this.ImageSpace = initialValue;
+                this.DATA = initialValue;
+                this.FogDepthAmount = initialValue;
+                this.FogShallowColor = initialValue;
+                this.FogDeepColor = initialValue;
+                this.FogColorShallowRange = initialValue;
+                this.FogColorDeepRange = initialValue;
+                this.FogShallowAlpha = initialValue;
+                this.FogDeepAlpha = initialValue;
+                this.FogAlphaShallowRange = initialValue;
+                this.FogAlphaDeepRange = initialValue;
+                this.FogUnderwaterColor = initialValue;
+                this.FogUnderwaterAmount = initialValue;
+                this.FogUnderwaterNear = initialValue;
+                this.FogUnderwaterFar = initialValue;
+                this.PhysicalNormalMagnitude = initialValue;
+                this.PhysicalShallowNormalFalloff = initialValue;
+                this.PhysicalDeepNormalFalloff = initialValue;
+                this.PhysicalReflectivityAmount = initialValue;
+                this.PhysicalFresnelAmount = initialValue;
+                this.PhysicalSurfaceEffectFalloff = initialValue;
+                this.PhysicalDisplacementSimulatorForce = initialValue;
+                this.PhysicalDisplacementSimulatorVelocity = initialValue;
+                this.PhysicalDisplacementSimulatorFalloff = initialValue;
+                this.PhysicalDisplacementSimulatorDampener = initialValue;
+                this.PhysicalDisplacementSimulatorStartingSize = initialValue;
+                this.PhysicalReflectionColor = initialValue;
+                this.SpecularSunSpecularPower = initialValue;
+                this.SpecularSunSpecularMagnitude = initialValue;
+                this.SpecularSunSparklePower = initialValue;
+                this.SpecularSunSparkleMagnitude = initialValue;
+                this.SpecularInteriorSpecularRadius = initialValue;
+                this.SpecularInteriorSpecularBrightness = initialValue;
+                this.SpecularInteriorSpecularPower = initialValue;
+                this.SiltAmount = initialValue;
+                this.SiltLightColor = initialValue;
+                this.SiltDarkColor = initialValue;
+                this.ScreenSpaceReflections = initialValue;
+                this.NoiseLayerOne = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(initialValue, new WaterNoiseProperties.Mask<TItem>(initialValue));
+                this.NoiseLayerTwo = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(initialValue, new WaterNoiseProperties.Mask<TItem>(initialValue));
+                this.NoiseLayerThree = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(initialValue, new WaterNoiseProperties.Mask<TItem>(initialValue));
+                this.GNAM = initialValue;
+                this.LinearVelocity = initialValue;
+                this.AngularVelocity = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +432,59 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem Opacity,
+                TItem Flags,
+                TItem Material,
+                TItem OpenSound,
+                TItem ConsumeSpell,
+                TItem ContactSpell,
+                TItem ImageSpace,
+                TItem DATA,
+                TItem FogDepthAmount,
+                TItem FogShallowColor,
+                TItem FogDeepColor,
+                TItem FogColorShallowRange,
+                TItem FogColorDeepRange,
+                TItem FogShallowAlpha,
+                TItem FogDeepAlpha,
+                TItem FogAlphaShallowRange,
+                TItem FogAlphaDeepRange,
+                TItem FogUnderwaterColor,
+                TItem FogUnderwaterAmount,
+                TItem FogUnderwaterNear,
+                TItem FogUnderwaterFar,
+                TItem PhysicalNormalMagnitude,
+                TItem PhysicalShallowNormalFalloff,
+                TItem PhysicalDeepNormalFalloff,
+                TItem PhysicalReflectivityAmount,
+                TItem PhysicalFresnelAmount,
+                TItem PhysicalSurfaceEffectFalloff,
+                TItem PhysicalDisplacementSimulatorForce,
+                TItem PhysicalDisplacementSimulatorVelocity,
+                TItem PhysicalDisplacementSimulatorFalloff,
+                TItem PhysicalDisplacementSimulatorDampener,
+                TItem PhysicalDisplacementSimulatorStartingSize,
+                TItem PhysicalReflectionColor,
+                TItem SpecularSunSpecularPower,
+                TItem SpecularSunSpecularMagnitude,
+                TItem SpecularSunSparklePower,
+                TItem SpecularSunSparkleMagnitude,
+                TItem SpecularInteriorSpecularRadius,
+                TItem SpecularInteriorSpecularBrightness,
+                TItem SpecularInteriorSpecularPower,
+                TItem SiltAmount,
+                TItem SiltLightColor,
+                TItem SiltDarkColor,
+                TItem ScreenSpaceReflections,
+                TItem NoiseLayerOne,
+                TItem NoiseLayerTwo,
+                TItem NoiseLayerThree,
+                TItem GNAM,
+                TItem LinearVelocity,
+                TItem AngularVelocity,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +493,58 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.Opacity = Opacity;
+                this.Flags = Flags;
+                this.Material = Material;
+                this.OpenSound = OpenSound;
+                this.ConsumeSpell = ConsumeSpell;
+                this.ContactSpell = ContactSpell;
+                this.ImageSpace = ImageSpace;
+                this.DATA = DATA;
+                this.FogDepthAmount = FogDepthAmount;
+                this.FogShallowColor = FogShallowColor;
+                this.FogDeepColor = FogDeepColor;
+                this.FogColorShallowRange = FogColorShallowRange;
+                this.FogColorDeepRange = FogColorDeepRange;
+                this.FogShallowAlpha = FogShallowAlpha;
+                this.FogDeepAlpha = FogDeepAlpha;
+                this.FogAlphaShallowRange = FogAlphaShallowRange;
+                this.FogAlphaDeepRange = FogAlphaDeepRange;
+                this.FogUnderwaterColor = FogUnderwaterColor;
+                this.FogUnderwaterAmount = FogUnderwaterAmount;
+                this.FogUnderwaterNear = FogUnderwaterNear;
+                this.FogUnderwaterFar = FogUnderwaterFar;
+                this.PhysicalNormalMagnitude = PhysicalNormalMagnitude;
+                this.PhysicalShallowNormalFalloff = PhysicalShallowNormalFalloff;
+                this.PhysicalDeepNormalFalloff = PhysicalDeepNormalFalloff;
+                this.PhysicalReflectivityAmount = PhysicalReflectivityAmount;
+                this.PhysicalFresnelAmount = PhysicalFresnelAmount;
+                this.PhysicalSurfaceEffectFalloff = PhysicalSurfaceEffectFalloff;
+                this.PhysicalDisplacementSimulatorForce = PhysicalDisplacementSimulatorForce;
+                this.PhysicalDisplacementSimulatorVelocity = PhysicalDisplacementSimulatorVelocity;
+                this.PhysicalDisplacementSimulatorFalloff = PhysicalDisplacementSimulatorFalloff;
+                this.PhysicalDisplacementSimulatorDampener = PhysicalDisplacementSimulatorDampener;
+                this.PhysicalDisplacementSimulatorStartingSize = PhysicalDisplacementSimulatorStartingSize;
+                this.PhysicalReflectionColor = PhysicalReflectionColor;
+                this.SpecularSunSpecularPower = SpecularSunSpecularPower;
+                this.SpecularSunSpecularMagnitude = SpecularSunSpecularMagnitude;
+                this.SpecularSunSparklePower = SpecularSunSparklePower;
+                this.SpecularSunSparkleMagnitude = SpecularSunSparkleMagnitude;
+                this.SpecularInteriorSpecularRadius = SpecularInteriorSpecularRadius;
+                this.SpecularInteriorSpecularBrightness = SpecularInteriorSpecularBrightness;
+                this.SpecularInteriorSpecularPower = SpecularInteriorSpecularPower;
+                this.SiltAmount = SiltAmount;
+                this.SiltLightColor = SiltLightColor;
+                this.SiltDarkColor = SiltDarkColor;
+                this.ScreenSpaceReflections = ScreenSpaceReflections;
+                this.NoiseLayerOne = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(NoiseLayerOne, new WaterNoiseProperties.Mask<TItem>(NoiseLayerOne));
+                this.NoiseLayerTwo = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(NoiseLayerTwo, new WaterNoiseProperties.Mask<TItem>(NoiseLayerTwo));
+                this.NoiseLayerThree = new MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>(NoiseLayerThree, new WaterNoiseProperties.Mask<TItem>(NoiseLayerThree));
+                this.GNAM = GNAM;
+                this.LinearVelocity = LinearVelocity;
+                this.AngularVelocity = AngularVelocity;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +553,61 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem Opacity;
+            public TItem Flags;
+            public TItem Material;
+            public TItem OpenSound;
+            public TItem ConsumeSpell;
+            public TItem ContactSpell;
+            public TItem ImageSpace;
+            public TItem DATA;
+            public TItem FogDepthAmount;
+            public TItem FogShallowColor;
+            public TItem FogDeepColor;
+            public TItem FogColorShallowRange;
+            public TItem FogColorDeepRange;
+            public TItem FogShallowAlpha;
+            public TItem FogDeepAlpha;
+            public TItem FogAlphaShallowRange;
+            public TItem FogAlphaDeepRange;
+            public TItem FogUnderwaterColor;
+            public TItem FogUnderwaterAmount;
+            public TItem FogUnderwaterNear;
+            public TItem FogUnderwaterFar;
+            public TItem PhysicalNormalMagnitude;
+            public TItem PhysicalShallowNormalFalloff;
+            public TItem PhysicalDeepNormalFalloff;
+            public TItem PhysicalReflectivityAmount;
+            public TItem PhysicalFresnelAmount;
+            public TItem PhysicalSurfaceEffectFalloff;
+            public TItem PhysicalDisplacementSimulatorForce;
+            public TItem PhysicalDisplacementSimulatorVelocity;
+            public TItem PhysicalDisplacementSimulatorFalloff;
+            public TItem PhysicalDisplacementSimulatorDampener;
+            public TItem PhysicalDisplacementSimulatorStartingSize;
+            public TItem PhysicalReflectionColor;
+            public TItem SpecularSunSpecularPower;
+            public TItem SpecularSunSpecularMagnitude;
+            public TItem SpecularSunSparklePower;
+            public TItem SpecularSunSparkleMagnitude;
+            public TItem SpecularInteriorSpecularRadius;
+            public TItem SpecularInteriorSpecularBrightness;
+            public TItem SpecularInteriorSpecularPower;
+            public TItem SiltAmount;
+            public TItem SiltLightColor;
+            public TItem SiltDarkColor;
+            public TItem ScreenSpaceReflections;
+            public MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>? NoiseLayerOne { get; set; }
+            public MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>? NoiseLayerTwo { get; set; }
+            public MaskItem<TItem, WaterNoiseProperties.Mask<TItem>?>? NoiseLayerThree { get; set; }
+            public TItem GNAM;
+            public TItem LinearVelocity;
+            public TItem AngularVelocity;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +621,115 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Opacity, rhs.Opacity)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Material, rhs.Material)) return false;
+                if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
+                if (!object.Equals(this.ConsumeSpell, rhs.ConsumeSpell)) return false;
+                if (!object.Equals(this.ContactSpell, rhs.ContactSpell)) return false;
+                if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
+                if (!object.Equals(this.DATA, rhs.DATA)) return false;
+                if (!object.Equals(this.FogDepthAmount, rhs.FogDepthAmount)) return false;
+                if (!object.Equals(this.FogShallowColor, rhs.FogShallowColor)) return false;
+                if (!object.Equals(this.FogDeepColor, rhs.FogDeepColor)) return false;
+                if (!object.Equals(this.FogColorShallowRange, rhs.FogColorShallowRange)) return false;
+                if (!object.Equals(this.FogColorDeepRange, rhs.FogColorDeepRange)) return false;
+                if (!object.Equals(this.FogShallowAlpha, rhs.FogShallowAlpha)) return false;
+                if (!object.Equals(this.FogDeepAlpha, rhs.FogDeepAlpha)) return false;
+                if (!object.Equals(this.FogAlphaShallowRange, rhs.FogAlphaShallowRange)) return false;
+                if (!object.Equals(this.FogAlphaDeepRange, rhs.FogAlphaDeepRange)) return false;
+                if (!object.Equals(this.FogUnderwaterColor, rhs.FogUnderwaterColor)) return false;
+                if (!object.Equals(this.FogUnderwaterAmount, rhs.FogUnderwaterAmount)) return false;
+                if (!object.Equals(this.FogUnderwaterNear, rhs.FogUnderwaterNear)) return false;
+                if (!object.Equals(this.FogUnderwaterFar, rhs.FogUnderwaterFar)) return false;
+                if (!object.Equals(this.PhysicalNormalMagnitude, rhs.PhysicalNormalMagnitude)) return false;
+                if (!object.Equals(this.PhysicalShallowNormalFalloff, rhs.PhysicalShallowNormalFalloff)) return false;
+                if (!object.Equals(this.PhysicalDeepNormalFalloff, rhs.PhysicalDeepNormalFalloff)) return false;
+                if (!object.Equals(this.PhysicalReflectivityAmount, rhs.PhysicalReflectivityAmount)) return false;
+                if (!object.Equals(this.PhysicalFresnelAmount, rhs.PhysicalFresnelAmount)) return false;
+                if (!object.Equals(this.PhysicalSurfaceEffectFalloff, rhs.PhysicalSurfaceEffectFalloff)) return false;
+                if (!object.Equals(this.PhysicalDisplacementSimulatorForce, rhs.PhysicalDisplacementSimulatorForce)) return false;
+                if (!object.Equals(this.PhysicalDisplacementSimulatorVelocity, rhs.PhysicalDisplacementSimulatorVelocity)) return false;
+                if (!object.Equals(this.PhysicalDisplacementSimulatorFalloff, rhs.PhysicalDisplacementSimulatorFalloff)) return false;
+                if (!object.Equals(this.PhysicalDisplacementSimulatorDampener, rhs.PhysicalDisplacementSimulatorDampener)) return false;
+                if (!object.Equals(this.PhysicalDisplacementSimulatorStartingSize, rhs.PhysicalDisplacementSimulatorStartingSize)) return false;
+                if (!object.Equals(this.PhysicalReflectionColor, rhs.PhysicalReflectionColor)) return false;
+                if (!object.Equals(this.SpecularSunSpecularPower, rhs.SpecularSunSpecularPower)) return false;
+                if (!object.Equals(this.SpecularSunSpecularMagnitude, rhs.SpecularSunSpecularMagnitude)) return false;
+                if (!object.Equals(this.SpecularSunSparklePower, rhs.SpecularSunSparklePower)) return false;
+                if (!object.Equals(this.SpecularSunSparkleMagnitude, rhs.SpecularSunSparkleMagnitude)) return false;
+                if (!object.Equals(this.SpecularInteriorSpecularRadius, rhs.SpecularInteriorSpecularRadius)) return false;
+                if (!object.Equals(this.SpecularInteriorSpecularBrightness, rhs.SpecularInteriorSpecularBrightness)) return false;
+                if (!object.Equals(this.SpecularInteriorSpecularPower, rhs.SpecularInteriorSpecularPower)) return false;
+                if (!object.Equals(this.SiltAmount, rhs.SiltAmount)) return false;
+                if (!object.Equals(this.SiltLightColor, rhs.SiltLightColor)) return false;
+                if (!object.Equals(this.SiltDarkColor, rhs.SiltDarkColor)) return false;
+                if (!object.Equals(this.ScreenSpaceReflections, rhs.ScreenSpaceReflections)) return false;
+                if (!object.Equals(this.NoiseLayerOne, rhs.NoiseLayerOne)) return false;
+                if (!object.Equals(this.NoiseLayerTwo, rhs.NoiseLayerTwo)) return false;
+                if (!object.Equals(this.NoiseLayerThree, rhs.NoiseLayerThree)) return false;
+                if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
+                if (!object.Equals(this.LinearVelocity, rhs.LinearVelocity)) return false;
+                if (!object.Equals(this.AngularVelocity, rhs.AngularVelocity)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Opacity);
+                hash.Add(this.Flags);
+                hash.Add(this.Material);
+                hash.Add(this.OpenSound);
+                hash.Add(this.ConsumeSpell);
+                hash.Add(this.ContactSpell);
+                hash.Add(this.ImageSpace);
+                hash.Add(this.DATA);
+                hash.Add(this.FogDepthAmount);
+                hash.Add(this.FogShallowColor);
+                hash.Add(this.FogDeepColor);
+                hash.Add(this.FogColorShallowRange);
+                hash.Add(this.FogColorDeepRange);
+                hash.Add(this.FogShallowAlpha);
+                hash.Add(this.FogDeepAlpha);
+                hash.Add(this.FogAlphaShallowRange);
+                hash.Add(this.FogAlphaDeepRange);
+                hash.Add(this.FogUnderwaterColor);
+                hash.Add(this.FogUnderwaterAmount);
+                hash.Add(this.FogUnderwaterNear);
+                hash.Add(this.FogUnderwaterFar);
+                hash.Add(this.PhysicalNormalMagnitude);
+                hash.Add(this.PhysicalShallowNormalFalloff);
+                hash.Add(this.PhysicalDeepNormalFalloff);
+                hash.Add(this.PhysicalReflectivityAmount);
+                hash.Add(this.PhysicalFresnelAmount);
+                hash.Add(this.PhysicalSurfaceEffectFalloff);
+                hash.Add(this.PhysicalDisplacementSimulatorForce);
+                hash.Add(this.PhysicalDisplacementSimulatorVelocity);
+                hash.Add(this.PhysicalDisplacementSimulatorFalloff);
+                hash.Add(this.PhysicalDisplacementSimulatorDampener);
+                hash.Add(this.PhysicalDisplacementSimulatorStartingSize);
+                hash.Add(this.PhysicalReflectionColor);
+                hash.Add(this.SpecularSunSpecularPower);
+                hash.Add(this.SpecularSunSpecularMagnitude);
+                hash.Add(this.SpecularSunSparklePower);
+                hash.Add(this.SpecularSunSparkleMagnitude);
+                hash.Add(this.SpecularInteriorSpecularRadius);
+                hash.Add(this.SpecularInteriorSpecularBrightness);
+                hash.Add(this.SpecularInteriorSpecularPower);
+                hash.Add(this.SiltAmount);
+                hash.Add(this.SiltLightColor);
+                hash.Add(this.SiltDarkColor);
+                hash.Add(this.ScreenSpaceReflections);
+                hash.Add(this.NoiseLayerOne);
+                hash.Add(this.NoiseLayerTwo);
+                hash.Add(this.NoiseLayerThree);
+                hash.Add(this.GNAM);
+                hash.Add(this.LinearVelocity);
+                hash.Add(this.AngularVelocity);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +740,70 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Opacity)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Material)) return false;
+                if (!eval(this.OpenSound)) return false;
+                if (!eval(this.ConsumeSpell)) return false;
+                if (!eval(this.ContactSpell)) return false;
+                if (!eval(this.ImageSpace)) return false;
+                if (!eval(this.DATA)) return false;
+                if (!eval(this.FogDepthAmount)) return false;
+                if (!eval(this.FogShallowColor)) return false;
+                if (!eval(this.FogDeepColor)) return false;
+                if (!eval(this.FogColorShallowRange)) return false;
+                if (!eval(this.FogColorDeepRange)) return false;
+                if (!eval(this.FogShallowAlpha)) return false;
+                if (!eval(this.FogDeepAlpha)) return false;
+                if (!eval(this.FogAlphaShallowRange)) return false;
+                if (!eval(this.FogAlphaDeepRange)) return false;
+                if (!eval(this.FogUnderwaterColor)) return false;
+                if (!eval(this.FogUnderwaterAmount)) return false;
+                if (!eval(this.FogUnderwaterNear)) return false;
+                if (!eval(this.FogUnderwaterFar)) return false;
+                if (!eval(this.PhysicalNormalMagnitude)) return false;
+                if (!eval(this.PhysicalShallowNormalFalloff)) return false;
+                if (!eval(this.PhysicalDeepNormalFalloff)) return false;
+                if (!eval(this.PhysicalReflectivityAmount)) return false;
+                if (!eval(this.PhysicalFresnelAmount)) return false;
+                if (!eval(this.PhysicalSurfaceEffectFalloff)) return false;
+                if (!eval(this.PhysicalDisplacementSimulatorForce)) return false;
+                if (!eval(this.PhysicalDisplacementSimulatorVelocity)) return false;
+                if (!eval(this.PhysicalDisplacementSimulatorFalloff)) return false;
+                if (!eval(this.PhysicalDisplacementSimulatorDampener)) return false;
+                if (!eval(this.PhysicalDisplacementSimulatorStartingSize)) return false;
+                if (!eval(this.PhysicalReflectionColor)) return false;
+                if (!eval(this.SpecularSunSpecularPower)) return false;
+                if (!eval(this.SpecularSunSpecularMagnitude)) return false;
+                if (!eval(this.SpecularSunSparklePower)) return false;
+                if (!eval(this.SpecularSunSparkleMagnitude)) return false;
+                if (!eval(this.SpecularInteriorSpecularRadius)) return false;
+                if (!eval(this.SpecularInteriorSpecularBrightness)) return false;
+                if (!eval(this.SpecularInteriorSpecularPower)) return false;
+                if (!eval(this.SiltAmount)) return false;
+                if (!eval(this.SiltLightColor)) return false;
+                if (!eval(this.SiltDarkColor)) return false;
+                if (!eval(this.ScreenSpaceReflections)) return false;
+                if (NoiseLayerOne != null)
+                {
+                    if (!eval(this.NoiseLayerOne.Overall)) return false;
+                    if (this.NoiseLayerOne.Specific != null && !this.NoiseLayerOne.Specific.All(eval)) return false;
+                }
+                if (NoiseLayerTwo != null)
+                {
+                    if (!eval(this.NoiseLayerTwo.Overall)) return false;
+                    if (this.NoiseLayerTwo.Specific != null && !this.NoiseLayerTwo.Specific.All(eval)) return false;
+                }
+                if (NoiseLayerThree != null)
+                {
+                    if (!eval(this.NoiseLayerThree.Overall)) return false;
+                    if (this.NoiseLayerThree.Specific != null && !this.NoiseLayerThree.Specific.All(eval)) return false;
+                }
+                if (!eval(this.GNAM)) return false;
+                if (!eval(this.LinearVelocity)) return false;
+                if (!eval(this.AngularVelocity)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +812,70 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Opacity)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Material)) return true;
+                if (eval(this.OpenSound)) return true;
+                if (eval(this.ConsumeSpell)) return true;
+                if (eval(this.ContactSpell)) return true;
+                if (eval(this.ImageSpace)) return true;
+                if (eval(this.DATA)) return true;
+                if (eval(this.FogDepthAmount)) return true;
+                if (eval(this.FogShallowColor)) return true;
+                if (eval(this.FogDeepColor)) return true;
+                if (eval(this.FogColorShallowRange)) return true;
+                if (eval(this.FogColorDeepRange)) return true;
+                if (eval(this.FogShallowAlpha)) return true;
+                if (eval(this.FogDeepAlpha)) return true;
+                if (eval(this.FogAlphaShallowRange)) return true;
+                if (eval(this.FogAlphaDeepRange)) return true;
+                if (eval(this.FogUnderwaterColor)) return true;
+                if (eval(this.FogUnderwaterAmount)) return true;
+                if (eval(this.FogUnderwaterNear)) return true;
+                if (eval(this.FogUnderwaterFar)) return true;
+                if (eval(this.PhysicalNormalMagnitude)) return true;
+                if (eval(this.PhysicalShallowNormalFalloff)) return true;
+                if (eval(this.PhysicalDeepNormalFalloff)) return true;
+                if (eval(this.PhysicalReflectivityAmount)) return true;
+                if (eval(this.PhysicalFresnelAmount)) return true;
+                if (eval(this.PhysicalSurfaceEffectFalloff)) return true;
+                if (eval(this.PhysicalDisplacementSimulatorForce)) return true;
+                if (eval(this.PhysicalDisplacementSimulatorVelocity)) return true;
+                if (eval(this.PhysicalDisplacementSimulatorFalloff)) return true;
+                if (eval(this.PhysicalDisplacementSimulatorDampener)) return true;
+                if (eval(this.PhysicalDisplacementSimulatorStartingSize)) return true;
+                if (eval(this.PhysicalReflectionColor)) return true;
+                if (eval(this.SpecularSunSpecularPower)) return true;
+                if (eval(this.SpecularSunSpecularMagnitude)) return true;
+                if (eval(this.SpecularSunSparklePower)) return true;
+                if (eval(this.SpecularSunSparkleMagnitude)) return true;
+                if (eval(this.SpecularInteriorSpecularRadius)) return true;
+                if (eval(this.SpecularInteriorSpecularBrightness)) return true;
+                if (eval(this.SpecularInteriorSpecularPower)) return true;
+                if (eval(this.SiltAmount)) return true;
+                if (eval(this.SiltLightColor)) return true;
+                if (eval(this.SiltDarkColor)) return true;
+                if (eval(this.ScreenSpaceReflections)) return true;
+                if (NoiseLayerOne != null)
+                {
+                    if (eval(this.NoiseLayerOne.Overall)) return true;
+                    if (this.NoiseLayerOne.Specific != null && this.NoiseLayerOne.Specific.Any(eval)) return true;
+                }
+                if (NoiseLayerTwo != null)
+                {
+                    if (eval(this.NoiseLayerTwo.Overall)) return true;
+                    if (this.NoiseLayerTwo.Specific != null && this.NoiseLayerTwo.Specific.Any(eval)) return true;
+                }
+                if (NoiseLayerThree != null)
+                {
+                    if (eval(this.NoiseLayerThree.Overall)) return true;
+                    if (this.NoiseLayerThree.Specific != null && this.NoiseLayerThree.Specific.Any(eval)) return true;
+                }
+                if (eval(this.GNAM)) return true;
+                if (eval(this.LinearVelocity)) return true;
+                if (eval(this.AngularVelocity)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +891,58 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Opacity = eval(this.Opacity);
+                obj.Flags = eval(this.Flags);
+                obj.Material = eval(this.Material);
+                obj.OpenSound = eval(this.OpenSound);
+                obj.ConsumeSpell = eval(this.ConsumeSpell);
+                obj.ContactSpell = eval(this.ContactSpell);
+                obj.ImageSpace = eval(this.ImageSpace);
+                obj.DATA = eval(this.DATA);
+                obj.FogDepthAmount = eval(this.FogDepthAmount);
+                obj.FogShallowColor = eval(this.FogShallowColor);
+                obj.FogDeepColor = eval(this.FogDeepColor);
+                obj.FogColorShallowRange = eval(this.FogColorShallowRange);
+                obj.FogColorDeepRange = eval(this.FogColorDeepRange);
+                obj.FogShallowAlpha = eval(this.FogShallowAlpha);
+                obj.FogDeepAlpha = eval(this.FogDeepAlpha);
+                obj.FogAlphaShallowRange = eval(this.FogAlphaShallowRange);
+                obj.FogAlphaDeepRange = eval(this.FogAlphaDeepRange);
+                obj.FogUnderwaterColor = eval(this.FogUnderwaterColor);
+                obj.FogUnderwaterAmount = eval(this.FogUnderwaterAmount);
+                obj.FogUnderwaterNear = eval(this.FogUnderwaterNear);
+                obj.FogUnderwaterFar = eval(this.FogUnderwaterFar);
+                obj.PhysicalNormalMagnitude = eval(this.PhysicalNormalMagnitude);
+                obj.PhysicalShallowNormalFalloff = eval(this.PhysicalShallowNormalFalloff);
+                obj.PhysicalDeepNormalFalloff = eval(this.PhysicalDeepNormalFalloff);
+                obj.PhysicalReflectivityAmount = eval(this.PhysicalReflectivityAmount);
+                obj.PhysicalFresnelAmount = eval(this.PhysicalFresnelAmount);
+                obj.PhysicalSurfaceEffectFalloff = eval(this.PhysicalSurfaceEffectFalloff);
+                obj.PhysicalDisplacementSimulatorForce = eval(this.PhysicalDisplacementSimulatorForce);
+                obj.PhysicalDisplacementSimulatorVelocity = eval(this.PhysicalDisplacementSimulatorVelocity);
+                obj.PhysicalDisplacementSimulatorFalloff = eval(this.PhysicalDisplacementSimulatorFalloff);
+                obj.PhysicalDisplacementSimulatorDampener = eval(this.PhysicalDisplacementSimulatorDampener);
+                obj.PhysicalDisplacementSimulatorStartingSize = eval(this.PhysicalDisplacementSimulatorStartingSize);
+                obj.PhysicalReflectionColor = eval(this.PhysicalReflectionColor);
+                obj.SpecularSunSpecularPower = eval(this.SpecularSunSpecularPower);
+                obj.SpecularSunSpecularMagnitude = eval(this.SpecularSunSpecularMagnitude);
+                obj.SpecularSunSparklePower = eval(this.SpecularSunSparklePower);
+                obj.SpecularSunSparkleMagnitude = eval(this.SpecularSunSparkleMagnitude);
+                obj.SpecularInteriorSpecularRadius = eval(this.SpecularInteriorSpecularRadius);
+                obj.SpecularInteriorSpecularBrightness = eval(this.SpecularInteriorSpecularBrightness);
+                obj.SpecularInteriorSpecularPower = eval(this.SpecularInteriorSpecularPower);
+                obj.SiltAmount = eval(this.SiltAmount);
+                obj.SiltLightColor = eval(this.SiltLightColor);
+                obj.SiltDarkColor = eval(this.SiltDarkColor);
+                obj.ScreenSpaceReflections = eval(this.ScreenSpaceReflections);
+                obj.NoiseLayerOne = this.NoiseLayerOne == null ? null : new MaskItem<R, WaterNoiseProperties.Mask<R>?>(eval(this.NoiseLayerOne.Overall), this.NoiseLayerOne.Specific?.Translate(eval));
+                obj.NoiseLayerTwo = this.NoiseLayerTwo == null ? null : new MaskItem<R, WaterNoiseProperties.Mask<R>?>(eval(this.NoiseLayerTwo.Overall), this.NoiseLayerTwo.Specific?.Translate(eval));
+                obj.NoiseLayerThree = this.NoiseLayerThree == null ? null : new MaskItem<R, WaterNoiseProperties.Mask<R>?>(eval(this.NoiseLayerThree.Overall), this.NoiseLayerThree.Specific?.Translate(eval));
+                obj.GNAM = eval(this.GNAM);
+                obj.LinearVelocity = eval(this.LinearVelocity);
+                obj.AngularVelocity = eval(this.AngularVelocity);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -172,6 +961,214 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Opacity ?? true)
+                    {
+                        sb.AppendItem(Opacity, "Opacity");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Material ?? true)
+                    {
+                        sb.AppendItem(Material, "Material");
+                    }
+                    if (printMask?.OpenSound ?? true)
+                    {
+                        sb.AppendItem(OpenSound, "OpenSound");
+                    }
+                    if (printMask?.ConsumeSpell ?? true)
+                    {
+                        sb.AppendItem(ConsumeSpell, "ConsumeSpell");
+                    }
+                    if (printMask?.ContactSpell ?? true)
+                    {
+                        sb.AppendItem(ContactSpell, "ContactSpell");
+                    }
+                    if (printMask?.ImageSpace ?? true)
+                    {
+                        sb.AppendItem(ImageSpace, "ImageSpace");
+                    }
+                    if (printMask?.DATA ?? true)
+                    {
+                        sb.AppendItem(DATA, "DATA");
+                    }
+                    if (printMask?.FogDepthAmount ?? true)
+                    {
+                        sb.AppendItem(FogDepthAmount, "FogDepthAmount");
+                    }
+                    if (printMask?.FogShallowColor ?? true)
+                    {
+                        sb.AppendItem(FogShallowColor, "FogShallowColor");
+                    }
+                    if (printMask?.FogDeepColor ?? true)
+                    {
+                        sb.AppendItem(FogDeepColor, "FogDeepColor");
+                    }
+                    if (printMask?.FogColorShallowRange ?? true)
+                    {
+                        sb.AppendItem(FogColorShallowRange, "FogColorShallowRange");
+                    }
+                    if (printMask?.FogColorDeepRange ?? true)
+                    {
+                        sb.AppendItem(FogColorDeepRange, "FogColorDeepRange");
+                    }
+                    if (printMask?.FogShallowAlpha ?? true)
+                    {
+                        sb.AppendItem(FogShallowAlpha, "FogShallowAlpha");
+                    }
+                    if (printMask?.FogDeepAlpha ?? true)
+                    {
+                        sb.AppendItem(FogDeepAlpha, "FogDeepAlpha");
+                    }
+                    if (printMask?.FogAlphaShallowRange ?? true)
+                    {
+                        sb.AppendItem(FogAlphaShallowRange, "FogAlphaShallowRange");
+                    }
+                    if (printMask?.FogAlphaDeepRange ?? true)
+                    {
+                        sb.AppendItem(FogAlphaDeepRange, "FogAlphaDeepRange");
+                    }
+                    if (printMask?.FogUnderwaterColor ?? true)
+                    {
+                        sb.AppendItem(FogUnderwaterColor, "FogUnderwaterColor");
+                    }
+                    if (printMask?.FogUnderwaterAmount ?? true)
+                    {
+                        sb.AppendItem(FogUnderwaterAmount, "FogUnderwaterAmount");
+                    }
+                    if (printMask?.FogUnderwaterNear ?? true)
+                    {
+                        sb.AppendItem(FogUnderwaterNear, "FogUnderwaterNear");
+                    }
+                    if (printMask?.FogUnderwaterFar ?? true)
+                    {
+                        sb.AppendItem(FogUnderwaterFar, "FogUnderwaterFar");
+                    }
+                    if (printMask?.PhysicalNormalMagnitude ?? true)
+                    {
+                        sb.AppendItem(PhysicalNormalMagnitude, "PhysicalNormalMagnitude");
+                    }
+                    if (printMask?.PhysicalShallowNormalFalloff ?? true)
+                    {
+                        sb.AppendItem(PhysicalShallowNormalFalloff, "PhysicalShallowNormalFalloff");
+                    }
+                    if (printMask?.PhysicalDeepNormalFalloff ?? true)
+                    {
+                        sb.AppendItem(PhysicalDeepNormalFalloff, "PhysicalDeepNormalFalloff");
+                    }
+                    if (printMask?.PhysicalReflectivityAmount ?? true)
+                    {
+                        sb.AppendItem(PhysicalReflectivityAmount, "PhysicalReflectivityAmount");
+                    }
+                    if (printMask?.PhysicalFresnelAmount ?? true)
+                    {
+                        sb.AppendItem(PhysicalFresnelAmount, "PhysicalFresnelAmount");
+                    }
+                    if (printMask?.PhysicalSurfaceEffectFalloff ?? true)
+                    {
+                        sb.AppendItem(PhysicalSurfaceEffectFalloff, "PhysicalSurfaceEffectFalloff");
+                    }
+                    if (printMask?.PhysicalDisplacementSimulatorForce ?? true)
+                    {
+                        sb.AppendItem(PhysicalDisplacementSimulatorForce, "PhysicalDisplacementSimulatorForce");
+                    }
+                    if (printMask?.PhysicalDisplacementSimulatorVelocity ?? true)
+                    {
+                        sb.AppendItem(PhysicalDisplacementSimulatorVelocity, "PhysicalDisplacementSimulatorVelocity");
+                    }
+                    if (printMask?.PhysicalDisplacementSimulatorFalloff ?? true)
+                    {
+                        sb.AppendItem(PhysicalDisplacementSimulatorFalloff, "PhysicalDisplacementSimulatorFalloff");
+                    }
+                    if (printMask?.PhysicalDisplacementSimulatorDampener ?? true)
+                    {
+                        sb.AppendItem(PhysicalDisplacementSimulatorDampener, "PhysicalDisplacementSimulatorDampener");
+                    }
+                    if (printMask?.PhysicalDisplacementSimulatorStartingSize ?? true)
+                    {
+                        sb.AppendItem(PhysicalDisplacementSimulatorStartingSize, "PhysicalDisplacementSimulatorStartingSize");
+                    }
+                    if (printMask?.PhysicalReflectionColor ?? true)
+                    {
+                        sb.AppendItem(PhysicalReflectionColor, "PhysicalReflectionColor");
+                    }
+                    if (printMask?.SpecularSunSpecularPower ?? true)
+                    {
+                        sb.AppendItem(SpecularSunSpecularPower, "SpecularSunSpecularPower");
+                    }
+                    if (printMask?.SpecularSunSpecularMagnitude ?? true)
+                    {
+                        sb.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                    }
+                    if (printMask?.SpecularSunSparklePower ?? true)
+                    {
+                        sb.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                    }
+                    if (printMask?.SpecularSunSparkleMagnitude ?? true)
+                    {
+                        sb.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                    }
+                    if (printMask?.SpecularInteriorSpecularRadius ?? true)
+                    {
+                        sb.AppendItem(SpecularInteriorSpecularRadius, "SpecularInteriorSpecularRadius");
+                    }
+                    if (printMask?.SpecularInteriorSpecularBrightness ?? true)
+                    {
+                        sb.AppendItem(SpecularInteriorSpecularBrightness, "SpecularInteriorSpecularBrightness");
+                    }
+                    if (printMask?.SpecularInteriorSpecularPower ?? true)
+                    {
+                        sb.AppendItem(SpecularInteriorSpecularPower, "SpecularInteriorSpecularPower");
+                    }
+                    if (printMask?.SiltAmount ?? true)
+                    {
+                        sb.AppendItem(SiltAmount, "SiltAmount");
+                    }
+                    if (printMask?.SiltLightColor ?? true)
+                    {
+                        sb.AppendItem(SiltLightColor, "SiltLightColor");
+                    }
+                    if (printMask?.SiltDarkColor ?? true)
+                    {
+                        sb.AppendItem(SiltDarkColor, "SiltDarkColor");
+                    }
+                    if (printMask?.ScreenSpaceReflections ?? true)
+                    {
+                        sb.AppendItem(ScreenSpaceReflections, "ScreenSpaceReflections");
+                    }
+                    if (printMask?.NoiseLayerOne?.Overall ?? true)
+                    {
+                        NoiseLayerOne?.Print(sb);
+                    }
+                    if (printMask?.NoiseLayerTwo?.Overall ?? true)
+                    {
+                        NoiseLayerTwo?.Print(sb);
+                    }
+                    if (printMask?.NoiseLayerThree?.Overall ?? true)
+                    {
+                        NoiseLayerThree?.Print(sb);
+                    }
+                    if (printMask?.GNAM ?? true)
+                    {
+                        sb.AppendItem(GNAM, "GNAM");
+                    }
+                    if (printMask?.LinearVelocity ?? true)
+                    {
+                        sb.AppendItem(LinearVelocity, "LinearVelocity");
+                    }
+                    if (printMask?.AngularVelocity ?? true)
+                    {
+                        sb.AppendItem(AngularVelocity, "AngularVelocity");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +1179,171 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? Opacity;
+            public Exception? Flags;
+            public Exception? Material;
+            public Exception? OpenSound;
+            public Exception? ConsumeSpell;
+            public Exception? ContactSpell;
+            public Exception? ImageSpace;
+            public Exception? DATA;
+            public Exception? FogDepthAmount;
+            public Exception? FogShallowColor;
+            public Exception? FogDeepColor;
+            public Exception? FogColorShallowRange;
+            public Exception? FogColorDeepRange;
+            public Exception? FogShallowAlpha;
+            public Exception? FogDeepAlpha;
+            public Exception? FogAlphaShallowRange;
+            public Exception? FogAlphaDeepRange;
+            public Exception? FogUnderwaterColor;
+            public Exception? FogUnderwaterAmount;
+            public Exception? FogUnderwaterNear;
+            public Exception? FogUnderwaterFar;
+            public Exception? PhysicalNormalMagnitude;
+            public Exception? PhysicalShallowNormalFalloff;
+            public Exception? PhysicalDeepNormalFalloff;
+            public Exception? PhysicalReflectivityAmount;
+            public Exception? PhysicalFresnelAmount;
+            public Exception? PhysicalSurfaceEffectFalloff;
+            public Exception? PhysicalDisplacementSimulatorForce;
+            public Exception? PhysicalDisplacementSimulatorVelocity;
+            public Exception? PhysicalDisplacementSimulatorFalloff;
+            public Exception? PhysicalDisplacementSimulatorDampener;
+            public Exception? PhysicalDisplacementSimulatorStartingSize;
+            public Exception? PhysicalReflectionColor;
+            public Exception? SpecularSunSpecularPower;
+            public Exception? SpecularSunSpecularMagnitude;
+            public Exception? SpecularSunSparklePower;
+            public Exception? SpecularSunSparkleMagnitude;
+            public Exception? SpecularInteriorSpecularRadius;
+            public Exception? SpecularInteriorSpecularBrightness;
+            public Exception? SpecularInteriorSpecularPower;
+            public Exception? SiltAmount;
+            public Exception? SiltLightColor;
+            public Exception? SiltDarkColor;
+            public Exception? ScreenSpaceReflections;
+            public MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>? NoiseLayerOne;
+            public MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>? NoiseLayerTwo;
+            public MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>? NoiseLayerThree;
+            public Exception? GNAM;
+            public Exception? LinearVelocity;
+            public Exception? AngularVelocity;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
+                    case Water_FieldIndex.Name:
+                        return Name;
+                    case Water_FieldIndex.Opacity:
+                        return Opacity;
+                    case Water_FieldIndex.Flags:
+                        return Flags;
+                    case Water_FieldIndex.Material:
+                        return Material;
+                    case Water_FieldIndex.OpenSound:
+                        return OpenSound;
+                    case Water_FieldIndex.ConsumeSpell:
+                        return ConsumeSpell;
+                    case Water_FieldIndex.ContactSpell:
+                        return ContactSpell;
+                    case Water_FieldIndex.ImageSpace:
+                        return ImageSpace;
+                    case Water_FieldIndex.DATA:
+                        return DATA;
+                    case Water_FieldIndex.FogDepthAmount:
+                        return FogDepthAmount;
+                    case Water_FieldIndex.FogShallowColor:
+                        return FogShallowColor;
+                    case Water_FieldIndex.FogDeepColor:
+                        return FogDeepColor;
+                    case Water_FieldIndex.FogColorShallowRange:
+                        return FogColorShallowRange;
+                    case Water_FieldIndex.FogColorDeepRange:
+                        return FogColorDeepRange;
+                    case Water_FieldIndex.FogShallowAlpha:
+                        return FogShallowAlpha;
+                    case Water_FieldIndex.FogDeepAlpha:
+                        return FogDeepAlpha;
+                    case Water_FieldIndex.FogAlphaShallowRange:
+                        return FogAlphaShallowRange;
+                    case Water_FieldIndex.FogAlphaDeepRange:
+                        return FogAlphaDeepRange;
+                    case Water_FieldIndex.FogUnderwaterColor:
+                        return FogUnderwaterColor;
+                    case Water_FieldIndex.FogUnderwaterAmount:
+                        return FogUnderwaterAmount;
+                    case Water_FieldIndex.FogUnderwaterNear:
+                        return FogUnderwaterNear;
+                    case Water_FieldIndex.FogUnderwaterFar:
+                        return FogUnderwaterFar;
+                    case Water_FieldIndex.PhysicalNormalMagnitude:
+                        return PhysicalNormalMagnitude;
+                    case Water_FieldIndex.PhysicalShallowNormalFalloff:
+                        return PhysicalShallowNormalFalloff;
+                    case Water_FieldIndex.PhysicalDeepNormalFalloff:
+                        return PhysicalDeepNormalFalloff;
+                    case Water_FieldIndex.PhysicalReflectivityAmount:
+                        return PhysicalReflectivityAmount;
+                    case Water_FieldIndex.PhysicalFresnelAmount:
+                        return PhysicalFresnelAmount;
+                    case Water_FieldIndex.PhysicalSurfaceEffectFalloff:
+                        return PhysicalSurfaceEffectFalloff;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorForce:
+                        return PhysicalDisplacementSimulatorForce;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorVelocity:
+                        return PhysicalDisplacementSimulatorVelocity;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorFalloff:
+                        return PhysicalDisplacementSimulatorFalloff;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorDampener:
+                        return PhysicalDisplacementSimulatorDampener;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize:
+                        return PhysicalDisplacementSimulatorStartingSize;
+                    case Water_FieldIndex.PhysicalReflectionColor:
+                        return PhysicalReflectionColor;
+                    case Water_FieldIndex.SpecularSunSpecularPower:
+                        return SpecularSunSpecularPower;
+                    case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                        return SpecularSunSpecularMagnitude;
+                    case Water_FieldIndex.SpecularSunSparklePower:
+                        return SpecularSunSparklePower;
+                    case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                        return SpecularSunSparkleMagnitude;
+                    case Water_FieldIndex.SpecularInteriorSpecularRadius:
+                        return SpecularInteriorSpecularRadius;
+                    case Water_FieldIndex.SpecularInteriorSpecularBrightness:
+                        return SpecularInteriorSpecularBrightness;
+                    case Water_FieldIndex.SpecularInteriorSpecularPower:
+                        return SpecularInteriorSpecularPower;
+                    case Water_FieldIndex.SiltAmount:
+                        return SiltAmount;
+                    case Water_FieldIndex.SiltLightColor:
+                        return SiltLightColor;
+                    case Water_FieldIndex.SiltDarkColor:
+                        return SiltDarkColor;
+                    case Water_FieldIndex.ScreenSpaceReflections:
+                        return ScreenSpaceReflections;
+                    case Water_FieldIndex.NoiseLayerOne:
+                        return NoiseLayerOne;
+                    case Water_FieldIndex.NoiseLayerTwo:
+                        return NoiseLayerTwo;
+                    case Water_FieldIndex.NoiseLayerThree:
+                        return NoiseLayerThree;
+                    case Water_FieldIndex.GNAM:
+                        return GNAM;
+                    case Water_FieldIndex.LinearVelocity:
+                        return LinearVelocity;
+                    case Water_FieldIndex.AngularVelocity:
+                        return AngularVelocity;
+                    case Water_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +1354,162 @@ namespace Mutagen.Bethesda.Fallout4
                 Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
+                    case Water_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Water_FieldIndex.Opacity:
+                        this.Opacity = ex;
+                        break;
+                    case Water_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Water_FieldIndex.Material:
+                        this.Material = ex;
+                        break;
+                    case Water_FieldIndex.OpenSound:
+                        this.OpenSound = ex;
+                        break;
+                    case Water_FieldIndex.ConsumeSpell:
+                        this.ConsumeSpell = ex;
+                        break;
+                    case Water_FieldIndex.ContactSpell:
+                        this.ContactSpell = ex;
+                        break;
+                    case Water_FieldIndex.ImageSpace:
+                        this.ImageSpace = ex;
+                        break;
+                    case Water_FieldIndex.DATA:
+                        this.DATA = ex;
+                        break;
+                    case Water_FieldIndex.FogDepthAmount:
+                        this.FogDepthAmount = ex;
+                        break;
+                    case Water_FieldIndex.FogShallowColor:
+                        this.FogShallowColor = ex;
+                        break;
+                    case Water_FieldIndex.FogDeepColor:
+                        this.FogDeepColor = ex;
+                        break;
+                    case Water_FieldIndex.FogColorShallowRange:
+                        this.FogColorShallowRange = ex;
+                        break;
+                    case Water_FieldIndex.FogColorDeepRange:
+                        this.FogColorDeepRange = ex;
+                        break;
+                    case Water_FieldIndex.FogShallowAlpha:
+                        this.FogShallowAlpha = ex;
+                        break;
+                    case Water_FieldIndex.FogDeepAlpha:
+                        this.FogDeepAlpha = ex;
+                        break;
+                    case Water_FieldIndex.FogAlphaShallowRange:
+                        this.FogAlphaShallowRange = ex;
+                        break;
+                    case Water_FieldIndex.FogAlphaDeepRange:
+                        this.FogAlphaDeepRange = ex;
+                        break;
+                    case Water_FieldIndex.FogUnderwaterColor:
+                        this.FogUnderwaterColor = ex;
+                        break;
+                    case Water_FieldIndex.FogUnderwaterAmount:
+                        this.FogUnderwaterAmount = ex;
+                        break;
+                    case Water_FieldIndex.FogUnderwaterNear:
+                        this.FogUnderwaterNear = ex;
+                        break;
+                    case Water_FieldIndex.FogUnderwaterFar:
+                        this.FogUnderwaterFar = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalNormalMagnitude:
+                        this.PhysicalNormalMagnitude = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalShallowNormalFalloff:
+                        this.PhysicalShallowNormalFalloff = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalDeepNormalFalloff:
+                        this.PhysicalDeepNormalFalloff = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalReflectivityAmount:
+                        this.PhysicalReflectivityAmount = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalFresnelAmount:
+                        this.PhysicalFresnelAmount = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalSurfaceEffectFalloff:
+                        this.PhysicalSurfaceEffectFalloff = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorForce:
+                        this.PhysicalDisplacementSimulatorForce = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorVelocity:
+                        this.PhysicalDisplacementSimulatorVelocity = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorFalloff:
+                        this.PhysicalDisplacementSimulatorFalloff = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorDampener:
+                        this.PhysicalDisplacementSimulatorDampener = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize:
+                        this.PhysicalDisplacementSimulatorStartingSize = ex;
+                        break;
+                    case Water_FieldIndex.PhysicalReflectionColor:
+                        this.PhysicalReflectionColor = ex;
+                        break;
+                    case Water_FieldIndex.SpecularSunSpecularPower:
+                        this.SpecularSunSpecularPower = ex;
+                        break;
+                    case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                        this.SpecularSunSpecularMagnitude = ex;
+                        break;
+                    case Water_FieldIndex.SpecularSunSparklePower:
+                        this.SpecularSunSparklePower = ex;
+                        break;
+                    case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                        this.SpecularSunSparkleMagnitude = ex;
+                        break;
+                    case Water_FieldIndex.SpecularInteriorSpecularRadius:
+                        this.SpecularInteriorSpecularRadius = ex;
+                        break;
+                    case Water_FieldIndex.SpecularInteriorSpecularBrightness:
+                        this.SpecularInteriorSpecularBrightness = ex;
+                        break;
+                    case Water_FieldIndex.SpecularInteriorSpecularPower:
+                        this.SpecularInteriorSpecularPower = ex;
+                        break;
+                    case Water_FieldIndex.SiltAmount:
+                        this.SiltAmount = ex;
+                        break;
+                    case Water_FieldIndex.SiltLightColor:
+                        this.SiltLightColor = ex;
+                        break;
+                    case Water_FieldIndex.SiltDarkColor:
+                        this.SiltDarkColor = ex;
+                        break;
+                    case Water_FieldIndex.ScreenSpaceReflections:
+                        this.ScreenSpaceReflections = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOne:
+                        this.NoiseLayerOne = new MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>(ex, null);
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwo:
+                        this.NoiseLayerTwo = new MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>(ex, null);
+                        break;
+                    case Water_FieldIndex.NoiseLayerThree:
+                        this.NoiseLayerThree = new MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>(ex, null);
+                        break;
+                    case Water_FieldIndex.GNAM:
+                        this.GNAM = ex;
+                        break;
+                    case Water_FieldIndex.LinearVelocity:
+                        this.LinearVelocity = ex;
+                        break;
+                    case Water_FieldIndex.AngularVelocity:
+                        this.AngularVelocity = ex;
+                        break;
+                    case Water_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +1521,162 @@ namespace Mutagen.Bethesda.Fallout4
                 Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
+                    case Water_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Opacity:
+                        this.Opacity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Material:
+                        this.Material = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.OpenSound:
+                        this.OpenSound = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.ConsumeSpell:
+                        this.ConsumeSpell = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.ContactSpell:
+                        this.ContactSpell = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.ImageSpace:
+                        this.ImageSpace = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DATA:
+                        this.DATA = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogDepthAmount:
+                        this.FogDepthAmount = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogShallowColor:
+                        this.FogShallowColor = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogDeepColor:
+                        this.FogDeepColor = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogColorShallowRange:
+                        this.FogColorShallowRange = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogColorDeepRange:
+                        this.FogColorDeepRange = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogShallowAlpha:
+                        this.FogShallowAlpha = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogDeepAlpha:
+                        this.FogDeepAlpha = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogAlphaShallowRange:
+                        this.FogAlphaShallowRange = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogAlphaDeepRange:
+                        this.FogAlphaDeepRange = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogUnderwaterColor:
+                        this.FogUnderwaterColor = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogUnderwaterAmount:
+                        this.FogUnderwaterAmount = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogUnderwaterNear:
+                        this.FogUnderwaterNear = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogUnderwaterFar:
+                        this.FogUnderwaterFar = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalNormalMagnitude:
+                        this.PhysicalNormalMagnitude = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalShallowNormalFalloff:
+                        this.PhysicalShallowNormalFalloff = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalDeepNormalFalloff:
+                        this.PhysicalDeepNormalFalloff = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalReflectivityAmount:
+                        this.PhysicalReflectivityAmount = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalFresnelAmount:
+                        this.PhysicalFresnelAmount = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalSurfaceEffectFalloff:
+                        this.PhysicalSurfaceEffectFalloff = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorForce:
+                        this.PhysicalDisplacementSimulatorForce = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorVelocity:
+                        this.PhysicalDisplacementSimulatorVelocity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorFalloff:
+                        this.PhysicalDisplacementSimulatorFalloff = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorDampener:
+                        this.PhysicalDisplacementSimulatorDampener = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize:
+                        this.PhysicalDisplacementSimulatorStartingSize = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.PhysicalReflectionColor:
+                        this.PhysicalReflectionColor = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularSunSpecularPower:
+                        this.SpecularSunSpecularPower = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                        this.SpecularSunSpecularMagnitude = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularSunSparklePower:
+                        this.SpecularSunSparklePower = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                        this.SpecularSunSparkleMagnitude = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularInteriorSpecularRadius:
+                        this.SpecularInteriorSpecularRadius = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularInteriorSpecularBrightness:
+                        this.SpecularInteriorSpecularBrightness = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularInteriorSpecularPower:
+                        this.SpecularInteriorSpecularPower = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SiltAmount:
+                        this.SiltAmount = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SiltLightColor:
+                        this.SiltLightColor = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SiltDarkColor:
+                        this.SiltDarkColor = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.ScreenSpaceReflections:
+                        this.ScreenSpaceReflections = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOne:
+                        this.NoiseLayerOne = (MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwo:
+                        this.NoiseLayerTwo = (MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThree:
+                        this.NoiseLayerThree = (MaskItem<Exception?, WaterNoiseProperties.ErrorMask?>?)obj;
+                        break;
+                    case Water_FieldIndex.GNAM:
+                        this.GNAM = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.LinearVelocity:
+                        this.LinearVelocity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.AngularVelocity:
+                        this.AngularVelocity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +1686,58 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Opacity != null) return true;
+                if (Flags != null) return true;
+                if (Material != null) return true;
+                if (OpenSound != null) return true;
+                if (ConsumeSpell != null) return true;
+                if (ContactSpell != null) return true;
+                if (ImageSpace != null) return true;
+                if (DATA != null) return true;
+                if (FogDepthAmount != null) return true;
+                if (FogShallowColor != null) return true;
+                if (FogDeepColor != null) return true;
+                if (FogColorShallowRange != null) return true;
+                if (FogColorDeepRange != null) return true;
+                if (FogShallowAlpha != null) return true;
+                if (FogDeepAlpha != null) return true;
+                if (FogAlphaShallowRange != null) return true;
+                if (FogAlphaDeepRange != null) return true;
+                if (FogUnderwaterColor != null) return true;
+                if (FogUnderwaterAmount != null) return true;
+                if (FogUnderwaterNear != null) return true;
+                if (FogUnderwaterFar != null) return true;
+                if (PhysicalNormalMagnitude != null) return true;
+                if (PhysicalShallowNormalFalloff != null) return true;
+                if (PhysicalDeepNormalFalloff != null) return true;
+                if (PhysicalReflectivityAmount != null) return true;
+                if (PhysicalFresnelAmount != null) return true;
+                if (PhysicalSurfaceEffectFalloff != null) return true;
+                if (PhysicalDisplacementSimulatorForce != null) return true;
+                if (PhysicalDisplacementSimulatorVelocity != null) return true;
+                if (PhysicalDisplacementSimulatorFalloff != null) return true;
+                if (PhysicalDisplacementSimulatorDampener != null) return true;
+                if (PhysicalDisplacementSimulatorStartingSize != null) return true;
+                if (PhysicalReflectionColor != null) return true;
+                if (SpecularSunSpecularPower != null) return true;
+                if (SpecularSunSpecularMagnitude != null) return true;
+                if (SpecularSunSparklePower != null) return true;
+                if (SpecularSunSparkleMagnitude != null) return true;
+                if (SpecularInteriorSpecularRadius != null) return true;
+                if (SpecularInteriorSpecularBrightness != null) return true;
+                if (SpecularInteriorSpecularPower != null) return true;
+                if (SiltAmount != null) return true;
+                if (SiltLightColor != null) return true;
+                if (SiltDarkColor != null) return true;
+                if (ScreenSpaceReflections != null) return true;
+                if (NoiseLayerOne != null) return true;
+                if (NoiseLayerTwo != null) return true;
+                if (NoiseLayerThree != null) return true;
+                if (GNAM != null) return true;
+                if (LinearVelocity != null) return true;
+                if (AngularVelocity != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +1764,156 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Opacity, "Opacity");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Material, "Material");
+                }
+                {
+                    sb.AppendItem(OpenSound, "OpenSound");
+                }
+                {
+                    sb.AppendItem(ConsumeSpell, "ConsumeSpell");
+                }
+                {
+                    sb.AppendItem(ContactSpell, "ContactSpell");
+                }
+                {
+                    sb.AppendItem(ImageSpace, "ImageSpace");
+                }
+                {
+                    sb.AppendItem(DATA, "DATA");
+                }
+                {
+                    sb.AppendItem(FogDepthAmount, "FogDepthAmount");
+                }
+                {
+                    sb.AppendItem(FogShallowColor, "FogShallowColor");
+                }
+                {
+                    sb.AppendItem(FogDeepColor, "FogDeepColor");
+                }
+                {
+                    sb.AppendItem(FogColorShallowRange, "FogColorShallowRange");
+                }
+                {
+                    sb.AppendItem(FogColorDeepRange, "FogColorDeepRange");
+                }
+                {
+                    sb.AppendItem(FogShallowAlpha, "FogShallowAlpha");
+                }
+                {
+                    sb.AppendItem(FogDeepAlpha, "FogDeepAlpha");
+                }
+                {
+                    sb.AppendItem(FogAlphaShallowRange, "FogAlphaShallowRange");
+                }
+                {
+                    sb.AppendItem(FogAlphaDeepRange, "FogAlphaDeepRange");
+                }
+                {
+                    sb.AppendItem(FogUnderwaterColor, "FogUnderwaterColor");
+                }
+                {
+                    sb.AppendItem(FogUnderwaterAmount, "FogUnderwaterAmount");
+                }
+                {
+                    sb.AppendItem(FogUnderwaterNear, "FogUnderwaterNear");
+                }
+                {
+                    sb.AppendItem(FogUnderwaterFar, "FogUnderwaterFar");
+                }
+                {
+                    sb.AppendItem(PhysicalNormalMagnitude, "PhysicalNormalMagnitude");
+                }
+                {
+                    sb.AppendItem(PhysicalShallowNormalFalloff, "PhysicalShallowNormalFalloff");
+                }
+                {
+                    sb.AppendItem(PhysicalDeepNormalFalloff, "PhysicalDeepNormalFalloff");
+                }
+                {
+                    sb.AppendItem(PhysicalReflectivityAmount, "PhysicalReflectivityAmount");
+                }
+                {
+                    sb.AppendItem(PhysicalFresnelAmount, "PhysicalFresnelAmount");
+                }
+                {
+                    sb.AppendItem(PhysicalSurfaceEffectFalloff, "PhysicalSurfaceEffectFalloff");
+                }
+                {
+                    sb.AppendItem(PhysicalDisplacementSimulatorForce, "PhysicalDisplacementSimulatorForce");
+                }
+                {
+                    sb.AppendItem(PhysicalDisplacementSimulatorVelocity, "PhysicalDisplacementSimulatorVelocity");
+                }
+                {
+                    sb.AppendItem(PhysicalDisplacementSimulatorFalloff, "PhysicalDisplacementSimulatorFalloff");
+                }
+                {
+                    sb.AppendItem(PhysicalDisplacementSimulatorDampener, "PhysicalDisplacementSimulatorDampener");
+                }
+                {
+                    sb.AppendItem(PhysicalDisplacementSimulatorStartingSize, "PhysicalDisplacementSimulatorStartingSize");
+                }
+                {
+                    sb.AppendItem(PhysicalReflectionColor, "PhysicalReflectionColor");
+                }
+                {
+                    sb.AppendItem(SpecularSunSpecularPower, "SpecularSunSpecularPower");
+                }
+                {
+                    sb.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                }
+                {
+                    sb.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                }
+                {
+                    sb.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                }
+                {
+                    sb.AppendItem(SpecularInteriorSpecularRadius, "SpecularInteriorSpecularRadius");
+                }
+                {
+                    sb.AppendItem(SpecularInteriorSpecularBrightness, "SpecularInteriorSpecularBrightness");
+                }
+                {
+                    sb.AppendItem(SpecularInteriorSpecularPower, "SpecularInteriorSpecularPower");
+                }
+                {
+                    sb.AppendItem(SiltAmount, "SiltAmount");
+                }
+                {
+                    sb.AppendItem(SiltLightColor, "SiltLightColor");
+                }
+                {
+                    sb.AppendItem(SiltDarkColor, "SiltDarkColor");
+                }
+                {
+                    sb.AppendItem(ScreenSpaceReflections, "ScreenSpaceReflections");
+                }
+                NoiseLayerOne?.Print(sb);
+                NoiseLayerTwo?.Print(sb);
+                NoiseLayerThree?.Print(sb);
+                {
+                    sb.AppendItem(GNAM, "GNAM");
+                }
+                {
+                    sb.AppendItem(LinearVelocity, "LinearVelocity");
+                }
+                {
+                    sb.AppendItem(AngularVelocity, "AngularVelocity");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +1922,58 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Opacity = this.Opacity.Combine(rhs.Opacity);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Material = this.Material.Combine(rhs.Material);
+                ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
+                ret.ConsumeSpell = this.ConsumeSpell.Combine(rhs.ConsumeSpell);
+                ret.ContactSpell = this.ContactSpell.Combine(rhs.ContactSpell);
+                ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
+                ret.DATA = this.DATA.Combine(rhs.DATA);
+                ret.FogDepthAmount = this.FogDepthAmount.Combine(rhs.FogDepthAmount);
+                ret.FogShallowColor = this.FogShallowColor.Combine(rhs.FogShallowColor);
+                ret.FogDeepColor = this.FogDeepColor.Combine(rhs.FogDeepColor);
+                ret.FogColorShallowRange = this.FogColorShallowRange.Combine(rhs.FogColorShallowRange);
+                ret.FogColorDeepRange = this.FogColorDeepRange.Combine(rhs.FogColorDeepRange);
+                ret.FogShallowAlpha = this.FogShallowAlpha.Combine(rhs.FogShallowAlpha);
+                ret.FogDeepAlpha = this.FogDeepAlpha.Combine(rhs.FogDeepAlpha);
+                ret.FogAlphaShallowRange = this.FogAlphaShallowRange.Combine(rhs.FogAlphaShallowRange);
+                ret.FogAlphaDeepRange = this.FogAlphaDeepRange.Combine(rhs.FogAlphaDeepRange);
+                ret.FogUnderwaterColor = this.FogUnderwaterColor.Combine(rhs.FogUnderwaterColor);
+                ret.FogUnderwaterAmount = this.FogUnderwaterAmount.Combine(rhs.FogUnderwaterAmount);
+                ret.FogUnderwaterNear = this.FogUnderwaterNear.Combine(rhs.FogUnderwaterNear);
+                ret.FogUnderwaterFar = this.FogUnderwaterFar.Combine(rhs.FogUnderwaterFar);
+                ret.PhysicalNormalMagnitude = this.PhysicalNormalMagnitude.Combine(rhs.PhysicalNormalMagnitude);
+                ret.PhysicalShallowNormalFalloff = this.PhysicalShallowNormalFalloff.Combine(rhs.PhysicalShallowNormalFalloff);
+                ret.PhysicalDeepNormalFalloff = this.PhysicalDeepNormalFalloff.Combine(rhs.PhysicalDeepNormalFalloff);
+                ret.PhysicalReflectivityAmount = this.PhysicalReflectivityAmount.Combine(rhs.PhysicalReflectivityAmount);
+                ret.PhysicalFresnelAmount = this.PhysicalFresnelAmount.Combine(rhs.PhysicalFresnelAmount);
+                ret.PhysicalSurfaceEffectFalloff = this.PhysicalSurfaceEffectFalloff.Combine(rhs.PhysicalSurfaceEffectFalloff);
+                ret.PhysicalDisplacementSimulatorForce = this.PhysicalDisplacementSimulatorForce.Combine(rhs.PhysicalDisplacementSimulatorForce);
+                ret.PhysicalDisplacementSimulatorVelocity = this.PhysicalDisplacementSimulatorVelocity.Combine(rhs.PhysicalDisplacementSimulatorVelocity);
+                ret.PhysicalDisplacementSimulatorFalloff = this.PhysicalDisplacementSimulatorFalloff.Combine(rhs.PhysicalDisplacementSimulatorFalloff);
+                ret.PhysicalDisplacementSimulatorDampener = this.PhysicalDisplacementSimulatorDampener.Combine(rhs.PhysicalDisplacementSimulatorDampener);
+                ret.PhysicalDisplacementSimulatorStartingSize = this.PhysicalDisplacementSimulatorStartingSize.Combine(rhs.PhysicalDisplacementSimulatorStartingSize);
+                ret.PhysicalReflectionColor = this.PhysicalReflectionColor.Combine(rhs.PhysicalReflectionColor);
+                ret.SpecularSunSpecularPower = this.SpecularSunSpecularPower.Combine(rhs.SpecularSunSpecularPower);
+                ret.SpecularSunSpecularMagnitude = this.SpecularSunSpecularMagnitude.Combine(rhs.SpecularSunSpecularMagnitude);
+                ret.SpecularSunSparklePower = this.SpecularSunSparklePower.Combine(rhs.SpecularSunSparklePower);
+                ret.SpecularSunSparkleMagnitude = this.SpecularSunSparkleMagnitude.Combine(rhs.SpecularSunSparkleMagnitude);
+                ret.SpecularInteriorSpecularRadius = this.SpecularInteriorSpecularRadius.Combine(rhs.SpecularInteriorSpecularRadius);
+                ret.SpecularInteriorSpecularBrightness = this.SpecularInteriorSpecularBrightness.Combine(rhs.SpecularInteriorSpecularBrightness);
+                ret.SpecularInteriorSpecularPower = this.SpecularInteriorSpecularPower.Combine(rhs.SpecularInteriorSpecularPower);
+                ret.SiltAmount = this.SiltAmount.Combine(rhs.SiltAmount);
+                ret.SiltLightColor = this.SiltLightColor.Combine(rhs.SiltLightColor);
+                ret.SiltDarkColor = this.SiltDarkColor.Combine(rhs.SiltDarkColor);
+                ret.ScreenSpaceReflections = this.ScreenSpaceReflections.Combine(rhs.ScreenSpaceReflections);
+                ret.NoiseLayerOne = this.NoiseLayerOne.Combine(rhs.NoiseLayerOne, (l, r) => l.Combine(r));
+                ret.NoiseLayerTwo = this.NoiseLayerTwo.Combine(rhs.NoiseLayerTwo, (l, r) => l.Combine(r));
+                ret.NoiseLayerThree = this.NoiseLayerThree.Combine(rhs.NoiseLayerThree, (l, r) => l.Combine(r));
+                ret.GNAM = this.GNAM.Combine(rhs.GNAM);
+                ret.LinearVelocity = this.LinearVelocity.Combine(rhs.LinearVelocity);
+                ret.AngularVelocity = this.AngularVelocity.Combine(rhs.AngularVelocity);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +1995,176 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Opacity;
+            public bool Flags;
+            public bool Material;
+            public bool OpenSound;
+            public bool ConsumeSpell;
+            public bool ContactSpell;
+            public bool ImageSpace;
+            public bool DATA;
+            public bool FogDepthAmount;
+            public bool FogShallowColor;
+            public bool FogDeepColor;
+            public bool FogColorShallowRange;
+            public bool FogColorDeepRange;
+            public bool FogShallowAlpha;
+            public bool FogDeepAlpha;
+            public bool FogAlphaShallowRange;
+            public bool FogAlphaDeepRange;
+            public bool FogUnderwaterColor;
+            public bool FogUnderwaterAmount;
+            public bool FogUnderwaterNear;
+            public bool FogUnderwaterFar;
+            public bool PhysicalNormalMagnitude;
+            public bool PhysicalShallowNormalFalloff;
+            public bool PhysicalDeepNormalFalloff;
+            public bool PhysicalReflectivityAmount;
+            public bool PhysicalFresnelAmount;
+            public bool PhysicalSurfaceEffectFalloff;
+            public bool PhysicalDisplacementSimulatorForce;
+            public bool PhysicalDisplacementSimulatorVelocity;
+            public bool PhysicalDisplacementSimulatorFalloff;
+            public bool PhysicalDisplacementSimulatorDampener;
+            public bool PhysicalDisplacementSimulatorStartingSize;
+            public bool PhysicalReflectionColor;
+            public bool SpecularSunSpecularPower;
+            public bool SpecularSunSpecularMagnitude;
+            public bool SpecularSunSparklePower;
+            public bool SpecularSunSparkleMagnitude;
+            public bool SpecularInteriorSpecularRadius;
+            public bool SpecularInteriorSpecularBrightness;
+            public bool SpecularInteriorSpecularPower;
+            public bool SiltAmount;
+            public bool SiltLightColor;
+            public bool SiltDarkColor;
+            public bool ScreenSpaceReflections;
+            public WaterNoiseProperties.TranslationMask? NoiseLayerOne;
+            public WaterNoiseProperties.TranslationMask? NoiseLayerTwo;
+            public WaterNoiseProperties.TranslationMask? NoiseLayerThree;
+            public bool GNAM;
+            public bool LinearVelocity;
+            public bool AngularVelocity;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Opacity = defaultOn;
+                this.Flags = defaultOn;
+                this.Material = defaultOn;
+                this.OpenSound = defaultOn;
+                this.ConsumeSpell = defaultOn;
+                this.ContactSpell = defaultOn;
+                this.ImageSpace = defaultOn;
+                this.DATA = defaultOn;
+                this.FogDepthAmount = defaultOn;
+                this.FogShallowColor = defaultOn;
+                this.FogDeepColor = defaultOn;
+                this.FogColorShallowRange = defaultOn;
+                this.FogColorDeepRange = defaultOn;
+                this.FogShallowAlpha = defaultOn;
+                this.FogDeepAlpha = defaultOn;
+                this.FogAlphaShallowRange = defaultOn;
+                this.FogAlphaDeepRange = defaultOn;
+                this.FogUnderwaterColor = defaultOn;
+                this.FogUnderwaterAmount = defaultOn;
+                this.FogUnderwaterNear = defaultOn;
+                this.FogUnderwaterFar = defaultOn;
+                this.PhysicalNormalMagnitude = defaultOn;
+                this.PhysicalShallowNormalFalloff = defaultOn;
+                this.PhysicalDeepNormalFalloff = defaultOn;
+                this.PhysicalReflectivityAmount = defaultOn;
+                this.PhysicalFresnelAmount = defaultOn;
+                this.PhysicalSurfaceEffectFalloff = defaultOn;
+                this.PhysicalDisplacementSimulatorForce = defaultOn;
+                this.PhysicalDisplacementSimulatorVelocity = defaultOn;
+                this.PhysicalDisplacementSimulatorFalloff = defaultOn;
+                this.PhysicalDisplacementSimulatorDampener = defaultOn;
+                this.PhysicalDisplacementSimulatorStartingSize = defaultOn;
+                this.PhysicalReflectionColor = defaultOn;
+                this.SpecularSunSpecularPower = defaultOn;
+                this.SpecularSunSpecularMagnitude = defaultOn;
+                this.SpecularSunSparklePower = defaultOn;
+                this.SpecularSunSparkleMagnitude = defaultOn;
+                this.SpecularInteriorSpecularRadius = defaultOn;
+                this.SpecularInteriorSpecularBrightness = defaultOn;
+                this.SpecularInteriorSpecularPower = defaultOn;
+                this.SiltAmount = defaultOn;
+                this.SiltLightColor = defaultOn;
+                this.SiltDarkColor = defaultOn;
+                this.ScreenSpaceReflections = defaultOn;
+                this.GNAM = defaultOn;
+                this.LinearVelocity = defaultOn;
+                this.AngularVelocity = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Opacity, null));
+                ret.Add((Flags, null));
+                ret.Add((Material, null));
+                ret.Add((OpenSound, null));
+                ret.Add((ConsumeSpell, null));
+                ret.Add((ContactSpell, null));
+                ret.Add((ImageSpace, null));
+                ret.Add((DATA, null));
+                ret.Add((FogDepthAmount, null));
+                ret.Add((FogShallowColor, null));
+                ret.Add((FogDeepColor, null));
+                ret.Add((FogColorShallowRange, null));
+                ret.Add((FogColorDeepRange, null));
+                ret.Add((FogShallowAlpha, null));
+                ret.Add((FogDeepAlpha, null));
+                ret.Add((FogAlphaShallowRange, null));
+                ret.Add((FogAlphaDeepRange, null));
+                ret.Add((FogUnderwaterColor, null));
+                ret.Add((FogUnderwaterAmount, null));
+                ret.Add((FogUnderwaterNear, null));
+                ret.Add((FogUnderwaterFar, null));
+                ret.Add((PhysicalNormalMagnitude, null));
+                ret.Add((PhysicalShallowNormalFalloff, null));
+                ret.Add((PhysicalDeepNormalFalloff, null));
+                ret.Add((PhysicalReflectivityAmount, null));
+                ret.Add((PhysicalFresnelAmount, null));
+                ret.Add((PhysicalSurfaceEffectFalloff, null));
+                ret.Add((PhysicalDisplacementSimulatorForce, null));
+                ret.Add((PhysicalDisplacementSimulatorVelocity, null));
+                ret.Add((PhysicalDisplacementSimulatorFalloff, null));
+                ret.Add((PhysicalDisplacementSimulatorDampener, null));
+                ret.Add((PhysicalDisplacementSimulatorStartingSize, null));
+                ret.Add((PhysicalReflectionColor, null));
+                ret.Add((SpecularSunSpecularPower, null));
+                ret.Add((SpecularSunSpecularMagnitude, null));
+                ret.Add((SpecularSunSparklePower, null));
+                ret.Add((SpecularSunSparkleMagnitude, null));
+                ret.Add((SpecularInteriorSpecularRadius, null));
+                ret.Add((SpecularInteriorSpecularBrightness, null));
+                ret.Add((SpecularInteriorSpecularPower, null));
+                ret.Add((SiltAmount, null));
+                ret.Add((SiltLightColor, null));
+                ret.Add((SiltDarkColor, null));
+                ret.Add((ScreenSpaceReflections, null));
+                ret.Add((NoiseLayerOne != null ? NoiseLayerOne.OnOverall : DefaultOn, NoiseLayerOne?.GetCrystal()));
+                ret.Add((NoiseLayerTwo != null ? NoiseLayerTwo.OnOverall : DefaultOn, NoiseLayerTwo?.GetCrystal()));
+                ret.Add((NoiseLayerThree != null ? NoiseLayerThree.OnOverall : DefaultOn, NoiseLayerThree?.GetCrystal()));
+                ret.Add((GNAM, null));
+                ret.Add((LinearVelocity, null));
+                ret.Add((AngularVelocity, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +2176,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterSetterCommon.Instance.RemapLinks(this, mapping);
         public Water(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -335,6 +2220,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IWater);
 
+        [Flags]
+        public enum DNAMDataType
+        {
+            Break0 = 1
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -415,9 +2305,69 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IWater :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWaterInternal>,
+        INamed,
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
         IWaterGetter
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new Byte Opacity { get; set; }
+        new Water.Flag Flags { get; set; }
+        new IFormLinkNullable<IMaterialTypeGetter> Material { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISpellGetter> ConsumeSpell { get; set; }
+        new IFormLinkNullable<ISpellGetter> ContactSpell { get; set; }
+        new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
+        new MemorySlice<Byte>? DATA { get; set; }
+        new Single FogDepthAmount { get; set; }
+        new Color FogShallowColor { get; set; }
+        new Color FogDeepColor { get; set; }
+        new Single FogColorShallowRange { get; set; }
+        new Single FogColorDeepRange { get; set; }
+        new Single FogShallowAlpha { get; set; }
+        new Single FogDeepAlpha { get; set; }
+        new Single FogAlphaShallowRange { get; set; }
+        new Single FogAlphaDeepRange { get; set; }
+        new Color FogUnderwaterColor { get; set; }
+        new Single FogUnderwaterAmount { get; set; }
+        new Single FogUnderwaterNear { get; set; }
+        new Single FogUnderwaterFar { get; set; }
+        new Single PhysicalNormalMagnitude { get; set; }
+        new Single PhysicalShallowNormalFalloff { get; set; }
+        new Single PhysicalDeepNormalFalloff { get; set; }
+        new Single PhysicalReflectivityAmount { get; set; }
+        new Single PhysicalFresnelAmount { get; set; }
+        new Single PhysicalSurfaceEffectFalloff { get; set; }
+        new Single PhysicalDisplacementSimulatorForce { get; set; }
+        new Single PhysicalDisplacementSimulatorVelocity { get; set; }
+        new Single PhysicalDisplacementSimulatorFalloff { get; set; }
+        new Single PhysicalDisplacementSimulatorDampener { get; set; }
+        new Single PhysicalDisplacementSimulatorStartingSize { get; set; }
+        new Color PhysicalReflectionColor { get; set; }
+        new Single SpecularSunSpecularPower { get; set; }
+        new Single SpecularSunSpecularMagnitude { get; set; }
+        new Single SpecularSunSparklePower { get; set; }
+        new Single SpecularSunSparkleMagnitude { get; set; }
+        new Single SpecularInteriorSpecularRadius { get; set; }
+        new Single SpecularInteriorSpecularBrightness { get; set; }
+        new Single SpecularInteriorSpecularPower { get; set; }
+        new Single SiltAmount { get; set; }
+        new Color SiltLightColor { get; set; }
+        new Color SiltDarkColor { get; set; }
+        new Boolean ScreenSpaceReflections { get; set; }
+        new WaterNoiseProperties NoiseLayerOne { get; set; }
+        new WaterNoiseProperties NoiseLayerTwo { get; set; }
+        new WaterNoiseProperties NoiseLayerThree { get; set; }
+        new MemorySlice<Byte>? GNAM { get; set; }
+        new P3Float? LinearVelocity { get; set; }
+        new P3Float? AngularVelocity { get; set; }
+        new Water.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IWaterInternal :
@@ -431,10 +2381,72 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IWaterGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IWaterGetter>,
-        IMapsToGetter<IWaterGetter>
+        IMapsToGetter<IWaterGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Water_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        Byte Opacity { get; }
+        Water.Flag Flags { get; }
+        IFormLinkNullableGetter<IMaterialTypeGetter> Material { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound { get; }
+        IFormLinkNullableGetter<ISpellGetter> ConsumeSpell { get; }
+        IFormLinkNullableGetter<ISpellGetter> ContactSpell { get; }
+        IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
+        ReadOnlyMemorySlice<Byte>? DATA { get; }
+        Single FogDepthAmount { get; }
+        Color FogShallowColor { get; }
+        Color FogDeepColor { get; }
+        Single FogColorShallowRange { get; }
+        Single FogColorDeepRange { get; }
+        Single FogShallowAlpha { get; }
+        Single FogDeepAlpha { get; }
+        Single FogAlphaShallowRange { get; }
+        Single FogAlphaDeepRange { get; }
+        Color FogUnderwaterColor { get; }
+        Single FogUnderwaterAmount { get; }
+        Single FogUnderwaterNear { get; }
+        Single FogUnderwaterFar { get; }
+        Single PhysicalNormalMagnitude { get; }
+        Single PhysicalShallowNormalFalloff { get; }
+        Single PhysicalDeepNormalFalloff { get; }
+        Single PhysicalReflectivityAmount { get; }
+        Single PhysicalFresnelAmount { get; }
+        Single PhysicalSurfaceEffectFalloff { get; }
+        Single PhysicalDisplacementSimulatorForce { get; }
+        Single PhysicalDisplacementSimulatorVelocity { get; }
+        Single PhysicalDisplacementSimulatorFalloff { get; }
+        Single PhysicalDisplacementSimulatorDampener { get; }
+        Single PhysicalDisplacementSimulatorStartingSize { get; }
+        Color PhysicalReflectionColor { get; }
+        Single SpecularSunSpecularPower { get; }
+        Single SpecularSunSpecularMagnitude { get; }
+        Single SpecularSunSparklePower { get; }
+        Single SpecularSunSparkleMagnitude { get; }
+        Single SpecularInteriorSpecularRadius { get; }
+        Single SpecularInteriorSpecularBrightness { get; }
+        Single SpecularInteriorSpecularPower { get; }
+        Single SiltAmount { get; }
+        Color SiltLightColor { get; }
+        Color SiltDarkColor { get; }
+        Boolean ScreenSpaceReflections { get; }
+        IWaterNoisePropertiesGetter NoiseLayerOne { get; }
+        IWaterNoisePropertiesGetter NoiseLayerTwo { get; }
+        IWaterNoisePropertiesGetter NoiseLayerThree { get; }
+        ReadOnlyMemorySlice<Byte>? GNAM { get; }
+        P3Float? LinearVelocity { get; }
+        P3Float? AngularVelocity { get; }
+        Water.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -599,6 +2611,58 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        Opacity = 7,
+        Flags = 8,
+        Material = 9,
+        OpenSound = 10,
+        ConsumeSpell = 11,
+        ContactSpell = 12,
+        ImageSpace = 13,
+        DATA = 14,
+        FogDepthAmount = 15,
+        FogShallowColor = 16,
+        FogDeepColor = 17,
+        FogColorShallowRange = 18,
+        FogColorDeepRange = 19,
+        FogShallowAlpha = 20,
+        FogDeepAlpha = 21,
+        FogAlphaShallowRange = 22,
+        FogAlphaDeepRange = 23,
+        FogUnderwaterColor = 24,
+        FogUnderwaterAmount = 25,
+        FogUnderwaterNear = 26,
+        FogUnderwaterFar = 27,
+        PhysicalNormalMagnitude = 28,
+        PhysicalShallowNormalFalloff = 29,
+        PhysicalDeepNormalFalloff = 30,
+        PhysicalReflectivityAmount = 31,
+        PhysicalFresnelAmount = 32,
+        PhysicalSurfaceEffectFalloff = 33,
+        PhysicalDisplacementSimulatorForce = 34,
+        PhysicalDisplacementSimulatorVelocity = 35,
+        PhysicalDisplacementSimulatorFalloff = 36,
+        PhysicalDisplacementSimulatorDampener = 37,
+        PhysicalDisplacementSimulatorStartingSize = 38,
+        PhysicalReflectionColor = 39,
+        SpecularSunSpecularPower = 40,
+        SpecularSunSpecularMagnitude = 41,
+        SpecularSunSparklePower = 42,
+        SpecularSunSparkleMagnitude = 43,
+        SpecularInteriorSpecularRadius = 44,
+        SpecularInteriorSpecularBrightness = 45,
+        SpecularInteriorSpecularPower = 46,
+        SiltAmount = 47,
+        SiltLightColor = 48,
+        SiltDarkColor = 49,
+        ScreenSpaceReflections = 50,
+        NoiseLayerOne = 51,
+        NoiseLayerTwo = 52,
+        NoiseLayerThree = 53,
+        GNAM = 54,
+        LinearVelocity = 55,
+        AngularVelocity = 56,
+        DNAMDataTypeState = 57,
     }
     #endregion
 
@@ -616,9 +2680,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "ae105b0f-70dd-40cb-b5be-e41cac5b0530";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 52;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 58;
 
         public static readonly Type MaskType = typeof(Water.Mask<>);
 
@@ -648,8 +2712,26 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.WATR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.WATR);
+            var all = RecordCollection.Factory(
+                RecordTypes.WATR,
+                RecordTypes.FULL,
+                RecordTypes.ANAM,
+                RecordTypes.FNAM,
+                RecordTypes.TNAM,
+                RecordTypes.SNAM,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM,
+                RecordTypes.INAM,
+                RecordTypes.DATA,
+                RecordTypes.DNAM,
+                RecordTypes.GNAM,
+                RecordTypes.NAM0,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.NAM4);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
@@ -693,6 +2775,58 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWaterInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Opacity = default;
+            item.Flags = default;
+            item.Material.Clear();
+            item.OpenSound.Clear();
+            item.ConsumeSpell.Clear();
+            item.ContactSpell.Clear();
+            item.ImageSpace.Clear();
+            item.DATA = default;
+            item.FogDepthAmount = default;
+            item.FogShallowColor = default;
+            item.FogDeepColor = default;
+            item.FogColorShallowRange = default;
+            item.FogColorDeepRange = default;
+            item.FogShallowAlpha = default;
+            item.FogDeepAlpha = default;
+            item.FogAlphaShallowRange = default;
+            item.FogAlphaDeepRange = default;
+            item.FogUnderwaterColor = default;
+            item.FogUnderwaterAmount = default;
+            item.FogUnderwaterNear = default;
+            item.FogUnderwaterFar = default;
+            item.PhysicalNormalMagnitude = default;
+            item.PhysicalShallowNormalFalloff = default;
+            item.PhysicalDeepNormalFalloff = default;
+            item.PhysicalReflectivityAmount = default;
+            item.PhysicalFresnelAmount = default;
+            item.PhysicalSurfaceEffectFalloff = default;
+            item.PhysicalDisplacementSimulatorForce = default;
+            item.PhysicalDisplacementSimulatorVelocity = default;
+            item.PhysicalDisplacementSimulatorFalloff = default;
+            item.PhysicalDisplacementSimulatorDampener = default;
+            item.PhysicalDisplacementSimulatorStartingSize = default;
+            item.PhysicalReflectionColor = default;
+            item.SpecularSunSpecularPower = default;
+            item.SpecularSunSpecularMagnitude = default;
+            item.SpecularSunSparklePower = default;
+            item.SpecularSunSparkleMagnitude = default;
+            item.SpecularInteriorSpecularRadius = default;
+            item.SpecularInteriorSpecularBrightness = default;
+            item.SpecularInteriorSpecularPower = default;
+            item.SiltAmount = default;
+            item.SiltLightColor = default;
+            item.SiltDarkColor = default;
+            item.ScreenSpaceReflections = default;
+            item.NoiseLayerOne.Clear();
+            item.NoiseLayerTwo.Clear();
+            item.NoiseLayerThree.Clear();
+            item.GNAM = default;
+            item.LinearVelocity = default;
+            item.AngularVelocity = default;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -710,6 +2844,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IWater obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Material.Relink(mapping);
+            obj.OpenSound.Relink(mapping);
+            obj.ConsumeSpell.Relink(mapping);
+            obj.ContactSpell.Relink(mapping);
+            obj.ImageSpace.Relink(mapping);
         }
         
         #endregion
@@ -778,6 +2917,58 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Opacity = item.Opacity == rhs.Opacity;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Material = item.Material.Equals(rhs.Material);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.ConsumeSpell = item.ConsumeSpell.Equals(rhs.ConsumeSpell);
+            ret.ContactSpell = item.ContactSpell.Equals(rhs.ContactSpell);
+            ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
+            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
+            ret.FogDepthAmount = item.FogDepthAmount.EqualsWithin(rhs.FogDepthAmount);
+            ret.FogShallowColor = item.FogShallowColor.ColorOnlyEquals(rhs.FogShallowColor);
+            ret.FogDeepColor = item.FogDeepColor.ColorOnlyEquals(rhs.FogDeepColor);
+            ret.FogColorShallowRange = item.FogColorShallowRange.EqualsWithin(rhs.FogColorShallowRange);
+            ret.FogColorDeepRange = item.FogColorDeepRange.EqualsWithin(rhs.FogColorDeepRange);
+            ret.FogShallowAlpha = item.FogShallowAlpha.EqualsWithin(rhs.FogShallowAlpha);
+            ret.FogDeepAlpha = item.FogDeepAlpha.EqualsWithin(rhs.FogDeepAlpha);
+            ret.FogAlphaShallowRange = item.FogAlphaShallowRange.EqualsWithin(rhs.FogAlphaShallowRange);
+            ret.FogAlphaDeepRange = item.FogAlphaDeepRange.EqualsWithin(rhs.FogAlphaDeepRange);
+            ret.FogUnderwaterColor = item.FogUnderwaterColor.ColorOnlyEquals(rhs.FogUnderwaterColor);
+            ret.FogUnderwaterAmount = item.FogUnderwaterAmount.EqualsWithin(rhs.FogUnderwaterAmount);
+            ret.FogUnderwaterNear = item.FogUnderwaterNear.EqualsWithin(rhs.FogUnderwaterNear);
+            ret.FogUnderwaterFar = item.FogUnderwaterFar.EqualsWithin(rhs.FogUnderwaterFar);
+            ret.PhysicalNormalMagnitude = item.PhysicalNormalMagnitude.EqualsWithin(rhs.PhysicalNormalMagnitude);
+            ret.PhysicalShallowNormalFalloff = item.PhysicalShallowNormalFalloff.EqualsWithin(rhs.PhysicalShallowNormalFalloff);
+            ret.PhysicalDeepNormalFalloff = item.PhysicalDeepNormalFalloff.EqualsWithin(rhs.PhysicalDeepNormalFalloff);
+            ret.PhysicalReflectivityAmount = item.PhysicalReflectivityAmount.EqualsWithin(rhs.PhysicalReflectivityAmount);
+            ret.PhysicalFresnelAmount = item.PhysicalFresnelAmount.EqualsWithin(rhs.PhysicalFresnelAmount);
+            ret.PhysicalSurfaceEffectFalloff = item.PhysicalSurfaceEffectFalloff.EqualsWithin(rhs.PhysicalSurfaceEffectFalloff);
+            ret.PhysicalDisplacementSimulatorForce = item.PhysicalDisplacementSimulatorForce.EqualsWithin(rhs.PhysicalDisplacementSimulatorForce);
+            ret.PhysicalDisplacementSimulatorVelocity = item.PhysicalDisplacementSimulatorVelocity.EqualsWithin(rhs.PhysicalDisplacementSimulatorVelocity);
+            ret.PhysicalDisplacementSimulatorFalloff = item.PhysicalDisplacementSimulatorFalloff.EqualsWithin(rhs.PhysicalDisplacementSimulatorFalloff);
+            ret.PhysicalDisplacementSimulatorDampener = item.PhysicalDisplacementSimulatorDampener.EqualsWithin(rhs.PhysicalDisplacementSimulatorDampener);
+            ret.PhysicalDisplacementSimulatorStartingSize = item.PhysicalDisplacementSimulatorStartingSize.EqualsWithin(rhs.PhysicalDisplacementSimulatorStartingSize);
+            ret.PhysicalReflectionColor = item.PhysicalReflectionColor.ColorOnlyEquals(rhs.PhysicalReflectionColor);
+            ret.SpecularSunSpecularPower = item.SpecularSunSpecularPower.EqualsWithin(rhs.SpecularSunSpecularPower);
+            ret.SpecularSunSpecularMagnitude = item.SpecularSunSpecularMagnitude.EqualsWithin(rhs.SpecularSunSpecularMagnitude);
+            ret.SpecularSunSparklePower = item.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower);
+            ret.SpecularSunSparkleMagnitude = item.SpecularSunSparkleMagnitude.EqualsWithin(rhs.SpecularSunSparkleMagnitude);
+            ret.SpecularInteriorSpecularRadius = item.SpecularInteriorSpecularRadius.EqualsWithin(rhs.SpecularInteriorSpecularRadius);
+            ret.SpecularInteriorSpecularBrightness = item.SpecularInteriorSpecularBrightness.EqualsWithin(rhs.SpecularInteriorSpecularBrightness);
+            ret.SpecularInteriorSpecularPower = item.SpecularInteriorSpecularPower.EqualsWithin(rhs.SpecularInteriorSpecularPower);
+            ret.SiltAmount = item.SiltAmount.EqualsWithin(rhs.SiltAmount);
+            ret.SiltLightColor = item.SiltLightColor.ColorOnlyEquals(rhs.SiltLightColor);
+            ret.SiltDarkColor = item.SiltDarkColor.ColorOnlyEquals(rhs.SiltDarkColor);
+            ret.ScreenSpaceReflections = item.ScreenSpaceReflections == rhs.ScreenSpaceReflections;
+            ret.NoiseLayerOne = MaskItemExt.Factory(item.NoiseLayerOne.GetEqualsMask(rhs.NoiseLayerOne, include), include);
+            ret.NoiseLayerTwo = MaskItemExt.Factory(item.NoiseLayerTwo.GetEqualsMask(rhs.NoiseLayerTwo, include), include);
+            ret.NoiseLayerThree = MaskItemExt.Factory(item.NoiseLayerThree.GetEqualsMask(rhs.NoiseLayerThree, include), include);
+            ret.GNAM = MemorySliceExt.Equal(item.GNAM, rhs.GNAM);
+            ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
+            ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +3018,219 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Opacity ?? true)
+            {
+                sb.AppendItem(item.Opacity, "Opacity");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Material ?? true)
+            {
+                sb.AppendItem(item.Material.FormKeyNullable, "Material");
+            }
+            if (printMask?.OpenSound ?? true)
+            {
+                sb.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
+            }
+            if (printMask?.ConsumeSpell ?? true)
+            {
+                sb.AppendItem(item.ConsumeSpell.FormKeyNullable, "ConsumeSpell");
+            }
+            if (printMask?.ContactSpell ?? true)
+            {
+                sb.AppendItem(item.ContactSpell.FormKeyNullable, "ContactSpell");
+            }
+            if (printMask?.ImageSpace ?? true)
+            {
+                sb.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
+            }
+            if ((printMask?.DATA ?? true)
+                && item.DATA is {} DATAItem)
+            {
+                sb.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
+            }
+            if (printMask?.FogDepthAmount ?? true)
+            {
+                sb.AppendItem(item.FogDepthAmount, "FogDepthAmount");
+            }
+            if (printMask?.FogShallowColor ?? true)
+            {
+                sb.AppendItem(item.FogShallowColor, "FogShallowColor");
+            }
+            if (printMask?.FogDeepColor ?? true)
+            {
+                sb.AppendItem(item.FogDeepColor, "FogDeepColor");
+            }
+            if (printMask?.FogColorShallowRange ?? true)
+            {
+                sb.AppendItem(item.FogColorShallowRange, "FogColorShallowRange");
+            }
+            if (printMask?.FogColorDeepRange ?? true)
+            {
+                sb.AppendItem(item.FogColorDeepRange, "FogColorDeepRange");
+            }
+            if (printMask?.FogShallowAlpha ?? true)
+            {
+                sb.AppendItem(item.FogShallowAlpha, "FogShallowAlpha");
+            }
+            if (printMask?.FogDeepAlpha ?? true)
+            {
+                sb.AppendItem(item.FogDeepAlpha, "FogDeepAlpha");
+            }
+            if (printMask?.FogAlphaShallowRange ?? true)
+            {
+                sb.AppendItem(item.FogAlphaShallowRange, "FogAlphaShallowRange");
+            }
+            if (printMask?.FogAlphaDeepRange ?? true)
+            {
+                sb.AppendItem(item.FogAlphaDeepRange, "FogAlphaDeepRange");
+            }
+            if (printMask?.FogUnderwaterColor ?? true)
+            {
+                sb.AppendItem(item.FogUnderwaterColor, "FogUnderwaterColor");
+            }
+            if (printMask?.FogUnderwaterAmount ?? true)
+            {
+                sb.AppendItem(item.FogUnderwaterAmount, "FogUnderwaterAmount");
+            }
+            if (printMask?.FogUnderwaterNear ?? true)
+            {
+                sb.AppendItem(item.FogUnderwaterNear, "FogUnderwaterNear");
+            }
+            if (printMask?.FogUnderwaterFar ?? true)
+            {
+                sb.AppendItem(item.FogUnderwaterFar, "FogUnderwaterFar");
+            }
+            if (printMask?.PhysicalNormalMagnitude ?? true)
+            {
+                sb.AppendItem(item.PhysicalNormalMagnitude, "PhysicalNormalMagnitude");
+            }
+            if (printMask?.PhysicalShallowNormalFalloff ?? true)
+            {
+                sb.AppendItem(item.PhysicalShallowNormalFalloff, "PhysicalShallowNormalFalloff");
+            }
+            if (printMask?.PhysicalDeepNormalFalloff ?? true)
+            {
+                sb.AppendItem(item.PhysicalDeepNormalFalloff, "PhysicalDeepNormalFalloff");
+            }
+            if (printMask?.PhysicalReflectivityAmount ?? true)
+            {
+                sb.AppendItem(item.PhysicalReflectivityAmount, "PhysicalReflectivityAmount");
+            }
+            if (printMask?.PhysicalFresnelAmount ?? true)
+            {
+                sb.AppendItem(item.PhysicalFresnelAmount, "PhysicalFresnelAmount");
+            }
+            if (printMask?.PhysicalSurfaceEffectFalloff ?? true)
+            {
+                sb.AppendItem(item.PhysicalSurfaceEffectFalloff, "PhysicalSurfaceEffectFalloff");
+            }
+            if (printMask?.PhysicalDisplacementSimulatorForce ?? true)
+            {
+                sb.AppendItem(item.PhysicalDisplacementSimulatorForce, "PhysicalDisplacementSimulatorForce");
+            }
+            if (printMask?.PhysicalDisplacementSimulatorVelocity ?? true)
+            {
+                sb.AppendItem(item.PhysicalDisplacementSimulatorVelocity, "PhysicalDisplacementSimulatorVelocity");
+            }
+            if (printMask?.PhysicalDisplacementSimulatorFalloff ?? true)
+            {
+                sb.AppendItem(item.PhysicalDisplacementSimulatorFalloff, "PhysicalDisplacementSimulatorFalloff");
+            }
+            if (printMask?.PhysicalDisplacementSimulatorDampener ?? true)
+            {
+                sb.AppendItem(item.PhysicalDisplacementSimulatorDampener, "PhysicalDisplacementSimulatorDampener");
+            }
+            if (printMask?.PhysicalDisplacementSimulatorStartingSize ?? true)
+            {
+                sb.AppendItem(item.PhysicalDisplacementSimulatorStartingSize, "PhysicalDisplacementSimulatorStartingSize");
+            }
+            if (printMask?.PhysicalReflectionColor ?? true)
+            {
+                sb.AppendItem(item.PhysicalReflectionColor, "PhysicalReflectionColor");
+            }
+            if (printMask?.SpecularSunSpecularPower ?? true)
+            {
+                sb.AppendItem(item.SpecularSunSpecularPower, "SpecularSunSpecularPower");
+            }
+            if (printMask?.SpecularSunSpecularMagnitude ?? true)
+            {
+                sb.AppendItem(item.SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+            }
+            if (printMask?.SpecularSunSparklePower ?? true)
+            {
+                sb.AppendItem(item.SpecularSunSparklePower, "SpecularSunSparklePower");
+            }
+            if (printMask?.SpecularSunSparkleMagnitude ?? true)
+            {
+                sb.AppendItem(item.SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+            }
+            if (printMask?.SpecularInteriorSpecularRadius ?? true)
+            {
+                sb.AppendItem(item.SpecularInteriorSpecularRadius, "SpecularInteriorSpecularRadius");
+            }
+            if (printMask?.SpecularInteriorSpecularBrightness ?? true)
+            {
+                sb.AppendItem(item.SpecularInteriorSpecularBrightness, "SpecularInteriorSpecularBrightness");
+            }
+            if (printMask?.SpecularInteriorSpecularPower ?? true)
+            {
+                sb.AppendItem(item.SpecularInteriorSpecularPower, "SpecularInteriorSpecularPower");
+            }
+            if (printMask?.SiltAmount ?? true)
+            {
+                sb.AppendItem(item.SiltAmount, "SiltAmount");
+            }
+            if (printMask?.SiltLightColor ?? true)
+            {
+                sb.AppendItem(item.SiltLightColor, "SiltLightColor");
+            }
+            if (printMask?.SiltDarkColor ?? true)
+            {
+                sb.AppendItem(item.SiltDarkColor, "SiltDarkColor");
+            }
+            if (printMask?.ScreenSpaceReflections ?? true)
+            {
+                sb.AppendItem(item.ScreenSpaceReflections, "ScreenSpaceReflections");
+            }
+            if (printMask?.NoiseLayerOne?.Overall ?? true)
+            {
+                item.NoiseLayerOne?.Print(sb, "NoiseLayerOne");
+            }
+            if (printMask?.NoiseLayerTwo?.Overall ?? true)
+            {
+                item.NoiseLayerTwo?.Print(sb, "NoiseLayerTwo");
+            }
+            if (printMask?.NoiseLayerThree?.Overall ?? true)
+            {
+                item.NoiseLayerThree?.Print(sb, "NoiseLayerThree");
+            }
+            if ((printMask?.GNAM ?? true)
+                && item.GNAM is {} GNAMItem)
+            {
+                sb.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
+            }
+            if ((printMask?.LinearVelocity ?? true)
+                && item.LinearVelocity is {} LinearVelocityItem)
+            {
+                sb.AppendItem(LinearVelocityItem, "LinearVelocity");
+            }
+            if ((printMask?.AngularVelocity ?? true)
+                && item.AngularVelocity is {} AngularVelocityItem)
+            {
+                sb.AppendItem(AngularVelocityItem, "AngularVelocity");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public static Water_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +3279,226 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
+            {
+                if (lhs.Opacity != rhs.Opacity) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
+            {
+                if (!lhs.Material.Equals(rhs.Material)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
+            {
+                if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.ConsumeSpell) ?? true))
+            {
+                if (!lhs.ConsumeSpell.Equals(rhs.ConsumeSpell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.ContactSpell) ?? true))
+            {
+                if (!lhs.ContactSpell.Equals(rhs.ContactSpell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
+            {
+                if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.DATA) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogDepthAmount) ?? true))
+            {
+                if (!lhs.FogDepthAmount.EqualsWithin(rhs.FogDepthAmount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogShallowColor) ?? true))
+            {
+                if (!lhs.FogShallowColor.ColorOnlyEquals(rhs.FogShallowColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogDeepColor) ?? true))
+            {
+                if (!lhs.FogDeepColor.ColorOnlyEquals(rhs.FogDeepColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogColorShallowRange) ?? true))
+            {
+                if (!lhs.FogColorShallowRange.EqualsWithin(rhs.FogColorShallowRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogColorDeepRange) ?? true))
+            {
+                if (!lhs.FogColorDeepRange.EqualsWithin(rhs.FogColorDeepRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogShallowAlpha) ?? true))
+            {
+                if (!lhs.FogShallowAlpha.EqualsWithin(rhs.FogShallowAlpha)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogDeepAlpha) ?? true))
+            {
+                if (!lhs.FogDeepAlpha.EqualsWithin(rhs.FogDeepAlpha)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaShallowRange) ?? true))
+            {
+                if (!lhs.FogAlphaShallowRange.EqualsWithin(rhs.FogAlphaShallowRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaDeepRange) ?? true))
+            {
+                if (!lhs.FogAlphaDeepRange.EqualsWithin(rhs.FogAlphaDeepRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterColor) ?? true))
+            {
+                if (!lhs.FogUnderwaterColor.ColorOnlyEquals(rhs.FogUnderwaterColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterAmount) ?? true))
+            {
+                if (!lhs.FogUnderwaterAmount.EqualsWithin(rhs.FogUnderwaterAmount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterNear) ?? true))
+            {
+                if (!lhs.FogUnderwaterNear.EqualsWithin(rhs.FogUnderwaterNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterFar) ?? true))
+            {
+                if (!lhs.FogUnderwaterFar.EqualsWithin(rhs.FogUnderwaterFar)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalNormalMagnitude) ?? true))
+            {
+                if (!lhs.PhysicalNormalMagnitude.EqualsWithin(rhs.PhysicalNormalMagnitude)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalShallowNormalFalloff) ?? true))
+            {
+                if (!lhs.PhysicalShallowNormalFalloff.EqualsWithin(rhs.PhysicalShallowNormalFalloff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDeepNormalFalloff) ?? true))
+            {
+                if (!lhs.PhysicalDeepNormalFalloff.EqualsWithin(rhs.PhysicalDeepNormalFalloff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectivityAmount) ?? true))
+            {
+                if (!lhs.PhysicalReflectivityAmount.EqualsWithin(rhs.PhysicalReflectivityAmount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalFresnelAmount) ?? true))
+            {
+                if (!lhs.PhysicalFresnelAmount.EqualsWithin(rhs.PhysicalFresnelAmount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalSurfaceEffectFalloff) ?? true))
+            {
+                if (!lhs.PhysicalSurfaceEffectFalloff.EqualsWithin(rhs.PhysicalSurfaceEffectFalloff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorForce) ?? true))
+            {
+                if (!lhs.PhysicalDisplacementSimulatorForce.EqualsWithin(rhs.PhysicalDisplacementSimulatorForce)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorVelocity) ?? true))
+            {
+                if (!lhs.PhysicalDisplacementSimulatorVelocity.EqualsWithin(rhs.PhysicalDisplacementSimulatorVelocity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorFalloff) ?? true))
+            {
+                if (!lhs.PhysicalDisplacementSimulatorFalloff.EqualsWithin(rhs.PhysicalDisplacementSimulatorFalloff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorDampener) ?? true))
+            {
+                if (!lhs.PhysicalDisplacementSimulatorDampener.EqualsWithin(rhs.PhysicalDisplacementSimulatorDampener)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize) ?? true))
+            {
+                if (!lhs.PhysicalDisplacementSimulatorStartingSize.EqualsWithin(rhs.PhysicalDisplacementSimulatorStartingSize)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectionColor) ?? true))
+            {
+                if (!lhs.PhysicalReflectionColor.ColorOnlyEquals(rhs.PhysicalReflectionColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularPower) ?? true))
+            {
+                if (!lhs.SpecularSunSpecularPower.EqualsWithin(rhs.SpecularSunSpecularPower)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularMagnitude) ?? true))
+            {
+                if (!lhs.SpecularSunSpecularMagnitude.EqualsWithin(rhs.SpecularSunSpecularMagnitude)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparklePower) ?? true))
+            {
+                if (!lhs.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparkleMagnitude) ?? true))
+            {
+                if (!lhs.SpecularSunSparkleMagnitude.EqualsWithin(rhs.SpecularSunSparkleMagnitude)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularRadius) ?? true))
+            {
+                if (!lhs.SpecularInteriorSpecularRadius.EqualsWithin(rhs.SpecularInteriorSpecularRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularBrightness) ?? true))
+            {
+                if (!lhs.SpecularInteriorSpecularBrightness.EqualsWithin(rhs.SpecularInteriorSpecularBrightness)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularPower) ?? true))
+            {
+                if (!lhs.SpecularInteriorSpecularPower.EqualsWithin(rhs.SpecularInteriorSpecularPower)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SiltAmount) ?? true))
+            {
+                if (!lhs.SiltAmount.EqualsWithin(rhs.SiltAmount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SiltLightColor) ?? true))
+            {
+                if (!lhs.SiltLightColor.ColorOnlyEquals(rhs.SiltLightColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SiltDarkColor) ?? true))
+            {
+                if (!lhs.SiltDarkColor.ColorOnlyEquals(rhs.SiltDarkColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.ScreenSpaceReflections) ?? true))
+            {
+                if (lhs.ScreenSpaceReflections != rhs.ScreenSpaceReflections) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOne) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NoiseLayerOne, rhs.NoiseLayerOne, out var lhsNoiseLayerOne, out var rhsNoiseLayerOne, out var isNoiseLayerOneEqual))
+                {
+                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerOne).CommonInstance()!).Equals(lhsNoiseLayerOne, rhsNoiseLayerOne, crystal?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerOne))) return false;
+                }
+                else if (!isNoiseLayerOneEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwo) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NoiseLayerTwo, rhs.NoiseLayerTwo, out var lhsNoiseLayerTwo, out var rhsNoiseLayerTwo, out var isNoiseLayerTwoEqual))
+                {
+                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerTwo).CommonInstance()!).Equals(lhsNoiseLayerTwo, rhsNoiseLayerTwo, crystal?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerTwo))) return false;
+                }
+                else if (!isNoiseLayerTwoEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThree) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NoiseLayerThree, rhs.NoiseLayerThree, out var lhsNoiseLayerThree, out var rhsNoiseLayerThree, out var isNoiseLayerThreeEqual))
+                {
+                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerThree).CommonInstance()!).Equals(lhsNoiseLayerThree, rhsNoiseLayerThree, crystal?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerThree))) return false;
+                }
+                else if (!isNoiseLayerThreeEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.GNAM, rhs.GNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
+            {
+                if (!lhs.LinearVelocity.Equals(rhs.LinearVelocity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
+            {
+                if (!lhs.AngularVelocity.Equals(rhs.AngularVelocity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            }
             return true;
         }
         
@@ -903,6 +3527,73 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IWaterGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Opacity);
+            hash.Add(item.Flags);
+            hash.Add(item.Material);
+            hash.Add(item.OpenSound);
+            hash.Add(item.ConsumeSpell);
+            hash.Add(item.ContactSpell);
+            hash.Add(item.ImageSpace);
+            if (item.DATA is {} DATAItem)
+            {
+                hash.Add(DATAItem);
+            }
+            hash.Add(item.FogDepthAmount);
+            hash.Add(item.FogShallowColor);
+            hash.Add(item.FogDeepColor);
+            hash.Add(item.FogColorShallowRange);
+            hash.Add(item.FogColorDeepRange);
+            hash.Add(item.FogShallowAlpha);
+            hash.Add(item.FogDeepAlpha);
+            hash.Add(item.FogAlphaShallowRange);
+            hash.Add(item.FogAlphaDeepRange);
+            hash.Add(item.FogUnderwaterColor);
+            hash.Add(item.FogUnderwaterAmount);
+            hash.Add(item.FogUnderwaterNear);
+            hash.Add(item.FogUnderwaterFar);
+            hash.Add(item.PhysicalNormalMagnitude);
+            hash.Add(item.PhysicalShallowNormalFalloff);
+            hash.Add(item.PhysicalDeepNormalFalloff);
+            hash.Add(item.PhysicalReflectivityAmount);
+            hash.Add(item.PhysicalFresnelAmount);
+            hash.Add(item.PhysicalSurfaceEffectFalloff);
+            hash.Add(item.PhysicalDisplacementSimulatorForce);
+            hash.Add(item.PhysicalDisplacementSimulatorVelocity);
+            hash.Add(item.PhysicalDisplacementSimulatorFalloff);
+            hash.Add(item.PhysicalDisplacementSimulatorDampener);
+            hash.Add(item.PhysicalDisplacementSimulatorStartingSize);
+            hash.Add(item.PhysicalReflectionColor);
+            hash.Add(item.SpecularSunSpecularPower);
+            hash.Add(item.SpecularSunSpecularMagnitude);
+            hash.Add(item.SpecularSunSparklePower);
+            hash.Add(item.SpecularSunSparkleMagnitude);
+            hash.Add(item.SpecularInteriorSpecularRadius);
+            hash.Add(item.SpecularInteriorSpecularBrightness);
+            hash.Add(item.SpecularInteriorSpecularPower);
+            hash.Add(item.SiltAmount);
+            hash.Add(item.SiltLightColor);
+            hash.Add(item.SiltDarkColor);
+            hash.Add(item.ScreenSpaceReflections);
+            hash.Add(item.NoiseLayerOne);
+            hash.Add(item.NoiseLayerTwo);
+            hash.Add(item.NoiseLayerThree);
+            if (item.GNAM is {} GNAMItem)
+            {
+                hash.Add(GNAMItem);
+            }
+            if (item.LinearVelocity is {} LinearVelocityitem)
+            {
+                hash.Add(LinearVelocityitem);
+            }
+            if (item.AngularVelocity is {} AngularVelocityitem)
+            {
+                hash.Add(AngularVelocityitem);
+            }
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -931,6 +3622,26 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Material, out var MaterialInfo))
+            {
+                yield return MaterialInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.OpenSound, out var OpenSoundInfo))
+            {
+                yield return OpenSoundInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.ConsumeSpell, out var ConsumeSpellInfo))
+            {
+                yield return ConsumeSpellInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.ContactSpell, out var ContactSpellInfo))
+            {
+                yield return ContactSpellInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.ImageSpace, out var ImageSpaceInfo))
+            {
+                yield return ImageSpaceInfo;
             }
             yield break;
         }
@@ -1006,6 +3717,282 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
+            {
+                item.Opacity = rhs.Opacity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
+            {
+                item.Material.SetTo(rhs.Material.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
+            {
+                item.OpenSound.SetTo(rhs.OpenSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ConsumeSpell) ?? true))
+            {
+                item.ConsumeSpell.SetTo(rhs.ConsumeSpell.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ContactSpell) ?? true))
+            {
+                item.ContactSpell.SetTo(rhs.ContactSpell.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
+            {
+                item.ImageSpace.SetTo(rhs.ImageSpace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DATA) ?? true))
+            {
+                if(rhs.DATA is {} DATArhs)
+                {
+                    item.DATA = DATArhs.ToArray();
+                }
+                else
+                {
+                    item.DATA = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogDepthAmount) ?? true))
+            {
+                item.FogDepthAmount = rhs.FogDepthAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowColor) ?? true))
+            {
+                item.FogShallowColor = rhs.FogShallowColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepColor) ?? true))
+            {
+                item.FogDeepColor = rhs.FogDeepColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogColorShallowRange) ?? true))
+            {
+                item.FogColorShallowRange = rhs.FogColorShallowRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogColorDeepRange) ?? true))
+            {
+                item.FogColorDeepRange = rhs.FogColorDeepRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowAlpha) ?? true))
+            {
+                item.FogShallowAlpha = rhs.FogShallowAlpha;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepAlpha) ?? true))
+            {
+                item.FogDeepAlpha = rhs.FogDeepAlpha;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaShallowRange) ?? true))
+            {
+                item.FogAlphaShallowRange = rhs.FogAlphaShallowRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaDeepRange) ?? true))
+            {
+                item.FogAlphaDeepRange = rhs.FogAlphaDeepRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterColor) ?? true))
+            {
+                item.FogUnderwaterColor = rhs.FogUnderwaterColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterAmount) ?? true))
+            {
+                item.FogUnderwaterAmount = rhs.FogUnderwaterAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterNear) ?? true))
+            {
+                item.FogUnderwaterNear = rhs.FogUnderwaterNear;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterFar) ?? true))
+            {
+                item.FogUnderwaterFar = rhs.FogUnderwaterFar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalNormalMagnitude) ?? true))
+            {
+                item.PhysicalNormalMagnitude = rhs.PhysicalNormalMagnitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalShallowNormalFalloff) ?? true))
+            {
+                item.PhysicalShallowNormalFalloff = rhs.PhysicalShallowNormalFalloff;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDeepNormalFalloff) ?? true))
+            {
+                item.PhysicalDeepNormalFalloff = rhs.PhysicalDeepNormalFalloff;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectivityAmount) ?? true))
+            {
+                item.PhysicalReflectivityAmount = rhs.PhysicalReflectivityAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalFresnelAmount) ?? true))
+            {
+                item.PhysicalFresnelAmount = rhs.PhysicalFresnelAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalSurfaceEffectFalloff) ?? true))
+            {
+                item.PhysicalSurfaceEffectFalloff = rhs.PhysicalSurfaceEffectFalloff;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorForce) ?? true))
+            {
+                item.PhysicalDisplacementSimulatorForce = rhs.PhysicalDisplacementSimulatorForce;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorVelocity) ?? true))
+            {
+                item.PhysicalDisplacementSimulatorVelocity = rhs.PhysicalDisplacementSimulatorVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorFalloff) ?? true))
+            {
+                item.PhysicalDisplacementSimulatorFalloff = rhs.PhysicalDisplacementSimulatorFalloff;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorDampener) ?? true))
+            {
+                item.PhysicalDisplacementSimulatorDampener = rhs.PhysicalDisplacementSimulatorDampener;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize) ?? true))
+            {
+                item.PhysicalDisplacementSimulatorStartingSize = rhs.PhysicalDisplacementSimulatorStartingSize;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectionColor) ?? true))
+            {
+                item.PhysicalReflectionColor = rhs.PhysicalReflectionColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularPower) ?? true))
+            {
+                item.SpecularSunSpecularPower = rhs.SpecularSunSpecularPower;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularMagnitude) ?? true))
+            {
+                item.SpecularSunSpecularMagnitude = rhs.SpecularSunSpecularMagnitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparklePower) ?? true))
+            {
+                item.SpecularSunSparklePower = rhs.SpecularSunSparklePower;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparkleMagnitude) ?? true))
+            {
+                item.SpecularSunSparkleMagnitude = rhs.SpecularSunSparkleMagnitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularRadius) ?? true))
+            {
+                item.SpecularInteriorSpecularRadius = rhs.SpecularInteriorSpecularRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularBrightness) ?? true))
+            {
+                item.SpecularInteriorSpecularBrightness = rhs.SpecularInteriorSpecularBrightness;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularPower) ?? true))
+            {
+                item.SpecularInteriorSpecularPower = rhs.SpecularInteriorSpecularPower;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SiltAmount) ?? true))
+            {
+                item.SiltAmount = rhs.SiltAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SiltLightColor) ?? true))
+            {
+                item.SiltLightColor = rhs.SiltLightColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SiltDarkColor) ?? true))
+            {
+                item.SiltDarkColor = rhs.SiltDarkColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ScreenSpaceReflections) ?? true))
+            {
+                item.ScreenSpaceReflections = rhs.ScreenSpaceReflections;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOne) ?? true))
+            {
+                errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOne);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOne) ?? true))
+                    {
+                        item.NoiseLayerOne = rhs.NoiseLayerOne.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerOne),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwo) ?? true))
+            {
+                errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwo);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwo) ?? true))
+                    {
+                        item.NoiseLayerTwo = rhs.NoiseLayerTwo.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerTwo),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThree) ?? true))
+            {
+                errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThree);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThree) ?? true))
+                    {
+                        item.NoiseLayerThree = rhs.NoiseLayerThree.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerThree),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
+            {
+                if(rhs.GNAM is {} GNAMrhs)
+                {
+                    item.GNAM = GNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.GNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
+            {
+                item.LinearVelocity = rhs.LinearVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
+            {
+                item.AngularVelocity = rhs.AngularVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +4141,221 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IWaterGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IWaterGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Opacity,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            EnumBinaryTranslation<Water.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Material,
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.OpenSound,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ConsumeSpell,
+                header: translationParams.ConvertToCustom(RecordTypes.XNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ContactSpell,
+                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpace,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.DATA,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDepthAmount);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogShallowColor);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogDeepColor);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogColorShallowRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogColorDeepRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogShallowAlpha);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDeepAlpha);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogAlphaShallowRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogAlphaDeepRange);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogUnderwaterColor);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogUnderwaterAmount);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogUnderwaterNear);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogUnderwaterFar);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalNormalMagnitude);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalShallowNormalFalloff);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalDeepNormalFalloff);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalReflectivityAmount);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalFresnelAmount);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalSurfaceEffectFalloff);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalDisplacementSimulatorForce);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalDisplacementSimulatorVelocity);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalDisplacementSimulatorFalloff);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalDisplacementSimulatorDampener);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalDisplacementSimulatorStartingSize);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalReflectionColor);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularSunSpecularPower);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularSunSpecularMagnitude);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularSunSparklePower);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularSunSparkleMagnitude);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularInteriorSpecularRadius);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularInteriorSpecularBrightness);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularInteriorSpecularPower);
+                WaterBinaryWriteTranslation.WriteBinaryNoiseLayerParsing(
+                    writer: writer,
+                    item: item);
+                if (!item.DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.SiltAmount);
+                    ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.SiltLightColor);
+                    ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.SiltDarkColor);
+                    writer.Write(item.ScreenSpaceReflections);
+                }
+            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.GNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LinearVelocity,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0));
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.AngularVelocity,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
+            WaterBinaryWriteTranslation.WriteBinaryNoiseTextureParsing(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryNoiseLayerParsingCustom(
+            MutagenWriter writer,
+            IWaterGetter item);
+
+        public static void WriteBinaryNoiseLayerParsing(
+            MutagenWriter writer,
+            IWaterGetter item)
+        {
+            WriteBinaryNoiseLayerParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryNoiseTextureParsingCustom(
+            MutagenWriter writer,
+            IWaterGetter item);
+
+        public static void WriteBinaryNoiseTextureParsing(
+            MutagenWriter writer,
+            IWaterGetter item)
+        {
+            WriteBinaryNoiseTextureParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IWaterGetter item,
@@ -1165,13 +4367,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +4433,172 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IWaterInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Water_FieldIndex.Name;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Opacity = frame.ReadUInt8();
+                    return (int)Water_FieldIndex.Opacity;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Water.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Water_FieldIndex.Flags;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Material.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Water_FieldIndex.Material;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OpenSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Water_FieldIndex.OpenSound;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ConsumeSpell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Water_FieldIndex.ConsumeSpell;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ContactSpell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Water_FieldIndex.ContactSpell;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Water_FieldIndex.ImageSpace;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DATA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Water_FieldIndex.DATA;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.FogDepthAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogShallowColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogDeepColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogColorShallowRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogColorDeepRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogShallowAlpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogDeepAlpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogAlphaShallowRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogAlphaDeepRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogUnderwaterColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogUnderwaterAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogUnderwaterNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogUnderwaterFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalNormalMagnitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalShallowNormalFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalDeepNormalFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalReflectivityAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalFresnelAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalSurfaceEffectFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalDisplacementSimulatorForce = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalDisplacementSimulatorVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalDisplacementSimulatorFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalDisplacementSimulatorDampener = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalDisplacementSimulatorStartingSize = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.PhysicalReflectionColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.SpecularSunSpecularPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SpecularSunSpecularMagnitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SpecularSunSparklePower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SpecularSunSparkleMagnitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SpecularInteriorSpecularRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SpecularInteriorSpecularBrightness = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SpecularInteriorSpecularPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    WaterBinaryCreateTranslation.FillBinaryNoiseLayerParsingCustom(
+                        frame: dataFrame,
+                        item: item);
+                    if (dataFrame.Complete)
+                    {
+                        item.DNAMDataTypeState |= Water.DNAMDataType.Break0;
+                        return (int)Water_FieldIndex.SpecularInteriorSpecularPower;
+                    }
+                    item.SiltAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SiltLightColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.SiltDarkColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.ScreenSpaceReflections = dataFrame.ReadBoolean();
+                    return (int)Water_FieldIndex.ScreenSpaceReflections;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Water_FieldIndex.GNAM;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LinearVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Water_FieldIndex.LinearVelocity;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AngularVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Water_FieldIndex.AngularVelocity;
+                }
+                case RecordTypeInts.NAM2:
+                case RecordTypeInts.NAM3:
+                case RecordTypeInts.NAM4:
+                {
+                    return WaterBinaryCreateTranslation.FillBinaryNoiseTextureParsingCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        public static partial void FillBinaryNoiseLayerParsingCustom(
+            MutagenFrame frame,
+            IWaterInternal item);
+
+        public static partial ParseResult FillBinaryNoiseTextureParsingCustom(
+            MutagenFrame frame,
+            IWaterInternal item);
+
     }
 
 }
@@ -1261,6 +4631,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +4646,256 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IWater);
 
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Opacity
+        private int? _OpacityLocation;
+        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OpacityLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Water.Flag Flags => _FlagsLocation.HasValue ? (Water.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Water.Flag);
+        #endregion
+        #region Material
+        private int? _MaterialLocation;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> Material => _MaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        #endregion
+        #region OpenSound
+        private int? _OpenSoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region ConsumeSpell
+        private int? _ConsumeSpellLocation;
+        public IFormLinkNullableGetter<ISpellGetter> ConsumeSpell => _ConsumeSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ConsumeSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        #endregion
+        #region ContactSpell
+        private int? _ContactSpellLocation;
+        public IFormLinkNullableGetter<ISpellGetter> ContactSpell => _ContactSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ContactSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        #endregion
+        #region ImageSpace
+        private int? _ImageSpaceLocation;
+        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceGetter>.Null;
+        #endregion
+        #region DATA
+        private int? _DATALocation;
+        public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        private RangeInt32? _DNAMLocation;
+        public Water.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region FogDepthAmount
+        private int _FogDepthAmountLocation => _DNAMLocation!.Value.Min;
+        private bool _FogDepthAmount_IsSet => _DNAMLocation.HasValue;
+        public Single FogDepthAmount => _FogDepthAmount_IsSet ? _data.Slice(_FogDepthAmountLocation, 4).Float() : default;
+        #endregion
+        #region FogShallowColor
+        private int _FogShallowColorLocation => _DNAMLocation!.Value.Min + 0x4;
+        private bool _FogShallowColor_IsSet => _DNAMLocation.HasValue;
+        public Color FogShallowColor => _FogShallowColor_IsSet ? _data.Slice(_FogShallowColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogDeepColor
+        private int _FogDeepColorLocation => _DNAMLocation!.Value.Min + 0x8;
+        private bool _FogDeepColor_IsSet => _DNAMLocation.HasValue;
+        public Color FogDeepColor => _FogDeepColor_IsSet ? _data.Slice(_FogDeepColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogColorShallowRange
+        private int _FogColorShallowRangeLocation => _DNAMLocation!.Value.Min + 0xC;
+        private bool _FogColorShallowRange_IsSet => _DNAMLocation.HasValue;
+        public Single FogColorShallowRange => _FogColorShallowRange_IsSet ? _data.Slice(_FogColorShallowRangeLocation, 4).Float() : default;
+        #endregion
+        #region FogColorDeepRange
+        private int _FogColorDeepRangeLocation => _DNAMLocation!.Value.Min + 0x10;
+        private bool _FogColorDeepRange_IsSet => _DNAMLocation.HasValue;
+        public Single FogColorDeepRange => _FogColorDeepRange_IsSet ? _data.Slice(_FogColorDeepRangeLocation, 4).Float() : default;
+        #endregion
+        #region FogShallowAlpha
+        private int _FogShallowAlphaLocation => _DNAMLocation!.Value.Min + 0x14;
+        private bool _FogShallowAlpha_IsSet => _DNAMLocation.HasValue;
+        public Single FogShallowAlpha => _FogShallowAlpha_IsSet ? _data.Slice(_FogShallowAlphaLocation, 4).Float() : default;
+        #endregion
+        #region FogDeepAlpha
+        private int _FogDeepAlphaLocation => _DNAMLocation!.Value.Min + 0x18;
+        private bool _FogDeepAlpha_IsSet => _DNAMLocation.HasValue;
+        public Single FogDeepAlpha => _FogDeepAlpha_IsSet ? _data.Slice(_FogDeepAlphaLocation, 4).Float() : default;
+        #endregion
+        #region FogAlphaShallowRange
+        private int _FogAlphaShallowRangeLocation => _DNAMLocation!.Value.Min + 0x1C;
+        private bool _FogAlphaShallowRange_IsSet => _DNAMLocation.HasValue;
+        public Single FogAlphaShallowRange => _FogAlphaShallowRange_IsSet ? _data.Slice(_FogAlphaShallowRangeLocation, 4).Float() : default;
+        #endregion
+        #region FogAlphaDeepRange
+        private int _FogAlphaDeepRangeLocation => _DNAMLocation!.Value.Min + 0x20;
+        private bool _FogAlphaDeepRange_IsSet => _DNAMLocation.HasValue;
+        public Single FogAlphaDeepRange => _FogAlphaDeepRange_IsSet ? _data.Slice(_FogAlphaDeepRangeLocation, 4).Float() : default;
+        #endregion
+        #region FogUnderwaterColor
+        private int _FogUnderwaterColorLocation => _DNAMLocation!.Value.Min + 0x24;
+        private bool _FogUnderwaterColor_IsSet => _DNAMLocation.HasValue;
+        public Color FogUnderwaterColor => _FogUnderwaterColor_IsSet ? _data.Slice(_FogUnderwaterColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogUnderwaterAmount
+        private int _FogUnderwaterAmountLocation => _DNAMLocation!.Value.Min + 0x28;
+        private bool _FogUnderwaterAmount_IsSet => _DNAMLocation.HasValue;
+        public Single FogUnderwaterAmount => _FogUnderwaterAmount_IsSet ? _data.Slice(_FogUnderwaterAmountLocation, 4).Float() : default;
+        #endregion
+        #region FogUnderwaterNear
+        private int _FogUnderwaterNearLocation => _DNAMLocation!.Value.Min + 0x2C;
+        private bool _FogUnderwaterNear_IsSet => _DNAMLocation.HasValue;
+        public Single FogUnderwaterNear => _FogUnderwaterNear_IsSet ? _data.Slice(_FogUnderwaterNearLocation, 4).Float() : default;
+        #endregion
+        #region FogUnderwaterFar
+        private int _FogUnderwaterFarLocation => _DNAMLocation!.Value.Min + 0x30;
+        private bool _FogUnderwaterFar_IsSet => _DNAMLocation.HasValue;
+        public Single FogUnderwaterFar => _FogUnderwaterFar_IsSet ? _data.Slice(_FogUnderwaterFarLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalNormalMagnitude
+        private int _PhysicalNormalMagnitudeLocation => _DNAMLocation!.Value.Min + 0x34;
+        private bool _PhysicalNormalMagnitude_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalNormalMagnitude => _PhysicalNormalMagnitude_IsSet ? _data.Slice(_PhysicalNormalMagnitudeLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalShallowNormalFalloff
+        private int _PhysicalShallowNormalFalloffLocation => _DNAMLocation!.Value.Min + 0x38;
+        private bool _PhysicalShallowNormalFalloff_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalShallowNormalFalloff => _PhysicalShallowNormalFalloff_IsSet ? _data.Slice(_PhysicalShallowNormalFalloffLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalDeepNormalFalloff
+        private int _PhysicalDeepNormalFalloffLocation => _DNAMLocation!.Value.Min + 0x3C;
+        private bool _PhysicalDeepNormalFalloff_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalDeepNormalFalloff => _PhysicalDeepNormalFalloff_IsSet ? _data.Slice(_PhysicalDeepNormalFalloffLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalReflectivityAmount
+        private int _PhysicalReflectivityAmountLocation => _DNAMLocation!.Value.Min + 0x40;
+        private bool _PhysicalReflectivityAmount_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalReflectivityAmount => _PhysicalReflectivityAmount_IsSet ? _data.Slice(_PhysicalReflectivityAmountLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalFresnelAmount
+        private int _PhysicalFresnelAmountLocation => _DNAMLocation!.Value.Min + 0x44;
+        private bool _PhysicalFresnelAmount_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalFresnelAmount => _PhysicalFresnelAmount_IsSet ? _data.Slice(_PhysicalFresnelAmountLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalSurfaceEffectFalloff
+        private int _PhysicalSurfaceEffectFalloffLocation => _DNAMLocation!.Value.Min + 0x48;
+        private bool _PhysicalSurfaceEffectFalloff_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalSurfaceEffectFalloff => _PhysicalSurfaceEffectFalloff_IsSet ? _data.Slice(_PhysicalSurfaceEffectFalloffLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalDisplacementSimulatorForce
+        private int _PhysicalDisplacementSimulatorForceLocation => _DNAMLocation!.Value.Min + 0x4C;
+        private bool _PhysicalDisplacementSimulatorForce_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalDisplacementSimulatorForce => _PhysicalDisplacementSimulatorForce_IsSet ? _data.Slice(_PhysicalDisplacementSimulatorForceLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalDisplacementSimulatorVelocity
+        private int _PhysicalDisplacementSimulatorVelocityLocation => _DNAMLocation!.Value.Min + 0x50;
+        private bool _PhysicalDisplacementSimulatorVelocity_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalDisplacementSimulatorVelocity => _PhysicalDisplacementSimulatorVelocity_IsSet ? _data.Slice(_PhysicalDisplacementSimulatorVelocityLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalDisplacementSimulatorFalloff
+        private int _PhysicalDisplacementSimulatorFalloffLocation => _DNAMLocation!.Value.Min + 0x54;
+        private bool _PhysicalDisplacementSimulatorFalloff_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalDisplacementSimulatorFalloff => _PhysicalDisplacementSimulatorFalloff_IsSet ? _data.Slice(_PhysicalDisplacementSimulatorFalloffLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalDisplacementSimulatorDampener
+        private int _PhysicalDisplacementSimulatorDampenerLocation => _DNAMLocation!.Value.Min + 0x58;
+        private bool _PhysicalDisplacementSimulatorDampener_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalDisplacementSimulatorDampener => _PhysicalDisplacementSimulatorDampener_IsSet ? _data.Slice(_PhysicalDisplacementSimulatorDampenerLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalDisplacementSimulatorStartingSize
+        private int _PhysicalDisplacementSimulatorStartingSizeLocation => _DNAMLocation!.Value.Min + 0x5C;
+        private bool _PhysicalDisplacementSimulatorStartingSize_IsSet => _DNAMLocation.HasValue;
+        public Single PhysicalDisplacementSimulatorStartingSize => _PhysicalDisplacementSimulatorStartingSize_IsSet ? _data.Slice(_PhysicalDisplacementSimulatorStartingSizeLocation, 4).Float() : default;
+        #endregion
+        #region PhysicalReflectionColor
+        private int _PhysicalReflectionColorLocation => _DNAMLocation!.Value.Min + 0x60;
+        private bool _PhysicalReflectionColor_IsSet => _DNAMLocation.HasValue;
+        public Color PhysicalReflectionColor => _PhysicalReflectionColor_IsSet ? _data.Slice(_PhysicalReflectionColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region SpecularSunSpecularPower
+        private int _SpecularSunSpecularPowerLocation => _DNAMLocation!.Value.Min + 0x64;
+        private bool _SpecularSunSpecularPower_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularSunSpecularPower => _SpecularSunSpecularPower_IsSet ? _data.Slice(_SpecularSunSpecularPowerLocation, 4).Float() : default;
+        #endregion
+        #region SpecularSunSpecularMagnitude
+        private int _SpecularSunSpecularMagnitudeLocation => _DNAMLocation!.Value.Min + 0x68;
+        private bool _SpecularSunSpecularMagnitude_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularSunSpecularMagnitude => _SpecularSunSpecularMagnitude_IsSet ? _data.Slice(_SpecularSunSpecularMagnitudeLocation, 4).Float() : default;
+        #endregion
+        #region SpecularSunSparklePower
+        private int _SpecularSunSparklePowerLocation => _DNAMLocation!.Value.Min + 0x6C;
+        private bool _SpecularSunSparklePower_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? _data.Slice(_SpecularSunSparklePowerLocation, 4).Float() : default;
+        #endregion
+        #region SpecularSunSparkleMagnitude
+        private int _SpecularSunSparkleMagnitudeLocation => _DNAMLocation!.Value.Min + 0x70;
+        private bool _SpecularSunSparkleMagnitude_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularSunSparkleMagnitude => _SpecularSunSparkleMagnitude_IsSet ? _data.Slice(_SpecularSunSparkleMagnitudeLocation, 4).Float() : default;
+        #endregion
+        #region SpecularInteriorSpecularRadius
+        private int _SpecularInteriorSpecularRadiusLocation => _DNAMLocation!.Value.Min + 0x74;
+        private bool _SpecularInteriorSpecularRadius_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularInteriorSpecularRadius => _SpecularInteriorSpecularRadius_IsSet ? _data.Slice(_SpecularInteriorSpecularRadiusLocation, 4).Float() : default;
+        #endregion
+        #region SpecularInteriorSpecularBrightness
+        private int _SpecularInteriorSpecularBrightnessLocation => _DNAMLocation!.Value.Min + 0x78;
+        private bool _SpecularInteriorSpecularBrightness_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularInteriorSpecularBrightness => _SpecularInteriorSpecularBrightness_IsSet ? _data.Slice(_SpecularInteriorSpecularBrightnessLocation, 4).Float() : default;
+        #endregion
+        #region SpecularInteriorSpecularPower
+        private int _SpecularInteriorSpecularPowerLocation => _DNAMLocation!.Value.Min + 0x7C;
+        private bool _SpecularInteriorSpecularPower_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularInteriorSpecularPower => _SpecularInteriorSpecularPower_IsSet ? _data.Slice(_SpecularInteriorSpecularPowerLocation, 4).Float() : default;
+        #endregion
+        #region NoiseLayerParsing
+        private int _NoiseLayerParsingLocation => _DNAMLocation!.Value.Min + 0x80;
+        private bool _NoiseLayerParsing_IsSet => _DNAMLocation.HasValue;
+        partial void NoiseLayerParsingCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
+        #region SiltAmount
+        private int _SiltAmountLocation => _DNAMLocation!.Value.Min + 0xBC;
+        private bool _SiltAmount_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
+        public Single SiltAmount => _SiltAmount_IsSet ? _data.Slice(_SiltAmountLocation, 4).Float() : default;
+        #endregion
+        #region SiltLightColor
+        private int _SiltLightColorLocation => _DNAMLocation!.Value.Min + 0xC0;
+        private bool _SiltLightColor_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
+        public Color SiltLightColor => _SiltLightColor_IsSet ? _data.Slice(_SiltLightColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region SiltDarkColor
+        private int _SiltDarkColorLocation => _DNAMLocation!.Value.Min + 0xC4;
+        private bool _SiltDarkColor_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
+        public Color SiltDarkColor => _SiltDarkColor_IsSet ? _data.Slice(_SiltDarkColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region ScreenSpaceReflections
+        private int _ScreenSpaceReflectionsLocation => _DNAMLocation!.Value.Min + 0xC8;
+        private bool _ScreenSpaceReflections_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
+        public Boolean ScreenSpaceReflections => _ScreenSpaceReflections_IsSet ? _data.Slice(_ScreenSpaceReflectionsLocation, 1)[0] >= 1 : default;
+        #endregion
+        #region GNAM
+        private int? _GNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _GNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region LinearVelocity
+        private int? _LinearVelocityLocation;
+        public P3Float? LinearVelocity => _LinearVelocityLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _LinearVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
+        #region AngularVelocity
+        private int? _AngularVelocityLocation;
+        public P3Float? AngularVelocity => _AngularVelocityLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _AngularVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
+        #region NoiseTextureParsing
+        public partial ParseResult NoiseTextureParsingCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +4950,106 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Name;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _OpacityLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Opacity;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Flags;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _MaterialLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Material;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _OpenSoundLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.OpenSound;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    _ConsumeSpellLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.ConsumeSpell;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    _ContactSpellLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.ContactSpell;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _ImageSpaceLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.ImageSpace;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.DATA;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0xBC)
+                    {
+                        this.DNAMDataTypeState |= Water.DNAMDataType.Break0;
+                    }
+                    return (int)Water_FieldIndex.ScreenSpaceReflections;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _GNAMLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.GNAM;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    _LinearVelocityLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.LinearVelocity;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _AngularVelocityLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.AngularVelocity;
+                }
+                case RecordTypeInts.NAM2:
+                case RecordTypeInts.NAM3:
+                case RecordTypeInts.NAM4:
+                {
+                    return NoiseTextureParsingCustomParse(
+                        stream,
+                        offset);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

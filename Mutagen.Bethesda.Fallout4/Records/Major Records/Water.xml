@@ -1,5 +1,79 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Water" recordType="WATR" objType="Record" baseClass="Fallout4MajorRecord" GUID="ae105b0f-70dd-40cb-b5be-e41cac5b0530" ID="131">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <UInt8 name="Opacity" nullable="False" recordType="ANAM" />
+      <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" nullable="False" />
+      <FormLink name="Material" refName="MaterialType" recordType="TNAM" />
+      <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="ConsumeSpell" refName="Spell" recordType="XNAM" />
+      <FormLink name="ContactSpell" refName="Spell" recordType="YNAM" />
+      <FormLink name="ImageSpace" refName="ImageSpace" recordType="INAM" />
+      <ByteArray name="DATA" recordType="DATA" />
+      <Data recordType="DNAM">
+        <Fields>
+          <Float name="FogDepthAmount" />
+          <Color name="FogShallowColor" binaryType="Alpha" />
+          <Color name="FogDeepColor" binaryType="Alpha" />
+          <Float name="FogColorShallowRange" />
+          <Float name="FogColorDeepRange" />
+          <Float name="FogShallowAlpha" />
+          <Float name="FogDeepAlpha" />
+          <Float name="FogAlphaShallowRange" />
+          <Float name="FogAlphaDeepRange" />
+          <Color name="FogUnderwaterColor" binaryType="Alpha" />
+          <Float name="FogUnderwaterAmount" />
+          <Float name="FogUnderwaterNear" />
+          <Float name="FogUnderwaterFar" />
+          <Float name="PhysicalNormalMagnitude" />
+          <Float name="PhysicalShallowNormalFalloff" />
+          <Float name="PhysicalDeepNormalFalloff" />
+          <Float name="PhysicalReflectivityAmount" />
+          <Float name="PhysicalFresnelAmount" />
+          <Float name="PhysicalSurfaceEffectFalloff" />
+          <Float name="PhysicalDisplacementSimulatorForce" />
+          <Float name="PhysicalDisplacementSimulatorVelocity" />
+          <Float name="PhysicalDisplacementSimulatorFalloff" />
+          <Float name="PhysicalDisplacementSimulatorDampener" />
+          <Float name="PhysicalDisplacementSimulatorStartingSize" />
+          <Color name="PhysicalReflectionColor" binaryType="Alpha" />
+          <Float name="SpecularSunSpecularPower" />
+          <Float name="SpecularSunSpecularMagnitude" />
+          <Float name="SpecularSunSparklePower" />
+          <Float name="SpecularSunSparkleMagnitude" />
+          <Float name="SpecularInteriorSpecularRadius" />
+          <Float name="SpecularInteriorSpecularBrightness" />
+          <Float name="SpecularInteriorSpecularPower" />
+          <CustomLogic name="NoiseLayerParsing" byteLength="60" />
+          <Break />
+          <Float name="SiltAmount" />
+          <Color name="SiltLightColor" binaryType="Alpha" />
+          <Color name="SiltDarkColor" binaryType="Alpha" />
+          <Bool name="ScreenSpaceReflections" byteLength="1" />
+        </Fields>
+      </Data>
+      <RefDirect name="NoiseLayerOne" refName="WaterNoiseProperties" binary="NoGeneration" />
+      <RefDirect name="NoiseLayerTwo" refName="WaterNoiseProperties" binary="NoGeneration" />
+      <RefDirect name="NoiseLayerThree" refName="WaterNoiseProperties" binary="NoGeneration" />
+      <ByteArray name="GNAM" recordType="GNAM" />
+      <P3Float name="LinearVelocity" recordType="NAM0" />
+      <P3Float name="AngularVelocity" recordType="NAM1" />
+      <CustomLogic name="NoiseTextureParsing">
+        <RecordType>NAM2</RecordType>
+        <RecordType>NAM3</RecordType>
+        <RecordType>NAM4</RecordType>
+      </CustomLogic>
+    </Fields>
+  </Object>
+  <Object name="WaterNoiseProperties" objType="Subrecord" GUID="94f64240-9ef5-4c59-a0d6-ee19ebbcff0d" ID="592">
+    <Fields>
+      <Float name="WindDirection" binary="NoGeneration" />
+      <Float name="WindSpeed" binary="NoGeneration" />
+      <Float name="AmplitudeScale" binary="NoGeneration" />
+      <Float name="UvScale" binary="NoGeneration" />
+      <Float name="NoiseFalloff" binary="NoGeneration" />
+      <String name="Texture" nullable="True" binary="NoGeneration" />
+    </Fields>
   </Object>
 </Loqui>

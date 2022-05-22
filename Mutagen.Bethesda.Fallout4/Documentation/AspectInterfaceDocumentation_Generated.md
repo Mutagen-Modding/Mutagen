@@ -163,6 +163,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TintGroup
 - TintTemplateOption
 - Tree
+- Water
 - Weapon
 - Worldspace
 ### IObjectBounded
@@ -614,6 +615,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### Water
+- INamed
 ### Weapon
 - IHasIcons
 - IKeyworded

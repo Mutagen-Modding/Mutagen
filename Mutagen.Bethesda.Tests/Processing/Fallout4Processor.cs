@@ -52,6 +52,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.INFO, ProcessDialogResponses);
         AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
+        AddDynamicProcessing(RecordTypes.WATR, ProcessWater);
     }
 
     private void ProcessGameSettings(
@@ -457,6 +458,21 @@ public class Fallout4Processor : Processor
             majorFrame,
             sizeChange,
             fileOffset);
+    }
+
+    private void ProcessWater(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.DNAM, out var dnam))
+        {
+            int loc = 0;
+            ProcessZeroFloat(dnam, fileOffset, ref loc);
+            loc += 8;
+            ProcessZeroFloats(dnam, fileOffset, ref loc, 6);
+            loc += 4;
+            ProcessZeroFloats(dnam, fileOffset, ref loc, 14);
+        }
     }
 
     private void ProcessPackages(
@@ -919,6 +935,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "WRLD", "FULL" },
                     new RecordType[] { "QUST", "FULL", "NNAM" },
                     new RecordType[] { "DIAL", "FULL" },
+                    new RecordType[] { "WATR", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

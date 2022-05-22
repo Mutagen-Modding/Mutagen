@@ -174,6 +174,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TintGroup_Registration.Instance,
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
+                Water_Registration.Instance,
                 Weapon_Registration.Instance,
                 Worldspace_Registration.Instance,
             });
@@ -260,6 +261,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TintGroup_Registration.Instance,
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
+                Water_Registration.Instance,
                 Weapon_Registration.Instance,
                 Worldspace_Registration.Instance,
             });
@@ -306,6 +308,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TintGroup_Registration.Instance,
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
+                Water_Registration.Instance,
                 Weapon_Registration.Instance,
                 Worldspace_Registration.Instance,
             });
@@ -355,6 +358,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TintGroup_Registration.Instance,
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
+                Water_Registration.Instance,
                 Weapon_Registration.Instance,
                 Worldspace_Registration.Instance,
             });

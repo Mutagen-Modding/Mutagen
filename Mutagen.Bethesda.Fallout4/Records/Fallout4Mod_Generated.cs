@@ -119,6 +119,7 @@ namespace Mutagen.Bethesda.Fallout4
             _CombatStyles_Object = new Fallout4Group<CombatStyle>(this);
             _LoadScreens_Object = new Fallout4Group<LoadScreen>(this);
             _AnimatedObjects_Object = new Fallout4Group<AnimatedObject>(this);
+            _Waters_Object = new Fallout4Group<Water>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -565,6 +566,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IAnimatedObjectGetter> IFallout4ModGetter.AnimatedObjects => _AnimatedObjects_Object;
         #endregion
+        #region Waters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Water> _Waters_Object;
+        public Fallout4Group<Water> Waters => _Waters_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IWaterGetter> IFallout4ModGetter.Waters => _Waters_Object;
+        #endregion
 
         #region To String
 
@@ -667,6 +675,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CombatStyles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.LoadScreens = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.AnimatedObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Waters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -732,7 +741,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Packages,
                 TItem CombatStyles,
                 TItem LoadScreens,
-                TItem AnimatedObjects)
+                TItem AnimatedObjects,
+                TItem Waters)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -797,6 +807,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CombatStyles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CombatStyles, new Fallout4Group.Mask<TItem>(CombatStyles));
                 this.LoadScreens = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LoadScreens, new Fallout4Group.Mask<TItem>(LoadScreens));
                 this.AnimatedObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AnimatedObjects, new Fallout4Group.Mask<TItem>(AnimatedObjects));
+                this.Waters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Waters, new Fallout4Group.Mask<TItem>(Waters));
             }
 
             #pragma warning disable CS8618
@@ -871,6 +882,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CombatStyles { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LoadScreens { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AnimatedObjects { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Waters { get; set; }
             #endregion
 
             #region Equals
@@ -946,6 +958,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
                 if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
                 if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
+                if (!object.Equals(this.Waters, rhs.Waters)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1014,6 +1027,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.CombatStyles);
                 hash.Add(this.LoadScreens);
                 hash.Add(this.AnimatedObjects);
+                hash.Add(this.Waters);
                 return hash.ToHashCode();
             }
 
@@ -1337,6 +1351,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.AnimatedObjects.Overall)) return false;
                     if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.All(eval)) return false;
                 }
+                if (Waters != null)
+                {
+                    if (!eval(this.Waters.Overall)) return false;
+                    if (this.Waters.Specific != null && !this.Waters.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1659,6 +1678,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.AnimatedObjects.Overall)) return true;
                     if (this.AnimatedObjects.Specific != null && this.AnimatedObjects.Specific.Any(eval)) return true;
                 }
+                if (Waters != null)
+                {
+                    if (eval(this.Waters.Overall)) return true;
+                    if (this.Waters.Specific != null && this.Waters.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1736,6 +1760,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
                 obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
                 obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
+                obj.Waters = this.Waters == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2006,6 +2031,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         AnimatedObjects?.Print(sb);
                     }
+                    if (printMask?.Waters?.Overall ?? true)
+                    {
+                        Waters?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2093,6 +2122,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Water.ErrorMask>?>? Waters;
             #endregion
 
             #region IErrorMask
@@ -2227,6 +2257,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return LoadScreens;
                     case Fallout4Mod_FieldIndex.AnimatedObjects:
                         return AnimatedObjects;
+                    case Fallout4Mod_FieldIndex.Waters:
+                        return Waters;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2425,6 +2457,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.AnimatedObjects:
                         this.AnimatedObjects = new MaskItem<Exception?, Fallout4Group.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Waters:
+                        this.Waters = new MaskItem<Exception?, Fallout4Group.ErrorMask<Water.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2625,6 +2660,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.AnimatedObjects:
                         this.AnimatedObjects = (MaskItem<Exception?, Fallout4Group.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Waters:
+                        this.Waters = (MaskItem<Exception?, Fallout4Group.ErrorMask<Water.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2696,6 +2734,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (CombatStyles != null) return true;
                 if (LoadScreens != null) return true;
                 if (AnimatedObjects != null) return true;
+                if (Waters != null) return true;
                 return false;
             }
             #endregion
@@ -2784,6 +2823,7 @@ namespace Mutagen.Bethesda.Fallout4
                 CombatStyles?.Print(sb);
                 LoadScreens?.Print(sb);
                 AnimatedObjects?.Print(sb);
+                Waters?.Print(sb);
             }
             #endregion
 
@@ -2855,6 +2895,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.CombatStyles = this.CombatStyles.Combine(rhs.CombatStyles, (l, r) => l.Combine(r));
                 ret.LoadScreens = this.LoadScreens.Combine(rhs.LoadScreens, (l, r) => l.Combine(r));
                 ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
+                ret.Waters = this.Waters.Combine(rhs.Waters, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2941,6 +2982,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<CombatStyle.TranslationMask>? CombatStyles;
             public Fallout4Group.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
             public Fallout4Group.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
+            public Fallout4Group.TranslationMask<Water.TranslationMask>? Waters;
             #endregion
 
             #region Ctors
@@ -3028,6 +3070,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((CombatStyles != null ? CombatStyles.OnOverall : DefaultOn, CombatStyles?.GetCrystal()));
                 ret.Add((LoadScreens != null ? LoadScreens.OnOverall : DefaultOn, LoadScreens?.GetCrystal()));
                 ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
+                ret.Add((Waters != null ? Waters.OnOverall : DefaultOn, Waters?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3130,6 +3173,7 @@ namespace Mutagen.Bethesda.Fallout4
             _CombatStyles_Object = new Fallout4Group<CombatStyle>(this);
             _LoadScreens_Object = new Fallout4Group<LoadScreen>(this);
             _AnimatedObjects_Object = new Fallout4Group<AnimatedObject>(this);
+            _Waters_Object = new Fallout4Group<Water>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3387,6 +3431,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
             }
+            if (mask?.Waters ?? true)
+            {
+                this.Waters.RecordCache.Set(rhsMod.Waters.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3459,6 +3507,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
             count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
             count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Waters.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3772,6 +3821,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<CombatStyle> CombatStyles { get; }
         new Fallout4Group<LoadScreen> LoadScreens { get; }
         new Fallout4Group<AnimatedObject> AnimatedObjects { get; }
+        new Fallout4Group<Water> Waters { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3853,6 +3903,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<ICombatStyleGetter> CombatStyles { get; }
         IFallout4GroupGetter<ILoadScreenGetter> LoadScreens { get; }
         IFallout4GroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
+        IFallout4GroupGetter<IWaterGetter> Waters { get; }
 
     }
 
@@ -4486,6 +4537,7 @@ namespace Mutagen.Bethesda.Fallout4
         CombatStyles = 60,
         LoadScreens = 61,
         AnimatedObjects = 62,
+        Waters = 63,
     }
     #endregion
 
@@ -4503,9 +4555,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 63;
+        public const ushort AdditionalFieldCount = 64;
 
-        public const ushort FieldCount = 63;
+        public const ushort FieldCount = 64;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4635,6 +4687,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.CombatStyles.Clear();
             item.LoadScreens.Clear();
             item.AnimatedObjects.Clear();
+            item.Waters.Clear();
         }
         
         #region Mutagen
@@ -4696,6 +4749,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Packages.RemapLinks(mapping);
             obj.LoadScreens.RemapLinks(mapping);
             obj.AnimatedObjects.RemapLinks(mapping);
+            obj.Waters.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -4792,6 +4846,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.CombatStyles.Remove(keys);
             obj.LoadScreens.Remove(keys);
             obj.AnimatedObjects.Remove(keys);
+            obj.Waters.Remove(keys);
         }
         
         public void Remove(
@@ -5343,6 +5398,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    obj.Waters.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -5832,6 +5895,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.CombatStyles = MaskItemExt.Factory(item.CombatStyles.GetEqualsMask(rhs.CombatStyles, include), include);
             ret.LoadScreens = MaskItemExt.Factory(item.LoadScreens.GetEqualsMask(rhs.LoadScreens, include), include);
             ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
+            ret.Waters = MaskItemExt.Factory(item.Waters.GetEqualsMask(rhs.Waters, include), include);
         }
         
         public string Print(
@@ -6127,6 +6191,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.AnimatedObjects?.Overall ?? true)
             {
                 item.AnimatedObjects?.Print(sb, "AnimatedObjects");
+            }
+            if (printMask?.Waters?.Overall ?? true)
+            {
+                item.Waters?.Print(sb, "Waters");
             }
         }
         
@@ -6641,6 +6709,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAnimatedObjectsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Waters) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Waters, rhs.Waters, out var lhsWaters, out var rhsWaters, out var isWatersEqual))
+                {
+                    if (!object.Equals(lhsWaters, rhsWaters)) return false;
+                }
+                else if (!isWatersEqual) return false;
+            }
             return true;
         }
         
@@ -6710,6 +6786,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.CombatStyles);
             hash.Add(item.LoadScreens);
             hash.Add(item.AnimatedObjects);
+            hash.Add(item.Waters);
             return hash.ToHashCode();
         }
         
@@ -7037,6 +7114,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
                     return obj.AnimatedObjects;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    return obj.Waters;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -7061,7 +7143,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[62];
+            Stream[] outputStreams = new Stream[63];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -7125,6 +7207,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.CombatStyles, 59, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LoadScreens, 60, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 61, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 62, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7396,6 +7479,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.Waters.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -7646,6 +7733,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Waters.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8229,6 +8320,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
                     foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -8950,6 +9050,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.AnimatedObjects,
                 groupGetter: (m) => m.AnimatedObjects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Water, IWaterGetter>(
+                srcGroup: obj.Waters,
+                type: typeof(IWaterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Waters,
+                groupGetter: (m) => m.Waters))
             {
                 yield return item;
             }
@@ -9834,6 +9943,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.AnimatedObjects,
                         groupGetter: (m) => m.AnimatedObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Water, IWaterGetter>(
+                        srcGroup: obj.Waters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Waters,
+                        groupGetter: (m) => m.Waters))
                     {
                         yield return item;
                     }
@@ -11392,6 +11515,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Waters) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Waters);
+                try
+                {
+                    item.Waters.DeepCopyIn(
+                        rhs: rhs.Waters,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Waters));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -11544,6 +11687,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool CombatStyles;
         public bool LoadScreens;
         public bool AnimatedObjects;
+        public bool Waters;
         public GroupMask()
         {
         }
@@ -11611,6 +11755,7 @@ namespace Mutagen.Bethesda.Fallout4
             CombatStyles = defaultValue;
             LoadScreens = defaultValue;
             AnimatedObjects = defaultValue;
+            Waters = defaultValue;
         }
     }
 
@@ -12320,6 +12465,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
                         item: AnimatedObjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Waters ?? true)
+            {
+                var WatersItem = item.Waters;
+                if (WatersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
+                        item: WatersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -13258,6 +13414,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.AnimatedObjects;
                 }
+                case RecordTypeInts.WATR:
+                {
+                    if (importMask?.Waters ?? true)
+                    {
+                        item.Waters.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Waters;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -13731,6 +13901,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? Fallout4GroupBinaryOverlay<IAnimatedObjectGetter>.Fallout4GroupFactory(_data, _AnimatedObjectsLocations, _package) : default;
         public IFallout4GroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new Fallout4Group<AnimatedObject>(this);
         #endregion
+        #region Waters
+        private List<RangeInt64>? _WatersLocations;
+        private IFallout4GroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? Fallout4GroupBinaryOverlay<IWaterGetter>.Fallout4GroupFactory(_data, _WatersLocations, _package) : default;
+        public IFallout4GroupGetter<IWaterGetter> Waters => _Waters ?? new Fallout4Group<Water>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -14189,6 +14364,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _AnimatedObjectsLocations ??= new();
                     _AnimatedObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.AnimatedObjects;
+                }
+                case RecordTypeInts.WATR:
+                {
+                    _WatersLocations ??= new();
+                    _WatersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Waters;
                 }
                 default:
                     return default(int?);

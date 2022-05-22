@@ -634,6 +634,12 @@
     <Compile Include="Records\Major Records\VoiceType.cs">
       <DependentUpon>VoiceType.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Water.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WaterNoiseProperties.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Weapon.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
@@ -2067,6 +2073,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AnimatedObject_Generated.cs">
       <DependentUpon>AnimatedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WaterNoiseProperties_Generated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -69,6 +69,7 @@
       <Group name="CombatStyles" refName="CombatStyle" />
       <Group name="LoadScreens" refName="LoadScreen" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />
+      <Group name="Waters" refName="Water" />
     </Fields>
   </Object>
 </Loqui>
