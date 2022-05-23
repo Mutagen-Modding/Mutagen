@@ -253,6 +253,9 @@
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\EffectShader.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\FaceFxPhonemes.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>

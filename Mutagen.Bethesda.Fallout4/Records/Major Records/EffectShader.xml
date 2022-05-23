@@ -1,5 +1,77 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="Fallout4MajorRecord" GUID="998828d0-071f-422e-b81d-7897d9765458" ID="268">
+    <Fields>
+      <String name="FillTexture" recordType="ICON" />
+      <String name="ParticleShaderTexture" recordType="ICO2" />
+      <String name="HolesTexture" recordType="NAM7" />
+      <String name="MembranePaletteTexture" recordType="NAM8" />
+      <String name="ParticlePaletteTexture" recordType="NAM9" />
+      <ByteArray name="DATA" recordType="DATA" />
+      <Data recordType="DNAM">
+        <Fields>
+          <UInt8 name="Unknown" >
+            <Versioning formVersion="106" action="Remove" />
+          </UInt8>
+          <Enum name="MembraneSourceBlendMode" enumName="EffectShader.BlendMode" default="BlendMode.Zero" />
+          <Enum name="MembraneBlendOperation" enumName="EffectShader.BlendOperation" default="BlendOperation.Add" />
+          <Enum name="MembraneZTest" enumName="EffectShader.ZTest" default="ZTest.EqualTo" />
+          <Color name="FillColorKey1" binaryType="Alpha" />
+          <Float name="FillAlphaFadeInTime" />
+          <Float name="FillFullAlphaTime" />
+          <Float name="FillFadeOutTime" />
+          <Float name="FillPersistentAlphaRatio" />
+          <Float name="FillAlphaPulseAmplitude" />
+          <Float name="FillAlphaPulseFrequency" />
+          <Float name="FillTextureAnimationSpeedU" />
+          <Float name="FillTextureAnimationSpeedV" />
+          <Float name="EdgeEffectFallOff" />
+          <Color name="EdgeEffectColor" binaryType="Alpha" />
+          <Float name="EdgeEffectAlphaFadeInTime" />
+          <Float name="EdgeEffectFullAlphaTime" />
+          <Float name="EdgeEffectAlphaFadeOutTime" />
+          <Float name="EdgeEffectPersistentAlphaRatio" />
+          <Float name="EdgeEffectAlphaPulseAmplitude" />
+          <Float name="EdgeEffectAlphaPulseFrequency" />
+          <Float name="FillFullAlphaRatio" />
+          <Float name="EdgeEffectFullAlphaRatio" />
+          <Enum name="MembraneDestBlendMode" enumName="EffectShader.BlendMode" default="BlendMode.Zero" />
+          <ByteArray name="Unknown2" byteLength="152" nullable="False" >
+            <Versioning formVersion="106" action="Remove" />
+          </ByteArray>
+          <Float name="HolesAnimationStartTime" />
+          <Float name="HolesAnimationEndTime" />
+          <Float name="HolesAnimationStartValue" />
+          <Float name="HolesAnimationEndValue" />
+          <ByteArray name="Unknown3" byteLength="44" nullable="False" >
+            <Versioning formVersion="106" action="Remove" />
+          </ByteArray>
+          <FormLink name="AmbientSound" >
+            <Interface>ISound</Interface>
+          </FormLink>
+          <Color name="FillColorKey2" binaryType="Alpha" />
+          <Color name="FillColorKey3" binaryType="Alpha" />
+          <UInt8 name="Unknown4" >
+            <Versioning formVersion="106" action="Add" />
+          </UInt8>
+          <Float name="FillColorKey1Scale" />
+          <Float name="FillColorKey2Scale" />
+          <Float name="FillColorKey3Scale" />
+          <Float name="FillColorKey1Time" />
+          <Float name="FillColorKey2Time" />
+          <Float name="FillColorKey3Time" />
+          <ByteArray name="Unknown5" byteLength="40" nullable="False" >
+            <Versioning formVersion="106" action="Remove" />
+          </ByteArray>
+          <Enum name="Flags" enumName="EffectShader.Flag" />
+          <Float name="FillTextureScaleU" />
+          <Float name="FillTextureScaleV" />
+          <UInt16 name="Unknown6" >
+            <Versioning formVersion="106" action="Remove" />
+          </UInt16>
+        </Fields>
+      </Data>
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
   </Object>
 </Loqui>

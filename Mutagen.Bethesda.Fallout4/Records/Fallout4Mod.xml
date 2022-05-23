@@ -70,6 +70,7 @@
       <Group name="LoadScreens" refName="LoadScreen" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="Waters" refName="Water" />
+      <Group name="EffectShaders" refName="EffectShader" />
     </Fields>
   </Object>
 </Loqui>

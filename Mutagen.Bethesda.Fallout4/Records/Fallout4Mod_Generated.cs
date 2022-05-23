@@ -120,6 +120,7 @@ namespace Mutagen.Bethesda.Fallout4
             _LoadScreens_Object = new Fallout4Group<LoadScreen>(this);
             _AnimatedObjects_Object = new Fallout4Group<AnimatedObject>(this);
             _Waters_Object = new Fallout4Group<Water>(this);
+            _EffectShaders_Object = new Fallout4Group<EffectShader>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -573,6 +574,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IWaterGetter> IFallout4ModGetter.Waters => _Waters_Object;
         #endregion
+        #region EffectShaders
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<EffectShader> _EffectShaders_Object;
+        public Fallout4Group<EffectShader> EffectShaders => _EffectShaders_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IEffectShaderGetter> IFallout4ModGetter.EffectShaders => _EffectShaders_Object;
+        #endregion
 
         #region To String
 
@@ -676,6 +684,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LoadScreens = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.AnimatedObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Waters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.EffectShaders = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -742,7 +751,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem CombatStyles,
                 TItem LoadScreens,
                 TItem AnimatedObjects,
-                TItem Waters)
+                TItem Waters,
+                TItem EffectShaders)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -808,6 +818,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LoadScreens = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LoadScreens, new Fallout4Group.Mask<TItem>(LoadScreens));
                 this.AnimatedObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AnimatedObjects, new Fallout4Group.Mask<TItem>(AnimatedObjects));
                 this.Waters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Waters, new Fallout4Group.Mask<TItem>(Waters));
+                this.EffectShaders = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(EffectShaders, new Fallout4Group.Mask<TItem>(EffectShaders));
             }
 
             #pragma warning disable CS8618
@@ -883,6 +894,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LoadScreens { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AnimatedObjects { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Waters { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? EffectShaders { get; set; }
             #endregion
 
             #region Equals
@@ -959,6 +971,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
                 if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
                 if (!object.Equals(this.Waters, rhs.Waters)) return false;
+                if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1028,6 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.LoadScreens);
                 hash.Add(this.AnimatedObjects);
                 hash.Add(this.Waters);
+                hash.Add(this.EffectShaders);
                 return hash.ToHashCode();
             }
 
@@ -1356,6 +1370,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Waters.Overall)) return false;
                     if (this.Waters.Specific != null && !this.Waters.Specific.All(eval)) return false;
                 }
+                if (EffectShaders != null)
+                {
+                    if (!eval(this.EffectShaders.Overall)) return false;
+                    if (this.EffectShaders.Specific != null && !this.EffectShaders.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1683,6 +1702,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Waters.Overall)) return true;
                     if (this.Waters.Specific != null && this.Waters.Specific.Any(eval)) return true;
                 }
+                if (EffectShaders != null)
+                {
+                    if (eval(this.EffectShaders.Overall)) return true;
+                    if (this.EffectShaders.Specific != null && this.EffectShaders.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1761,6 +1785,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
                 obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
                 obj.Waters = this.Waters == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
+                obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2035,6 +2060,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Waters?.Print(sb);
                     }
+                    if (printMask?.EffectShaders?.Overall ?? true)
+                    {
+                        EffectShaders?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2123,6 +2152,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Water.ErrorMask>?>? Waters;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
             #endregion
 
             #region IErrorMask
@@ -2259,6 +2289,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return AnimatedObjects;
                     case Fallout4Mod_FieldIndex.Waters:
                         return Waters;
+                    case Fallout4Mod_FieldIndex.EffectShaders:
+                        return EffectShaders;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2460,6 +2492,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Waters:
                         this.Waters = new MaskItem<Exception?, Fallout4Group.ErrorMask<Water.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.EffectShaders:
+                        this.EffectShaders = new MaskItem<Exception?, Fallout4Group.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2663,6 +2698,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Waters:
                         this.Waters = (MaskItem<Exception?, Fallout4Group.ErrorMask<Water.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.EffectShaders:
+                        this.EffectShaders = (MaskItem<Exception?, Fallout4Group.ErrorMask<EffectShader.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2735,6 +2773,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (LoadScreens != null) return true;
                 if (AnimatedObjects != null) return true;
                 if (Waters != null) return true;
+                if (EffectShaders != null) return true;
                 return false;
             }
             #endregion
@@ -2824,6 +2863,7 @@ namespace Mutagen.Bethesda.Fallout4
                 LoadScreens?.Print(sb);
                 AnimatedObjects?.Print(sb);
                 Waters?.Print(sb);
+                EffectShaders?.Print(sb);
             }
             #endregion
 
@@ -2896,6 +2936,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.LoadScreens = this.LoadScreens.Combine(rhs.LoadScreens, (l, r) => l.Combine(r));
                 ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
                 ret.Waters = this.Waters.Combine(rhs.Waters, (l, r) => l.Combine(r));
+                ret.EffectShaders = this.EffectShaders.Combine(rhs.EffectShaders, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2983,6 +3024,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
             public Fallout4Group.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
             public Fallout4Group.TranslationMask<Water.TranslationMask>? Waters;
+            public Fallout4Group.TranslationMask<EffectShader.TranslationMask>? EffectShaders;
             #endregion
 
             #region Ctors
@@ -3071,6 +3113,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((LoadScreens != null ? LoadScreens.OnOverall : DefaultOn, LoadScreens?.GetCrystal()));
                 ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
                 ret.Add((Waters != null ? Waters.OnOverall : DefaultOn, Waters?.GetCrystal()));
+                ret.Add((EffectShaders != null ? EffectShaders.OnOverall : DefaultOn, EffectShaders?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3174,6 +3217,7 @@ namespace Mutagen.Bethesda.Fallout4
             _LoadScreens_Object = new Fallout4Group<LoadScreen>(this);
             _AnimatedObjects_Object = new Fallout4Group<AnimatedObject>(this);
             _Waters_Object = new Fallout4Group<Water>(this);
+            _EffectShaders_Object = new Fallout4Group<EffectShader>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3435,6 +3479,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Waters.RecordCache.Set(rhsMod.Waters.RecordCache.Items);
             }
+            if (mask?.EffectShaders ?? true)
+            {
+                this.EffectShaders.RecordCache.Set(rhsMod.EffectShaders.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3508,6 +3556,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
             count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Waters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3822,6 +3871,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<LoadScreen> LoadScreens { get; }
         new Fallout4Group<AnimatedObject> AnimatedObjects { get; }
         new Fallout4Group<Water> Waters { get; }
+        new Fallout4Group<EffectShader> EffectShaders { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3904,6 +3954,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<ILoadScreenGetter> LoadScreens { get; }
         IFallout4GroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
         IFallout4GroupGetter<IWaterGetter> Waters { get; }
+        IFallout4GroupGetter<IEffectShaderGetter> EffectShaders { get; }
 
     }
 
@@ -4538,6 +4589,7 @@ namespace Mutagen.Bethesda.Fallout4
         LoadScreens = 61,
         AnimatedObjects = 62,
         Waters = 63,
+        EffectShaders = 64,
     }
     #endregion
 
@@ -4555,9 +4607,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 64;
+        public const ushort AdditionalFieldCount = 65;
 
-        public const ushort FieldCount = 64;
+        public const ushort FieldCount = 65;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4688,6 +4740,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.LoadScreens.Clear();
             item.AnimatedObjects.Clear();
             item.Waters.Clear();
+            item.EffectShaders.Clear();
         }
         
         #region Mutagen
@@ -4750,6 +4803,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.LoadScreens.RemapLinks(mapping);
             obj.AnimatedObjects.RemapLinks(mapping);
             obj.Waters.RemapLinks(mapping);
+            obj.EffectShaders.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -4847,6 +4901,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.LoadScreens.Remove(keys);
             obj.AnimatedObjects.Remove(keys);
             obj.Waters.Remove(keys);
+            obj.EffectShaders.Remove(keys);
         }
         
         public void Remove(
@@ -5406,6 +5461,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    obj.EffectShaders.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -5896,6 +5959,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.LoadScreens = MaskItemExt.Factory(item.LoadScreens.GetEqualsMask(rhs.LoadScreens, include), include);
             ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
             ret.Waters = MaskItemExt.Factory(item.Waters.GetEqualsMask(rhs.Waters, include), include);
+            ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
         }
         
         public string Print(
@@ -6195,6 +6259,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Waters?.Overall ?? true)
             {
                 item.Waters?.Print(sb, "Waters");
+            }
+            if (printMask?.EffectShaders?.Overall ?? true)
+            {
+                item.EffectShaders?.Print(sb, "EffectShaders");
             }
         }
         
@@ -6717,6 +6785,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isWatersEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EffectShaders) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.EffectShaders, rhs.EffectShaders, out var lhsEffectShaders, out var rhsEffectShaders, out var isEffectShadersEqual))
+                {
+                    if (!object.Equals(lhsEffectShaders, rhsEffectShaders)) return false;
+                }
+                else if (!isEffectShadersEqual) return false;
+            }
             return true;
         }
         
@@ -6787,6 +6863,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.LoadScreens);
             hash.Add(item.AnimatedObjects);
             hash.Add(item.Waters);
+            hash.Add(item.EffectShaders);
             return hash.ToHashCode();
         }
         
@@ -7119,6 +7196,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IWater":
                 case "IWaterInternal":
                     return obj.Waters;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    return obj.EffectShaders;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -7143,7 +7225,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[63];
+            Stream[] outputStreams = new Stream[64];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -7208,6 +7290,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.LoadScreens, 60, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 61, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Waters, 62, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 63, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7483,6 +7566,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.EffectShaders.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -7737,6 +7824,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.Waters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EffectShaders.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8329,6 +8420,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IWater":
                 case "IWaterInternal":
                     foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -9059,6 +9159,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.Waters,
                 groupGetter: (m) => m.Waters))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, EffectShader, IEffectShaderGetter>(
+                srcGroup: obj.EffectShaders,
+                type: typeof(IEffectShaderGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EffectShaders,
+                groupGetter: (m) => m.EffectShaders))
             {
                 yield return item;
             }
@@ -9957,6 +10066,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.Waters,
                         groupGetter: (m) => m.Waters))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, EffectShader, IEffectShaderGetter>(
+                        srcGroup: obj.EffectShaders,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EffectShaders,
+                        groupGetter: (m) => m.EffectShaders))
                     {
                         yield return item;
                     }
@@ -11535,6 +11658,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EffectShaders) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.EffectShaders);
+                try
+                {
+                    item.EffectShaders.DeepCopyIn(
+                        rhs: rhs.EffectShaders,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.EffectShaders));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -11688,6 +11831,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool LoadScreens;
         public bool AnimatedObjects;
         public bool Waters;
+        public bool EffectShaders;
         public GroupMask()
         {
         }
@@ -11756,6 +11900,7 @@ namespace Mutagen.Bethesda.Fallout4
             LoadScreens = defaultValue;
             AnimatedObjects = defaultValue;
             Waters = defaultValue;
+            EffectShaders = defaultValue;
         }
     }
 
@@ -12476,6 +12621,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
                         item: WatersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.EffectShaders ?? true)
+            {
+                var EffectShadersItem = item.EffectShaders;
+                if (EffectShadersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
+                        item: EffectShadersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -13428,6 +13584,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.Waters;
                 }
+                case RecordTypeInts.EFSH:
+                {
+                    if (importMask?.EffectShaders ?? true)
+                    {
+                        item.EffectShaders.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.EffectShaders;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -13906,6 +14076,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? Fallout4GroupBinaryOverlay<IWaterGetter>.Fallout4GroupFactory(_data, _WatersLocations, _package) : default;
         public IFallout4GroupGetter<IWaterGetter> Waters => _Waters ?? new Fallout4Group<Water>(this);
         #endregion
+        #region EffectShaders
+        private List<RangeInt64>? _EffectShadersLocations;
+        private IFallout4GroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? Fallout4GroupBinaryOverlay<IEffectShaderGetter>.Fallout4GroupFactory(_data, _EffectShadersLocations, _package) : default;
+        public IFallout4GroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new Fallout4Group<EffectShader>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -14370,6 +14545,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _WatersLocations ??= new();
                     _WatersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Waters;
+                }
+                case RecordTypeInts.EFSH:
+                {
+                    _EffectShadersLocations ??= new();
+                    _EffectShadersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.EffectShaders;
                 }
                 default:
                     return default(int?);

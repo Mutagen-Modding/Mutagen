@@ -93,6 +93,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Container_Registration.Instance,
                 DestructionStage_Registration.Instance,
                 Door_Registration.Instance,
+                EffectShader_Registration.Instance,
                 Flora_Registration.Instance,
                 Furniture_Registration.Instance,
                 Grass_Registration.Instance,
