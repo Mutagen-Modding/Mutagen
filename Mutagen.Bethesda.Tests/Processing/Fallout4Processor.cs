@@ -161,9 +161,9 @@ public class Fallout4Processor : Processor
         if (majorFrame.TryFindSubrecord(RecordTypes.AIDT, out frame))
         {
             int offset = 6;
-            ProcessBool(frame, fileOffset, ref offset, 2, 1);
+            ProcessBool(frame, fileOffset, offset, 2, 1);
             offset = 20;
-            ProcessBool(frame, fileOffset, ref offset, 4, 1);
+            ProcessBool(frame, fileOffset, offset, 4, 1);
         }
         if (majorFrame.TryFindSubrecord(RecordTypes.TPLT, out frame))
         {
@@ -267,7 +267,7 @@ public class Fallout4Processor : Processor
             && xbsd.ContentLength > 20)
         {
             int loc = 20;
-            ProcessBool(xbsd, fileOffset, ref loc, 1, 1);
+            ProcessBool(xbsd, fileOffset, loc, 1, 1);
         }
         if (majorFrame.TryFindSubrecord(RecordTypes.XRMR, out var xrmr)
             && xrmr.AsInt32() == 0
@@ -285,7 +285,7 @@ public class Fallout4Processor : Processor
             && xown.ContentLength == 12)
         {
             int offset = 8;
-            ProcessBool(xown, fileOffset, ref offset, 4, 1);
+            ProcessBool(xown, fileOffset, offset, 4, 1);
         }
 
         var removed = 0;
@@ -343,7 +343,7 @@ public class Fallout4Processor : Processor
             && xown.ContentLength == 12)
         {
             int offset = 8;
-            ProcessBool(xown, fileOffset, ref offset, 4, 1);
+            ProcessBool(xown, fileOffset, offset, 4, 1);
         }
     }
 
@@ -363,7 +363,7 @@ public class Fallout4Processor : Processor
             && xown.ContentLength == 12)
         {
             int offset = 8;
-            ProcessBool(xown, fileOffset, ref offset, 4, 1);
+            ProcessBool(xown, fileOffset, offset, 4, 1);
         }
     }
 
@@ -452,7 +452,7 @@ public class Fallout4Processor : Processor
             && xown.ContentLength == 12)
         {
             int offset = 8;
-            ProcessBool(xown, fileOffset, ref offset, 4, 1);
+            ProcessBool(xown, fileOffset, offset, 4, 1);
         }
 
         ProcessLengths(

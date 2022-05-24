@@ -458,7 +458,7 @@ public abstract class Processor
         return true;
     }
 
-    public void ProcessColorFloat(ReadOnlySpan<byte> span, ref long offsetLoc, bool alpha)
+    public void ProcessColorFloat(ReadOnlySpan<byte> span, long offsetLoc, bool alpha)
     {
         var len = alpha ? 16 : 12;
         var type = alpha ? ColorBinaryType.AlphaFloat : ColorBinaryType.NoAlphaFloat;
@@ -479,12 +479,12 @@ public abstract class Processor
     {
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
-        ProcessColorFloat(pin.Content.Slice(loc), ref longLoc, alpha: alpha);
+        ProcessColorFloat(pin.Content.Slice(loc), longLoc, alpha: alpha);
         loc += 12;
         return true;
     }
 
-    public void ProcessBool(ReadOnlySpan<byte> span, ref long offsetLoc, byte importantBytes)
+    public void ProcessBool(ReadOnlySpan<byte> span, long offsetLoc, byte importantBytes)
     {
         if (importantBytes != 1) throw new NotImplementedException();
         if (span[0] > 1)
@@ -506,11 +506,11 @@ public abstract class Processor
         }
     }
 
-    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, ref int loc, byte length, byte importantBytes)
+    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, int loc, byte length, byte importantBytes)
     {
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
-        ProcessBool(pin.Content.Slice(loc, length), ref longLoc, importantBytes);
+        ProcessBool(pin.Content.Slice(loc, length), longLoc, importantBytes);
         loc += length;
         return true;
     }
