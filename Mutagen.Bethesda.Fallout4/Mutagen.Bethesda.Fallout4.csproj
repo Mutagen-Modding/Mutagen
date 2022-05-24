@@ -235,6 +235,9 @@
     <Compile Include="Records\Major Records\CreateReferenceToObject.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DebrisModel.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\DialogBranch.cs">
       <DependentUpon>DialogBranch.xml</DependentUpon>
     </Compile>
@@ -2087,6 +2090,9 @@
       <DependentUpon>AddonNode.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IExplodeSpawn_Generated.cs" />
+    <Compile Include="Records\Major Records\DebrisModel_Generated.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

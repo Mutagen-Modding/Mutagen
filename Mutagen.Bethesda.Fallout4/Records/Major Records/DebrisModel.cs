@@ -1,4 +1,4 @@
-namespace Mutagen.Bethesda.Skyrim;
+namespace Mutagen.Bethesda.Fallout4;
 
 public partial class DebrisModel
 {
