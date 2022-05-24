@@ -334,6 +334,9 @@
     <Compile Include="Records\Major Records\IdleMarker.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ImageSpace.cs">
+      <DependentUpon>ImageSpace.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ImageSpaceAdapter.cs">
       <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
     </Compile>

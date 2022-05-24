@@ -123,6 +123,7 @@ namespace Mutagen.Bethesda.Fallout4
             _EffectShaders_Object = new Fallout4Group<EffectShader>(this);
             _Explosions_Object = new Fallout4Group<Explosion>(this);
             _Debris_Object = new Fallout4Group<Debris>(this);
+            _ImageSpaces_Object = new Fallout4Group<ImageSpace>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -597,6 +598,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IDebrisGetter> IFallout4ModGetter.Debris => _Debris_Object;
         #endregion
+        #region ImageSpaces
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<ImageSpace> _ImageSpaces_Object;
+        public Fallout4Group<ImageSpace> ImageSpaces => _ImageSpaces_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IImageSpaceGetter> IFallout4ModGetter.ImageSpaces => _ImageSpaces_Object;
+        #endregion
 
         #region To String
 
@@ -703,6 +711,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.EffectShaders = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Explosions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Debris = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.ImageSpaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -772,7 +781,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Waters,
                 TItem EffectShaders,
                 TItem Explosions,
-                TItem Debris)
+                TItem Debris,
+                TItem ImageSpaces)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -841,6 +851,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.EffectShaders = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(EffectShaders, new Fallout4Group.Mask<TItem>(EffectShaders));
                 this.Explosions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Explosions, new Fallout4Group.Mask<TItem>(Explosions));
                 this.Debris = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Debris, new Fallout4Group.Mask<TItem>(Debris));
+                this.ImageSpaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ImageSpaces, new Fallout4Group.Mask<TItem>(ImageSpaces));
             }
 
             #pragma warning disable CS8618
@@ -919,6 +930,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? EffectShaders { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Explosions { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Debris { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ImageSpaces { get; set; }
             #endregion
 
             #region Equals
@@ -998,6 +1010,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
                 if (!object.Equals(this.Explosions, rhs.Explosions)) return false;
                 if (!object.Equals(this.Debris, rhs.Debris)) return false;
+                if (!object.Equals(this.ImageSpaces, rhs.ImageSpaces)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1070,6 +1083,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.EffectShaders);
                 hash.Add(this.Explosions);
                 hash.Add(this.Debris);
+                hash.Add(this.ImageSpaces);
                 return hash.ToHashCode();
             }
 
@@ -1413,6 +1427,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Debris.Overall)) return false;
                     if (this.Debris.Specific != null && !this.Debris.Specific.All(eval)) return false;
                 }
+                if (ImageSpaces != null)
+                {
+                    if (!eval(this.ImageSpaces.Overall)) return false;
+                    if (this.ImageSpaces.Specific != null && !this.ImageSpaces.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1755,6 +1774,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Debris.Overall)) return true;
                     if (this.Debris.Specific != null && this.Debris.Specific.Any(eval)) return true;
                 }
+                if (ImageSpaces != null)
+                {
+                    if (eval(this.ImageSpaces.Overall)) return true;
+                    if (this.ImageSpaces.Specific != null && this.ImageSpaces.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1836,6 +1860,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
                 obj.Explosions = this.Explosions == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Explosions.Overall), this.Explosions.Specific?.Translate(eval));
                 obj.Debris = this.Debris == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
+                obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2122,6 +2147,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Debris?.Print(sb);
                     }
+                    if (printMask?.ImageSpaces?.Overall ?? true)
+                    {
+                        ImageSpaces?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2213,6 +2242,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Explosion.ErrorMask>?>? Explosions;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Debris.ErrorMask>?>? Debris;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ImageSpace.ErrorMask>?>? ImageSpaces;
             #endregion
 
             #region IErrorMask
@@ -2355,6 +2385,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Explosions;
                     case Fallout4Mod_FieldIndex.Debris:
                         return Debris;
+                    case Fallout4Mod_FieldIndex.ImageSpaces:
+                        return ImageSpaces;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2565,6 +2597,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Debris:
                         this.Debris = new MaskItem<Exception?, Fallout4Group.ErrorMask<Debris.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.ImageSpaces:
+                        this.ImageSpaces = new MaskItem<Exception?, Fallout4Group.ErrorMask<ImageSpace.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2777,6 +2812,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Debris:
                         this.Debris = (MaskItem<Exception?, Fallout4Group.ErrorMask<Debris.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.ImageSpaces:
+                        this.ImageSpaces = (MaskItem<Exception?, Fallout4Group.ErrorMask<ImageSpace.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2852,6 +2890,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (EffectShaders != null) return true;
                 if (Explosions != null) return true;
                 if (Debris != null) return true;
+                if (ImageSpaces != null) return true;
                 return false;
             }
             #endregion
@@ -2944,6 +2983,7 @@ namespace Mutagen.Bethesda.Fallout4
                 EffectShaders?.Print(sb);
                 Explosions?.Print(sb);
                 Debris?.Print(sb);
+                ImageSpaces?.Print(sb);
             }
             #endregion
 
@@ -3019,6 +3059,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.EffectShaders = this.EffectShaders.Combine(rhs.EffectShaders, (l, r) => l.Combine(r));
                 ret.Explosions = this.Explosions.Combine(rhs.Explosions, (l, r) => l.Combine(r));
                 ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
+                ret.ImageSpaces = this.ImageSpaces.Combine(rhs.ImageSpaces, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3109,6 +3150,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<EffectShader.TranslationMask>? EffectShaders;
             public Fallout4Group.TranslationMask<Explosion.TranslationMask>? Explosions;
             public Fallout4Group.TranslationMask<Debris.TranslationMask>? Debris;
+            public Fallout4Group.TranslationMask<ImageSpace.TranslationMask>? ImageSpaces;
             #endregion
 
             #region Ctors
@@ -3200,6 +3242,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((EffectShaders != null ? EffectShaders.OnOverall : DefaultOn, EffectShaders?.GetCrystal()));
                 ret.Add((Explosions != null ? Explosions.OnOverall : DefaultOn, Explosions?.GetCrystal()));
                 ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
+                ret.Add((ImageSpaces != null ? ImageSpaces.OnOverall : DefaultOn, ImageSpaces?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3306,6 +3349,7 @@ namespace Mutagen.Bethesda.Fallout4
             _EffectShaders_Object = new Fallout4Group<EffectShader>(this);
             _Explosions_Object = new Fallout4Group<Explosion>(this);
             _Debris_Object = new Fallout4Group<Debris>(this);
+            _ImageSpaces_Object = new Fallout4Group<ImageSpace>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3579,6 +3623,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Debris.RecordCache.Set(rhsMod.Debris.RecordCache.Items);
             }
+            if (mask?.ImageSpaces ?? true)
+            {
+                this.ImageSpaces.RecordCache.Set(rhsMod.ImageSpaces.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3655,6 +3703,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
             count += Explosions.RecordCache.Count > 0 ? 1 : default(uint);
             count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3972,6 +4021,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<EffectShader> EffectShaders { get; }
         new Fallout4Group<Explosion> Explosions { get; }
         new Fallout4Group<Debris> Debris { get; }
+        new Fallout4Group<ImageSpace> ImageSpaces { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -4057,6 +4107,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IEffectShaderGetter> EffectShaders { get; }
         IFallout4GroupGetter<IExplosionGetter> Explosions { get; }
         IFallout4GroupGetter<IDebrisGetter> Debris { get; }
+        IFallout4GroupGetter<IImageSpaceGetter> ImageSpaces { get; }
 
     }
 
@@ -4694,6 +4745,7 @@ namespace Mutagen.Bethesda.Fallout4
         EffectShaders = 64,
         Explosions = 65,
         Debris = 66,
+        ImageSpaces = 67,
     }
     #endregion
 
@@ -4711,9 +4763,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 67;
+        public const ushort AdditionalFieldCount = 68;
 
-        public const ushort FieldCount = 67;
+        public const ushort FieldCount = 68;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4847,6 +4899,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.EffectShaders.Clear();
             item.Explosions.Clear();
             item.Debris.Clear();
+            item.ImageSpaces.Clear();
         }
         
         #region Mutagen
@@ -5011,6 +5064,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.EffectShaders.Remove(keys);
             obj.Explosions.Remove(keys);
             obj.Debris.Remove(keys);
+            obj.ImageSpaces.Remove(keys);
         }
         
         public void Remove(
@@ -5594,6 +5648,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "ImageSpace":
+                case "IImageSpaceGetter":
+                case "IImageSpace":
+                case "IImageSpaceInternal":
+                    obj.ImageSpaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -6130,6 +6192,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
             ret.Explosions = MaskItemExt.Factory(item.Explosions.GetEqualsMask(rhs.Explosions, include), include);
             ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
+            ret.ImageSpaces = MaskItemExt.Factory(item.ImageSpaces.GetEqualsMask(rhs.ImageSpaces, include), include);
         }
         
         public string Print(
@@ -6441,6 +6504,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Debris?.Overall ?? true)
             {
                 item.Debris?.Print(sb, "Debris");
+            }
+            if (printMask?.ImageSpaces?.Overall ?? true)
+            {
+                item.ImageSpaces?.Print(sb, "ImageSpaces");
             }
         }
         
@@ -6987,6 +7054,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isDebrisEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImageSpaces) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ImageSpaces, rhs.ImageSpaces, out var lhsImageSpaces, out var rhsImageSpaces, out var isImageSpacesEqual))
+                {
+                    if (!object.Equals(lhsImageSpaces, rhsImageSpaces)) return false;
+                }
+                else if (!isImageSpacesEqual) return false;
+            }
             return true;
         }
         
@@ -7060,6 +7135,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.EffectShaders);
             hash.Add(item.Explosions);
             hash.Add(item.Debris);
+            hash.Add(item.ImageSpaces);
             return hash.ToHashCode();
         }
         
@@ -7407,6 +7483,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IDebris":
                 case "IDebrisInternal":
                     return obj.Debris;
+                case "ImageSpace":
+                case "IImageSpaceGetter":
+                case "IImageSpace":
+                case "IImageSpaceInternal":
+                    return obj.ImageSpaces;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -7431,7 +7512,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[66];
+            Stream[] outputStreams = new Stream[67];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -7499,6 +7580,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.EffectShaders, 63, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Explosions, 64, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Debris, 65, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, 66, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8048,6 +8130,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.Debris.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImageSpaces.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8667,6 +8753,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IDebris":
                 case "IDebrisInternal":
                     foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImageSpace":
+                case "IImageSpaceGetter":
+                case "IImageSpace":
+                case "IImageSpaceInternal":
+                    foreach (var item in obj.ImageSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -9424,6 +9519,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.Debris,
                 groupGetter: (m) => m.Debris))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ImageSpace, IImageSpaceGetter>(
+                srcGroup: obj.ImageSpaces,
+                type: typeof(IImageSpaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImageSpaces,
+                groupGetter: (m) => m.ImageSpaces))
             {
                 yield return item;
             }
@@ -10364,6 +10468,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.Debris,
                         groupGetter: (m) => m.Debris))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImageSpace":
+                case "IImageSpaceGetter":
+                case "IImageSpace":
+                case "IImageSpaceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ImageSpace, IImageSpaceGetter>(
+                        srcGroup: obj.ImageSpaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImageSpaces,
+                        groupGetter: (m) => m.ImageSpaces))
                     {
                         yield return item;
                     }
@@ -12002,6 +12120,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImageSpaces) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ImageSpaces);
+                try
+                {
+                    item.ImageSpaces.DeepCopyIn(
+                        rhs: rhs.ImageSpaces,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ImageSpaces));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -12158,6 +12296,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool EffectShaders;
         public bool Explosions;
         public bool Debris;
+        public bool ImageSpaces;
         public GroupMask()
         {
         }
@@ -12229,6 +12368,7 @@ namespace Mutagen.Bethesda.Fallout4
             EffectShaders = defaultValue;
             Explosions = defaultValue;
             Debris = defaultValue;
+            ImageSpaces = defaultValue;
         }
     }
 
@@ -12982,6 +13122,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)DebrisItem).BinaryWriteTranslator).Write<IDebrisGetter>(
                         item: DebrisItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ImageSpaces ?? true)
+            {
+                var ImageSpacesItem = item.ImageSpaces;
+                if (ImageSpacesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ImageSpacesItem).BinaryWriteTranslator).Write<IImageSpaceGetter>(
+                        item: ImageSpacesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -13976,6 +14127,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.Debris;
                 }
+                case RecordTypeInts.IMGS:
+                {
+                    if (importMask?.ImageSpaces ?? true)
+                    {
+                        item.ImageSpaces.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.ImageSpaces;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -14469,6 +14634,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? Fallout4GroupBinaryOverlay<IDebrisGetter>.Fallout4GroupFactory(_data, _DebrisLocations, _package) : default;
         public IFallout4GroupGetter<IDebrisGetter> Debris => _Debris ?? new Fallout4Group<Debris>(this);
         #endregion
+        #region ImageSpaces
+        private List<RangeInt64>? _ImageSpacesLocations;
+        private IFallout4GroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? Fallout4GroupBinaryOverlay<IImageSpaceGetter>.Fallout4GroupFactory(_data, _ImageSpacesLocations, _package) : default;
+        public IFallout4GroupGetter<IImageSpaceGetter> ImageSpaces => _ImageSpaces ?? new Fallout4Group<ImageSpace>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -14951,6 +15121,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _DebrisLocations ??= new();
                     _DebrisLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Debris;
+                }
+                case RecordTypeInts.IMGS:
+                {
+                    _ImageSpacesLocations ??= new();
+                    _ImageSpacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.ImageSpaces;
                 }
                 default:
                     return default(int?);

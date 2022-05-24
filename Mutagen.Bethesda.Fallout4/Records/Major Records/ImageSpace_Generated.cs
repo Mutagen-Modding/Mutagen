@@ -31,6 +31,7 @@ using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -53,6 +54,110 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region HdrEyeAdaptSpeed
+        public Single HdrEyeAdaptSpeed { get; set; } = default;
+        #endregion
+        #region HdrTonemapE
+        public Single HdrTonemapE { get; set; } = default;
+        #endregion
+        #region HdrBloomThreshold
+        public Single HdrBloomThreshold { get; set; } = default;
+        #endregion
+        #region HdrBloomScale
+        public Single HdrBloomScale { get; set; } = default;
+        #endregion
+        #region HdrAutoExposureMax
+        public Single HdrAutoExposureMax { get; set; } = default;
+        #endregion
+        #region HdrAutoExposureMin
+        public Single HdrAutoExposureMin { get; set; } = default;
+        #endregion
+        #region HdrSunlightScale
+        public Single HdrSunlightScale { get; set; } = default;
+        #endregion
+        #region HdrSkyScale
+        public Single HdrSkyScale { get; set; } = default;
+        #endregion
+        #region HdrMiddleGray
+        public Single HdrMiddleGray { get; set; } = default;
+        #endregion
+        #region CinematicSaturation
+        public Single CinematicSaturation { get; set; } = default;
+        #endregion
+        #region CinematicBrightness
+        public Single CinematicBrightness { get; set; } = default;
+        #endregion
+        #region CinematicContrast
+        public Single CinematicContrast { get; set; } = default;
+        #endregion
+        #region TintAmount
+        public Single TintAmount { get; set; } = default;
+        #endregion
+        #region TintColor
+        public Color TintColor { get; set; } = default;
+        #endregion
+        #region DepthOfFieldStrength
+        public Single DepthOfFieldStrength { get; set; } = default;
+        #endregion
+        #region DepthOfFieldDistance
+        public Single DepthOfFieldDistance { get; set; } = default;
+        #endregion
+        #region DepthOfFieldRange
+        public Single DepthOfFieldRange { get; set; } = default;
+        #endregion
+        #region DepthOfFieldUnused
+        public Int16 DepthOfFieldUnused { get; set; } = default;
+        #endregion
+        #region DepthOfFieldBlurRadius
+        public Byte DepthOfFieldBlurRadius { get; set; } = default;
+        public static RangeUInt8 DepthOfFieldBlurRadius_Range = new RangeUInt8(0, 7);
+        #endregion
+        #region DepthOfFieldSky
+        public Boolean DepthOfFieldSky { get; set; } = default;
+        #endregion
+        #region DepthOfFieldVignetteRadius
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DepthOfFieldVignetteRadius;
+        public Single DepthOfFieldVignetteRadius
+        {
+            get => this._DepthOfFieldVignetteRadius;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._DepthOfFieldVignetteRadius = value;
+            }
+        }
+        #endregion
+        #region DepthOfFieldVignetteStrength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _DepthOfFieldVignetteStrength;
+        public Single DepthOfFieldVignetteStrength
+        {
+            get => this._DepthOfFieldVignetteStrength;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._DepthOfFieldVignetteStrength = value;
+            }
+        }
+        #endregion
+        #region Lut
+        public String? Lut { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IImageSpaceGetter.Lut => this.Lut;
+        #endregion
+        #region HNAMDataTypeState
+        public ImageSpace.HNAMDataType HNAMDataTypeState { get; set; } = default;
+        #endregion
+        #region CNAMDataTypeState
+        public ImageSpace.CNAMDataType CNAMDataTypeState { get; set; } = default;
+        #endregion
+        #region TNAMDataTypeState
+        public ImageSpace.TNAMDataType TNAMDataTypeState { get; set; } = default;
+        #endregion
+        #region DNAMDataTypeState
+        public ImageSpace.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +183,33 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.HdrEyeAdaptSpeed = initialValue;
+                this.HdrTonemapE = initialValue;
+                this.HdrBloomThreshold = initialValue;
+                this.HdrBloomScale = initialValue;
+                this.HdrAutoExposureMax = initialValue;
+                this.HdrAutoExposureMin = initialValue;
+                this.HdrSunlightScale = initialValue;
+                this.HdrSkyScale = initialValue;
+                this.HdrMiddleGray = initialValue;
+                this.CinematicSaturation = initialValue;
+                this.CinematicBrightness = initialValue;
+                this.CinematicContrast = initialValue;
+                this.TintAmount = initialValue;
+                this.TintColor = initialValue;
+                this.DepthOfFieldStrength = initialValue;
+                this.DepthOfFieldDistance = initialValue;
+                this.DepthOfFieldRange = initialValue;
+                this.DepthOfFieldUnused = initialValue;
+                this.DepthOfFieldBlurRadius = initialValue;
+                this.DepthOfFieldSky = initialValue;
+                this.DepthOfFieldVignetteRadius = initialValue;
+                this.DepthOfFieldVignetteStrength = initialValue;
+                this.Lut = initialValue;
+                this.HNAMDataTypeState = initialValue;
+                this.CNAMDataTypeState = initialValue;
+                this.TNAMDataTypeState = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +218,34 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem HdrEyeAdaptSpeed,
+                TItem HdrTonemapE,
+                TItem HdrBloomThreshold,
+                TItem HdrBloomScale,
+                TItem HdrAutoExposureMax,
+                TItem HdrAutoExposureMin,
+                TItem HdrSunlightScale,
+                TItem HdrSkyScale,
+                TItem HdrMiddleGray,
+                TItem CinematicSaturation,
+                TItem CinematicBrightness,
+                TItem CinematicContrast,
+                TItem TintAmount,
+                TItem TintColor,
+                TItem DepthOfFieldStrength,
+                TItem DepthOfFieldDistance,
+                TItem DepthOfFieldRange,
+                TItem DepthOfFieldUnused,
+                TItem DepthOfFieldBlurRadius,
+                TItem DepthOfFieldSky,
+                TItem DepthOfFieldVignetteRadius,
+                TItem DepthOfFieldVignetteStrength,
+                TItem Lut,
+                TItem HNAMDataTypeState,
+                TItem CNAMDataTypeState,
+                TItem TNAMDataTypeState,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +254,33 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.HdrEyeAdaptSpeed = HdrEyeAdaptSpeed;
+                this.HdrTonemapE = HdrTonemapE;
+                this.HdrBloomThreshold = HdrBloomThreshold;
+                this.HdrBloomScale = HdrBloomScale;
+                this.HdrAutoExposureMax = HdrAutoExposureMax;
+                this.HdrAutoExposureMin = HdrAutoExposureMin;
+                this.HdrSunlightScale = HdrSunlightScale;
+                this.HdrSkyScale = HdrSkyScale;
+                this.HdrMiddleGray = HdrMiddleGray;
+                this.CinematicSaturation = CinematicSaturation;
+                this.CinematicBrightness = CinematicBrightness;
+                this.CinematicContrast = CinematicContrast;
+                this.TintAmount = TintAmount;
+                this.TintColor = TintColor;
+                this.DepthOfFieldStrength = DepthOfFieldStrength;
+                this.DepthOfFieldDistance = DepthOfFieldDistance;
+                this.DepthOfFieldRange = DepthOfFieldRange;
+                this.DepthOfFieldUnused = DepthOfFieldUnused;
+                this.DepthOfFieldBlurRadius = DepthOfFieldBlurRadius;
+                this.DepthOfFieldSky = DepthOfFieldSky;
+                this.DepthOfFieldVignetteRadius = DepthOfFieldVignetteRadius;
+                this.DepthOfFieldVignetteStrength = DepthOfFieldVignetteStrength;
+                this.Lut = Lut;
+                this.HNAMDataTypeState = HNAMDataTypeState;
+                this.CNAMDataTypeState = CNAMDataTypeState;
+                this.TNAMDataTypeState = TNAMDataTypeState;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +289,36 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem HdrEyeAdaptSpeed;
+            public TItem HdrTonemapE;
+            public TItem HdrBloomThreshold;
+            public TItem HdrBloomScale;
+            public TItem HdrAutoExposureMax;
+            public TItem HdrAutoExposureMin;
+            public TItem HdrSunlightScale;
+            public TItem HdrSkyScale;
+            public TItem HdrMiddleGray;
+            public TItem CinematicSaturation;
+            public TItem CinematicBrightness;
+            public TItem CinematicContrast;
+            public TItem TintAmount;
+            public TItem TintColor;
+            public TItem DepthOfFieldStrength;
+            public TItem DepthOfFieldDistance;
+            public TItem DepthOfFieldRange;
+            public TItem DepthOfFieldUnused;
+            public TItem DepthOfFieldBlurRadius;
+            public TItem DepthOfFieldSky;
+            public TItem DepthOfFieldVignetteRadius;
+            public TItem DepthOfFieldVignetteStrength;
+            public TItem Lut;
+            public TItem HNAMDataTypeState;
+            public TItem CNAMDataTypeState;
+            public TItem TNAMDataTypeState;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +332,65 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.HdrEyeAdaptSpeed, rhs.HdrEyeAdaptSpeed)) return false;
+                if (!object.Equals(this.HdrTonemapE, rhs.HdrTonemapE)) return false;
+                if (!object.Equals(this.HdrBloomThreshold, rhs.HdrBloomThreshold)) return false;
+                if (!object.Equals(this.HdrBloomScale, rhs.HdrBloomScale)) return false;
+                if (!object.Equals(this.HdrAutoExposureMax, rhs.HdrAutoExposureMax)) return false;
+                if (!object.Equals(this.HdrAutoExposureMin, rhs.HdrAutoExposureMin)) return false;
+                if (!object.Equals(this.HdrSunlightScale, rhs.HdrSunlightScale)) return false;
+                if (!object.Equals(this.HdrSkyScale, rhs.HdrSkyScale)) return false;
+                if (!object.Equals(this.HdrMiddleGray, rhs.HdrMiddleGray)) return false;
+                if (!object.Equals(this.CinematicSaturation, rhs.CinematicSaturation)) return false;
+                if (!object.Equals(this.CinematicBrightness, rhs.CinematicBrightness)) return false;
+                if (!object.Equals(this.CinematicContrast, rhs.CinematicContrast)) return false;
+                if (!object.Equals(this.TintAmount, rhs.TintAmount)) return false;
+                if (!object.Equals(this.TintColor, rhs.TintColor)) return false;
+                if (!object.Equals(this.DepthOfFieldStrength, rhs.DepthOfFieldStrength)) return false;
+                if (!object.Equals(this.DepthOfFieldDistance, rhs.DepthOfFieldDistance)) return false;
+                if (!object.Equals(this.DepthOfFieldRange, rhs.DepthOfFieldRange)) return false;
+                if (!object.Equals(this.DepthOfFieldUnused, rhs.DepthOfFieldUnused)) return false;
+                if (!object.Equals(this.DepthOfFieldBlurRadius, rhs.DepthOfFieldBlurRadius)) return false;
+                if (!object.Equals(this.DepthOfFieldSky, rhs.DepthOfFieldSky)) return false;
+                if (!object.Equals(this.DepthOfFieldVignetteRadius, rhs.DepthOfFieldVignetteRadius)) return false;
+                if (!object.Equals(this.DepthOfFieldVignetteStrength, rhs.DepthOfFieldVignetteStrength)) return false;
+                if (!object.Equals(this.Lut, rhs.Lut)) return false;
+                if (!object.Equals(this.HNAMDataTypeState, rhs.HNAMDataTypeState)) return false;
+                if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
+                if (!object.Equals(this.TNAMDataTypeState, rhs.TNAMDataTypeState)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.HdrEyeAdaptSpeed);
+                hash.Add(this.HdrTonemapE);
+                hash.Add(this.HdrBloomThreshold);
+                hash.Add(this.HdrBloomScale);
+                hash.Add(this.HdrAutoExposureMax);
+                hash.Add(this.HdrAutoExposureMin);
+                hash.Add(this.HdrSunlightScale);
+                hash.Add(this.HdrSkyScale);
+                hash.Add(this.HdrMiddleGray);
+                hash.Add(this.CinematicSaturation);
+                hash.Add(this.CinematicBrightness);
+                hash.Add(this.CinematicContrast);
+                hash.Add(this.TintAmount);
+                hash.Add(this.TintColor);
+                hash.Add(this.DepthOfFieldStrength);
+                hash.Add(this.DepthOfFieldDistance);
+                hash.Add(this.DepthOfFieldRange);
+                hash.Add(this.DepthOfFieldUnused);
+                hash.Add(this.DepthOfFieldBlurRadius);
+                hash.Add(this.DepthOfFieldSky);
+                hash.Add(this.DepthOfFieldVignetteRadius);
+                hash.Add(this.DepthOfFieldVignetteStrength);
+                hash.Add(this.Lut);
+                hash.Add(this.HNAMDataTypeState);
+                hash.Add(this.CNAMDataTypeState);
+                hash.Add(this.TNAMDataTypeState);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +401,33 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.HdrEyeAdaptSpeed)) return false;
+                if (!eval(this.HdrTonemapE)) return false;
+                if (!eval(this.HdrBloomThreshold)) return false;
+                if (!eval(this.HdrBloomScale)) return false;
+                if (!eval(this.HdrAutoExposureMax)) return false;
+                if (!eval(this.HdrAutoExposureMin)) return false;
+                if (!eval(this.HdrSunlightScale)) return false;
+                if (!eval(this.HdrSkyScale)) return false;
+                if (!eval(this.HdrMiddleGray)) return false;
+                if (!eval(this.CinematicSaturation)) return false;
+                if (!eval(this.CinematicBrightness)) return false;
+                if (!eval(this.CinematicContrast)) return false;
+                if (!eval(this.TintAmount)) return false;
+                if (!eval(this.TintColor)) return false;
+                if (!eval(this.DepthOfFieldStrength)) return false;
+                if (!eval(this.DepthOfFieldDistance)) return false;
+                if (!eval(this.DepthOfFieldRange)) return false;
+                if (!eval(this.DepthOfFieldUnused)) return false;
+                if (!eval(this.DepthOfFieldBlurRadius)) return false;
+                if (!eval(this.DepthOfFieldSky)) return false;
+                if (!eval(this.DepthOfFieldVignetteRadius)) return false;
+                if (!eval(this.DepthOfFieldVignetteStrength)) return false;
+                if (!eval(this.Lut)) return false;
+                if (!eval(this.HNAMDataTypeState)) return false;
+                if (!eval(this.CNAMDataTypeState)) return false;
+                if (!eval(this.TNAMDataTypeState)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +436,33 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.HdrEyeAdaptSpeed)) return true;
+                if (eval(this.HdrTonemapE)) return true;
+                if (eval(this.HdrBloomThreshold)) return true;
+                if (eval(this.HdrBloomScale)) return true;
+                if (eval(this.HdrAutoExposureMax)) return true;
+                if (eval(this.HdrAutoExposureMin)) return true;
+                if (eval(this.HdrSunlightScale)) return true;
+                if (eval(this.HdrSkyScale)) return true;
+                if (eval(this.HdrMiddleGray)) return true;
+                if (eval(this.CinematicSaturation)) return true;
+                if (eval(this.CinematicBrightness)) return true;
+                if (eval(this.CinematicContrast)) return true;
+                if (eval(this.TintAmount)) return true;
+                if (eval(this.TintColor)) return true;
+                if (eval(this.DepthOfFieldStrength)) return true;
+                if (eval(this.DepthOfFieldDistance)) return true;
+                if (eval(this.DepthOfFieldRange)) return true;
+                if (eval(this.DepthOfFieldUnused)) return true;
+                if (eval(this.DepthOfFieldBlurRadius)) return true;
+                if (eval(this.DepthOfFieldSky)) return true;
+                if (eval(this.DepthOfFieldVignetteRadius)) return true;
+                if (eval(this.DepthOfFieldVignetteStrength)) return true;
+                if (eval(this.Lut)) return true;
+                if (eval(this.HNAMDataTypeState)) return true;
+                if (eval(this.CNAMDataTypeState)) return true;
+                if (eval(this.TNAMDataTypeState)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +478,33 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.HdrEyeAdaptSpeed = eval(this.HdrEyeAdaptSpeed);
+                obj.HdrTonemapE = eval(this.HdrTonemapE);
+                obj.HdrBloomThreshold = eval(this.HdrBloomThreshold);
+                obj.HdrBloomScale = eval(this.HdrBloomScale);
+                obj.HdrAutoExposureMax = eval(this.HdrAutoExposureMax);
+                obj.HdrAutoExposureMin = eval(this.HdrAutoExposureMin);
+                obj.HdrSunlightScale = eval(this.HdrSunlightScale);
+                obj.HdrSkyScale = eval(this.HdrSkyScale);
+                obj.HdrMiddleGray = eval(this.HdrMiddleGray);
+                obj.CinematicSaturation = eval(this.CinematicSaturation);
+                obj.CinematicBrightness = eval(this.CinematicBrightness);
+                obj.CinematicContrast = eval(this.CinematicContrast);
+                obj.TintAmount = eval(this.TintAmount);
+                obj.TintColor = eval(this.TintColor);
+                obj.DepthOfFieldStrength = eval(this.DepthOfFieldStrength);
+                obj.DepthOfFieldDistance = eval(this.DepthOfFieldDistance);
+                obj.DepthOfFieldRange = eval(this.DepthOfFieldRange);
+                obj.DepthOfFieldUnused = eval(this.DepthOfFieldUnused);
+                obj.DepthOfFieldBlurRadius = eval(this.DepthOfFieldBlurRadius);
+                obj.DepthOfFieldSky = eval(this.DepthOfFieldSky);
+                obj.DepthOfFieldVignetteRadius = eval(this.DepthOfFieldVignetteRadius);
+                obj.DepthOfFieldVignetteStrength = eval(this.DepthOfFieldVignetteStrength);
+                obj.Lut = eval(this.Lut);
+                obj.HNAMDataTypeState = eval(this.HNAMDataTypeState);
+                obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
+                obj.TNAMDataTypeState = eval(this.TNAMDataTypeState);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -172,6 +523,114 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(ImageSpace.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.HdrEyeAdaptSpeed ?? true)
+                    {
+                        sb.AppendItem(HdrEyeAdaptSpeed, "HdrEyeAdaptSpeed");
+                    }
+                    if (printMask?.HdrTonemapE ?? true)
+                    {
+                        sb.AppendItem(HdrTonemapE, "HdrTonemapE");
+                    }
+                    if (printMask?.HdrBloomThreshold ?? true)
+                    {
+                        sb.AppendItem(HdrBloomThreshold, "HdrBloomThreshold");
+                    }
+                    if (printMask?.HdrBloomScale ?? true)
+                    {
+                        sb.AppendItem(HdrBloomScale, "HdrBloomScale");
+                    }
+                    if (printMask?.HdrAutoExposureMax ?? true)
+                    {
+                        sb.AppendItem(HdrAutoExposureMax, "HdrAutoExposureMax");
+                    }
+                    if (printMask?.HdrAutoExposureMin ?? true)
+                    {
+                        sb.AppendItem(HdrAutoExposureMin, "HdrAutoExposureMin");
+                    }
+                    if (printMask?.HdrSunlightScale ?? true)
+                    {
+                        sb.AppendItem(HdrSunlightScale, "HdrSunlightScale");
+                    }
+                    if (printMask?.HdrSkyScale ?? true)
+                    {
+                        sb.AppendItem(HdrSkyScale, "HdrSkyScale");
+                    }
+                    if (printMask?.HdrMiddleGray ?? true)
+                    {
+                        sb.AppendItem(HdrMiddleGray, "HdrMiddleGray");
+                    }
+                    if (printMask?.CinematicSaturation ?? true)
+                    {
+                        sb.AppendItem(CinematicSaturation, "CinematicSaturation");
+                    }
+                    if (printMask?.CinematicBrightness ?? true)
+                    {
+                        sb.AppendItem(CinematicBrightness, "CinematicBrightness");
+                    }
+                    if (printMask?.CinematicContrast ?? true)
+                    {
+                        sb.AppendItem(CinematicContrast, "CinematicContrast");
+                    }
+                    if (printMask?.TintAmount ?? true)
+                    {
+                        sb.AppendItem(TintAmount, "TintAmount");
+                    }
+                    if (printMask?.TintColor ?? true)
+                    {
+                        sb.AppendItem(TintColor, "TintColor");
+                    }
+                    if (printMask?.DepthOfFieldStrength ?? true)
+                    {
+                        sb.AppendItem(DepthOfFieldStrength, "DepthOfFieldStrength");
+                    }
+                    if (printMask?.DepthOfFieldDistance ?? true)
+                    {
+                        sb.AppendItem(DepthOfFieldDistance, "DepthOfFieldDistance");
+                    }
+                    if (printMask?.DepthOfFieldRange ?? true)
+                    {
+                        sb.AppendItem(DepthOfFieldRange, "DepthOfFieldRange");
+                    }
+                    if (printMask?.DepthOfFieldUnused ?? true)
+                    {
+                        sb.AppendItem(DepthOfFieldUnused, "DepthOfFieldUnused");
+                    }
+                    if (printMask?.DepthOfFieldBlurRadius ?? true)
+                    {
+                        sb.AppendItem(DepthOfFieldBlurRadius, "DepthOfFieldBlurRadius");
+                    }
+                    if (printMask?.DepthOfFieldSky ?? true)
+                    {
+                        sb.AppendItem(DepthOfFieldSky, "DepthOfFieldSky");
+                    }
+                    if (printMask?.DepthOfFieldVignetteRadius ?? true)
+                    {
+                        sb.AppendItem(DepthOfFieldVignetteRadius, "DepthOfFieldVignetteRadius");
+                    }
+                    if (printMask?.DepthOfFieldVignetteStrength ?? true)
+                    {
+                        sb.AppendItem(DepthOfFieldVignetteStrength, "DepthOfFieldVignetteStrength");
+                    }
+                    if (printMask?.Lut ?? true)
+                    {
+                        sb.AppendItem(Lut, "Lut");
+                    }
+                    if (printMask?.HNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
+                    }
+                    if (printMask?.CNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
+                    }
+                    if (printMask?.TNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +641,96 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? HdrEyeAdaptSpeed;
+            public Exception? HdrTonemapE;
+            public Exception? HdrBloomThreshold;
+            public Exception? HdrBloomScale;
+            public Exception? HdrAutoExposureMax;
+            public Exception? HdrAutoExposureMin;
+            public Exception? HdrSunlightScale;
+            public Exception? HdrSkyScale;
+            public Exception? HdrMiddleGray;
+            public Exception? CinematicSaturation;
+            public Exception? CinematicBrightness;
+            public Exception? CinematicContrast;
+            public Exception? TintAmount;
+            public Exception? TintColor;
+            public Exception? DepthOfFieldStrength;
+            public Exception? DepthOfFieldDistance;
+            public Exception? DepthOfFieldRange;
+            public Exception? DepthOfFieldUnused;
+            public Exception? DepthOfFieldBlurRadius;
+            public Exception? DepthOfFieldSky;
+            public Exception? DepthOfFieldVignetteRadius;
+            public Exception? DepthOfFieldVignetteStrength;
+            public Exception? Lut;
+            public Exception? HNAMDataTypeState;
+            public Exception? CNAMDataTypeState;
+            public Exception? TNAMDataTypeState;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ImageSpace_FieldIndex enu = (ImageSpace_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImageSpace_FieldIndex.HdrEyeAdaptSpeed:
+                        return HdrEyeAdaptSpeed;
+                    case ImageSpace_FieldIndex.HdrTonemapE:
+                        return HdrTonemapE;
+                    case ImageSpace_FieldIndex.HdrBloomThreshold:
+                        return HdrBloomThreshold;
+                    case ImageSpace_FieldIndex.HdrBloomScale:
+                        return HdrBloomScale;
+                    case ImageSpace_FieldIndex.HdrAutoExposureMax:
+                        return HdrAutoExposureMax;
+                    case ImageSpace_FieldIndex.HdrAutoExposureMin:
+                        return HdrAutoExposureMin;
+                    case ImageSpace_FieldIndex.HdrSunlightScale:
+                        return HdrSunlightScale;
+                    case ImageSpace_FieldIndex.HdrSkyScale:
+                        return HdrSkyScale;
+                    case ImageSpace_FieldIndex.HdrMiddleGray:
+                        return HdrMiddleGray;
+                    case ImageSpace_FieldIndex.CinematicSaturation:
+                        return CinematicSaturation;
+                    case ImageSpace_FieldIndex.CinematicBrightness:
+                        return CinematicBrightness;
+                    case ImageSpace_FieldIndex.CinematicContrast:
+                        return CinematicContrast;
+                    case ImageSpace_FieldIndex.TintAmount:
+                        return TintAmount;
+                    case ImageSpace_FieldIndex.TintColor:
+                        return TintColor;
+                    case ImageSpace_FieldIndex.DepthOfFieldStrength:
+                        return DepthOfFieldStrength;
+                    case ImageSpace_FieldIndex.DepthOfFieldDistance:
+                        return DepthOfFieldDistance;
+                    case ImageSpace_FieldIndex.DepthOfFieldRange:
+                        return DepthOfFieldRange;
+                    case ImageSpace_FieldIndex.DepthOfFieldUnused:
+                        return DepthOfFieldUnused;
+                    case ImageSpace_FieldIndex.DepthOfFieldBlurRadius:
+                        return DepthOfFieldBlurRadius;
+                    case ImageSpace_FieldIndex.DepthOfFieldSky:
+                        return DepthOfFieldSky;
+                    case ImageSpace_FieldIndex.DepthOfFieldVignetteRadius:
+                        return DepthOfFieldVignetteRadius;
+                    case ImageSpace_FieldIndex.DepthOfFieldVignetteStrength:
+                        return DepthOfFieldVignetteStrength;
+                    case ImageSpace_FieldIndex.Lut:
+                        return Lut;
+                    case ImageSpace_FieldIndex.HNAMDataTypeState:
+                        return HNAMDataTypeState;
+                    case ImageSpace_FieldIndex.CNAMDataTypeState:
+                        return CNAMDataTypeState;
+                    case ImageSpace_FieldIndex.TNAMDataTypeState:
+                        return TNAMDataTypeState;
+                    case ImageSpace_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +741,87 @@ namespace Mutagen.Bethesda.Fallout4
                 ImageSpace_FieldIndex enu = (ImageSpace_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImageSpace_FieldIndex.HdrEyeAdaptSpeed:
+                        this.HdrEyeAdaptSpeed = ex;
+                        break;
+                    case ImageSpace_FieldIndex.HdrTonemapE:
+                        this.HdrTonemapE = ex;
+                        break;
+                    case ImageSpace_FieldIndex.HdrBloomThreshold:
+                        this.HdrBloomThreshold = ex;
+                        break;
+                    case ImageSpace_FieldIndex.HdrBloomScale:
+                        this.HdrBloomScale = ex;
+                        break;
+                    case ImageSpace_FieldIndex.HdrAutoExposureMax:
+                        this.HdrAutoExposureMax = ex;
+                        break;
+                    case ImageSpace_FieldIndex.HdrAutoExposureMin:
+                        this.HdrAutoExposureMin = ex;
+                        break;
+                    case ImageSpace_FieldIndex.HdrSunlightScale:
+                        this.HdrSunlightScale = ex;
+                        break;
+                    case ImageSpace_FieldIndex.HdrSkyScale:
+                        this.HdrSkyScale = ex;
+                        break;
+                    case ImageSpace_FieldIndex.HdrMiddleGray:
+                        this.HdrMiddleGray = ex;
+                        break;
+                    case ImageSpace_FieldIndex.CinematicSaturation:
+                        this.CinematicSaturation = ex;
+                        break;
+                    case ImageSpace_FieldIndex.CinematicBrightness:
+                        this.CinematicBrightness = ex;
+                        break;
+                    case ImageSpace_FieldIndex.CinematicContrast:
+                        this.CinematicContrast = ex;
+                        break;
+                    case ImageSpace_FieldIndex.TintAmount:
+                        this.TintAmount = ex;
+                        break;
+                    case ImageSpace_FieldIndex.TintColor:
+                        this.TintColor = ex;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldStrength:
+                        this.DepthOfFieldStrength = ex;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldDistance:
+                        this.DepthOfFieldDistance = ex;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldRange:
+                        this.DepthOfFieldRange = ex;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldUnused:
+                        this.DepthOfFieldUnused = ex;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldBlurRadius:
+                        this.DepthOfFieldBlurRadius = ex;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldSky:
+                        this.DepthOfFieldSky = ex;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldVignetteRadius:
+                        this.DepthOfFieldVignetteRadius = ex;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldVignetteStrength:
+                        this.DepthOfFieldVignetteStrength = ex;
+                        break;
+                    case ImageSpace_FieldIndex.Lut:
+                        this.Lut = ex;
+                        break;
+                    case ImageSpace_FieldIndex.HNAMDataTypeState:
+                        this.HNAMDataTypeState = ex;
+                        break;
+                    case ImageSpace_FieldIndex.CNAMDataTypeState:
+                        this.CNAMDataTypeState = ex;
+                        break;
+                    case ImageSpace_FieldIndex.TNAMDataTypeState:
+                        this.TNAMDataTypeState = ex;
+                        break;
+                    case ImageSpace_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +833,87 @@ namespace Mutagen.Bethesda.Fallout4
                 ImageSpace_FieldIndex enu = (ImageSpace_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImageSpace_FieldIndex.HdrEyeAdaptSpeed:
+                        this.HdrEyeAdaptSpeed = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.HdrTonemapE:
+                        this.HdrTonemapE = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.HdrBloomThreshold:
+                        this.HdrBloomThreshold = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.HdrBloomScale:
+                        this.HdrBloomScale = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.HdrAutoExposureMax:
+                        this.HdrAutoExposureMax = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.HdrAutoExposureMin:
+                        this.HdrAutoExposureMin = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.HdrSunlightScale:
+                        this.HdrSunlightScale = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.HdrSkyScale:
+                        this.HdrSkyScale = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.HdrMiddleGray:
+                        this.HdrMiddleGray = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.CinematicSaturation:
+                        this.CinematicSaturation = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.CinematicBrightness:
+                        this.CinematicBrightness = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.CinematicContrast:
+                        this.CinematicContrast = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.TintAmount:
+                        this.TintAmount = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.TintColor:
+                        this.TintColor = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldStrength:
+                        this.DepthOfFieldStrength = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldDistance:
+                        this.DepthOfFieldDistance = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldRange:
+                        this.DepthOfFieldRange = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldUnused:
+                        this.DepthOfFieldUnused = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldBlurRadius:
+                        this.DepthOfFieldBlurRadius = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldSky:
+                        this.DepthOfFieldSky = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldVignetteRadius:
+                        this.DepthOfFieldVignetteRadius = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.DepthOfFieldVignetteStrength:
+                        this.DepthOfFieldVignetteStrength = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.Lut:
+                        this.Lut = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.HNAMDataTypeState:
+                        this.HNAMDataTypeState = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.CNAMDataTypeState:
+                        this.CNAMDataTypeState = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.TNAMDataTypeState:
+                        this.TNAMDataTypeState = (Exception?)obj;
+                        break;
+                    case ImageSpace_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +923,33 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (HdrEyeAdaptSpeed != null) return true;
+                if (HdrTonemapE != null) return true;
+                if (HdrBloomThreshold != null) return true;
+                if (HdrBloomScale != null) return true;
+                if (HdrAutoExposureMax != null) return true;
+                if (HdrAutoExposureMin != null) return true;
+                if (HdrSunlightScale != null) return true;
+                if (HdrSkyScale != null) return true;
+                if (HdrMiddleGray != null) return true;
+                if (CinematicSaturation != null) return true;
+                if (CinematicBrightness != null) return true;
+                if (CinematicContrast != null) return true;
+                if (TintAmount != null) return true;
+                if (TintColor != null) return true;
+                if (DepthOfFieldStrength != null) return true;
+                if (DepthOfFieldDistance != null) return true;
+                if (DepthOfFieldRange != null) return true;
+                if (DepthOfFieldUnused != null) return true;
+                if (DepthOfFieldBlurRadius != null) return true;
+                if (DepthOfFieldSky != null) return true;
+                if (DepthOfFieldVignetteRadius != null) return true;
+                if (DepthOfFieldVignetteStrength != null) return true;
+                if (Lut != null) return true;
+                if (HNAMDataTypeState != null) return true;
+                if (CNAMDataTypeState != null) return true;
+                if (TNAMDataTypeState != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +976,87 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(HdrEyeAdaptSpeed, "HdrEyeAdaptSpeed");
+                }
+                {
+                    sb.AppendItem(HdrTonemapE, "HdrTonemapE");
+                }
+                {
+                    sb.AppendItem(HdrBloomThreshold, "HdrBloomThreshold");
+                }
+                {
+                    sb.AppendItem(HdrBloomScale, "HdrBloomScale");
+                }
+                {
+                    sb.AppendItem(HdrAutoExposureMax, "HdrAutoExposureMax");
+                }
+                {
+                    sb.AppendItem(HdrAutoExposureMin, "HdrAutoExposureMin");
+                }
+                {
+                    sb.AppendItem(HdrSunlightScale, "HdrSunlightScale");
+                }
+                {
+                    sb.AppendItem(HdrSkyScale, "HdrSkyScale");
+                }
+                {
+                    sb.AppendItem(HdrMiddleGray, "HdrMiddleGray");
+                }
+                {
+                    sb.AppendItem(CinematicSaturation, "CinematicSaturation");
+                }
+                {
+                    sb.AppendItem(CinematicBrightness, "CinematicBrightness");
+                }
+                {
+                    sb.AppendItem(CinematicContrast, "CinematicContrast");
+                }
+                {
+                    sb.AppendItem(TintAmount, "TintAmount");
+                }
+                {
+                    sb.AppendItem(TintColor, "TintColor");
+                }
+                {
+                    sb.AppendItem(DepthOfFieldStrength, "DepthOfFieldStrength");
+                }
+                {
+                    sb.AppendItem(DepthOfFieldDistance, "DepthOfFieldDistance");
+                }
+                {
+                    sb.AppendItem(DepthOfFieldRange, "DepthOfFieldRange");
+                }
+                {
+                    sb.AppendItem(DepthOfFieldUnused, "DepthOfFieldUnused");
+                }
+                {
+                    sb.AppendItem(DepthOfFieldBlurRadius, "DepthOfFieldBlurRadius");
+                }
+                {
+                    sb.AppendItem(DepthOfFieldSky, "DepthOfFieldSky");
+                }
+                {
+                    sb.AppendItem(DepthOfFieldVignetteRadius, "DepthOfFieldVignetteRadius");
+                }
+                {
+                    sb.AppendItem(DepthOfFieldVignetteStrength, "DepthOfFieldVignetteStrength");
+                }
+                {
+                    sb.AppendItem(Lut, "Lut");
+                }
+                {
+                    sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
+                }
+                {
+                    sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
+                }
+                {
+                    sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +1065,33 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.HdrEyeAdaptSpeed = this.HdrEyeAdaptSpeed.Combine(rhs.HdrEyeAdaptSpeed);
+                ret.HdrTonemapE = this.HdrTonemapE.Combine(rhs.HdrTonemapE);
+                ret.HdrBloomThreshold = this.HdrBloomThreshold.Combine(rhs.HdrBloomThreshold);
+                ret.HdrBloomScale = this.HdrBloomScale.Combine(rhs.HdrBloomScale);
+                ret.HdrAutoExposureMax = this.HdrAutoExposureMax.Combine(rhs.HdrAutoExposureMax);
+                ret.HdrAutoExposureMin = this.HdrAutoExposureMin.Combine(rhs.HdrAutoExposureMin);
+                ret.HdrSunlightScale = this.HdrSunlightScale.Combine(rhs.HdrSunlightScale);
+                ret.HdrSkyScale = this.HdrSkyScale.Combine(rhs.HdrSkyScale);
+                ret.HdrMiddleGray = this.HdrMiddleGray.Combine(rhs.HdrMiddleGray);
+                ret.CinematicSaturation = this.CinematicSaturation.Combine(rhs.CinematicSaturation);
+                ret.CinematicBrightness = this.CinematicBrightness.Combine(rhs.CinematicBrightness);
+                ret.CinematicContrast = this.CinematicContrast.Combine(rhs.CinematicContrast);
+                ret.TintAmount = this.TintAmount.Combine(rhs.TintAmount);
+                ret.TintColor = this.TintColor.Combine(rhs.TintColor);
+                ret.DepthOfFieldStrength = this.DepthOfFieldStrength.Combine(rhs.DepthOfFieldStrength);
+                ret.DepthOfFieldDistance = this.DepthOfFieldDistance.Combine(rhs.DepthOfFieldDistance);
+                ret.DepthOfFieldRange = this.DepthOfFieldRange.Combine(rhs.DepthOfFieldRange);
+                ret.DepthOfFieldUnused = this.DepthOfFieldUnused.Combine(rhs.DepthOfFieldUnused);
+                ret.DepthOfFieldBlurRadius = this.DepthOfFieldBlurRadius.Combine(rhs.DepthOfFieldBlurRadius);
+                ret.DepthOfFieldSky = this.DepthOfFieldSky.Combine(rhs.DepthOfFieldSky);
+                ret.DepthOfFieldVignetteRadius = this.DepthOfFieldVignetteRadius.Combine(rhs.DepthOfFieldVignetteRadius);
+                ret.DepthOfFieldVignetteStrength = this.DepthOfFieldVignetteStrength.Combine(rhs.DepthOfFieldVignetteStrength);
+                ret.Lut = this.Lut.Combine(rhs.Lut);
+                ret.HNAMDataTypeState = this.HNAMDataTypeState.Combine(rhs.HNAMDataTypeState);
+                ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
+                ret.TNAMDataTypeState = this.TNAMDataTypeState.Combine(rhs.TNAMDataTypeState);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +1113,104 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool HdrEyeAdaptSpeed;
+            public bool HdrTonemapE;
+            public bool HdrBloomThreshold;
+            public bool HdrBloomScale;
+            public bool HdrAutoExposureMax;
+            public bool HdrAutoExposureMin;
+            public bool HdrSunlightScale;
+            public bool HdrSkyScale;
+            public bool HdrMiddleGray;
+            public bool CinematicSaturation;
+            public bool CinematicBrightness;
+            public bool CinematicContrast;
+            public bool TintAmount;
+            public bool TintColor;
+            public bool DepthOfFieldStrength;
+            public bool DepthOfFieldDistance;
+            public bool DepthOfFieldRange;
+            public bool DepthOfFieldUnused;
+            public bool DepthOfFieldBlurRadius;
+            public bool DepthOfFieldSky;
+            public bool DepthOfFieldVignetteRadius;
+            public bool DepthOfFieldVignetteStrength;
+            public bool Lut;
+            public bool HNAMDataTypeState;
+            public bool CNAMDataTypeState;
+            public bool TNAMDataTypeState;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.HdrEyeAdaptSpeed = defaultOn;
+                this.HdrTonemapE = defaultOn;
+                this.HdrBloomThreshold = defaultOn;
+                this.HdrBloomScale = defaultOn;
+                this.HdrAutoExposureMax = defaultOn;
+                this.HdrAutoExposureMin = defaultOn;
+                this.HdrSunlightScale = defaultOn;
+                this.HdrSkyScale = defaultOn;
+                this.HdrMiddleGray = defaultOn;
+                this.CinematicSaturation = defaultOn;
+                this.CinematicBrightness = defaultOn;
+                this.CinematicContrast = defaultOn;
+                this.TintAmount = defaultOn;
+                this.TintColor = defaultOn;
+                this.DepthOfFieldStrength = defaultOn;
+                this.DepthOfFieldDistance = defaultOn;
+                this.DepthOfFieldRange = defaultOn;
+                this.DepthOfFieldUnused = defaultOn;
+                this.DepthOfFieldBlurRadius = defaultOn;
+                this.DepthOfFieldSky = defaultOn;
+                this.DepthOfFieldVignetteRadius = defaultOn;
+                this.DepthOfFieldVignetteStrength = defaultOn;
+                this.Lut = defaultOn;
+                this.HNAMDataTypeState = defaultOn;
+                this.CNAMDataTypeState = defaultOn;
+                this.TNAMDataTypeState = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((HdrEyeAdaptSpeed, null));
+                ret.Add((HdrTonemapE, null));
+                ret.Add((HdrBloomThreshold, null));
+                ret.Add((HdrBloomScale, null));
+                ret.Add((HdrAutoExposureMax, null));
+                ret.Add((HdrAutoExposureMin, null));
+                ret.Add((HdrSunlightScale, null));
+                ret.Add((HdrSkyScale, null));
+                ret.Add((HdrMiddleGray, null));
+                ret.Add((CinematicSaturation, null));
+                ret.Add((CinematicBrightness, null));
+                ret.Add((CinematicContrast, null));
+                ret.Add((TintAmount, null));
+                ret.Add((TintColor, null));
+                ret.Add((DepthOfFieldStrength, null));
+                ret.Add((DepthOfFieldDistance, null));
+                ret.Add((DepthOfFieldRange, null));
+                ret.Add((DepthOfFieldUnused, null));
+                ret.Add((DepthOfFieldBlurRadius, null));
+                ret.Add((DepthOfFieldSky, null));
+                ret.Add((DepthOfFieldVignetteRadius, null));
+                ret.Add((DepthOfFieldVignetteStrength, null));
+                ret.Add((Lut, null));
+                ret.Add((HNAMDataTypeState, null));
+                ret.Add((CNAMDataTypeState, null));
+                ret.Add((TNAMDataTypeState, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -335,6 +1264,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IImageSpace);
 
+        [Flags]
+        public enum HNAMDataType
+        {
+        }
+        [Flags]
+        public enum CNAMDataType
+        {
+        }
+        [Flags]
+        public enum TNAMDataType
+        {
+        }
+        [Flags]
+        public enum DNAMDataType
+        {
+            Break0 = 1
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -418,6 +1364,33 @@ namespace Mutagen.Bethesda.Fallout4
         IImageSpaceGetter,
         ILoquiObjectSetter<IImageSpaceInternal>
     {
+        new Single HdrEyeAdaptSpeed { get; set; }
+        new Single HdrTonemapE { get; set; }
+        new Single HdrBloomThreshold { get; set; }
+        new Single HdrBloomScale { get; set; }
+        new Single HdrAutoExposureMax { get; set; }
+        new Single HdrAutoExposureMin { get; set; }
+        new Single HdrSunlightScale { get; set; }
+        new Single HdrSkyScale { get; set; }
+        new Single HdrMiddleGray { get; set; }
+        new Single CinematicSaturation { get; set; }
+        new Single CinematicBrightness { get; set; }
+        new Single CinematicContrast { get; set; }
+        new Single TintAmount { get; set; }
+        new Color TintColor { get; set; }
+        new Single DepthOfFieldStrength { get; set; }
+        new Single DepthOfFieldDistance { get; set; }
+        new Single DepthOfFieldRange { get; set; }
+        new Int16 DepthOfFieldUnused { get; set; }
+        new Byte DepthOfFieldBlurRadius { get; set; }
+        new Boolean DepthOfFieldSky { get; set; }
+        new Single DepthOfFieldVignetteRadius { get; set; }
+        new Single DepthOfFieldVignetteStrength { get; set; }
+        new String? Lut { get; set; }
+        new ImageSpace.HNAMDataType HNAMDataTypeState { get; set; }
+        new ImageSpace.CNAMDataType CNAMDataTypeState { get; set; }
+        new ImageSpace.TNAMDataType TNAMDataTypeState { get; set; }
+        new ImageSpace.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IImageSpaceInternal :
@@ -435,6 +1408,33 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IImageSpaceGetter>
     {
         static new ILoquiRegistration StaticRegistration => ImageSpace_Registration.Instance;
+        Single HdrEyeAdaptSpeed { get; }
+        Single HdrTonemapE { get; }
+        Single HdrBloomThreshold { get; }
+        Single HdrBloomScale { get; }
+        Single HdrAutoExposureMax { get; }
+        Single HdrAutoExposureMin { get; }
+        Single HdrSunlightScale { get; }
+        Single HdrSkyScale { get; }
+        Single HdrMiddleGray { get; }
+        Single CinematicSaturation { get; }
+        Single CinematicBrightness { get; }
+        Single CinematicContrast { get; }
+        Single TintAmount { get; }
+        Color TintColor { get; }
+        Single DepthOfFieldStrength { get; }
+        Single DepthOfFieldDistance { get; }
+        Single DepthOfFieldRange { get; }
+        Int16 DepthOfFieldUnused { get; }
+        Byte DepthOfFieldBlurRadius { get; }
+        Boolean DepthOfFieldSky { get; }
+        Single DepthOfFieldVignetteRadius { get; }
+        Single DepthOfFieldVignetteStrength { get; }
+        String? Lut { get; }
+        ImageSpace.HNAMDataType HNAMDataTypeState { get; }
+        ImageSpace.CNAMDataType CNAMDataTypeState { get; }
+        ImageSpace.TNAMDataType TNAMDataTypeState { get; }
+        ImageSpace.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -599,6 +1599,33 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        HdrEyeAdaptSpeed = 6,
+        HdrTonemapE = 7,
+        HdrBloomThreshold = 8,
+        HdrBloomScale = 9,
+        HdrAutoExposureMax = 10,
+        HdrAutoExposureMin = 11,
+        HdrSunlightScale = 12,
+        HdrSkyScale = 13,
+        HdrMiddleGray = 14,
+        CinematicSaturation = 15,
+        CinematicBrightness = 16,
+        CinematicContrast = 17,
+        TintAmount = 18,
+        TintColor = 19,
+        DepthOfFieldStrength = 20,
+        DepthOfFieldDistance = 21,
+        DepthOfFieldRange = 22,
+        DepthOfFieldUnused = 23,
+        DepthOfFieldBlurRadius = 24,
+        DepthOfFieldSky = 25,
+        DepthOfFieldVignetteRadius = 26,
+        DepthOfFieldVignetteStrength = 27,
+        Lut = 28,
+        HNAMDataTypeState = 29,
+        CNAMDataTypeState = 30,
+        TNAMDataTypeState = 31,
+        DNAMDataTypeState = 32,
     }
     #endregion
 
@@ -616,9 +1643,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "3b3264aa-9b31-4ee5-939a-eb664fa1b35a";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(ImageSpace.Mask<>);
 
@@ -648,8 +1675,16 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.IMGS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.IMGS);
+            var all = RecordCollection.Factory(
+                RecordTypes.IMGS,
+                RecordTypes.ENAM,
+                RecordTypes.HNAM,
+                RecordTypes.CNAM,
+                RecordTypes.TNAM,
+                RecordTypes.DNAM,
+                RecordTypes.TX00);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceBinaryWriteTranslation);
         #region Interface
@@ -693,6 +1728,33 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IImageSpaceInternal item)
         {
             ClearPartial();
+            item.HdrEyeAdaptSpeed = default;
+            item.HdrTonemapE = default;
+            item.HdrBloomThreshold = default;
+            item.HdrBloomScale = default;
+            item.HdrAutoExposureMax = default;
+            item.HdrAutoExposureMin = default;
+            item.HdrSunlightScale = default;
+            item.HdrSkyScale = default;
+            item.HdrMiddleGray = default;
+            item.CinematicSaturation = default;
+            item.CinematicBrightness = default;
+            item.CinematicContrast = default;
+            item.TintAmount = default;
+            item.TintColor = default;
+            item.DepthOfFieldStrength = default;
+            item.DepthOfFieldDistance = default;
+            item.DepthOfFieldRange = default;
+            item.DepthOfFieldUnused = default;
+            item.DepthOfFieldBlurRadius = default;
+            item.DepthOfFieldSky = default;
+            item.DepthOfFieldVignetteRadius = default;
+            item.DepthOfFieldVignetteStrength = default;
+            item.Lut = default;
+            item.HNAMDataTypeState = default;
+            item.CNAMDataTypeState = default;
+            item.TNAMDataTypeState = default;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -778,6 +1840,33 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.HdrEyeAdaptSpeed = item.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed);
+            ret.HdrTonemapE = item.HdrTonemapE.EqualsWithin(rhs.HdrTonemapE);
+            ret.HdrBloomThreshold = item.HdrBloomThreshold.EqualsWithin(rhs.HdrBloomThreshold);
+            ret.HdrBloomScale = item.HdrBloomScale.EqualsWithin(rhs.HdrBloomScale);
+            ret.HdrAutoExposureMax = item.HdrAutoExposureMax.EqualsWithin(rhs.HdrAutoExposureMax);
+            ret.HdrAutoExposureMin = item.HdrAutoExposureMin.EqualsWithin(rhs.HdrAutoExposureMin);
+            ret.HdrSunlightScale = item.HdrSunlightScale.EqualsWithin(rhs.HdrSunlightScale);
+            ret.HdrSkyScale = item.HdrSkyScale.EqualsWithin(rhs.HdrSkyScale);
+            ret.HdrMiddleGray = item.HdrMiddleGray.EqualsWithin(rhs.HdrMiddleGray);
+            ret.CinematicSaturation = item.CinematicSaturation.EqualsWithin(rhs.CinematicSaturation);
+            ret.CinematicBrightness = item.CinematicBrightness.EqualsWithin(rhs.CinematicBrightness);
+            ret.CinematicContrast = item.CinematicContrast.EqualsWithin(rhs.CinematicContrast);
+            ret.TintAmount = item.TintAmount.EqualsWithin(rhs.TintAmount);
+            ret.TintColor = item.TintColor.ColorOnlyEquals(rhs.TintColor);
+            ret.DepthOfFieldStrength = item.DepthOfFieldStrength.EqualsWithin(rhs.DepthOfFieldStrength);
+            ret.DepthOfFieldDistance = item.DepthOfFieldDistance.EqualsWithin(rhs.DepthOfFieldDistance);
+            ret.DepthOfFieldRange = item.DepthOfFieldRange.EqualsWithin(rhs.DepthOfFieldRange);
+            ret.DepthOfFieldUnused = item.DepthOfFieldUnused == rhs.DepthOfFieldUnused;
+            ret.DepthOfFieldBlurRadius = item.DepthOfFieldBlurRadius == rhs.DepthOfFieldBlurRadius;
+            ret.DepthOfFieldSky = item.DepthOfFieldSky == rhs.DepthOfFieldSky;
+            ret.DepthOfFieldVignetteRadius = item.DepthOfFieldVignetteRadius.EqualsWithin(rhs.DepthOfFieldVignetteRadius);
+            ret.DepthOfFieldVignetteStrength = item.DepthOfFieldVignetteStrength.EqualsWithin(rhs.DepthOfFieldVignetteStrength);
+            ret.Lut = string.Equals(item.Lut, rhs.Lut);
+            ret.HNAMDataTypeState = item.HNAMDataTypeState == rhs.HNAMDataTypeState;
+            ret.CNAMDataTypeState = item.CNAMDataTypeState == rhs.CNAMDataTypeState;
+            ret.TNAMDataTypeState = item.TNAMDataTypeState == rhs.TNAMDataTypeState;
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1916,115 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.HdrEyeAdaptSpeed ?? true)
+            {
+                sb.AppendItem(item.HdrEyeAdaptSpeed, "HdrEyeAdaptSpeed");
+            }
+            if (printMask?.HdrTonemapE ?? true)
+            {
+                sb.AppendItem(item.HdrTonemapE, "HdrTonemapE");
+            }
+            if (printMask?.HdrBloomThreshold ?? true)
+            {
+                sb.AppendItem(item.HdrBloomThreshold, "HdrBloomThreshold");
+            }
+            if (printMask?.HdrBloomScale ?? true)
+            {
+                sb.AppendItem(item.HdrBloomScale, "HdrBloomScale");
+            }
+            if (printMask?.HdrAutoExposureMax ?? true)
+            {
+                sb.AppendItem(item.HdrAutoExposureMax, "HdrAutoExposureMax");
+            }
+            if (printMask?.HdrAutoExposureMin ?? true)
+            {
+                sb.AppendItem(item.HdrAutoExposureMin, "HdrAutoExposureMin");
+            }
+            if (printMask?.HdrSunlightScale ?? true)
+            {
+                sb.AppendItem(item.HdrSunlightScale, "HdrSunlightScale");
+            }
+            if (printMask?.HdrSkyScale ?? true)
+            {
+                sb.AppendItem(item.HdrSkyScale, "HdrSkyScale");
+            }
+            if (printMask?.HdrMiddleGray ?? true)
+            {
+                sb.AppendItem(item.HdrMiddleGray, "HdrMiddleGray");
+            }
+            if (printMask?.CinematicSaturation ?? true)
+            {
+                sb.AppendItem(item.CinematicSaturation, "CinematicSaturation");
+            }
+            if (printMask?.CinematicBrightness ?? true)
+            {
+                sb.AppendItem(item.CinematicBrightness, "CinematicBrightness");
+            }
+            if (printMask?.CinematicContrast ?? true)
+            {
+                sb.AppendItem(item.CinematicContrast, "CinematicContrast");
+            }
+            if (printMask?.TintAmount ?? true)
+            {
+                sb.AppendItem(item.TintAmount, "TintAmount");
+            }
+            if (printMask?.TintColor ?? true)
+            {
+                sb.AppendItem(item.TintColor, "TintColor");
+            }
+            if (printMask?.DepthOfFieldStrength ?? true)
+            {
+                sb.AppendItem(item.DepthOfFieldStrength, "DepthOfFieldStrength");
+            }
+            if (printMask?.DepthOfFieldDistance ?? true)
+            {
+                sb.AppendItem(item.DepthOfFieldDistance, "DepthOfFieldDistance");
+            }
+            if (printMask?.DepthOfFieldRange ?? true)
+            {
+                sb.AppendItem(item.DepthOfFieldRange, "DepthOfFieldRange");
+            }
+            if (printMask?.DepthOfFieldUnused ?? true)
+            {
+                sb.AppendItem(item.DepthOfFieldUnused, "DepthOfFieldUnused");
+            }
+            if (printMask?.DepthOfFieldBlurRadius ?? true)
+            {
+                sb.AppendItem(item.DepthOfFieldBlurRadius, "DepthOfFieldBlurRadius");
+            }
+            if (printMask?.DepthOfFieldSky ?? true)
+            {
+                sb.AppendItem(item.DepthOfFieldSky, "DepthOfFieldSky");
+            }
+            if (printMask?.DepthOfFieldVignetteRadius ?? true)
+            {
+                sb.AppendItem(item.DepthOfFieldVignetteRadius, "DepthOfFieldVignetteRadius");
+            }
+            if (printMask?.DepthOfFieldVignetteStrength ?? true)
+            {
+                sb.AppendItem(item.DepthOfFieldVignetteStrength, "DepthOfFieldVignetteStrength");
+            }
+            if ((printMask?.Lut ?? true)
+                && item.Lut is {} LutItem)
+            {
+                sb.AppendItem(LutItem, "Lut");
+            }
+            if (printMask?.HNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
+            }
+            if (printMask?.CNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
+            }
+            if (printMask?.TNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public static ImageSpace_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +2073,114 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrEyeAdaptSpeed) ?? true))
+            {
+                if (!lhs.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrTonemapE) ?? true))
+            {
+                if (!lhs.HdrTonemapE.EqualsWithin(rhs.HdrTonemapE)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrBloomThreshold) ?? true))
+            {
+                if (!lhs.HdrBloomThreshold.EqualsWithin(rhs.HdrBloomThreshold)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrBloomScale) ?? true))
+            {
+                if (!lhs.HdrBloomScale.EqualsWithin(rhs.HdrBloomScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrAutoExposureMax) ?? true))
+            {
+                if (!lhs.HdrAutoExposureMax.EqualsWithin(rhs.HdrAutoExposureMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrAutoExposureMin) ?? true))
+            {
+                if (!lhs.HdrAutoExposureMin.EqualsWithin(rhs.HdrAutoExposureMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrSunlightScale) ?? true))
+            {
+                if (!lhs.HdrSunlightScale.EqualsWithin(rhs.HdrSunlightScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrSkyScale) ?? true))
+            {
+                if (!lhs.HdrSkyScale.EqualsWithin(rhs.HdrSkyScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrMiddleGray) ?? true))
+            {
+                if (!lhs.HdrMiddleGray.EqualsWithin(rhs.HdrMiddleGray)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicSaturation) ?? true))
+            {
+                if (!lhs.CinematicSaturation.EqualsWithin(rhs.CinematicSaturation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicBrightness) ?? true))
+            {
+                if (!lhs.CinematicBrightness.EqualsWithin(rhs.CinematicBrightness)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicContrast) ?? true))
+            {
+                if (!lhs.CinematicContrast.EqualsWithin(rhs.CinematicContrast)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.TintAmount) ?? true))
+            {
+                if (!lhs.TintAmount.EqualsWithin(rhs.TintAmount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.TintColor) ?? true))
+            {
+                if (!lhs.TintColor.ColorOnlyEquals(rhs.TintColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldStrength) ?? true))
+            {
+                if (!lhs.DepthOfFieldStrength.EqualsWithin(rhs.DepthOfFieldStrength)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldDistance) ?? true))
+            {
+                if (!lhs.DepthOfFieldDistance.EqualsWithin(rhs.DepthOfFieldDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldRange) ?? true))
+            {
+                if (!lhs.DepthOfFieldRange.EqualsWithin(rhs.DepthOfFieldRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldUnused) ?? true))
+            {
+                if (lhs.DepthOfFieldUnused != rhs.DepthOfFieldUnused) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldBlurRadius) ?? true))
+            {
+                if (lhs.DepthOfFieldBlurRadius != rhs.DepthOfFieldBlurRadius) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldSky) ?? true))
+            {
+                if (lhs.DepthOfFieldSky != rhs.DepthOfFieldSky) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
+            {
+                if (!lhs.DepthOfFieldVignetteRadius.EqualsWithin(rhs.DepthOfFieldVignetteRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
+            {
+                if (!lhs.DepthOfFieldVignetteStrength.EqualsWithin(rhs.DepthOfFieldVignetteStrength)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Lut) ?? true))
+            {
+                if (!string.Equals(lhs.Lut, rhs.Lut)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HNAMDataTypeState) ?? true))
+            {
+                if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.CNAMDataTypeState) ?? true))
+            {
+                if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.TNAMDataTypeState) ?? true))
+            {
+                if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            }
             return true;
         }
         
@@ -903,6 +2209,36 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IImageSpaceGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.HdrEyeAdaptSpeed);
+            hash.Add(item.HdrTonemapE);
+            hash.Add(item.HdrBloomThreshold);
+            hash.Add(item.HdrBloomScale);
+            hash.Add(item.HdrAutoExposureMax);
+            hash.Add(item.HdrAutoExposureMin);
+            hash.Add(item.HdrSunlightScale);
+            hash.Add(item.HdrSkyScale);
+            hash.Add(item.HdrMiddleGray);
+            hash.Add(item.CinematicSaturation);
+            hash.Add(item.CinematicBrightness);
+            hash.Add(item.CinematicContrast);
+            hash.Add(item.TintAmount);
+            hash.Add(item.TintColor);
+            hash.Add(item.DepthOfFieldStrength);
+            hash.Add(item.DepthOfFieldDistance);
+            hash.Add(item.DepthOfFieldRange);
+            hash.Add(item.DepthOfFieldUnused);
+            hash.Add(item.DepthOfFieldBlurRadius);
+            hash.Add(item.DepthOfFieldSky);
+            hash.Add(item.DepthOfFieldVignetteRadius);
+            hash.Add(item.DepthOfFieldVignetteStrength);
+            if (item.Lut is {} Lutitem)
+            {
+                hash.Add(Lutitem);
+            }
+            hash.Add(item.HNAMDataTypeState);
+            hash.Add(item.CNAMDataTypeState);
+            hash.Add(item.TNAMDataTypeState);
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1006,6 +2342,114 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrEyeAdaptSpeed) ?? true))
+            {
+                item.HdrEyeAdaptSpeed = rhs.HdrEyeAdaptSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrTonemapE) ?? true))
+            {
+                item.HdrTonemapE = rhs.HdrTonemapE;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrBloomThreshold) ?? true))
+            {
+                item.HdrBloomThreshold = rhs.HdrBloomThreshold;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrBloomScale) ?? true))
+            {
+                item.HdrBloomScale = rhs.HdrBloomScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrAutoExposureMax) ?? true))
+            {
+                item.HdrAutoExposureMax = rhs.HdrAutoExposureMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrAutoExposureMin) ?? true))
+            {
+                item.HdrAutoExposureMin = rhs.HdrAutoExposureMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrSunlightScale) ?? true))
+            {
+                item.HdrSunlightScale = rhs.HdrSunlightScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrSkyScale) ?? true))
+            {
+                item.HdrSkyScale = rhs.HdrSkyScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrMiddleGray) ?? true))
+            {
+                item.HdrMiddleGray = rhs.HdrMiddleGray;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicSaturation) ?? true))
+            {
+                item.CinematicSaturation = rhs.CinematicSaturation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicBrightness) ?? true))
+            {
+                item.CinematicBrightness = rhs.CinematicBrightness;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicContrast) ?? true))
+            {
+                item.CinematicContrast = rhs.CinematicContrast;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TintAmount) ?? true))
+            {
+                item.TintAmount = rhs.TintAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TintColor) ?? true))
+            {
+                item.TintColor = rhs.TintColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldStrength) ?? true))
+            {
+                item.DepthOfFieldStrength = rhs.DepthOfFieldStrength;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldDistance) ?? true))
+            {
+                item.DepthOfFieldDistance = rhs.DepthOfFieldDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldRange) ?? true))
+            {
+                item.DepthOfFieldRange = rhs.DepthOfFieldRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldUnused) ?? true))
+            {
+                item.DepthOfFieldUnused = rhs.DepthOfFieldUnused;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldBlurRadius) ?? true))
+            {
+                item.DepthOfFieldBlurRadius = rhs.DepthOfFieldBlurRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldSky) ?? true))
+            {
+                item.DepthOfFieldSky = rhs.DepthOfFieldSky;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
+            {
+                item.DepthOfFieldVignetteRadius = rhs.DepthOfFieldVignetteRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
+            {
+                item.DepthOfFieldVignetteStrength = rhs.DepthOfFieldVignetteStrength;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Lut) ?? true))
+            {
+                item.Lut = rhs.Lut;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HNAMDataTypeState) ?? true))
+            {
+                item.HNAMDataTypeState = rhs.HNAMDataTypeState;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CNAMDataTypeState) ?? true))
+            {
+                item.CNAMDataTypeState = rhs.CNAMDataTypeState;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TNAMDataTypeState) ?? true))
+            {
+                item.TNAMDataTypeState = rhs.TNAMDataTypeState;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +2598,165 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static ImageSpaceBinaryWriteTranslation Instance = new ImageSpaceBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IImageSpaceGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IImageSpaceGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            ImageSpaceBinaryWriteTranslation.WriteBinaryENAMParsing(
+                writer: writer,
+                item: item);
+            if (writer.MetaData.FormVersion!.Value >= 16)
+            {
+                using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.HNAM)))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HdrEyeAdaptSpeed);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HdrTonemapE);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBloomThreshold);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HdrBloomScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HdrAutoExposureMax);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HdrAutoExposureMin);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HdrSunlightScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HdrSkyScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HdrMiddleGray);
+                }
+            }
+            if (writer.MetaData.FormVersion!.Value >= 16)
+            {
+                using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CNAM)))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.CinematicSaturation);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.CinematicBrightness);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.CinematicContrast);
+                }
+            }
+            if (writer.MetaData.FormVersion!.Value >= 16)
+            {
+                using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.TNAM)))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.TintAmount);
+                    ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.TintColor,
+                        binaryType: ColorBinaryType.NoAlphaFloat);
+                }
+            }
+            if (writer.MetaData.FormVersion!.Value >= 16)
+            {
+                using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.DepthOfFieldStrength);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.DepthOfFieldDistance);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.DepthOfFieldRange);
+                    writer.Write(item.DepthOfFieldUnused);
+                    ImageSpaceBinaryWriteTranslation.WriteBinaryDepthOfFieldBlurRadius(
+                        writer: writer,
+                        item: item);
+                    ImageSpaceBinaryWriteTranslation.WriteBinaryDepthOfFieldSky(
+                        writer: writer,
+                        item: item);
+                    if (!item.DNAMDataTypeState.HasFlag(ImageSpace.DNAMDataType.Break0))
+                    {
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.DepthOfFieldVignetteRadius);
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.DepthOfFieldVignetteStrength);
+                    }
+                }
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Lut,
+                header: translationParams.ConvertToCustom(RecordTypes.TX00),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
+        public static partial void WriteBinaryENAMParsingCustom(
+            MutagenWriter writer,
+            IImageSpaceGetter item);
+
+        public static void WriteBinaryENAMParsing(
+            MutagenWriter writer,
+            IImageSpaceGetter item)
+        {
+            WriteBinaryENAMParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDepthOfFieldBlurRadiusCustom(
+            MutagenWriter writer,
+            IImageSpaceGetter item);
+
+        public static void WriteBinaryDepthOfFieldBlurRadius(
+            MutagenWriter writer,
+            IImageSpaceGetter item)
+        {
+            WriteBinaryDepthOfFieldBlurRadiusCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDepthOfFieldSkyCustom(
+            MutagenWriter writer,
+            IImageSpaceGetter item);
+
+        public static void WriteBinaryDepthOfFieldSky(
+            MutagenWriter writer,
+            IImageSpaceGetter item)
+        {
+            WriteBinaryDepthOfFieldSkyCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IImageSpaceGetter item,
@@ -1165,13 +2768,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +2834,110 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IImageSpaceInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.ENAM:
+                {
+                    return ImageSpaceBinaryCreateTranslation.FillBinaryENAMParsingCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.HdrEyeAdaptSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HdrTonemapE = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HdrBloomThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HdrBloomScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HdrAutoExposureMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HdrAutoExposureMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HdrSunlightScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HdrSkyScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HdrMiddleGray = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)ImageSpace_FieldIndex.HdrMiddleGray;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.CinematicSaturation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CinematicBrightness = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CinematicContrast = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)ImageSpace_FieldIndex.CinematicContrast;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.TintAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.TintColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    return (int)ImageSpace_FieldIndex.TintColor;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.DepthOfFieldStrength = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DepthOfFieldDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DepthOfFieldRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DepthOfFieldUnused = dataFrame.ReadInt16();
+                    ImageSpaceBinaryCreateTranslation.FillBinaryDepthOfFieldBlurRadiusCustom(
+                        frame: dataFrame,
+                        item: item);
+                    ImageSpaceBinaryCreateTranslation.FillBinaryDepthOfFieldSkyCustom(
+                        frame: dataFrame,
+                        item: item);
+                    if (dataFrame.Complete)
+                    {
+                        item.DNAMDataTypeState |= ImageSpace.DNAMDataType.Break0;
+                        return (int)ImageSpace_FieldIndex.DepthOfFieldSky;
+                    }
+                    item.DepthOfFieldVignetteRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DepthOfFieldVignetteStrength = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)ImageSpace_FieldIndex.DepthOfFieldVignetteStrength;
+                }
+                case RecordTypeInts.TX00:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Lut = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ImageSpace_FieldIndex.Lut;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        public static partial ParseResult FillBinaryENAMParsingCustom(
+            MutagenFrame frame,
+            IImageSpaceInternal item);
+
+        public static partial void FillBinaryDepthOfFieldBlurRadiusCustom(
+            MutagenFrame frame,
+            IImageSpaceInternal item);
+
+        public static partial void FillBinaryDepthOfFieldSkyCustom(
+            MutagenFrame frame,
+            IImageSpaceInternal item);
+
     }
 
 }
@@ -1275,6 +2984,133 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IImageSpace);
 
 
+        #region ENAMParsing
+        public partial ParseResult ENAMParsingCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
+        private RangeInt32? _HNAMLocation;
+        public ImageSpace.HNAMDataType HNAMDataTypeState { get; private set; }
+        #region HdrEyeAdaptSpeed
+        private int _HdrEyeAdaptSpeedLocation => _HNAMLocation!.Value.Min;
+        private bool _HdrEyeAdaptSpeed_IsSet => _HNAMLocation.HasValue;
+        public Single HdrEyeAdaptSpeed => _HdrEyeAdaptSpeed_IsSet ? _data.Slice(_HdrEyeAdaptSpeedLocation, 4).Float() : default;
+        #endregion
+        #region HdrTonemapE
+        private int _HdrTonemapELocation => _HNAMLocation!.Value.Min + 0x4;
+        private bool _HdrTonemapE_IsSet => _HNAMLocation.HasValue;
+        public Single HdrTonemapE => _HdrTonemapE_IsSet ? _data.Slice(_HdrTonemapELocation, 4).Float() : default;
+        #endregion
+        #region HdrBloomThreshold
+        private int _HdrBloomThresholdLocation => _HNAMLocation!.Value.Min + 0x8;
+        private bool _HdrBloomThreshold_IsSet => _HNAMLocation.HasValue;
+        public Single HdrBloomThreshold => _HdrBloomThreshold_IsSet ? _data.Slice(_HdrBloomThresholdLocation, 4).Float() : default;
+        #endregion
+        #region HdrBloomScale
+        private int _HdrBloomScaleLocation => _HNAMLocation!.Value.Min + 0xC;
+        private bool _HdrBloomScale_IsSet => _HNAMLocation.HasValue;
+        public Single HdrBloomScale => _HdrBloomScale_IsSet ? _data.Slice(_HdrBloomScaleLocation, 4).Float() : default;
+        #endregion
+        #region HdrAutoExposureMax
+        private int _HdrAutoExposureMaxLocation => _HNAMLocation!.Value.Min + 0x10;
+        private bool _HdrAutoExposureMax_IsSet => _HNAMLocation.HasValue;
+        public Single HdrAutoExposureMax => _HdrAutoExposureMax_IsSet ? _data.Slice(_HdrAutoExposureMaxLocation, 4).Float() : default;
+        #endregion
+        #region HdrAutoExposureMin
+        private int _HdrAutoExposureMinLocation => _HNAMLocation!.Value.Min + 0x14;
+        private bool _HdrAutoExposureMin_IsSet => _HNAMLocation.HasValue;
+        public Single HdrAutoExposureMin => _HdrAutoExposureMin_IsSet ? _data.Slice(_HdrAutoExposureMinLocation, 4).Float() : default;
+        #endregion
+        #region HdrSunlightScale
+        private int _HdrSunlightScaleLocation => _HNAMLocation!.Value.Min + 0x18;
+        private bool _HdrSunlightScale_IsSet => _HNAMLocation.HasValue;
+        public Single HdrSunlightScale => _HdrSunlightScale_IsSet ? _data.Slice(_HdrSunlightScaleLocation, 4).Float() : default;
+        #endregion
+        #region HdrSkyScale
+        private int _HdrSkyScaleLocation => _HNAMLocation!.Value.Min + 0x1C;
+        private bool _HdrSkyScale_IsSet => _HNAMLocation.HasValue;
+        public Single HdrSkyScale => _HdrSkyScale_IsSet ? _data.Slice(_HdrSkyScaleLocation, 4).Float() : default;
+        #endregion
+        #region HdrMiddleGray
+        private int _HdrMiddleGrayLocation => _HNAMLocation!.Value.Min + 0x20;
+        private bool _HdrMiddleGray_IsSet => _HNAMLocation.HasValue;
+        public Single HdrMiddleGray => _HdrMiddleGray_IsSet ? _data.Slice(_HdrMiddleGrayLocation, 4).Float() : default;
+        #endregion
+        private RangeInt32? _CNAMLocation;
+        public ImageSpace.CNAMDataType CNAMDataTypeState { get; private set; }
+        #region CinematicSaturation
+        private int _CinematicSaturationLocation => _CNAMLocation!.Value.Min;
+        private bool _CinematicSaturation_IsSet => _CNAMLocation.HasValue;
+        public Single CinematicSaturation => _CinematicSaturation_IsSet ? _data.Slice(_CinematicSaturationLocation, 4).Float() : default;
+        #endregion
+        #region CinematicBrightness
+        private int _CinematicBrightnessLocation => _CNAMLocation!.Value.Min + 0x4;
+        private bool _CinematicBrightness_IsSet => _CNAMLocation.HasValue;
+        public Single CinematicBrightness => _CinematicBrightness_IsSet ? _data.Slice(_CinematicBrightnessLocation, 4).Float() : default;
+        #endregion
+        #region CinematicContrast
+        private int _CinematicContrastLocation => _CNAMLocation!.Value.Min + 0x8;
+        private bool _CinematicContrast_IsSet => _CNAMLocation.HasValue;
+        public Single CinematicContrast => _CinematicContrast_IsSet ? _data.Slice(_CinematicContrastLocation, 4).Float() : default;
+        #endregion
+        private RangeInt32? _TNAMLocation;
+        public ImageSpace.TNAMDataType TNAMDataTypeState { get; private set; }
+        #region TintAmount
+        private int _TintAmountLocation => _TNAMLocation!.Value.Min;
+        private bool _TintAmount_IsSet => _TNAMLocation.HasValue;
+        public Single TintAmount => _TintAmount_IsSet ? _data.Slice(_TintAmountLocation, 4).Float() : default;
+        #endregion
+        #region TintColor
+        private int _TintColorLocation => _TNAMLocation!.Value.Min + 0x4;
+        private bool _TintColor_IsSet => _TNAMLocation.HasValue;
+        public Color TintColor => _TintColor_IsSet ? _data.Slice(_TintColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        #endregion
+        private RangeInt32? _DNAMLocation;
+        public ImageSpace.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region DepthOfFieldStrength
+        private int _DepthOfFieldStrengthLocation => _DNAMLocation!.Value.Min;
+        private bool _DepthOfFieldStrength_IsSet => _DNAMLocation.HasValue;
+        public Single DepthOfFieldStrength => _DepthOfFieldStrength_IsSet ? _data.Slice(_DepthOfFieldStrengthLocation, 4).Float() : default;
+        #endregion
+        #region DepthOfFieldDistance
+        private int _DepthOfFieldDistanceLocation => _DNAMLocation!.Value.Min + 0x4;
+        private bool _DepthOfFieldDistance_IsSet => _DNAMLocation.HasValue;
+        public Single DepthOfFieldDistance => _DepthOfFieldDistance_IsSet ? _data.Slice(_DepthOfFieldDistanceLocation, 4).Float() : default;
+        #endregion
+        #region DepthOfFieldRange
+        private int _DepthOfFieldRangeLocation => _DNAMLocation!.Value.Min + 0x8;
+        private bool _DepthOfFieldRange_IsSet => _DNAMLocation.HasValue;
+        public Single DepthOfFieldRange => _DepthOfFieldRange_IsSet ? _data.Slice(_DepthOfFieldRangeLocation, 4).Float() : default;
+        #endregion
+        #region DepthOfFieldUnused
+        private int _DepthOfFieldUnusedLocation => _DNAMLocation!.Value.Min + 0xC;
+        private bool _DepthOfFieldUnused_IsSet => _DNAMLocation.HasValue;
+        public Int16 DepthOfFieldUnused => _DepthOfFieldUnused_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_DepthOfFieldUnusedLocation, 2)) : default;
+        #endregion
+        #region DepthOfFieldBlurRadius
+        private int _DepthOfFieldBlurRadiusLocation => _DNAMLocation!.Value.Min + 0xE;
+        public partial Byte GetDepthOfFieldBlurRadiusCustom();
+        public Byte DepthOfFieldBlurRadius => GetDepthOfFieldBlurRadiusCustom();
+        #endregion
+        #region DepthOfFieldSky
+        private int _DepthOfFieldSkyLocation => _DNAMLocation!.Value.Min + 0xF;
+        public partial Boolean GetDepthOfFieldSkyCustom();
+        public Boolean DepthOfFieldSky => GetDepthOfFieldSkyCustom();
+        #endregion
+        #region DepthOfFieldVignetteRadius
+        private int _DepthOfFieldVignetteRadiusLocation => _DNAMLocation!.Value.Min + 0x10;
+        private bool _DepthOfFieldVignetteRadius_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpace.DNAMDataType.Break0);
+        public Single DepthOfFieldVignetteRadius => _DepthOfFieldVignetteRadius_IsSet ? _data.Slice(_DepthOfFieldVignetteRadiusLocation, 4).Float() : default;
+        #endregion
+        #region DepthOfFieldVignetteStrength
+        private int _DepthOfFieldVignetteStrengthLocation => _DNAMLocation!.Value.Min + 0x14;
+        private bool _DepthOfFieldVignetteStrength_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpace.DNAMDataType.Break0);
+        public Single DepthOfFieldVignetteStrength => _DepthOfFieldVignetteStrength_IsSet ? _data.Slice(_DepthOfFieldVignetteStrengthLocation, 4).Float() : default;
+        #endregion
+        #region Lut
+        private int? _LutLocation;
+        public String? Lut => _LutLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LutLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1292,33 +3128,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static IImageSpaceGetter ImageSpaceFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
-        {
-            stream = Decompression.DecompressStream(stream);
-            var ret = new ImageSpaceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
-                package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: finalPos,
-                offset: offset);
-            ret.FillSubrecordTypes(
-                majorReference: ret,
-                stream: stream,
-                finalPos: finalPos,
-                offset: offset,
-                parseParams: parseParams,
-                fill: ret.FillRecordType);
-            return ret;
-        }
-
-        public static IImageSpaceGetter ImageSpaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1329,6 +3138,64 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.ENAM:
+                {
+                    return ENAMParsingCustomParse(
+                        stream,
+                        offset);
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    _HNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)ImageSpace_FieldIndex.HdrMiddleGray;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _CNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)ImageSpace_FieldIndex.CinematicContrast;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _TNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)ImageSpace_FieldIndex.TintColor;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x10)
+                    {
+                        this.DNAMDataTypeState |= ImageSpace.DNAMDataType.Break0;
+                    }
+                    return (int)ImageSpace_FieldIndex.DepthOfFieldVignetteStrength;
+                }
+                case RecordTypeInts.TX00:
+                {
+                    _LutLocation = (stream.Position - offset);
+                    return (int)ImageSpace_FieldIndex.Lut;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

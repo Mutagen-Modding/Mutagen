@@ -750,9 +750,11 @@
   </xs:complexType>
   
   <xs:complexType name="DataType" >
-    <xs:choice minOccurs="0" maxOccurs="unbounded" >
+    <xs:sequence>
       <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
-    </xs:choice>
+      <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Versioning" type="VersioningType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
     <xs:attribute name="recordType" />
     <xs:attribute name="binaryOverlay" type="MutagenBinaryType" >
       <xs:annotation>

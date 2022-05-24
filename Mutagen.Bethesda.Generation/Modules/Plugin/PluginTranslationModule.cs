@@ -2115,7 +2115,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                         lengths.PassedLength,
                         lengths.PassedAccessor);
                     if (data.HasVersioning
-                        && !lengths.Field.Nullable)
+                        && !lengths.Field.Nullable
+                        && lengths.Field is not DataType)
                     {
                         VersioningModule.AddVersionOffset(sb, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
                         lastVersionedField = lengths.Field;

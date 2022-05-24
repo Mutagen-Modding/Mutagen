@@ -53,6 +53,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.WATR, ProcessWater);
+        AddDynamicProcessing(RecordTypes.IMGS, ProcessImageSpace);
     }
 
     private void ProcessGameSettings(
@@ -472,6 +473,22 @@ public class Fallout4Processor : Processor
             ProcessZeroFloats(dnam, fileOffset, ref loc, 6);
             loc += 4;
             ProcessZeroFloats(dnam, fileOffset, ref loc, 14);
+        }
+    }
+
+    private void ProcessImageSpace(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.TNAM, out var tnam))
+        {
+            int loc = 0;
+            ProcessZeroFloat(tnam, fileOffset, ref loc);
+            ProcessColorFloat(tnam, fileOffset, ref loc, alpha: false);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.HNAM, out var hnam))
+        {
+            ProcessZeroFloats(tnam, fileOffset, 9);
         }
     }
 

@@ -32,6 +32,6 @@ public class RunningTestsVM : ViewModel
             .Select(g => new GroupTestVM(this, g)));
         await Task.WhenAll(Groups
             .SelectMany(g => g.Passthroughs.Items)
-            .Select(t => Task.Run(t.Run)));
+            .Select(t => t.Run()));
     }
 }
