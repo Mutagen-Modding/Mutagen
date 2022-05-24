@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static EffectBinaryOverlay EffectFactory(
+        public static IEffectGetter EffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static EffectBinaryOverlay EffectFactory(
+        public static IEffectGetter EffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

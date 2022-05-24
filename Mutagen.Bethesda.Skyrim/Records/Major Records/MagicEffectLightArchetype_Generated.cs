@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MagicEffectLightArchetypeBinaryOverlay MagicEffectLightArchetypeFactory(
+        public static IMagicEffectLightArchetypeGetter MagicEffectLightArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MagicEffectLightArchetypeBinaryOverlay MagicEffectLightArchetypeFactory(
+        public static IMagicEffectLightArchetypeGetter MagicEffectLightArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

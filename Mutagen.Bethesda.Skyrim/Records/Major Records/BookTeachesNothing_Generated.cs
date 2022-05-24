@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static BookTeachesNothingBinaryOverlay BookTeachesNothingFactory(
+        public static IBookTeachesNothingGetter BookTeachesNothingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static BookTeachesNothingBinaryOverlay BookTeachesNothingFactory(
+        public static IBookTeachesNothingGetter BookTeachesNothingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

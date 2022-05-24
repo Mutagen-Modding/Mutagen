@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static GlobalIntBinaryOverlay GlobalIntFactory(
+        public static IGlobalIntGetter GlobalIntFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static GlobalIntBinaryOverlay GlobalIntFactory(
+        public static IGlobalIntGetter GlobalIntFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

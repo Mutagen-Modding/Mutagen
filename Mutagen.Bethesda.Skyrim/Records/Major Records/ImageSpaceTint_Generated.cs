@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ImageSpaceTintBinaryOverlay ImageSpaceTintFactory(
+        public static IImageSpaceTintGetter ImageSpaceTintFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ImageSpaceTintBinaryOverlay ImageSpaceTintFactory(
+        public static IImageSpaceTintGetter ImageSpaceTintFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

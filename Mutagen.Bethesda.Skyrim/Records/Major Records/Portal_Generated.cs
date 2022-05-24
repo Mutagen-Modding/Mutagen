@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PortalBinaryOverlay PortalFactory(
+        public static IPortalGetter PortalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PortalBinaryOverlay PortalFactory(
+        public static IPortalGetter PortalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

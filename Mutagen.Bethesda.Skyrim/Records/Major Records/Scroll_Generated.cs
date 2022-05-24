@@ -3496,7 +3496,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _HalfCostPerk_IsSet => _SPITLocation.HasValue;
         public IFormLinkGetter<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<EffectBinaryOverlay>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3513,7 +3513,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ScrollBinaryOverlay ScrollFactory(
+        public static IScrollGetter ScrollFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3540,7 +3540,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ScrollBinaryOverlay ScrollFactory(
+        public static IScrollGetter ScrollFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3643,7 +3643,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.EFIT:
                 case RecordTypeInts.CTDA:
                 {
-                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Effect_Registration.TriggerSpecs,

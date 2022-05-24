@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static CombatStyleCloseRangeBinaryOverlay CombatStyleCloseRangeFactory(
+        public static ICombatStyleCloseRangeGetter CombatStyleCloseRangeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static CombatStyleCloseRangeBinaryOverlay CombatStyleCloseRangeFactory(
+        public static ICombatStyleCloseRangeGetter CombatStyleCloseRangeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -2567,7 +2567,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static TreeBinaryOverlay TreeFactory(
+        public static ITreeGetter TreeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2594,7 +2594,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static TreeBinaryOverlay TreeFactory(
+        public static ITreeGetter TreeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

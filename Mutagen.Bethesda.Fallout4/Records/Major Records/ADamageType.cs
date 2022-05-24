@@ -25,7 +25,7 @@ public partial class ADamageType
 
 partial class ADamageTypeBinaryOverlay
 {
-    public static ADamageTypeBinaryOverlay ADamageTypeFactory(
+    public static IADamageTypeGetter ADamageTypeFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
         TypedParseParams? translationParams)

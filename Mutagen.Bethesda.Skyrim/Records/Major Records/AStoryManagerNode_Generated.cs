@@ -1654,7 +1654,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _PreviousSiblingLocation;
         public IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling => _PreviousSiblingLocation.HasValue ? new FormLinkNullable<IAStoryManagerNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousSiblingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAStoryManagerNodeGetter>.Null;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1697,7 +1697,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

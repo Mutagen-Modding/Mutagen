@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ScriptBoolPropertyBinaryOverlay ScriptBoolPropertyFactory(
+        public static IScriptBoolPropertyGetter ScriptBoolPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ScriptBoolPropertyBinaryOverlay ScriptBoolPropertyFactory(
+        public static IScriptBoolPropertyGetter ScriptBoolPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

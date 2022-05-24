@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static WeatherDataBinaryOverlay WeatherDataFactory(
+        public static IWeatherDataGetter WeatherDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static WeatherDataBinaryOverlay WeatherDataFactory(
+        public static IWeatherDataGetter WeatherDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

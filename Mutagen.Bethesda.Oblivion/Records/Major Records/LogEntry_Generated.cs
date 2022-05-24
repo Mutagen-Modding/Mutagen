@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _FlagsLocation;
         public LogEntry.Flag? Flags => _FlagsLocation.HasValue ? (LogEntry.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LogEntry.Flag?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Entry
         private int? _EntryLocation;
         public String? Entry => _EntryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EntryLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LogEntryBinaryOverlay LogEntryFactory(
+        public static ILogEntryGetter LogEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LogEntryBinaryOverlay LogEntryFactory(
+        public static ILogEntryGetter LogEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CTDT:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Conditions) return ParseResult.Stop;
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

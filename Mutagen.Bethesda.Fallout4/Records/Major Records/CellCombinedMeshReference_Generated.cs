@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static CellCombinedMeshReferenceBinaryOverlay CellCombinedMeshReferenceFactory(
+        public static ICellCombinedMeshReferenceGetter CellCombinedMeshReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static CellCombinedMeshReferenceBinaryOverlay CellCombinedMeshReferenceFactory(
+        public static ICellCombinedMeshReferenceGetter CellCombinedMeshReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

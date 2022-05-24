@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MagicEffectCloakArchetypeBinaryOverlay MagicEffectCloakArchetypeFactory(
+        public static IMagicEffectCloakArchetypeGetter MagicEffectCloakArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MagicEffectCloakArchetypeBinaryOverlay MagicEffectCloakArchetypeFactory(
+        public static IMagicEffectCloakArchetypeGetter MagicEffectCloakArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

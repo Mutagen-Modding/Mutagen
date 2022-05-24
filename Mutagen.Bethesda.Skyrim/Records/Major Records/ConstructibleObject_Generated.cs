@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region CreatedObject
         private int? _CreatedObjectLocation;
         public IFormLinkNullableGetter<IConstructibleGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<IConstructibleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IConstructibleGetter>.Null;
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ConstructibleObjectBinaryOverlay ConstructibleObjectFactory(
+        public static IConstructibleObjectGetter ConstructibleObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ConstructibleObjectBinaryOverlay ConstructibleObjectFactory(
+        public static IConstructibleObjectGetter ConstructibleObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2037,7 +2037,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region AnimationGroupSection
         private int? _AnimationGroupSectionLocation;
         public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => _AnimationGroupSectionLocation.HasValue ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationGroupSectionLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);
@@ -1922,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static IdleAnimationBinaryOverlay IdleAnimationFactory(
+        public static IIdleAnimationGetter IdleAnimationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1949,7 +1949,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static IdleAnimationBinaryOverlay IdleAnimationFactory(
+        public static IIdleAnimationGetter IdleAnimationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1983,7 +1983,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

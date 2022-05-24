@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static GlobalFloatBinaryOverlay GlobalFloatFactory(
+        public static IGlobalFloatGetter GlobalFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1607,7 +1607,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static GlobalFloatBinaryOverlay GlobalFloatFactory(
+        public static IGlobalFloatGetter GlobalFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

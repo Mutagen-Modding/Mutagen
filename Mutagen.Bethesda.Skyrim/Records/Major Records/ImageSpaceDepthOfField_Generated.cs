@@ -1470,7 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ImageSpaceDepthOfFieldBinaryOverlay ImageSpaceDepthOfFieldFactory(
+        public static IImageSpaceDepthOfFieldGetter ImageSpaceDepthOfFieldFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ImageSpaceDepthOfFieldBinaryOverlay ImageSpaceDepthOfFieldFactory(
+        public static IImageSpaceDepthOfFieldGetter ImageSpaceDepthOfFieldFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

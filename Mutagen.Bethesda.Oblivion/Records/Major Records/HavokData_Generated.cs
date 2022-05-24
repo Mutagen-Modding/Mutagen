@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static HavokDataBinaryOverlay HavokDataFactory(
+        public static IHavokDataGetter HavokDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static HavokDataBinaryOverlay HavokDataFactory(
+        public static IHavokDataGetter HavokDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

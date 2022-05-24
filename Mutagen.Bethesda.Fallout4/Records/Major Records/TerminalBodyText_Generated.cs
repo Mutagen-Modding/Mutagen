@@ -1286,7 +1286,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _TextLocation;
         public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static TerminalBodyTextBinaryOverlay TerminalBodyTextFactory(
+        public static ITerminalBodyTextGetter TerminalBodyTextFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static TerminalBodyTextBinaryOverlay TerminalBodyTextFactory(
+        public static ITerminalBodyTextGetter TerminalBodyTextFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

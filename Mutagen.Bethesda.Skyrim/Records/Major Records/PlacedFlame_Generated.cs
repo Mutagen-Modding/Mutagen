@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PlacedFlameBinaryOverlay PlacedFlameFactory(
+        public static IPlacedFlameGetter PlacedFlameFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PlacedFlameBinaryOverlay PlacedFlameFactory(
+        public static IPlacedFlameGetter PlacedFlameFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

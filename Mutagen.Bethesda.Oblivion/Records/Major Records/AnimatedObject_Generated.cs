@@ -1544,7 +1544,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static AnimatedObjectBinaryOverlay AnimatedObjectFactory(
+        public static IAnimatedObjectGetter AnimatedObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AnimatedObjectBinaryOverlay AnimatedObjectFactory(
+        public static IAnimatedObjectGetter AnimatedObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

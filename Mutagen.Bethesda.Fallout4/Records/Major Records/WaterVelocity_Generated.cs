@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WaterVelocityBinaryOverlay WaterVelocityFactory(
+        public static IWaterVelocityGetter WaterVelocityFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WaterVelocityBinaryOverlay WaterVelocityFactory(
+        public static IWaterVelocityGetter WaterVelocityFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

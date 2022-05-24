@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static QuestFragmentAliasBinaryOverlay QuestFragmentAliasFactory(
+        public static IQuestFragmentAliasGetter QuestFragmentAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static QuestFragmentAliasBinaryOverlay QuestFragmentAliasFactory(
+        public static IQuestFragmentAliasGetter QuestFragmentAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

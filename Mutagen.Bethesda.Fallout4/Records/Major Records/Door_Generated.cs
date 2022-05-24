@@ -2870,7 +2870,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static DoorBinaryOverlay DoorFactory(
+        public static IDoorGetter DoorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2897,7 +2897,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static DoorBinaryOverlay DoorFactory(
+        public static IDoorGetter DoorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

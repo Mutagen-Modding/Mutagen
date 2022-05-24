@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static ClothingFlagsBinaryOverlay ClothingFlagsFactory(
+        public static IClothingFlagsGetter ClothingFlagsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ClothingFlagsBinaryOverlay ClothingFlagsFactory(
+        public static IClothingFlagsGetter ClothingFlagsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

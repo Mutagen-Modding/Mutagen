@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NpcLevelBinaryOverlay NpcLevelFactory(
+        public static INpcLevelGetter NpcLevelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NpcLevelBinaryOverlay NpcLevelFactory(
+        public static INpcLevelGetter NpcLevelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

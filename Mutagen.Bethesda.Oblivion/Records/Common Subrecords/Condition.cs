@@ -71,7 +71,7 @@ partial class ConditionBinaryOverlay
     public Condition.Flag Flags => ConditionBinaryCreateTranslation.GetFlag(_data.Span[0]);
     public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
 
-    static ConditionBinaryOverlay CustomRecordTypeTrigger(
+    static IConditionGetter CustomRecordTypeTrigger(
         OverlayStream stream,
         RecordType recordType,
         BinaryOverlayFactoryPackage package,

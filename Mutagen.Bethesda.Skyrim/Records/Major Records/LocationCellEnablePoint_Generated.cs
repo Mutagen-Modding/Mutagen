@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LocationCellEnablePointBinaryOverlay LocationCellEnablePointFactory(
+        public static ILocationCellEnablePointGetter LocationCellEnablePointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LocationCellEnablePointBinaryOverlay LocationCellEnablePointFactory(
+        public static ILocationCellEnablePointGetter LocationCellEnablePointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

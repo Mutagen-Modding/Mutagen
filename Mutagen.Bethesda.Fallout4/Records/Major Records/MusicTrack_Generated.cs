@@ -2415,7 +2415,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static MusicTrackBinaryOverlay MusicTrackFactory(
+        public static IMusicTrackGetter MusicTrackFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2442,7 +2442,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static MusicTrackBinaryOverlay MusicTrackFactory(
+        public static IMusicTrackGetter MusicTrackFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2510,7 +2510,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

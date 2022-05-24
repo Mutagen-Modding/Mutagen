@@ -2609,8 +2609,8 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
-        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<DialogResponseBinaryOverlay>();
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
         public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
         #region Script
@@ -2633,7 +2633,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static DialogItemBinaryOverlay DialogItemFactory(
+        public static IDialogItemGetter DialogItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2660,7 +2660,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DialogItemBinaryOverlay DialogItemFactory(
+        public static IDialogItemGetter DialogItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2716,7 +2716,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.NAM1:
                 case RecordTypeInts.NAM2:
                 {
-                    this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
+                    this.Responses = this.ParseRepeatedTypelessSubrecord<IDialogResponseGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: DialogResponse_Registration.TriggerSpecs,
@@ -2726,7 +2726,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

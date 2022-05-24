@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<ILoadScreenLocationGetter> Locations { get; private set; } = Array.Empty<LoadScreenLocationBinaryOverlay>();
+        public IReadOnlyList<ILoadScreenLocationGetter> Locations { get; private set; } = Array.Empty<ILoadScreenLocationGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LoadScreenBinaryOverlay LoadScreenFactory(
+        public static ILoadScreenGetter LoadScreenFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1699,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LoadScreenBinaryOverlay LoadScreenFactory(
+        public static ILoadScreenGetter LoadScreenFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1734,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    this.Locations = BinaryOverlayList.FactoryByArray<LoadScreenLocationBinaryOverlay>(
+                    this.Locations = BinaryOverlayList.FactoryByArray<ILoadScreenLocationGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

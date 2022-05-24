@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _StageLocation;
         public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StageLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
-        public IReadOnlyList<ILogEntryGetter> LogEntries { get; private set; } = Array.Empty<LogEntryBinaryOverlay>();
+        public IReadOnlyList<ILogEntryGetter> LogEntries { get; private set; } = Array.Empty<ILogEntryGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static QuestStageBinaryOverlay QuestStageFactory(
+        public static IQuestStageGetter QuestStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static QuestStageBinaryOverlay QuestStageFactory(
+        public static IQuestStageGetter QuestStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
                 {
-                    this.LogEntries = this.ParseRepeatedTypelessSubrecord<LogEntryBinaryOverlay>(
+                    this.LogEntries = this.ParseRepeatedTypelessSubrecord<ILogEntryGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: LogEntry_Registration.TriggerSpecs,

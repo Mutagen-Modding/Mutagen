@@ -1533,7 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static RoadBinaryOverlay RoadFactory(
+        public static IRoadGetter RoadFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RoadBinaryOverlay RoadFactory(
+        public static IRoadGetter RoadFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

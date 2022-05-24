@@ -1964,7 +1964,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DualCastDataBinaryOverlay DualCastDataFactory(
+        public static IDualCastDataGetter DualCastDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1991,7 +1991,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DualCastDataBinaryOverlay DualCastDataFactory(
+        public static IDualCastDataGetter DualCastDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

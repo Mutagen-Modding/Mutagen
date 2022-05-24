@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static GameSettingFloatBinaryOverlay GameSettingFloatFactory(
+        public static IGameSettingFloatGetter GameSettingFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static GameSettingFloatBinaryOverlay GameSettingFloatFactory(
+        public static IGameSettingFloatGetter GameSettingFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

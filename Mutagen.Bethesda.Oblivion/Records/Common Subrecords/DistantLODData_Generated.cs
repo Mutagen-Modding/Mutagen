@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static DistantLODDataBinaryOverlay DistantLODDataFactory(
+        public static IDistantLODDataGetter DistantLODDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DistantLODDataBinaryOverlay DistantLODDataFactory(
+        public static IDistantLODDataGetter DistantLODDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

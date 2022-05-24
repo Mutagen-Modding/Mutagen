@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static AIPackageScheduleBinaryOverlay AIPackageScheduleFactory(
+        public static IAIPackageScheduleGetter AIPackageScheduleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AIPackageScheduleBinaryOverlay AIPackageScheduleFactory(
+        public static IAIPackageScheduleGetter AIPackageScheduleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

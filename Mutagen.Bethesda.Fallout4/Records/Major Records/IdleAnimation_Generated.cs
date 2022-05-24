@@ -2264,7 +2264,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IIdleAnimation);
 
 
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region BehaviorGraph
         private int? _BehaviorGraphLocation;
         public String? BehaviorGraph => _BehaviorGraphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -2321,7 +2321,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IdleAnimationBinaryOverlay IdleAnimationFactory(
+        public static IIdleAnimationGetter IdleAnimationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2348,7 +2348,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IdleAnimationBinaryOverlay IdleAnimationFactory(
+        public static IIdleAnimationGetter IdleAnimationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2373,7 +2373,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static DamageTypeIndexedBinaryOverlay DamageTypeIndexedFactory(
+        public static IDamageTypeIndexedGetter DamageTypeIndexedFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1657,7 +1657,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static DamageTypeIndexedBinaryOverlay DamageTypeIndexedFactory(
+        public static IDamageTypeIndexedGetter DamageTypeIndexedFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

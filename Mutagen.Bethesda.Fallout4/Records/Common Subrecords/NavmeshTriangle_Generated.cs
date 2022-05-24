@@ -1441,7 +1441,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NavmeshTriangleBinaryOverlay NavmeshTriangleFactory(
+        public static INavmeshTriangleGetter NavmeshTriangleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NavmeshTriangleBinaryOverlay NavmeshTriangleFactory(
+        public static INavmeshTriangleGetter NavmeshTriangleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

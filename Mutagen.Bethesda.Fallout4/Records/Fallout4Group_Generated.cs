@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Fallout4
             return new Fallout4GroupWrapper<T>(new GroupMergeGetter<IFallout4GroupGetter<T>, T>(subGroups));
         }
 
-        public static Fallout4GroupBinaryOverlay<T> Fallout4GroupFactory(
+        public static IFallout4GroupGetter<T> Fallout4GroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static Fallout4GroupBinaryOverlay<T> Fallout4GroupFactory(
+        public static IFallout4GroupGetter<T> Fallout4GroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

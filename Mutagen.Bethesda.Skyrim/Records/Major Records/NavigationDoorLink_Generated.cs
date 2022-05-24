@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NavigationDoorLinkBinaryOverlay NavigationDoorLinkFactory(
+        public static INavigationDoorLinkGetter NavigationDoorLinkFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NavigationDoorLinkBinaryOverlay NavigationDoorLinkFactory(
+        public static INavigationDoorLinkGetter NavigationDoorLinkFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static GlobalFloatBinaryOverlay GlobalFloatFactory(
+        public static IGlobalFloatGetter GlobalFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GlobalFloatBinaryOverlay GlobalFloatFactory(
+        public static IGlobalFloatGetter GlobalFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

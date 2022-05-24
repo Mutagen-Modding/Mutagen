@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static GetEventDataBinaryOverlay GetEventDataFactory(
+        public static IGetEventDataGetter GetEventDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static GetEventDataBinaryOverlay GetEventDataFactory(
+        public static IGetEventDataGetter GetEventDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

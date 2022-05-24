@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static RankBinaryOverlay RankFactory(
+        public static IRankGetter RankFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RankBinaryOverlay RankFactory(
+        public static IRankGetter RankFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

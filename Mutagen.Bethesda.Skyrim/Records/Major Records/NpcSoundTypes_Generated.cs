@@ -1226,7 +1226,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<INpcSoundTypeGetter> Types { get; private set; } = Array.Empty<NpcSoundTypeBinaryOverlay>();
+        public IReadOnlyList<INpcSoundTypeGetter> Types { get; private set; } = Array.Empty<INpcSoundTypeGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NpcSoundTypesBinaryOverlay NpcSoundTypesFactory(
+        public static INpcSoundTypesGetter NpcSoundTypesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NpcSoundTypesBinaryOverlay NpcSoundTypesFactory(
+        public static INpcSoundTypesGetter NpcSoundTypesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CSDC:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundTypes_FieldIndex.Types) return ParseResult.Stop;
-                    this.Types = this.ParseRepeatedTypelessSubrecord<NpcSoundTypeBinaryOverlay>(
+                    this.Types = this.ParseRepeatedTypelessSubrecord<INpcSoundTypeGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: NpcSoundType_Registration.TriggerSpecs,

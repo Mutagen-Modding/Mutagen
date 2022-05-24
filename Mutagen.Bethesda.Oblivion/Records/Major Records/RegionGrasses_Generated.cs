@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static RegionGrassesBinaryOverlay RegionGrassesFactory(
+        public static IRegionGrassesGetter RegionGrassesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionGrassesBinaryOverlay RegionGrassesFactory(
+        public static IRegionGrassesGetter RegionGrassesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

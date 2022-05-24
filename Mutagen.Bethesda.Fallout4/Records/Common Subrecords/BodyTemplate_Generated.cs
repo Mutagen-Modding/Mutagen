@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static BodyTemplateBinaryOverlay BodyTemplateFactory(
+        public static IBodyTemplateGetter BodyTemplateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static BodyTemplateBinaryOverlay BodyTemplateFactory(
+        public static IBodyTemplateGetter BodyTemplateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

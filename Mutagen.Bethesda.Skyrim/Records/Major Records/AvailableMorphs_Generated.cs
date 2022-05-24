@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static AvailableMorphsBinaryOverlay AvailableMorphsFactory(
+        public static IAvailableMorphsGetter AvailableMorphsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1482,7 +1482,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static AvailableMorphsBinaryOverlay AvailableMorphsFactory(
+        public static IAvailableMorphsGetter AvailableMorphsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static TopicReferenceBinaryOverlay TopicReferenceFactory(
+        public static ITopicReferenceGetter TopicReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static TopicReferenceBinaryOverlay TopicReferenceFactory(
+        public static ITopicReferenceGetter TopicReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

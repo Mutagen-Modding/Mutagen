@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static MagicEffectEnhanceWeaponArchetypeBinaryOverlay MagicEffectEnhanceWeaponArchetypeFactory(
+        public static IMagicEffectEnhanceWeaponArchetypeGetter MagicEffectEnhanceWeaponArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static MagicEffectEnhanceWeaponArchetypeBinaryOverlay MagicEffectEnhanceWeaponArchetypeFactory(
+        public static IMagicEffectEnhanceWeaponArchetypeGetter MagicEffectEnhanceWeaponArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

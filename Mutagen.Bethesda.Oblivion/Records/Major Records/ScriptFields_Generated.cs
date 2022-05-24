@@ -1699,8 +1699,8 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _SourceCodeLocation;
         public String? SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SourceCodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<ILocalVariableGetter> LocalVariables { get; private set; } = Array.Empty<LocalVariableBinaryOverlay>();
-        public IReadOnlyList<IAScriptReferenceGetter> References { get; private set; } = Array.Empty<AScriptReferenceBinaryOverlay>();
+        public IReadOnlyList<ILocalVariableGetter> LocalVariables { get; private set; } = Array.Empty<ILocalVariableGetter>();
+        public IReadOnlyList<IAScriptReferenceGetter> References { get; private set; } = Array.Empty<IAScriptReferenceGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static ScriptFieldsBinaryOverlay ScriptFieldsFactory(
+        public static IScriptFieldsGetter ScriptFieldsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ScriptFieldsBinaryOverlay ScriptFieldsFactory(
+        public static IScriptFieldsGetter ScriptFieldsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1785,7 +1785,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SLSD:
                 case RecordTypeInts.SCVR:
                 {
-                    this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryOverlay>(
+                    this.LocalVariables = this.ParseRepeatedTypelessSubrecord<ILocalVariableGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: LocalVariable_Registration.TriggerSpecs,
@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRV:
                 case RecordTypeInts.SCRO:
                 {
-                    this.References = this.ParseRepeatedTypelessSubrecord<AScriptReferenceBinaryOverlay>(
+                    this.References = this.ParseRepeatedTypelessSubrecord<IAScriptReferenceGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: AScriptReference_Registration.TriggerSpecs,

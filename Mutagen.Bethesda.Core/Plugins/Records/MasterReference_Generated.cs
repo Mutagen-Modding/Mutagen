@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             this.CustomCtor();
         }
 
-        public static MasterReferenceBinaryOverlay MasterReferenceFactory(
+        public static IMasterReferenceGetter MasterReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             return ret;
         }
 
-        public static MasterReferenceBinaryOverlay MasterReferenceFactory(
+        public static IMasterReferenceGetter MasterReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MagicEffectPeakValueModArchetypeBinaryOverlay MagicEffectPeakValueModArchetypeFactory(
+        public static IMagicEffectPeakValueModArchetypeGetter MagicEffectPeakValueModArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MagicEffectPeakValueModArchetypeBinaryOverlay MagicEffectPeakValueModArchetypeFactory(
+        public static IMagicEffectPeakValueModArchetypeGetter MagicEffectPeakValueModArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ShoutWordBinaryOverlay ShoutWordFactory(
+        public static IShoutWordGetter ShoutWordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ShoutWordBinaryOverlay ShoutWordFactory(
+        public static IShoutWordGetter ShoutWordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

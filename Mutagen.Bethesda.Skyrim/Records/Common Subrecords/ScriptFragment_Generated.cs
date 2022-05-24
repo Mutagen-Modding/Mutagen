@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ScriptFragmentBinaryOverlay ScriptFragmentFactory(
+        public static IScriptFragmentGetter ScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ScriptFragmentBinaryOverlay ScriptFragmentFactory(
+        public static IScriptFragmentGetter ScriptFragmentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

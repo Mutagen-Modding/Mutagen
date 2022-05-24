@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static KeyFrameBinaryOverlay KeyFrameFactory(
+        public static IKeyFrameGetter KeyFrameFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static KeyFrameBinaryOverlay KeyFrameFactory(
+        public static IKeyFrameGetter KeyFrameFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

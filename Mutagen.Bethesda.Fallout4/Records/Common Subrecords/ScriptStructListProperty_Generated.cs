@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Structs
-        public IReadOnlyList<IScriptStructPropertyGetter> Structs => BinaryOverlayList.FactoryByLazyParse<ScriptStructPropertyBinaryOverlay>(_data, _package, countLength: 4, (s, p) => ScriptStructPropertyBinaryOverlay.ScriptStructPropertyFactory(s, p));
+        public IReadOnlyList<IScriptStructPropertyGetter> Structs => BinaryOverlayList.FactoryByLazyParse<IScriptStructPropertyGetter>(_data, _package, countLength: 4, (s, p) => ScriptStructPropertyBinaryOverlay.ScriptStructPropertyFactory(s, p));
         protected int StructsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ScriptStructListPropertyBinaryOverlay ScriptStructListPropertyFactory(
+        public static IScriptStructListPropertyGetter ScriptStructListPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1239,7 +1239,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ScriptStructListPropertyBinaryOverlay ScriptStructListPropertyFactory(
+        public static IScriptStructListPropertyGetter ScriptStructListPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

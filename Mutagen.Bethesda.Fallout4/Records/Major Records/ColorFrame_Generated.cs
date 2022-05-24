@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ColorFrameBinaryOverlay ColorFrameFactory(
+        public static IColorFrameGetter ColorFrameFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ColorFrameBinaryOverlay ColorFrameFactory(
+        public static IColorFrameGetter ColorFrameFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1639,7 +1639,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static CrimeValuesBinaryOverlay CrimeValuesFactory(
+        public static ICrimeValuesGetter CrimeValuesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static CrimeValuesBinaryOverlay CrimeValuesFactory(
+        public static ICrimeValuesGetter CrimeValuesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

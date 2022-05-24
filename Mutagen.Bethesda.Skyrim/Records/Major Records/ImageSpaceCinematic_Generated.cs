@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ImageSpaceCinematicBinaryOverlay ImageSpaceCinematicFactory(
+        public static IImageSpaceCinematicGetter ImageSpaceCinematicFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ImageSpaceCinematicBinaryOverlay ImageSpaceCinematicFactory(
+        public static IImageSpaceCinematicGetter ImageSpaceCinematicFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

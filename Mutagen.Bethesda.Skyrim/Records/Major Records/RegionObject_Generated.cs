@@ -1967,7 +1967,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static RegionObjectBinaryOverlay RegionObjectFactory(
+        public static IRegionObjectGetter RegionObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static RegionObjectBinaryOverlay RegionObjectFactory(
+        public static IRegionObjectGetter RegionObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

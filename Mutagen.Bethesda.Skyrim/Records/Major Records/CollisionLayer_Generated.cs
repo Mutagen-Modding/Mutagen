@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static CollisionLayerBinaryOverlay CollisionLayerFactory(
+        public static ICollisionLayerGetter CollisionLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1945,7 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static CollisionLayerBinaryOverlay CollisionLayerFactory(
+        public static ICollisionLayerGetter CollisionLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

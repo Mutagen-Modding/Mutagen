@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _Unknown_IsSet => _INDXLocation.HasValue;
         public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
         #endregion
-        public IReadOnlyList<IQuestLogEntryGetter> LogEntries { get; private set; } = Array.Empty<QuestLogEntryBinaryOverlay>();
+        public IReadOnlyList<IQuestLogEntryGetter> LogEntries { get; private set; } = Array.Empty<IQuestLogEntryGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1492,7 +1492,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static QuestStageBinaryOverlay QuestStageFactory(
+        public static IQuestStageGetter QuestStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1510,7 +1510,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static QuestStageBinaryOverlay QuestStageFactory(
+        public static IQuestStageGetter QuestStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CNAM:
                 case RecordTypeInts.NAM0:
                 {
-                    this.LogEntries = this.ParseRepeatedTypelessSubrecord<QuestLogEntryBinaryOverlay>(
+                    this.LogEntries = this.ParseRepeatedTypelessSubrecord<IQuestLogEntryGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: QuestLogEntry_Registration.TriggerSpecs,

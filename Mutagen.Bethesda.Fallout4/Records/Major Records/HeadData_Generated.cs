@@ -2636,7 +2636,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public INeckFatAdjustmentsScaleGetter? NeckFatAdjustmentsScale { get; private set; }
-        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = Array.Empty<HeadPartReferenceBinaryOverlay>();
+        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = Array.Empty<IHeadPartReferenceGetter>();
         public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = Array.Empty<IFormLinkGetter<INpcGetter>>();
         public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = Array.Empty<IFormLinkGetter<IColorRecordGetter>>();
         public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = Array.Empty<IFormLinkGetter<ITextureSetGetter>>();
@@ -2644,9 +2644,9 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _DefaultFaceTextureLocation;
         public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
-        public IReadOnlyList<ITintGroupGetter> TintLayers { get; private set; } = Array.Empty<TintGroupBinaryOverlay>();
-        public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = Array.Empty<MorphGroupBinaryOverlay>();
-        public IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<FaceMorphBinaryOverlay>();
+        public IReadOnlyList<ITintGroupGetter> TintLayers { get; private set; } = Array.Empty<ITintGroupGetter>();
+        public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = Array.Empty<IMorphGroupGetter>();
+        public IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<IFaceMorphGetter>();
         #region MaleWrinkleMapPath
         private int? _MaleWrinkleMapPathLocation;
         public String? MaleWrinkleMapPath => _MaleWrinkleMapPathLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaleWrinkleMapPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -2667,7 +2667,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static HeadDataBinaryOverlay HeadDataFactory(
+        public static IHeadDataGetter HeadDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2685,7 +2685,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static HeadDataBinaryOverlay HeadDataFactory(
+        public static IHeadDataGetter HeadDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2722,7 +2722,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.HEAD:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.HeadParts) return ParseResult.Stop;
-                    this.HeadParts = this.ParseRepeatedTypelessSubrecord<HeadPartReferenceBinaryOverlay>(
+                    this.HeadParts = this.ParseRepeatedTypelessSubrecord<IHeadPartReferenceGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: HeadPartReference_Registration.TriggerSpecs,
@@ -2785,7 +2785,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TTGE:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.TintLayers) return ParseResult.Stop;
-                    this.TintLayers = this.ParseRepeatedTypelessSubrecord<TintGroupBinaryOverlay>(
+                    this.TintLayers = this.ParseRepeatedTypelessSubrecord<ITintGroupGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: TintGroup_Registration.TriggerSpecs,
@@ -2803,7 +2803,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MPGS:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.MorphGroups) return ParseResult.Stop;
-                    this.MorphGroups = this.ParseRepeatedTypelessSubrecord<MorphGroupBinaryOverlay>(
+                    this.MorphGroups = this.ParseRepeatedTypelessSubrecord<IMorphGroupGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: MorphGroup_Registration.TriggerSpecs,
@@ -2814,7 +2814,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FMRN:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.FaceMorphs) return ParseResult.Stop;
-                    this.FaceMorphs = this.ParseRepeatedTypelessSubrecord<FaceMorphBinaryOverlay>(
+                    this.FaceMorphs = this.ParseRepeatedTypelessSubrecord<IFaceMorphGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: FaceMorph_Registration.TriggerSpecs,

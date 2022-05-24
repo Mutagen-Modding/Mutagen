@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(IDebris);
 
 
-        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = Array.Empty<DebrisModelBinaryOverlay>();
+        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = Array.Empty<IDebrisModelGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DebrisBinaryOverlay DebrisFactory(
+        public static IDebrisGetter DebrisFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DebrisBinaryOverlay DebrisFactory(
+        public static IDebrisGetter DebrisFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1586,7 +1586,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DATA:
                 {
-                    this.Models = this.ParseRepeatedTypelessSubrecord<DebrisModelBinaryOverlay>(
+                    this.Models = this.ParseRepeatedTypelessSubrecord<IDebrisModelGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: DebrisModel_Registration.TriggerSpecs,

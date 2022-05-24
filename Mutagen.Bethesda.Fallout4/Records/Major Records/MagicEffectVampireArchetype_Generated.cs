@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static MagicEffectVampireArchetypeBinaryOverlay MagicEffectVampireArchetypeFactory(
+        public static IMagicEffectVampireArchetypeGetter MagicEffectVampireArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static MagicEffectVampireArchetypeBinaryOverlay MagicEffectVampireArchetypeFactory(
+        public static IMagicEffectVampireArchetypeGetter MagicEffectVampireArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

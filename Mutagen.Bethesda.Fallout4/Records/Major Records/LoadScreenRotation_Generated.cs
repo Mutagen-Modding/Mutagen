@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LoadScreenRotationBinaryOverlay LoadScreenRotationFactory(
+        public static ILoadScreenRotationGetter LoadScreenRotationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LoadScreenRotationBinaryOverlay LoadScreenRotationFactory(
+        public static ILoadScreenRotationGetter LoadScreenRotationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

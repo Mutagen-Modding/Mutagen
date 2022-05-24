@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WeatherMagicBinaryOverlay WeatherMagicFactory(
+        public static IWeatherMagicGetter WeatherMagicFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WeatherMagicBinaryOverlay WeatherMagicFactory(
+        public static IWeatherMagicGetter WeatherMagicFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

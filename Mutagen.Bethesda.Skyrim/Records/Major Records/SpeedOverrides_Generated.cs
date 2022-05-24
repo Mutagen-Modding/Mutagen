@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static SpeedOverridesBinaryOverlay SpeedOverridesFactory(
+        public static ISpeedOverridesGetter SpeedOverridesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1652,7 +1652,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SpeedOverridesBinaryOverlay SpeedOverridesFactory(
+        public static ISpeedOverridesGetter SpeedOverridesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

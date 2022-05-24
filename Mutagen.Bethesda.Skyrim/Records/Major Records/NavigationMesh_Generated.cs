@@ -1757,7 +1757,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NavigationMeshBinaryOverlay NavigationMeshFactory(
+        public static INavigationMeshGetter NavigationMeshFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1784,7 +1784,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NavigationMeshBinaryOverlay NavigationMeshFactory(
+        public static INavigationMeshGetter NavigationMeshFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

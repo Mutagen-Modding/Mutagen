@@ -1670,7 +1670,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static SoundMarkerBinaryOverlay SoundMarkerFactory(
+        public static ISoundMarkerGetter SoundMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1697,7 +1697,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static SoundMarkerBinaryOverlay SoundMarkerFactory(
+        public static ISoundMarkerGetter SoundMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

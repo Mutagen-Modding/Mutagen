@@ -1685,7 +1685,7 @@ namespace Mutagen.Bethesda.Oblivion
         public partial LeveledFlag? GetFlagsCustom();
         public LeveledFlag? Flags => GetFlagsCustom();
         #endregion
-        public IReadOnlyList<ILeveledItemEntryGetter> Entries { get; private set; } = Array.Empty<LeveledItemEntryBinaryOverlay>();
+        public IReadOnlyList<ILeveledItemEntryGetter> Entries { get; private set; } = Array.Empty<ILeveledItemEntryGetter>();
         #region Vestigial
         public partial ParseResult VestigialCustomParse(
             OverlayStream stream,
@@ -1707,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LeveledItemBinaryOverlay LeveledItemFactory(
+        public static ILeveledItemGetter LeveledItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1734,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LeveledItemBinaryOverlay LeveledItemFactory(
+        public static ILeveledItemGetter LeveledItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.LVLO:
                 {
-                    this.Entries = BinaryOverlayList.FactoryByArray<LeveledItemEntryBinaryOverlay>(
+                    this.Entries = BinaryOverlayList.FactoryByArray<ILeveledItemEntryGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

@@ -3441,7 +3441,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static PlacedObjectBinaryOverlay PlacedObjectFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3468,7 +3468,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PlacedObjectBinaryOverlay PlacedObjectFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

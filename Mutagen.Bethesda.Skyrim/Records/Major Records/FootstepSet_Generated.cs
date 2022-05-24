@@ -2207,7 +2207,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static FootstepSetBinaryOverlay FootstepSetFactory(
+        public static IFootstepSetGetter FootstepSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2234,7 +2234,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static FootstepSetBinaryOverlay FootstepSetFactory(
+        public static IFootstepSetGetter FootstepSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

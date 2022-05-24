@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static FogDistanceBinaryOverlay FogDistanceFactory(
+        public static IFogDistanceGetter FogDistanceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static FogDistanceBinaryOverlay FogDistanceFactory(
+        public static IFogDistanceGetter FogDistanceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

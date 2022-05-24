@@ -2033,7 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LandscapeTextureBinaryOverlay LandscapeTextureFactory(
+        public static ILandscapeTextureGetter LandscapeTextureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2060,7 +2060,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LandscapeTextureBinaryOverlay LandscapeTextureFactory(
+        public static ILandscapeTextureGetter LandscapeTextureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

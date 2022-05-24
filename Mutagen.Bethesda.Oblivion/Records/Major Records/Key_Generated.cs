@@ -1840,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static KeyBinaryOverlay KeyFactory(
+        public static IKeyGetter KeyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1867,7 +1867,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static KeyBinaryOverlay KeyFactory(
+        public static IKeyGetter KeyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

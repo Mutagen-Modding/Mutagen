@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NoOwnerBinaryOverlay NoOwnerFactory(
+        public static INoOwnerGetter NoOwnerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NoOwnerBinaryOverlay NoOwnerFactory(
+        public static INoOwnerGetter NoOwnerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

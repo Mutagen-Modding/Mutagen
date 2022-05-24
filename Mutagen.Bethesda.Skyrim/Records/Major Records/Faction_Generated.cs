@@ -3066,7 +3066,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<RelationBinaryOverlay>();
+        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<IRelationGetter>();
         #region Flags
         private int? _FlagsLocation;
         public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Faction.FactionFlag);
@@ -3099,7 +3099,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _CrimeValuesLocation;
         public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new OverlayStream(_data.Slice(_CrimeValuesLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<RankBinaryOverlay>();
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
         public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VendorBuySellListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
@@ -3130,7 +3130,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static FactionBinaryOverlay FactionFactory(
+        public static IFactionGetter FactionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3157,7 +3157,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static FactionBinaryOverlay FactionFactory(
+        public static IFactionGetter FactionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3187,7 +3187,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.Relations = BinaryOverlayList.FactoryByArray<RelationBinaryOverlay>(
+                    this.Relations = BinaryOverlayList.FactoryByArray<IRelationGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -3245,7 +3245,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.FNAM:
                 case RecordTypeInts.INAM:
                 {
-                    this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryOverlay>(
+                    this.Ranks = this.ParseRepeatedTypelessSubrecord<IRankGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Rank_Registration.TriggerSpecs,
@@ -3279,7 +3279,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

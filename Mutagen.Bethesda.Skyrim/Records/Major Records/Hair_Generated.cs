@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static HairBinaryOverlay HairFactory(
+        public static IHairGetter HairFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static HairBinaryOverlay HairFactory(
+        public static IHairGetter HairFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

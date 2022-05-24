@@ -8230,7 +8230,7 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<WeatherSoundBinaryOverlay>();
+        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<IWeatherSoundGetter>();
         public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = Array.Empty<IFormLinkGetter<IStaticGetter>>();
         private RangeInt32? _IMSPLocation;
         public Weather.IMSPDataType IMSPDataTypeState { get; private set; }
@@ -8319,7 +8319,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WeatherBinaryOverlay WeatherFactory(
+        public static IWeatherGetter WeatherFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -8346,7 +8346,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WeatherBinaryOverlay WeatherFactory(
+        public static IWeatherGetter WeatherFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -8468,7 +8468,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Sounds = BinaryOverlayList.FactoryByArray<WeatherSoundBinaryOverlay>(
+                    this.Sounds = BinaryOverlayList.FactoryByArray<IWeatherSoundGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

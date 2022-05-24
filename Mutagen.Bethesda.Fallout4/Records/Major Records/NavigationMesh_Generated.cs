@@ -1859,7 +1859,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NavigationMeshBinaryOverlay NavigationMeshFactory(
+        public static INavigationMeshGetter NavigationMeshFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NavigationMeshBinaryOverlay NavigationMeshFactory(
+        public static INavigationMeshGetter NavigationMeshFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.PreCutMapEntries = BinaryOverlayList.FactoryByLazyParse<PreCutMapEntryBinaryOverlay>(
+                    this.PreCutMapEntries = BinaryOverlayList.FactoryByLazyParse<IPreCutMapEntryGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         getter: (s, p) => PreCutMapEntryBinaryOverlay.PreCutMapEntryFactory(s, p));

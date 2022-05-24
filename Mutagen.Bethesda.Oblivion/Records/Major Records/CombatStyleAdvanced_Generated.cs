@@ -2194,7 +2194,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static CombatStyleAdvancedBinaryOverlay CombatStyleAdvancedFactory(
+        public static ICombatStyleAdvancedGetter CombatStyleAdvancedFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2212,7 +2212,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CombatStyleAdvancedBinaryOverlay CombatStyleAdvancedFactory(
+        public static ICombatStyleAdvancedGetter CombatStyleAdvancedFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

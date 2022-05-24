@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LinkedReferenceColorBinaryOverlay LinkedReferenceColorFactory(
+        public static ILinkedReferenceColorGetter LinkedReferenceColorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LinkedReferenceColorBinaryOverlay LinkedReferenceColorFactory(
+        public static ILinkedReferenceColorGetter LinkedReferenceColorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

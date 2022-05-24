@@ -9844,7 +9844,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _Unknown_IsSet => _ACBSLocation.HasValue;
         public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
         #endregion
-        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<RankPlacementBinaryOverlay>();
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
         public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
@@ -9887,7 +9887,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AttackRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<AttackBinaryOverlay>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
         public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
@@ -10117,9 +10117,9 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<INpcFaceTintingLayerGetter> FaceTintingLayers { get; private set; } = Array.Empty<NpcFaceTintingLayerBinaryOverlay>();
+        public IReadOnlyList<INpcFaceTintingLayerGetter> FaceTintingLayers { get; private set; } = Array.Empty<INpcFaceTintingLayerGetter>();
         public INpcBodyMorphRegionValuesGetter? BodyMorphRegionValues { get; private set; }
-        public IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<NpcFaceMorphBinaryOverlay>();
+        public IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<INpcFaceMorphGetter>();
         #region FacialMorphIntensity
         private int? _FacialMorphIntensityLocation;
         public Single? FacialMorphIntensity => _FacialMorphIntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacialMorphIntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
@@ -10144,7 +10144,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NpcBinaryOverlay NpcFactory(
+        public static INpcGetter NpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -10171,7 +10171,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NpcBinaryOverlay NpcFactory(
+        public static INpcGetter NpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -10221,7 +10221,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Factions = BinaryOverlayList.FactoryByArray<RankPlacementBinaryOverlay>(
+                    this.Factions = BinaryOverlayList.FactoryByArray<IRankPlacementGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -10315,7 +10315,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ATKS:
                 case RecordTypeInts.ATKT:
                 {
-                    this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
+                    this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Attack_Registration.TriggerSpecs,
@@ -10355,7 +10355,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PRKR:
                 case RecordTypeInts.PRKZ:
                 {
-                    this.Perks = BinaryOverlayList.FactoryByCountPerItem<PerkPlacementBinaryOverlay>(
+                    this.Perks = BinaryOverlayList.FactoryByCountPerItem<IPerkPlacementGetter>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x5,
@@ -10370,7 +10370,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<ObjectPropertyBinaryOverlay>(
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -10391,7 +10391,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -10448,7 +10448,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.OBTE:
                 {
-                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<ObjectTemplateBinaryOverlay<Npc.Property>>(
+                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<IObjectTemplateGetter<Npc.Property>>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -10552,7 +10552,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CS2D:
                 case RecordTypeInts.CS2H:
                 {
-                    this.Sounds = BinaryOverlayList.FactoryByCountPerItem<NpcSoundBinaryOverlay>(
+                    this.Sounds = BinaryOverlayList.FactoryByCountPerItem<INpcSoundGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -10617,7 +10617,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TETI:
                 {
-                    this.FaceTintingLayers = this.ParseRepeatedTypelessSubrecord<NpcFaceTintingLayerBinaryOverlay>(
+                    this.FaceTintingLayers = this.ParseRepeatedTypelessSubrecord<INpcFaceTintingLayerGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: NpcFaceTintingLayer_Registration.TriggerSpecs,
@@ -10636,7 +10636,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FMRI:
                 case RecordTypeInts.FMRS:
                 {
-                    this.FaceMorphs = this.ParseRepeatedTypelessSubrecord<NpcFaceMorphBinaryOverlay>(
+                    this.FaceMorphs = this.ParseRepeatedTypelessSubrecord<INpcFaceMorphGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: NpcFaceMorph_Registration.TriggerSpecs,

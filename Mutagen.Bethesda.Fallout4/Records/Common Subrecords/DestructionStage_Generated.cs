@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static DestructionStageBinaryOverlay DestructionStageFactory(
+        public static IDestructionStageGetter DestructionStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static DestructionStageBinaryOverlay DestructionStageFactory(
+        public static IDestructionStageGetter DestructionStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

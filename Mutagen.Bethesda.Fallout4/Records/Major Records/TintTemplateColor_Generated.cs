@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static TintTemplateColorBinaryOverlay TintTemplateColorFactory(
+        public static ITintTemplateColorGetter TintTemplateColorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static TintTemplateColorBinaryOverlay TintTemplateColorFactory(
+        public static ITintTemplateColorGetter TintTemplateColorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

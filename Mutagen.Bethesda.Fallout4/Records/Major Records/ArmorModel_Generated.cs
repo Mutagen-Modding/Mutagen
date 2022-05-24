@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ArmorModelBinaryOverlay ArmorModelFactory(
+        public static IArmorModelGetter ArmorModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ArmorModelBinaryOverlay ArmorModelFactory(
+        public static IArmorModelGetter ArmorModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

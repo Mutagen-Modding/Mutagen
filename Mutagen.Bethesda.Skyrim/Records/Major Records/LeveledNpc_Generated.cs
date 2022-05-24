@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LeveledNpcBinaryOverlay LeveledNpcFactory(
+        public static ILeveledNpcGetter LeveledNpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2071,7 +2071,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LeveledNpcBinaryOverlay LeveledNpcFactory(
+        public static ILeveledNpcGetter LeveledNpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2118,7 +2118,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.COED:
                 case RecordTypeInts.LLCT:
                 {
-                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<LeveledNpcEntryBinaryOverlay>(
+                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<ILeveledNpcEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 1,

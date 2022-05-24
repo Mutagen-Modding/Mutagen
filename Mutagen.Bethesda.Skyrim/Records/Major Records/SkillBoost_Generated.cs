@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static SkillBoostBinaryOverlay SkillBoostFactory(
+        public static ISkillBoostGetter SkillBoostFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkillBoostBinaryOverlay SkillBoostFactory(
+        public static ISkillBoostGetter SkillBoostFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

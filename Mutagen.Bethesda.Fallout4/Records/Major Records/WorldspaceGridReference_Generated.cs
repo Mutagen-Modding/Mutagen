@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public P2Int16 GridPosition => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x4));
         #region References
-        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList.FactoryByCountLength<WorldspaceReferenceBinaryOverlay>(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
+        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList.FactoryByCountLength<IWorldspaceReferenceGetter>(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
         protected int ReferencesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WorldspaceGridReferenceBinaryOverlay WorldspaceGridReferenceFactory(
+        public static IWorldspaceGridReferenceGetter WorldspaceGridReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WorldspaceGridReferenceBinaryOverlay WorldspaceGridReferenceFactory(
+        public static IWorldspaceGridReferenceGetter WorldspaceGridReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

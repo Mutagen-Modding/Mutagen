@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static AttractionRuleBinaryOverlay AttractionRuleFactory(
+        public static IAttractionRuleGetter AttractionRuleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static AttractionRuleBinaryOverlay AttractionRuleFactory(
+        public static IAttractionRuleGetter AttractionRuleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

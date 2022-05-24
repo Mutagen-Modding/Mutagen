@@ -160,7 +160,7 @@ partial class NavigationMeshDataBinaryOverlay
             get
             {
                 var triangleLoc = _trianglesStartPos + (index * 16);
-                var triangle = NavmeshTriangleBinaryOverlay.NavmeshTriangleFactory(
+                var triangle = (NavmeshTriangleBinaryOverlay)NavmeshTriangleBinaryOverlay.NavmeshTriangleFactory(
                     _data.Slice(triangleLoc),
                     _package);
                 triangle.IsCover = _isCover[index];

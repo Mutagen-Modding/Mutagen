@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static BookSkillBinaryOverlay BookSkillFactory(
+        public static IBookSkillGetter BookSkillFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static BookSkillBinaryOverlay BookSkillFactory(
+        public static IBookSkillGetter BookSkillFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

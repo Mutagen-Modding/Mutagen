@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static PointToReferenceMappingBinaryOverlay PointToReferenceMappingFactory(
+        public static IPointToReferenceMappingGetter PointToReferenceMappingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PointToReferenceMappingBinaryOverlay PointToReferenceMappingFactory(
+        public static IPointToReferenceMappingGetter PointToReferenceMappingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

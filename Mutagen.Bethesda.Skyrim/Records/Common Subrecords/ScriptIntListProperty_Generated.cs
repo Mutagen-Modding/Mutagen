@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ScriptIntListPropertyBinaryOverlay ScriptIntListPropertyFactory(
+        public static IScriptIntListPropertyGetter ScriptIntListPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ScriptIntListPropertyBinaryOverlay ScriptIntListPropertyFactory(
+        public static IScriptIntListPropertyGetter ScriptIntListPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

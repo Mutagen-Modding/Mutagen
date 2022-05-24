@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NpcMorphBinaryOverlay NpcMorphFactory(
+        public static INpcMorphGetter NpcMorphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NpcMorphBinaryOverlay NpcMorphFactory(
+        public static INpcMorphGetter NpcMorphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

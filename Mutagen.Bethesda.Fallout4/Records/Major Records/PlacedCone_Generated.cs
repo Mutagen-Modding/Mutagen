@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PlacedConeBinaryOverlay PlacedConeFactory(
+        public static IPlacedConeGetter PlacedConeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1662,7 +1662,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PlacedConeBinaryOverlay PlacedConeFactory(
+        public static IPlacedConeGetter PlacedConeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

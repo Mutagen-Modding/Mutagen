@@ -7388,7 +7388,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WeaponBinaryOverlay WeaponFactory(
+        public static IWeaponGetter WeaponFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -7415,7 +7415,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WeaponBinaryOverlay WeaponFactory(
+        public static IWeaponGetter WeaponFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -7564,7 +7564,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.OBTE:
                 {
-                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<ObjectTemplateBinaryOverlay<Weapon.Property>>(
+                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<IObjectTemplateGetter<Weapon.Property>>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

@@ -2543,7 +2543,7 @@ namespace Mutagen.Bethesda.Fallout4
         public HeadPart.TypeEnum? Type => _TypeLocation.HasValue ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(HeadPart.TypeEnum?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
-        public IReadOnlyList<IPartGetter> Parts { get; private set; } = Array.Empty<PartBinaryOverlay>();
+        public IReadOnlyList<IPartGetter> Parts { get; private set; } = Array.Empty<IPartGetter>();
         #region TextureSet
         private int? _TextureSetLocation;
         public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
@@ -2556,7 +2556,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _ValidRacesLocation;
         public IFormLinkNullableGetter<IFormListGetter> ValidRaces => _ValidRacesLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ValidRacesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2573,7 +2573,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static HeadPartBinaryOverlay HeadPartFactory(
+        public static IHeadPartGetter HeadPartFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2600,7 +2600,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static HeadPartBinaryOverlay HeadPartFactory(
+        public static IHeadPartGetter HeadPartFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2663,7 +2663,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
                 {
-                    this.Parts = this.ParseRepeatedTypelessSubrecord<PartBinaryOverlay>(
+                    this.Parts = this.ParseRepeatedTypelessSubrecord<IPartGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Part_Registration.TriggerSpecs,
@@ -2687,7 +2687,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

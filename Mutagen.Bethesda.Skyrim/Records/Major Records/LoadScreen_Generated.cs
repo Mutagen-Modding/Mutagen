@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DescriptionLocation;
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
         public IFormLinkGetter<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
@@ -2248,7 +2248,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LoadScreenBinaryOverlay LoadScreenFactory(
+        public static ILoadScreenGetter LoadScreenFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LoadScreenBinaryOverlay LoadScreenFactory(
+        public static ILoadScreenGetter LoadScreenFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2313,7 +2313,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

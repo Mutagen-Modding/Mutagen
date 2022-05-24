@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WeatherAlphaBinaryOverlay WeatherAlphaFactory(
+        public static IWeatherAlphaGetter WeatherAlphaFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WeatherAlphaBinaryOverlay WeatherAlphaFactory(
+        public static IWeatherAlphaGetter WeatherAlphaFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

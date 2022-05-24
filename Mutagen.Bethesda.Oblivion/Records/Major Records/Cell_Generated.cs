@@ -4772,7 +4772,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static CellBinaryOverlay CellFactory(
+        public static ICellGetter CellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4804,7 +4804,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CellBinaryOverlay CellFactory(
+        public static ICellGetter CellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

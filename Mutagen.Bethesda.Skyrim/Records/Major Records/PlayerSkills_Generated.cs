@@ -1782,7 +1782,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PlayerSkillsBinaryOverlay PlayerSkillsFactory(
+        public static IPlayerSkillsGetter PlayerSkillsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1800,7 +1800,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PlayerSkillsBinaryOverlay PlayerSkillsFactory(
+        public static IPlayerSkillsGetter PlayerSkillsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

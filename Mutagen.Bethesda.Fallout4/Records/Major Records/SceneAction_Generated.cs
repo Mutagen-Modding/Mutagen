@@ -4851,7 +4851,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _STSCLocation;
         public ReadOnlyMemorySlice<Byte>? STSC => _STSCLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _STSCLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IStartSceneGetter> StartScenes { get; private set; } = Array.Empty<StartSceneBinaryOverlay>();
+        public IReadOnlyList<IStartSceneGetter> StartScenes { get; private set; } = Array.Empty<IStartSceneGetter>();
         #region PlayerPositiveResponse
         private int? _PlayerPositiveResponseLocation;
         public IFormLinkNullableGetter<IDialogTopicGetter> PlayerPositiveResponse => _PlayerPositiveResponseLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PlayerPositiveResponseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
@@ -4982,7 +4982,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static SceneActionBinaryOverlay SceneActionFactory(
+        public static ISceneActionGetter SceneActionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -5000,7 +5000,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static SceneActionBinaryOverlay SceneActionFactory(
+        public static ISceneActionGetter SceneActionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -5132,7 +5132,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    this.StartScenes = this.ParseRepeatedTypelessSubrecord<StartSceneBinaryOverlay>(
+                    this.StartScenes = this.ParseRepeatedTypelessSubrecord<IStartSceneGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: StartScene_Registration.TriggerSpecs,

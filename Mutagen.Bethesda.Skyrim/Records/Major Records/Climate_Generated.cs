@@ -2349,7 +2349,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ClimateBinaryOverlay ClimateFactory(
+        public static IClimateGetter ClimateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2376,7 +2376,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ClimateBinaryOverlay ClimateFactory(
+        public static IClimateGetter ClimateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2403,7 +2403,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.WeatherTypes = BinaryOverlayList.FactoryByStartIndex<WeatherTypeBinaryOverlay>(
+                    this.WeatherTypes = BinaryOverlayList.FactoryByStartIndex<IWeatherTypeGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,

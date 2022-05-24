@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static WeaponBinaryOverlay WeaponFactory(
+        public static IWeaponGetter WeaponFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static WeaponBinaryOverlay WeaponFactory(
+        public static IWeaponGetter WeaponFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

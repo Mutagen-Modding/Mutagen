@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static AnimationSoundTagSetBinaryOverlay AnimationSoundTagSetFactory(
+        public static IAnimationSoundTagSetGetter AnimationSoundTagSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static AnimationSoundTagSetBinaryOverlay AnimationSoundTagSetFactory(
+        public static IAnimationSoundTagSetGetter AnimationSoundTagSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

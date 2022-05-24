@@ -4814,7 +4814,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static EffectShaderBinaryOverlay EffectShaderFactory(
+        public static IEffectShaderGetter EffectShaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4841,7 +4841,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static EffectShaderBinaryOverlay EffectShaderFactory(
+        public static IEffectShaderGetter EffectShaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

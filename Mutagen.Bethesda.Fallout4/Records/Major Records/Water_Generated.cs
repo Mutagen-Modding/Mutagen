@@ -4912,7 +4912,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WaterBinaryOverlay WaterFactory(
+        public static IWaterGetter WaterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4939,7 +4939,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WaterBinaryOverlay WaterFactory(
+        public static IWaterGetter WaterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

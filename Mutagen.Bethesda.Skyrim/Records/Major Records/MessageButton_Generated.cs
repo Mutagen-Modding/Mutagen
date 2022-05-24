@@ -1293,7 +1293,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _TextLocation;
         public ITranslatedStringGetter? Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MessageButtonBinaryOverlay MessageButtonFactory(
+        public static IMessageButtonGetter MessageButtonFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1328,7 +1328,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MessageButtonBinaryOverlay MessageButtonFactory(
+        public static IMessageButtonGetter MessageButtonFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1360,7 +1360,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CTDA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MessageButton_FieldIndex.Conditions) return ParseResult.Stop;
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

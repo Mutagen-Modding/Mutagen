@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static DialogSetParentQuestStageBinaryOverlay DialogSetParentQuestStageFactory(
+        public static IDialogSetParentQuestStageGetter DialogSetParentQuestStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static DialogSetParentQuestStageBinaryOverlay DialogSetParentQuestStageFactory(
+        public static IDialogSetParentQuestStageGetter DialogSetParentQuestStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

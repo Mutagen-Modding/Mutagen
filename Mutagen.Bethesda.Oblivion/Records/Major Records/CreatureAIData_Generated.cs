@@ -1408,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static CreatureAIDataBinaryOverlay CreatureAIDataFactory(
+        public static ICreatureAIDataGetter CreatureAIDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CreatureAIDataBinaryOverlay CreatureAIDataFactory(
+        public static ICreatureAIDataGetter CreatureAIDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

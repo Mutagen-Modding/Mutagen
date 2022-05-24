@@ -1493,7 +1493,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static FootstepBinaryOverlay FootstepFactory(
+        public static IFootstepGetter FootstepFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static FootstepBinaryOverlay FootstepFactory(
+        public static IFootstepGetter FootstepFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

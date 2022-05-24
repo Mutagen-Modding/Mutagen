@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static OwnershipBinaryOverlay OwnershipFactory(
+        public static IOwnershipGetter OwnershipFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static OwnershipBinaryOverlay OwnershipFactory(
+        public static IOwnershipGetter OwnershipFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

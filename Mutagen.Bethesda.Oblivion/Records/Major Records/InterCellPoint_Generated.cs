@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static InterCellPointBinaryOverlay InterCellPointFactory(
+        public static IInterCellPointGetter InterCellPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static InterCellPointBinaryOverlay InterCellPointFactory(
+        public static IInterCellPointGetter InterCellPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

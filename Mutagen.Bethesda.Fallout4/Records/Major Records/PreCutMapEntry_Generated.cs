@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PreCutMapEntryBinaryOverlay PreCutMapEntryFactory(
+        public static IPreCutMapEntryGetter PreCutMapEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PreCutMapEntryBinaryOverlay PreCutMapEntryFactory(
+        public static IPreCutMapEntryGetter PreCutMapEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1488,7 +1488,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _Keyword_IsSet => _QSTALocation.HasValue && !QSTADataTypeState.HasFlag(QuestObjectiveTarget.QSTADataType.Break0);
         public IFormLinkGetter<IKeywordGetter> Keyword => _Keyword_IsSet ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_KeywordLocation, 0x4)))) : FormLink<IKeywordGetter>.Null;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static QuestObjectiveTargetBinaryOverlay QuestObjectiveTargetFactory(
+        public static IQuestObjectiveTargetGetter QuestObjectiveTargetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static QuestObjectiveTargetBinaryOverlay QuestObjectiveTargetFactory(
+        public static IQuestObjectiveTargetGetter QuestObjectiveTargetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

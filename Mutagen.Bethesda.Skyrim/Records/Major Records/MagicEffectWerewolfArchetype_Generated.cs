@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MagicEffectWerewolfArchetypeBinaryOverlay MagicEffectWerewolfArchetypeFactory(
+        public static IMagicEffectWerewolfArchetypeGetter MagicEffectWerewolfArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MagicEffectWerewolfArchetypeBinaryOverlay MagicEffectWerewolfArchetypeFactory(
+        public static IMagicEffectWerewolfArchetypeGetter MagicEffectWerewolfArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

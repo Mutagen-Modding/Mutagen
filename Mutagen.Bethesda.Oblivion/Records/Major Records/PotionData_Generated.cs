@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static PotionDataBinaryOverlay PotionDataFactory(
+        public static IPotionDataGetter PotionDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PotionDataBinaryOverlay PotionDataFactory(
+        public static IPotionDataGetter PotionDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

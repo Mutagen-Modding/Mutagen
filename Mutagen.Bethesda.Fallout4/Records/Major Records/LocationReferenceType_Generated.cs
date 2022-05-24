@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LocationReferenceTypeBinaryOverlay LocationReferenceTypeFactory(
+        public static ILocationReferenceTypeGetter LocationReferenceTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LocationReferenceTypeBinaryOverlay LocationReferenceTypeFactory(
+        public static ILocationReferenceTypeGetter LocationReferenceTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

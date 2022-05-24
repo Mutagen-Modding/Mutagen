@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static VirtualMachineAdapterBinaryOverlay VirtualMachineAdapterFactory(
+        public static IVirtualMachineAdapterGetter VirtualMachineAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static VirtualMachineAdapterBinaryOverlay VirtualMachineAdapterFactory(
+        public static IVirtualMachineAdapterGetter VirtualMachineAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

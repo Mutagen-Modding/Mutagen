@@ -2342,442 +2342,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                     sb.AppendLine();
                 }
 
-                using (var args = sb.Function(
-                           $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
-                {
-                    if (obj.GetObjectType() == ObjectType.Mod)
-                    {
-                        args.Add($"{nameof(IMutagenReadStream)} stream");
-                        args.Add("ModKey modKey");
-                        if (objData.GameReleaseOptions != null)
-                        {
-                            args.Add($"{ModModule.ReleaseEnumName(obj)} release");
-                        }
-                        args.Add("bool shouldDispose");
-                    }
-                    else
-                    {
-                        args.Add($"{nameof(OverlayStream)} stream");
-                        args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
-                        if (obj.IsVariableLengthStruct())
-                        {
-                            args.Add($"int finalPos");
-                        }
-                        args.Add($"{nameof(TypedParseParams)}? parseParams = null");
-                    }
-                }
-                using (sb.CurlyBrace())
-                {
-                    if (await obj.IsMajorRecord())
-                    {
-                        if (objData.CustomBinaryEnd != CustomEnd.Off)
-                        {
-                            sb.AppendLine("var origStream = stream;");
-                        }
-                        sb.AppendLine($"stream = {nameof(Decompression)}.{nameof(Decompression.DecompressStream)}(stream);");
-                    }
-                    if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
-                    {
-                        sb.AppendLine($"var nextRecord = parseParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "SubrecordHeader" : "MajorRecordHeader")}().RecordType);");
-                        sb.AppendLine($"switch (nextRecord.TypeInt)");
-                        using (sb.CurlyBrace())
-                        {
-                            foreach (var item in customLogicTriggers)
-                            {
-                                sb.AppendLine($"case {item.TypeInt}: // {item.Type}");
-                            }
-                            using (sb.IncreaseDepth())
-                            {
-                                using (var args = sb.Call(
-                                           "return CustomRecordTypeTrigger"))
-                                {
-                                    args.AddPassArg($"stream");
-                                    args.Add("recordType: nextRecord");
-                                    args.AddPassArg("package");
-                                    args.AddPassArg("parseParams");
-                                }
-                            }
-                            sb.AppendLine("default:");
-                            using (sb.IncreaseDepth())
-                            {
-                                sb.AppendLine("break;");
-                            }
-                        }
-                    }
-                    using (var args = sb.Call(
-                               $"var ret = new {BinaryOverlayClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
-                    {
-                        if (obj.IsTypelessStruct())
-                        {
-                            if (anyHasRecordTypes
-                                || totalPassedLength == null
-                                || totalPassedLength.Value == 0)
-                            {
-                                args.Add($"bytes: stream.RemainingMemory");
-                            }
-                            else if (obj.IsVariableLengthStruct())
-                            {
-                                args.Add($"bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position)");
-                            }
-                            else
-                            {
-                                args.Add($"bytes: stream.RemainingMemory.Slice(0, 0x{totalPassedLength:X})");
-                            }
-                        }
-                        else
-                        {
-                            switch (obj.GetObjectType())
-                            {
-                                case ObjectType.Record:
-                                    args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractRecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})");
-                                    break;
-                                case ObjectType.Group:
-                                    args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractGroupMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})");
-                                    break;
-                                case ObjectType.Subrecord:
-                                    args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}, parseParams)");
-                                    break;
-                                case ObjectType.Mod:
-                                    args.AddPassArg($"stream");
-                                    if (objData.GameReleaseOptions != null)
-                                    {
-                                        args.AddPassArg($"release");
-                                    }
-                                    break;
-                                default:
-                                    throw new NotImplementedException();
-                            }
-                        }
-                        if (obj.GetObjectType() == ObjectType.Mod)
-                        {
-                            args.AddPassArg("modKey");
-                            args.AddPassArg("shouldDispose");
-                        }
-                        else
-                        {
-                            args.AddPassArg("package");
-                        }
-                    }
-                    if (obj.IsTypelessStruct())
-                    {
-                        sb.AppendLine($"int offset = stream.Position;");
-                    }
-                    else
-                    {
-                        switch (obj.GetObjectType())
-                        {
-                            case ObjectType.Subrecord:
-                                sb.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));");
-                                sb.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
-                                break;
-                            case ObjectType.Record:
-                                sb.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));");
-                                sb.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
-                                break;
-                            case ObjectType.Group:
-                                sb.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetGroupHeader().TotalLength));");
-                                sb.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
-                                break;
-                            case ObjectType.Mod:
-                                break;
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
-
-                    if (await obj.IsMajorRecord())
-                    {
-                        sb.AppendLine("ret._package.FormVersion = ret;");
-                    }
-
-                    // Parse struct section ending positions 
-                    string? structPassedAccessor = null;
-                    int? structPassedLen = 0;
-                    await foreach (var lengths in IteratePassedLengths(
-                                       obj,
-                                       forOverlay: true,
-                                       includeBaseClass: true,
-                                       passedLenPrefix: "ret."))
-                    {
-                        if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
-                        var data = lengths.Field.GetFieldData();
-                        if (lengths.Field is CustomLogic) continue;
-                        switch (data.BinaryOverlayFallback)
-                        {
-                            case BinaryGenerationType.Normal:
-                            case BinaryGenerationType.Custom:
-                                break;
-                            default:
-                                continue;
-                        }
-                        if (!data.HasTrigger)
-                        {
-                            structPassedLen = lengths.CurLength;
-                            structPassedAccessor = lengths.CurAccessor;
-                        }
-                    }
-
-                    // Parse ending positions  
-                    await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
-                    {
-                        if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
-                        var data = lengths.Field.GetFieldData();
-                        switch (data.BinaryOverlayFallback)
-                        {
-                            case BinaryGenerationType.Normal:
-                            case BinaryGenerationType.Custom:
-                                break;
-                            default:
-                                continue;
-                        }
-                        if (data.HasTrigger) continue;
-                        var amount = await typeGen.GetPassedAmount(obj, lengths.Field);
-                        if (amount != null) continue;
-                        if (lengths.Field is CustomLogic) continue;
-                        switch (data.BinaryOverlayFallback)
-                        {
-                            case BinaryGenerationType.Custom:
-                                sb.AppendLine($"ret.Custom{lengths.Field.Name}EndPos();");
-                                break;
-                            case BinaryGenerationType.NoGeneration:
-                                break;
-                            case BinaryGenerationType.Normal:
-                                await typeGen.GenerateWrapperUnknownLengthParse(
-                                    sb,
-                                    obj,
-                                    lengths.Field,
-                                    lengths.PassedLength,
-                                    lengths.PassedAccessor);
-                                break;
-                        }
-                    }
-
-                    if (anyHasRecordTypes)
-                    {
-                        if (obj.GetObjectType() != ObjectType.Mod
-                            && !obj.IsTypelessStruct())
-                        {
-                            if (structPassedAccessor != null)
-                            {
-                                switch (obj.GetObjectType())
-                                {
-                                    case ObjectType.Subrecord:
-                                        sb.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
-                                        break;
-                                    case ObjectType.Record:
-                                        sb.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
-                                        break;
-                                    case ObjectType.Group:
-                                        sb.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
-                                        break;
-                                    case ObjectType.Mod:
-                                        break;
-                                    default:
-                                        throw new NotImplementedException();
-                                }
-                            }
-                            using (var args = sb.Call(
-                                       $"ret.CustomFactoryEnd"))
-                            {
-                                args.AddPassArg($"stream");
-                                args.AddPassArg($"finalPos");
-                                args.AddPassArg($"offset");
-                            }
-                        }
-
-                        string call;
-                        switch (obj.GetObjectType())
-                        {
-                            case ObjectType.Subrecord:
-                            case ObjectType.Record:
-                                if (obj.IsTypelessStruct())
-                                {
-                                    call = $"ret.{nameof(PluginBinaryOverlay.FillTypelessSubrecordTypes)}";
-                                }
-                                else
-                                {
-                                    call = $"ret.{nameof(PluginBinaryOverlay.FillSubrecordTypes)}";
-                                }
-                                break;
-                            case ObjectType.Group:
-                                var grupLoqui = await obj.GetGroupLoquiType();
-                                if (grupLoqui.TargetObjectGeneration != null && await grupLoqui.TargetObjectGeneration.IsMajorRecord())
-                                {
-                                    call = $"ret.{nameof(PluginBinaryOverlay.FillMajorRecords)}";
-                                }
-                                else
-                                {
-                                    call = $"ret.{nameof(PluginBinaryOverlay.FillGroupRecordsForWrapper)}";
-                                }
-                                break;
-                            case ObjectType.Mod:
-                                call = $"{nameof(PluginBinaryOverlay)}.{nameof(PluginBinaryOverlay.FillModTypes)}";
-                                break;
-                            default:
-                                throw new NotImplementedException();
-                        }
-                        using (var args = sb.Call(
-                                   $"{call}"))
-                        {
-                            if (await obj.IsMajorRecord())
-                            {
-                                args.Add("majorReference: ret");
-                            }
-                            args.Add($"stream: stream");
-                            if (obj.GetObjectType() != ObjectType.Mod)
-                            {
-                                if (obj.IsTypelessStruct())
-                                {
-                                    args.Add($"finalPos: stream.Length");
-                                }
-                                else
-                                {
-                                    args.AddPassArg($"finalPos");
-                                }
-                                args.Add($"offset: offset");
-                                args.AddPassArg($"parseParams");
-                            }
-                            else
-                            {
-                                args.Add("package: ret._package");
-                            }
-                            args.Add($"fill: ret.FillRecordType");
-                        }
-                    }
-                    else
-                    {
-
-                        if (obj.IsTypelessStruct())
-                        {
-                            var breaks = obj.Fields.WhereCastable<TypeGeneration, BreakType>().ToList();
-                            if (breaks.Count > 0)
-                            {
-                                int breakIndex = 0;
-                                await foreach (var lengths in IteratePassedLengths(obj,
-                                                   forOverlay: true,
-                                                   includeBaseClass: true,
-                                                   passedLenPrefix: "ret."))
-                                {
-                                    if (lengths.Field is BreakType breakType)
-                                    {
-                                        sb.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
-                                        using (sb.CurlyBrace())
-                                        {
-                                            sb.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
-                                        }
-                                    }
-                                }
-                                // Not advancing stream position, but only because breaks only occur in situations 
-                                // that stream position doesn't matter 
-                            }
-                            else if (structPassedAccessor != null)
-                            {
-                                sb.AppendLine($"stream.Position += {structPassedAccessor};");
-                            }
-                        }
-                        else
-                        {
-                            string headerAddition = null;
-                            switch (obj.GetObjectType())
-                            {
-                                case ObjectType.Record:
-                                    headerAddition = $" + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.HeaderLength";
-                                    break;
-                                case ObjectType.Group:
-                                    headerAddition = $" + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.HeaderLength";
-                                    break;
-                                case ObjectType.Subrecord:
-                                    headerAddition = $" + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength";
-                                    break;
-                                case ObjectType.Mod:
-                                    break;
-                                default:
-                                    throw new NotImplementedException();
-                            }
-                            var breaks = obj.Fields.WhereCastable<TypeGeneration, BreakType>().ToList();
-                            if (breaks.Count > 0)
-                            {
-                                int breakIndex = 0;
-                                await foreach (var lengths in IteratePassedLengths(obj,
-                                                   forOverlay: true,
-                                                   includeBaseClass: true,
-                                                   passedLenPrefix: "ret."))
-                                {
-                                    if (lengths.Field is BreakType breakType)
-                                    {
-                                        sb.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
-                                        using (sb.CurlyBrace())
-                                        {
-                                            sb.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
-                                        }
-                                    }
-                                }
-                                // Not advancing stream position, but only because breaks only occur in situations 
-                                // that stream position doesn't matter 
-                            }
-                            else if (totalPassedLength != null)
-                            {
-                                sb.AppendLine($"stream.Position += 0x{totalPassedLength.Value:X}{headerAddition};");
-                            }
-                        }
-                        using (var args = sb.Call(
-                                   $"ret.CustomFactoryEnd"))
-                        {
-                            args.AddPassArg($"stream");
-                            args.Add($"finalPos: stream.Length");
-                            args.AddPassArg($"offset");
-                        }
-                    }
-
-                    // Parse ending positions  
-                    await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
-                    {
-                        if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
-                        var data = lengths.Field.GetFieldData();
-                        switch (data.BinaryOverlayFallback)
-                        {
-                            case BinaryGenerationType.Normal:
-                            case BinaryGenerationType.Custom:
-                                break;
-                            default:
-                                continue;
-                        }
-                        if (lengths.Field is DataType)
-                        {
-                            await typeGen.GenerateWrapperUnknownLengthParse(
-                                sb,
-                                obj,
-                                lengths.Field,
-                                lengths.PassedLength,
-                                lengths.PassedAccessor);
-                        }
-                    }
-
-                    if (objData.CustomBinaryEnd != CustomEnd.Off)
-                    {
-                        using (var args = sb.Call(
-                                   "ret.CustomEnd"))
-                        {
-                            if (obj.GetObjectType() == ObjectType.Record)
-                            {
-                                args.Add("stream: origStream");
-                            }
-                            else
-                            {
-                                args.AddPassArg("stream");
-                            }
-                            args.Add("finalPos: stream.Length");
-                            args.AddPassArg("offset");
-                        }
-                    }
-                    sb.AppendLine("return ret;");
-                }
-                sb.AppendLine();
+                await GenerateFactoryMethod(obj, sb, anyHasRecordTypes, totalPassedLength);
 
                 if (obj.GetObjectType() != ObjectType.Mod)
                 {
                     using (var args = sb.Function(
-                               $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
+                               $"public static {obj.Interface(getter: true)} {obj.Name}Factory"))
                     {
                         args.Add($"ReadOnlyMemorySlice<byte> slice");
                         args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
@@ -2823,6 +2393,444 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
             }
 
+        }
+        sb.AppendLine();
+    }
+
+    private async Task GenerateFactoryMethod(ObjectGeneration obj, StructuredStringBuilder sb, bool anyHasRecordTypes, int? totalPassedLength)
+    {
+        var objData = obj.GetObjectData();
+        if (!objData.BinaryOverlayGenerateCtor) return;
+        var retValue = obj.GetObjectType() == ObjectType.Mod ? this.BinaryOverlayClass(obj) : obj.Interface(getter: true, internalInterface: true);
+        using (var args = sb.Function(
+                   $"public static {retValue} {obj.Name}Factory"))
+        {
+            if (obj.GetObjectType() == ObjectType.Mod)
+            {
+                args.Add($"{nameof(IMutagenReadStream)} stream");
+                args.Add("ModKey modKey");
+                if (objData.GameReleaseOptions != null)
+                {
+                    args.Add($"{ModModule.ReleaseEnumName(obj)} release");
+                }
+                args.Add("bool shouldDispose");
+            }
+            else
+            {
+                args.Add($"{nameof(OverlayStream)} stream");
+                args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+                if (obj.IsVariableLengthStruct())
+                {
+                    args.Add($"int finalPos");
+                }
+                args.Add($"{nameof(TypedParseParams)}? parseParams = null");
+            }
+        }
+        using (sb.CurlyBrace())
+        {
+            if (await obj.IsMajorRecord())
+            {
+                if (objData.CustomBinaryEnd != CustomEnd.Off)
+                {
+                    sb.AppendLine("var origStream = stream;");
+                }
+                sb.AppendLine($"stream = {nameof(Decompression)}.{nameof(Decompression.DecompressStream)}(stream);");
+            }
+            if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
+            {
+                sb.AppendLine($"var nextRecord = parseParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "SubrecordHeader" : "MajorRecordHeader")}().RecordType);");
+                sb.AppendLine($"switch (nextRecord.TypeInt)");
+                using (sb.CurlyBrace())
+                {
+                    foreach (var item in customLogicTriggers)
+                    {
+                        sb.AppendLine($"case {item.TypeInt}: // {item.Type}");
+                    }
+                    using (sb.IncreaseDepth())
+                    {
+                        using (var args = sb.Call(
+                                   "return CustomRecordTypeTrigger"))
+                        {
+                            args.AddPassArg($"stream");
+                            args.Add("recordType: nextRecord");
+                            args.AddPassArg("package");
+                            args.AddPassArg("parseParams");
+                        }
+                    }
+                    sb.AppendLine("default:");
+                    using (sb.IncreaseDepth())
+                    {
+                        sb.AppendLine("break;");
+                    }
+                }
+            }
+            using (var args = sb.Call(
+                       $"var ret = new {BinaryOverlayClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
+            {
+                if (obj.IsTypelessStruct())
+                {
+                    if (anyHasRecordTypes
+                        || totalPassedLength == null
+                        || totalPassedLength.Value == 0)
+                    {
+                        args.Add($"bytes: stream.RemainingMemory");
+                    }
+                    else if (obj.IsVariableLengthStruct())
+                    {
+                        args.Add($"bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position)");
+                    }
+                    else
+                    {
+                        args.Add($"bytes: stream.RemainingMemory.Slice(0, 0x{totalPassedLength:X})");
+                    }
+                }
+                else
+                {
+                    switch (obj.GetObjectType())
+                    {
+                        case ObjectType.Record:
+                            args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractRecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})");
+                            break;
+                        case ObjectType.Group:
+                            args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractGroupMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})");
+                            break;
+                        case ObjectType.Subrecord:
+                            args.Add($"bytes: {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(stream.RemainingMemory, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}, parseParams)");
+                            break;
+                        case ObjectType.Mod:
+                            args.AddPassArg($"stream");
+                            if (objData.GameReleaseOptions != null)
+                            {
+                                args.AddPassArg($"release");
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    args.AddPassArg("modKey");
+                    args.AddPassArg("shouldDispose");
+                }
+                else
+                {
+                    args.AddPassArg("package");
+                }
+            }
+            if (obj.IsTypelessStruct())
+            {
+                sb.AppendLine($"int offset = stream.Position;");
+            }
+            else
+            {
+                switch (obj.GetObjectType())
+                {
+                    case ObjectType.Subrecord:
+                        sb.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));");
+                        sb.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
+                        break;
+                    case ObjectType.Record:
+                        sb.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));");
+                        sb.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
+                        break;
+                    case ObjectType.Group:
+                        sb.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetGroupHeader().TotalLength));");
+                        sb.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
+                        break;
+                    case ObjectType.Mod:
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            if (await obj.IsMajorRecord())
+            {
+                sb.AppendLine("ret._package.FormVersion = ret;");
+            }
+
+            // Parse struct section ending positions 
+            string? structPassedAccessor = null;
+            int? structPassedLen = 0;
+            await foreach (var lengths in IteratePassedLengths(
+                               obj,
+                               forOverlay: true,
+                               includeBaseClass: true,
+                               passedLenPrefix: "ret."))
+            {
+                if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+                var data = lengths.Field.GetFieldData();
+                if (lengths.Field is CustomLogic) continue;
+                switch (data.BinaryOverlayFallback)
+                {
+                    case BinaryGenerationType.Normal:
+                    case BinaryGenerationType.Custom:
+                        break;
+                    default:
+                        continue;
+                }
+                if (!data.HasTrigger)
+                {
+                    structPassedLen = lengths.CurLength;
+                    structPassedAccessor = lengths.CurAccessor;
+                }
+            }
+
+            // Parse ending positions  
+            await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
+            {
+                if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+                var data = lengths.Field.GetFieldData();
+                switch (data.BinaryOverlayFallback)
+                {
+                    case BinaryGenerationType.Normal:
+                    case BinaryGenerationType.Custom:
+                        break;
+                    default:
+                        continue;
+                }
+                if (data.HasTrigger) continue;
+                var amount = await typeGen.GetPassedAmount(obj, lengths.Field);
+                if (amount != null) continue;
+                if (lengths.Field is CustomLogic) continue;
+                switch (data.BinaryOverlayFallback)
+                {
+                    case BinaryGenerationType.Custom:
+                        sb.AppendLine($"ret.Custom{lengths.Field.Name}EndPos();");
+                        break;
+                    case BinaryGenerationType.NoGeneration:
+                        break;
+                    case BinaryGenerationType.Normal:
+                        await typeGen.GenerateWrapperUnknownLengthParse(
+                            sb,
+                            obj,
+                            lengths.Field,
+                            lengths.PassedLength,
+                            lengths.PassedAccessor);
+                        break;
+                }
+            }
+
+            if (anyHasRecordTypes)
+            {
+                if (obj.GetObjectType() != ObjectType.Mod
+                    && !obj.IsTypelessStruct())
+                {
+                    if (structPassedAccessor != null)
+                    {
+                        switch (obj.GetObjectType())
+                        {
+                            case ObjectType.Subrecord:
+                                sb.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
+                                break;
+                            case ObjectType.Record:
+                                sb.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
+                                break;
+                            case ObjectType.Group:
+                                sb.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
+                                break;
+                            case ObjectType.Mod:
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                    using (var args = sb.Call(
+                               $"ret.CustomFactoryEnd"))
+                    {
+                        args.AddPassArg($"stream");
+                        args.AddPassArg($"finalPos");
+                        args.AddPassArg($"offset");
+                    }
+                }
+
+                string call;
+                switch (obj.GetObjectType())
+                {
+                    case ObjectType.Subrecord:
+                    case ObjectType.Record:
+                        if (obj.IsTypelessStruct())
+                        {
+                            call = $"ret.{nameof(PluginBinaryOverlay.FillTypelessSubrecordTypes)}";
+                        }
+                        else
+                        {
+                            call = $"ret.{nameof(PluginBinaryOverlay.FillSubrecordTypes)}";
+                        }
+                        break;
+                    case ObjectType.Group:
+                        var grupLoqui = await obj.GetGroupLoquiType();
+                        if (grupLoqui.TargetObjectGeneration != null && await grupLoqui.TargetObjectGeneration.IsMajorRecord())
+                        {
+                            call = $"ret.{nameof(PluginBinaryOverlay.FillMajorRecords)}";
+                        }
+                        else
+                        {
+                            call = $"ret.{nameof(PluginBinaryOverlay.FillGroupRecordsForWrapper)}";
+                        }
+                        break;
+                    case ObjectType.Mod:
+                        call = $"{nameof(PluginBinaryOverlay)}.{nameof(PluginBinaryOverlay.FillModTypes)}";
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+                using (var args = sb.Call(
+                           $"{call}"))
+                {
+                    if (await obj.IsMajorRecord())
+                    {
+                        args.Add("majorReference: ret");
+                    }
+                    args.Add($"stream: stream");
+                    if (obj.GetObjectType() != ObjectType.Mod)
+                    {
+                        if (obj.IsTypelessStruct())
+                        {
+                            args.Add($"finalPos: stream.Length");
+                        }
+                        else
+                        {
+                            args.AddPassArg($"finalPos");
+                        }
+                        args.Add($"offset: offset");
+                        args.AddPassArg($"parseParams");
+                    }
+                    else
+                    {
+                        args.Add("package: ret._package");
+                    }
+                    args.Add($"fill: ret.FillRecordType");
+                }
+            }
+            else
+            {
+
+                if (obj.IsTypelessStruct())
+                {
+                    var breaks = obj.Fields.WhereCastable<TypeGeneration, BreakType>().ToList();
+                    if (breaks.Count > 0)
+                    {
+                        int breakIndex = 0;
+                        await foreach (var lengths in IteratePassedLengths(obj,
+                                           forOverlay: true,
+                                           includeBaseClass: true,
+                                           passedLenPrefix: "ret."))
+                        {
+                            if (lengths.Field is BreakType breakType)
+                            {
+                                sb.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
+                                using (sb.CurlyBrace())
+                                {
+                                    sb.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
+                                }
+                            }
+                        }
+                        // Not advancing stream position, but only because breaks only occur in situations 
+                        // that stream position doesn't matter 
+                    }
+                    else if (structPassedAccessor != null)
+                    {
+                        sb.AppendLine($"stream.Position += {structPassedAccessor};");
+                    }
+                }
+                else
+                {
+                    string headerAddition = null;
+                    switch (obj.GetObjectType())
+                    {
+                        case ObjectType.Record:
+                            headerAddition = $" + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.HeaderLength";
+                            break;
+                        case ObjectType.Group:
+                            headerAddition = $" + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.HeaderLength";
+                            break;
+                        case ObjectType.Subrecord:
+                            headerAddition = $" + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength";
+                            break;
+                        case ObjectType.Mod:
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                    var breaks = obj.Fields.WhereCastable<TypeGeneration, BreakType>().ToList();
+                    if (breaks.Count > 0)
+                    {
+                        int breakIndex = 0;
+                        await foreach (var lengths in IteratePassedLengths(obj,
+                                           forOverlay: true,
+                                           includeBaseClass: true,
+                                           passedLenPrefix: "ret."))
+                        {
+                            if (lengths.Field is BreakType breakType)
+                            {
+                                sb.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
+                                using (sb.CurlyBrace())
+                                {
+                                    sb.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
+                                }
+                            }
+                        }
+                        // Not advancing stream position, but only because breaks only occur in situations 
+                        // that stream position doesn't matter 
+                    }
+                    else if (totalPassedLength != null)
+                    {
+                        sb.AppendLine($"stream.Position += 0x{totalPassedLength.Value:X}{headerAddition};");
+                    }
+                }
+                using (var args = sb.Call(
+                           $"ret.CustomFactoryEnd"))
+                {
+                    args.AddPassArg($"stream");
+                    args.Add($"finalPos: stream.Length");
+                    args.AddPassArg($"offset");
+                }
+            }
+
+            // Parse ending positions  
+            await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
+            {
+                if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+                var data = lengths.Field.GetFieldData();
+                switch (data.BinaryOverlayFallback)
+                {
+                    case BinaryGenerationType.Normal:
+                    case BinaryGenerationType.Custom:
+                        break;
+                    default:
+                        continue;
+                }
+                if (lengths.Field is DataType)
+                {
+                    await typeGen.GenerateWrapperUnknownLengthParse(
+                        sb,
+                        obj,
+                        lengths.Field,
+                        lengths.PassedLength,
+                        lengths.PassedAccessor);
+                }
+            }
+
+            if (objData.CustomBinaryEnd != CustomEnd.Off)
+            {
+                using (var args = sb.Call(
+                           "ret.CustomEnd"))
+                {
+                    if (obj.GetObjectType() == ObjectType.Record)
+                    {
+                        args.Add("stream: origStream");
+                    }
+                    else
+                    {
+                        args.AddPassArg("stream");
+                    }
+                    args.Add("finalPos: stream.Length");
+                    args.AddPassArg("offset");
+                }
+            }
+            sb.AppendLine("return ret;");
         }
         sb.AppendLine();
     }

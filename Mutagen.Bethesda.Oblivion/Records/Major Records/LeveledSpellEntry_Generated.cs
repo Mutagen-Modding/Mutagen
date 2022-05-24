@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LeveledSpellEntryBinaryOverlay LeveledSpellEntryFactory(
+        public static ILeveledSpellEntryGetter LeveledSpellEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LeveledSpellEntryBinaryOverlay LeveledSpellEntryFactory(
+        public static ILeveledSpellEntryGetter LeveledSpellEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

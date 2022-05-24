@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WeatherSoundBinaryOverlay WeatherSoundFactory(
+        public static IWeatherSoundGetter WeatherSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WeatherSoundBinaryOverlay WeatherSoundFactory(
+        public static IWeatherSoundGetter WeatherSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

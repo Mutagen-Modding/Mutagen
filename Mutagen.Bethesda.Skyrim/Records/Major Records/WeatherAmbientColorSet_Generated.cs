@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WeatherAmbientColorSetBinaryOverlay WeatherAmbientColorSetFactory(
+        public static IWeatherAmbientColorSetGetter WeatherAmbientColorSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1357,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WeatherAmbientColorSetBinaryOverlay WeatherAmbientColorSetFactory(
+        public static IWeatherAmbientColorSetGetter WeatherAmbientColorSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

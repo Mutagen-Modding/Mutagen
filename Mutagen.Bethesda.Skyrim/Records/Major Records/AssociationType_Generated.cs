@@ -1613,7 +1613,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static AssociationTypeBinaryOverlay AssociationTypeFactory(
+        public static IAssociationTypeGetter AssociationTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1640,7 +1640,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static AssociationTypeBinaryOverlay AssociationTypeFactory(
+        public static IAssociationTypeGetter AssociationTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

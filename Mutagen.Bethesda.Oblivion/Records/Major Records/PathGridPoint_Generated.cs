@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static PathGridPointBinaryOverlay PathGridPointFactory(
+        public static IPathGridPointGetter PathGridPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PathGridPointBinaryOverlay PathGridPointFactory(
+        public static IPathGridPointGetter PathGridPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

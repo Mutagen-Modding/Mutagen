@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static RegionGrassBinaryOverlay RegionGrassFactory(
+        public static IRegionGrassGetter RegionGrassFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static RegionGrassBinaryOverlay RegionGrassFactory(
+        public static IRegionGrassGetter RegionGrassFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

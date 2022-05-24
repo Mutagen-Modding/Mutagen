@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static SceneActionStartSceneBinaryOverlay SceneActionStartSceneFactory(
+        public static ISceneActionStartSceneGetter SceneActionStartSceneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static SceneActionStartSceneBinaryOverlay SceneActionStartSceneFactory(
+        public static ISceneActionStartSceneGetter SceneActionStartSceneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

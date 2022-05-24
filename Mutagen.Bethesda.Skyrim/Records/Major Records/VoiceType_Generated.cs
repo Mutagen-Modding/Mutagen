@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static VoiceTypeBinaryOverlay VoiceTypeFactory(
+        public static IVoiceTypeGetter VoiceTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static VoiceTypeBinaryOverlay VoiceTypeFactory(
+        public static IVoiceTypeGetter VoiceTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

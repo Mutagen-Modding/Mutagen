@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _PresetDefaultLocation;
         public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
-        public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = Array.Empty<TintPresetBinaryOverlay>();
+        public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = Array.Empty<ITintPresetGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1533,7 +1533,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static TintAssetsBinaryOverlay TintAssetsFactory(
+        public static ITintAssetsGetter TintAssetsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static TintAssetsBinaryOverlay TintAssetsFactory(
+        public static ITintAssetsGetter TintAssetsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1603,7 +1603,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
-                    this.Presets = this.ParseRepeatedTypelessSubrecord<TintPresetBinaryOverlay>(
+                    this.Presets = this.ParseRepeatedTypelessSubrecord<ITintPresetGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: TintPreset_Registration.TriggerSpecs,

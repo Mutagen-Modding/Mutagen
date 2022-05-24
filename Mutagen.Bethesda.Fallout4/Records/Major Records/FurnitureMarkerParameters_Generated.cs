@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static FurnitureMarkerParametersBinaryOverlay FurnitureMarkerParametersFactory(
+        public static IFurnitureMarkerParametersGetter FurnitureMarkerParametersFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int finalPos,
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static FurnitureMarkerParametersBinaryOverlay FurnitureMarkerParametersFactory(
+        public static IFurnitureMarkerParametersGetter FurnitureMarkerParametersFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

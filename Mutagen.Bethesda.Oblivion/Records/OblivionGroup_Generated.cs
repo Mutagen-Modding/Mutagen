@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion
             return new OblivionGroupWrapper<T>(new GroupMergeGetter<IOblivionGroupGetter<T>, T>(subGroups));
         }
 
-        public static OblivionGroupBinaryOverlay<T> OblivionGroupFactory(
+        public static IOblivionGroupGetter<T> OblivionGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static OblivionGroupBinaryOverlay<T> OblivionGroupFactory(
+        public static IOblivionGroupGetter<T> OblivionGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

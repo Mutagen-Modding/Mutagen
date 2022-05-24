@@ -2033,7 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(ICameraPath);
 
 
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = Array.Empty<IFormLinkGetter<ICameraPathGetter>>();
         #region Zoom
         partial void ZoomCustomParse(
@@ -2060,7 +2060,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static CameraPathBinaryOverlay CameraPathFactory(
+        public static ICameraPathGetter CameraPathFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2087,7 +2087,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static CameraPathBinaryOverlay CameraPathFactory(
+        public static ICameraPathGetter CameraPathFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2112,7 +2112,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

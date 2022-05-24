@@ -1792,7 +1792,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _NavMeshVersionLocation;
         public UInt32? NavMeshVersion => _NavMeshVersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NavMeshVersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; private set; } = Array.Empty<NavigationMapInfoBinaryOverlay>();
+        public IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; private set; } = Array.Empty<INavigationMapInfoGetter>();
         #region PreferredPathing
         private RangeInt32? _PreferredPathingLocation;
         public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(new OverlayStream(_data.Slice(_PreferredPathingLocation!.Value.Min), _package), _package) : default;
@@ -1817,7 +1817,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NavigationMeshInfoMapBinaryOverlay NavigationMeshInfoMapFactory(
+        public static INavigationMeshInfoMapGetter NavigationMeshInfoMapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1844,7 +1844,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NavigationMeshInfoMapBinaryOverlay NavigationMeshInfoMapFactory(
+        public static INavigationMeshInfoMapGetter NavigationMeshInfoMapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NVMI:
                 {
-                    this.MapInfos = BinaryOverlayList.FactoryByArray<NavigationMapInfoBinaryOverlay>(
+                    this.MapInfos = BinaryOverlayList.FactoryByArray<INavigationMapInfoGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

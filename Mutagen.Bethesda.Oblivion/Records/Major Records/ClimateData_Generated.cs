@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static ClimateDataBinaryOverlay ClimateDataFactory(
+        public static IClimateDataGetter ClimateDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ClimateDataBinaryOverlay ClimateDataFactory(
+        public static IClimateDataGetter ClimateDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

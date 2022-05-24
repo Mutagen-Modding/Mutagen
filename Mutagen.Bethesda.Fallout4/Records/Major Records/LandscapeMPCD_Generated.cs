@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LandscapeMPCDBinaryOverlay LandscapeMPCDFactory(
+        public static ILandscapeMPCDGetter LandscapeMPCDFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LandscapeMPCDBinaryOverlay LandscapeMPCDFactory(
+        public static ILandscapeMPCDGetter LandscapeMPCDFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

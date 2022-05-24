@@ -2946,7 +2946,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DialogTopicBinaryOverlay DialogTopicFactory(
+        public static IDialogTopicGetter DialogTopicFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2978,7 +2978,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DialogTopicBinaryOverlay DialogTopicFactory(
+        public static IDialogTopicGetter DialogTopicFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

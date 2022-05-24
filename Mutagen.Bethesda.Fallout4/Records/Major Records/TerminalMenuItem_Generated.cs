@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _SubmenuLocation;
         public IFormLinkNullableGetter<ITerminalGetter> Submenu => _SubmenuLocation.HasValue ? new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SubmenuLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalGetter>.Null;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1745,7 +1745,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static TerminalMenuItemBinaryOverlay TerminalMenuItemFactory(
+        public static ITerminalMenuItemGetter TerminalMenuItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1763,7 +1763,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static TerminalMenuItemBinaryOverlay TerminalMenuItemFactory(
+        public static ITerminalMenuItemGetter TerminalMenuItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

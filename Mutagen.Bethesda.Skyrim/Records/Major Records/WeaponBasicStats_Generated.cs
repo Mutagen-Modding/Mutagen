@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WeaponBasicStatsBinaryOverlay WeaponBasicStatsFactory(
+        public static IWeaponBasicStatsGetter WeaponBasicStatsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WeaponBasicStatsBinaryOverlay WeaponBasicStatsFactory(
+        public static IWeaponBasicStatsGetter WeaponBasicStatsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

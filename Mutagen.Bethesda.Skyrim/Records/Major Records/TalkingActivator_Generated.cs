@@ -2556,7 +2556,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static TalkingActivatorBinaryOverlay TalkingActivatorFactory(
+        public static ITalkingActivatorGetter TalkingActivatorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2583,7 +2583,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static TalkingActivatorBinaryOverlay TalkingActivatorFactory(
+        public static ITalkingActivatorGetter TalkingActivatorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

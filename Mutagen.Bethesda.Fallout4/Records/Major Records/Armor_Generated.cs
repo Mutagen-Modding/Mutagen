@@ -4540,7 +4540,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _InstanceNamingLocation;
         public IFormLinkNullableGetter<IInstanceNamingRuleGetter> InstanceNaming => _InstanceNamingLocation.HasValue ? new FormLinkNullable<IInstanceNamingRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InstanceNamingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IInstanceNamingRuleGetter>.Null;
         #endregion
-        public IReadOnlyList<IArmorAddonModelGetter> Armatures { get; private set; } = Array.Empty<ArmorAddonModelBinaryOverlay>();
+        public IReadOnlyList<IArmorAddonModelGetter> Armatures { get; private set; } = Array.Empty<IArmorAddonModelGetter>();
         private RangeInt32? _DATALocation;
         public Armor.DATADataType DATADataTypeState { get; private set; }
         #region Value
@@ -4603,7 +4603,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ArmorBinaryOverlay ArmorFactory(
+        public static IArmorGetter ArmorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4630,7 +4630,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ArmorBinaryOverlay ArmorFactory(
+        public static IArmorGetter ArmorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4766,7 +4766,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.MODL:
                 {
-                    this.Armatures = this.ParseRepeatedTypelessSubrecord<ArmorAddonModelBinaryOverlay>(
+                    this.Armatures = this.ParseRepeatedTypelessSubrecord<IArmorAddonModelGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: ArmorAddonModel_Registration.TriggerSpecs,
@@ -4787,7 +4787,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<ArmorResistanceBinaryOverlay>(
+                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<IArmorResistanceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -4814,7 +4814,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.OBTE:
                 {
-                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<ObjectTemplateBinaryOverlay<Armor.Property>>(
+                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<IObjectTemplateGetter<Armor.Property>>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

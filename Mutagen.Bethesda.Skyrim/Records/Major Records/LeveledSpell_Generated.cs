@@ -1833,7 +1833,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static ILeveledSpellGetter LeveledSpellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1860,7 +1860,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static ILeveledSpellGetter LeveledSpellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.COED:
                 case RecordTypeInts.LLCT:
                 {
-                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<LeveledSpellEntryBinaryOverlay>(
+                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<ILeveledSpellEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 1,

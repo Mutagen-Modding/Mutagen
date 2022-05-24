@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MusicTypeDataBinaryOverlay MusicTypeDataFactory(
+        public static IMusicTypeDataGetter MusicTypeDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MusicTypeDataBinaryOverlay MusicTypeDataFactory(
+        public static IMusicTypeDataGetter MusicTypeDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

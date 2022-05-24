@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static GlobalShortBinaryOverlay GlobalShortFactory(
+        public static IGlobalShortGetter GlobalShortFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static GlobalShortBinaryOverlay GlobalShortFactory(
+        public static IGlobalShortGetter GlobalShortFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

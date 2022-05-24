@@ -2260,7 +2260,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<MasterReferenceBinaryOverlay>();
+        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<IMasterReferenceGetter>();
         public IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms { get; private set; }
         #region INTV
         private int? _INTVLocation;
@@ -2286,7 +2286,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static SkyrimModHeaderBinaryOverlay SkyrimModHeaderFactory(
+        public static ISkyrimModHeaderGetter SkyrimModHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2310,7 +2310,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkyrimModHeaderBinaryOverlay SkyrimModHeaderFactory(
+        public static ISkyrimModHeaderGetter SkyrimModHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2360,7 +2360,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.MAST:
                 {
-                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
+                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<IMasterReferenceGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: MasterReference_Registration.TriggerSpecs,

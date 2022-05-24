@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _DataLocation;
         public IDestructableDataGetter? Data => _DataLocation.HasValue ? DestructableDataBinaryOverlay.DestructableDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = Array.Empty<DestructionStageBinaryOverlay>();
+        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = Array.Empty<IDestructionStageGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DestructibleBinaryOverlay DestructibleFactory(
+        public static IDestructibleGetter DestructibleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DestructibleBinaryOverlay DestructibleFactory(
+        public static IDestructibleGetter DestructibleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DMDL:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Stages) return ParseResult.Stop;
-                    this.Stages = this.ParseRepeatedTypelessSubrecord<DestructionStageBinaryOverlay>(
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<IDestructionStageGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: DestructionStage_Registration.TriggerSpecs,

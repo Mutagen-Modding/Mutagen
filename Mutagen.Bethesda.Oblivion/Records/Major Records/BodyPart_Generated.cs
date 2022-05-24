@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static BodyPartBinaryOverlay BodyPartFactory(
+        public static IBodyPartGetter BodyPartFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static BodyPartBinaryOverlay BodyPartFactory(
+        public static IBodyPartGetter BodyPartFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

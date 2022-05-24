@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static ConditionBinaryOverlay ConditionFactory(
+        public static IConditionGetter ConditionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ConditionBinaryOverlay ConditionFactory(
+        public static IConditionGetter ConditionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

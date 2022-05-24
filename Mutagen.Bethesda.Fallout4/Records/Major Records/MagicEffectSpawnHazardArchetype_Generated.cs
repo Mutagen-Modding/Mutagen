@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static MagicEffectSpawnHazardArchetypeBinaryOverlay MagicEffectSpawnHazardArchetypeFactory(
+        public static IMagicEffectSpawnHazardArchetypeGetter MagicEffectSpawnHazardArchetypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static MagicEffectSpawnHazardArchetypeBinaryOverlay MagicEffectSpawnHazardArchetypeFactory(
+        public static IMagicEffectSpawnHazardArchetypeGetter MagicEffectSpawnHazardArchetypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

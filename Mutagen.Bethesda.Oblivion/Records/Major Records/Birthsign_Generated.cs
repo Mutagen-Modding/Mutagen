@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static BirthsignBinaryOverlay BirthsignFactory(
+        public static IBirthsignGetter BirthsignFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static BirthsignBinaryOverlay BirthsignFactory(
+        public static IBirthsignGetter BirthsignFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

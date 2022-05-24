@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ClassBinaryOverlay ClassFactory(
+        public static IClassGetter ClassFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2049,7 +2049,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ClassBinaryOverlay ClassFactory(
+        public static IClassGetter ClassFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2091,7 +2091,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<ObjectPropertyBinaryOverlay>(
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

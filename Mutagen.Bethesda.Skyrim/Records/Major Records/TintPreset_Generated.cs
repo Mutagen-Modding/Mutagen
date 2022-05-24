@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static TintPresetBinaryOverlay TintPresetFactory(
+        public static ITintPresetGetter TintPresetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static TintPresetBinaryOverlay TintPresetFactory(
+        public static ITintPresetGetter TintPresetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

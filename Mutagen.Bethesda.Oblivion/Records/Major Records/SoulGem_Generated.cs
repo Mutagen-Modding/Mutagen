@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static SoulGemBinaryOverlay SoulGemFactory(
+        public static ISoulGemGetter SoulGemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SoulGemBinaryOverlay SoulGemFactory(
+        public static ISoulGemGetter SoulGemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

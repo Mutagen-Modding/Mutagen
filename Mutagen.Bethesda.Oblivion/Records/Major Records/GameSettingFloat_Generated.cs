@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static GameSettingFloatBinaryOverlay GameSettingFloatFactory(
+        public static IGameSettingFloatGetter GameSettingFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GameSettingFloatBinaryOverlay GameSettingFloatFactory(
+        public static IGameSettingFloatGetter GameSettingFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

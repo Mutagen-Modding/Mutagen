@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static CellNavmeshParentBinaryOverlay CellNavmeshParentFactory(
+        public static ICellNavmeshParentGetter CellNavmeshParentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static CellNavmeshParentBinaryOverlay CellNavmeshParentFactory(
+        public static ICellNavmeshParentGetter CellNavmeshParentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

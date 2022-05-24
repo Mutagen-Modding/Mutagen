@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ActorValueSkillBinaryOverlay ActorValueSkillFactory(
+        public static IActorValueSkillGetter ActorValueSkillFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ActorValueSkillBinaryOverlay ActorValueSkillFactory(
+        public static IActorValueSkillGetter ActorValueSkillFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static BookPerkBinaryOverlay BookPerkFactory(
+        public static IBookPerkGetter BookPerkFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static BookPerkBinaryOverlay BookPerkFactory(
+        public static IBookPerkGetter BookPerkFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

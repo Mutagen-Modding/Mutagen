@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static CollectionAliasBinaryOverlay CollectionAliasFactory(
+        public static ICollectionAliasGetter CollectionAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static CollectionAliasBinaryOverlay CollectionAliasFactory(
+        public static ICollectionAliasGetter CollectionAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

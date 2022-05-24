@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static MapMarkerBinaryOverlay MapMarkerFactory(
+        public static IMapMarkerGetter MapMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1420,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static MapMarkerBinaryOverlay MapMarkerFactory(
+        public static IMapMarkerGetter MapMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -2341,7 +2341,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static CameraShotBinaryOverlay CameraShotFactory(
+        public static ICameraShotGetter CameraShotFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2368,7 +2368,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static CameraShotBinaryOverlay CameraShotFactory(
+        public static ICameraShotGetter CameraShotFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

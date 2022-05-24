@@ -2159,7 +2159,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected int PreferredMergesEndingPos;
         #endregion
         #region LinkedDoors
-        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList.FactoryByCountLength<LinkedDoorBinaryOverlay>(_data.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
+        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList.FactoryByCountLength<ILinkedDoorGetter>(_data.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
         protected int LinkedDoorsEndingPos;
         #endregion
         #region Island
@@ -2192,7 +2192,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NavigationMapInfoBinaryOverlay NavigationMapInfoFactory(
+        public static INavigationMapInfoGetter NavigationMapInfoFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NavigationMapInfoBinaryOverlay NavigationMapInfoFactory(
+        public static INavigationMapInfoGetter NavigationMapInfoFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

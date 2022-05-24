@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static IconsBinaryOverlay IconsFactory(
+        public static IIconsGetter IconsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static IconsBinaryOverlay IconsFactory(
+        public static IIconsGetter IconsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

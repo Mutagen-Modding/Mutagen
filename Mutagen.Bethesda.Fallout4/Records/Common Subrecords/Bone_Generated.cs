@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static BoneBinaryOverlay BoneFactory(
+        public static IBoneGetter BoneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static BoneBinaryOverlay BoneFactory(
+        public static IBoneGetter BoneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

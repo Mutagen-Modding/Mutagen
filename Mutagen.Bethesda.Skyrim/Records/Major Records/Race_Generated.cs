@@ -8429,7 +8429,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _AttackRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<AttackBinaryOverlay>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region BodyData
         private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
         public IGenderedItemGetter<IBodyDataGetter?> BodyData => _BodyDataOverlay ?? new GenderedItem<IBodyDataGetter?>(default, default);
@@ -8470,7 +8470,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _CloseLootSoundLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseLootSound => _CloseLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
-        public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = Array.Empty<RaceMovementTypeBinaryOverlay>();
+        public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = Array.Empty<IRaceMovementTypeGetter>();
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
         public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
@@ -8542,7 +8542,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -8569,7 +8569,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -8716,7 +8716,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ATKD:
                 case RecordTypeInts.ATKE:
                 {
-                    this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
+                    this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Attack_Registration.TriggerSpecs,
@@ -8812,7 +8812,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MTYP:
                 case RecordTypeInts.SPED:
                 {
-                    this.MovementTypes = this.ParseRepeatedTypelessSubrecord<RaceMovementTypeBinaryOverlay>(
+                    this.MovementTypes = this.ParseRepeatedTypelessSubrecord<IRaceMovementTypeGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: RaceMovementType_Registration.TriggerSpecs,

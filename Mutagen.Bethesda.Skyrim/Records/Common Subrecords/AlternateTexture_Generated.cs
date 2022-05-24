@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static AlternateTextureBinaryOverlay AlternateTextureFactory(
+        public static IAlternateTextureGetter AlternateTextureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static AlternateTextureBinaryOverlay AlternateTextureFactory(
+        public static IAlternateTextureGetter AlternateTextureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

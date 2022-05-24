@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static RegionDataHeaderBinaryOverlay RegionDataHeaderFactory(
+        public static IRegionDataHeaderGetter RegionDataHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static RegionDataHeaderBinaryOverlay RegionDataHeaderFactory(
+        public static IRegionDataHeaderGetter RegionDataHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NpcInheritSoundBinaryOverlay NpcInheritSoundFactory(
+        public static INpcInheritSoundGetter NpcInheritSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NpcInheritSoundBinaryOverlay NpcInheritSoundFactory(
+        public static INpcInheritSoundGetter NpcInheritSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

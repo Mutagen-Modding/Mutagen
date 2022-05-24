@@ -1055,7 +1055,7 @@ abstract partial class ConditionBinaryOverlay
     public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
     public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
 
-    public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
+    public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
         var subRecMeta = stream.GetSubrecord();
         if (subRecMeta.RecordType != RecordTypes.CTDA)
@@ -1073,7 +1073,7 @@ abstract partial class ConditionBinaryOverlay
         }
     }
 
-    public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams? _)
+    public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams? _)
     {
         var subRecMeta = stream.GetSubrecord();
         if (subRecMeta.RecordType != RecordTypes.CTDA)
@@ -1091,7 +1091,7 @@ abstract partial class ConditionBinaryOverlay
         }
     }
 
-    public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
+    public static IReadOnlyList<IConditionGetter> ConstructBinayOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
         var counterMeta = stream.ReadSubrecord();
         if (counterMeta.RecordType != RecordTypes.CITC
@@ -1108,7 +1108,7 @@ abstract partial class ConditionBinaryOverlay
         return ret;
     }
 
-    public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
+    public static IReadOnlyList<IConditionGetter> ConstructBinayOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
         var span = stream.RemainingMemory;
         var pos = stream.Position;
@@ -1120,7 +1120,7 @@ abstract partial class ConditionBinaryOverlay
             includeTriggers: IncludeTriggers,
             skipHeader: false);
         span = span.Slice(0, stream.Position - pos);
-        return BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+        return BinaryOverlayList.FactoryByArray<IConditionGetter>(
             mem: span,
             package: package,
             getter: (s, p) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p),

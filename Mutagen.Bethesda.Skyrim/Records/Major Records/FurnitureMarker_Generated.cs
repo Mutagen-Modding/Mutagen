@@ -1347,7 +1347,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static FurnitureMarkerBinaryOverlay FurnitureMarkerFactory(
+        public static IFurnitureMarkerGetter FurnitureMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static FurnitureMarkerBinaryOverlay FurnitureMarkerFactory(
+        public static IFurnitureMarkerGetter FurnitureMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

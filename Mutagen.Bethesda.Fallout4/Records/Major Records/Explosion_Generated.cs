@@ -3220,7 +3220,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ExplosionBinaryOverlay ExplosionFactory(
+        public static IExplosionGetter ExplosionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3247,7 +3247,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ExplosionBinaryOverlay ExplosionFactory(
+        public static IExplosionGetter ExplosionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

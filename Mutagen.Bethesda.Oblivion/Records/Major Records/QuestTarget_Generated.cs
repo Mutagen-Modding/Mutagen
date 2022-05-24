@@ -1308,7 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion
         private IQuestTargetDataGetter? _Data => _DataLocation.HasValue ? QuestTargetDataBinaryOverlay.QuestTargetDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public IQuestTargetDataGetter Data => _Data ?? new QuestTargetData();
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static QuestTargetBinaryOverlay QuestTargetFactory(
+        public static IQuestTargetGetter QuestTargetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static QuestTargetBinaryOverlay QuestTargetFactory(
+        public static IQuestTargetGetter QuestTargetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

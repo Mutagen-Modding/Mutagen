@@ -1779,7 +1779,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LandTextureBinaryOverlay LandTextureFactory(
+        public static ILandTextureGetter LandTextureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LandTextureBinaryOverlay LandTextureFactory(
+        public static ILandTextureGetter LandTextureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

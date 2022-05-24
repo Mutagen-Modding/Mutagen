@@ -3907,7 +3907,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static TerminalBinaryOverlay TerminalFactory(
+        public static ITerminalGetter TerminalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3934,7 +3934,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static TerminalBinaryOverlay TerminalFactory(
+        public static ITerminalGetter TerminalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4012,7 +4012,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<ObjectPropertyBinaryOverlay>(
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -4033,7 +4033,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Holotapes = BinaryOverlayList.FactoryByCountPerItem<TerminalHolotapeEntryBinaryOverlay>(
+                    this.Holotapes = BinaryOverlayList.FactoryByCountPerItem<ITerminalHolotapeEntryGetter>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x8,
@@ -4074,7 +4074,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.BSIZ:
                 {
-                    this.BodyTexts = BinaryOverlayList.FactoryByCountPerItem<TerminalBodyTextBinaryOverlay>(
+                    this.BodyTexts = BinaryOverlayList.FactoryByCountPerItem<ITerminalBodyTextGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -4087,7 +4087,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ISIZ:
                 {
-                    this.MenuItems = BinaryOverlayList.FactoryByCountPerItem<TerminalMenuItemBinaryOverlay>(
+                    this.MenuItems = BinaryOverlayList.FactoryByCountPerItem<ITerminalMenuItemGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

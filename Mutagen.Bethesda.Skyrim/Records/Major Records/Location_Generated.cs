@@ -5346,9 +5346,9 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; private set; }
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; private set; }
-        public IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; private set; } = Array.Empty<LocationCoordinateBinaryOverlay>();
-        public IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; private set; } = Array.Empty<LocationCoordinateBinaryOverlay>();
-        public IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; private set; } = Array.Empty<LocationCoordinateBinaryOverlay>();
+        public IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
+        public IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
+        public IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; private set; }
         public IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; private set; }
@@ -5413,7 +5413,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LocationBinaryOverlay LocationFactory(
+        public static ILocationGetter LocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -5440,7 +5440,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LocationBinaryOverlay LocationFactory(
+        public static ILocationGetter LocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -5467,7 +5467,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.ActorCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
+                    this.ActorCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<ILocationReferenceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5479,7 +5479,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.LocationCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
+                    this.LocationCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<ILocationReferenceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5503,7 +5503,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationCellUniqueBinaryOverlay>(
+                    this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndex<ILocationCellUniqueGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5515,7 +5515,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationCellUniqueBinaryOverlay>(
+                    this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndex<ILocationCellUniqueGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5539,7 +5539,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.ActorCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
+                    this.ActorCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<ILocationCellStaticReferenceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -5551,7 +5551,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.LocationCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
+                    this.LocationCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<ILocationCellStaticReferenceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -5573,7 +5573,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ACEC:
                 {
-                    this.ActorCellEncounterCell = this.ParseRepeatedTypelessSubrecord<LocationCoordinateBinaryOverlay>(
+                    this.ActorCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: RecordTypes.ACEC,
@@ -5583,7 +5583,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.LCEC:
                 {
-                    this.LocationCellEncounterCell = this.ParseRepeatedTypelessSubrecord<LocationCoordinateBinaryOverlay>(
+                    this.LocationCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: RecordTypes.LCEC,
@@ -5593,7 +5593,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.RCEC:
                 {
-                    this.ReferenceCellEncounterCell = this.ParseRepeatedTypelessSubrecord<LocationCoordinateBinaryOverlay>(
+                    this.ReferenceCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: RecordTypes.RCEC,
@@ -5629,7 +5629,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.ActorCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
+                    this.ActorCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<ILocationCellEnablePointGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5641,7 +5641,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.LocationCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
+                    this.LocationCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<ILocationCellEnablePointGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,

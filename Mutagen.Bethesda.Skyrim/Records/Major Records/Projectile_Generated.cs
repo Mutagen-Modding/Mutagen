@@ -3723,7 +3723,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ProjectileBinaryOverlay ProjectileFactory(
+        public static IProjectileGetter ProjectileFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3750,7 +3750,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ProjectileBinaryOverlay ProjectileFactory(
+        public static IProjectileGetter ProjectileFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

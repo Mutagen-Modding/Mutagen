@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LocationReferenceTypeBinaryOverlay LocationReferenceTypeFactory(
+        public static ILocationReferenceTypeGetter LocationReferenceTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LocationReferenceTypeBinaryOverlay LocationReferenceTypeFactory(
+        public static ILocationReferenceTypeGetter LocationReferenceTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

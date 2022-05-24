@@ -3412,7 +3412,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ContainerBinaryOverlay ContainerFactory(
+        public static IContainerGetter ContainerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3439,7 +3439,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ContainerBinaryOverlay ContainerFactory(
+        public static IContainerGetter ContainerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3493,7 +3493,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -3543,7 +3543,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<ObjectPropertyBinaryOverlay>(
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

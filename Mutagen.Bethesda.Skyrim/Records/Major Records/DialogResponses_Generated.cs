@@ -3040,9 +3040,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _ResponseDataLocation;
         public IFormLinkNullableGetter<IDialogResponsesGetter> ResponseData => _ResponseDataLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ResponseDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
         #endregion
-        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<DialogResponseBinaryOverlay>();
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
-        public IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; private set; } = Array.Empty<DialogResponsesUnknownDataBinaryOverlay>();
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; private set; } = Array.Empty<IDialogResponsesUnknownDataGetter>();
         #region Prompt
         private int? _PromptLocation;
         public ITranslatedStringGetter? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
@@ -3075,7 +3075,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DialogResponsesBinaryOverlay DialogResponsesFactory(
+        public static IDialogResponsesGetter DialogResponsesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3102,7 +3102,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DialogResponsesBinaryOverlay DialogResponsesFactory(
+        public static IDialogResponsesGetter DialogResponsesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3176,7 +3176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TRDT:
                 {
-                    this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
+                    this.Responses = this.ParseRepeatedTypelessSubrecord<IDialogResponseGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: DialogResponse_Registration.TriggerSpecs,
@@ -3185,7 +3185,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -3202,7 +3202,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.QNAM:
                 case RecordTypeInts.NEXT:
                 {
-                    this.UnknownData = this.ParseRepeatedTypelessSubrecord<DialogResponsesUnknownDataBinaryOverlay>(
+                    this.UnknownData = this.ParseRepeatedTypelessSubrecord<IDialogResponsesUnknownDataGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: DialogResponsesUnknownData_Registration.TriggerSpecs,

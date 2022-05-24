@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ScenePhaseFragmentBinaryOverlay ScenePhaseFragmentFactory(
+        public static IScenePhaseFragmentGetter ScenePhaseFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ScenePhaseFragmentBinaryOverlay ScenePhaseFragmentFactory(
+        public static IScenePhaseFragmentGetter ScenePhaseFragmentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

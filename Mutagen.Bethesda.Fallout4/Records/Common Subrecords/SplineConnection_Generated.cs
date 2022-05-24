@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static SplineConnectionBinaryOverlay SplineConnectionFactory(
+        public static ISplineConnectionGetter SplineConnectionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static SplineConnectionBinaryOverlay SplineConnectionFactory(
+        public static ISplineConnectionGetter SplineConnectionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

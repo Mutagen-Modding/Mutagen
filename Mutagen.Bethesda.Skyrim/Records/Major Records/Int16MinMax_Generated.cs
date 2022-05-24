@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static Int16MinMaxBinaryOverlay Int16MinMaxFactory(
+        public static IInt16MinMaxGetter Int16MinMaxFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Int16MinMaxBinaryOverlay Int16MinMaxFactory(
+        public static IInt16MinMaxGetter Int16MinMaxFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

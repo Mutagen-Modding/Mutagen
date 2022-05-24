@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DialogResponsesAdapterBinaryOverlay DialogResponsesAdapterFactory(
+        public static IDialogResponsesAdapterGetter DialogResponsesAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DialogResponsesAdapterBinaryOverlay DialogResponsesAdapterFactory(
+        public static IDialogResponsesAdapterGetter DialogResponsesAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

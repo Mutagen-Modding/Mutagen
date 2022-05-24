@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _RunOnTabIndexLocation;
         public Byte RunOnTabIndex => _RunOnTabIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RunOnTabIndexLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PerkConditionBinaryOverlay PerkConditionFactory(
+        public static IPerkConditionGetter PerkConditionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PerkConditionBinaryOverlay PerkConditionFactory(
+        public static IPerkConditionGetter PerkConditionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

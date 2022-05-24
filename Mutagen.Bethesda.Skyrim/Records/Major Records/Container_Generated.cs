@@ -2600,7 +2600,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ContainerBinaryOverlay ContainerFactory(
+        public static IContainerGetter ContainerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2627,7 +2627,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ContainerBinaryOverlay ContainerFactory(
+        public static IContainerGetter ContainerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2676,7 +2676,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

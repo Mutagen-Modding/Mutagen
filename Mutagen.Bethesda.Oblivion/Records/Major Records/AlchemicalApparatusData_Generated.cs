@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static AlchemicalApparatusDataBinaryOverlay AlchemicalApparatusDataFactory(
+        public static IAlchemicalApparatusDataGetter AlchemicalApparatusDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AlchemicalApparatusDataBinaryOverlay AlchemicalApparatusDataFactory(
+        public static IAlchemicalApparatusDataGetter AlchemicalApparatusDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

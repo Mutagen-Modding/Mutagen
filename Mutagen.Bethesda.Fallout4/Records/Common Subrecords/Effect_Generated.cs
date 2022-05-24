@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Fallout4
         private RangeInt32? _DataLocation;
         public IEffectDataGetter? Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static EffectBinaryOverlay EffectFactory(
+        public static IEffectGetter EffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static EffectBinaryOverlay EffectFactory(
+        public static IEffectGetter EffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Effect_FieldIndex.Conditions) return ParseResult.Stop;
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

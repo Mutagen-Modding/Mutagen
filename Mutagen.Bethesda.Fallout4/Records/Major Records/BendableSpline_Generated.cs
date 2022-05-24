@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static BendableSplineBinaryOverlay BendableSplineFactory(
+        public static IBendableSplineGetter BendableSplineFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2046,7 +2046,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static BendableSplineBinaryOverlay BendableSplineFactory(
+        public static IBendableSplineGetter BendableSplineFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

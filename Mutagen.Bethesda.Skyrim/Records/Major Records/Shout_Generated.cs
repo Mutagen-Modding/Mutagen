@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IShoutWordGetter> WordsOfPower { get; private set; } = Array.Empty<ShoutWordBinaryOverlay>();
+        public IReadOnlyList<IShoutWordGetter> WordsOfPower { get; private set; } = Array.Empty<IShoutWordGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ShoutBinaryOverlay ShoutFactory(
+        public static IShoutGetter ShoutFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ShoutBinaryOverlay ShoutFactory(
+        public static IShoutGetter ShoutFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.WordsOfPower = BinaryOverlayList.FactoryByArray<ShoutWordBinaryOverlay>(
+                    this.WordsOfPower = BinaryOverlayList.FactoryByArray<IShoutWordGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

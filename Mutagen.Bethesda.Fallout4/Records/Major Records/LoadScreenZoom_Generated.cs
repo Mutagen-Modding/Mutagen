@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LoadScreenZoomBinaryOverlay LoadScreenZoomFactory(
+        public static ILoadScreenZoomGetter LoadScreenZoomFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LoadScreenZoomBinaryOverlay LoadScreenZoomFactory(
+        public static ILoadScreenZoomGetter LoadScreenZoomFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

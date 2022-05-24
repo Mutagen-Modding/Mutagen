@@ -1583,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static EyeBinaryOverlay EyeFactory(
+        public static IEyeGetter EyeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1610,7 +1610,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static EyeBinaryOverlay EyeFactory(
+        public static IEyeGetter EyeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

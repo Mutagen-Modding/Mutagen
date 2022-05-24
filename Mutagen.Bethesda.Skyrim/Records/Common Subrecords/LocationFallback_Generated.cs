@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LocationFallbackBinaryOverlay LocationFallbackFactory(
+        public static ILocationFallbackGetter LocationFallbackFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LocationFallbackBinaryOverlay LocationFallbackFactory(
+        public static ILocationFallbackGetter LocationFallbackFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

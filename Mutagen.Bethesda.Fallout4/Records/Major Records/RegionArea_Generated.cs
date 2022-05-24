@@ -1349,7 +1349,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static RegionAreaBinaryOverlay RegionAreaFactory(
+        public static IRegionAreaGetter RegionAreaFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static RegionAreaBinaryOverlay RegionAreaFactory(
+        public static IRegionAreaGetter RegionAreaFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

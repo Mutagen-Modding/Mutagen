@@ -2078,7 +2078,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _ScriptLocation;
         public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
-        public IReadOnlyList<IContainerItemGetter> Items { get; private set; } = Array.Empty<ContainerItemBinaryOverlay>();
+        public IReadOnlyList<IContainerItemGetter> Items { get; private set; } = Array.Empty<IContainerItemGetter>();
         #region Data
         private RangeInt32? _DataLocation;
         public IContainerDataGetter? Data => _DataLocation.HasValue ? ContainerDataBinaryOverlay.ContainerDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
@@ -2107,7 +2107,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static ContainerBinaryOverlay ContainerFactory(
+        public static IContainerGetter ContainerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2134,7 +2134,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static ContainerBinaryOverlay ContainerFactory(
+        public static IContainerGetter ContainerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2177,7 +2177,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.CNTO:
                 {
-                    this.Items = BinaryOverlayList.FactoryByArray<ContainerItemBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByArray<IContainerItemGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

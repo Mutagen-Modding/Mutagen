@@ -2638,7 +2638,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static NpcDataBinaryOverlay NpcDataFactory(
+        public static INpcDataGetter NpcDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2656,7 +2656,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static NpcDataBinaryOverlay NpcDataFactory(
+        public static INpcDataGetter NpcDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

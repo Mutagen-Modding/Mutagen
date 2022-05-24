@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DialogBranchBinaryOverlay DialogBranchFactory(
+        public static IDialogBranchGetter DialogBranchFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1686,7 +1686,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DialogBranchBinaryOverlay DialogBranchFactory(
+        public static IDialogBranchGetter DialogBranchFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static EffectDataBinaryOverlay EffectDataFactory(
+        public static IEffectDataGetter EffectDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static EffectDataBinaryOverlay EffectDataFactory(
+        public static IEffectDataGetter EffectDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -4455,7 +4455,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _HealthLocation;
         public Percent? Health => _HealthLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_data, _HealthLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent?);
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<LinkedReferencesBinaryOverlay>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region IsActivationPoint
         private int? _IsActivationPointLocation;
@@ -4490,7 +4490,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _IsIgnoredBySandboxLocation;
         public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
         #endregion
-        public IReadOnlyList<ISplineConnectionGetter> SplineConnections { get; private set; } = Array.Empty<SplineConnectionBinaryOverlay>();
+        public IReadOnlyList<ISplineConnectionGetter> SplineConnections { get; private set; } = Array.Empty<ISplineConnectionGetter>();
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;
         public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
@@ -4556,7 +4556,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PlacedNpcBinaryOverlay PlacedNpcFactory(
+        public static IPlacedNpcGetter PlacedNpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4583,7 +4583,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PlacedNpcBinaryOverlay PlacedNpcFactory(
+        public static IPlacedNpcGetter PlacedNpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4661,7 +4661,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLKR:
                 {
-                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<LinkedReferencesBinaryOverlay>(
+                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -4736,7 +4736,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XPLK:
                 {
-                    this.SplineConnections = BinaryOverlayList.FactoryByArray<SplineConnectionBinaryOverlay>(
+                    this.SplineConnections = BinaryOverlayList.FactoryByArray<ISplineConnectionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

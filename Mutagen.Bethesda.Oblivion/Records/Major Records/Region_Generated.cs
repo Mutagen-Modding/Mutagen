@@ -2281,7 +2281,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _WorldspaceLocation;
         public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = Array.Empty<RegionAreaBinaryOverlay>();
+        public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = Array.Empty<IRegionAreaGetter>();
         #region RegionAreaLogic
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,
@@ -2303,7 +2303,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static RegionBinaryOverlay RegionFactory(
+        public static IRegionGetter RegionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2330,7 +2330,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionBinaryOverlay RegionFactory(
+        public static IRegionGetter RegionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2374,7 +2374,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.RPLI:
                 case RecordTypeInts.RPLD:
                 {
-                    this.Areas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryOverlay>(
+                    this.Areas = this.ParseRepeatedTypelessSubrecord<IRegionAreaGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: RegionArea_Registration.TriggerSpecs,

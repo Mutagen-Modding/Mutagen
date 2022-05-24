@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PlacedHazardBinaryOverlay PlacedHazardFactory(
+        public static IPlacedHazardGetter PlacedHazardFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1662,7 +1662,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PlacedHazardBinaryOverlay PlacedHazardFactory(
+        public static IPlacedHazardGetter PlacedHazardFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

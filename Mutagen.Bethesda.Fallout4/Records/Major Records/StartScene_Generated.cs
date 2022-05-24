@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static StartSceneBinaryOverlay StartSceneFactory(
+        public static IStartSceneGetter StartSceneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static StartSceneBinaryOverlay StartSceneFactory(
+        public static IStartSceneGetter StartSceneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1544,7 +1544,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CITC:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StartScene_FieldIndex.Conditions) return ParseResult.Stop;
-                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

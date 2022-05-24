@@ -2247,7 +2247,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ShaderParticleGeometryBinaryOverlay ShaderParticleGeometryFactory(
+        public static IShaderParticleGeometryGetter ShaderParticleGeometryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2274,7 +2274,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ShaderParticleGeometryBinaryOverlay ShaderParticleGeometryFactory(
+        public static IShaderParticleGeometryGetter ShaderParticleGeometryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

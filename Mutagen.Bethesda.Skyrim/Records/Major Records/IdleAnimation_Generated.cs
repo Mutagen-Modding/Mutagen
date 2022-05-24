@@ -2200,7 +2200,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(IIdleAnimation);
 
 
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Filename
         private int? _FilenameLocation;
         public String? Filename => _FilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -2253,7 +2253,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static IdleAnimationBinaryOverlay IdleAnimationFactory(
+        public static IIdleAnimationGetter IdleAnimationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2280,7 +2280,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static IdleAnimationBinaryOverlay IdleAnimationFactory(
+        public static IIdleAnimationGetter IdleAnimationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2305,7 +2305,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

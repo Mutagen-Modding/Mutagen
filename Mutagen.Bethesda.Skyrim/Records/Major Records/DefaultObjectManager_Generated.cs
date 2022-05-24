@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DefaultObjectManagerBinaryOverlay DefaultObjectManagerFactory(
+        public static IDefaultObjectManagerGetter DefaultObjectManagerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DefaultObjectManagerBinaryOverlay DefaultObjectManagerFactory(
+        public static IDefaultObjectManagerGetter DefaultObjectManagerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1611,7 +1611,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Objects = BinaryOverlayList.FactoryByStartIndex<DefaultObjectBinaryOverlay>(
+                    this.Objects = BinaryOverlayList.FactoryByStartIndex<IDefaultObjectGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

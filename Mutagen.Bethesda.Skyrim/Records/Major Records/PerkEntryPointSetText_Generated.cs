@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PerkEntryPointSetTextBinaryOverlay PerkEntryPointSetTextFactory(
+        public static IPerkEntryPointSetTextGetter PerkEntryPointSetTextFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PerkEntryPointSetTextBinaryOverlay PerkEntryPointSetTextFactory(
+        public static IPerkEntryPointSetTextGetter PerkEntryPointSetTextFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static InstanceNamingBinaryOverlay InstanceNamingFactory(
+        public static IInstanceNamingGetter InstanceNamingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static InstanceNamingBinaryOverlay InstanceNamingFactory(
+        public static IInstanceNamingGetter InstanceNamingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ActorValuePerkNodeBinaryOverlay ActorValuePerkNodeFactory(
+        public static IActorValuePerkNodeGetter ActorValuePerkNodeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1825,7 +1825,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ActorValuePerkNodeBinaryOverlay ActorValuePerkNodeFactory(
+        public static IActorValuePerkNodeGetter ActorValuePerkNodeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

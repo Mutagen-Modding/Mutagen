@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static GameSettingBoolBinaryOverlay GameSettingBoolFactory(
+        public static IGameSettingBoolGetter GameSettingBoolFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static GameSettingBoolBinaryOverlay GameSettingBoolFactory(
+        public static IGameSettingBoolGetter GameSettingBoolFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

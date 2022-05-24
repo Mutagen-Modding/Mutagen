@@ -2342,7 +2342,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ClimateBinaryOverlay ClimateFactory(
+        public static IClimateGetter ClimateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2369,7 +2369,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ClimateBinaryOverlay ClimateFactory(
+        public static IClimateGetter ClimateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2396,7 +2396,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Weathers = BinaryOverlayList.FactoryByStartIndex<WeatherTypeBinaryOverlay>(
+                    this.Weathers = BinaryOverlayList.FactoryByStartIndex<IWeatherTypeGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,

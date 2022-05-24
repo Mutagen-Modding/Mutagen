@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _FlagsLocation;
         public TintTemplateOption.Flag? Flags => _FlagsLocation.HasValue ? (TintTemplateOption.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TintTemplateOption.Flag?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IReadOnlyList<String> Textures { get; private set; } = Array.Empty<String>();
         #region BlendOperation
         private int? _BlendOperationLocation;
@@ -2155,7 +2155,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static TintTemplateOptionBinaryOverlay TintTemplateOptionFactory(
+        public static ITintTemplateOptionGetter TintTemplateOptionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static TintTemplateOptionBinaryOverlay TintTemplateOptionFactory(
+        public static ITintTemplateOptionGetter TintTemplateOptionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2214,7 +2214,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -2250,7 +2250,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.TemplateColors = BinaryOverlayList.FactoryByStartIndex<TintTemplateColorBinaryOverlay>(
+                    this.TemplateColors = BinaryOverlayList.FactoryByStartIndex<ITintTemplateColorGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 14,

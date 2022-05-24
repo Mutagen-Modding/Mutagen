@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<ITintTemplateOptionGetter> Options { get; private set; } = Array.Empty<TintTemplateOptionBinaryOverlay>();
+        public IReadOnlyList<ITintTemplateOptionGetter> Options { get; private set; } = Array.Empty<ITintTemplateOptionGetter>();
         #region CategoryIndex
         private int? _CategoryIndexLocation;
         public UInt32? CategoryIndex => _CategoryIndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CategoryIndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static TintGroupBinaryOverlay TintGroupFactory(
+        public static ITintGroupGetter TintGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static TintGroupBinaryOverlay TintGroupFactory(
+        public static ITintGroupGetter TintGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TETI:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintGroup_FieldIndex.Options) return ParseResult.Stop;
-                    this.Options = this.ParseRepeatedTypelessSubrecord<TintTemplateOptionBinaryOverlay>(
+                    this.Options = this.ParseRepeatedTypelessSubrecord<ITintTemplateOptionGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: TintTemplateOption_Registration.TriggerSpecs,

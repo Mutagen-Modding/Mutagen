@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DoorTriangleBinaryOverlay DoorTriangleFactory(
+        public static IDoorTriangleGetter DoorTriangleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DoorTriangleBinaryOverlay DoorTriangleFactory(
+        public static IDoorTriangleGetter DoorTriangleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

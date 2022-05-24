@@ -1437,7 +1437,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static KeywordBinaryOverlay KeywordFactory(
+        public static IKeywordGetter KeywordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static KeywordBinaryOverlay KeywordFactory(
+        public static IKeywordGetter KeywordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

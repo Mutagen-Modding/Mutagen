@@ -1876,7 +1876,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _MaxNumQuestsToRunLocation;
         public UInt32? MaxNumQuestsToRun => _MaxNumQuestsToRunLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaxNumQuestsToRunLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<IStoryManagerQuestGetter> Quests { get; private set; } = Array.Empty<StoryManagerQuestBinaryOverlay>();
+        public IReadOnlyList<IStoryManagerQuestGetter> Quests { get; private set; } = Array.Empty<IStoryManagerQuestGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1893,7 +1893,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static StoryManagerQuestNodeBinaryOverlay StoryManagerQuestNodeFactory(
+        public static IStoryManagerQuestNodeGetter StoryManagerQuestNodeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static StoryManagerQuestNodeBinaryOverlay StoryManagerQuestNodeFactory(
+        public static IStoryManagerQuestNodeGetter StoryManagerQuestNodeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.QNAM:
                 {
-                    this.Quests = BinaryOverlayList.FactoryByCountPerItem<StoryManagerQuestBinaryOverlay>(
+                    this.Quests = BinaryOverlayList.FactoryByCountPerItem<IStoryManagerQuestGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

@@ -1970,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _TargetLocation;
         public IAIPackageTargetGetter? Target => _TargetLocation.HasValue ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(new OverlayStream(_data.Slice(_TargetLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static AIPackageBinaryOverlay AIPackageFactory(
+        public static IAIPackageGetter AIPackageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AIPackageBinaryOverlay AIPackageFactory(
+        public static IAIPackageGetter AIPackageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2060,7 +2060,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

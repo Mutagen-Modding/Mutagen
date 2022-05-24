@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static ILeveledSpellGetter LeveledSpellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static ILeveledSpellGetter LeveledSpellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

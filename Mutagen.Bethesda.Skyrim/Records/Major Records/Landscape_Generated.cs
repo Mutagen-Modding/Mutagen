@@ -2299,7 +2299,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ILandscapeVertexHeightMapGetter? VertexHeightMap => _VertexHeightMapLocation.HasValue ? LandscapeVertexHeightMapBinaryOverlay.LandscapeVertexHeightMapFactory(new OverlayStream(_data.Slice(_VertexHeightMapLocation!.Value.Min), _package), _package) : default;
         #endregion
         public IReadOnlyArray2d<P3UInt8>? VertexColors { get; private set; }
-        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = Array.Empty<BaseLayerBinaryOverlay>();
+        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = Array.Empty<IBaseLayerGetter>();
         public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2317,7 +2317,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LandscapeBinaryOverlay LandscapeFactory(
+        public static ILandscapeGetter LandscapeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2344,7 +2344,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LandscapeBinaryOverlay LandscapeFactory(
+        public static ILandscapeGetter LandscapeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2402,7 +2402,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.BTXT:
                 case RecordTypeInts.ATXT:
                 {
-                    this.Layers = this.ParseRepeatedTypelessSubrecord<BaseLayerBinaryOverlay>(
+                    this.Layers = this.ParseRepeatedTypelessSubrecord<IBaseLayerGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: BaseLayer_Registration.TriggerSpecs,

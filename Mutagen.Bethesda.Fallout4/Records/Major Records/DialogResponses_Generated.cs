@@ -3270,8 +3270,8 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _OverrideFileNameLocation;
         public String? OverrideFileName => _OverrideFileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _OverrideFileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<DialogResponseBinaryOverlay>();
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Prompt
         private int? _PromptLocation;
         public ITranslatedStringGetter? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
@@ -3336,7 +3336,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static DialogResponsesBinaryOverlay DialogResponsesFactory(
+        public static IDialogResponsesGetter DialogResponsesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3363,7 +3363,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static DialogResponsesBinaryOverlay DialogResponsesFactory(
+        public static IDialogResponsesGetter DialogResponsesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3423,7 +3423,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TRDA:
                 {
-                    this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
+                    this.Responses = this.ParseRepeatedTypelessSubrecord<IDialogResponseGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: DialogResponse_Registration.TriggerSpecs,
@@ -3432,7 +3432,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

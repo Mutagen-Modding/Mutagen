@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LensFlareBinaryOverlay LensFlareFactory(
+        public static ILensFlareGetter LensFlareFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LensFlareBinaryOverlay LensFlareFactory(
+        public static ILensFlareGetter LensFlareFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

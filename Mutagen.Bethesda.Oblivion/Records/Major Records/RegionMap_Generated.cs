@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static RegionMapBinaryOverlay RegionMapFactory(
+        public static IRegionMapGetter RegionMapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionMapBinaryOverlay RegionMapFactory(
+        public static IRegionMapGetter RegionMapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

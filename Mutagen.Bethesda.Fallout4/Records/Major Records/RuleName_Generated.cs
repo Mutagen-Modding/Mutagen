@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static RuleNameBinaryOverlay RuleNameFactory(
+        public static IRuleNameGetter RuleNameFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static RuleNameBinaryOverlay RuleNameFactory(
+        public static IRuleNameGetter RuleNameFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

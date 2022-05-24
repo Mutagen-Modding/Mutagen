@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static TeleportDestinationBinaryOverlay TeleportDestinationFactory(
+        public static ITeleportDestinationGetter TeleportDestinationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static TeleportDestinationBinaryOverlay TeleportDestinationFactory(
+        public static ITeleportDestinationGetter TeleportDestinationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

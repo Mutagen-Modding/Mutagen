@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LockInformationBinaryOverlay LockInformationFactory(
+        public static ILockInformationGetter LockInformationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LockInformationBinaryOverlay LockInformationFactory(
+        public static ILockInformationGetter LockInformationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

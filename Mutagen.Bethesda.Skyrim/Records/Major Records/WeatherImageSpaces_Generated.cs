@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WeatherImageSpacesBinaryOverlay WeatherImageSpacesFactory(
+        public static IWeatherImageSpacesGetter WeatherImageSpacesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1305,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WeatherImageSpacesBinaryOverlay WeatherImageSpacesFactory(
+        public static IWeatherImageSpacesGetter WeatherImageSpacesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _Flags_IsSet => _QSTALocation.HasValue;
         public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1438,7 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static QuestTargetBinaryOverlay QuestTargetFactory(
+        public static IQuestTargetGetter QuestTargetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static QuestTargetBinaryOverlay QuestTargetFactory(
+        public static IQuestTargetGetter QuestTargetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

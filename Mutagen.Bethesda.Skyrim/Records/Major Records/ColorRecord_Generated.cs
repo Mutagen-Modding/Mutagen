@@ -1620,7 +1620,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ColorRecordBinaryOverlay ColorRecordFactory(
+        public static IColorRecordGetter ColorRecordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1647,7 +1647,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ColorRecordBinaryOverlay ColorRecordFactory(
+        public static IColorRecordGetter ColorRecordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -2325,7 +2325,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _DataLocation;
         public IWeatherDataGetter? Data => _DataLocation.HasValue ? WeatherDataBinaryOverlay.WeatherDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<WeatherSoundBinaryOverlay>();
+        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<IWeatherSoundGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2342,7 +2342,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static WeatherBinaryOverlay WeatherFactory(
+        public static IWeatherGetter WeatherFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2369,7 +2369,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static WeatherBinaryOverlay WeatherFactory(
+        public static IWeatherGetter WeatherFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2414,7 +2414,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Colors = BinaryOverlayList.FactoryByStartIndex<WeatherColorsBinaryOverlay>(
+                    this.Colors = BinaryOverlayList.FactoryByStartIndex<IWeatherColorsGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -2439,7 +2439,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Sounds = BinaryOverlayList.FactoryByArray<WeatherSoundBinaryOverlay>(
+                    this.Sounds = BinaryOverlayList.FactoryByArray<IWeatherSoundGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

@@ -2082,7 +2082,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NpcFaceMorphBinaryOverlay NpcFaceMorphFactory(
+        public static INpcFaceMorphGetter NpcFaceMorphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2100,7 +2100,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NpcFaceMorphBinaryOverlay NpcFaceMorphFactory(
+        public static INpcFaceMorphGetter NpcFaceMorphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

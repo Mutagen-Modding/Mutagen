@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WorldspaceMaxHeightBinaryOverlay WorldspaceMaxHeightFactory(
+        public static IWorldspaceMaxHeightGetter WorldspaceMaxHeightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WorldspaceMaxHeightBinaryOverlay WorldspaceMaxHeightFactory(
+        public static IWorldspaceMaxHeightGetter WorldspaceMaxHeightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

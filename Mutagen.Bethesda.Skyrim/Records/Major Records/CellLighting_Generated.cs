@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static CellLightingBinaryOverlay CellLightingFactory(
+        public static ICellLightingGetter CellLightingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2035,7 +2035,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static CellLightingBinaryOverlay CellLightingFactory(
+        public static ICellLightingGetter CellLightingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

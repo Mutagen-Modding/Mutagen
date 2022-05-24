@@ -1637,7 +1637,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static AIDataBinaryOverlay AIDataFactory(
+        public static IAIDataGetter AIDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static AIDataBinaryOverlay AIDataFactory(
+        public static IAIDataGetter AIDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NpcOwnerBinaryOverlay NpcOwnerFactory(
+        public static INpcOwnerGetter NpcOwnerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NpcOwnerBinaryOverlay NpcOwnerFactory(
+        public static INpcOwnerGetter NpcOwnerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

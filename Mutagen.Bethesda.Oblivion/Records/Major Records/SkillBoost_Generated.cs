@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static SkillBoostBinaryOverlay SkillBoostFactory(
+        public static ISkillBoostGetter SkillBoostFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SkillBoostBinaryOverlay SkillBoostFactory(
+        public static ISkillBoostGetter SkillBoostFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

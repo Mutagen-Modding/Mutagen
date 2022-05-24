@@ -1518,7 +1518,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static AmbientColorsBinaryOverlay AmbientColorsFactory(
+        public static IAmbientColorsGetter AmbientColorsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int finalPos,
@@ -1539,7 +1539,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static AmbientColorsBinaryOverlay AmbientColorsFactory(
+        public static IAmbientColorsGetter AmbientColorsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

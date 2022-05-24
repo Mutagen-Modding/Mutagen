@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LocationKeywordBinaryOverlay LocationKeywordFactory(
+        public static ILocationKeywordGetter LocationKeywordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LocationKeywordBinaryOverlay LocationKeywordFactory(
+        public static ILocationKeywordGetter LocationKeywordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

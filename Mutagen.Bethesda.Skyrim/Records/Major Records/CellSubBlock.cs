@@ -11,7 +11,7 @@ partial class CellSubBlockBinaryOverlay
 
     partial void CellsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        this.Cells = BinaryOverlayList.FactoryByArray<CellBinaryOverlay>(
+        this.Cells = BinaryOverlayList.FactoryByArray<ICellGetter>(
             mem: stream.RemainingMemory,
             package: _package,
             parseParams: null,

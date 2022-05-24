@@ -2739,7 +2739,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static FloraBinaryOverlay FloraFactory(
+        public static IFloraGetter FloraFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2766,7 +2766,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static FloraBinaryOverlay FloraFactory(
+        public static IFloraGetter FloraFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -3408,14 +3408,14 @@ namespace Mutagen.Bethesda.Skyrim
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<QuestStageBinaryOverlay>();
-        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<QuestObjectiveBinaryOverlay>();
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
         #region NextAliasID
         public partial ParseResult NextAliasIDCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = Array.Empty<QuestAliasBinaryOverlay>();
+        public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = Array.Empty<IQuestAliasGetter>();
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
@@ -3436,7 +3436,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static QuestBinaryOverlay QuestFactory(
+        public static IQuestGetter QuestFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3463,7 +3463,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static QuestBinaryOverlay QuestFactory(
+        public static IQuestGetter QuestFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3543,7 +3543,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.INDX:
                 {
-                    this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<IQuestStageGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: QuestStage_Registration.TriggerSpecs,
@@ -3552,7 +3552,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.QOBJ:
                 {
-                    this.Objectives = this.ParseRepeatedTypelessSubrecord<QuestObjectiveBinaryOverlay>(
+                    this.Objectives = this.ParseRepeatedTypelessSubrecord<IQuestObjectiveGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: QuestObjective_Registration.TriggerSpecs,
@@ -3568,7 +3568,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
-                    this.Aliases = this.ParseRepeatedTypelessSubrecord<QuestAliasBinaryOverlay>(
+                    this.Aliases = this.ParseRepeatedTypelessSubrecord<IQuestAliasGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: QuestAlias_Registration.TriggerSpecs,

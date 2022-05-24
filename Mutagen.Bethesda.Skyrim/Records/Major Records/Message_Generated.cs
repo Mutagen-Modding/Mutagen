@@ -2031,7 +2031,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DisplayTimeLocation;
         public UInt32? DisplayTime => _DisplayTimeLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayTimeLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = Array.Empty<MessageButtonBinaryOverlay>();
+        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = Array.Empty<IMessageButtonGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2048,7 +2048,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MessageBinaryOverlay MessageFactory(
+        public static IMessageGetter MessageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2075,7 +2075,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MessageBinaryOverlay MessageFactory(
+        public static IMessageGetter MessageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ITXT:
                 case RecordTypeInts.CTDA:
                 {
-                    this.MenuButtons = this.ParseRepeatedTypelessSubrecord<MessageButtonBinaryOverlay>(
+                    this.MenuButtons = this.ParseRepeatedTypelessSubrecord<IMessageButtonGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: MessageButton_Registration.TriggerSpecs,

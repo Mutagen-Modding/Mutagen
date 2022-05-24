@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ArmorResistanceBinaryOverlay ArmorResistanceFactory(
+        public static IArmorResistanceGetter ArmorResistanceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ArmorResistanceBinaryOverlay ArmorResistanceFactory(
+        public static IArmorResistanceGetter ArmorResistanceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

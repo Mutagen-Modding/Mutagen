@@ -2334,7 +2334,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MovementTypeBinaryOverlay MovementTypeFactory(
+        public static IMovementTypeGetter MovementTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2361,7 +2361,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MovementTypeBinaryOverlay MovementTypeFactory(
+        public static IMovementTypeGetter MovementTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

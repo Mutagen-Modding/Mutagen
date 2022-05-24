@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static MagicEffectSoundBinaryOverlay MagicEffectSoundFactory(
+        public static IMagicEffectSoundGetter MagicEffectSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static MagicEffectSoundBinaryOverlay MagicEffectSoundFactory(
+        public static IMagicEffectSoundGetter MagicEffectSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

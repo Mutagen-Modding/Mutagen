@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Skyrim
             return new SkyrimGroupWrapper<T>(new GroupMergeGetter<ISkyrimGroupGetter<T>, T>(subGroups));
         }
 
-        public static SkyrimGroupBinaryOverlay<T> SkyrimGroupFactory(
+        public static ISkyrimGroupGetter<T> SkyrimGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkyrimGroupBinaryOverlay<T> SkyrimGroupFactory(
+        public static ISkyrimGroupGetter<T> SkyrimGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

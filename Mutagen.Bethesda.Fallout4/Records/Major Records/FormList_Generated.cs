@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static FormListBinaryOverlay FormListFactory(
+        public static IFormListGetter FormListFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1324,7 +1324,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static FormListBinaryOverlay FormListFactory(
+        public static IFormListGetter FormListFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

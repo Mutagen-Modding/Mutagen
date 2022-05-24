@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static WeatherColorsBinaryOverlay WeatherColorsFactory(
+        public static IWeatherColorsGetter WeatherColorsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static WeatherColorsBinaryOverlay WeatherColorsFactory(
+        public static IWeatherColorsGetter WeatherColorsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LoadScreenLocationBinaryOverlay LoadScreenLocationFactory(
+        public static ILoadScreenLocationGetter LoadScreenLocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LoadScreenLocationBinaryOverlay LoadScreenLocationFactory(
+        public static ILoadScreenLocationGetter LoadScreenLocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

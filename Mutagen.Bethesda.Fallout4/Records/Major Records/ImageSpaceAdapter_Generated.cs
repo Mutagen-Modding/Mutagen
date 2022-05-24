@@ -12433,7 +12433,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ImageSpaceAdapterBinaryOverlay ImageSpaceAdapterFactory(
+        public static IImageSpaceAdapterGetter ImageSpaceAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -12460,7 +12460,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ImageSpaceAdapterBinaryOverlay ImageSpaceAdapterFactory(
+        public static IImageSpaceAdapterGetter ImageSpaceAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -12492,7 +12492,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.BlurRadius = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.BlurRadius = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12504,7 +12504,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.DoubleVisionStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.DoubleVisionStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12516,7 +12516,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.TintColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
+                    this.TintColor = BinaryOverlayList.FactoryByStartIndex<IColorFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 20,
@@ -12528,7 +12528,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.FadeColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
+                    this.FadeColor = BinaryOverlayList.FactoryByStartIndex<IColorFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 20,
@@ -12540,7 +12540,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.RadialBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.RadialBlurStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12552,7 +12552,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.RadialBlurRampUp = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.RadialBlurRampUp = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12564,7 +12564,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.RadialBlurStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.RadialBlurStart = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12576,7 +12576,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.RadialBlurRampDown = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.RadialBlurRampDown = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12588,7 +12588,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.RadialBlurDownStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.RadialBlurDownStart = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12600,7 +12600,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.DepthOfFieldStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.DepthOfFieldStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12612,7 +12612,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.DepthOfFieldDistance = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.DepthOfFieldDistance = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12624,7 +12624,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.DepthOfFieldRange = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.DepthOfFieldRange = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12636,7 +12636,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.MotionBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.MotionBlurStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12648,7 +12648,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12660,7 +12660,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12672,7 +12672,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrBloomBlurRadiusMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrBloomBlurRadiusMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12684,7 +12684,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12696,7 +12696,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrBloomThresholdMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrBloomThresholdMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12708,7 +12708,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrBloomThresholdAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrBloomThresholdAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12720,7 +12720,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrBloomScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrBloomScaleMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12732,7 +12732,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrBloomScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrBloomScaleAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12744,7 +12744,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrTargetLumMinMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrTargetLumMinMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12756,7 +12756,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrTargetLumMinAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrTargetLumMinAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12768,7 +12768,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrTargetLumMaxMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrTargetLumMaxMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12780,7 +12780,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrTargetLumMaxAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrTargetLumMaxAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12792,7 +12792,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrSunlightScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrSunlightScaleMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12804,7 +12804,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrSunlightScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrSunlightScaleAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12816,7 +12816,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrSkyScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrSkyScaleMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12828,7 +12828,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.HdrSkyScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.HdrSkyScaleAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12840,7 +12840,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown08 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown08 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12852,7 +12852,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown48 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown48 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12864,7 +12864,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown09 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown09 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12876,7 +12876,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown49 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown49 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12888,7 +12888,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown0A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown0A = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12900,7 +12900,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown4A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown4A = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12912,7 +12912,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown0B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown0B = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12924,7 +12924,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown4B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown4B = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12936,7 +12936,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown0C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown0C = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12948,7 +12948,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown4C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown4C = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12960,7 +12960,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown0D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown0D = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12972,7 +12972,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown4D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown4D = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12984,7 +12984,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown0E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown0E = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -12996,7 +12996,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown4E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown4E = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13008,7 +13008,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown0F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown0F = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13020,7 +13020,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown4F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown4F = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13032,7 +13032,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown10 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown10 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13044,7 +13044,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown50 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown50 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13056,7 +13056,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.CinematicSaturationMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.CinematicSaturationMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13068,7 +13068,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.CinematicSaturationAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.CinematicSaturationAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13080,7 +13080,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.CinematicBrightnessMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.CinematicBrightnessMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13092,7 +13092,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.CinematicBrightnessAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.CinematicBrightnessAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13104,7 +13104,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.CinematicContrastMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.CinematicContrastMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13116,7 +13116,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.CinematicContrastAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.CinematicContrastAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13128,7 +13128,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown14 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown14 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13140,7 +13140,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Unknown54 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    this.Unknown54 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

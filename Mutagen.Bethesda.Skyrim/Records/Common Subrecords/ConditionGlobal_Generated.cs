@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ConditionGlobalBinaryOverlay ConditionGlobalFactory(
+        public static IConditionGlobalGetter ConditionGlobalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ConditionGlobalBinaryOverlay ConditionGlobalFactory(
+        public static IConditionGlobalGetter ConditionGlobalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

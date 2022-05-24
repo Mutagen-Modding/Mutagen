@@ -2087,7 +2087,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static CellSubBlockBinaryOverlay CellSubBlockFactory(
+        public static ICellSubBlockGetter CellSubBlockFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2111,7 +2111,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static CellSubBlockBinaryOverlay CellSubBlockFactory(
+        public static ICellSubBlockGetter CellSubBlockFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

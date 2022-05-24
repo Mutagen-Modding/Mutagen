@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static BookActorValueBinaryOverlay BookActorValueFactory(
+        public static IBookActorValueGetter BookActorValueFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static BookActorValueBinaryOverlay BookActorValueFactory(
+        public static IBookActorValueGetter BookActorValueFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

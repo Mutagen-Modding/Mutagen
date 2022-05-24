@@ -1923,7 +1923,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = Array.Empty<CellSubBlockBinaryOverlay>();
+        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = Array.Empty<ICellSubBlockGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static CellBlockBinaryOverlay CellBlockFactory(
+        public static ICellBlockGetter CellBlockFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1964,7 +1964,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CellBlockBinaryOverlay CellBlockFactory(
+        public static ICellBlockGetter CellBlockFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1989,7 +1989,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.GRUP:
                 {
-                    this.SubBlocks = BinaryOverlayList.FactoryByArray<CellSubBlockBinaryOverlay>(
+                    this.SubBlocks = BinaryOverlayList.FactoryByArray<ICellSubBlockGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

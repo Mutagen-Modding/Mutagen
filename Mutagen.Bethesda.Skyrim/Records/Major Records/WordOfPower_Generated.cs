@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WordOfPowerBinaryOverlay WordOfPowerFactory(
+        public static IWordOfPowerGetter WordOfPowerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1583,7 +1583,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WordOfPowerBinaryOverlay WordOfPowerFactory(
+        public static IWordOfPowerGetter WordOfPowerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MapMarkerBinaryOverlay MapMarkerFactory(
+        public static IMapMarkerGetter MapMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MapMarkerBinaryOverlay MapMarkerFactory(
+        public static IMapMarkerGetter MapMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

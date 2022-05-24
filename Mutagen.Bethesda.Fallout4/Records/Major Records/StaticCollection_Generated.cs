@@ -2227,7 +2227,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IStaticPartGetter> Parts { get; private set; } = Array.Empty<StaticPartBinaryOverlay>();
+        public IReadOnlyList<IStaticPartGetter> Parts { get; private set; } = Array.Empty<IStaticPartGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2244,7 +2244,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static StaticCollectionBinaryOverlay StaticCollectionFactory(
+        public static IStaticCollectionGetter StaticCollectionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2271,7 +2271,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static StaticCollectionBinaryOverlay StaticCollectionFactory(
+        public static IStaticCollectionGetter StaticCollectionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2330,7 +2330,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ONAM:
                 case RecordTypeInts.DATA:
                 {
-                    this.Parts = this.ParseRepeatedTypelessSubrecord<StaticPartBinaryOverlay>(
+                    this.Parts = this.ParseRepeatedTypelessSubrecord<IStaticPartGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: StaticPart_Registration.TriggerSpecs,

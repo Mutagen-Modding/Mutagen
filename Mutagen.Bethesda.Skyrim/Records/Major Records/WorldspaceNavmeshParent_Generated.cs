@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WorldspaceNavmeshParentBinaryOverlay WorldspaceNavmeshParentFactory(
+        public static IWorldspaceNavmeshParentGetter WorldspaceNavmeshParentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WorldspaceNavmeshParentBinaryOverlay WorldspaceNavmeshParentFactory(
+        public static IWorldspaceNavmeshParentGetter WorldspaceNavmeshParentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

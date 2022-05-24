@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WorldspaceReferenceBinaryOverlay WorldspaceReferenceFactory(
+        public static IWorldspaceReferenceGetter WorldspaceReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WorldspaceReferenceBinaryOverlay WorldspaceReferenceFactory(
+        public static IWorldspaceReferenceGetter WorldspaceReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

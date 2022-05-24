@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static StoryManagerBranchNodeBinaryOverlay StoryManagerBranchNodeFactory(
+        public static IStoryManagerBranchNodeGetter StoryManagerBranchNodeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static StoryManagerBranchNodeBinaryOverlay StoryManagerBranchNodeFactory(
+        public static IStoryManagerBranchNodeGetter StoryManagerBranchNodeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static RelatedWatersBinaryOverlay RelatedWatersFactory(
+        public static IRelatedWatersGetter RelatedWatersFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RelatedWatersBinaryOverlay RelatedWatersFactory(
+        public static IRelatedWatersGetter RelatedWatersFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

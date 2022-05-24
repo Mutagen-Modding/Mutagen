@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PerkQuestEffectBinaryOverlay PerkQuestEffectFactory(
+        public static IPerkQuestEffectGetter PerkQuestEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PerkQuestEffectBinaryOverlay PerkQuestEffectFactory(
+        public static IPerkQuestEffectGetter PerkQuestEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

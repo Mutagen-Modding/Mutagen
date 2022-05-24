@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LinkedDoorBinaryOverlay LinkedDoorFactory(
+        public static ILinkedDoorGetter LinkedDoorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LinkedDoorBinaryOverlay LinkedDoorFactory(
+        public static ILinkedDoorGetter LinkedDoorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

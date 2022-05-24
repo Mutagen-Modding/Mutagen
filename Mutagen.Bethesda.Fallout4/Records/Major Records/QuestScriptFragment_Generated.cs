@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static QuestScriptFragmentBinaryOverlay QuestScriptFragmentFactory(
+        public static IQuestScriptFragmentGetter QuestScriptFragmentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static QuestScriptFragmentBinaryOverlay QuestScriptFragmentFactory(
+        public static IQuestScriptFragmentGetter QuestScriptFragmentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

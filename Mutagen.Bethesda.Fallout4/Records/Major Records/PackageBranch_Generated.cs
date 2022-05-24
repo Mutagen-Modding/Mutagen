@@ -2111,7 +2111,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _BranchTypeLocation;
         public String BranchType => _BranchTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IPackageRootGetter? Root { get; private set; }
         #region ProcedureType
         private int? _ProcedureTypeLocation;
@@ -2147,7 +2147,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PackageBranchBinaryOverlay PackageBranchFactory(
+        public static IPackageBranchGetter PackageBranchFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2165,7 +2165,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PackageBranchBinaryOverlay PackageBranchFactory(
+        public static IPackageBranchGetter PackageBranchFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2197,7 +2197,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

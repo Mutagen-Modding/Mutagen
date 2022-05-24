@@ -3440,7 +3440,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AddictionNameLocation;
         public ITranslatedStringGetter? AddictionName => _AddictionNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _AddictionNameLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<EffectBinaryOverlay>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3457,7 +3457,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IngestibleBinaryOverlay IngestibleFactory(
+        public static IIngestibleGetter IngestibleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3484,7 +3484,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IngestibleBinaryOverlay IngestibleFactory(
+        public static IIngestibleGetter IngestibleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3608,7 +3608,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.EFIT:
                 case RecordTypeInts.CTDA:
                 {
-                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Effect_Registration.TriggerSpecs,

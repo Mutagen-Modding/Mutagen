@@ -1714,7 +1714,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static HairBinaryOverlay HairFactory(
+        public static IHairGetter HairFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static HairBinaryOverlay HairFactory(
+        public static IHairGetter HairFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

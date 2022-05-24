@@ -1539,7 +1539,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IDestructableDataGetter? Data => _DataLocation.HasValue ? DestructableDataBinaryOverlay.DestructableDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
         public IReadOnlyList<IResistanceDestructibleGetter>? Resistances { get; private set; }
-        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = Array.Empty<DestructionStageBinaryOverlay>();
+        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = Array.Empty<IDestructionStageGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static DestructibleBinaryOverlay DestructibleFactory(
+        public static IDestructibleGetter DestructibleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static DestructibleBinaryOverlay DestructibleFactory(
+        public static IDestructibleGetter DestructibleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Resistances) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<ResistanceDestructibleBinaryOverlay>(
+                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<IResistanceDestructibleGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DMDL:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Stages) return ParseResult.Stop;
-                    this.Stages = this.ParseRepeatedTypelessSubrecord<DestructionStageBinaryOverlay>(
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<IDestructionStageGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: DestructionStage_Registration.TriggerSpecs,

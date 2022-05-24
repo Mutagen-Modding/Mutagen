@@ -3355,7 +3355,7 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellGetter>>();
-        public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = Array.Empty<RaceRelationBinaryOverlay>();
+        public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = Array.Empty<IRaceRelationGetter>();
         #region Data
         private RangeInt32? _DataLocation;
         public IRaceDataGetter? Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
@@ -3414,7 +3414,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
-        public IReadOnlyList<IFacePartGetter> FaceData { get; private set; } = Array.Empty<FacePartBinaryOverlay>();
+        public IReadOnlyList<IFacePartGetter> FaceData { get; private set; } = Array.Empty<IFacePartGetter>();
         #region BodyData
         private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
         public IGenderedItemGetter<IBodyDataGetter?>? BodyData => _BodyDataOverlay;
@@ -3442,7 +3442,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3469,7 +3469,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3518,7 +3518,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.Relations = BinaryOverlayList.FactoryByArray<RaceRelationBinaryOverlay>(
+                    this.Relations = BinaryOverlayList.FactoryByArray<IRaceRelationGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -3569,7 +3569,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.NAM0:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
-                    this.FaceData = this.ParseRepeatedTypelessSubrecord<FacePartBinaryOverlay>(
+                    this.FaceData = this.ParseRepeatedTypelessSubrecord<IFacePartGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: FacePart_Registration.TriggerSpecs,

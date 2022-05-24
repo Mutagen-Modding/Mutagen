@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static StaticPlacementBinaryOverlay StaticPlacementFactory(
+        public static IStaticPlacementGetter StaticPlacementFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static StaticPlacementBinaryOverlay StaticPlacementFactory(
+        public static IStaticPlacementGetter StaticPlacementFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

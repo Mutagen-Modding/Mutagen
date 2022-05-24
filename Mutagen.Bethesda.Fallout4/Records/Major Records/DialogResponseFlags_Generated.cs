@@ -1138,7 +1138,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static DialogResponseFlagsBinaryOverlay DialogResponseFlagsFactory(
+        public static IDialogResponseFlagsGetter DialogResponseFlagsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static DialogResponseFlagsBinaryOverlay DialogResponseFlagsFactory(
+        public static IDialogResponseFlagsGetter DialogResponseFlagsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

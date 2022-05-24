@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomNavmeshSetsEndPos();
         #endregion
         #region NavmeshTree
-        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList.FactoryByCountLength<NavmeshNodeBinaryOverlay>(_data.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
+        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList.FactoryByCountLength<INavmeshNodeGetter>(_data.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
         protected int NavmeshTreeEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PreferredPathingBinaryOverlay PreferredPathingFactory(
+        public static IPreferredPathingGetter PreferredPathingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PreferredPathingBinaryOverlay PreferredPathingFactory(
+        public static IPreferredPathingGetter PreferredPathingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

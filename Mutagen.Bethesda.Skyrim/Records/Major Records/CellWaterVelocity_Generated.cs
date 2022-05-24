@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static CellWaterVelocityBinaryOverlay CellWaterVelocityFactory(
+        public static ICellWaterVelocityGetter CellWaterVelocityFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static CellWaterVelocityBinaryOverlay CellWaterVelocityFactory(
+        public static ICellWaterVelocityGetter CellWaterVelocityFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

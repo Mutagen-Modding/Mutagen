@@ -1249,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static SpellDataBinaryOverlay SpellDataFactory(
+        public static ISpellDataGetter SpellDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SpellDataBinaryOverlay SpellDataFactory(
+        public static ISpellDataGetter SpellDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

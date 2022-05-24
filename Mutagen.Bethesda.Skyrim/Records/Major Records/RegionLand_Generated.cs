@@ -1025,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static RegionLandBinaryOverlay RegionLandFactory(
+        public static IRegionLandGetter RegionLandFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static RegionLandBinaryOverlay RegionLandFactory(
+        public static IRegionLandGetter RegionLandFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1514,9 +1514,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!_DataLocation.HasValue) return default;
                 switch (_DataType.TypeInt)
                 {
-                    case 0x44444E53: // SNDD
+                    case RecordTypeInts.SNDD:
                         return SoundDataBinaryOverlay.SoundDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, default(TypedParseParams));
-                    case 0x58444E53: // SNDX
+                    case RecordTypeInts.SNDX:
                         return SoundDataExtendedBinaryOverlay.SoundDataExtendedFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package, default(TypedParseParams));
                     default:
                         throw new ArgumentException();
@@ -1540,7 +1540,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static SoundBinaryOverlay SoundFactory(
+        public static ISoundGetter SoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SoundBinaryOverlay SoundFactory(
+        public static ISoundGetter SoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

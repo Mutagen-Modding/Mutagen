@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion
             PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IInterCellPointGetter>? InterCellConnections { get; private set; }
-        public IReadOnlyList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = Array.Empty<PointToReferenceMappingBinaryOverlay>();
+        public IReadOnlyList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = Array.Empty<IPointToReferenceMappingGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1991,7 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static PathGridBinaryOverlay PathGridFactory(
+        public static IPathGridGetter PathGridFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2018,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static PathGridBinaryOverlay PathGridFactory(
+        public static IPathGridGetter PathGridFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2055,7 +2055,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.InterCellConnections = BinaryOverlayList.FactoryByStartIndex<InterCellPointBinaryOverlay>(
+                    this.InterCellConnections = BinaryOverlayList.FactoryByStartIndex<IInterCellPointGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -2065,7 +2065,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.PGRL:
                 {
-                    this.PointToReferenceMappings = BinaryOverlayList.FactoryByArray<PointToReferenceMappingBinaryOverlay>(
+                    this.PointToReferenceMappings = BinaryOverlayList.FactoryByArray<IPointToReferenceMappingGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

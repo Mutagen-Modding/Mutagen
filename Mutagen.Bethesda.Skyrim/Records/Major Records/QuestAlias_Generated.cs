@@ -3875,7 +3875,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ICreateReferenceToObjectGetter? CreateReferenceToObject { get; private set; }
         public IFindMatchingRefNearAliasGetter? FindMatchingRefNearAlias { get; private set; }
         public IFindMatchingRefFromEventGetter? FindMatchingRefFromEvent { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
@@ -3924,7 +3924,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static QuestAliasBinaryOverlay QuestAliasFactory(
+        public static IQuestAliasGetter QuestAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3942,7 +3942,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static QuestAliasBinaryOverlay QuestAliasFactory(
+        public static IQuestAliasGetter QuestAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4051,7 +4051,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -4080,7 +4080,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

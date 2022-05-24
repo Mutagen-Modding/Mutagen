@@ -2756,9 +2756,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FlagsLocation;
         public Scene.Flag? Flags => _FlagsLocation.HasValue ? (Scene.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Scene.Flag?);
         #endregion
-        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = Array.Empty<ScenePhaseBinaryOverlay>();
-        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = Array.Empty<SceneActorBinaryOverlay>();
-        public IReadOnlyList<ISceneActionGetter> Actions { get; private set; } = Array.Empty<SceneActionBinaryOverlay>();
+        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = Array.Empty<IScenePhaseGetter>();
+        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = Array.Empty<ISceneActorGetter>();
+        public IReadOnlyList<ISceneActionGetter> Actions { get; private set; } = Array.Empty<ISceneActionGetter>();
         public IScenePhaseUnusedDataGetter? Unused { get; private set; }
         public IScenePhaseUnusedDataGetter? Unused2 { get; private set; }
         #region Quest
@@ -2773,7 +2773,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _VNAMLocation;
         public ReadOnlyMemorySlice<Byte>? VNAM => _VNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2790,7 +2790,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static SceneBinaryOverlay SceneFactory(
+        public static ISceneGetter SceneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2817,7 +2817,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SceneBinaryOverlay SceneFactory(
+        public static ISceneGetter SceneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2852,7 +2852,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    this.Phases = this.ParseRepeatedTypelessSubrecord<ScenePhaseBinaryOverlay>(
+                    this.Phases = this.ParseRepeatedTypelessSubrecord<IScenePhaseGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: ScenePhase_Registration.TriggerSpecs,
@@ -2861,7 +2861,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ALID:
                 {
-                    this.Actors = this.ParseRepeatedTypelessSubrecord<SceneActorBinaryOverlay>(
+                    this.Actors = this.ParseRepeatedTypelessSubrecord<ISceneActorGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: SceneActor_Registration.TriggerSpecs,
@@ -2870,7 +2870,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    this.Actions = this.ParseRepeatedTypelessSubrecord<SceneActionBinaryOverlay>(
+                    this.Actions = this.ParseRepeatedTypelessSubrecord<ISceneActionGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: SceneAction_Registration.TriggerSpecs,
@@ -2915,7 +2915,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

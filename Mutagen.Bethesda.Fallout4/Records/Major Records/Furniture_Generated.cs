@@ -4846,7 +4846,7 @@ namespace Mutagen.Bethesda.Fallout4
         public partial Furniture.EntryPointType? GetEnabledEntryPointsCustom();
         public Furniture.EntryPointType? EnabledEntryPoints => GetEnabledEntryPointsCustom();
         #endregion
-        public IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; private set; } = Array.Empty<FurnitureMarkerEntryPointsBinaryOverlay>();
+        public IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; private set; } = Array.Empty<IFurnitureMarkerEntryPointsGetter>();
         #region MarkerModel
         private int? _MarkerModelLocation;
         public String? MarkerModel => _MarkerModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MarkerModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -4882,7 +4882,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static FurnitureBinaryOverlay FurnitureFactory(
+        public static IFurnitureGetter FurnitureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4909,7 +4909,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static FurnitureBinaryOverlay FurnitureFactory(
+        public static IFurnitureGetter FurnitureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4989,7 +4989,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<ObjectPropertyBinaryOverlay>(
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -5033,7 +5033,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -5047,7 +5047,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -5089,7 +5089,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FNPR:
                 {
-                    this.MarkerEntryPoints = BinaryOverlayList.FactoryByArray<FurnitureMarkerEntryPointsBinaryOverlay>(
+                    this.MarkerEntryPoints = BinaryOverlayList.FactoryByArray<IFurnitureMarkerEntryPointsGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -5131,7 +5131,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.OBTE:
                 {
-                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<ObjectTemplateBinaryOverlay<Furniture.Property>>(
+                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<IObjectTemplateGetter<Furniture.Property>>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

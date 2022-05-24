@@ -1286,7 +1286,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _SoundTypeLocation;
         public CreatureSound.CreatureSoundType? SoundType => _SoundTypeLocation.HasValue ? (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundTypeLocation!.Value, _package.MetaData.Constants)) : default(CreatureSound.CreatureSoundType?);
         #endregion
-        public IReadOnlyList<ISoundItemGetter> Sounds { get; private set; } = Array.Empty<SoundItemBinaryOverlay>();
+        public IReadOnlyList<ISoundItemGetter> Sounds { get; private set; } = Array.Empty<ISoundItemGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static CreatureSoundBinaryOverlay CreatureSoundFactory(
+        public static ICreatureSoundGetter CreatureSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CreatureSoundBinaryOverlay CreatureSoundFactory(
+        public static ICreatureSoundGetter CreatureSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CSDC:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)CreatureSound_FieldIndex.Sounds) return ParseResult.Stop;
-                    this.Sounds = this.ParseRepeatedTypelessSubrecord<SoundItemBinaryOverlay>(
+                    this.Sounds = this.ParseRepeatedTypelessSubrecord<ISoundItemGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: SoundItem_Registration.TriggerSpecs,

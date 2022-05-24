@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PlacedMissileBinaryOverlay PlacedMissileFactory(
+        public static IPlacedMissileGetter PlacedMissileFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PlacedMissileBinaryOverlay PlacedMissileFactory(
+        public static IPlacedMissileGetter PlacedMissileFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

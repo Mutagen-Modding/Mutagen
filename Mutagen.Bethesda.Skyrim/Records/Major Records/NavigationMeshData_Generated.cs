@@ -2330,11 +2330,11 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomTrianglesEndPos();
         #endregion
         #region EdgeLinks
-        public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList.FactoryByCountLength<EdgeLinkBinaryOverlay>(_data.Slice(TrianglesEndingPos), _package, 10, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
+        public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList.FactoryByCountLength<IEdgeLinkGetter>(_data.Slice(TrianglesEndingPos), _package, 10, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
         protected int EdgeLinksEndingPos;
         #endregion
         #region DoorTriangles
-        public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList.FactoryByCountLength<DoorTriangleBinaryOverlay>(_data.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
+        public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList.FactoryByCountLength<IDoorTriangleGetter>(_data.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
         protected int DoorTrianglesEndingPos;
         #endregion
         #region CoverTrianglesLogic
@@ -2359,7 +2359,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NavigationMeshDataBinaryOverlay NavigationMeshDataFactory(
+        public static INavigationMeshDataGetter NavigationMeshDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2380,7 +2380,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NavigationMeshDataBinaryOverlay NavigationMeshDataFactory(
+        public static INavigationMeshDataGetter NavigationMeshDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

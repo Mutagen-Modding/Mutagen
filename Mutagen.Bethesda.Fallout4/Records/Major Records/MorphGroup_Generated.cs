@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static MorphGroupBinaryOverlay MorphGroupFactory(
+        public static IMorphGroupGetter MorphGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static MorphGroupBinaryOverlay MorphGroupFactory(
+        public static IMorphGroupGetter MorphGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MPPC:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MorphGroup_FieldIndex.MorphPresets) return ParseResult.Stop;
-                    this.MorphPresets = BinaryOverlayList.FactoryByCountPerItem<MorphPresetBinaryOverlay>(
+                    this.MorphPresets = BinaryOverlayList.FactoryByCountPerItem<IMorphPresetGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

@@ -1690,7 +1690,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NpcConfigurationBinaryOverlay NpcConfigurationFactory(
+        public static INpcConfigurationGetter NpcConfigurationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1708,7 +1708,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NpcConfigurationBinaryOverlay NpcConfigurationFactory(
+        public static INpcConfigurationGetter NpcConfigurationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

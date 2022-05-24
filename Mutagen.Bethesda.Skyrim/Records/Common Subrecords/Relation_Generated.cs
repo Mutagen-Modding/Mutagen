@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static RelationBinaryOverlay RelationFactory(
+        public static IRelationGetter RelationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static RelationBinaryOverlay RelationFactory(
+        public static IRelationGetter RelationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

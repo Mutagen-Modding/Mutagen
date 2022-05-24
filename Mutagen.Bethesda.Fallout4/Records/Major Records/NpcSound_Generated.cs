@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NpcSoundBinaryOverlay NpcSoundFactory(
+        public static INpcSoundGetter NpcSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NpcSoundBinaryOverlay NpcSoundFactory(
+        public static INpcSoundGetter NpcSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

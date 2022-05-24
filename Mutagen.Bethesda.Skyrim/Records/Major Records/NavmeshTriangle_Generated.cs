@@ -1382,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NavmeshTriangleBinaryOverlay NavmeshTriangleFactory(
+        public static INavmeshTriangleGetter NavmeshTriangleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1399,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NavmeshTriangleBinaryOverlay NavmeshTriangleFactory(
+        public static INavmeshTriangleGetter NavmeshTriangleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

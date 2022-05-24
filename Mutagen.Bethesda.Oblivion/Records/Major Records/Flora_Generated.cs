@@ -1841,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static FloraBinaryOverlay FloraFactory(
+        public static IFloraGetter FloraFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1868,7 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static FloraBinaryOverlay FloraFactory(
+        public static IFloraGetter FloraFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

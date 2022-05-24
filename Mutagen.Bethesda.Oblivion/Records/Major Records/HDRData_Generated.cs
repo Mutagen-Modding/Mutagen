@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static HDRDataBinaryOverlay HDRDataFactory(
+        public static IHDRDataGetter HDRDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1820,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static HDRDataBinaryOverlay HDRDataFactory(
+        public static IHDRDataGetter HDRDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

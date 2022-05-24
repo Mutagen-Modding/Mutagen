@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PlacedObjectSplineBinaryOverlay PlacedObjectSplineFactory(
+        public static IPlacedObjectSplineGetter PlacedObjectSplineFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1397,7 +1397,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PlacedObjectSplineBinaryOverlay PlacedObjectSplineFactory(
+        public static IPlacedObjectSplineGetter PlacedObjectSplineFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

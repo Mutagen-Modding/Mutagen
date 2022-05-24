@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WorldDefaultLevelDataBinaryOverlay WorldDefaultLevelDataFactory(
+        public static IWorldDefaultLevelDataGetter WorldDefaultLevelDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WorldDefaultLevelDataBinaryOverlay WorldDefaultLevelDataFactory(
+        public static IWorldDefaultLevelDataGetter WorldDefaultLevelDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

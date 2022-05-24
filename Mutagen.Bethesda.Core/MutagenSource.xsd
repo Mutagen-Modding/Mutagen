@@ -66,6 +66,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="binaryOverlayGenerateCtor" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to generate the binary overlay factory method
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="endMarkerType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>

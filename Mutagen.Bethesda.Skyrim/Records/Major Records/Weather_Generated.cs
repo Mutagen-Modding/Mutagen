@@ -6870,7 +6870,7 @@ namespace Mutagen.Bethesda.Skyrim
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<WeatherSoundBinaryOverlay>();
+        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<IWeatherSoundGetter>();
         public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = Array.Empty<IFormLinkGetter<IStaticGetter>>();
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
@@ -6917,7 +6917,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WeatherBinaryOverlay WeatherFactory(
+        public static IWeatherGetter WeatherFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -6944,7 +6944,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WeatherBinaryOverlay WeatherFactory(
+        public static IWeatherGetter WeatherFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -7067,7 +7067,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Sounds = BinaryOverlayList.FactoryByArray<WeatherSoundBinaryOverlay>(
+                    this.Sounds = BinaryOverlayList.FactoryByArray<IWeatherSoundGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

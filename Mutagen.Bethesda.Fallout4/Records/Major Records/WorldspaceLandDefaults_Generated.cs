@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WorldspaceLandDefaultsBinaryOverlay WorldspaceLandDefaultsFactory(
+        public static IWorldspaceLandDefaultsGetter WorldspaceLandDefaultsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WorldspaceLandDefaultsBinaryOverlay WorldspaceLandDefaultsFactory(
+        public static IWorldspaceLandDefaultsGetter WorldspaceLandDefaultsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

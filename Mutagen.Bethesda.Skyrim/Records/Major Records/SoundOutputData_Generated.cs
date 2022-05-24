@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static SoundOutputDataBinaryOverlay SoundOutputDataFactory(
+        public static ISoundOutputDataGetter SoundOutputDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SoundOutputDataBinaryOverlay SoundOutputDataFactory(
+        public static ISoundOutputDataGetter SoundOutputDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

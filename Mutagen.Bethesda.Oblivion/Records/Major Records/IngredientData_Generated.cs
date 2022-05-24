@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static IngredientDataBinaryOverlay IngredientDataFactory(
+        public static IIngredientDataGetter IngredientDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static IngredientDataBinaryOverlay IngredientDataFactory(
+        public static IIngredientDataGetter IngredientDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

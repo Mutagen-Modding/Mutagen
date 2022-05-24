@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static RankBinaryOverlay RankFactory(
+        public static IRankGetter RankFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static RankBinaryOverlay RankFactory(
+        public static IRankGetter RankFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

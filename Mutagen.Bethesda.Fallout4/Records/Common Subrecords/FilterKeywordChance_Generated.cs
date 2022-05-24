@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static FilterKeywordChanceBinaryOverlay FilterKeywordChanceFactory(
+        public static IFilterKeywordChanceGetter FilterKeywordChanceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static FilterKeywordChanceBinaryOverlay FilterKeywordChanceFactory(
+        public static IFilterKeywordChanceGetter FilterKeywordChanceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

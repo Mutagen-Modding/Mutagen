@@ -1245,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PlacedObjectRadioBinaryOverlay PlacedObjectRadioFactory(
+        public static IPlacedObjectRadioGetter PlacedObjectRadioFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PlacedObjectRadioBinaryOverlay PlacedObjectRadioFactory(
+        public static IPlacedObjectRadioGetter PlacedObjectRadioFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

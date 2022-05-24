@@ -83,7 +83,7 @@ abstract partial class GlobalBinaryOverlay
     public abstract float? RawFloat { get; }
     public virtual char TypeChar { get; set; }
 
-    public static GlobalBinaryOverlay GlobalFactory(
+    public static IGlobalGetter GlobalFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
         TypedParseParams? translationParams)
@@ -105,7 +105,7 @@ abstract partial class GlobalBinaryOverlay
                     stream,
                     package);
             case null:
-                var ret = GlobalFloatBinaryOverlay.GlobalFloatFactory(
+                var ret = (GlobalFloatBinaryOverlay)GlobalFloatBinaryOverlay.GlobalFloatFactory(
                     stream,
                     package);
                 ret.NoTypeDeclaration = true;

@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static FunctionConditionDataBinaryOverlay FunctionConditionDataFactory(
+        public static IFunctionConditionDataGetter FunctionConditionDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1547,7 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static FunctionConditionDataBinaryOverlay FunctionConditionDataFactory(
+        public static IFunctionConditionDataGetter FunctionConditionDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

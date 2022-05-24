@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PcLevelMultBinaryOverlay PcLevelMultFactory(
+        public static IPcLevelMultGetter PcLevelMultFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PcLevelMultBinaryOverlay PcLevelMultFactory(
+        public static IPcLevelMultGetter PcLevelMultFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

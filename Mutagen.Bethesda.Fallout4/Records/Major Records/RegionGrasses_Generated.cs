@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static RegionGrassesBinaryOverlay RegionGrassesFactory(
+        public static IRegionGrassesGetter RegionGrassesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static RegionGrassesBinaryOverlay RegionGrassesFactory(
+        public static IRegionGrassesGetter RegionGrassesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Grasses = BinaryOverlayList.FactoryByStartIndex<RegionGrassBinaryOverlay>(
+                    this.Grasses = BinaryOverlayList.FactoryByStartIndex<IRegionGrassGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

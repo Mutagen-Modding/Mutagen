@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LocationCoordinateBinaryOverlay LocationCoordinateFactory(
+        public static ILocationCoordinateGetter LocationCoordinateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LocationCoordinateBinaryOverlay LocationCoordinateFactory(
+        public static ILocationCoordinateGetter LocationCoordinateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

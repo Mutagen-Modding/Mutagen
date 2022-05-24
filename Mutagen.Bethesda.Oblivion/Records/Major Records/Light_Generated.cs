@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LightBinaryOverlay LightFactory(
+        public static ILightGetter LightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LightBinaryOverlay LightFactory(
+        public static ILightGetter LightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

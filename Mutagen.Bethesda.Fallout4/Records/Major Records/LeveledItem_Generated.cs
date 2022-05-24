@@ -2331,7 +2331,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LeveledItemBinaryOverlay LeveledItemFactory(
+        public static ILeveledItemGetter LeveledItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2358,7 +2358,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LeveledItemBinaryOverlay LeveledItemFactory(
+        public static ILeveledItemGetter LeveledItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2410,7 +2410,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.COED:
                 case RecordTypeInts.LLCT:
                 {
-                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<LeveledItemEntryBinaryOverlay>(
+                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<ILeveledItemEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 1,
@@ -2425,7 +2425,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.FilterKeywordChances = BinaryOverlayList.FactoryByLazyParse<FilterKeywordChanceBinaryOverlay>(
+                    this.FilterKeywordChances = BinaryOverlayList.FactoryByLazyParse<IFilterKeywordChanceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));

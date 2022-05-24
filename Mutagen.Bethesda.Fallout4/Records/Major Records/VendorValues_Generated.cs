@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static VendorValuesBinaryOverlay VendorValuesFactory(
+        public static IVendorValuesGetter VendorValuesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static VendorValuesBinaryOverlay VendorValuesFactory(
+        public static IVendorValuesGetter VendorValuesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

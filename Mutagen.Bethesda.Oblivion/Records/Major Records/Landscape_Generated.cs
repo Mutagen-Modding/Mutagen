@@ -2063,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _VertexColorsLocation;
         public ReadOnlyMemorySlice<Byte>? VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VertexColorsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = Array.Empty<BaseLayerBinaryOverlay>();
+        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = Array.Empty<IBaseLayerGetter>();
         public IReadOnlyList<IFormLinkGetter<ILandTextureGetter>>? Textures { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2081,7 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LandscapeBinaryOverlay LandscapeFactory(
+        public static ILandscapeGetter LandscapeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2108,7 +2108,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LandscapeBinaryOverlay LandscapeFactory(
+        public static ILandscapeGetter LandscapeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2154,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.BTXT:
                 case RecordTypeInts.ATXT:
                 {
-                    this.Layers = this.ParseRepeatedTypelessSubrecord<BaseLayerBinaryOverlay>(
+                    this.Layers = this.ParseRepeatedTypelessSubrecord<IBaseLayerGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: BaseLayer_Registration.TriggerSpecs,

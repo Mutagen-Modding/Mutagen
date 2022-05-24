@@ -1977,7 +1977,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = Array.Empty<WorldspaceSubBlockBinaryOverlay>();
+        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = Array.Empty<IWorldspaceSubBlockGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1994,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static WorldspaceBlockBinaryOverlay WorldspaceBlockFactory(
+        public static IWorldspaceBlockGetter WorldspaceBlockFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2018,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static WorldspaceBlockBinaryOverlay WorldspaceBlockFactory(
+        public static IWorldspaceBlockGetter WorldspaceBlockFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2043,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.GRUP:
                 {
-                    this.Items = BinaryOverlayList.FactoryByArray<WorldspaceSubBlockBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByArray<IWorldspaceSubBlockGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

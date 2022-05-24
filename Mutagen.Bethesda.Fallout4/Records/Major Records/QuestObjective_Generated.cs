@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _DisplayTextLocation;
         public ITranslatedStringGetter? DisplayText => _DisplayTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayTextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; private set; } = Array.Empty<QuestObjectiveTargetBinaryOverlay>();
+        public IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; private set; } = Array.Empty<IQuestObjectiveTargetGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static QuestObjectiveBinaryOverlay QuestObjectiveFactory(
+        public static IQuestObjectiveGetter QuestObjectiveFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static QuestObjectiveBinaryOverlay QuestObjectiveFactory(
+        public static IQuestObjectiveGetter QuestObjectiveFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1508,7 +1508,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.QSTA:
                 {
-                    this.Targets = this.ParseRepeatedTypelessSubrecord<QuestObjectiveTargetBinaryOverlay>(
+                    this.Targets = this.ParseRepeatedTypelessSubrecord<IQuestObjectiveTargetGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: QuestObjectiveTarget_Registration.TriggerSpecs,

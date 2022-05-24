@@ -3947,7 +3947,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
         public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_ScheduleDurationInMinutesLocation, 4)) : default;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Unknown4
         private int? _Unknown4Location;
         public Int32? Unknown4 => _Unknown4Location.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown4Location.Value, _package.MetaData.Constants)) : default(Int32?);
@@ -3996,7 +3996,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PackageBinaryOverlay PackageFactory(
+        public static IPackageGetter PackageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4023,7 +4023,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PackageBinaryOverlay PackageFactory(
+        public static IPackageGetter PackageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4063,7 +4063,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

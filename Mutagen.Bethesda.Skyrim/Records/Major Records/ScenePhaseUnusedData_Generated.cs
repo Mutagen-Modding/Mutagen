@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ScenePhaseUnusedDataBinaryOverlay ScenePhaseUnusedDataFactory(
+        public static IScenePhaseUnusedDataGetter ScenePhaseUnusedDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ScenePhaseUnusedDataBinaryOverlay ScenePhaseUnusedDataFactory(
+        public static IScenePhaseUnusedDataGetter ScenePhaseUnusedDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

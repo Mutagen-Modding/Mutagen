@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LeveledItemEntryBinaryOverlay LeveledItemEntryFactory(
+        public static ILeveledItemEntryGetter LeveledItemEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LeveledItemEntryBinaryOverlay LeveledItemEntryFactory(
+        public static ILeveledItemEntryGetter LeveledItemEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

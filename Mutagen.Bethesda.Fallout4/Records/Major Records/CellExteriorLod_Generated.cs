@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static CellExteriorLodBinaryOverlay CellExteriorLodFactory(
+        public static ICellExteriorLodGetter CellExteriorLodFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static CellExteriorLodBinaryOverlay CellExteriorLodFactory(
+        public static ICellExteriorLodGetter CellExteriorLodFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

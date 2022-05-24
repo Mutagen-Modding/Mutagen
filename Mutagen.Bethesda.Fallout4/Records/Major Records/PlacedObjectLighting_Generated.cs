@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PlacedObjectLightingBinaryOverlay PlacedObjectLightingFactory(
+        public static IPlacedObjectLightingGetter PlacedObjectLightingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PlacedObjectLightingBinaryOverlay PlacedObjectLightingFactory(
+        public static IPlacedObjectLightingGetter PlacedObjectLightingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

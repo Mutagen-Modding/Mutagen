@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static FormListBinaryOverlay FormListFactory(
+        public static IFormListGetter FormListFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1572,7 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static FormListBinaryOverlay FormListFactory(
+        public static IFormListGetter FormListFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

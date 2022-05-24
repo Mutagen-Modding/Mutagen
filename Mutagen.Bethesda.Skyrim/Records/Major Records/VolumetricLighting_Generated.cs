@@ -2218,7 +2218,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static VolumetricLightingBinaryOverlay VolumetricLightingFactory(
+        public static IVolumetricLightingGetter VolumetricLightingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2245,7 +2245,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static VolumetricLightingBinaryOverlay VolumetricLightingFactory(
+        public static IVolumetricLightingGetter VolumetricLightingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

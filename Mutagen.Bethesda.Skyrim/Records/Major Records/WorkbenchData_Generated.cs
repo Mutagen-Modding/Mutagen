@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WorkbenchDataBinaryOverlay WorkbenchDataFactory(
+        public static IWorkbenchDataGetter WorkbenchDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WorkbenchDataBinaryOverlay WorkbenchDataFactory(
+        public static IWorkbenchDataGetter WorkbenchDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

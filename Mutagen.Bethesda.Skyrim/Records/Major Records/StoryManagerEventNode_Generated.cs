@@ -1704,7 +1704,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static StoryManagerEventNodeBinaryOverlay StoryManagerEventNodeFactory(
+        public static IStoryManagerEventNodeGetter StoryManagerEventNodeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static StoryManagerEventNodeBinaryOverlay StoryManagerEventNodeFactory(
+        public static IStoryManagerEventNodeGetter StoryManagerEventNodeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

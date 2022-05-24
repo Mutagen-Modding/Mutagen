@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ModelBinaryOverlay ModelFactory(
+        public static IModelGetter ModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ModelBinaryOverlay ModelFactory(
+        public static IModelGetter ModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     var count = stream.ReadUInt32();
-                    this.AlternateTextures = BinaryOverlayList.FactoryByCount<AlternateTextureBinaryOverlay>(
+                    this.AlternateTextures = BinaryOverlayList.FactoryByCount<IAlternateTextureGetter>(
                         stream: stream,
                         package: _package,
                         count: count,

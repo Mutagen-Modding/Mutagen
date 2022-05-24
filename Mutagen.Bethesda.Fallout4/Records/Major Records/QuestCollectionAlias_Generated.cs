@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<ICollectionAliasGetter> Collection { get; private set; } = Array.Empty<CollectionAliasBinaryOverlay>();
+        public IReadOnlyList<ICollectionAliasGetter> Collection { get; private set; } = Array.Empty<ICollectionAliasGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static QuestCollectionAliasBinaryOverlay QuestCollectionAliasFactory(
+        public static IQuestCollectionAliasGetter QuestCollectionAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static QuestCollectionAliasBinaryOverlay QuestCollectionAliasFactory(
+        public static IQuestCollectionAliasGetter QuestCollectionAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ALCS:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestCollectionAlias_FieldIndex.Collection) return ParseResult.Stop;
-                    this.Collection = this.ParseRepeatedTypelessSubrecord<CollectionAliasBinaryOverlay>(
+                    this.Collection = this.ParseRepeatedTypelessSubrecord<ICollectionAliasGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: CollectionAlias_Registration.TriggerSpecs,

@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static RegionSoundsBinaryOverlay RegionSoundsFactory(
+        public static IRegionSoundsGetter RegionSoundsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1382,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static RegionSoundsBinaryOverlay RegionSoundsFactory(
+        public static IRegionSoundsGetter RegionSoundsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1414,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<RegionSoundBinaryOverlay>(
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<IRegionSoundGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,

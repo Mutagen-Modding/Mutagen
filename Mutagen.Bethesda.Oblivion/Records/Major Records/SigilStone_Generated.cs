@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _ScriptLocation;
         public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<EffectBinaryOverlay>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         #region Data
         private RangeInt32? _DataLocation;
         public ISigilStoneDataGetter? Data => _DataLocation.HasValue ? SigilStoneDataBinaryOverlay.SigilStoneDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
@@ -2031,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static SigilStoneBinaryOverlay SigilStoneFactory(
+        public static ISigilStoneGetter SigilStoneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SigilStoneBinaryOverlay SigilStoneFactory(
+        public static ISigilStoneGetter SigilStoneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2107,7 +2107,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
                 {
-                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Effect_Registration.TriggerSpecs,

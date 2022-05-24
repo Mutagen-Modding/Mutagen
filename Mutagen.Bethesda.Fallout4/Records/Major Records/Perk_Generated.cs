@@ -1293,7 +1293,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PerkBinaryOverlay PerkFactory(
+        public static IPerkGetter PerkFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PerkBinaryOverlay PerkFactory(
+        public static IPerkGetter PerkFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

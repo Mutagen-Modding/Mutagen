@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WaterNoisePropertiesBinaryOverlay WaterNoisePropertiesFactory(
+        public static IWaterNoisePropertiesGetter WaterNoisePropertiesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1328,7 +1328,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WaterNoisePropertiesBinaryOverlay WaterNoisePropertiesFactory(
+        public static IWaterNoisePropertiesGetter WaterNoisePropertiesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

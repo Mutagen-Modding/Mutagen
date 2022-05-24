@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(IImpactDataSet);
 
 
-        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = Array.Empty<ImpactDataBinaryOverlay>();
+        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = Array.Empty<IImpactDataGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1544,7 +1544,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ImpactDataSetBinaryOverlay ImpactDataSetFactory(
+        public static IImpactDataSetGetter ImpactDataSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ImpactDataSetBinaryOverlay ImpactDataSetFactory(
+        public static IImpactDataSetGetter ImpactDataSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.PNAM:
                 {
-                    this.Impacts = BinaryOverlayList.FactoryByArray<ImpactDataBinaryOverlay>(
+                    this.Impacts = BinaryOverlayList.FactoryByArray<IImpactDataGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

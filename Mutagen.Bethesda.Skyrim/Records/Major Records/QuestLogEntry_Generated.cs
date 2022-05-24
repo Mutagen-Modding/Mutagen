@@ -1691,7 +1691,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FlagsLocation;
         public QuestLogEntry.Flag? Flags => _FlagsLocation.HasValue ? (QuestLogEntry.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(QuestLogEntry.Flag?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Entry
         private int? _EntryLocation;
         public ITranslatedStringGetter? Entry => _EntryLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _EntryLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static QuestLogEntryBinaryOverlay QuestLogEntryFactory(
+        public static IQuestLogEntryGetter QuestLogEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static QuestLogEntryBinaryOverlay QuestLogEntryFactory(
+        public static IQuestLogEntryGetter QuestLogEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1778,7 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CTDA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestLogEntry_FieldIndex.Conditions) return ParseResult.Stop;
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

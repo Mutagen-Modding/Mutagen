@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static StaticPartBinaryOverlay StaticPartFactory(
+        public static IStaticPartGetter StaticPartFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static StaticPartBinaryOverlay StaticPartFactory(
+        public static IStaticPartGetter StaticPartFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1361,7 +1361,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Placements) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Placements = BinaryOverlayList.FactoryByStartIndex<StaticPlacementBinaryOverlay>(
+                    this.Placements = BinaryOverlayList.FactoryByStartIndex<IStaticPlacementGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 28,

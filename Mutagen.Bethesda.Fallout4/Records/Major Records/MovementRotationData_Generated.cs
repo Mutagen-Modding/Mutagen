@@ -1226,7 +1226,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static MovementRotationDataBinaryOverlay MovementRotationDataFactory(
+        public static IMovementRotationDataGetter MovementRotationDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static MovementRotationDataBinaryOverlay MovementRotationDataFactory(
+        public static IMovementRotationDataGetter MovementRotationDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

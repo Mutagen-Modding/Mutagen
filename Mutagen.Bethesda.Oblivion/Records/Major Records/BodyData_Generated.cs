@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IBodyPartGetter> BodyParts { get; private set; } = Array.Empty<BodyPartBinaryOverlay>();
+        public IReadOnlyList<IBodyPartGetter> BodyParts { get; private set; } = Array.Empty<IBodyPartGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static BodyDataBinaryOverlay BodyDataFactory(
+        public static IBodyDataGetter BodyDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static BodyDataBinaryOverlay BodyDataFactory(
+        public static IBodyDataGetter BodyDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.ICON:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyData_FieldIndex.BodyParts) return ParseResult.Stop;
-                    this.BodyParts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(
+                    this.BodyParts = this.ParseRepeatedTypelessSubrecord<IBodyPartGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: BodyPart_Registration.TriggerSpecs,

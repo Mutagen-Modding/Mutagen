@@ -3872,7 +3872,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
         public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_ScheduleDurationInMinutesLocation, 4)) : default;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
         #region CombatStyle
         private int? _CombatStyleLocation;
@@ -3917,7 +3917,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PackageBinaryOverlay PackageFactory(
+        public static IPackageGetter PackageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3944,7 +3944,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PackageBinaryOverlay PackageFactory(
+        public static IPackageGetter PackageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3984,7 +3984,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

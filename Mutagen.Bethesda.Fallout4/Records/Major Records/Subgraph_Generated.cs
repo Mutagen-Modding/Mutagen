@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static SubgraphBinaryOverlay SubgraphFactory(
+        public static ISubgraphGetter SubgraphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1817,7 +1817,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static SubgraphBinaryOverlay SubgraphFactory(
+        public static ISubgraphGetter SubgraphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

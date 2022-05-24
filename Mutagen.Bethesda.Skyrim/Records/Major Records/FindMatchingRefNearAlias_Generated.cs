@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static FindMatchingRefNearAliasBinaryOverlay FindMatchingRefNearAliasFactory(
+        public static IFindMatchingRefNearAliasGetter FindMatchingRefNearAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static FindMatchingRefNearAliasBinaryOverlay FindMatchingRefNearAliasFactory(
+        public static IFindMatchingRefNearAliasGetter FindMatchingRefNearAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

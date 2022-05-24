@@ -5276,8 +5276,8 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<QuestStageBinaryOverlay>();
-        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<QuestObjectiveBinaryOverlay>();
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
         #region AliasParse
         public partial ParseResult AliasParseCustomParse(
             OverlayStream stream,
@@ -5315,7 +5315,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static QuestBinaryOverlay QuestFactory(
+        public static IQuestGetter QuestFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -5347,7 +5347,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static QuestBinaryOverlay QuestFactory(
+        public static IQuestGetter QuestFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -5437,7 +5437,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INDX:
                 {
-                    this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<IQuestStageGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: QuestStage_Registration.TriggerSpecs,
@@ -5446,7 +5446,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.QOBJ:
                 {
-                    this.Objectives = this.ParseRepeatedTypelessSubrecord<QuestObjectiveBinaryOverlay>(
+                    this.Objectives = this.ParseRepeatedTypelessSubrecord<IQuestObjectiveGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: QuestObjective_Registration.TriggerSpecs,

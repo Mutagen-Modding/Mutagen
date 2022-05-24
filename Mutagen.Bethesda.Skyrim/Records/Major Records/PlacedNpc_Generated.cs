@@ -4006,7 +4006,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _HealthLocation;
         public Single? Health => _HealthLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HealthLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<LinkedReferencesBinaryOverlay>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region LinkedReferenceColor
         private RangeInt32? _LinkedReferenceColorLocation;
@@ -4085,7 +4085,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PlacedNpcBinaryOverlay PlacedNpcFactory(
+        public static IPlacedNpcGetter PlacedNpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4112,7 +4112,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PlacedNpcBinaryOverlay PlacedNpcFactory(
+        public static IPlacedNpcGetter PlacedNpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4195,7 +4195,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XLKR:
                 {
-                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<LinkedReferencesBinaryOverlay>(
+                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

@@ -2484,9 +2484,9 @@ namespace Mutagen.Bethesda.Fallout4
         public ILandscapeVertexHeightMapGetter? VertexHeightMap => _VertexHeightMapLocation.HasValue ? LandscapeVertexHeightMapBinaryOverlay.LandscapeVertexHeightMapFactory(new OverlayStream(_data.Slice(_VertexHeightMapLocation!.Value.Min), _package), _package) : default;
         #endregion
         public IReadOnlyArray2d<P3UInt8>? VertexColors { get; private set; }
-        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = Array.Empty<BaseLayerBinaryOverlay>();
+        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = Array.Empty<IBaseLayerGetter>();
         public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; private set; }
-        public IReadOnlyList<ILandscapeMPCDGetter> MPCDs { get; private set; } = Array.Empty<LandscapeMPCDBinaryOverlay>();
+        public IReadOnlyList<ILandscapeMPCDGetter> MPCDs { get; private set; } = Array.Empty<ILandscapeMPCDGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2503,7 +2503,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LandscapeBinaryOverlay LandscapeFactory(
+        public static ILandscapeGetter LandscapeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2530,7 +2530,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LandscapeBinaryOverlay LandscapeFactory(
+        public static ILandscapeGetter LandscapeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2588,7 +2588,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.BTXT:
                 case RecordTypeInts.ATXT:
                 {
-                    this.Layers = this.ParseRepeatedTypelessSubrecord<BaseLayerBinaryOverlay>(
+                    this.Layers = this.ParseRepeatedTypelessSubrecord<IBaseLayerGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: BaseLayer_Registration.TriggerSpecs,
@@ -2620,7 +2620,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MPCD:
                 {
-                    this.MPCDs = BinaryOverlayList.FactoryByArray<LandscapeMPCDBinaryOverlay>(
+                    this.MPCDs = BinaryOverlayList.FactoryByArray<ILandscapeMPCDGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

@@ -3854,7 +3854,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ProjectileBinaryOverlay ProjectileFactory(
+        public static IProjectileGetter ProjectileFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3881,7 +3881,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ProjectileBinaryOverlay ProjectileFactory(
+        public static IProjectileGetter ProjectileFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

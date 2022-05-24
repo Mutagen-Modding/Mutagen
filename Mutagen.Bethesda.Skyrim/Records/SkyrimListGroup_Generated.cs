@@ -1476,7 +1476,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static SkyrimListGroupBinaryOverlay<T> SkyrimListGroupFactory(
+        public static ISkyrimListGroupGetter<T> SkyrimListGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkyrimListGroupBinaryOverlay<T> SkyrimListGroupFactory(
+        public static ISkyrimListGroupGetter<T> SkyrimListGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

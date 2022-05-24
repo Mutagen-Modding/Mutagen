@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static DistantLodBinaryOverlay DistantLodFactory(
+        public static IDistantLodGetter DistantLodFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static DistantLodBinaryOverlay DistantLodFactory(
+        public static IDistantLodGetter DistantLodFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

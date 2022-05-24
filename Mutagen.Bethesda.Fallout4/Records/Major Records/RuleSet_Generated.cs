@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IReadOnlyList<IRuleNameGetter> Names { get; private set; } = Array.Empty<RuleNameBinaryOverlay>();
+        public IReadOnlyList<IRuleNameGetter> Names { get; private set; } = Array.Empty<IRuleNameGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static RuleSetBinaryOverlay RuleSetFactory(
+        public static IRuleSetGetter RuleSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static RuleSetBinaryOverlay RuleSetFactory(
+        public static IRuleSetGetter RuleSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1341,7 +1341,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.XNAM:
                 {
-                    this.Names = this.ParseRepeatedTypelessSubrecord<RuleNameBinaryOverlay>(
+                    this.Names = this.ParseRepeatedTypelessSubrecord<IRuleNameGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: RuleName_Registration.TriggerSpecs,

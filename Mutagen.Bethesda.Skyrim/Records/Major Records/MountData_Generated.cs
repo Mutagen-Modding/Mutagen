@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static MountDataBinaryOverlay MountDataFactory(
+        public static IMountDataGetter MountDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MountDataBinaryOverlay MountDataFactory(
+        public static IMountDataGetter MountDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

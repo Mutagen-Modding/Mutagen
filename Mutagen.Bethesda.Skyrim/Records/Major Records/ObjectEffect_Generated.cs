@@ -2443,7 +2443,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _WornRestrictions_IsSet => _ENITLocation.HasValue && !ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0);
         public IFormLinkGetter<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<EffectBinaryOverlay>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2460,7 +2460,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ObjectEffectBinaryOverlay ObjectEffectFactory(
+        public static IObjectEffectGetter ObjectEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2487,7 +2487,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ObjectEffectBinaryOverlay ObjectEffectFactory(
+        public static IObjectEffectGetter ObjectEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2534,7 +2534,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.EFIT:
                 case RecordTypeInts.CTDA:
                 {
-                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Effect_Registration.TriggerSpecs,

@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static RaceRelationBinaryOverlay RaceRelationFactory(
+        public static IRaceRelationGetter RaceRelationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RaceRelationBinaryOverlay RaceRelationFactory(
+        public static IRaceRelationGetter RaceRelationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

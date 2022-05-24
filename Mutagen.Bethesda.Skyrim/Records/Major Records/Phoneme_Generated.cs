@@ -3258,7 +3258,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PhonemeBinaryOverlay PhonemeFactory(
+        public static IPhonemeGetter PhonemeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3274,7 +3274,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PhonemeBinaryOverlay PhonemeFactory(
+        public static IPhonemeGetter PhonemeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

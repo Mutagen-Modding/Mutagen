@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DecalBinaryOverlay DecalFactory(
+        public static IDecalGetter DecalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1652,7 +1652,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DecalBinaryOverlay DecalFactory(
+        public static IDecalGetter DecalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1476,7 +1476,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static Fallout4ListGroupBinaryOverlay<T> Fallout4ListGroupFactory(
+        public static IFallout4ListGroupGetter<T> Fallout4ListGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static Fallout4ListGroupBinaryOverlay<T> Fallout4ListGroupFactory(
+        public static IFallout4ListGroupGetter<T> Fallout4ListGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

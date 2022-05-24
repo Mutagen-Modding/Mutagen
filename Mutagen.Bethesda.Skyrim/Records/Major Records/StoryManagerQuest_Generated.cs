@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static StoryManagerQuestBinaryOverlay StoryManagerQuestFactory(
+        public static IStoryManagerQuestGetter StoryManagerQuestFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static StoryManagerQuestBinaryOverlay StoryManagerQuestFactory(
+        public static IStoryManagerQuestGetter StoryManagerQuestFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

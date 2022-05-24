@@ -1737,7 +1737,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _DataLocation;
         public ISpellDataGetter? Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<EffectBinaryOverlay>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1754,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static SpellUnleveledBinaryOverlay SpellUnleveledFactory(
+        public static ISpellUnleveledGetter SpellUnleveledFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1781,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SpellUnleveledBinaryOverlay SpellUnleveledFactory(
+        public static ISpellUnleveledGetter SpellUnleveledFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
                 {
-                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Effect_Registration.TriggerSpecs,

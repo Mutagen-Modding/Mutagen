@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NavmeshWaypointBinaryOverlay NavmeshWaypointFactory(
+        public static INavmeshWaypointGetter NavmeshWaypointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NavmeshWaypointBinaryOverlay NavmeshWaypointFactory(
+        public static INavmeshWaypointGetter NavmeshWaypointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

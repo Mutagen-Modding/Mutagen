@@ -70,7 +70,7 @@ abstract partial class GlobalBinaryOverlay
     public abstract float? RawFloat { get; }
     public abstract char TypeChar { get; }
 
-    public static GlobalBinaryOverlay GlobalFactory(
+    public static IGlobalGetter GlobalFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
         TypedParseParams? translationParams)

@@ -9574,7 +9574,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AttackRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<AttackBinaryOverlay>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region BodyData
         private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
         public IGenderedItemGetter<IBodyDataGetter?> BodyData => _BodyDataOverlay ?? new GenderedItem<IBodyDataGetter?>(default, default);
@@ -9621,12 +9621,12 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _SoundCloseCorpseLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundCloseCorpse => _SoundCloseCorpseLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundCloseCorpseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
-        public IReadOnlyList<IMovementDataOverrideGetter> MovementDataOverrides { get; private set; } = Array.Empty<MovementDataOverrideBinaryOverlay>();
+        public IReadOnlyList<IMovementDataOverrideGetter> MovementDataOverrides { get; private set; } = Array.Empty<IMovementDataOverrideGetter>();
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
         public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
         #endregion
-        public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = Array.Empty<EquipmentSlotBinaryOverlay>();
+        public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = Array.Empty<IEquipmentSlotGetter>();
         #region UnarmedWeapon
         private int? _UnarmedWeaponLocation;
         public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => _UnarmedWeaponLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnarmedWeaponLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
@@ -9677,7 +9677,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _SubgraphAdditiveRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> SubgraphAdditiveRace => _SubgraphAdditiveRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SubgraphAdditiveRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = Array.Empty<SubgraphBinaryOverlay>();
+        public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = Array.Empty<ISubgraphGetter>();
         #region IdleChatterTimeMin
         private int? _IdleChatterTimeMinLocation;
         public Single? IdleChatterTimeMin => _IdleChatterTimeMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IdleChatterTimeMinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
@@ -9727,7 +9727,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -9754,7 +9754,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -9832,7 +9832,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<ObjectPropertyBinaryOverlay>(
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -9919,7 +9919,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ATKS:
                 case RecordTypeInts.ATKT:
                 {
-                    this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
+                    this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Attack_Registration.TriggerSpecs,
@@ -10001,7 +10001,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MTYP:
                 case RecordTypeInts.SPED:
                 {
-                    this.MovementDataOverrides = this.ParseRepeatedTypelessSubrecord<MovementDataOverrideBinaryOverlay>(
+                    this.MovementDataOverrides = this.ParseRepeatedTypelessSubrecord<IMovementDataOverrideGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: MovementDataOverride_Registration.TriggerSpecs,
@@ -10016,7 +10016,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.QNAM:
                 case RecordTypeInts.ZNAM:
                 {
-                    this.EquipmentSlots = this.ParseRepeatedTypelessSubrecord<EquipmentSlotBinaryOverlay>(
+                    this.EquipmentSlots = this.ParseRepeatedTypelessSubrecord<IEquipmentSlotGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: EquipmentSlot_Registration.TriggerSpecs,
@@ -10098,7 +10098,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SAPT:
                 case RecordTypeInts.SRAF:
                 {
-                    this.Subgraphs = this.ParseRepeatedTypelessSubrecord<SubgraphBinaryOverlay>(
+                    this.Subgraphs = this.ParseRepeatedTypelessSubrecord<ISubgraphGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Subgraph_Registration.TriggerSpecs,

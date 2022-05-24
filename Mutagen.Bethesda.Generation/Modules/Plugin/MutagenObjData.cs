@@ -21,6 +21,7 @@ public class MutagenObjData
     public string TriggeringSource;
     public bool CustomBinary;
     public BinaryGenerationType BinaryOverlay = BinaryGenerationType.Normal;
+    public bool BinaryOverlayGenerateCtor;
     public CustomEnd CustomBinaryEnd;
     public Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GenerationTypes => GetGenerationTypes();
     public TaskCompletionSource WiringComplete = new();

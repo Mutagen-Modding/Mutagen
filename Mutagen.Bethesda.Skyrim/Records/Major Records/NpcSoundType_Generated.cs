@@ -1286,7 +1286,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _TypeLocation;
         public NpcSoundType.SoundType? Type => _TypeLocation.HasValue ? (NpcSoundType.SoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(NpcSoundType.SoundType?);
         #endregion
-        public IReadOnlyList<INpcSoundGetter> Sounds { get; private set; } = Array.Empty<NpcSoundBinaryOverlay>();
+        public IReadOnlyList<INpcSoundGetter> Sounds { get; private set; } = Array.Empty<INpcSoundGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NpcSoundTypeBinaryOverlay NpcSoundTypeFactory(
+        public static INpcSoundTypeGetter NpcSoundTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NpcSoundTypeBinaryOverlay NpcSoundTypeFactory(
+        public static INpcSoundTypeGetter NpcSoundTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CSDC:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcSoundType_FieldIndex.Sounds) return ParseResult.Stop;
-                    this.Sounds = this.ParseRepeatedTypelessSubrecord<NpcSoundBinaryOverlay>(
+                    this.Sounds = this.ParseRepeatedTypelessSubrecord<INpcSoundGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: NpcSound_Registration.TriggerSpecs,

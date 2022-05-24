@@ -2319,7 +2319,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IdleMarkerBinaryOverlay IdleMarkerFactory(
+        public static IIdleMarkerGetter IdleMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2346,7 +2346,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IdleMarkerBinaryOverlay IdleMarkerFactory(
+        public static IIdleMarkerGetter IdleMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static FaceGenDataBinaryOverlay FaceGenDataFactory(
+        public static IFaceGenDataGetter FaceGenDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static FaceGenDataBinaryOverlay FaceGenDataFactory(
+        public static IFaceGenDataGetter FaceGenDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

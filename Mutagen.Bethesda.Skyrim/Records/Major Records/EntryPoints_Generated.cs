@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static EntryPointsBinaryOverlay EntryPointsFactory(
+        public static IEntryPointsGetter EntryPointsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static EntryPointsBinaryOverlay EntryPointsFactory(
+        public static IEntryPointsGetter EntryPointsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

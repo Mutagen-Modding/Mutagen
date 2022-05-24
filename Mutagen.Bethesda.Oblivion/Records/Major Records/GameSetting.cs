@@ -41,7 +41,7 @@ public partial class GameSetting : IGameSettingCommon
 
 internal partial class GameSettingBinaryOverlay
 {
-    public static GameSettingBinaryOverlay GameSettingFactory(
+    public static IGameSettingGetter GameSettingFactory(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
         TypedParseParams? translationParams)

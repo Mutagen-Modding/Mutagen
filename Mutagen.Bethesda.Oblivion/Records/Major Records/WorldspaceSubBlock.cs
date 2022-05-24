@@ -11,7 +11,7 @@ internal partial class WorldspaceSubBlockBinaryOverlay
 
     partial void ItemsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        this.Items = BinaryOverlayList.FactoryByArray<CellBinaryOverlay>(
+        this.Items = BinaryOverlayList.FactoryByArray<ICellGetter>(
             mem: stream.RemainingMemory,
             package: _package,
             parseParams: null,

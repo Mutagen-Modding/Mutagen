@@ -2554,7 +2554,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _StringLocation;
         public String? String => _StringLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _StringLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoopAndRumble
         private RangeInt32? _LoopAndRumbleLocation;
         public ISoundLoopAndRumbleGetter? LoopAndRumble => _LoopAndRumbleLocation.HasValue ? SoundLoopAndRumbleBinaryOverlay.SoundLoopAndRumbleFactory(new OverlayStream(_data.Slice(_LoopAndRumbleLocation!.Value.Min), _package), _package) : default;
@@ -2602,7 +2602,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static SoundDescriptorBinaryOverlay SoundDescriptorFactory(
+        public static ISoundDescriptorGetter SoundDescriptorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2629,7 +2629,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SoundDescriptorBinaryOverlay SoundDescriptorFactory(
+        public static ISoundDescriptorGetter SoundDescriptorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2693,7 +2693,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

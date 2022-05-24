@@ -1510,7 +1510,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IDebris);
 
 
-        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = Array.Empty<DebrisModelBinaryOverlay>();
+        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = Array.Empty<IDebrisModelGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static DebrisBinaryOverlay DebrisFactory(
+        public static IDebrisGetter DebrisFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static DebrisBinaryOverlay DebrisFactory(
+        public static IDebrisGetter DebrisFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1579,7 +1579,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DATA:
                 {
-                    this.Models = this.ParseRepeatedTypelessSubrecord<DebrisModelBinaryOverlay>(
+                    this.Models = this.ParseRepeatedTypelessSubrecord<IDebrisModelGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: DebrisModel_Registration.TriggerSpecs,

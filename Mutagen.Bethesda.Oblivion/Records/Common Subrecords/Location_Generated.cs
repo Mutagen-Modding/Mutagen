@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LocationBinaryOverlay LocationFactory(
+        public static ILocationGetter LocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LocationBinaryOverlay LocationFactory(
+        public static ILocationGetter LocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

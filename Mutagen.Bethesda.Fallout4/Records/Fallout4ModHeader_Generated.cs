@@ -2541,13 +2541,13 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<MasterReferenceBinaryOverlay>();
+        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<IMasterReferenceGetter>();
         public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms { get; private set; }
         #region Screenshot
         private int? _ScreenshotLocation;
         public ReadOnlyMemorySlice<Byte>? Screenshot => _ScreenshotLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScreenshotLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = Array.Empty<TransientTypeBinaryOverlay>();
+        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = Array.Empty<ITransientTypeGetter>();
         #region INTV
         private int? _INTVLocation;
         public ReadOnlyMemorySlice<Byte>? INTV => _INTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _INTVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -2572,7 +2572,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static Fallout4ModHeaderBinaryOverlay Fallout4ModHeaderFactory(
+        public static IFallout4ModHeaderGetter Fallout4ModHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2596,7 +2596,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static Fallout4ModHeaderBinaryOverlay Fallout4ModHeaderFactory(
+        public static IFallout4ModHeaderGetter Fallout4ModHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2646,7 +2646,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MAST:
                 {
-                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
+                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<IMasterReferenceGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: MasterReference_Registration.TriggerSpecs,
@@ -2672,7 +2672,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    this.TransientTypes = BinaryOverlayList.FactoryByArray<TransientTypeBinaryOverlay>(
+                    this.TransientTypes = BinaryOverlayList.FactoryByArray<ITransientTypeGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

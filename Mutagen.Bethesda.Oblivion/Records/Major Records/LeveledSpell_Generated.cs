@@ -1654,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _FlagsLocation;
         public LeveledFlag? Flags => _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledFlag?);
         #endregion
-        public IReadOnlyList<ILeveledSpellEntryGetter> Entries { get; private set; } = Array.Empty<LeveledSpellEntryBinaryOverlay>();
+        public IReadOnlyList<ILeveledSpellEntryGetter> Entries { get; private set; } = Array.Empty<ILeveledSpellEntryGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1671,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static ILeveledSpellGetter LeveledSpellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1698,7 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static ILeveledSpellGetter LeveledSpellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1733,7 +1733,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.LVLO:
                 {
-                    this.Entries = BinaryOverlayList.FactoryByArray<LeveledSpellEntryBinaryOverlay>(
+                    this.Entries = BinaryOverlayList.FactoryByArray<ILeveledSpellEntryGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

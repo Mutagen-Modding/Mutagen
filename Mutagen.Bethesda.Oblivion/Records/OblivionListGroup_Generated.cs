@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static OblivionListGroupBinaryOverlay<T> OblivionListGroupFactory(
+        public static IOblivionListGroupGetter<T> OblivionListGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1476,7 +1476,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static OblivionListGroupBinaryOverlay<T> OblivionListGroupFactory(
+        public static IOblivionListGroupGetter<T> OblivionListGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

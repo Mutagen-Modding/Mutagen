@@ -2717,7 +2717,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static CombatStyleBinaryOverlay CombatStyleFactory(
+        public static ICombatStyleGetter CombatStyleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2744,7 +2744,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static CombatStyleBinaryOverlay CombatStyleFactory(
+        public static ICombatStyleGetter CombatStyleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = Array.Empty<BodyPartBinaryOverlay>();
+        public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = Array.Empty<IBodyPartGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static BodyPartDataBinaryOverlay BodyPartDataFactory(
+        public static IBodyPartDataGetter BodyPartDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static BodyPartDataBinaryOverlay BodyPartDataFactory(
+        public static IBodyPartDataGetter BodyPartDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.BPTN:
                 {
-                    this.Parts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(
+                    this.Parts = this.ParseRepeatedTypelessSubrecord<IBodyPartGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: BodyPart_Registration.TriggerSpecs,

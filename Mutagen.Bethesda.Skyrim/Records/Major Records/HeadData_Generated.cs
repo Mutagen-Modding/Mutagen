@@ -2286,7 +2286,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = Array.Empty<HeadPartReferenceBinaryOverlay>();
+        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = Array.Empty<IHeadPartReferenceGetter>();
         public IAvailableMorphsGetter? AvailableMorphs { get; private set; }
         public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = Array.Empty<IFormLinkGetter<INpcGetter>>();
         public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = Array.Empty<IFormLinkGetter<IColorRecordGetter>>();
@@ -2295,7 +2295,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DefaultFaceTextureLocation;
         public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
-        public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = Array.Empty<TintAssetsBinaryOverlay>();
+        public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = Array.Empty<ITintAssetsGetter>();
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2313,7 +2313,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static HeadDataBinaryOverlay HeadDataFactory(
+        public static IHeadDataGetter HeadDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2331,7 +2331,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static HeadDataBinaryOverlay HeadDataFactory(
+        public static IHeadDataGetter HeadDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2358,7 +2358,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.HEAD:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.HeadParts) return ParseResult.Stop;
-                    this.HeadParts = this.ParseRepeatedTypelessSubrecord<HeadPartReferenceBinaryOverlay>(
+                    this.HeadParts = this.ParseRepeatedTypelessSubrecord<IHeadPartReferenceGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: HeadPartReference_Registration.TriggerSpecs,
@@ -2434,7 +2434,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.TintMasks) return ParseResult.Stop;
-                    this.TintMasks = this.ParseRepeatedTypelessSubrecord<TintAssetsBinaryOverlay>(
+                    this.TintMasks = this.ParseRepeatedTypelessSubrecord<ITintAssetsGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: TintAssets_Registration.TriggerSpecs,

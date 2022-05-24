@@ -444,7 +444,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                                         if (subLoq?.TargetObjectGeneration?.Abstract ?? false) continue;
                                         foreach (var trigger in gen.Key)
                                         {
-                                            sb.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                            sb.AppendLine($"case RecordTypeInts.{trigger.Type}:");
                                         }
                                         using (sb.IncreaseDepth())
                                         using (sb.Line())

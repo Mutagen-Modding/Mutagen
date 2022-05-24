@@ -1627,7 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static EquipTypeBinaryOverlay EquipTypeFactory(
+        public static IEquipTypeGetter EquipTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1654,7 +1654,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static EquipTypeBinaryOverlay EquipTypeFactory(
+        public static IEquipTypeGetter EquipTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

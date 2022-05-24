@@ -2567,7 +2567,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ImpactBinaryOverlay ImpactFactory(
+        public static IImpactGetter ImpactFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2594,7 +2594,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ImpactBinaryOverlay ImpactFactory(
+        public static IImpactGetter ImpactFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

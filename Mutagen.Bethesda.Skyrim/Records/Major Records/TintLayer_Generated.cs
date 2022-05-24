@@ -1324,7 +1324,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static TintLayerBinaryOverlay TintLayerFactory(
+        public static ITintLayerGetter TintLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static TintLayerBinaryOverlay TintLayerFactory(
+        public static ITintLayerGetter TintLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

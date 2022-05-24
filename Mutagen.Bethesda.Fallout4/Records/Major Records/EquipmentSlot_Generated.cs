@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static EquipmentSlotBinaryOverlay EquipmentSlotFactory(
+        public static IEquipmentSlotGetter EquipmentSlotFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static EquipmentSlotBinaryOverlay EquipmentSlotFactory(
+        public static IEquipmentSlotGetter EquipmentSlotFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

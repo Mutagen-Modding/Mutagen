@@ -54,7 +54,8 @@ public class TriggeringRecordModule : GenerationModule
         data.CustomBinary = obj.Node.GetAttribute<bool>("customBinary", defaultVal: false);
         data.UsesStringFiles = obj.Node.GetAttribute<bool>("usesStringFiles", defaultVal: true);
         data.CustomBinaryEnd = obj.Node.GetAttribute<CustomEnd>("customBinaryEnd", defaultVal: CustomEnd.Off);
-        data.BinaryOverlay = obj.Node.GetAttribute<BinaryGenerationType>("binaryOverlay", defaultVal: BinaryGenerationType.Normal);
+        data.BinaryOverlay = obj.Node.GetAttribute<BinaryGenerationType>(Constants.BinaryOverlay, defaultVal: BinaryGenerationType.Normal);
+        data.BinaryOverlayGenerateCtor = obj.Node.GetAttribute<bool>(Constants.BinaryOverlayGenerateCtor, defaultVal: true);
 
         var objType = obj.Node.GetAttribute(Mutagen.Bethesda.Generation.Constants.ObjectType);
         if (!Enum.TryParse<ObjectType>(objType, out var objTypeEnum))

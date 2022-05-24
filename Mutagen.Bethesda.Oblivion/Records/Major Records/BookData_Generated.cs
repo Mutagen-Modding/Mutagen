@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static BookDataBinaryOverlay BookDataFactory(
+        public static IBookDataGetter BookDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static BookDataBinaryOverlay BookDataFactory(
+        public static IBookDataGetter BookDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

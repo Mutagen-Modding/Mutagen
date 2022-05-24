@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static VirtualMachineAdapterIndexedBinaryOverlay VirtualMachineAdapterIndexedFactory(
+        public static IVirtualMachineAdapterIndexedGetter VirtualMachineAdapterIndexedFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static VirtualMachineAdapterIndexedBinaryOverlay VirtualMachineAdapterIndexedFactory(
+        public static IVirtualMachineAdapterIndexedGetter VirtualMachineAdapterIndexedFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

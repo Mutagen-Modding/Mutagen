@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static RegionObjectsBinaryOverlay RegionObjectsFactory(
+        public static IRegionObjectsGetter RegionObjectsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static RegionObjectsBinaryOverlay RegionObjectsFactory(
+        public static IRegionObjectsGetter RegionObjectsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Objects = BinaryOverlayList.FactoryByStartIndex<RegionObjectBinaryOverlay>(
+                    this.Objects = BinaryOverlayList.FactoryByStartIndex<IRegionObjectGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 52,

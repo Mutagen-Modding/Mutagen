@@ -2176,7 +2176,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _ShortTitleLocation;
         public ITranslatedStringGetter? ShortTitle => _ShortTitleLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortTitleLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = Array.Empty<MessageButtonBinaryOverlay>();
+        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = Array.Empty<IMessageButtonGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2193,7 +2193,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static MessageBinaryOverlay MessageFactory(
+        public static IMessageGetter MessageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2220,7 +2220,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static MessageBinaryOverlay MessageFactory(
+        public static IMessageGetter MessageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2286,7 +2286,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ITXT:
                 case RecordTypeInts.CTDA:
                 {
-                    this.MenuButtons = this.ParseRepeatedTypelessSubrecord<MessageButtonBinaryOverlay>(
+                    this.MenuButtons = this.ParseRepeatedTypelessSubrecord<IMessageButtonGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: MessageButton_Registration.TriggerSpecs,

@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static IdleMarkerBinaryOverlay IdleMarkerFactory(
+        public static IIdleMarkerGetter IdleMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2053,7 +2053,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static IdleMarkerBinaryOverlay IdleMarkerFactory(
+        public static IIdleMarkerGetter IdleMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

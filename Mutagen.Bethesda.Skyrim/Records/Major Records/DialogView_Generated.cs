@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static DialogViewBinaryOverlay DialogViewFactory(
+        public static IDialogViewGetter DialogViewFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DialogViewBinaryOverlay DialogViewFactory(
+        public static IDialogViewGetter DialogViewFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

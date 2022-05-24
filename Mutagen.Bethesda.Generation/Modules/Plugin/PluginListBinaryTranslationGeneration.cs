@@ -591,7 +591,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         var expLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
         if (list.SubTypeGeneration is LoquiType loqui)
         {
-            var typeName = this.Module.BinaryOverlayClassName(loqui);
+            var typeName = loqui.TypeName(getter: true, needsCovariance: true);
             switch (listBinaryType)
             {
                 case ListBinaryType.PrependCount
@@ -698,16 +698,8 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         var subGenTypes = subData.GenerationTypes.ToList();
         ListBinaryType listBinaryType = GetListType(list, data, subData);
         var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-        string typeName;
+        string typeName = list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
         LoquiType loqui = list.SubTypeGeneration as LoquiType;
-        if (loqui != null)
-        {
-            typeName = this.Module.BinaryOverlayClassName(loqui);
-        }
-        else
-        {
-            typeName = list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
-        }
         var additive = (bool)list.CustomData[Additive];
         string target;
         if (additive)
@@ -784,7 +776,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                             args.Add($"mem: stream.RemainingMemory");
                             args.Add($"package: _package");
                             args.Add($"parseParams: {converterAccessor}");
-                            args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
+                            args.Add($"getter: (s, p, recConv) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                             args.Add(subFg =>
                             {
                                 using (var subArgs = subFg.Function(
@@ -999,7 +991,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                         args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                         args.Add($"parseParams: {converterAccessor}");
-                        args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
+                        args.Add($"getter: (s, p, recConv) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                         args.Add("skipHeader: false");
                     }
                 }

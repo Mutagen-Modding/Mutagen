@@ -6181,7 +6181,7 @@ namespace Mutagen.Bethesda.Skyrim
         private INpcConfigurationGetter? _Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new OverlayStream(_data.Slice(_ConfigurationLocation!.Value.Min), _package), _package) : default;
         public INpcConfigurationGetter Configuration => _Configuration ?? new NpcConfiguration();
         #endregion
-        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<RankPlacementBinaryOverlay>();
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
         public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
@@ -6212,7 +6212,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _AttackRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<AttackBinaryOverlay>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
         public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
@@ -6332,7 +6332,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _FacePartsLocation;
         public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(new OverlayStream(_data.Slice(_FacePartsLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = Array.Empty<TintLayerBinaryOverlay>();
+        public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = Array.Empty<ITintLayerGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -6349,7 +6349,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static NpcBinaryOverlay NpcFactory(
+        public static INpcGetter NpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -6376,7 +6376,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NpcBinaryOverlay NpcFactory(
+        public static INpcGetter NpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -6416,7 +6416,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Factions = BinaryOverlayList.FactoryByArray<RankPlacementBinaryOverlay>(
+                    this.Factions = BinaryOverlayList.FactoryByArray<IRankPlacementGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -6490,7 +6490,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ATKD:
                 case RecordTypeInts.ATKE:
                 {
-                    this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
+                    this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Attack_Registration.TriggerSpecs,
@@ -6520,7 +6520,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.PRKR:
                 case RecordTypeInts.PRKZ:
                 {
-                    this.Perks = BinaryOverlayList.FactoryByCountPerItem<PerkPlacementBinaryOverlay>(
+                    this.Perks = BinaryOverlayList.FactoryByCountPerItem<IPerkPlacementGetter>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x8,
@@ -6534,7 +6534,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -6715,7 +6715,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIAS:
                 {
-                    this.TintLayers = this.ParseRepeatedTypelessSubrecord<TintLayerBinaryOverlay>(
+                    this.TintLayers = this.ParseRepeatedTypelessSubrecord<ITintLayerGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: TintLayer_Registration.TriggerSpecs,

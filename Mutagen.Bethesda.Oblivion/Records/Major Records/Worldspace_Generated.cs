@@ -4035,7 +4035,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static WorldspaceBinaryOverlay WorldspaceFactory(
+        public static IWorldspaceGetter WorldspaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4067,7 +4067,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static WorldspaceBinaryOverlay WorldspaceFactory(
+        public static IWorldspaceGetter WorldspaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

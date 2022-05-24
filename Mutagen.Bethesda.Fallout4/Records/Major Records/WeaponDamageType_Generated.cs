@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WeaponDamageTypeBinaryOverlay WeaponDamageTypeFactory(
+        public static IWeaponDamageTypeGetter WeaponDamageTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WeaponDamageTypeBinaryOverlay WeaponDamageTypeFactory(
+        public static IWeaponDamageTypeGetter WeaponDamageTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

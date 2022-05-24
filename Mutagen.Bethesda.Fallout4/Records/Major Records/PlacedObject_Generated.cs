@@ -8479,7 +8479,7 @@ namespace Mutagen.Bethesda.Fallout4
         private RangeInt32? _EnableParentLocation;
         public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<LinkedReferencesBinaryOverlay>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
         public IPatrolGetter? Patrol { get; private set; }
         #region Action
         private int? _ActionLocation;
@@ -8502,7 +8502,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AttachRefLocation;
         public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => _AttachRefLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttachRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
         #endregion
-        public IReadOnlyList<ISplineLinkGetter> SplineConnections { get; private set; } = Array.Empty<SplineLinkBinaryOverlay>();
+        public IReadOnlyList<ISplineLinkGetter> SplineConnections { get; private set; } = Array.Empty<ISplineLinkGetter>();
         #region PowerGridConnections
         private ImmutableManyListWrapper<IPowerGridConnectionGetter>? _additivePowerGridConnections;
         public IReadOnlyList<IPowerGridConnectionGetter>? PowerGridConnections => _additivePowerGridConnections;
@@ -8564,7 +8564,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static PlacedObjectBinaryOverlay PlacedObjectFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -8591,7 +8591,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static PlacedObjectBinaryOverlay PlacedObjectFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -8638,7 +8638,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Portals = BinaryOverlayList.FactoryByStartIndex<PortalBinaryOverlay>(
+                    this.Portals = BinaryOverlayList.FactoryByStartIndex<IPortalGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -8917,7 +8917,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLKR:
                 {
-                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<LinkedReferencesBinaryOverlay>(
+                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -8974,7 +8974,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XPLK:
                 {
-                    this.SplineConnections = BinaryOverlayList.FactoryByArray<SplineLinkBinaryOverlay>(
+                    this.SplineConnections = BinaryOverlayList.FactoryByArray<ISplineLinkGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -8991,7 +8991,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XWPG:
                 {
                     _additivePowerGridConnections ??= new();
-                    var PowerGridConnectionsTmp = BinaryOverlayList.FactoryByCountPerItem<PowerGridConnectionBinaryOverlay>(
+                    var PowerGridConnectionsTmp = BinaryOverlayList.FactoryByCountPerItem<IPowerGridConnectionGetter>(
                         stream: stream,
                         package: _package,
                         itemLength: 0xC,

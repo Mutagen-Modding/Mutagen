@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NavmeshGridArrayBinaryOverlay NavmeshGridArrayFactory(
+        public static INavmeshGridArrayGetter NavmeshGridArrayFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NavmeshGridArrayBinaryOverlay NavmeshGridArrayFactory(
+        public static INavmeshGridArrayGetter NavmeshGridArrayFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

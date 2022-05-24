@@ -2763,11 +2763,11 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomTrianglesEndPos();
         #endregion
         #region EdgeLinks
-        public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList.FactoryByCountLength<EdgeLinkBinaryOverlay>(_data.Slice(TrianglesEndingPos), _package, 11, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
+        public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList.FactoryByCountLength<IEdgeLinkGetter>(_data.Slice(TrianglesEndingPos), _package, 11, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
         protected int EdgeLinksEndingPos;
         #endregion
         #region DoorTriangles
-        public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList.FactoryByCountLength<DoorTriangleBinaryOverlay>(_data.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
+        public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList.FactoryByCountLength<IDoorTriangleGetter>(_data.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
         protected int DoorTrianglesEndingPos;
         #endregion
         #region Unknown
@@ -2779,7 +2779,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected int Unknown2EndingPos;
         #endregion
         #region Waypoints
-        public IReadOnlyList<INavmeshWaypointGetter> Waypoints => BinaryOverlayList.FactoryByCountLength<NavmeshWaypointBinaryOverlay>(_data.Slice(Unknown2EndingPos), _package, 18, countLength: 4, (s, p) => NavmeshWaypointBinaryOverlay.NavmeshWaypointFactory(s, p));
+        public IReadOnlyList<INavmeshWaypointGetter> Waypoints => BinaryOverlayList.FactoryByCountLength<INavmeshWaypointGetter>(_data.Slice(Unknown2EndingPos), _package, 18, countLength: 4, (s, p) => NavmeshWaypointBinaryOverlay.NavmeshWaypointFactory(s, p));
         protected int WaypointsEndingPos;
         #endregion
         public UInt32 GridSize => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(WaypointsEndingPos, 0x4));
@@ -2806,7 +2806,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static NavmeshGeometryBinaryOverlay NavmeshGeometryFactory(
+        public static INavmeshGeometryGetter NavmeshGeometryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2830,7 +2830,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static NavmeshGeometryBinaryOverlay NavmeshGeometryFactory(
+        public static INavmeshGeometryGetter NavmeshGeometryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static TreeDataBinaryOverlay TreeDataFactory(
+        public static ITreeDataGetter TreeDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1482,7 +1482,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static TreeDataBinaryOverlay TreeDataFactory(
+        public static ITreeDataGetter TreeDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

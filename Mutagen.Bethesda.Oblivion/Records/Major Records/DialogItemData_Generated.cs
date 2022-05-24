@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static DialogItemDataBinaryOverlay DialogItemDataFactory(
+        public static IDialogItemDataGetter DialogItemDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1226,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static DialogItemDataBinaryOverlay DialogItemDataFactory(
+        public static IDialogItemDataGetter DialogItemDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

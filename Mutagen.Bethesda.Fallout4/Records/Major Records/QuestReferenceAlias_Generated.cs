@@ -4147,7 +4147,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _ClosestToAliasLocation;
         public Int32? ClosestToAlias => _ClosestToAliasLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClosestToAliasLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
@@ -4205,7 +4205,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static QuestReferenceAliasBinaryOverlay QuestReferenceAliasFactory(
+        public static IQuestReferenceAliasGetter QuestReferenceAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4223,7 +4223,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static QuestReferenceAliasBinaryOverlay QuestReferenceAliasFactory(
+        public static IQuestReferenceAliasGetter QuestReferenceAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -4323,7 +4323,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -4352,7 +4352,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -4387,7 +4387,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.LinkedAliases = BinaryOverlayList.FactoryByStartIndex<LinkedAliasBinaryOverlay>(
+                    this.LinkedAliases = BinaryOverlayList.FactoryByStartIndex<ILinkedAliasGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

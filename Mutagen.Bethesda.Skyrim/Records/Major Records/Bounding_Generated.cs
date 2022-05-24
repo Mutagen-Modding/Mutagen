@@ -1392,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static BoundingBinaryOverlay BoundingFactory(
+        public static IBoundingGetter BoundingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static BoundingBinaryOverlay BoundingFactory(
+        public static IBoundingGetter BoundingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

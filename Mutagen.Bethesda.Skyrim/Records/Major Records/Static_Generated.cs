@@ -2111,7 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static StaticBinaryOverlay StaticFactory(
+        public static IStaticGetter StaticFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2138,7 +2138,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static StaticBinaryOverlay StaticFactory(
+        public static IStaticGetter StaticFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

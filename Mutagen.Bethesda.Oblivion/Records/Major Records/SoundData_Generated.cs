@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static SoundDataBinaryOverlay SoundDataFactory(
+        public static ISoundDataInternalGetter SoundDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static SoundDataBinaryOverlay SoundDataFactory(
+        public static ISoundDataGetter SoundDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

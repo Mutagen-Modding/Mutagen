@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PerkScriptFlagBinaryOverlay PerkScriptFlagFactory(
+        public static IPerkScriptFlagGetter PerkScriptFlagFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PerkScriptFlagBinaryOverlay PerkScriptFlagFactory(
+        public static IPerkScriptFlagGetter PerkScriptFlagFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

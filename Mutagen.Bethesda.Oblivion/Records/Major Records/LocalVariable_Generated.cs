@@ -1249,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LocalVariableBinaryOverlay LocalVariableFactory(
+        public static ILocalVariableGetter LocalVariableFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LocalVariableBinaryOverlay LocalVariableFactory(
+        public static ILocalVariableGetter LocalVariableFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

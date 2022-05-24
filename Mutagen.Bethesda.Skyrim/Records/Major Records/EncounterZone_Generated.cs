@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static EncounterZoneBinaryOverlay EncounterZoneFactory(
+        public static IEncounterZoneGetter EncounterZoneFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1883,7 +1883,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static EncounterZoneBinaryOverlay EncounterZoneFactory(
+        public static IEncounterZoneGetter EncounterZoneFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

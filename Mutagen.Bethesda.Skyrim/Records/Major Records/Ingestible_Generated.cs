@@ -3206,7 +3206,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _ConsumeSound_IsSet => _ENITLocation.HasValue;
         public IFormLinkGetter<ISoundDescriptorGetter> ConsumeSound => _ConsumeSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ConsumeSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<EffectBinaryOverlay>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3223,7 +3223,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static IngestibleBinaryOverlay IngestibleFactory(
+        public static IIngestibleGetter IngestibleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3250,7 +3250,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static IngestibleBinaryOverlay IngestibleFactory(
+        public static IIngestibleGetter IngestibleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3356,7 +3356,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.EFIT:
                 case RecordTypeInts.CTDA:
                 {
-                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<IEffectGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Effect_Registration.TriggerSpecs,

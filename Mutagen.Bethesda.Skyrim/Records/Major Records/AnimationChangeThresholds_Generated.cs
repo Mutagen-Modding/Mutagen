@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static AnimationChangeThresholdsBinaryOverlay AnimationChangeThresholdsFactory(
+        public static IAnimationChangeThresholdsGetter AnimationChangeThresholdsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static AnimationChangeThresholdsBinaryOverlay AnimationChangeThresholdsFactory(
+        public static IAnimationChangeThresholdsGetter AnimationChangeThresholdsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

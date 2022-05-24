@@ -3060,7 +3060,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static FurnitureBinaryOverlay FurnitureFactory(
+        public static IFurnitureGetter FurnitureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -3087,7 +3087,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static FurnitureBinaryOverlay FurnitureFactory(
+        public static IFurnitureGetter FurnitureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

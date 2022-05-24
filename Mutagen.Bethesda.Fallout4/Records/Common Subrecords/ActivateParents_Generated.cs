@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _FlagsLocation;
         public ActivateParents.Flag Flags => _FlagsLocation.HasValue ? (ActivateParents.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(ActivateParents.Flag);
         #endregion
-        public IReadOnlyList<IActivateParentGetter> Parents { get; private set; } = Array.Empty<ActivateParentBinaryOverlay>();
+        public IReadOnlyList<IActivateParentGetter> Parents { get; private set; } = Array.Empty<IActivateParentGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ActivateParentsBinaryOverlay ActivateParentsFactory(
+        public static IActivateParentsGetter ActivateParentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ActivateParentsBinaryOverlay ActivateParentsFactory(
+        public static IActivateParentsGetter ActivateParentsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XAPR:
                 {
-                    this.Parents = BinaryOverlayList.FactoryByArray<ActivateParentBinaryOverlay>(
+                    this.Parents = BinaryOverlayList.FactoryByArray<IActivateParentGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

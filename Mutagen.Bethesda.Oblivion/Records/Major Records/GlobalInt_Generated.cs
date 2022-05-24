@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static GlobalIntBinaryOverlay GlobalIntFactory(
+        public static IGlobalIntGetter GlobalIntFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static GlobalIntBinaryOverlay GlobalIntFactory(
+        public static IGlobalIntGetter GlobalIntFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

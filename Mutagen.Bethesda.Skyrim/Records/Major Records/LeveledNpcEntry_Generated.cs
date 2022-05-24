@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static LeveledNpcEntryBinaryOverlay LeveledNpcEntryFactory(
+        public static ILeveledNpcEntryGetter LeveledNpcEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LeveledNpcEntryBinaryOverlay LeveledNpcEntryFactory(
+        public static ILeveledNpcEntryGetter LeveledNpcEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

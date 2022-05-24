@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<RelationBinaryOverlay>();
+        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<IRelationGetter>();
         #region Flags
         private int? _FlagsLocation;
         public Faction.FactionFlag? Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Faction.FactionFlag?);
@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _CrimeGoldMultiplierLocation;
         public Single? CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeGoldMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<RankBinaryOverlay>();
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static FactionBinaryOverlay FactionFactory(
+        public static IFactionGetter FactionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1992,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static FactionBinaryOverlay FactionFactory(
+        public static IFactionGetter FactionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.Relations = BinaryOverlayList.FactoryByArray<RelationBinaryOverlay>(
+                    this.Relations = BinaryOverlayList.FactoryByArray<IRelationGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.FNAM:
                 case RecordTypeInts.INAM:
                 {
-                    this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryOverlay>(
+                    this.Ranks = this.ParseRepeatedTypelessSubrecord<IRankGetter>(
                         stream: stream,
                         parseParams: parseParams,
                         trigger: Rank_Registration.TriggerSpecs,

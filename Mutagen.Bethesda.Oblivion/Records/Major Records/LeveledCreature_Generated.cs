@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _FlagsLocation;
         public LeveledFlag? Flags => _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledFlag?);
         #endregion
-        public IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; private set; } = Array.Empty<LeveledCreatureEntryBinaryOverlay>();
+        public IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; private set; } = Array.Empty<ILeveledCreatureEntryGetter>();
         #region Script
         private int? _ScriptLocation;
         public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static LeveledCreatureBinaryOverlay LeveledCreatureFactory(
+        public static ILeveledCreatureGetter LeveledCreatureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LeveledCreatureBinaryOverlay LeveledCreatureFactory(
+        public static ILeveledCreatureGetter LeveledCreatureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1889,7 +1889,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.LVLO:
                 {
-                    this.Entries = BinaryOverlayList.FactoryByArray<LeveledCreatureEntryBinaryOverlay>(
+                    this.Entries = BinaryOverlayList.FactoryByArray<ILeveledCreatureEntryGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

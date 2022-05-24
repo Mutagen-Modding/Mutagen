@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static CloudLayerBinaryOverlay CloudLayerFactory(
+        public static ICloudLayerGetter CloudLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static CloudLayerBinaryOverlay CloudLayerFactory(
+        public static ICloudLayerGetter CloudLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

@@ -2885,7 +2885,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ArmorAddonBinaryOverlay ArmorAddonFactory(
+        public static IArmorAddonGetter ArmorAddonFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2912,7 +2912,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ArmorAddonBinaryOverlay ArmorAddonFactory(
+        public static IArmorAddonGetter ArmorAddonFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

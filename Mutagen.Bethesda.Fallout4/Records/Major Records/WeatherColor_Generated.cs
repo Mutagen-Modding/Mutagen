@@ -1518,7 +1518,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static WeatherColorBinaryOverlay WeatherColorFactory(
+        public static IWeatherColorGetter WeatherColorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int finalPos,
@@ -1539,7 +1539,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static WeatherColorBinaryOverlay WeatherColorFactory(
+        public static IWeatherColorGetter WeatherColorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

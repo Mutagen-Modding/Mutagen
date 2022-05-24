@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ImageSpaceHdrBinaryOverlay ImageSpaceHdrFactory(
+        public static IImageSpaceHdrGetter ImageSpaceHdrFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1540,7 +1540,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ImageSpaceHdrBinaryOverlay ImageSpaceHdrFactory(
+        public static IImageSpaceHdrGetter ImageSpaceHdrFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

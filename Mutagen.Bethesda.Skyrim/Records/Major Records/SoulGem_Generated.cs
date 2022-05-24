@@ -2830,7 +2830,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static SoulGemBinaryOverlay SoulGemFactory(
+        public static ISoulGemGetter SoulGemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2857,7 +2857,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SoulGemBinaryOverlay SoulGemFactory(
+        public static ISoulGemGetter SoulGemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

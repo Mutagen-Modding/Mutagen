@@ -7027,7 +7027,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _RadiusLocation;
         public Single? Radius => _RadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = Array.Empty<WaterReflectionBinaryOverlay>();
+        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = Array.Empty<IWaterReflectionGetter>();
         public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = Array.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
         #region Emittance
         private int? _EmittanceLocation;
@@ -7147,7 +7147,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _EnableParentLocation;
         public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<LinkedReferencesBinaryOverlay>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
         public IPatrolGetter? Patrol { get; private set; }
         #region Action
         private int? _ActionLocation;
@@ -7194,7 +7194,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static PlacedObjectBinaryOverlay PlacedObjectFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -7221,7 +7221,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static PlacedObjectBinaryOverlay PlacedObjectFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -7282,7 +7282,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.Portals = BinaryOverlayList.FactoryByStartIndex<PortalBinaryOverlay>(
+                    this.Portals = BinaryOverlayList.FactoryByStartIndex<IPortalGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -7327,7 +7327,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XPWR:
                 {
-                    this.Reflections = BinaryOverlayList.FactoryByArray<WaterReflectionBinaryOverlay>(
+                    this.Reflections = BinaryOverlayList.FactoryByArray<IWaterReflectionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,
@@ -7521,7 +7521,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XLKR:
                 {
-                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<LinkedReferencesBinaryOverlay>(
+                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

@@ -2720,7 +2720,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static HazardBinaryOverlay HazardFactory(
+        public static IHazardGetter HazardFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2747,7 +2747,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static HazardBinaryOverlay HazardFactory(
+        public static IHazardGetter HazardFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)

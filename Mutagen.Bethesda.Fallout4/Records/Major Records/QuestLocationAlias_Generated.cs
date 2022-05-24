@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReferenceAliasLocationGetter? ReferenceAliasLocation { get; private set; }
         public IExternalAliasLocationGetter? ExternalAliasLocation { get; private set; }
         public IFindMatchingRefFromEventGetter? FindMatchingRefFromEvent { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region ClosestToAlias
         private int? _ClosestToAliasLocation;
         public Int32? ClosestToAlias => _ClosestToAliasLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClosestToAliasLocation.Value, _package.MetaData.Constants)) : default(Int32?);
@@ -2082,7 +2082,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static QuestLocationAliasBinaryOverlay QuestLocationAliasFactory(
+        public static IQuestLocationAliasGetter QuestLocationAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2100,7 +2100,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static QuestLocationAliasBinaryOverlay QuestLocationAliasFactory(
+        public static IQuestLocationAliasGetter QuestLocationAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -2172,7 +2172,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         parseParams: parseParams,

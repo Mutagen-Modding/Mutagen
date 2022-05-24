@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static HolotapeProgramBinaryOverlay HolotapeProgramFactory(
+        public static IHolotapeProgramGetter HolotapeProgramFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static HolotapeProgramBinaryOverlay HolotapeProgramFactory(
+        public static IHolotapeProgramGetter HolotapeProgramFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
