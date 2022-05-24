@@ -3,10 +3,10 @@
     <Fields>
       <Data recordType="DNAM">
         <Fields>
-          <Enum name="Flags" enumName="ImageSpaceAdapter.Flag" byteLength="4" />
+          <Bool name="Animatable" byteLength="4" />
           <Float name="Duration" />
           <CustomLogic name="Counts1" byteLength="192" />
-          <Enum name="RadialBlurFlags" enumName="ImageSpaceAdapter.RadialBlurFlag" byteLength="4" />
+          <Bool name="RadialBlurUseTarget" byteLength="4" />
           <P2Float name="RadialBlurCenter" />
           <CustomLogic name="Counts2" byteLength="12" />
           <Enum name="DepthOfFieldFlags" enumName="ImageSpaceAdapter.DepthOfFieldFlag" byteLength="4" />

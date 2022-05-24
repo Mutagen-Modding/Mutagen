@@ -6,18 +6,6 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class ImageSpaceAdapter
 {
     [Flags]
-    public enum Flag
-    {
-        Animatable = 0x01
-    }
-
-    [Flags]
-    public enum RadialBlurFlag
-    {
-        UseTarget = 0x01
-    }
-
-    [Flags]
     public enum DepthOfFieldFlag
     {
         UseTarget = 0x0001,

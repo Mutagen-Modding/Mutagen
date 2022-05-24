@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Flags
-        public ImageSpaceAdapter.Flag Flags { get; set; } = default;
+        #region Animatable
+        public Boolean Animatable { get; set; } = default;
         #endregion
         #region Duration
         public Single Duration { get; set; } = default;
         #endregion
-        #region RadialBlurFlags
-        public ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; } = default;
+        #region RadialBlurUseTarget
+        public Boolean RadialBlurUseTarget { get; set; } = default;
         #endregion
         #region RadialBlurCenter
         public P2Float RadialBlurCenter { get; set; } = default;
@@ -866,9 +866,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Flags = initialValue;
+                this.Animatable = initialValue;
                 this.Duration = initialValue;
-                this.RadialBlurFlags = initialValue;
+                this.RadialBlurUseTarget = initialValue;
                 this.RadialBlurCenter = initialValue;
                 this.DepthOfFieldFlags = initialValue;
                 this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
@@ -936,9 +936,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Flags,
+                TItem Animatable,
                 TItem Duration,
-                TItem RadialBlurFlags,
+                TItem RadialBlurUseTarget,
                 TItem RadialBlurCenter,
                 TItem DepthOfFieldFlags,
                 TItem BlurRadius,
@@ -1005,9 +1005,9 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.Flags = Flags;
+                this.Animatable = Animatable;
                 this.Duration = Duration;
-                this.RadialBlurFlags = RadialBlurFlags;
+                this.RadialBlurUseTarget = RadialBlurUseTarget;
                 this.RadialBlurCenter = RadialBlurCenter;
                 this.DepthOfFieldFlags = DepthOfFieldFlags;
                 this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(BlurRadius, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
@@ -1077,9 +1077,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Flags;
+            public TItem Animatable;
             public TItem Duration;
-            public TItem RadialBlurFlags;
+            public TItem RadialBlurUseTarget;
             public TItem RadialBlurCenter;
             public TItem DepthOfFieldFlags;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? BlurRadius;
@@ -1151,9 +1151,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Animatable, rhs.Animatable)) return false;
                 if (!object.Equals(this.Duration, rhs.Duration)) return false;
-                if (!object.Equals(this.RadialBlurFlags, rhs.RadialBlurFlags)) return false;
+                if (!object.Equals(this.RadialBlurUseTarget, rhs.RadialBlurUseTarget)) return false;
                 if (!object.Equals(this.RadialBlurCenter, rhs.RadialBlurCenter)) return false;
                 if (!object.Equals(this.DepthOfFieldFlags, rhs.DepthOfFieldFlags)) return false;
                 if (!object.Equals(this.BlurRadius, rhs.BlurRadius)) return false;
@@ -1217,9 +1217,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Flags);
+                hash.Add(this.Animatable);
                 hash.Add(this.Duration);
-                hash.Add(this.RadialBlurFlags);
+                hash.Add(this.RadialBlurUseTarget);
                 hash.Add(this.RadialBlurCenter);
                 hash.Add(this.DepthOfFieldFlags);
                 hash.Add(this.BlurRadius);
@@ -1288,9 +1288,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.Animatable)) return false;
                 if (!eval(this.Duration)) return false;
-                if (!eval(this.RadialBlurFlags)) return false;
+                if (!eval(this.RadialBlurUseTarget)) return false;
                 if (!eval(this.RadialBlurCenter)) return false;
                 if (!eval(this.DepthOfFieldFlags)) return false;
                 if (this.BlurRadius != null)
@@ -1962,9 +1962,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.Animatable)) return true;
                 if (eval(this.Duration)) return true;
-                if (eval(this.RadialBlurFlags)) return true;
+                if (eval(this.RadialBlurUseTarget)) return true;
                 if (eval(this.RadialBlurCenter)) return true;
                 if (eval(this.DepthOfFieldFlags)) return true;
                 if (this.BlurRadius != null)
@@ -2643,9 +2643,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Flags = eval(this.Flags);
+                obj.Animatable = eval(this.Animatable);
                 obj.Duration = eval(this.Duration);
-                obj.RadialBlurFlags = eval(this.RadialBlurFlags);
+                obj.RadialBlurUseTarget = eval(this.RadialBlurUseTarget);
                 obj.RadialBlurCenter = eval(this.RadialBlurCenter);
                 obj.DepthOfFieldFlags = eval(this.DepthOfFieldFlags);
                 if (BlurRadius != null)
@@ -3492,17 +3492,17 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(ImageSpaceAdapter.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Animatable ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Animatable, "Animatable");
                     }
                     if (printMask?.Duration ?? true)
                     {
                         sb.AppendItem(Duration, "Duration");
                     }
-                    if (printMask?.RadialBlurFlags ?? true)
+                    if (printMask?.RadialBlurUseTarget ?? true)
                     {
-                        sb.AppendItem(RadialBlurFlags, "RadialBlurFlags");
+                        sb.AppendItem(RadialBlurUseTarget, "RadialBlurUseTarget");
                     }
                     if (printMask?.RadialBlurCenter ?? true)
                     {
@@ -4572,9 +4572,9 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Flags;
+            public Exception? Animatable;
             public Exception? Duration;
-            public Exception? RadialBlurFlags;
+            public Exception? RadialBlurUseTarget;
             public Exception? RadialBlurCenter;
             public Exception? DepthOfFieldFlags;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? BlurRadius;
@@ -4641,12 +4641,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpaceAdapter_FieldIndex.Flags:
-                        return Flags;
+                    case ImageSpaceAdapter_FieldIndex.Animatable:
+                        return Animatable;
                     case ImageSpaceAdapter_FieldIndex.Duration:
                         return Duration;
-                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
-                        return RadialBlurFlags;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget:
+                        return RadialBlurUseTarget;
                     case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
                         return RadialBlurCenter;
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
@@ -4773,14 +4773,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpaceAdapter_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case ImageSpaceAdapter_FieldIndex.Animatable:
+                        this.Animatable = ex;
                         break;
                     case ImageSpaceAdapter_FieldIndex.Duration:
                         this.Duration = ex;
                         break;
-                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
-                        this.RadialBlurFlags = ex;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget:
+                        this.RadialBlurUseTarget = ex;
                         break;
                     case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
                         this.RadialBlurCenter = ex;
@@ -4967,14 +4967,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpaceAdapter_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case ImageSpaceAdapter_FieldIndex.Animatable:
+                        this.Animatable = (Exception?)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.Duration:
                         this.Duration = (Exception?)obj;
                         break;
-                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
-                        this.RadialBlurFlags = (Exception?)obj;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget:
+                        this.RadialBlurUseTarget = (Exception?)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
                         this.RadialBlurCenter = (Exception?)obj;
@@ -5159,9 +5159,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Flags != null) return true;
+                if (Animatable != null) return true;
                 if (Duration != null) return true;
-                if (RadialBlurFlags != null) return true;
+                if (RadialBlurUseTarget != null) return true;
                 if (RadialBlurCenter != null) return true;
                 if (DepthOfFieldFlags != null) return true;
                 if (BlurRadius != null) return true;
@@ -5247,13 +5247,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(Animatable, "Animatable");
                 }
                 {
                     sb.AppendItem(Duration, "Duration");
                 }
                 {
-                    sb.AppendItem(RadialBlurFlags, "RadialBlurFlags");
+                    sb.AppendItem(RadialBlurUseTarget, "RadialBlurUseTarget");
                 }
                 {
                     sb.AppendItem(RadialBlurCenter, "RadialBlurCenter");
@@ -6262,9 +6262,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Animatable = this.Animatable.Combine(rhs.Animatable);
                 ret.Duration = this.Duration.Combine(rhs.Duration);
-                ret.RadialBlurFlags = this.RadialBlurFlags.Combine(rhs.RadialBlurFlags);
+                ret.RadialBlurUseTarget = this.RadialBlurUseTarget.Combine(rhs.RadialBlurUseTarget);
                 ret.RadialBlurCenter = this.RadialBlurCenter.Combine(rhs.RadialBlurCenter);
                 ret.DepthOfFieldFlags = this.DepthOfFieldFlags.Combine(rhs.DepthOfFieldFlags);
                 ret.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.BlurRadius?.Overall, rhs.BlurRadius?.Overall), ExceptionExt.Combine(this.BlurRadius?.Specific, rhs.BlurRadius?.Specific));
@@ -6345,9 +6345,9 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool Flags;
+            public bool Animatable;
             public bool Duration;
-            public bool RadialBlurFlags;
+            public bool RadialBlurUseTarget;
             public bool RadialBlurCenter;
             public bool DepthOfFieldFlags;
             public KeyFrame.TranslationMask? BlurRadius;
@@ -6414,9 +6414,9 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Flags = defaultOn;
+                this.Animatable = defaultOn;
                 this.Duration = defaultOn;
-                this.RadialBlurFlags = defaultOn;
+                this.RadialBlurUseTarget = defaultOn;
                 this.RadialBlurCenter = defaultOn;
                 this.DepthOfFieldFlags = defaultOn;
                 this.DNAMDataTypeState = defaultOn;
@@ -6427,9 +6427,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Flags, null));
+                ret.Add((Animatable, null));
                 ret.Add((Duration, null));
-                ret.Add((RadialBlurFlags, null));
+                ret.Add((RadialBlurUseTarget, null));
                 ret.Add((RadialBlurCenter, null));
                 ret.Add((DepthOfFieldFlags, null));
                 ret.Add((BlurRadius == null ? DefaultOn : !BlurRadius.GetCrystal().CopyNothing, BlurRadius?.GetCrystal()));
@@ -6636,9 +6636,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IImageSpaceAdapterInternal>,
         ISkyrimMajorRecordInternal
     {
-        new ImageSpaceAdapter.Flag Flags { get; set; }
+        new Boolean Animatable { get; set; }
         new Single Duration { get; set; }
-        new ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; }
+        new Boolean RadialBlurUseTarget { get; set; }
         new P2Float RadialBlurCenter { get; set; }
         new ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; }
         new ExtendedList<KeyFrame>? BlurRadius { get; set; }
@@ -6714,9 +6714,9 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IImageSpaceAdapterGetter>
     {
         static new ILoquiRegistration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
-        ImageSpaceAdapter.Flag Flags { get; }
+        Boolean Animatable { get; }
         Single Duration { get; }
-        ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; }
+        Boolean RadialBlurUseTarget { get; }
         P2Float RadialBlurCenter { get; }
         ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; }
         IReadOnlyList<IKeyFrameGetter>? BlurRadius { get; }
@@ -6939,9 +6939,9 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Flags = 6,
+        Animatable = 6,
         Duration = 7,
-        RadialBlurFlags = 8,
+        RadialBlurUseTarget = 8,
         RadialBlurCenter = 9,
         DepthOfFieldFlags = 10,
         BlurRadius = 11,
@@ -7152,9 +7152,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IImageSpaceAdapterInternal item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Animatable = default;
             item.Duration = default;
-            item.RadialBlurFlags = default;
+            item.RadialBlurUseTarget = default;
             item.RadialBlurCenter = default;
             item.DepthOfFieldFlags = default;
             item.BlurRadius = null;
@@ -7298,9 +7298,9 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Animatable = item.Animatable == rhs.Animatable;
             ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
-            ret.RadialBlurFlags = item.RadialBlurFlags == rhs.RadialBlurFlags;
+            ret.RadialBlurUseTarget = item.RadialBlurUseTarget == rhs.RadialBlurUseTarget;
             ret.RadialBlurCenter = item.RadialBlurCenter.Equals(rhs.RadialBlurCenter);
             ret.DepthOfFieldFlags = item.DepthOfFieldFlags == rhs.DepthOfFieldFlags;
             ret.BlurRadius = item.BlurRadius.CollectionEqualsHelper(
@@ -7573,17 +7573,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Flags ?? true)
+            if (printMask?.Animatable ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Animatable, "Animatable");
             }
             if (printMask?.Duration ?? true)
             {
                 sb.AppendItem(item.Duration, "Duration");
             }
-            if (printMask?.RadialBlurFlags ?? true)
+            if (printMask?.RadialBlurUseTarget ?? true)
             {
-                sb.AppendItem(item.RadialBlurFlags, "RadialBlurFlags");
+                sb.AppendItem(item.RadialBlurUseTarget, "RadialBlurUseTarget");
             }
             if (printMask?.RadialBlurCenter ?? true)
             {
@@ -8470,17 +8470,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.Animatable != rhs.Animatable) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
             {
                 if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
             {
-                if (lhs.RadialBlurFlags != rhs.RadialBlurFlags) return false;
+                if (lhs.RadialBlurUseTarget != rhs.RadialBlurUseTarget) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
             {
@@ -8742,9 +8742,9 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IImageSpaceAdapterGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Flags);
+            hash.Add(item.Animatable);
             hash.Add(item.Duration);
-            hash.Add(item.RadialBlurFlags);
+            hash.Add(item.RadialBlurUseTarget);
             hash.Add(item.RadialBlurCenter);
             hash.Add(item.DepthOfFieldFlags);
             hash.Add(item.BlurRadius);
@@ -8906,17 +8906,17 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.Animatable = rhs.Animatable;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
             {
                 item.Duration = rhs.Duration;
             }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
             {
-                item.RadialBlurFlags = rhs.RadialBlurFlags;
+                item.RadialBlurUseTarget = rhs.RadialBlurUseTarget;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
             {
@@ -10858,20 +10858,14 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
-                EnumBinaryTranslation<ImageSpaceAdapter.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 4);
+                writer.Write(item.Animatable, length: 4);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Duration);
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts1(
                     writer: writer,
                     item: item);
-                EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.RadialBlurFlags,
-                    length: 4);
+                writer.Write(item.RadialBlurUseTarget, length: 4);
                 P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RadialBlurCenter);
@@ -11680,16 +11674,16 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Animatable = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        length: 4);
+                        byteLength: 4);
                     item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
                         frame: dataFrame,
                         item: item);
-                    item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.RadialBlurUseTarget = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        length: 4);
+                        byteLength: 4);
                     item.RadialBlurCenter = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
                         frame: dataFrame,
@@ -12323,10 +12317,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         private RangeInt32? _DNAMLocation;
         public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; private set; }
-        #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value.Min;
-        private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public ImageSpaceAdapter.Flag Flags => _Flags_IsSet ? (ImageSpaceAdapter.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #region Animatable
+        private int _AnimatableLocation => _DNAMLocation!.Value.Min;
+        private bool _Animatable_IsSet => _DNAMLocation.HasValue;
+        public Boolean Animatable => _Animatable_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AnimatableLocation, 4)) >= 1 : default;
         #endregion
         #region Duration
         private int _DurationLocation => _DNAMLocation!.Value.Min + 0x4;
@@ -12340,10 +12334,10 @@ namespace Mutagen.Bethesda.Skyrim
             OverlayStream stream,
             int offset);
         #endregion
-        #region RadialBlurFlags
-        private int _RadialBlurFlagsLocation => _DNAMLocation!.Value.Min + 0xC8;
-        private bool _RadialBlurFlags_IsSet => _DNAMLocation.HasValue;
-        public ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags => _RadialBlurFlags_IsSet ? (ImageSpaceAdapter.RadialBlurFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_RadialBlurFlagsLocation, 0x4)) : default;
+        #region RadialBlurUseTarget
+        private int _RadialBlurUseTargetLocation => _DNAMLocation!.Value.Min + 0xC8;
+        private bool _RadialBlurUseTarget_IsSet => _DNAMLocation.HasValue;
+        public Boolean RadialBlurUseTarget => _RadialBlurUseTarget_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_RadialBlurUseTargetLocation, 4)) >= 1 : default;
         #endregion
         #region RadialBlurCenter
         private int _RadialBlurCenterLocation => _DNAMLocation!.Value.Min + 0xCC;
