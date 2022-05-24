@@ -1202,6 +1202,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IStatic :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IStaticInternal>,
@@ -1256,6 +1257,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IStaticGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IStaticGetter>,
         IMapsToGetter<IStaticGetter>,

@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class LeveledSpell :
+    public partial class AddonNode :
         Fallout4MajorRecord,
-        IEquatable<ILeveledSpellGetter>,
-        ILeveledSpellInternal,
-        ILoquiObjectSetter<LeveledSpell>
+        IAddonNodeInternal,
+        IEquatable<IAddonNodeGetter>,
+        ILoquiObjectSetter<AddonNode>
     {
         #region Ctor
-        protected LeveledSpell()
+        protected AddonNode()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledSpellMixIn.Print(
+            AddonNodeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LeveledSpell.Mask<R>();
+                var ret = new AddonNode.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -160,16 +160,16 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(LeveledSpell.Mask<bool>? printMask = null)
+            public string Print(AddonNode.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, LeveledSpell.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AddonNode.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(LeveledSpell.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(AddonNode.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                LeveledSpell_FieldIndex enu = (LeveledSpell_FieldIndex)index;
+                AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                LeveledSpell_FieldIndex enu = (LeveledSpell_FieldIndex)index;
+                AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                LeveledSpell_FieldIndex enu = (LeveledSpell_FieldIndex)index;
+                AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -292,14 +292,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LeveledSpell_Registration.TriggeringRecordType;
-        public LeveledSpell(FormKey formKey)
+        public static readonly RecordType GrupRecordType = AddonNode_Registration.TriggeringRecordType;
+        public AddonNode(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private LeveledSpell(
+        private AddonNode(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal LeveledSpell(
+        internal AddonNode(
             FormKey formKey,
             ushort formVersion)
         {
@@ -317,12 +317,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public LeveledSpell(IFallout4Mod mod)
+        public AddonNode(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LeveledSpell(IFallout4Mod mod, string editorID)
+        public AddonNode(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -330,10 +330,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<LeveledSpell>.ToString(this);
+            return MajorRecordPrinter<AddonNode>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(ILeveledSpell);
+        protected override Type LinkType => typeof(IAddonNode);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -342,16 +342,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ILeveledSpellGetter rhs) return false;
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IAddonNodeGetter rhs) return false;
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ILeveledSpellGetter? obj)
+        public bool Equals(IAddonNodeGetter? obj)
         {
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -359,23 +359,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LeveledSpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AddonNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((LeveledSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AddonNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static LeveledSpell CreateFromBinary(
+        public new static AddonNode CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new LeveledSpell();
-            ((LeveledSpellSetterCommon)((ILeveledSpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new AddonNode();
+            ((AddonNodeSetterCommon)((IAddonNodeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out LeveledSpell item,
+            out AddonNode item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -401,86 +401,84 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((LeveledSpellSetterCommon)((ILeveledSpellGetter)this).CommonSetterInstance()!).Clear(this);
+            ((AddonNodeSetterCommon)((IAddonNodeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new LeveledSpell GetNew()
+        internal static new AddonNode GetNew()
         {
-            return new LeveledSpell();
+            return new AddonNode();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILeveledSpell :
+    public partial interface IAddonNode :
+        IAddonNodeGetter,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
-        ILeveledSpellGetter,
-        ILoquiObjectSetter<ILeveledSpellInternal>,
-        ISpellRecord
+        ILoquiObjectSetter<IAddonNodeInternal>
     {
     }
 
-    public partial interface ILeveledSpellInternal :
+    public partial interface IAddonNodeInternal :
         IFallout4MajorRecordInternal,
-        ILeveledSpell,
-        ILeveledSpellGetter
+        IAddonNode,
+        IAddonNodeGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.LVSP)]
-    public partial interface ILeveledSpellGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.ADDN)]
+    public partial interface IAddonNodeGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
-        ILoquiObject<ILeveledSpellGetter>,
-        IMapsToGetter<ILeveledSpellGetter>,
-        ISpellRecordGetter
+        ILoquiObject<IAddonNodeGetter>,
+        IMapsToGetter<IAddonNodeGetter>
     {
-        static new ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AddonNode_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LeveledSpellMixIn
+    public static partial class AddonNodeMixIn
     {
-        public static void Clear(this ILeveledSpellInternal item)
+        public static void Clear(this IAddonNodeInternal item)
         {
-            ((LeveledSpellSetterCommon)((ILeveledSpellGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((AddonNodeSetterCommon)((IAddonNodeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LeveledSpell.Mask<bool> GetEqualsMask(
-            this ILeveledSpellGetter item,
-            ILeveledSpellGetter rhs,
+        public static AddonNode.Mask<bool> GetEqualsMask(
+            this IAddonNodeGetter item,
+            IAddonNodeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ILeveledSpellGetter item,
+            this IAddonNodeGetter item,
             string? name = null,
-            LeveledSpell.Mask<bool>? printMask = null)
+            AddonNode.Mask<bool>? printMask = null)
         {
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).Print(
+            return ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ILeveledSpellGetter item,
+            this IAddonNodeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LeveledSpell.Mask<bool>? printMask = null)
+            AddonNode.Mask<bool>? printMask = null)
         {
-            ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).Print(
+            ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -488,39 +486,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this ILeveledSpellGetter item,
-            ILeveledSpellGetter rhs,
-            LeveledSpell.TranslationMask? equalsMask = null)
+            this IAddonNodeGetter item,
+            IAddonNodeGetter rhs,
+            AddonNode.TranslationMask? equalsMask = null)
         {
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).Equals(
+            return ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ILeveledSpellInternal lhs,
-            ILeveledSpellGetter rhs,
-            out LeveledSpell.ErrorMask errorMask,
-            LeveledSpell.TranslationMask? copyMask = null)
+            this IAddonNodeInternal lhs,
+            IAddonNodeGetter rhs,
+            out AddonNode.ErrorMask errorMask,
+            AddonNode.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LeveledSpellSetterTranslationCommon)((ILeveledSpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AddonNodeSetterTranslationCommon)((IAddonNodeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = LeveledSpell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AddonNode.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILeveledSpellInternal lhs,
-            ILeveledSpellGetter rhs,
+            this IAddonNodeInternal lhs,
+            IAddonNodeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LeveledSpellSetterTranslationCommon)((ILeveledSpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AddonNodeSetterTranslationCommon)((IAddonNodeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -528,44 +526,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static LeveledSpell DeepCopy(
-            this ILeveledSpellGetter item,
-            LeveledSpell.TranslationMask? copyMask = null)
+        public static AddonNode DeepCopy(
+            this IAddonNodeGetter item,
+            AddonNode.TranslationMask? copyMask = null)
         {
-            return ((LeveledSpellSetterTranslationCommon)((ILeveledSpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AddonNodeSetterTranslationCommon)((IAddonNodeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LeveledSpell DeepCopy(
-            this ILeveledSpellGetter item,
-            out LeveledSpell.ErrorMask errorMask,
-            LeveledSpell.TranslationMask? copyMask = null)
+        public static AddonNode DeepCopy(
+            this IAddonNodeGetter item,
+            out AddonNode.ErrorMask errorMask,
+            AddonNode.TranslationMask? copyMask = null)
         {
-            return ((LeveledSpellSetterTranslationCommon)((ILeveledSpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AddonNodeSetterTranslationCommon)((IAddonNodeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LeveledSpell DeepCopy(
-            this ILeveledSpellGetter item,
+        public static AddonNode DeepCopy(
+            this IAddonNodeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LeveledSpellSetterTranslationCommon)((ILeveledSpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AddonNodeSetterTranslationCommon)((IAddonNodeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static LeveledSpell Duplicate(
-            this ILeveledSpellGetter item,
+        public static AddonNode Duplicate(
+            this IAddonNodeGetter item,
             FormKey formKey,
-            LeveledSpell.TranslationMask? copyMask = null)
+            AddonNode.TranslationMask? copyMask = null)
         {
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).Duplicate(
+            return ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -575,11 +573,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILeveledSpellInternal item,
+            this IAddonNodeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((LeveledSpellSetterCommon)((ILeveledSpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((AddonNodeSetterCommon)((IAddonNodeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -595,7 +593,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum LeveledSpell_FieldIndex
+    internal enum AddonNode_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -607,40 +605,40 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Registration
-    internal partial class LeveledSpell_Registration : ILoquiRegistration
+    internal partial class AddonNode_Registration : ILoquiRegistration
     {
-        public static readonly LeveledSpell_Registration Instance = new LeveledSpell_Registration();
+        public static readonly AddonNode_Registration Instance = new AddonNode_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 92,
+            msgID: 593,
             version: 0);
 
-        public const string GUID = "30f35ff7-3238-4788-b96a-acce6b8afe85";
+        public const string GUID = "532676e2-896e-4295-b298-076f1cbe69cc";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(LeveledSpell.Mask<>);
+        public static readonly Type MaskType = typeof(AddonNode.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LeveledSpell.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AddonNode.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LeveledSpell);
+        public static readonly Type ClassType = typeof(AddonNode);
 
-        public static readonly Type GetterType = typeof(ILeveledSpellGetter);
+        public static readonly Type GetterType = typeof(IAddonNodeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILeveledSpell);
+        public static readonly Type SetterType = typeof(IAddonNode);
 
-        public static readonly Type? InternalSetterType = typeof(ILeveledSpellInternal);
+        public static readonly Type? InternalSetterType = typeof(IAddonNodeInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.LeveledSpell";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.AddonNode";
 
-        public const string Name = "LeveledSpell";
+        public const string Name = "AddonNode";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -648,14 +646,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.LVSP;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ADDN;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LVSP);
+            var all = RecordCollection.Factory(RecordTypes.ADDN);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(LeveledSpellBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(AddonNodeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -688,13 +686,13 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class LeveledSpellSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class AddonNodeSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly LeveledSpellSetterCommon Instance = new LeveledSpellSetterCommon();
+        public new static readonly AddonNodeSetterCommon Instance = new AddonNodeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILeveledSpellInternal item)
+        public void Clear(IAddonNodeInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -702,16 +700,16 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (ILeveledSpellInternal)item);
+            Clear(item: (IAddonNodeInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ILeveledSpellInternal)item);
+            Clear(item: (IAddonNodeInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(ILeveledSpell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IAddonNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -720,16 +718,16 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILeveledSpellInternal item,
+            IAddonNodeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<ILeveledSpellInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IAddonNodeInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LeveledSpellBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: LeveledSpellBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: AddonNodeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AddonNodeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -738,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (LeveledSpell)item,
+                item: (AddonNode)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -749,7 +747,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (LeveledSpell)item,
+                item: (AddonNode)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -757,17 +755,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class LeveledSpellCommon : Fallout4MajorRecordCommon
+    internal partial class AddonNodeCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly LeveledSpellCommon Instance = new LeveledSpellCommon();
+        public new static readonly AddonNodeCommon Instance = new AddonNodeCommon();
 
-        public LeveledSpell.Mask<bool> GetEqualsMask(
-            ILeveledSpellGetter item,
-            ILeveledSpellGetter rhs,
+        public AddonNode.Mask<bool> GetEqualsMask(
+            IAddonNodeGetter item,
+            IAddonNodeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LeveledSpell.Mask<bool>(false);
-            ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new AddonNode.Mask<bool>(false);
+            ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -776,9 +774,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            ILeveledSpellGetter item,
-            ILeveledSpellGetter rhs,
-            LeveledSpell.Mask<bool> ret,
+            IAddonNodeGetter item,
+            IAddonNodeGetter rhs,
+            AddonNode.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -786,9 +784,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public string Print(
-            ILeveledSpellGetter item,
+            IAddonNodeGetter item,
             string? name = null,
-            LeveledSpell.Mask<bool>? printMask = null)
+            AddonNode.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -800,18 +798,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            ILeveledSpellGetter item,
+            IAddonNodeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LeveledSpell.Mask<bool>? printMask = null)
+            AddonNode.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"LeveledSpell =>");
+                sb.AppendLine($"AddonNode =>");
             }
             else
             {
-                sb.AppendLine($"{name} (LeveledSpell) =>");
+                sb.AppendLine($"{name} (AddonNode) =>");
             }
             using (sb.Brace())
             {
@@ -823,9 +821,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            ILeveledSpellGetter item,
+            IAddonNodeGetter item,
             StructuredStringBuilder sb,
-            LeveledSpell.Mask<bool>? printMask = null)
+            AddonNode.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
@@ -833,39 +831,39 @@ namespace Mutagen.Bethesda.Fallout4
                 printMask: printMask);
         }
         
-        public static LeveledSpell_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static AddonNode_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new LeveledSpell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new AddonNode_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (LeveledSpell_FieldIndex)((int)index);
+                    return (AddonNode_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -873,8 +871,8 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILeveledSpellGetter? lhs,
-            ILeveledSpellGetter? rhs,
+            IAddonNodeGetter? lhs,
+            IAddonNodeGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -888,8 +886,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (ILeveledSpellGetter?)lhs,
-                rhs: rhs as ILeveledSpellGetter,
+                lhs: (IAddonNodeGetter?)lhs,
+                rhs: rhs as IAddonNodeGetter,
                 crystal: crystal);
         }
         
@@ -899,12 +897,12 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (ILeveledSpellGetter?)lhs,
-                rhs: rhs as ILeveledSpellGetter,
+                lhs: (IAddonNodeGetter?)lhs,
+                rhs: rhs as IAddonNodeGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(ILeveledSpellGetter item)
+        public virtual int GetHashCode(IAddonNodeGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -913,12 +911,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (ILeveledSpellGetter)item);
+            return GetHashCode(item: (IAddonNodeGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ILeveledSpellGetter)item);
+            return GetHashCode(item: (IAddonNodeGetter)item);
         }
         
         #endregion
@@ -926,11 +924,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return LeveledSpell.GetNew();
+            return AddonNode.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledSpellGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAddonNodeGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -940,12 +938,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Duplicate
-        public LeveledSpell Duplicate(
-            ILeveledSpellGetter item,
+        public AddonNode Duplicate(
+            IAddonNodeGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new LeveledSpell(formKey);
+            var newRec = new AddonNode(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -956,7 +954,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILeveledSpellGetter)item,
+                item: (IAddonNodeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -967,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILeveledSpellGetter)item,
+                item: (IAddonNodeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -977,14 +975,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class LeveledSpellSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class AddonNodeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly LeveledSpellSetterTranslationCommon Instance = new LeveledSpellSetterTranslationCommon();
+        public new static readonly AddonNodeSetterTranslationCommon Instance = new AddonNodeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILeveledSpellInternal item,
-            ILeveledSpellGetter rhs,
+            IAddonNodeInternal item,
+            IAddonNodeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -998,8 +996,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            ILeveledSpell item,
-            ILeveledSpellGetter rhs,
+            IAddonNode item,
+            IAddonNodeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1020,8 +1018,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILeveledSpellInternal)item,
-                rhs: (ILeveledSpellGetter)rhs,
+                item: (IAddonNodeInternal)item,
+                rhs: (IAddonNodeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1035,8 +1033,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILeveledSpell)item,
-                rhs: (ILeveledSpellGetter)rhs,
+                item: (IAddonNode)item,
+                rhs: (IAddonNodeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1050,8 +1048,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILeveledSpellInternal)item,
-                rhs: (ILeveledSpellGetter)rhs,
+                item: (IAddonNodeInternal)item,
+                rhs: (IAddonNodeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1065,8 +1063,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILeveledSpell)item,
-                rhs: (ILeveledSpellGetter)rhs,
+                item: (IAddonNode)item,
+                rhs: (IAddonNodeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1074,12 +1072,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public LeveledSpell DeepCopy(
-            ILeveledSpellGetter item,
-            LeveledSpell.TranslationMask? copyMask = null)
+        public AddonNode DeepCopy(
+            IAddonNodeGetter item,
+            AddonNode.TranslationMask? copyMask = null)
         {
-            LeveledSpell ret = (LeveledSpell)((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).GetNew();
-            ((LeveledSpellSetterTranslationCommon)((ILeveledSpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AddonNode ret = (AddonNode)((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).GetNew();
+            ((AddonNodeSetterTranslationCommon)((IAddonNodeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1088,30 +1086,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public LeveledSpell DeepCopy(
-            ILeveledSpellGetter item,
-            out LeveledSpell.ErrorMask errorMask,
-            LeveledSpell.TranslationMask? copyMask = null)
+        public AddonNode DeepCopy(
+            IAddonNodeGetter item,
+            out AddonNode.ErrorMask errorMask,
+            AddonNode.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LeveledSpell ret = (LeveledSpell)((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).GetNew();
-            ((LeveledSpellSetterTranslationCommon)((ILeveledSpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AddonNode ret = (AddonNode)((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).GetNew();
+            ((AddonNodeSetterTranslationCommon)((IAddonNodeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = LeveledSpell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AddonNode.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public LeveledSpell DeepCopy(
-            ILeveledSpellGetter item,
+        public AddonNode DeepCopy(
+            IAddonNodeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LeveledSpell ret = (LeveledSpell)((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).GetNew();
-            ((LeveledSpellSetterTranslationCommon)((ILeveledSpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AddonNode ret = (AddonNode)((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).GetNew();
+            ((AddonNodeSetterTranslationCommon)((IAddonNodeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1127,21 +1125,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LeveledSpell
+    public partial class AddonNode
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AddonNode_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AddonNode_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LeveledSpellCommon.Instance;
+        protected override object CommonInstance() => AddonNodeCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return LeveledSpellSetterCommon.Instance;
+            return AddonNodeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LeveledSpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AddonNodeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1152,20 +1150,20 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LeveledSpellBinaryWriteTranslation :
+    public partial class AddonNodeBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LeveledSpellBinaryWriteTranslation Instance = new LeveledSpellBinaryWriteTranslation();
+        public new readonly static AddonNodeBinaryWriteTranslation Instance = new AddonNodeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            ILeveledSpellGetter item,
+            IAddonNodeGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LVSP)))
+                record: translationParams.ConvertToCustom(RecordTypes.ADDN)))
             {
                 try
                 {
@@ -1190,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ILeveledSpellGetter)item,
+                item: (IAddonNodeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1201,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ILeveledSpellGetter)item,
+                item: (IAddonNodeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1212,20 +1210,20 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ILeveledSpellGetter)item,
+                item: (IAddonNodeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class LeveledSpellBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class AddonNodeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
+        public new readonly static AddonNodeBinaryCreateTranslation Instance = new AddonNodeBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.LVSP;
+        public override RecordType RecordType => RecordTypes.ADDN;
         public static void FillBinaryStructs(
-            ILeveledSpellInternal item,
+            IAddonNodeInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1239,7 +1237,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class LeveledSpellBinaryTranslationMixIn
+    public static class AddonNodeBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1248,35 +1246,35 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class LeveledSpellBinaryOverlay :
+    internal partial class AddonNodeBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        ILeveledSpellGetter
+        IAddonNodeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AddonNode_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AddonNode_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LeveledSpellCommon.Instance;
+        protected override object CommonInstance() => AddonNodeCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LeveledSpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AddonNodeSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LeveledSpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AddonNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((LeveledSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AddonNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILeveledSpell);
+        protected override Type LinkType => typeof(IAddonNode);
 
 
         partial void CustomFactoryEnd(
@@ -1285,7 +1283,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
 
         partial void CustomCtor();
-        protected LeveledSpellBinaryOverlay(
+        protected AddonNodeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1295,13 +1293,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static AddonNodeBinaryOverlay AddonNodeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = Decompression.DecompressStream(stream);
-            var ret = new LeveledSpellBinaryOverlay(
+            var ret = new AddonNodeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
@@ -1322,12 +1320,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static AddonNodeBinaryOverlay AddonNodeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return LeveledSpellFactory(
+            return AddonNodeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1339,7 +1337,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledSpellMixIn.Print(
+            AddonNodeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1349,7 +1347,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<LeveledSpell>.ToString(this);
+            return MajorRecordPrinter<AddonNode>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1359,16 +1357,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ILeveledSpellGetter rhs) return false;
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IAddonNodeGetter rhs) return false;
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ILeveledSpellGetter? obj)
+        public bool Equals(IAddonNodeGetter? obj)
         {
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

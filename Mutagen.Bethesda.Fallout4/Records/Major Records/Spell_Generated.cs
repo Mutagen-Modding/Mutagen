@@ -1197,6 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface ISpell :
         IEffectRecord,
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IFurnitureAssociation,
@@ -1250,6 +1251,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IEffectRecordGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IFurnitureAssociationGetter,
         IKeywordedGetter<IKeywordGetter>,

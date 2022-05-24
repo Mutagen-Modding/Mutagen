@@ -4,5 +4,6 @@
     <Fields>
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

@@ -1664,6 +1664,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITerminal :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1726,6 +1727,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ITerminalGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ITerminalGetter>,

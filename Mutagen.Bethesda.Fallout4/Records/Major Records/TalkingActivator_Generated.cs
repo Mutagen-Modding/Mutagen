@@ -979,6 +979,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITalkingActivator :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1035,6 +1036,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ITalkingActivatorGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ITalkingActivatorGetter>,

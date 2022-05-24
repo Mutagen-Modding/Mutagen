@@ -121,6 +121,7 @@ namespace Mutagen.Bethesda.Fallout4
             _AnimatedObjects_Object = new Fallout4Group<AnimatedObject>(this);
             _Waters_Object = new Fallout4Group<Water>(this);
             _EffectShaders_Object = new Fallout4Group<EffectShader>(this);
+            _Explosions_Object = new Fallout4Group<Explosion>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -581,6 +582,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IEffectShaderGetter> IFallout4ModGetter.EffectShaders => _EffectShaders_Object;
         #endregion
+        #region Explosions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Explosion> _Explosions_Object;
+        public Fallout4Group<Explosion> Explosions => _Explosions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IExplosionGetter> IFallout4ModGetter.Explosions => _Explosions_Object;
+        #endregion
 
         #region To String
 
@@ -685,6 +693,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AnimatedObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Waters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.EffectShaders = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Explosions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -752,7 +761,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem LoadScreens,
                 TItem AnimatedObjects,
                 TItem Waters,
-                TItem EffectShaders)
+                TItem EffectShaders,
+                TItem Explosions)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -819,6 +829,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AnimatedObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AnimatedObjects, new Fallout4Group.Mask<TItem>(AnimatedObjects));
                 this.Waters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Waters, new Fallout4Group.Mask<TItem>(Waters));
                 this.EffectShaders = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(EffectShaders, new Fallout4Group.Mask<TItem>(EffectShaders));
+                this.Explosions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Explosions, new Fallout4Group.Mask<TItem>(Explosions));
             }
 
             #pragma warning disable CS8618
@@ -895,6 +906,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AnimatedObjects { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Waters { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? EffectShaders { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Explosions { get; set; }
             #endregion
 
             #region Equals
@@ -972,6 +984,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
                 if (!object.Equals(this.Waters, rhs.Waters)) return false;
                 if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
+                if (!object.Equals(this.Explosions, rhs.Explosions)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1042,6 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.AnimatedObjects);
                 hash.Add(this.Waters);
                 hash.Add(this.EffectShaders);
+                hash.Add(this.Explosions);
                 return hash.ToHashCode();
             }
 
@@ -1375,6 +1389,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.EffectShaders.Overall)) return false;
                     if (this.EffectShaders.Specific != null && !this.EffectShaders.Specific.All(eval)) return false;
                 }
+                if (Explosions != null)
+                {
+                    if (!eval(this.Explosions.Overall)) return false;
+                    if (this.Explosions.Specific != null && !this.Explosions.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1707,6 +1726,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.EffectShaders.Overall)) return true;
                     if (this.EffectShaders.Specific != null && this.EffectShaders.Specific.Any(eval)) return true;
                 }
+                if (Explosions != null)
+                {
+                    if (eval(this.Explosions.Overall)) return true;
+                    if (this.Explosions.Specific != null && this.Explosions.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1786,6 +1810,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
                 obj.Waters = this.Waters == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
                 obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
+                obj.Explosions = this.Explosions == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Explosions.Overall), this.Explosions.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2064,6 +2089,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         EffectShaders?.Print(sb);
                     }
+                    if (printMask?.Explosions?.Overall ?? true)
+                    {
+                        Explosions?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2153,6 +2182,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Water.ErrorMask>?>? Waters;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Explosion.ErrorMask>?>? Explosions;
             #endregion
 
             #region IErrorMask
@@ -2291,6 +2321,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Waters;
                     case Fallout4Mod_FieldIndex.EffectShaders:
                         return EffectShaders;
+                    case Fallout4Mod_FieldIndex.Explosions:
+                        return Explosions;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2495,6 +2527,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.EffectShaders:
                         this.EffectShaders = new MaskItem<Exception?, Fallout4Group.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Explosions:
+                        this.Explosions = new MaskItem<Exception?, Fallout4Group.ErrorMask<Explosion.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2701,6 +2736,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.EffectShaders:
                         this.EffectShaders = (MaskItem<Exception?, Fallout4Group.ErrorMask<EffectShader.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Explosions:
+                        this.Explosions = (MaskItem<Exception?, Fallout4Group.ErrorMask<Explosion.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2774,6 +2812,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (AnimatedObjects != null) return true;
                 if (Waters != null) return true;
                 if (EffectShaders != null) return true;
+                if (Explosions != null) return true;
                 return false;
             }
             #endregion
@@ -2864,6 +2903,7 @@ namespace Mutagen.Bethesda.Fallout4
                 AnimatedObjects?.Print(sb);
                 Waters?.Print(sb);
                 EffectShaders?.Print(sb);
+                Explosions?.Print(sb);
             }
             #endregion
 
@@ -2937,6 +2977,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
                 ret.Waters = this.Waters.Combine(rhs.Waters, (l, r) => l.Combine(r));
                 ret.EffectShaders = this.EffectShaders.Combine(rhs.EffectShaders, (l, r) => l.Combine(r));
+                ret.Explosions = this.Explosions.Combine(rhs.Explosions, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3025,6 +3066,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
             public Fallout4Group.TranslationMask<Water.TranslationMask>? Waters;
             public Fallout4Group.TranslationMask<EffectShader.TranslationMask>? EffectShaders;
+            public Fallout4Group.TranslationMask<Explosion.TranslationMask>? Explosions;
             #endregion
 
             #region Ctors
@@ -3114,6 +3156,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
                 ret.Add((Waters != null ? Waters.OnOverall : DefaultOn, Waters?.GetCrystal()));
                 ret.Add((EffectShaders != null ? EffectShaders.OnOverall : DefaultOn, EffectShaders?.GetCrystal()));
+                ret.Add((Explosions != null ? Explosions.OnOverall : DefaultOn, Explosions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3218,6 +3261,7 @@ namespace Mutagen.Bethesda.Fallout4
             _AnimatedObjects_Object = new Fallout4Group<AnimatedObject>(this);
             _Waters_Object = new Fallout4Group<Water>(this);
             _EffectShaders_Object = new Fallout4Group<EffectShader>(this);
+            _Explosions_Object = new Fallout4Group<Explosion>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3483,6 +3527,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.EffectShaders.RecordCache.Set(rhsMod.EffectShaders.RecordCache.Items);
             }
+            if (mask?.Explosions ?? true)
+            {
+                this.Explosions.RecordCache.Set(rhsMod.Explosions.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3557,6 +3605,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Waters.RecordCache.Count > 0 ? 1 : default(uint);
             count += EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Explosions.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3872,6 +3921,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<AnimatedObject> AnimatedObjects { get; }
         new Fallout4Group<Water> Waters { get; }
         new Fallout4Group<EffectShader> EffectShaders { get; }
+        new Fallout4Group<Explosion> Explosions { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3955,6 +4005,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
         IFallout4GroupGetter<IWaterGetter> Waters { get; }
         IFallout4GroupGetter<IEffectShaderGetter> EffectShaders { get; }
+        IFallout4GroupGetter<IExplosionGetter> Explosions { get; }
 
     }
 
@@ -4590,6 +4641,7 @@ namespace Mutagen.Bethesda.Fallout4
         AnimatedObjects = 62,
         Waters = 63,
         EffectShaders = 64,
+        Explosions = 65,
     }
     #endregion
 
@@ -4607,9 +4659,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 65;
+        public const ushort AdditionalFieldCount = 66;
 
-        public const ushort FieldCount = 65;
+        public const ushort FieldCount = 66;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4741,6 +4793,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.AnimatedObjects.Clear();
             item.Waters.Clear();
             item.EffectShaders.Clear();
+            item.Explosions.Clear();
         }
         
         #region Mutagen
@@ -4804,6 +4857,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.AnimatedObjects.RemapLinks(mapping);
             obj.Waters.RemapLinks(mapping);
             obj.EffectShaders.RemapLinks(mapping);
+            obj.Explosions.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -4902,6 +4956,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.AnimatedObjects.Remove(keys);
             obj.Waters.Remove(keys);
             obj.EffectShaders.Remove(keys);
+            obj.Explosions.Remove(keys);
         }
         
         public void Remove(
@@ -5469,6 +5524,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    obj.Explosions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -5624,6 +5687,49 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IExplodeSpawn":
+                case "IExplodeSpawnGetter":
+                    Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBendableSplineGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IComponentGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IExplosionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IGrassGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IHolotapeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMovableStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITalkingActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
                     break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
@@ -5960,6 +6066,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
             ret.Waters = MaskItemExt.Factory(item.Waters.GetEqualsMask(rhs.Waters, include), include);
             ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
+            ret.Explosions = MaskItemExt.Factory(item.Explosions.GetEqualsMask(rhs.Explosions, include), include);
         }
         
         public string Print(
@@ -6263,6 +6370,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.EffectShaders?.Overall ?? true)
             {
                 item.EffectShaders?.Print(sb, "EffectShaders");
+            }
+            if (printMask?.Explosions?.Overall ?? true)
+            {
+                item.Explosions?.Print(sb, "Explosions");
             }
         }
         
@@ -6793,6 +6904,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isEffectShadersEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Explosions) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Explosions, rhs.Explosions, out var lhsExplosions, out var rhsExplosions, out var isExplosionsEqual))
+                {
+                    if (!object.Equals(lhsExplosions, rhsExplosions)) return false;
+                }
+                else if (!isExplosionsEqual) return false;
+            }
             return true;
         }
         
@@ -6864,6 +6983,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.AnimatedObjects);
             hash.Add(item.Waters);
             hash.Add(item.EffectShaders);
+            hash.Add(item.Explosions);
             return hash.ToHashCode();
         }
         
@@ -7201,6 +7321,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IEffectShader":
                 case "IEffectShaderInternal":
                     return obj.EffectShaders;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    return obj.Explosions;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -7225,7 +7350,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[64];
+            Stream[] outputStreams = new Stream[65];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -7291,6 +7416,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 61, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Waters, 62, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.EffectShaders, 63, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, 64, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7570,6 +7696,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.Explosions.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -7828,6 +7958,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.EffectShaders.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Explosions.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8429,6 +8563,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IEffectShader":
                 case "IEffectShaderInternal":
                     foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    foreach (var item in obj.Explosions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -9168,6 +9311,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.EffectShaders,
                 groupGetter: (m) => m.EffectShaders))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Explosion, IExplosionGetter>(
+                srcGroup: obj.Explosions,
+                type: typeof(IExplosionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Explosions,
+                groupGetter: (m) => m.Explosions))
             {
                 yield return item;
             }
@@ -10080,6 +10232,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.EffectShaders,
                         groupGetter: (m) => m.EffectShaders))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Explosion, IExplosionGetter>(
+                        srcGroup: obj.Explosions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Explosions,
+                        groupGetter: (m) => m.Explosions))
                     {
                         yield return item;
                     }
@@ -11678,6 +11844,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Explosions) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Explosions);
+                try
+                {
+                    item.Explosions.DeepCopyIn(
+                        rhs: rhs.Explosions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Explosions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -11832,6 +12018,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool AnimatedObjects;
         public bool Waters;
         public bool EffectShaders;
+        public bool Explosions;
         public GroupMask()
         {
         }
@@ -11901,6 +12088,7 @@ namespace Mutagen.Bethesda.Fallout4
             AnimatedObjects = defaultValue;
             Waters = defaultValue;
             EffectShaders = defaultValue;
+            Explosions = defaultValue;
         }
     }
 
@@ -12632,6 +12820,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
                         item: EffectShadersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Explosions ?? true)
+            {
+                var ExplosionsItem = item.Explosions;
+                if (ExplosionsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ExplosionsItem).BinaryWriteTranslator).Write<IExplosionGetter>(
+                        item: ExplosionsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -13598,6 +13797,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.EffectShaders;
                 }
+                case RecordTypeInts.EXPL:
+                {
+                    if (importMask?.Explosions ?? true)
+                    {
+                        item.Explosions.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Explosions;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -14081,6 +14294,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? Fallout4GroupBinaryOverlay<IEffectShaderGetter>.Fallout4GroupFactory(_data, _EffectShadersLocations, _package) : default;
         public IFallout4GroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new Fallout4Group<EffectShader>(this);
         #endregion
+        #region Explosions
+        private List<RangeInt64>? _ExplosionsLocations;
+        private IFallout4GroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? Fallout4GroupBinaryOverlay<IExplosionGetter>.Fallout4GroupFactory(_data, _ExplosionsLocations, _package) : default;
+        public IFallout4GroupGetter<IExplosionGetter> Explosions => _Explosions ?? new Fallout4Group<Explosion>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -14551,6 +14769,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _EffectShadersLocations ??= new();
                     _EffectShadersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.EffectShaders;
+                }
+                case RecordTypeInts.EXPL:
+                {
+                    _ExplosionsLocations ??= new();
+                    _ExplosionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Explosions;
                 }
                 default:
                     return default(int?);

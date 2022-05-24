@@ -466,7 +466,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             LoadScreenRotation_Registration.Instance,
             LoadScreenZoom_Registration.Instance,
             AnimatedObject_Registration.Instance,
-            WaterNoiseProperties_Registration.Instance
+            WaterNoiseProperties_Registration.Instance,
+            AddonNode_Registration.Instance
         );
     }
 }

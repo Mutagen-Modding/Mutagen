@@ -51,6 +51,7 @@
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="FurnitureMarkerParameters" objType="Subrecord" GUID="c75d9213-af7a-438c-a3d9-d953c0001d6a" ID="334">
     <Fields>

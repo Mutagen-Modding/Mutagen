@@ -21,5 +21,6 @@
       <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IEffectRecord</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

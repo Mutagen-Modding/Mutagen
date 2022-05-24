@@ -106,6 +106,7 @@
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IFurnitureAssociation</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="WeaponDamageType" recordType="DAMA" objType="Subrecord" GUID="a188e5af-64a3-40af-8022-3898f4d59cdf" ID="337">
     <Fields>

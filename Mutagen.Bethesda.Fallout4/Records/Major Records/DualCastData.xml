@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DualCastData" recordType="DUAL" objType="Record" baseClass="Fallout4MajorRecord" GUID="0769c9ee-ad32-40b2-a815-68695b895015" ID="272">
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

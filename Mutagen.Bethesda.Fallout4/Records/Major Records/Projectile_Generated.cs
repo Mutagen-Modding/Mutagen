@@ -1733,6 +1733,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IProjectile :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IProjectileInternal>,
@@ -1802,6 +1803,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IProjectileGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IProjectileGetter>,
         IMapsToGetter<IProjectileGetter>,

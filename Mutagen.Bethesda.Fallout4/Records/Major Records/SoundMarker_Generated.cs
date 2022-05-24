@@ -573,6 +573,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ISoundMarker :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<ISoundMarkerInternal>,
@@ -600,6 +601,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ISoundMarkerGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<ISoundMarkerGetter>,
         IMapsToGetter<ISoundMarkerGetter>,

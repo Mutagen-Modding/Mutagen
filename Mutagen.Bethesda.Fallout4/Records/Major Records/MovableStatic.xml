@@ -19,5 +19,6 @@
     <LinkInterface>IRegionTarget</LinkInterface>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

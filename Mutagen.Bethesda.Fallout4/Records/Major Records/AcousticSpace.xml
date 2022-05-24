@@ -10,5 +10,6 @@
       <Float name="WeatherAttenuationDb" recordType="WNAM" integerType="UShort" divisor="100" />
     </Fields>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

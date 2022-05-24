@@ -76,6 +76,7 @@
     <LinkInterface>IFurnitureAssociation</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="ArmorModel" objType="Subrecord" GUID="9c3dda06-b786-4b46-98d2-98ce753be2b5" ID="137">
     <Fields>

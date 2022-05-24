@@ -28,5 +28,6 @@
     <LinkInterface>IEffectRecord</LinkInterface>
     <LinkInterface>ISpellRecord</LinkInterface>
     <LinkInterface>IFurnitureAssociation</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

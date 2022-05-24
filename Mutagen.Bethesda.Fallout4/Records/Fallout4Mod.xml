@@ -71,6 +71,7 @@
       <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="Waters" refName="Water" />
       <Group name="EffectShaders" refName="EffectShader" />
+      <Group name="Explosions" refName="Explosion" />
     </Fields>
   </Object>
 </Loqui>

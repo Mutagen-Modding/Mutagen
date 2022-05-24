@@ -1205,6 +1205,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFlora :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFloraGetter,
         IFormLinkContainer,
@@ -1261,6 +1262,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IFloraGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IFloraGetter>,

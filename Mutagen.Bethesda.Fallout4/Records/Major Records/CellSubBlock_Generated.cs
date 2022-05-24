@@ -1320,6 +1320,13 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IExplodeSpawn":
+                case "IExplodeSpawnGetter":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                     foreach (var subItem in obj.Cells)

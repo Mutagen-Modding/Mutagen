@@ -1013,6 +1013,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IObjectEffect :
         IEffectRecord,
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IObjectEffectInternal>,
@@ -1056,6 +1057,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IEffectRecordGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IObjectEffectGetter>,
         IMapsToGetter<IObjectEffectGetter>,

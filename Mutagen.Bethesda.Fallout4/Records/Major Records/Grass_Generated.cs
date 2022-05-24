@@ -1014,6 +1014,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGrass :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IGrassGetter,
@@ -1056,6 +1057,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGrassGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IGrassGetter>,
         IMapsToGetter<IGrassGetter>,

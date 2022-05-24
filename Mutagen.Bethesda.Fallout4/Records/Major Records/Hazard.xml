@@ -28,5 +28,6 @@
     </Fields>
     <LinkInterface>IPlacedTrapTarget</LinkInterface>
     <LinkInterface>IFurnitureAssociation</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

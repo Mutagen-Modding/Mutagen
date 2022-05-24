@@ -1051,6 +1051,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IMovableStatic :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1110,6 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IMovableStaticGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IMovableStaticGetter>,

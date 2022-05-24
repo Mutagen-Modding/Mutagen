@@ -3910,6 +3910,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IPlacedObject :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILocationTargetable,
@@ -4010,6 +4011,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPlacedObjectGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILocationTargetableGetter,
         ILoquiObject<IPlacedObjectGetter>,

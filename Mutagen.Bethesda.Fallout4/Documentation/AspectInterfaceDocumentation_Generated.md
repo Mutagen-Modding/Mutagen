@@ -62,6 +62,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - DestructionStage
 - Door
 - EffectShader
+- Explosion
 - Flora
 - Furniture
 - Grass
@@ -99,6 +100,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - DialogTopic
 - Door
+- Explosion
 - FaceMorph
 - Faction
 - Flora
@@ -178,6 +180,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Component
 - Container
 - Door
+- Explosion
 - Flora
 - Furniture
 - Grass
@@ -340,6 +343,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IScripted
 ### EffectShader
 - IModeled
+### Explosion
+- IModeled
+- INamed
+- IObjectBounded
 ### FaceMorph
 - INamed
 ### Faction

@@ -15,6 +15,7 @@ public partial class RecordTypes
     public static readonly RecordType ACHR = new(0x52484341);
     public static readonly RecordType ACTI = new(0x49544341);
     public static readonly RecordType ACTV = new(0x56544341);
+    public static readonly RecordType ADDN = new(0x4E444441);
     public static readonly RecordType AHCF = new(0x46434841);
     public static readonly RecordType AHCM = new(0x4D434841);
     public static readonly RecordType AIAD = new(0x44414941);

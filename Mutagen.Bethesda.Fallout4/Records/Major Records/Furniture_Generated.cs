@@ -2128,6 +2128,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IFurniture :
         IConstructible,
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IFurnitureGetter,
@@ -2204,6 +2205,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IConstructibleGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IFurnitureGetter>,

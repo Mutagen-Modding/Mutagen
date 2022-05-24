@@ -710,6 +710,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IComponent :
         IComponentGetter,
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IComponentInternal>,
@@ -744,6 +745,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IComponentGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IComponentGetter>,
         IMapsToGetter<IComponentGetter>,

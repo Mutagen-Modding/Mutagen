@@ -1141,6 +1141,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IHazard :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IFurnitureAssociation,
@@ -1194,6 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IHazardGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IFurnitureAssociationGetter,
         ILoquiObject<IHazardGetter>,

@@ -678,6 +678,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IAcousticSpace :
         IAcousticSpaceGetter,
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IAcousticSpaceInternal>,
@@ -706,6 +707,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IAcousticSpaceGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IAcousticSpaceGetter>,
         IMapsToGetter<IAcousticSpaceGetter>,

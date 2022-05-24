@@ -10,5 +10,6 @@
       <FormLink name="ScrapItem" refName="MiscItem" recordType="MNAM" />
       <FormLink name="ModScrapScalar" refName="Global" recordType="GNAM" />
     </Fields>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

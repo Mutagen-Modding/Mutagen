@@ -1224,6 +1224,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITree :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IHarvestable,
@@ -1287,6 +1288,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ITreeGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestableGetter,
         ILoquiObject<ITreeGetter>,

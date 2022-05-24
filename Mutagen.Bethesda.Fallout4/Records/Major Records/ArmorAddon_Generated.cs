@@ -1115,6 +1115,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IArmorAddon :
         IArmorAddonGetter,
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IArmorAddonInternal>
@@ -1158,6 +1159,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IArmorAddonGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IArmorAddonGetter>,
         IMapsToGetter<IArmorAddonGetter>

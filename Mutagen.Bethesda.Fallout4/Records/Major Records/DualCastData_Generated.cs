@@ -415,6 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IDualCastData :
         IDualCastDataGetter,
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IDualCastDataInternal>
     {
@@ -431,6 +432,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IDualCastDataGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         ILoquiObject<IDualCastDataGetter>,
         IMapsToGetter<IDualCastDataGetter>
     {

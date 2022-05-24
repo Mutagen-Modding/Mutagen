@@ -576,6 +576,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IArtObject :
         IArtObjectGetter,
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IArtObjectInternal>,
@@ -604,6 +605,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IArtObjectGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IArtObjectGetter>,
         IMapsToGetter<IArtObjectGetter>,

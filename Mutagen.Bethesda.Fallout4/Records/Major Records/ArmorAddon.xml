@@ -68,5 +68,6 @@
       <FormLink name="FootstepSound" refName="FootstepSet" recordType="SNDD" />
       <FormLink name="ArtObject" refName="ArtObject" recordType="ONAM" />
     </Fields>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

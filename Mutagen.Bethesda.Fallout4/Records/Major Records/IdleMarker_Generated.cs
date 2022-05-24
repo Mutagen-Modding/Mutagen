@@ -884,6 +884,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IIdleMarker :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IIdleMarkerGetter,
@@ -927,6 +928,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IIdleMarkerGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IIdleMarkerGetter>,

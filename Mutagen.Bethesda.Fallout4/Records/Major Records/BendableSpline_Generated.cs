@@ -773,6 +773,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IBendableSpline :
         IBendableSplineGetter,
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IBendableSplineInternal>,
@@ -804,6 +805,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IBendableSplineGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IBendableSplineGetter>,
         IMapsToGetter<IBendableSplineGetter>,

@@ -13,6 +13,7 @@ public partial class RecordTypeInts
     public const int ACHR = 0x52484341;
     public const int ACTI = 0x49544341;
     public const int ACTV = 0x56544341;
+    public const int ADDN = 0x4E444441;
     public const int AHCF = 0x46434841;
     public const int AHCM = 0x4D434841;
     public const int AIAD = 0x44414941;

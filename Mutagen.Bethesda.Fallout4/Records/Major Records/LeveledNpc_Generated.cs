@@ -897,6 +897,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ILeveledNpc :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILeveledNpcGetter,
@@ -932,6 +933,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ILeveledNpcGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledNpcGetter>,
         IMapsToGetter<ILeveledNpcGetter>,

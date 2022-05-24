@@ -922,6 +922,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ILeveledItem :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IHarvestTarget,
@@ -956,6 +957,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ILeveledItemGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
         IItemGetter,
