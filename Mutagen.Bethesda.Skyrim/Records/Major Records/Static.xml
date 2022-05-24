@@ -18,6 +18,7 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IRegionTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="Lod" objType="Subrecord" recordType="MNAM" GUID="a708745a-1c62-4a97-afcc-345a6c66ad64" ID="185">
     <Fields>

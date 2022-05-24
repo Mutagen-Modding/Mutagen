@@ -16,7 +16,9 @@
           <FormLink name="Sound1" refName="SoundDescriptor" />
           <FormLink name="Sound2" refName="SoundDescriptor" />
           <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
-          <FormLink name="PlacedObject" refName="SkyrimMajorRecord" />
+          <FormLink name="PlacedObject" >
+            <Interface>IExplodeSpawn</Interface>
+          </FormLink>
           <FormLink name="SpawnProjectile" refName="Projectile" />
           <Float name="Force" />
           <Float name="Damage" />
@@ -31,5 +33,6 @@
         </Fields>
       </Data>
     </Fields>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

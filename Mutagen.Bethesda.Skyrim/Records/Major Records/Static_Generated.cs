@@ -795,6 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStatic :
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IStaticInternal>,
         IModeled,
@@ -836,6 +837,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStaticGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IStaticGetter>,
         IMapsToGetter<IStaticGetter>,

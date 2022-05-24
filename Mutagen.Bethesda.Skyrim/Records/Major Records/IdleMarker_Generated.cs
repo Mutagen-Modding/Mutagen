@@ -733,6 +733,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIdleMarker :
+        IExplodeSpawn,
         IFormLinkContainer,
         IIdleMarkerGetter,
         ILoquiObjectSetter<IIdleMarkerInternal>,
@@ -770,6 +771,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IIdleMarkerGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IIdleMarkerGetter>,
         IMapsToGetter<IIdleMarkerGetter>,

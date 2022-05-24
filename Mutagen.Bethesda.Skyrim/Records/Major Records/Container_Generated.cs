@@ -1011,6 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IContainer :
         IContainerGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IContainerInternal>,
         IModeled,
@@ -1064,6 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IContainerGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IContainerGetter>,
         IMapsToGetter<IContainerGetter>,

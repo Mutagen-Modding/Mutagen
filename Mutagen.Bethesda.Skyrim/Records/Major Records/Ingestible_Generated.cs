@@ -1350,6 +1350,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IIngestible :
         IConstructible,
+        IExplodeSpawn,
         IFormLinkContainer,
         IHarvestTarget,
         IHasIcons,
@@ -1419,6 +1420,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IConstructibleGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
         IHasIconsGetter,

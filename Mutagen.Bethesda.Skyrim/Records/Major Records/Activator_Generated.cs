@@ -1103,6 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IActivator :
         IActivatorGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IActivatorInternal>,
@@ -1162,6 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActivatorGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IActivatorGetter>,

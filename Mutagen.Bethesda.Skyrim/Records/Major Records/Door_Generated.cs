@@ -872,6 +872,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDoor :
         IDoorGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILocationTargetable,
         ILoquiObjectSetter<IDoorInternal>,
@@ -924,6 +925,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDoorGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILocationTargetableGetter,
         ILoquiObject<IDoorGetter>,

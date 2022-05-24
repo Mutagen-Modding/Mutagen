@@ -1527,6 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IScroll :
         IConstructible,
+        IExplodeSpawn,
         IFormLinkContainer,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -1593,6 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IConstructibleGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,

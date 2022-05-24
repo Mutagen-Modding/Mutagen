@@ -1661,6 +1661,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IProjectile :
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IProjectileInternal>,
         IModeled,
@@ -1728,6 +1729,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IProjectileGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IProjectileGetter>,
         IMapsToGetter<IProjectileGetter>,

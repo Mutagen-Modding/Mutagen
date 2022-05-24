@@ -1008,6 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITree :
+        IExplodeSpawn,
         IFormLinkContainer,
         IHarvestable,
         ILoquiObjectSetter<ITreeInternal>,
@@ -1065,6 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITreeGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestableGetter,
         ILoquiObject<ITreeGetter>,

@@ -615,6 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAcousticSpace :
         IAcousticSpaceGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IAcousticSpaceInternal>,
         IObjectBounded,
@@ -641,6 +642,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAcousticSpaceGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IAcousticSpaceGetter>,
         IMapsToGetter<IAcousticSpaceGetter>,

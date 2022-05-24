@@ -1182,6 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IFurniture :
+        IExplodeSpawn,
         IFormLinkContainer,
         IFurnitureGetter,
         IKeyworded<IKeywordGetter>,
@@ -1242,6 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFurnitureGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IFurnitureGetter>,

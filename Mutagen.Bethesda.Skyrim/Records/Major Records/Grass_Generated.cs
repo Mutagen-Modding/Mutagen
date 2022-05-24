@@ -1021,6 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGrass :
+        IExplodeSpawn,
         IFormLinkContainer,
         IGrassGetter,
         ILoquiObjectSetter<IGrassInternal>,
@@ -1063,6 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGrassGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IGrassGetter>,
         IMapsToGetter<IGrassGetter>,

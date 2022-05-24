@@ -616,6 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundMarker :
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<ISoundMarkerInternal>,
         IObjectBounded,
@@ -645,6 +646,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISoundMarkerGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<ISoundMarkerGetter>,
         IMapsToGetter<ISoundMarkerGetter>,

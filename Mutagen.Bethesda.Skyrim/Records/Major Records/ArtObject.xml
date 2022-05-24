@@ -6,5 +6,6 @@
       <RefDirect name="Model" refName="Model" />
       <Enum name="Type" enumName="ArtObject.TypeEnum" byteLength="4" recordType="DNAM" />
     </Fields>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

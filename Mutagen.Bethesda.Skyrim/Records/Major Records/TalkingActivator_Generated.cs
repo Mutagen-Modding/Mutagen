@@ -986,6 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITalkingActivator :
+        IExplodeSpawn,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ITalkingActivatorInternal>,
@@ -1042,6 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITalkingActivatorGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ITalkingActivatorGetter>,

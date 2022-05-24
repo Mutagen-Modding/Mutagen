@@ -762,6 +762,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledNpc :
+        IExplodeSpawn,
         IFormLinkContainer,
         ILeveledNpcGetter,
         ILoquiObjectSetter<ILeveledNpcInternal>,
@@ -795,6 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledNpcGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledNpcGetter>,
         IMapsToGetter<ILeveledNpcGetter>,

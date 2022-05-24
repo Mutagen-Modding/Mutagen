@@ -1244,6 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ISpell :
         IEffectRecord,
+        IExplodeSpawn,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISpellInternal>,
@@ -1298,6 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IEffectRecordGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISpellGetter>,

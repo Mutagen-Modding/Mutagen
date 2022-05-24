@@ -1117,6 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArmorAddon :
         IArmorAddonGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IArmorAddonInternal>,
         ISkyrimMajorRecordInternal
@@ -1156,6 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorAddonGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IArmorAddonGetter>,
         IMapsToGetter<IArmorAddonGetter>

@@ -724,6 +724,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAddonNode :
         IAddonNodeGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IAddonNodeInternal>,
         IModeled,
@@ -756,6 +757,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAddonNodeGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IAddonNodeGetter>,
         IMapsToGetter<IAddonNodeGetter>,

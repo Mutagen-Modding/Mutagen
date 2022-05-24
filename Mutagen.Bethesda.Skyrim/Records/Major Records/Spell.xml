@@ -29,5 +29,6 @@
     <LinkInterface>IEffectRecord</LinkInterface>
     <LinkInterface>ISpellRecord</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

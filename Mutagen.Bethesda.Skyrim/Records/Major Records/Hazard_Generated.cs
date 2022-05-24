@@ -1049,6 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IHazard :
+        IExplodeSpawn,
         IFormLinkContainer,
         IHazardGetter,
         ILoquiObjectSetter<IHazardInternal>,
@@ -1098,6 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHazardGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IHazardGetter>,
         IMapsToGetter<IHazardGetter>,

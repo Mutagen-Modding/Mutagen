@@ -583,6 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArtObject :
         IArtObjectGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IArtObjectInternal>,
         IModeled,
@@ -611,6 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArtObjectGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IArtObjectGetter>,
         IMapsToGetter<IArtObjectGetter>,

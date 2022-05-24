@@ -1020,6 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IObjectEffect :
         IEffectRecord,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IObjectEffectInternal>,
         INamed,
@@ -1063,6 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IEffectRecordGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IObjectEffectGetter>,
         IMapsToGetter<IObjectEffectGetter>,

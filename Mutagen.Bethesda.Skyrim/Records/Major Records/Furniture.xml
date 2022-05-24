@@ -20,9 +20,10 @@
       <RefList name="Markers" refName="FurnitureMarker" recordType="FNPR" binary="Custom" />
       <String name="ModelFilename" recordType="XMRK" />
     </Fields>
-    <AdditionalContainedRecordType>FNMK</AdditionalContainedRecordType>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+    <AdditionalContainedRecordType>FNMK</AdditionalContainedRecordType>
   </Object>
   <Object name="WorkbenchData" objType="Subrecord" recordType="WBDT" GUID="751a4c09-9920-42eb-b754-b9a7a15a73d0" ID="193">
     <Fields>

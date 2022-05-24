@@ -16,5 +16,6 @@
       <FormLink name="VoiceType" recordType="VNAM" refName="VoiceType" />
     </Fields>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

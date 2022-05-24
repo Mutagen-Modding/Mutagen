@@ -8,6 +8,7 @@
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledSpellEntry" counterLength="1" />
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="LeveledSpellEntry" objType="Subrecord" GUID="315b973b-31dd-49c8-aa34-9e4905e06064" ID="401">
     <Fields>

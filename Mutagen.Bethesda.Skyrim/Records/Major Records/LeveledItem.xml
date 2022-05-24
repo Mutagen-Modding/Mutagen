@@ -11,6 +11,7 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IOutfitTarget</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="LeveledItemEntry" objType="Subrecord" GUID="a077418e-1fb2-4956-abe3-a48f9d76449b" ID="239">
     <Fields>

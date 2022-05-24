@@ -1063,6 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IFlora :
+        IExplodeSpawn,
         IFloraGetter,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1116,6 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFloraGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IFloraGetter>,

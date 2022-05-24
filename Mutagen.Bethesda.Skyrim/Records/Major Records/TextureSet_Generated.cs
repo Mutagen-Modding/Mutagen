@@ -852,6 +852,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITextureSet :
+        IExplodeSpawn,
         ILoquiObjectSetter<ITextureSetInternal>,
         IObjectBounded,
         IObjectId,
@@ -886,6 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITextureSetGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         ILoquiObject<ITextureSetGetter>,
         IMapsToGetter<ITextureSetGetter>,
         IObjectBoundedGetter,

@@ -765,6 +765,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDualCastData :
         IDualCastDataGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IDualCastDataInternal>,
         IObjectBounded,
@@ -794,6 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDualCastDataGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IDualCastDataGetter>,
         IMapsToGetter<IDualCastDataGetter>,

@@ -209,14 +209,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region PlacedObject
-        private readonly IFormLink<ISkyrimMajorRecordGetter> _PlacedObject = new FormLink<ISkyrimMajorRecordGetter>();
-        public IFormLink<ISkyrimMajorRecordGetter> PlacedObject
+        private readonly IFormLink<IExplodeSpawnGetter> _PlacedObject = new FormLink<IExplodeSpawnGetter>();
+        public IFormLink<IExplodeSpawnGetter> PlacedObject
         {
             get => _PlacedObject;
             set => _PlacedObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IExplosionGetter.PlacedObject => this.PlacedObject;
+        IFormLinkGetter<IExplodeSpawnGetter> IExplosionGetter.PlacedObject => this.PlacedObject;
         #endregion
         #region SpawnProjectile
         private readonly IFormLink<IProjectileGetter> _SpawnProjectile = new FormLink<IProjectileGetter>();
@@ -1291,6 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IExplosion :
+        IExplodeSpawn,
         IExplosionGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IExplosionInternal>,
@@ -1325,7 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLink<ISoundDescriptorGetter> Sound1 { get; set; }
         new IFormLink<ISoundDescriptorGetter> Sound2 { get; set; }
         new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> PlacedObject { get; set; }
+        new IFormLink<IExplodeSpawnGetter> PlacedObject { get; set; }
         new IFormLink<IProjectileGetter> SpawnProjectile { get; set; }
         new Single Force { get; set; }
         new Single Damage { get; set; }
@@ -1348,6 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExplosionGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IExplosionGetter>,
         IMapsToGetter<IExplosionGetter>,
@@ -1390,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ISoundDescriptorGetter> Sound1 { get; }
         IFormLinkGetter<ISoundDescriptorGetter> Sound2 { get; }
         IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> PlacedObject { get; }
+        IFormLinkGetter<IExplodeSpawnGetter> PlacedObject { get; }
         IFormLinkGetter<IProjectileGetter> SpawnProjectile { get; }
         Single Force { get; }
         Single Damage { get; }
@@ -2964,7 +2966,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region PlacedObject
         private int _PlacedObjectLocation => _DATALocation!.Value.Min + 0x10;
         private bool _PlacedObject_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> PlacedObject => _PlacedObject_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PlacedObjectLocation, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkGetter<IExplodeSpawnGetter> PlacedObject => _PlacedObject_IsSet ? new FormLink<IExplodeSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PlacedObjectLocation, 0x4)))) : FormLink<IExplodeSpawnGetter>.Null;
         #endregion
         #region SpawnProjectile
         private int _SpawnProjectileLocation => _DATALocation!.Value.Min + 0x14;

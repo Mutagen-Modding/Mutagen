@@ -24,5 +24,6 @@
     </Fields>
     <LinkInterface>IRegionTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

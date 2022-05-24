@@ -57,6 +57,7 @@
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IBindableEquipment</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="ArmorModel" objType="Subrecord" GUID="39a3a83f-68bd-473a-aa14-10efdb07031b" ID="151">
     <Fields>

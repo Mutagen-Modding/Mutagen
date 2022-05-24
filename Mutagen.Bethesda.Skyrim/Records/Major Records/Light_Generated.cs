@@ -1280,6 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILight :
         IConstructible,
         IEmittance,
+        IExplodeSpawn,
         IFormLinkContainer,
         IHasIcons,
         IItem,
@@ -1352,6 +1353,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IConstructibleGetter,
         IEmittanceGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasIconsGetter,
         IItemGetter,

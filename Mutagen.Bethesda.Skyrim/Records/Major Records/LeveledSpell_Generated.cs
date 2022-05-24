@@ -671,6 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledSpell :
+        IExplodeSpawn,
         IFormLinkContainer,
         ILeveledSpellGetter,
         ILoquiObjectSetter<ILeveledSpellInternal>,
@@ -698,6 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledSpellGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledSpellGetter>,
         IMapsToGetter<ILeveledSpellGetter>,

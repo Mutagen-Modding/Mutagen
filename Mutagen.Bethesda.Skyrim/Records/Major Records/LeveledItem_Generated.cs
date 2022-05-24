@@ -709,6 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledItem :
+        IExplodeSpawn,
         IFormLinkContainer,
         IHarvestTarget,
         IItem,
@@ -739,6 +740,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledItemGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
         IItemGetter,

@@ -10,6 +10,7 @@
       <RefDirect name="Model" refName="Model" />
     </Fields>
     <LinkInterface>INpcSpawn</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="LeveledNpcEntry" objType="Subrecord" GUID="669005f3-8cf3-4880-a195-8cbce079f303" ID="241">
     <Fields>
