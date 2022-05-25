@@ -5,6 +5,7 @@ using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda;
 
@@ -488,7 +489,7 @@ public static class HeaderExt
     /// If true, iteration will stop after finding the first non-applicable record after some applicable ones.<br/>
     /// If false, records will continue to be searched in their entirety for all matching subrecords.
     /// </param>
-    /// <returns>First encountered SubrecordFrame with the given type</returns>
+    /// <returns>Encountered SubrecordFrames with the given type</returns>
     public static IEnumerable<SubrecordPinFrame> FindEnumerateSubrecords(this MajorRecordFrame majorFrame, RecordType type, bool onlyFirstSet = false)
     {
         bool encountered = false;
@@ -502,6 +503,23 @@ public static class HeaderExt
             else if (onlyFirstSet && encountered)
             {
                 yield break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Finds and iterates subrecords of a given type
+    /// </summary>
+    /// <param name="majorFrame">Frame to read from</param>
+    /// <param name="recordTypes">Types to search for</param>
+    /// <returns>Encountered SubrecordFrames with the given types</returns>
+    public static IEnumerable<SubrecordPinFrame> FindEnumerateSubrecords(this MajorRecordFrame majorFrame, IReadOnlyCollection<RecordType> recordTypes)
+    {
+        foreach (var subrecord in majorFrame)
+        {
+            if (recordTypes.Contains(subrecord.RecordType))
+            {
+                yield return subrecord;
             }
         }
     }

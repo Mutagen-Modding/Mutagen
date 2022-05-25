@@ -53,20 +53,33 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
-        #region Flags
-        public ImageSpaceAdapter.Flag Flags { get; set; } = default;
+        #region Animatable
+        public Boolean Animatable { get; set; } = default;
         #endregion
         #region Duration
         public Single Duration { get; set; } = default;
         #endregion
-        #region RadialBlurFlags
-        public ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; } = default;
+        #region RadialBlurUseTarget
+        public Boolean RadialBlurUseTarget { get; set; } = default;
         #endregion
         #region RadialBlurCenter
         public P2Float RadialBlurCenter { get; set; } = default;
         #endregion
         #region DepthOfFieldFlags
         public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; } = default;
+        #endregion
+        #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt64 _Unknown;
+        public UInt64 Unknown
+        {
+            get => this._Unknown;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._Unknown = value;
+            }
+        }
         #endregion
         #region BlurRadius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -233,6 +246,34 @@ namespace Mutagen.Bethesda.Fallout4
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.DepthOfFieldRange => _DepthOfFieldRange;
+        #endregion
+
+        #endregion
+        #region DepthOfFieldVignetteRadius
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _DepthOfFieldVignetteRadius;
+        public ExtendedList<KeyFrame>? DepthOfFieldVignetteRadius
+        {
+            get => this._DepthOfFieldVignetteRadius;
+            set => this._DepthOfFieldVignetteRadius = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.DepthOfFieldVignetteRadius => _DepthOfFieldVignetteRadius;
+        #endregion
+
+        #endregion
+        #region DepthOfFieldVignetteStrength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _DepthOfFieldVignetteStrength;
+        public ExtendedList<KeyFrame>? DepthOfFieldVignetteStrength
+        {
+            get => this._DepthOfFieldVignetteStrength;
+            set => this._DepthOfFieldVignetteStrength = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.DepthOfFieldVignetteStrength => _DepthOfFieldVignetteStrength;
         #endregion
 
         #endregion
@@ -866,11 +907,12 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Flags = initialValue;
+                this.Animatable = initialValue;
                 this.Duration = initialValue;
-                this.RadialBlurFlags = initialValue;
+                this.RadialBlurUseTarget = initialValue;
                 this.RadialBlurCenter = initialValue;
                 this.DepthOfFieldFlags = initialValue;
+                this.Unknown = initialValue;
                 this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
@@ -883,6 +925,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DepthOfFieldStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.DepthOfFieldDistance = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.DepthOfFieldRange = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldVignetteRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldVignetteStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.MotionBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.HdrEyeAdaptSpeedMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.HdrEyeAdaptSpeedAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
@@ -936,11 +980,12 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Flags,
+                TItem Animatable,
                 TItem Duration,
-                TItem RadialBlurFlags,
+                TItem RadialBlurUseTarget,
                 TItem RadialBlurCenter,
                 TItem DepthOfFieldFlags,
+                TItem Unknown,
                 TItem BlurRadius,
                 TItem DoubleVisionStrength,
                 TItem TintColor,
@@ -953,6 +998,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem DepthOfFieldStrength,
                 TItem DepthOfFieldDistance,
                 TItem DepthOfFieldRange,
+                TItem DepthOfFieldVignetteRadius,
+                TItem DepthOfFieldVignetteStrength,
                 TItem MotionBlurStrength,
                 TItem HdrEyeAdaptSpeedMult,
                 TItem HdrEyeAdaptSpeedAdd,
@@ -1005,11 +1052,12 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.Flags = Flags;
+                this.Animatable = Animatable;
                 this.Duration = Duration;
-                this.RadialBlurFlags = RadialBlurFlags;
+                this.RadialBlurUseTarget = RadialBlurUseTarget;
                 this.RadialBlurCenter = RadialBlurCenter;
                 this.DepthOfFieldFlags = DepthOfFieldFlags;
+                this.Unknown = Unknown;
                 this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(BlurRadius, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DoubleVisionStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(TintColor, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
@@ -1022,6 +1070,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DepthOfFieldStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.DepthOfFieldDistance = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldDistance, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.DepthOfFieldRange = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldRange, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldVignetteRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldVignetteRadius, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldVignetteStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldVignetteStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.MotionBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(MotionBlurStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.HdrEyeAdaptSpeedMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrEyeAdaptSpeedMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.HdrEyeAdaptSpeedAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrEyeAdaptSpeedAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
@@ -1077,11 +1127,12 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem Flags;
+            public TItem Animatable;
             public TItem Duration;
-            public TItem RadialBlurFlags;
+            public TItem RadialBlurUseTarget;
             public TItem RadialBlurCenter;
             public TItem DepthOfFieldFlags;
+            public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? BlurRadius;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DoubleVisionStrength;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>? TintColor;
@@ -1094,6 +1145,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DepthOfFieldStrength;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DepthOfFieldDistance;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DepthOfFieldRange;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DepthOfFieldVignetteRadius;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DepthOfFieldVignetteStrength;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? MotionBlurStrength;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrEyeAdaptSpeedMult;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrEyeAdaptSpeedAdd;
@@ -1151,11 +1204,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Animatable, rhs.Animatable)) return false;
                 if (!object.Equals(this.Duration, rhs.Duration)) return false;
-                if (!object.Equals(this.RadialBlurFlags, rhs.RadialBlurFlags)) return false;
+                if (!object.Equals(this.RadialBlurUseTarget, rhs.RadialBlurUseTarget)) return false;
                 if (!object.Equals(this.RadialBlurCenter, rhs.RadialBlurCenter)) return false;
                 if (!object.Equals(this.DepthOfFieldFlags, rhs.DepthOfFieldFlags)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.BlurRadius, rhs.BlurRadius)) return false;
                 if (!object.Equals(this.DoubleVisionStrength, rhs.DoubleVisionStrength)) return false;
                 if (!object.Equals(this.TintColor, rhs.TintColor)) return false;
@@ -1168,6 +1222,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.DepthOfFieldStrength, rhs.DepthOfFieldStrength)) return false;
                 if (!object.Equals(this.DepthOfFieldDistance, rhs.DepthOfFieldDistance)) return false;
                 if (!object.Equals(this.DepthOfFieldRange, rhs.DepthOfFieldRange)) return false;
+                if (!object.Equals(this.DepthOfFieldVignetteRadius, rhs.DepthOfFieldVignetteRadius)) return false;
+                if (!object.Equals(this.DepthOfFieldVignetteStrength, rhs.DepthOfFieldVignetteStrength)) return false;
                 if (!object.Equals(this.MotionBlurStrength, rhs.MotionBlurStrength)) return false;
                 if (!object.Equals(this.HdrEyeAdaptSpeedMult, rhs.HdrEyeAdaptSpeedMult)) return false;
                 if (!object.Equals(this.HdrEyeAdaptSpeedAdd, rhs.HdrEyeAdaptSpeedAdd)) return false;
@@ -1217,11 +1273,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Flags);
+                hash.Add(this.Animatable);
                 hash.Add(this.Duration);
-                hash.Add(this.RadialBlurFlags);
+                hash.Add(this.RadialBlurUseTarget);
                 hash.Add(this.RadialBlurCenter);
                 hash.Add(this.DepthOfFieldFlags);
+                hash.Add(this.Unknown);
                 hash.Add(this.BlurRadius);
                 hash.Add(this.DoubleVisionStrength);
                 hash.Add(this.TintColor);
@@ -1234,6 +1291,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.DepthOfFieldStrength);
                 hash.Add(this.DepthOfFieldDistance);
                 hash.Add(this.DepthOfFieldRange);
+                hash.Add(this.DepthOfFieldVignetteRadius);
+                hash.Add(this.DepthOfFieldVignetteStrength);
                 hash.Add(this.MotionBlurStrength);
                 hash.Add(this.HdrEyeAdaptSpeedMult);
                 hash.Add(this.HdrEyeAdaptSpeedAdd);
@@ -1288,11 +1347,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.Animatable)) return false;
                 if (!eval(this.Duration)) return false;
-                if (!eval(this.RadialBlurFlags)) return false;
+                if (!eval(this.RadialBlurUseTarget)) return false;
                 if (!eval(this.RadialBlurCenter)) return false;
                 if (!eval(this.DepthOfFieldFlags)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (this.BlurRadius != null)
                 {
                     if (!eval(this.BlurRadius.Overall)) return false;
@@ -1431,6 +1491,30 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.DepthOfFieldRange.Specific != null)
                     {
                         foreach (var item in this.DepthOfFieldRange.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldVignetteRadius != null)
+                {
+                    if (!eval(this.DepthOfFieldVignetteRadius.Overall)) return false;
+                    if (this.DepthOfFieldVignetteRadius.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldVignetteRadius.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldVignetteStrength != null)
+                {
+                    if (!eval(this.DepthOfFieldVignetteStrength.Overall)) return false;
+                    if (this.DepthOfFieldVignetteStrength.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldVignetteStrength.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -1962,11 +2046,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.Animatable)) return true;
                 if (eval(this.Duration)) return true;
-                if (eval(this.RadialBlurFlags)) return true;
+                if (eval(this.RadialBlurUseTarget)) return true;
                 if (eval(this.RadialBlurCenter)) return true;
                 if (eval(this.DepthOfFieldFlags)) return true;
+                if (eval(this.Unknown)) return true;
                 if (this.BlurRadius != null)
                 {
                     if (eval(this.BlurRadius.Overall)) return true;
@@ -2105,6 +2190,30 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.DepthOfFieldRange.Specific != null)
                     {
                         foreach (var item in this.DepthOfFieldRange.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldVignetteRadius != null)
+                {
+                    if (eval(this.DepthOfFieldVignetteRadius.Overall)) return true;
+                    if (this.DepthOfFieldVignetteRadius.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldVignetteRadius.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldVignetteStrength != null)
+                {
+                    if (eval(this.DepthOfFieldVignetteStrength.Overall)) return true;
+                    if (this.DepthOfFieldVignetteStrength.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldVignetteStrength.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -2643,11 +2752,12 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Flags = eval(this.Flags);
+                obj.Animatable = eval(this.Animatable);
                 obj.Duration = eval(this.Duration);
-                obj.RadialBlurFlags = eval(this.RadialBlurFlags);
+                obj.RadialBlurUseTarget = eval(this.RadialBlurUseTarget);
                 obj.RadialBlurCenter = eval(this.RadialBlurCenter);
                 obj.DepthOfFieldFlags = eval(this.DepthOfFieldFlags);
+                obj.Unknown = eval(this.Unknown);
                 if (BlurRadius != null)
                 {
                     obj.BlurRadius = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.BlurRadius.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
@@ -2821,6 +2931,36 @@ namespace Mutagen.Bethesda.Fallout4
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.DepthOfFieldRange.Specific = l;
                         foreach (var item in DepthOfFieldRange.Specific)
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (DepthOfFieldVignetteRadius != null)
+                {
+                    obj.DepthOfFieldVignetteRadius = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldVignetteRadius.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (DepthOfFieldVignetteRadius.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.DepthOfFieldVignetteRadius.Specific = l;
+                        foreach (var item in DepthOfFieldVignetteRadius.Specific)
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (DepthOfFieldVignetteStrength != null)
+                {
+                    obj.DepthOfFieldVignetteStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldVignetteStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (DepthOfFieldVignetteStrength.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.DepthOfFieldVignetteStrength.Specific = l;
+                        foreach (var item in DepthOfFieldVignetteStrength.Specific)
                         {
                             MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
@@ -3492,17 +3632,17 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(ImageSpaceAdapter.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Animatable ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Animatable, "Animatable");
                     }
                     if (printMask?.Duration ?? true)
                     {
                         sb.AppendItem(Duration, "Duration");
                     }
-                    if (printMask?.RadialBlurFlags ?? true)
+                    if (printMask?.RadialBlurUseTarget ?? true)
                     {
-                        sb.AppendItem(RadialBlurFlags, "RadialBlurFlags");
+                        sb.AppendItem(RadialBlurUseTarget, "RadialBlurUseTarget");
                     }
                     if (printMask?.RadialBlurCenter ?? true)
                     {
@@ -3511,6 +3651,10 @@ namespace Mutagen.Bethesda.Fallout4
                     if (printMask?.DepthOfFieldFlags ?? true)
                     {
                         sb.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.BlurRadius?.Overall ?? true)
                         && BlurRadius is {} BlurRadiusItem)
@@ -3731,6 +3875,44 @@ namespace Mutagen.Bethesda.Fallout4
                             if (DepthOfFieldRangeItem.Specific != null)
                             {
                                 foreach (var subItem in DepthOfFieldRangeItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.DepthOfFieldVignetteRadius?.Overall ?? true)
+                        && DepthOfFieldVignetteRadius is {} DepthOfFieldVignetteRadiusItem)
+                    {
+                        sb.AppendLine("DepthOfFieldVignetteRadius =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DepthOfFieldVignetteRadiusItem.Overall);
+                            if (DepthOfFieldVignetteRadiusItem.Specific != null)
+                            {
+                                foreach (var subItem in DepthOfFieldVignetteRadiusItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.DepthOfFieldVignetteStrength?.Overall ?? true)
+                        && DepthOfFieldVignetteStrength is {} DepthOfFieldVignetteStrengthItem)
+                    {
+                        sb.AppendLine("DepthOfFieldVignetteStrength =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DepthOfFieldVignetteStrengthItem.Overall);
+                            if (DepthOfFieldVignetteStrengthItem.Specific != null)
+                            {
+                                foreach (var subItem in DepthOfFieldVignetteStrengthItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -4572,11 +4754,12 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Flags;
+            public Exception? Animatable;
             public Exception? Duration;
-            public Exception? RadialBlurFlags;
+            public Exception? RadialBlurUseTarget;
             public Exception? RadialBlurCenter;
             public Exception? DepthOfFieldFlags;
+            public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? BlurRadius;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DoubleVisionStrength;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>? TintColor;
@@ -4589,6 +4772,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DepthOfFieldStrength;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DepthOfFieldDistance;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DepthOfFieldRange;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DepthOfFieldVignetteRadius;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DepthOfFieldVignetteStrength;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? MotionBlurStrength;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrEyeAdaptSpeedMult;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrEyeAdaptSpeedAdd;
@@ -4641,16 +4826,18 @@ namespace Mutagen.Bethesda.Fallout4
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpaceAdapter_FieldIndex.Flags:
-                        return Flags;
+                    case ImageSpaceAdapter_FieldIndex.Animatable:
+                        return Animatable;
                     case ImageSpaceAdapter_FieldIndex.Duration:
                         return Duration;
-                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
-                        return RadialBlurFlags;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget:
+                        return RadialBlurUseTarget;
                     case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
                         return RadialBlurCenter;
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
                         return DepthOfFieldFlags;
+                    case ImageSpaceAdapter_FieldIndex.Unknown:
+                        return Unknown;
                     case ImageSpaceAdapter_FieldIndex.BlurRadius:
                         return BlurRadius;
                     case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
@@ -4675,6 +4862,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return DepthOfFieldDistance;
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
                         return DepthOfFieldRange;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius:
+                        return DepthOfFieldVignetteRadius;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength:
+                        return DepthOfFieldVignetteStrength;
                     case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
                         return MotionBlurStrength;
                     case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
@@ -4773,20 +4964,23 @@ namespace Mutagen.Bethesda.Fallout4
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpaceAdapter_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case ImageSpaceAdapter_FieldIndex.Animatable:
+                        this.Animatable = ex;
                         break;
                     case ImageSpaceAdapter_FieldIndex.Duration:
                         this.Duration = ex;
                         break;
-                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
-                        this.RadialBlurFlags = ex;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget:
+                        this.RadialBlurUseTarget = ex;
                         break;
                     case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
                         this.RadialBlurCenter = ex;
                         break;
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
                         this.DepthOfFieldFlags = ex;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     case ImageSpaceAdapter_FieldIndex.BlurRadius:
                         this.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
@@ -4823,6 +5017,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
                         this.DepthOfFieldRange = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius:
+                        this.DepthOfFieldVignetteRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength:
+                        this.DepthOfFieldVignetteStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
                         break;
                     case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
                         this.MotionBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
@@ -4967,20 +5167,23 @@ namespace Mutagen.Bethesda.Fallout4
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpaceAdapter_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case ImageSpaceAdapter_FieldIndex.Animatable:
+                        this.Animatable = (Exception?)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.Duration:
                         this.Duration = (Exception?)obj;
                         break;
-                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
-                        this.RadialBlurFlags = (Exception?)obj;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget:
+                        this.RadialBlurUseTarget = (Exception?)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
                         this.RadialBlurCenter = (Exception?)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
                         this.DepthOfFieldFlags = (Exception?)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.BlurRadius:
                         this.BlurRadius = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
@@ -5017,6 +5220,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
                         this.DepthOfFieldRange = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius:
+                        this.DepthOfFieldVignetteRadius = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength:
+                        this.DepthOfFieldVignetteStrength = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
                         this.MotionBlurStrength = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
@@ -5159,11 +5368,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Flags != null) return true;
+                if (Animatable != null) return true;
                 if (Duration != null) return true;
-                if (RadialBlurFlags != null) return true;
+                if (RadialBlurUseTarget != null) return true;
                 if (RadialBlurCenter != null) return true;
                 if (DepthOfFieldFlags != null) return true;
+                if (Unknown != null) return true;
                 if (BlurRadius != null) return true;
                 if (DoubleVisionStrength != null) return true;
                 if (TintColor != null) return true;
@@ -5176,6 +5386,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (DepthOfFieldStrength != null) return true;
                 if (DepthOfFieldDistance != null) return true;
                 if (DepthOfFieldRange != null) return true;
+                if (DepthOfFieldVignetteRadius != null) return true;
+                if (DepthOfFieldVignetteStrength != null) return true;
                 if (MotionBlurStrength != null) return true;
                 if (HdrEyeAdaptSpeedMult != null) return true;
                 if (HdrEyeAdaptSpeedAdd != null) return true;
@@ -5247,19 +5459,22 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(Animatable, "Animatable");
                 }
                 {
                     sb.AppendItem(Duration, "Duration");
                 }
                 {
-                    sb.AppendItem(RadialBlurFlags, "RadialBlurFlags");
+                    sb.AppendItem(RadialBlurUseTarget, "RadialBlurUseTarget");
                 }
                 {
                     sb.AppendItem(RadialBlurCenter, "RadialBlurCenter");
                 }
                 {
                     sb.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
                 }
                 if (BlurRadius is {} BlurRadiusItem)
                 {
@@ -5468,6 +5683,42 @@ namespace Mutagen.Bethesda.Fallout4
                         if (DepthOfFieldRangeItem.Specific != null)
                         {
                             foreach (var subItem in DepthOfFieldRangeItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (DepthOfFieldVignetteRadius is {} DepthOfFieldVignetteRadiusItem)
+                {
+                    sb.AppendLine("DepthOfFieldVignetteRadius =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DepthOfFieldVignetteRadiusItem.Overall);
+                        if (DepthOfFieldVignetteRadiusItem.Specific != null)
+                        {
+                            foreach (var subItem in DepthOfFieldVignetteRadiusItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (DepthOfFieldVignetteStrength is {} DepthOfFieldVignetteStrengthItem)
+                {
+                    sb.AppendLine("DepthOfFieldVignetteStrength =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DepthOfFieldVignetteStrengthItem.Overall);
+                        if (DepthOfFieldVignetteStrengthItem.Specific != null)
+                        {
+                            foreach (var subItem in DepthOfFieldVignetteStrengthItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -6262,11 +6513,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Animatable = this.Animatable.Combine(rhs.Animatable);
                 ret.Duration = this.Duration.Combine(rhs.Duration);
-                ret.RadialBlurFlags = this.RadialBlurFlags.Combine(rhs.RadialBlurFlags);
+                ret.RadialBlurUseTarget = this.RadialBlurUseTarget.Combine(rhs.RadialBlurUseTarget);
                 ret.RadialBlurCenter = this.RadialBlurCenter.Combine(rhs.RadialBlurCenter);
                 ret.DepthOfFieldFlags = this.DepthOfFieldFlags.Combine(rhs.DepthOfFieldFlags);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.BlurRadius?.Overall, rhs.BlurRadius?.Overall), ExceptionExt.Combine(this.BlurRadius?.Specific, rhs.BlurRadius?.Specific));
                 ret.DoubleVisionStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DoubleVisionStrength?.Overall, rhs.DoubleVisionStrength?.Overall), ExceptionExt.Combine(this.DoubleVisionStrength?.Specific, rhs.DoubleVisionStrength?.Specific));
                 ret.TintColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.TintColor?.Overall, rhs.TintColor?.Overall), ExceptionExt.Combine(this.TintColor?.Specific, rhs.TintColor?.Specific));
@@ -6279,6 +6531,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DepthOfFieldStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldStrength?.Overall, rhs.DepthOfFieldStrength?.Overall), ExceptionExt.Combine(this.DepthOfFieldStrength?.Specific, rhs.DepthOfFieldStrength?.Specific));
                 ret.DepthOfFieldDistance = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldDistance?.Overall, rhs.DepthOfFieldDistance?.Overall), ExceptionExt.Combine(this.DepthOfFieldDistance?.Specific, rhs.DepthOfFieldDistance?.Specific));
                 ret.DepthOfFieldRange = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldRange?.Overall, rhs.DepthOfFieldRange?.Overall), ExceptionExt.Combine(this.DepthOfFieldRange?.Specific, rhs.DepthOfFieldRange?.Specific));
+                ret.DepthOfFieldVignetteRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldVignetteRadius?.Overall, rhs.DepthOfFieldVignetteRadius?.Overall), ExceptionExt.Combine(this.DepthOfFieldVignetteRadius?.Specific, rhs.DepthOfFieldVignetteRadius?.Specific));
+                ret.DepthOfFieldVignetteStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldVignetteStrength?.Overall, rhs.DepthOfFieldVignetteStrength?.Overall), ExceptionExt.Combine(this.DepthOfFieldVignetteStrength?.Specific, rhs.DepthOfFieldVignetteStrength?.Specific));
                 ret.MotionBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.MotionBlurStrength?.Overall, rhs.MotionBlurStrength?.Overall), ExceptionExt.Combine(this.MotionBlurStrength?.Specific, rhs.MotionBlurStrength?.Specific));
                 ret.HdrEyeAdaptSpeedMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrEyeAdaptSpeedMult?.Overall, rhs.HdrEyeAdaptSpeedMult?.Overall), ExceptionExt.Combine(this.HdrEyeAdaptSpeedMult?.Specific, rhs.HdrEyeAdaptSpeedMult?.Specific));
                 ret.HdrEyeAdaptSpeedAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrEyeAdaptSpeedAdd?.Overall, rhs.HdrEyeAdaptSpeedAdd?.Overall), ExceptionExt.Combine(this.HdrEyeAdaptSpeedAdd?.Specific, rhs.HdrEyeAdaptSpeedAdd?.Specific));
@@ -6345,11 +6599,12 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool Flags;
+            public bool Animatable;
             public bool Duration;
-            public bool RadialBlurFlags;
+            public bool RadialBlurUseTarget;
             public bool RadialBlurCenter;
             public bool DepthOfFieldFlags;
+            public bool Unknown;
             public KeyFrame.TranslationMask? BlurRadius;
             public KeyFrame.TranslationMask? DoubleVisionStrength;
             public ColorFrame.TranslationMask? TintColor;
@@ -6362,6 +6617,8 @@ namespace Mutagen.Bethesda.Fallout4
             public KeyFrame.TranslationMask? DepthOfFieldStrength;
             public KeyFrame.TranslationMask? DepthOfFieldDistance;
             public KeyFrame.TranslationMask? DepthOfFieldRange;
+            public KeyFrame.TranslationMask? DepthOfFieldVignetteRadius;
+            public KeyFrame.TranslationMask? DepthOfFieldVignetteStrength;
             public KeyFrame.TranslationMask? MotionBlurStrength;
             public KeyFrame.TranslationMask? HdrEyeAdaptSpeedMult;
             public KeyFrame.TranslationMask? HdrEyeAdaptSpeedAdd;
@@ -6414,11 +6671,12 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Flags = defaultOn;
+                this.Animatable = defaultOn;
                 this.Duration = defaultOn;
-                this.RadialBlurFlags = defaultOn;
+                this.RadialBlurUseTarget = defaultOn;
                 this.RadialBlurCenter = defaultOn;
                 this.DepthOfFieldFlags = defaultOn;
+                this.Unknown = defaultOn;
                 this.DNAMDataTypeState = defaultOn;
             }
 
@@ -6427,11 +6685,12 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Flags, null));
+                ret.Add((Animatable, null));
                 ret.Add((Duration, null));
-                ret.Add((RadialBlurFlags, null));
+                ret.Add((RadialBlurUseTarget, null));
                 ret.Add((RadialBlurCenter, null));
                 ret.Add((DepthOfFieldFlags, null));
+                ret.Add((Unknown, null));
                 ret.Add((BlurRadius == null ? DefaultOn : !BlurRadius.GetCrystal().CopyNothing, BlurRadius?.GetCrystal()));
                 ret.Add((DoubleVisionStrength == null ? DefaultOn : !DoubleVisionStrength.GetCrystal().CopyNothing, DoubleVisionStrength?.GetCrystal()));
                 ret.Add((TintColor == null ? DefaultOn : !TintColor.GetCrystal().CopyNothing, TintColor?.GetCrystal()));
@@ -6444,6 +6703,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((DepthOfFieldStrength == null ? DefaultOn : !DepthOfFieldStrength.GetCrystal().CopyNothing, DepthOfFieldStrength?.GetCrystal()));
                 ret.Add((DepthOfFieldDistance == null ? DefaultOn : !DepthOfFieldDistance.GetCrystal().CopyNothing, DepthOfFieldDistance?.GetCrystal()));
                 ret.Add((DepthOfFieldRange == null ? DefaultOn : !DepthOfFieldRange.GetCrystal().CopyNothing, DepthOfFieldRange?.GetCrystal()));
+                ret.Add((DepthOfFieldVignetteRadius == null ? DefaultOn : !DepthOfFieldVignetteRadius.GetCrystal().CopyNothing, DepthOfFieldVignetteRadius?.GetCrystal()));
+                ret.Add((DepthOfFieldVignetteStrength == null ? DefaultOn : !DepthOfFieldVignetteStrength.GetCrystal().CopyNothing, DepthOfFieldVignetteStrength?.GetCrystal()));
                 ret.Add((MotionBlurStrength == null ? DefaultOn : !MotionBlurStrength.GetCrystal().CopyNothing, MotionBlurStrength?.GetCrystal()));
                 ret.Add((HdrEyeAdaptSpeedMult == null ? DefaultOn : !HdrEyeAdaptSpeedMult.GetCrystal().CopyNothing, HdrEyeAdaptSpeedMult?.GetCrystal()));
                 ret.Add((HdrEyeAdaptSpeedAdd == null ? DefaultOn : !HdrEyeAdaptSpeedAdd.GetCrystal().CopyNothing, HdrEyeAdaptSpeedAdd?.GetCrystal()));
@@ -6545,6 +6806,7 @@ namespace Mutagen.Bethesda.Fallout4
         [Flags]
         public enum DNAMDataType
         {
+            Break0 = 1
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -6629,11 +6891,12 @@ namespace Mutagen.Bethesda.Fallout4
         IImageSpaceAdapterGetter,
         ILoquiObjectSetter<IImageSpaceAdapterInternal>
     {
-        new ImageSpaceAdapter.Flag Flags { get; set; }
+        new Boolean Animatable { get; set; }
         new Single Duration { get; set; }
-        new ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; }
+        new Boolean RadialBlurUseTarget { get; set; }
         new P2Float RadialBlurCenter { get; set; }
         new ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; }
+        new UInt64 Unknown { get; set; }
         new ExtendedList<KeyFrame>? BlurRadius { get; set; }
         new ExtendedList<KeyFrame>? DoubleVisionStrength { get; set; }
         new ExtendedList<ColorFrame>? TintColor { get; set; }
@@ -6646,6 +6909,8 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<KeyFrame>? DepthOfFieldStrength { get; set; }
         new ExtendedList<KeyFrame>? DepthOfFieldDistance { get; set; }
         new ExtendedList<KeyFrame>? DepthOfFieldRange { get; set; }
+        new ExtendedList<KeyFrame>? DepthOfFieldVignetteRadius { get; set; }
+        new ExtendedList<KeyFrame>? DepthOfFieldVignetteStrength { get; set; }
         new ExtendedList<KeyFrame>? MotionBlurStrength { get; set; }
         new ExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult { get; set; }
         new ExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd { get; set; }
@@ -6707,11 +6972,12 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IImageSpaceAdapterGetter>
     {
         static new ILoquiRegistration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
-        ImageSpaceAdapter.Flag Flags { get; }
+        Boolean Animatable { get; }
         Single Duration { get; }
-        ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; }
+        Boolean RadialBlurUseTarget { get; }
         P2Float RadialBlurCenter { get; }
         ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; }
+        UInt64 Unknown { get; }
         IReadOnlyList<IKeyFrameGetter>? BlurRadius { get; }
         IReadOnlyList<IKeyFrameGetter>? DoubleVisionStrength { get; }
         IReadOnlyList<IColorFrameGetter>? TintColor { get; }
@@ -6724,6 +6990,8 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IKeyFrameGetter>? DepthOfFieldStrength { get; }
         IReadOnlyList<IKeyFrameGetter>? DepthOfFieldDistance { get; }
         IReadOnlyList<IKeyFrameGetter>? DepthOfFieldRange { get; }
+        IReadOnlyList<IKeyFrameGetter>? DepthOfFieldVignetteRadius { get; }
+        IReadOnlyList<IKeyFrameGetter>? DepthOfFieldVignetteStrength { get; }
         IReadOnlyList<IKeyFrameGetter>? MotionBlurStrength { get; }
         IReadOnlyList<IKeyFrameGetter>? HdrEyeAdaptSpeedMult { get; }
         IReadOnlyList<IKeyFrameGetter>? HdrEyeAdaptSpeedAdd { get; }
@@ -6932,67 +7200,70 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Flags = 6,
+        Animatable = 6,
         Duration = 7,
-        RadialBlurFlags = 8,
+        RadialBlurUseTarget = 8,
         RadialBlurCenter = 9,
         DepthOfFieldFlags = 10,
-        BlurRadius = 11,
-        DoubleVisionStrength = 12,
-        TintColor = 13,
-        FadeColor = 14,
-        RadialBlurStrength = 15,
-        RadialBlurRampUp = 16,
-        RadialBlurStart = 17,
-        RadialBlurRampDown = 18,
-        RadialBlurDownStart = 19,
-        DepthOfFieldStrength = 20,
-        DepthOfFieldDistance = 21,
-        DepthOfFieldRange = 22,
-        MotionBlurStrength = 23,
-        HdrEyeAdaptSpeedMult = 24,
-        HdrEyeAdaptSpeedAdd = 25,
-        HdrBloomBlurRadiusMult = 26,
-        HdrBloomBlurRadiusAdd = 27,
-        HdrBloomThresholdMult = 28,
-        HdrBloomThresholdAdd = 29,
-        HdrBloomScaleMult = 30,
-        HdrBloomScaleAdd = 31,
-        HdrTargetLumMinMult = 32,
-        HdrTargetLumMinAdd = 33,
-        HdrTargetLumMaxMult = 34,
-        HdrTargetLumMaxAdd = 35,
-        HdrSunlightScaleMult = 36,
-        HdrSunlightScaleAdd = 37,
-        HdrSkyScaleMult = 38,
-        HdrSkyScaleAdd = 39,
-        Unknown08 = 40,
-        Unknown48 = 41,
-        Unknown09 = 42,
-        Unknown49 = 43,
-        Unknown0A = 44,
-        Unknown4A = 45,
-        Unknown0B = 46,
-        Unknown4B = 47,
-        Unknown0C = 48,
-        Unknown4C = 49,
-        Unknown0D = 50,
-        Unknown4D = 51,
-        Unknown0E = 52,
-        Unknown4E = 53,
-        Unknown0F = 54,
-        Unknown4F = 55,
-        Unknown10 = 56,
-        Unknown50 = 57,
-        CinematicSaturationMult = 58,
-        CinematicSaturationAdd = 59,
-        CinematicBrightnessMult = 60,
-        CinematicBrightnessAdd = 61,
-        CinematicContrastMult = 62,
-        CinematicContrastAdd = 63,
-        Unknown14 = 64,
-        Unknown54 = 65,
-        DNAMDataTypeState = 66,
+        Unknown = 11,
+        BlurRadius = 12,
+        DoubleVisionStrength = 13,
+        TintColor = 14,
+        FadeColor = 15,
+        RadialBlurStrength = 16,
+        RadialBlurRampUp = 17,
+        RadialBlurStart = 18,
+        RadialBlurRampDown = 19,
+        RadialBlurDownStart = 20,
+        DepthOfFieldStrength = 21,
+        DepthOfFieldDistance = 22,
+        DepthOfFieldRange = 23,
+        DepthOfFieldVignetteRadius = 24,
+        DepthOfFieldVignetteStrength = 25,
+        MotionBlurStrength = 26,
+        HdrEyeAdaptSpeedMult = 27,
+        HdrEyeAdaptSpeedAdd = 28,
+        HdrBloomBlurRadiusMult = 29,
+        HdrBloomBlurRadiusAdd = 30,
+        HdrBloomThresholdMult = 31,
+        HdrBloomThresholdAdd = 32,
+        HdrBloomScaleMult = 33,
+        HdrBloomScaleAdd = 34,
+        HdrTargetLumMinMult = 35,
+        HdrTargetLumMinAdd = 36,
+        HdrTargetLumMaxMult = 37,
+        HdrTargetLumMaxAdd = 38,
+        HdrSunlightScaleMult = 39,
+        HdrSunlightScaleAdd = 40,
+        HdrSkyScaleMult = 41,
+        HdrSkyScaleAdd = 42,
+        Unknown08 = 43,
+        Unknown48 = 44,
+        Unknown09 = 45,
+        Unknown49 = 46,
+        Unknown0A = 47,
+        Unknown4A = 48,
+        Unknown0B = 49,
+        Unknown4B = 50,
+        Unknown0C = 51,
+        Unknown4C = 52,
+        Unknown0D = 53,
+        Unknown4D = 54,
+        Unknown0E = 55,
+        Unknown4E = 56,
+        Unknown0F = 57,
+        Unknown4F = 58,
+        Unknown10 = 59,
+        Unknown50 = 60,
+        CinematicSaturationMult = 61,
+        CinematicSaturationAdd = 62,
+        CinematicBrightnessMult = 63,
+        CinematicBrightnessAdd = 64,
+        CinematicContrastMult = 65,
+        CinematicContrastAdd = 66,
+        Unknown14 = 67,
+        Unknown54 = 68,
+        DNAMDataTypeState = 69,
     }
     #endregion
 
@@ -7010,9 +7281,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "41703d5d-cf96-4b22-9b54-6bbdbb24fabb";
 
-        public const ushort AdditionalFieldCount = 61;
+        public const ushort AdditionalFieldCount = 64;
 
-        public const ushort FieldCount = 67;
+        public const ushort FieldCount = 70;
 
         public static readonly Type MaskType = typeof(ImageSpaceAdapter.Mask<>);
 
@@ -7058,6 +7329,8 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.WNAM,
                 RecordTypes.XNAM,
                 RecordTypes.YNAM,
+                RecordTypes.NAM5,
+                RecordTypes.NAM6,
                 RecordTypes.NAM4,
                 RecordTypes._0_IAD,
                 RecordTypes.@IAD,
@@ -7145,11 +7418,12 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IImageSpaceAdapterInternal item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Animatable = default;
             item.Duration = default;
-            item.RadialBlurFlags = default;
+            item.RadialBlurUseTarget = default;
             item.RadialBlurCenter = default;
             item.DepthOfFieldFlags = default;
+            item.Unknown = default;
             item.BlurRadius = null;
             item.DoubleVisionStrength = null;
             item.TintColor = null;
@@ -7162,6 +7436,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.DepthOfFieldStrength = null;
             item.DepthOfFieldDistance = null;
             item.DepthOfFieldRange = null;
+            item.DepthOfFieldVignetteRadius = null;
+            item.DepthOfFieldVignetteStrength = null;
             item.MotionBlurStrength = null;
             item.HdrEyeAdaptSpeedMult = null;
             item.HdrEyeAdaptSpeedAdd = null;
@@ -7291,11 +7567,12 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Animatable = item.Animatable == rhs.Animatable;
             ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
-            ret.RadialBlurFlags = item.RadialBlurFlags == rhs.RadialBlurFlags;
+            ret.RadialBlurUseTarget = item.RadialBlurUseTarget == rhs.RadialBlurUseTarget;
             ret.RadialBlurCenter = item.RadialBlurCenter.Equals(rhs.RadialBlurCenter);
             ret.DepthOfFieldFlags = item.DepthOfFieldFlags == rhs.DepthOfFieldFlags;
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.BlurRadius = item.BlurRadius.CollectionEqualsHelper(
                 rhs.BlurRadius,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -7342,6 +7619,14 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.DepthOfFieldRange = item.DepthOfFieldRange.CollectionEqualsHelper(
                 rhs.DepthOfFieldRange,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DepthOfFieldVignetteRadius = item.DepthOfFieldVignetteRadius.CollectionEqualsHelper(
+                rhs.DepthOfFieldVignetteRadius,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DepthOfFieldVignetteStrength = item.DepthOfFieldVignetteStrength.CollectionEqualsHelper(
+                rhs.DepthOfFieldVignetteStrength,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.MotionBlurStrength = item.MotionBlurStrength.CollectionEqualsHelper(
@@ -7566,17 +7851,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Flags ?? true)
+            if (printMask?.Animatable ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Animatable, "Animatable");
             }
             if (printMask?.Duration ?? true)
             {
                 sb.AppendItem(item.Duration, "Duration");
             }
-            if (printMask?.RadialBlurFlags ?? true)
+            if (printMask?.RadialBlurUseTarget ?? true)
             {
-                sb.AppendItem(item.RadialBlurFlags, "RadialBlurFlags");
+                sb.AppendItem(item.RadialBlurUseTarget, "RadialBlurUseTarget");
             }
             if (printMask?.RadialBlurCenter ?? true)
             {
@@ -7585,6 +7870,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.DepthOfFieldFlags ?? true)
             {
                 sb.AppendItem(item.DepthOfFieldFlags, "DepthOfFieldFlags");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.BlurRadius?.Overall ?? true)
                 && item.BlurRadius is {} BlurRadiusItem)
@@ -7758,6 +8047,36 @@ namespace Mutagen.Bethesda.Fallout4
                 using (sb.Brace())
                 {
                     foreach (var subItem in DepthOfFieldRangeItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.DepthOfFieldVignetteRadius?.Overall ?? true)
+                && item.DepthOfFieldVignetteRadius is {} DepthOfFieldVignetteRadiusItem)
+            {
+                sb.AppendLine("DepthOfFieldVignetteRadius =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in DepthOfFieldVignetteRadiusItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.DepthOfFieldVignetteStrength?.Overall ?? true)
+                && item.DepthOfFieldVignetteStrength is {} DepthOfFieldVignetteStrengthItem)
+            {
+                sb.AppendLine("DepthOfFieldVignetteStrength =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in DepthOfFieldVignetteStrengthItem)
                     {
                         using (sb.Brace())
                         {
@@ -8463,17 +8782,17 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.Animatable != rhs.Animatable) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
             {
                 if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
             {
-                if (lhs.RadialBlurFlags != rhs.RadialBlurFlags) return false;
+                if (lhs.RadialBlurUseTarget != rhs.RadialBlurUseTarget) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
             {
@@ -8482,6 +8801,10 @@ namespace Mutagen.Bethesda.Fallout4
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags) ?? true))
             {
                 if (lhs.DepthOfFieldFlags != rhs.DepthOfFieldFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
             {
@@ -8530,6 +8853,14 @@ namespace Mutagen.Bethesda.Fallout4
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange) ?? true))
             {
                 if (!lhs.DepthOfFieldRange.SequenceEqualNullable(rhs.DepthOfFieldRange, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
+            {
+                if (!lhs.DepthOfFieldVignetteRadius.SequenceEqualNullable(rhs.DepthOfFieldVignetteRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
+            {
+                if (!lhs.DepthOfFieldVignetteStrength.SequenceEqualNullable(rhs.DepthOfFieldVignetteStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength) ?? true))
             {
@@ -8735,11 +9066,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IImageSpaceAdapterGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Flags);
+            hash.Add(item.Animatable);
             hash.Add(item.Duration);
-            hash.Add(item.RadialBlurFlags);
+            hash.Add(item.RadialBlurUseTarget);
             hash.Add(item.RadialBlurCenter);
             hash.Add(item.DepthOfFieldFlags);
+            hash.Add(item.Unknown);
             hash.Add(item.BlurRadius);
             hash.Add(item.DoubleVisionStrength);
             hash.Add(item.TintColor);
@@ -8752,6 +9084,8 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.DepthOfFieldStrength);
             hash.Add(item.DepthOfFieldDistance);
             hash.Add(item.DepthOfFieldRange);
+            hash.Add(item.DepthOfFieldVignetteRadius);
+            hash.Add(item.DepthOfFieldVignetteStrength);
             hash.Add(item.MotionBlurStrength);
             hash.Add(item.HdrEyeAdaptSpeedMult);
             hash.Add(item.HdrEyeAdaptSpeedAdd);
@@ -8899,17 +9233,17 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.Animatable = rhs.Animatable;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
             {
                 item.Duration = rhs.Duration;
             }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
             {
-                item.RadialBlurFlags = rhs.RadialBlurFlags;
+                item.RadialBlurUseTarget = rhs.RadialBlurUseTarget;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
             {
@@ -8918,6 +9252,10 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags) ?? true))
             {
                 item.DepthOfFieldFlags = rhs.DepthOfFieldFlags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
             {
@@ -9291,6 +9629,70 @@ namespace Mutagen.Bethesda.Fallout4
                     else
                     {
                         item.DepthOfFieldRange = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius);
+                try
+                {
+                    if ((rhs.DepthOfFieldVignetteRadius != null))
+                    {
+                        item.DepthOfFieldVignetteRadius = 
+                            rhs.DepthOfFieldVignetteRadius
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.DepthOfFieldVignetteRadius = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength);
+                try
+                {
+                    if ((rhs.DepthOfFieldVignetteStrength != null))
+                    {
+                        item.DepthOfFieldVignetteStrength = 
+                            rhs.DepthOfFieldVignetteStrength
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.DepthOfFieldVignetteStrength = null;
                     }
                 }
                 catch (Exception ex)
@@ -10851,20 +11253,14 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
-                EnumBinaryTranslation<ImageSpaceAdapter.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 4);
+                writer.Write(item.Animatable, length: 4);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Duration);
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts1(
                     writer: writer,
                     item: item);
-                EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.RadialBlurFlags,
-                    length: 4);
+                writer.Write(item.RadialBlurUseTarget, length: 4);
                 P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RadialBlurCenter);
@@ -10878,6 +11274,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts3(
                     writer: writer,
                     item: item);
+                if (!item.DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0))
+                {
+                    writer.Write(item.Unknown);
+                }
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
@@ -11015,6 +11415,30 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 items: item.DepthOfFieldRange,
                 recordType: translationParams.ConvertToCustom(RecordTypes.YNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.DepthOfFieldVignetteRadius,
+                recordType: translationParams.ConvertToCustom(RecordTypes.NAM5),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.DepthOfFieldVignetteStrength,
+                recordType: translationParams.ConvertToCustom(RecordTypes.NAM6),
                 transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
@@ -11673,16 +12097,16 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Animatable = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        length: 4);
+                        byteLength: 4);
                     item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
                         frame: dataFrame,
                         item: item);
-                    item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.RadialBlurUseTarget = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        length: 4);
+                        byteLength: 4);
                     item.RadialBlurCenter = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
                         frame: dataFrame,
@@ -11693,7 +12117,13 @@ namespace Mutagen.Bethesda.Fallout4
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts3Custom(
                         frame: dataFrame,
                         item: item);
-                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags;
+                    if (dataFrame.Complete)
+                    {
+                        item.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break0;
+                        return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags;
+                    }
+                    item.Unknown = dataFrame.ReadUInt64();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -11814,6 +12244,26 @@ namespace Mutagen.Bethesda.Fallout4
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DepthOfFieldVignetteRadius = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: KeyFrame.TryCreateFromBinary)
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius;
+                }
+                case RecordTypeInts.NAM6:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DepthOfFieldVignetteStrength = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: KeyFrame.TryCreateFromBinary)
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength;
                 }
                 case RecordTypeInts.NAM4:
                 {
@@ -12316,10 +12766,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         private RangeInt32? _DNAMLocation;
         public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; private set; }
-        #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value.Min;
-        private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public ImageSpaceAdapter.Flag Flags => _Flags_IsSet ? (ImageSpaceAdapter.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #region Animatable
+        private int _AnimatableLocation => _DNAMLocation!.Value.Min;
+        private bool _Animatable_IsSet => _DNAMLocation.HasValue;
+        public Boolean Animatable => _Animatable_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AnimatableLocation, 4)) >= 1 : default;
         #endregion
         #region Duration
         private int _DurationLocation => _DNAMLocation!.Value.Min + 0x4;
@@ -12333,10 +12783,10 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             int offset);
         #endregion
-        #region RadialBlurFlags
-        private int _RadialBlurFlagsLocation => _DNAMLocation!.Value.Min + 0xC8;
-        private bool _RadialBlurFlags_IsSet => _DNAMLocation.HasValue;
-        public ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags => _RadialBlurFlags_IsSet ? (ImageSpaceAdapter.RadialBlurFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_RadialBlurFlagsLocation, 0x4)) : default;
+        #region RadialBlurUseTarget
+        private int _RadialBlurUseTargetLocation => _DNAMLocation!.Value.Min + 0xC8;
+        private bool _RadialBlurUseTarget_IsSet => _DNAMLocation.HasValue;
+        public Boolean RadialBlurUseTarget => _RadialBlurUseTarget_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_RadialBlurUseTargetLocation, 4)) >= 1 : default;
         #endregion
         #region RadialBlurCenter
         private int _RadialBlurCenterLocation => _DNAMLocation!.Value.Min + 0xCC;
@@ -12362,6 +12812,11 @@ namespace Mutagen.Bethesda.Fallout4
             OverlayStream stream,
             int offset);
         #endregion
+        #region Unknown
+        private int _UnknownLocation => _DNAMLocation!.Value.Min + 0xF4;
+        private bool _Unknown_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
+        public UInt64 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt64LittleEndian(_data.Slice(_UnknownLocation, 8)) : default;
+        #endregion
         public IReadOnlyList<IKeyFrameGetter>? BlurRadius { get; private set; }
         public IReadOnlyList<IKeyFrameGetter>? DoubleVisionStrength { get; private set; }
         public IReadOnlyList<IColorFrameGetter>? TintColor { get; private set; }
@@ -12374,6 +12829,8 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IKeyFrameGetter>? DepthOfFieldStrength { get; private set; }
         public IReadOnlyList<IKeyFrameGetter>? DepthOfFieldDistance { get; private set; }
         public IReadOnlyList<IKeyFrameGetter>? DepthOfFieldRange { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? DepthOfFieldVignetteRadius { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? DepthOfFieldVignetteStrength { get; private set; }
         public IReadOnlyList<IKeyFrameGetter>? MotionBlurStrength { get; private set; }
         public IReadOnlyList<IKeyFrameGetter>? HdrEyeAdaptSpeedMult { get; private set; }
         public IReadOnlyList<IKeyFrameGetter>? HdrEyeAdaptSpeedAdd { get; private set; }
@@ -12486,7 +12943,12 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0xF4)
+                    {
+                        this.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break0;
+                    }
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -12631,6 +13093,30 @@ namespace Mutagen.Bethesda.Fallout4
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.DepthOfFieldVignetteRadius = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius;
+                }
+                case RecordTypeInts.NAM6:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.DepthOfFieldVignetteStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength;
                 }
                 case RecordTypeInts.NAM4:
                 {

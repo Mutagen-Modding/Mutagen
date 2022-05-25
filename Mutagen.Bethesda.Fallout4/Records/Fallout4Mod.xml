@@ -74,6 +74,7 @@
       <Group name="Explosions" refName="Explosion" />
       <Group name="Debris" refName="Debris" />
       <Group name="ImageSpaces" refName="ImageSpace" />
+      <Group name="ImageSpaceAdapters" refName="ImageSpaceAdapter" />
     </Fields>
   </Object>
 </Loqui>

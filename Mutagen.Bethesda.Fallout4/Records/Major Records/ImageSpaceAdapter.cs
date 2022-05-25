@@ -6,27 +6,14 @@ namespace Mutagen.Bethesda.Fallout4;
 public partial class ImageSpaceAdapter
 {
     [Flags]
-    public enum Flag
-    {
-        Animatable = 0x01
-    }
-
-    [Flags]
-    public enum RadialBlurFlag
-    {
-        UseTarget = 0x01
-    }
-
-    [Flags]
     public enum DepthOfFieldFlag
     {
-        UseTarget = 0x0001,
-        ModeFront = 0x0100,
-        ModeBack = 0x0200,
-        NoSky = 0x0400,
-        BlurRadiusBit2 = 0x0800,
-        BlurRadiusBit1 = 0x1000,
-        BlurRadiusBit0 = 0x2000,
+        ModeFront = 0x01,
+        ModeBack = 0x02,
+        NoSky = 0x04,
+        BlurRadiusBit2 = 0x08,
+        BlurRadiusBit1 = 0x10,
+        BlurRadiusBit0 = 0x20,
     }
 }
 

@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog;
@@ -54,6 +55,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.WATR, ProcessWater);
         AddDynamicProcessing(RecordTypes.IMGS, ProcessImageSpace);
+        AddDynamicProcessing(RecordTypes.IMAD, ProcessImageSpaceAdapters);
     }
 
     private void ProcessGameSettings(
@@ -489,6 +491,57 @@ public class Fallout4Processor : Processor
         if (majorFrame.TryFindSubrecord(RecordTypes.HNAM, out var hnam))
         {
             ProcessZeroFloats(tnam, fileOffset, 9);
+        }
+    }
+
+    private void ProcessImageSpaceAdapters(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subrecord in majorFrame)
+        {
+            switch (subrecord.RecordTypeInt)
+            {
+                case RecordTypeInts.QIAD:
+                case RecordTypeInts.RIAD:
+                    ProcessZeroFloats(subrecord, fileOffset, subrecord.ContentLength / 4);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        void ProcessColorFrames(SubrecordPinFrame subrecord, ref int loc)
+        {
+            while(loc < subrecord.ContentLength)
+            {
+                ProcessZeroFloat(subrecord, fileOffset, ref loc);
+                ProcessColorFloat(subrecord, fileOffset, ref loc, alpha: true);
+            }
+        }
+
+        foreach (var rec in majorFrame.FindEnumerateSubrecords(RecordCollection.Factory(RecordTypes.TNAM, RecordTypes.NAM3)))
+        {
+            int loc = 0;
+            ProcessColorFrames(rec, ref loc);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.NAM3, out var nam3))
+        {
+            int loc = 0;
+            ProcessColorFrames(nam3, ref loc);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.BIAD, out var biad))
+        {
+            ProcessZeroFloats(biad, fileOffset);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec))
+        {
+            int offset = 0;
+            ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
+            ProcessZeroFloats(dataRec, fileOffset, ref offset, 5);
         }
     }
 

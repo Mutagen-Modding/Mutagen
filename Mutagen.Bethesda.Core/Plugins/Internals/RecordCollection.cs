@@ -1,8 +1,9 @@
 using DynamicData;
+using System.Collections;
 
 namespace Mutagen.Bethesda.Plugins.Internals;
 
-public interface IRecordCollection
+public interface IRecordCollection : IReadOnlyCollection<RecordType>
 {
     bool Contains(RecordType type);
     int IndexOf(RecordType type);
@@ -13,10 +14,12 @@ public class RecordCollection : IRecordCollection
     private readonly IReadOnlyList<RecordType> _ordered;
     private readonly IReadOnlySet<RecordType> _set;
 
-    private RecordCollection(params RecordType[] types)
+    public int Count => _ordered.Count;
+
+    private RecordCollection(IReadOnlyList<RecordType> ordered)
     {
-        _ordered = types;
-        _set = types.ToHashSet();
+        _ordered = ordered;
+        _set = ordered.ToHashSet();
     }
 
     public bool Contains(RecordType type) => _set.Contains(type);
@@ -35,9 +38,31 @@ public class RecordCollection : IRecordCollection
         }
         else
         {
-            return new RecordCollection(types);
+            return new RecordCollection(types.ToList());
         }
     }
+
+    public static IRecordCollection FactoryFromOneAndArray(RecordType type, params RecordType[] types)
+    {
+        if (types.Length == 0)
+        {
+            return new SingleRecordCollection(type);
+        }
+        else
+        {
+            var list = new List<RecordType>();
+            list.Add(type);
+            list.AddRange(types);
+            return new RecordCollection(list);
+        }
+    }
+
+    public IEnumerator<RecordType> GetEnumerator()
+    {
+        return _ordered.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
 public class SingleRecordCollection : IRecordCollection
@@ -49,16 +74,31 @@ public class SingleRecordCollection : IRecordCollection
         _type = type;
     }
 
+    public int Count => 1;
+
     public bool Contains(RecordType type) => _type == type;
 
+    public IEnumerator<RecordType> GetEnumerator()
+    {
+        yield return _type;
+    }
+
     public int IndexOf(RecordType type) => _type == type ? 0 : -1;
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
 public class EmptyRecordCollection : IRecordCollection
 {
     public static readonly EmptyRecordCollection Instance = new();
 
+    public int Count => 0;
+
     public bool Contains(RecordType type) => false;
 
+    public IEnumerator<RecordType> GetEnumerator() => Enumerable.Empty<RecordType>().GetEnumerator();
+
     public int IndexOf(RecordType type) => -1;
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

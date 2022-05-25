@@ -475,13 +475,35 @@ public abstract class Processor
             outBytes);
     }
 
+    public bool ProcessColorFloat(SubrecordPinFrame pin, long offsetLoc, bool alpha)
+    {
+        int loc = 0;
+        return ProcessColorFloat(pin, offsetLoc, ref loc, alpha);
+    }
+
     public bool ProcessColorFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc, bool alpha)
     {
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
         ProcessColorFloat(pin.Content.Slice(loc), longLoc, alpha: alpha);
-        loc += 12;
+        loc += alpha ? 16 : 12;
         return true;
+    }
+
+    public void ProcessColorFloats(SubrecordPinFrame pin, long offsetLoc, bool alpha)
+    {
+        int loc = 0;
+        ProcessColorFloats(pin, offsetLoc, ref loc, alpha);
+    }
+
+    public void ProcessColorFloats(SubrecordPinFrame pin, long offsetLoc, ref int loc, bool alpha)
+    {
+        while (loc < pin.ContentLength)
+        {
+            long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+            ProcessColorFloat(pin.Content.Slice(loc), longLoc, alpha: alpha);
+            loc += alpha ? 16 : 12;
+        }
     }
 
     public void ProcessBool(ReadOnlySpan<byte> span, long offsetLoc, byte importantBytes)
