@@ -104,6 +104,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - FaceMorph
 - Faction
 - Flora
+- FormList
 - Furniture
 - Hazard
 - HeadPart
@@ -357,6 +358,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### FormList
+- INamed
 ### Furniture
 - IKeyworded
 - IModeled

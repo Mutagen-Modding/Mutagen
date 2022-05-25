@@ -56,6 +56,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.WATR, ProcessWater);
         AddDynamicProcessing(RecordTypes.IMGS, ProcessImageSpace);
         AddDynamicProcessing(RecordTypes.IMAD, ProcessImageSpaceAdapters);
+        AddDynamicProcessing(RecordTypes.FLST, ProcessFormLists);
     }
 
     private void ProcessGameSettings(
@@ -544,6 +545,15 @@ public class Fallout4Processor : Processor
             ProcessZeroFloats(dataRec, fileOffset, ref offset, 5);
         }
     }
+    private void ProcessFormLists(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var rec in majorFrame.FindEnumerateSubrecords(RecordTypes.LNAM))
+        {
+            ProcessFormIDOverflow(rec, fileOffset);
+        }
+    }
 
     private void ProcessPackages(
         MajorRecordFrame majorFrame,
@@ -1007,6 +1017,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "DIAL", "FULL" },
                     new RecordType[] { "WATR", "FULL" },
                     new RecordType[] { "EXPL", "FULL" },
+                    new RecordType[] { "FLST", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

@@ -125,6 +125,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Debris_Object = new Fallout4Group<Debris>(this);
             _ImageSpaces_Object = new Fallout4Group<ImageSpace>(this);
             _ImageSpaceAdapters_Object = new Fallout4Group<ImageSpaceAdapter>(this);
+            _FormLists_Object = new Fallout4Group<FormList>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -613,6 +614,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IImageSpaceAdapterGetter> IFallout4ModGetter.ImageSpaceAdapters => _ImageSpaceAdapters_Object;
         #endregion
+        #region FormLists
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<FormList> _FormLists_Object;
+        public Fallout4Group<FormList> FormLists => _FormLists_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IFormListGetter> IFallout4ModGetter.FormLists => _FormLists_Object;
+        #endregion
 
         #region To String
 
@@ -721,6 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Debris = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.ImageSpaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.ImageSpaceAdapters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.FormLists = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -792,7 +801,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Explosions,
                 TItem Debris,
                 TItem ImageSpaces,
-                TItem ImageSpaceAdapters)
+                TItem ImageSpaceAdapters,
+                TItem FormLists)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -863,6 +873,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Debris = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Debris, new Fallout4Group.Mask<TItem>(Debris));
                 this.ImageSpaces = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ImageSpaces, new Fallout4Group.Mask<TItem>(ImageSpaces));
                 this.ImageSpaceAdapters = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ImageSpaceAdapters, new Fallout4Group.Mask<TItem>(ImageSpaceAdapters));
+                this.FormLists = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(FormLists, new Fallout4Group.Mask<TItem>(FormLists));
             }
 
             #pragma warning disable CS8618
@@ -943,6 +954,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Debris { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ImageSpaces { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ImageSpaceAdapters { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? FormLists { get; set; }
             #endregion
 
             #region Equals
@@ -1024,6 +1036,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Debris, rhs.Debris)) return false;
                 if (!object.Equals(this.ImageSpaces, rhs.ImageSpaces)) return false;
                 if (!object.Equals(this.ImageSpaceAdapters, rhs.ImageSpaceAdapters)) return false;
+                if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1098,6 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Debris);
                 hash.Add(this.ImageSpaces);
                 hash.Add(this.ImageSpaceAdapters);
+                hash.Add(this.FormLists);
                 return hash.ToHashCode();
             }
 
@@ -1451,6 +1465,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.ImageSpaceAdapters.Overall)) return false;
                     if (this.ImageSpaceAdapters.Specific != null && !this.ImageSpaceAdapters.Specific.All(eval)) return false;
                 }
+                if (FormLists != null)
+                {
+                    if (!eval(this.FormLists.Overall)) return false;
+                    if (this.FormLists.Specific != null && !this.FormLists.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1803,6 +1822,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.ImageSpaceAdapters.Overall)) return true;
                     if (this.ImageSpaceAdapters.Specific != null && this.ImageSpaceAdapters.Specific.Any(eval)) return true;
                 }
+                if (FormLists != null)
+                {
+                    if (eval(this.FormLists.Overall)) return true;
+                    if (this.FormLists.Specific != null && this.FormLists.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1886,6 +1910,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Debris = this.Debris == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
                 obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
                 obj.ImageSpaceAdapters = this.ImageSpaceAdapters == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ImageSpaceAdapters.Overall), this.ImageSpaceAdapters.Specific?.Translate(eval));
+                obj.FormLists = this.FormLists == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2180,6 +2205,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         ImageSpaceAdapters?.Print(sb);
                     }
+                    if (printMask?.FormLists?.Overall ?? true)
+                    {
+                        FormLists?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2273,6 +2302,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Debris.ErrorMask>?>? Debris;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ImageSpace.ErrorMask>?>? ImageSpaces;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>? ImageSpaceAdapters;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<FormList.ErrorMask>?>? FormLists;
             #endregion
 
             #region IErrorMask
@@ -2419,6 +2449,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return ImageSpaces;
                     case Fallout4Mod_FieldIndex.ImageSpaceAdapters:
                         return ImageSpaceAdapters;
+                    case Fallout4Mod_FieldIndex.FormLists:
+                        return FormLists;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2635,6 +2667,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.ImageSpaceAdapters:
                         this.ImageSpaceAdapters = new MaskItem<Exception?, Fallout4Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.FormLists:
+                        this.FormLists = new MaskItem<Exception?, Fallout4Group.ErrorMask<FormList.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2853,6 +2888,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.ImageSpaceAdapters:
                         this.ImageSpaceAdapters = (MaskItem<Exception?, Fallout4Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.FormLists:
+                        this.FormLists = (MaskItem<Exception?, Fallout4Group.ErrorMask<FormList.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2930,6 +2968,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Debris != null) return true;
                 if (ImageSpaces != null) return true;
                 if (ImageSpaceAdapters != null) return true;
+                if (FormLists != null) return true;
                 return false;
             }
             #endregion
@@ -3024,6 +3063,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Debris?.Print(sb);
                 ImageSpaces?.Print(sb);
                 ImageSpaceAdapters?.Print(sb);
+                FormLists?.Print(sb);
             }
             #endregion
 
@@ -3101,6 +3141,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
                 ret.ImageSpaces = this.ImageSpaces.Combine(rhs.ImageSpaces, (l, r) => l.Combine(r));
                 ret.ImageSpaceAdapters = this.ImageSpaceAdapters.Combine(rhs.ImageSpaceAdapters, (l, r) => l.Combine(r));
+                ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3193,6 +3234,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Debris.TranslationMask>? Debris;
             public Fallout4Group.TranslationMask<ImageSpace.TranslationMask>? ImageSpaces;
             public Fallout4Group.TranslationMask<ImageSpaceAdapter.TranslationMask>? ImageSpaceAdapters;
+            public Fallout4Group.TranslationMask<FormList.TranslationMask>? FormLists;
             #endregion
 
             #region Ctors
@@ -3286,6 +3328,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
                 ret.Add((ImageSpaces != null ? ImageSpaces.OnOverall : DefaultOn, ImageSpaces?.GetCrystal()));
                 ret.Add((ImageSpaceAdapters != null ? ImageSpaceAdapters.OnOverall : DefaultOn, ImageSpaceAdapters?.GetCrystal()));
+                ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3394,6 +3437,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Debris_Object = new Fallout4Group<Debris>(this);
             _ImageSpaces_Object = new Fallout4Group<ImageSpace>(this);
             _ImageSpaceAdapters_Object = new Fallout4Group<ImageSpaceAdapter>(this);
+            _FormLists_Object = new Fallout4Group<FormList>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3675,6 +3719,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ImageSpaceAdapters.RecordCache.Set(rhsMod.ImageSpaceAdapters.RecordCache.Items);
             }
+            if (mask?.FormLists ?? true)
+            {
+                this.FormLists.RecordCache.Set(rhsMod.FormLists.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3753,6 +3801,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
             count += ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
             count += ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4072,6 +4121,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Debris> Debris { get; }
         new Fallout4Group<ImageSpace> ImageSpaces { get; }
         new Fallout4Group<ImageSpaceAdapter> ImageSpaceAdapters { get; }
+        new Fallout4Group<FormList> FormLists { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -4159,6 +4209,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IDebrisGetter> Debris { get; }
         IFallout4GroupGetter<IImageSpaceGetter> ImageSpaces { get; }
         IFallout4GroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters { get; }
+        IFallout4GroupGetter<IFormListGetter> FormLists { get; }
 
     }
 
@@ -4798,6 +4849,7 @@ namespace Mutagen.Bethesda.Fallout4
         Debris = 66,
         ImageSpaces = 67,
         ImageSpaceAdapters = 68,
+        FormLists = 69,
     }
     #endregion
 
@@ -4815,9 +4867,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 69;
+        public const ushort AdditionalFieldCount = 70;
 
-        public const ushort FieldCount = 69;
+        public const ushort FieldCount = 70;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4953,6 +5005,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Debris.Clear();
             item.ImageSpaces.Clear();
             item.ImageSpaceAdapters.Clear();
+            item.FormLists.Clear();
         }
         
         #region Mutagen
@@ -5017,6 +5070,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Waters.RemapLinks(mapping);
             obj.EffectShaders.RemapLinks(mapping);
             obj.Explosions.RemapLinks(mapping);
+            obj.FormLists.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -5119,6 +5173,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Debris.Remove(keys);
             obj.ImageSpaces.Remove(keys);
             obj.ImageSpaceAdapters.Remove(keys);
+            obj.FormLists.Remove(keys);
         }
         
         public void Remove(
@@ -5718,6 +5773,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    obj.FormLists.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -5931,6 +5994,7 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IHolotapeGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown);
@@ -6028,6 +6092,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAliasVoiceType":
                 case "IAliasVoiceTypeGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IRegionTarget":
                 case "IRegionTargetGetter":
@@ -6038,6 +6103,7 @@ namespace Mutagen.Bethesda.Fallout4
                     break;
                 case "ILockList":
                 case "ILockListGetter":
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IPlacedTrapTarget":
@@ -6256,6 +6322,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
             ret.ImageSpaces = MaskItemExt.Factory(item.ImageSpaces.GetEqualsMask(rhs.ImageSpaces, include), include);
             ret.ImageSpaceAdapters = MaskItemExt.Factory(item.ImageSpaceAdapters.GetEqualsMask(rhs.ImageSpaceAdapters, include), include);
+            ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
         }
         
         public string Print(
@@ -6575,6 +6642,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.ImageSpaceAdapters?.Overall ?? true)
             {
                 item.ImageSpaceAdapters?.Print(sb, "ImageSpaceAdapters");
+            }
+            if (printMask?.FormLists?.Overall ?? true)
+            {
+                item.FormLists?.Print(sb, "FormLists");
             }
         }
         
@@ -7137,6 +7208,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isImageSpaceAdaptersEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.FormLists) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FormLists, rhs.FormLists, out var lhsFormLists, out var rhsFormLists, out var isFormListsEqual))
+                {
+                    if (!object.Equals(lhsFormLists, rhsFormLists)) return false;
+                }
+                else if (!isFormListsEqual) return false;
+            }
             return true;
         }
         
@@ -7212,6 +7291,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Debris);
             hash.Add(item.ImageSpaces);
             hash.Add(item.ImageSpaceAdapters);
+            hash.Add(item.FormLists);
             return hash.ToHashCode();
         }
         
@@ -7569,6 +7649,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IImageSpaceAdapter":
                 case "IImageSpaceAdapterInternal":
                     return obj.ImageSpaceAdapters;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    return obj.FormLists;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -7593,7 +7678,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[68];
+            Stream[] outputStreams = new Stream[69];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -7663,6 +7748,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.Debris, 65, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ImageSpaces, 66, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, 67, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 68, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7946,6 +8032,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.FormLists.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -8220,6 +8310,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FormLists.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8857,6 +8951,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IImageSpaceAdapter":
                 case "IImageSpaceAdapterInternal":
                     foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    foreach (var item in obj.FormLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -9632,6 +9735,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.ImageSpaceAdapters,
                 groupGetter: (m) => m.ImageSpaceAdapters))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, FormList, IFormListGetter>(
+                srcGroup: obj.FormLists,
+                type: typeof(IFormListGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.FormLists,
+                groupGetter: (m) => m.FormLists))
             {
                 yield return item;
             }
@@ -10600,6 +10712,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.ImageSpaceAdapters,
                         groupGetter: (m) => m.ImageSpaceAdapters))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, FormList, IFormListGetter>(
+                        srcGroup: obj.FormLists,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.FormLists,
+                        groupGetter: (m) => m.FormLists))
                     {
                         yield return item;
                     }
@@ -12278,6 +12404,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.FormLists) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.FormLists);
+                try
+                {
+                    item.FormLists.DeepCopyIn(
+                        rhs: rhs.FormLists,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.FormLists));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -12436,6 +12582,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Debris;
         public bool ImageSpaces;
         public bool ImageSpaceAdapters;
+        public bool FormLists;
         public GroupMask()
         {
         }
@@ -12509,6 +12656,7 @@ namespace Mutagen.Bethesda.Fallout4
             Debris = defaultValue;
             ImageSpaces = defaultValue;
             ImageSpaceAdapters = defaultValue;
+            FormLists = defaultValue;
         }
     }
 
@@ -13284,6 +13432,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ImageSpaceAdaptersItem).BinaryWriteTranslator).Write<IImageSpaceAdapterGetter>(
                         item: ImageSpaceAdaptersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.FormLists ?? true)
+            {
+                var FormListsItem = item.FormLists;
+                if (FormListsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)FormListsItem).BinaryWriteTranslator).Write<IFormListGetter>(
+                        item: FormListsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -14306,6 +14465,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.ImageSpaceAdapters;
                 }
+                case RecordTypeInts.FLST:
+                {
+                    if (importMask?.FormLists ?? true)
+                    {
+                        item.FormLists.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.FormLists;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -14809,6 +14982,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? Fallout4GroupBinaryOverlay<IImageSpaceAdapterGetter>.Fallout4GroupFactory(_data, _ImageSpaceAdaptersLocations, _package) : default;
         public IFallout4GroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters => _ImageSpaceAdapters ?? new Fallout4Group<ImageSpaceAdapter>(this);
         #endregion
+        #region FormLists
+        private List<RangeInt64>? _FormListsLocations;
+        private IFallout4GroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? Fallout4GroupBinaryOverlay<IFormListGetter>.Fallout4GroupFactory(_data, _FormListsLocations, _package) : default;
+        public IFallout4GroupGetter<IFormListGetter> FormLists => _FormLists ?? new Fallout4Group<FormList>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -15303,6 +15481,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _ImageSpaceAdaptersLocations ??= new();
                     _ImageSpaceAdaptersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.ImageSpaceAdapters;
+                }
+                case RecordTypeInts.FLST:
+                {
+                    _FormListsLocations ??= new();
+                    _FormListsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.FormLists;
                 }
                 default:
                     return default(int?);
