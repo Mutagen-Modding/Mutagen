@@ -170,6 +170,9 @@
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ActorValueInformation.cs">
+      <DependentUpon>ActorValueInformation.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ADamageType.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>

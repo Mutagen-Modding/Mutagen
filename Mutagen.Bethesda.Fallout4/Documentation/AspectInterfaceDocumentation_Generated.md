@@ -89,6 +89,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### INamed
 - ActionRecord
 - Activator
+- ActorValueInformation
 - Ammunition
 - APackageData
 - Armor
@@ -280,6 +281,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### ActorValueInformation
+- INamed
 ### AddonNode
 - IModeled
 - IObjectBounded

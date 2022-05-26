@@ -79,6 +79,7 @@
       <Group name="Perks" refName="Perk" />
       <Group name="BodyParts" refName="BodyPartData" />
       <Group name="AddonNodes" refName="AddonNode" />
+      <Group name="ActorValueInformation" refName="ActorValueInformation" />
     </Fields>
   </Object>
 </Loqui>

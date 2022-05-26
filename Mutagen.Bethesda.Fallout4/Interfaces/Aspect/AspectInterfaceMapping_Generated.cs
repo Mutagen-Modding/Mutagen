@@ -124,6 +124,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 ActionRecord_Registration.Instance,
                 Activator_Registration.Instance,
+                ActorValueInformation_Registration.Instance,
                 Ammunition_Registration.Instance,
                 APackageData_Registration.Instance,
                 Armor_Registration.Instance,
@@ -190,6 +191,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 ActionRecord_Registration.Instance,
                 Activator_Registration.Instance,
+                ActorValueInformation_Registration.Instance,
                 Ammunition_Registration.Instance,
                 APackageData_Registration.Instance,
                 Armor_Registration.Instance,
@@ -280,6 +282,7 @@ namespace Mutagen.Bethesda.Fallout4
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                ActorValueInformation_Registration.Instance,
                 Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 Book_Registration.Instance,
@@ -330,6 +333,7 @@ namespace Mutagen.Bethesda.Fallout4
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                ActorValueInformation_Registration.Instance,
                 Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 BodyPart_Registration.Instance,

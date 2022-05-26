@@ -66,6 +66,7 @@ public partial class RecordTypeInts
     public const int ATKW = 0x574B5441;
     public const int ATTX = 0x58545441;
     public const int ATXT = 0x54585441;
+    public const int AVFL = 0x4C465641;
     public const int AVIF = 0x46495641;
     public const int BAMT = 0x544D4142;
     public const int BCLF = 0x464C4342;

@@ -68,6 +68,7 @@ public partial class RecordTypes
     public static readonly RecordType ATKW = new(0x574B5441);
     public static readonly RecordType ATTX = new(0x58545441);
     public static readonly RecordType ATXT = new(0x54585441);
+    public static readonly RecordType AVFL = new(0x4C465641);
     public static readonly RecordType AVIF = new(0x46495641);
     public static readonly RecordType BAMT = new(0x544D4142);
     public static readonly RecordType BCLF = new(0x464C4342);
