@@ -120,7 +120,7 @@
   </Object>
   <Object name="PerkScriptFragments" objType="Subrecord" GUID="111c1431-8ddc-44ab-83e1-8acac57ea4f2" ID="430">
     <Fields>
-      <Int8 name="Unknown" />
+      <UInt8 name="ExtraBindDataVersion" default="2" />
       <String name="FileName" binaryType="PrependLengthUShort" />
       <RefList name="Fragments" refName="IndexedScriptFragment" counterLength="2" binaryOverlay="Custom" />
     </Fields>
