@@ -7,6 +7,7 @@ using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -126,11 +127,11 @@ partial class PerkBinaryCreateTranslation
                                 }
                                 else
                                 {
-                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
-                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
+                                    if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Float)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
 
                                     f = epfd.Value.Float();
@@ -143,18 +144,18 @@ partial class PerkBinaryCreateTranslation
                                         APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
                                         APerkEntryPointEffect.FunctionType.MultiplyValue => PerkEntryPointModifyValue.ModificationType.Multiply,
                                         APerkEntryPointEffect.FunctionType.AddValue => PerkEntryPointModifyValue.ModificationType.Add,
-                                        _ => throw new ArgumentException(),
+                                        _ => throw new MalformedDataException(),
                                     }
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.AddRangeToValue:
                                 if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                 if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                                if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFT record");
-                                if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFD record");
+                                if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFT record");
+                                if (!epfd.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFD record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
                                 {
-                                    throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                 }
                                 entryPointEffect = new PerkEntryPointAddRangeToValue()
                                 {
@@ -168,11 +169,11 @@ partial class PerkBinaryCreateTranslation
                             case APerkEntryPointEffect.FunctionType.AddActorValueMult:
                                 if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                 if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                                if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
-                                if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFD record");
+                                if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
+                                if (!epfd.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFD record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
                                 {
-                                    throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                 }
                                 entryPointEffect = new PerkEntryPointModifyActorValue()
                                 {
@@ -184,7 +185,7 @@ partial class PerkBinaryCreateTranslation
                                         APerkEntryPointEffect.FunctionType.AddActorValueMult => PerkEntryPointModifyActorValue.ModificationType.AddAVMult,
                                         APerkEntryPointEffect.FunctionType.MultiplyActorValueMult => PerkEntryPointModifyActorValue.ModificationType.MultiplyAVMult,
                                         APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult => PerkEntryPointModifyActorValue.ModificationType.MultiplyOnePlusAVMult,
-                                        _ => throw new ArgumentException(),
+                                        _ => throw new MalformedDataException(),
                                     }
                                 };
                                 break;
@@ -194,7 +195,7 @@ partial class PerkBinaryCreateTranslation
                                 if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                 if (epft.HasValue && epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.None)
                                 {
-                                    throw new ArgumentException($"{nameof(PerkEntryPointAbsoluteValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointAbsoluteValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                 }
                                 entryPointEffect = new PerkEntryPointAbsoluteValue()
                                 {
@@ -204,10 +205,10 @@ partial class PerkBinaryCreateTranslation
                             case APerkEntryPointEffect.FunctionType.AddLeveledList:
                                 if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                 if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                                if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFT record");
+                                if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LeveledItem)
                                 {
-                                    throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected parameter type flag: {epft.Value[0]}");
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected parameter type flag: {epft.Value[0]}");
                                 }
                                 entryPointEffect = new PerkEntryPointAddLeveledItem()
                                 {
@@ -215,11 +216,11 @@ partial class PerkBinaryCreateTranslation
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.AddActivateChoice:
-                                if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPFT record");
-                                if (!epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPF3 record");
+                                if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPFT record");
+                                if (!epf3.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPF3 record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.SpellWithStrings)
                                 {
-                                    throw new ArgumentException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected parameter type flag: {epft.Value[0]}");
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected parameter type flag: {epft.Value[0]}");
                                 }
                                 entryPointEffect = new PerkEntryPointAddActivateChoice()
                                 {
@@ -235,10 +236,10 @@ partial class PerkBinaryCreateTranslation
                             case APerkEntryPointEffect.FunctionType.SelectSpell:
                                 if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                 if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                                if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFT record");
+                                if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
                                 {
-                                    throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected parameter type flag: {epft.Value[0]}");
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointSelectSpell)} did not have expected parameter type flag: {epft.Value[0]}");
                                 }
                                 entryPointEffect = new PerkEntryPointSelectSpell()
                                 {
@@ -248,10 +249,10 @@ partial class PerkBinaryCreateTranslation
                             case APerkEntryPointEffect.FunctionType.SelectText:
                                 if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                 if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                                if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
+                                if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.String)
                                 {
-                                    throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected parameter type flag: {epft.Value[0]}");
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointSelectText)} did not have expected parameter type flag: {epft.Value[0]}");
                                 }
                                 entryPointEffect = new PerkEntryPointSelectText()
                                 {
@@ -261,10 +262,10 @@ partial class PerkBinaryCreateTranslation
                             case APerkEntryPointEffect.FunctionType.SetText:
                                 if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                 if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                                if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected EPFT record");
+                                if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSetText)} did not have expected EPFT record");
                                 if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LString)
                                 {
-                                    throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected parameter type flag: {epft.Value[0]}");
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointSetText)} did not have expected parameter type flag: {epft.Value[0]}");
                                 }
                                 entryPointEffect = new PerkEntryPointSetText()
                                 {
@@ -289,7 +290,7 @@ partial class PerkBinaryCreateTranslation
                 {
                     Perk.EffectType.Quest => new PerkQuestEffect(),
                     Perk.EffectType.Ability => new PerkAbilityEffect(),
-                    _ => throw new ArgumentException($"Expected DATA subrecord that did not exist."),
+                    _ => throw new MalformedDataException($"Expected DATA subrecord that did not exist."),
                 };
             }
             effect.Rank = rank;
@@ -298,7 +299,7 @@ partial class PerkBinaryCreateTranslation
                 && epftFrame.ContentLength != 1
                 && epftFrame.Content[0] != (byte)APerkEntryPointEffect.ParameterType.None)
             {
-                throw new ArgumentException($"Encountered an unexpected epft frame.");
+                throw new MalformedDataException($"Encountered an unexpected epft frame.");
             }
             stream.TryReadSubrecord(RecordTypes.PRKF, out var _);
             yield return effect;
