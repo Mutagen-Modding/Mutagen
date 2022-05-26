@@ -1059,6 +1059,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "EXPL", "FULL" },
                     new RecordType[] { "FLST", "FULL" },
                     new StringsAlignmentCustom("PERK", PerkStringHandler),
+                    new RecordType[] { "BPTD", "BPTN" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

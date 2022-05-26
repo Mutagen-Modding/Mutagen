@@ -79,7 +79,11 @@ public partial class RecordTypes
     public static readonly RecordType BOD2 = new(0x32444F42);
     public static readonly RecordType BODT = new(0x54444F42);
     public static readonly RecordType BOOK = new(0x4B4F4F42);
+    public static readonly RecordType BPND = new(0x444E5042);
+    public static readonly RecordType BPNN = new(0x4E4E5042);
+    public static readonly RecordType BPNT = new(0x544E5042);
     public static readonly RecordType BPTD = new(0x44545042);
+    public static readonly RecordType BPTN = new(0x4E545042);
     public static readonly RecordType BSIZ = new(0x5A495342);
     public static readonly RecordType BSMB = new(0x424D5342);
     public static readonly RecordType BSMP = new(0x504D5342);

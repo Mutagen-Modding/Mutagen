@@ -56,6 +56,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ArmorModel
 - ArtObject
 - BodyData
+- BodyPartData
 - Book
 - Climate
 - Container
@@ -91,6 +92,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - APackageData
 - Armor
 - BipedObjectData
+- BodyPart
 - Bone
 - Book
 - Cell
@@ -305,6 +307,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### BipedObjectData
 - INamed
 ### BodyData
+- IModeled
+### BodyPart
+- INamed
+### BodyPartData
 - IModeled
 ### Bone
 - INamed

@@ -485,7 +485,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             PerkEntryPointSelectSpell_Registration.Instance,
             PerkEntryPointSelectText_Registration.Instance,
             PerkEntryPointSetText_Registration.Instance,
-            PerkCondition_Registration.Instance
+            PerkCondition_Registration.Instance,
+            BodyPart_Registration.Instance
         );
     }
 }
