@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
@@ -25,7 +25,7 @@ public class PluginRawListingsReader : IPluginRawListingsReader
     {
         if (!_fileSystem.File.Exists(pluginPath))
         {
-            throw new FileNotFoundException("Could not locate plugins file", pluginPath);
+            throw new FileNotFoundException($"Could not locate plugins file: {pluginPath}", pluginPath);
         }
         using var stream = _fileSystem.FileStream.Create(pluginPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
         return Parser.Parse(stream).ToList();
