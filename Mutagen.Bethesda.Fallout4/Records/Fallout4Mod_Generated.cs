@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Fallout4
             _FormLists_Object = new Fallout4Group<FormList>(this);
             _Perks_Object = new Fallout4Group<Perk>(this);
             _BodyParts_Object = new Fallout4Group<BodyPartData>(this);
+            _AddonNodes_Object = new Fallout4Group<AddonNode>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -637,6 +638,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IBodyPartDataGetter> IFallout4ModGetter.BodyParts => _BodyParts_Object;
         #endregion
+        #region AddonNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<AddonNode> _AddonNodes_Object;
+        public Fallout4Group<AddonNode> AddonNodes => _AddonNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IAddonNodeGetter> IFallout4ModGetter.AddonNodes => _AddonNodes_Object;
+        #endregion
 
         #region To String
 
@@ -748,6 +756,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FormLists = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Perks = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.BodyParts = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.AddonNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -822,7 +831,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ImageSpaceAdapters,
                 TItem FormLists,
                 TItem Perks,
-                TItem BodyParts)
+                TItem BodyParts,
+                TItem AddonNodes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -896,6 +906,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FormLists = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(FormLists, new Fallout4Group.Mask<TItem>(FormLists));
                 this.Perks = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Perks, new Fallout4Group.Mask<TItem>(Perks));
                 this.BodyParts = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(BodyParts, new Fallout4Group.Mask<TItem>(BodyParts));
+                this.AddonNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AddonNodes, new Fallout4Group.Mask<TItem>(AddonNodes));
             }
 
             #pragma warning disable CS8618
@@ -979,6 +990,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? FormLists { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Perks { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? BodyParts { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AddonNodes { get; set; }
             #endregion
 
             #region Equals
@@ -1063,6 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 if (!object.Equals(this.Perks, rhs.Perks)) return false;
                 if (!object.Equals(this.BodyParts, rhs.BodyParts)) return false;
+                if (!object.Equals(this.AddonNodes, rhs.AddonNodes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1140,6 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.FormLists);
                 hash.Add(this.Perks);
                 hash.Add(this.BodyParts);
+                hash.Add(this.AddonNodes);
                 return hash.ToHashCode();
             }
 
@@ -1508,6 +1522,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.BodyParts.Overall)) return false;
                     if (this.BodyParts.Specific != null && !this.BodyParts.Specific.All(eval)) return false;
                 }
+                if (AddonNodes != null)
+                {
+                    if (!eval(this.AddonNodes.Overall)) return false;
+                    if (this.AddonNodes.Specific != null && !this.AddonNodes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1875,6 +1894,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.BodyParts.Overall)) return true;
                     if (this.BodyParts.Specific != null && this.BodyParts.Specific.Any(eval)) return true;
                 }
+                if (AddonNodes != null)
+                {
+                    if (eval(this.AddonNodes.Overall)) return true;
+                    if (this.AddonNodes.Specific != null && this.AddonNodes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1961,6 +1985,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FormLists = this.FormLists == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
                 obj.Perks = this.Perks == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
                 obj.BodyParts = this.BodyParts == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.BodyParts.Overall), this.BodyParts.Specific?.Translate(eval));
+                obj.AddonNodes = this.AddonNodes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AddonNodes.Overall), this.AddonNodes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2267,6 +2292,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         BodyParts?.Print(sb);
                     }
+                    if (printMask?.AddonNodes?.Overall ?? true)
+                    {
+                        AddonNodes?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2363,6 +2392,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<FormList.ErrorMask>?>? FormLists;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Perk.ErrorMask>?>? Perks;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<BodyPartData.ErrorMask>?>? BodyParts;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<AddonNode.ErrorMask>?>? AddonNodes;
             #endregion
 
             #region IErrorMask
@@ -2515,6 +2545,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Perks;
                     case Fallout4Mod_FieldIndex.BodyParts:
                         return BodyParts;
+                    case Fallout4Mod_FieldIndex.AddonNodes:
+                        return AddonNodes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2740,6 +2772,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.BodyParts:
                         this.BodyParts = new MaskItem<Exception?, Fallout4Group.ErrorMask<BodyPartData.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.AddonNodes:
+                        this.AddonNodes = new MaskItem<Exception?, Fallout4Group.ErrorMask<AddonNode.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2967,6 +3002,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.BodyParts:
                         this.BodyParts = (MaskItem<Exception?, Fallout4Group.ErrorMask<BodyPartData.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.AddonNodes:
+                        this.AddonNodes = (MaskItem<Exception?, Fallout4Group.ErrorMask<AddonNode.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3047,6 +3085,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (FormLists != null) return true;
                 if (Perks != null) return true;
                 if (BodyParts != null) return true;
+                if (AddonNodes != null) return true;
                 return false;
             }
             #endregion
@@ -3144,6 +3183,7 @@ namespace Mutagen.Bethesda.Fallout4
                 FormLists?.Print(sb);
                 Perks?.Print(sb);
                 BodyParts?.Print(sb);
+                AddonNodes?.Print(sb);
             }
             #endregion
 
@@ -3224,6 +3264,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
                 ret.BodyParts = this.BodyParts.Combine(rhs.BodyParts, (l, r) => l.Combine(r));
+                ret.AddonNodes = this.AddonNodes.Combine(rhs.AddonNodes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3319,6 +3360,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<FormList.TranslationMask>? FormLists;
             public Fallout4Group.TranslationMask<Perk.TranslationMask>? Perks;
             public Fallout4Group.TranslationMask<BodyPartData.TranslationMask>? BodyParts;
+            public Fallout4Group.TranslationMask<AddonNode.TranslationMask>? AddonNodes;
             #endregion
 
             #region Ctors
@@ -3415,6 +3457,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
                 ret.Add((Perks != null ? Perks.OnOverall : DefaultOn, Perks?.GetCrystal()));
                 ret.Add((BodyParts != null ? BodyParts.OnOverall : DefaultOn, BodyParts?.GetCrystal()));
+                ret.Add((AddonNodes != null ? AddonNodes.OnOverall : DefaultOn, AddonNodes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3526,6 +3569,7 @@ namespace Mutagen.Bethesda.Fallout4
             _FormLists_Object = new Fallout4Group<FormList>(this);
             _Perks_Object = new Fallout4Group<Perk>(this);
             _BodyParts_Object = new Fallout4Group<BodyPartData>(this);
+            _AddonNodes_Object = new Fallout4Group<AddonNode>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3819,6 +3863,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.BodyParts.RecordCache.Set(rhsMod.BodyParts.RecordCache.Items);
             }
+            if (mask?.AddonNodes ?? true)
+            {
+                this.AddonNodes.RecordCache.Set(rhsMod.AddonNodes.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3900,6 +3948,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
             count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
             count += BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4222,6 +4271,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<FormList> FormLists { get; }
         new Fallout4Group<Perk> Perks { get; }
         new Fallout4Group<BodyPartData> BodyParts { get; }
+        new Fallout4Group<AddonNode> AddonNodes { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -4312,6 +4362,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IFormListGetter> FormLists { get; }
         IFallout4GroupGetter<IPerkGetter> Perks { get; }
         IFallout4GroupGetter<IBodyPartDataGetter> BodyParts { get; }
+        IFallout4GroupGetter<IAddonNodeGetter> AddonNodes { get; }
 
     }
 
@@ -4954,6 +5005,7 @@ namespace Mutagen.Bethesda.Fallout4
         FormLists = 69,
         Perks = 70,
         BodyParts = 71,
+        AddonNodes = 72,
     }
     #endregion
 
@@ -4971,9 +5023,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 72;
+        public const ushort AdditionalFieldCount = 73;
 
-        public const ushort FieldCount = 72;
+        public const ushort FieldCount = 73;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -5112,6 +5164,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.FormLists.Clear();
             item.Perks.Clear();
             item.BodyParts.Clear();
+            item.AddonNodes.Clear();
         }
         
         #region Mutagen
@@ -5179,6 +5232,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.FormLists.RemapLinks(mapping);
             obj.Perks.RemapLinks(mapping);
             obj.BodyParts.RemapLinks(mapping);
+            obj.AddonNodes.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -5284,6 +5338,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.FormLists.Remove(keys);
             obj.Perks.Remove(keys);
             obj.BodyParts.Remove(keys);
+            obj.AddonNodes.Remove(keys);
         }
         
         public void Remove(
@@ -5907,6 +5962,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    obj.AddonNodes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -6067,6 +6130,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IExplodeSpawnGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAddonNodeGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBendableSplineGetter), throwIfUnknown: throwIfUnknown);
@@ -6452,6 +6516,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
             ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
             ret.BodyParts = MaskItemExt.Factory(item.BodyParts.GetEqualsMask(rhs.BodyParts, include), include);
+            ret.AddonNodes = MaskItemExt.Factory(item.AddonNodes.GetEqualsMask(rhs.AddonNodes, include), include);
         }
         
         public string Print(
@@ -6783,6 +6848,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.BodyParts?.Overall ?? true)
             {
                 item.BodyParts?.Print(sb, "BodyParts");
+            }
+            if (printMask?.AddonNodes?.Overall ?? true)
+            {
+                item.AddonNodes?.Print(sb, "AddonNodes");
             }
         }
         
@@ -7369,6 +7438,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isBodyPartsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AddonNodes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AddonNodes, rhs.AddonNodes, out var lhsAddonNodes, out var rhsAddonNodes, out var isAddonNodesEqual))
+                {
+                    if (!object.Equals(lhsAddonNodes, rhsAddonNodes)) return false;
+                }
+                else if (!isAddonNodesEqual) return false;
+            }
             return true;
         }
         
@@ -7447,6 +7524,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.FormLists);
             hash.Add(item.Perks);
             hash.Add(item.BodyParts);
+            hash.Add(item.AddonNodes);
             return hash.ToHashCode();
         }
         
@@ -7819,6 +7897,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
                     return obj.BodyParts;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    return obj.AddonNodes;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -7843,7 +7926,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[71];
+            Stream[] outputStreams = new Stream[72];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -7916,6 +7999,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.FormLists, 68, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Perks, 69, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BodyParts, 70, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, 71, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8211,6 +8295,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.AddonNodes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -8497,6 +8585,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.BodyParts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AddonNodes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -9161,6 +9253,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
                     foreach (var item in obj.BodyParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -9963,6 +10064,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.BodyParts,
                 groupGetter: (m) => m.BodyParts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AddonNode, IAddonNodeGetter>(
+                srcGroup: obj.AddonNodes,
+                type: typeof(IAddonNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AddonNodes,
+                groupGetter: (m) => m.AddonNodes))
             {
                 yield return item;
             }
@@ -10973,6 +11083,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.BodyParts,
                         groupGetter: (m) => m.BodyParts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, AddonNode, IAddonNodeGetter>(
+                        srcGroup: obj.AddonNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AddonNodes,
+                        groupGetter: (m) => m.AddonNodes))
                     {
                         yield return item;
                     }
@@ -12711,6 +12835,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AddonNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.AddonNodes);
+                try
+                {
+                    item.AddonNodes.DeepCopyIn(
+                        rhs: rhs.AddonNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.AddonNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -12872,6 +13016,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool FormLists;
         public bool Perks;
         public bool BodyParts;
+        public bool AddonNodes;
         public GroupMask()
         {
         }
@@ -12948,6 +13093,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormLists = defaultValue;
             Perks = defaultValue;
             BodyParts = defaultValue;
+            AddonNodes = defaultValue;
         }
     }
 
@@ -13756,6 +13902,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)BodyPartsItem).BinaryWriteTranslator).Write<IBodyPartDataGetter>(
                         item: BodyPartsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AddonNodes ?? true)
+            {
+                var AddonNodesItem = item.AddonNodes;
+                if (AddonNodesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AddonNodesItem).BinaryWriteTranslator).Write<IAddonNodeGetter>(
+                        item: AddonNodesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -14820,6 +14977,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.BodyParts;
                 }
+                case RecordTypeInts.ADDN:
+                {
+                    if (importMask?.AddonNodes ?? true)
+                    {
+                        item.AddonNodes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.AddonNodes;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -15338,6 +15509,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? Fallout4GroupBinaryOverlay<IBodyPartDataGetter>.Fallout4GroupFactory(_data, _BodyPartsLocations, _package) : default;
         public IFallout4GroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new Fallout4Group<BodyPartData>(this);
         #endregion
+        #region AddonNodes
+        private List<RangeInt64>? _AddonNodesLocations;
+        private IFallout4GroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? Fallout4GroupBinaryOverlay<IAddonNodeGetter>.Fallout4GroupFactory(_data, _AddonNodesLocations, _package) : default;
+        public IFallout4GroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new Fallout4Group<AddonNode>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -15850,6 +16026,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _BodyPartsLocations ??= new();
                     _BodyPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.BodyParts;
+                }
+                case RecordTypeInts.ADDN:
+                {
+                    _AddonNodesLocations ??= new();
+                    _AddonNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.AddonNodes;
                 }
                 default:
                     return default(int?);

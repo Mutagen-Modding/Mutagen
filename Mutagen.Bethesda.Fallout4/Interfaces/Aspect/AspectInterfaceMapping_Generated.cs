@@ -83,6 +83,7 @@ namespace Mutagen.Bethesda.Fallout4
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                AddonNode_Registration.Instance,
                 Ammunition_Registration.Instance,
                 AnimatedObject_Registration.Instance,
                 ArmorModel_Registration.Instance,
@@ -384,6 +385,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 AcousticSpace_Registration.Instance,
                 Activator_Registration.Instance,
+                AddonNode_Registration.Instance,
                 Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 ArtObject_Registration.Instance,

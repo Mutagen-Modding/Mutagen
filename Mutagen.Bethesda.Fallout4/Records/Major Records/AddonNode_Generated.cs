@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +55,76 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IAddonNodeGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IAddonNodeGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region NodeIndex
+        public Int32 NodeIndex { get; set; } = default;
+        #endregion
+        #region Sound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IAddonNodeGetter.Sound => this.Sound;
+        #endregion
+        #region Light
+        private readonly IFormLinkNullable<ILightGetter> _Light = new FormLinkNullable<ILightGetter>();
+        public IFormLinkNullable<ILightGetter> Light
+        {
+            get => _Light;
+            set => _Light.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILightGetter> IAddonNodeGetter.Light => this.Light;
+        #endregion
+        #region MasterParticleSystemCap
+        public UInt16 MasterParticleSystemCap { get; set; } = default;
+        #endregion
+        #region Flags
+        public AddonNode.Flag Flags { get; set; } = default;
+        #endregion
+        #region DNAMDataTypeState
+        public AddonNode.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +150,14 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.NodeIndex = initialValue;
+                this.Sound = initialValue;
+                this.Light = initialValue;
+                this.MasterParticleSystemCap = initialValue;
+                this.Flags = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +166,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Model,
+                TItem NodeIndex,
+                TItem Sound,
+                TItem Light,
+                TItem MasterParticleSystemCap,
+                TItem Flags,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +183,14 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.NodeIndex = NodeIndex;
+                this.Sound = Sound;
+                this.Light = Light;
+                this.MasterParticleSystemCap = MasterParticleSystemCap;
+                this.Flags = Flags;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +199,17 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem NodeIndex;
+            public TItem Sound;
+            public TItem Light;
+            public TItem MasterParticleSystemCap;
+            public TItem Flags;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +223,27 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.NodeIndex, rhs.NodeIndex)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.Light, rhs.Light)) return false;
+                if (!object.Equals(this.MasterParticleSystemCap, rhs.MasterParticleSystemCap)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Model);
+                hash.Add(this.NodeIndex);
+                hash.Add(this.Sound);
+                hash.Add(this.Light);
+                hash.Add(this.MasterParticleSystemCap);
+                hash.Add(this.Flags);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +254,22 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.NodeIndex)) return false;
+                if (!eval(this.Sound)) return false;
+                if (!eval(this.Light)) return false;
+                if (!eval(this.MasterParticleSystemCap)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +278,22 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.NodeIndex)) return true;
+                if (eval(this.Sound)) return true;
+                if (eval(this.Light)) return true;
+                if (eval(this.MasterParticleSystemCap)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +309,14 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.NodeIndex = eval(this.NodeIndex);
+                obj.Sound = eval(this.Sound);
+                obj.Light = eval(this.Light);
+                obj.MasterParticleSystemCap = eval(this.MasterParticleSystemCap);
+                obj.Flags = eval(this.Flags);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -172,6 +335,38 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(AddonNode.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.NodeIndex ?? true)
+                    {
+                        sb.AppendItem(NodeIndex, "NodeIndex");
+                    }
+                    if (printMask?.Sound ?? true)
+                    {
+                        sb.AppendItem(Sound, "Sound");
+                    }
+                    if (printMask?.Light ?? true)
+                    {
+                        sb.AppendItem(Light, "Light");
+                    }
+                    if (printMask?.MasterParticleSystemCap ?? true)
+                    {
+                        sb.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +377,39 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? NodeIndex;
+            public Exception? Sound;
+            public Exception? Light;
+            public Exception? MasterParticleSystemCap;
+            public Exception? Flags;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
                 switch (enu)
                 {
+                    case AddonNode_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case AddonNode_FieldIndex.Model:
+                        return Model;
+                    case AddonNode_FieldIndex.NodeIndex:
+                        return NodeIndex;
+                    case AddonNode_FieldIndex.Sound:
+                        return Sound;
+                    case AddonNode_FieldIndex.Light:
+                        return Light;
+                    case AddonNode_FieldIndex.MasterParticleSystemCap:
+                        return MasterParticleSystemCap;
+                    case AddonNode_FieldIndex.Flags:
+                        return Flags;
+                    case AddonNode_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +420,30 @@ namespace Mutagen.Bethesda.Fallout4
                 AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
                 switch (enu)
                 {
+                    case AddonNode_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case AddonNode_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case AddonNode_FieldIndex.NodeIndex:
+                        this.NodeIndex = ex;
+                        break;
+                    case AddonNode_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    case AddonNode_FieldIndex.Light:
+                        this.Light = ex;
+                        break;
+                    case AddonNode_FieldIndex.MasterParticleSystemCap:
+                        this.MasterParticleSystemCap = ex;
+                        break;
+                    case AddonNode_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case AddonNode_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +455,30 @@ namespace Mutagen.Bethesda.Fallout4
                 AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
                 switch (enu)
                 {
+                    case AddonNode_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case AddonNode_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case AddonNode_FieldIndex.NodeIndex:
+                        this.NodeIndex = (Exception?)obj;
+                        break;
+                    case AddonNode_FieldIndex.Sound:
+                        this.Sound = (Exception?)obj;
+                        break;
+                    case AddonNode_FieldIndex.Light:
+                        this.Light = (Exception?)obj;
+                        break;
+                    case AddonNode_FieldIndex.MasterParticleSystemCap:
+                        this.MasterParticleSystemCap = (Exception?)obj;
+                        break;
+                    case AddonNode_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case AddonNode_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +488,14 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Model != null) return true;
+                if (NodeIndex != null) return true;
+                if (Sound != null) return true;
+                if (Light != null) return true;
+                if (MasterParticleSystemCap != null) return true;
+                if (Flags != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +522,26 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(NodeIndex, "NodeIndex");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +550,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.NodeIndex = this.NodeIndex.Combine(rhs.NodeIndex);
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.Light = this.Light.Combine(rhs.Light);
+                ret.MasterParticleSystemCap = this.MasterParticleSystemCap.Combine(rhs.MasterParticleSystemCap);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +579,45 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public Model.TranslationMask? Model;
+            public bool NodeIndex;
+            public bool Sound;
+            public bool Light;
+            public bool MasterParticleSystemCap;
+            public bool Flags;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.NodeIndex = defaultOn;
+                this.Sound = defaultOn;
+                this.Light = defaultOn;
+                this.MasterParticleSystemCap = defaultOn;
+                this.Flags = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((NodeIndex, null));
+                ret.Add((Sound, null));
+                ret.Add((Light, null));
+                ret.Add((MasterParticleSystemCap, null));
+                ret.Add((Flags, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +629,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AddonNode_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AddonNodeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AddonNodeSetterCommon.Instance.RemapLinks(this, mapping);
         public AddonNode(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -335,6 +673,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IAddonNode);
 
+        [Flags]
+        public enum DNAMDataType
+        {
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -417,8 +759,25 @@ namespace Mutagen.Bethesda.Fallout4
         IAddonNodeGetter,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<IAddonNodeInternal>
+        IFormLinkContainer,
+        ILoquiObjectSetter<IAddonNodeInternal>,
+        IModeled,
+        IObjectBounded
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new Int32 NodeIndex { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
+        new IFormLinkNullable<ILightGetter> Light { get; set; }
+        new UInt16 MasterParticleSystemCap { get; set; }
+        new AddonNode.Flag Flags { get; set; }
+        new AddonNode.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IAddonNodeInternal :
@@ -433,10 +792,31 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
+        IFormLinkContainerGetter,
         ILoquiObject<IAddonNodeGetter>,
-        IMapsToGetter<IAddonNodeGetter>
+        IMapsToGetter<IAddonNodeGetter>,
+        IModeledGetter,
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => AddonNode_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        Int32 NodeIndex { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
+        IFormLinkNullableGetter<ILightGetter> Light { get; }
+        UInt16 MasterParticleSystemCap { get; }
+        AddonNode.Flag Flags { get; }
+        AddonNode.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -601,6 +981,14 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ObjectBounds = 6,
+        Model = 7,
+        NodeIndex = 8,
+        Sound = 9,
+        Light = 10,
+        MasterParticleSystemCap = 11,
+        Flags = 12,
+        DNAMDataTypeState = 13,
     }
     #endregion
 
@@ -618,9 +1006,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "532676e2-896e-4295-b298-076f1cbe69cc";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(AddonNode.Mask<>);
 
@@ -650,8 +1038,16 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.ADDN);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.ADDN);
+            var all = RecordCollection.Factory(
+                RecordTypes.ADDN,
+                RecordTypes.OBND,
+                RecordTypes.MODL,
+                RecordTypes.DATA,
+                RecordTypes.SNAM,
+                RecordTypes.LNAM,
+                RecordTypes.DNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AddonNodeBinaryWriteTranslation);
         #region Interface
@@ -695,6 +1091,14 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IAddonNodeInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.Model = null;
+            item.NodeIndex = default;
+            item.Sound.Clear();
+            item.Light.Clear();
+            item.MasterParticleSystemCap = default;
+            item.Flags = default;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -712,6 +1116,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IAddonNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Sound.Relink(mapping);
+            obj.Light.Relink(mapping);
         }
         
         #endregion
@@ -780,6 +1187,18 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.NodeIndex = item.NodeIndex == rhs.NodeIndex;
+            ret.Sound = item.Sound.Equals(rhs.Sound);
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.MasterParticleSystemCap = item.MasterParticleSystemCap == rhs.MasterParticleSystemCap;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +1248,39 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.NodeIndex ?? true)
+            {
+                sb.AppendItem(item.NodeIndex, "NodeIndex");
+            }
+            if (printMask?.Sound ?? true)
+            {
+                sb.AppendItem(item.Sound.FormKeyNullable, "Sound");
+            }
+            if (printMask?.Light ?? true)
+            {
+                sb.AppendItem(item.Light.FormKeyNullable, "Light");
+            }
+            if (printMask?.MasterParticleSystemCap ?? true)
+            {
+                sb.AppendItem(item.MasterParticleSystemCap, "MasterParticleSystemCap");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public static AddonNode_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -877,6 +1329,46 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)AddonNode_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)AddonNode_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.NodeIndex) ?? true))
+            {
+                if (lhs.NodeIndex != rhs.NodeIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Light) ?? true))
+            {
+                if (!lhs.Light.Equals(rhs.Light)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
+            {
+                if (lhs.MasterParticleSystemCap != rhs.MasterParticleSystemCap) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            }
             return true;
         }
         
@@ -905,6 +1397,17 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IAddonNodeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.NodeIndex);
+            hash.Add(item.Sound);
+            hash.Add(item.Light);
+            hash.Add(item.MasterParticleSystemCap);
+            hash.Add(item.Flags);
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,6 +1436,21 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
+            {
+                yield return SoundInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Light, out var LightInfo))
+            {
+                yield return LightInfo;
             }
             yield break;
         }
@@ -1008,6 +1526,78 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)AddonNode_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)AddonNode_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)AddonNode_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AddonNode_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.NodeIndex) ?? true))
+            {
+                item.NodeIndex = rhs.NodeIndex;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
+            {
+                item.Sound.SetTo(rhs.Sound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Light) ?? true))
+            {
+                item.Light.SetTo(rhs.Light.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
+            {
+                item.MasterParticleSystemCap = rhs.MasterParticleSystemCap;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1156,6 +1746,58 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static AddonNodeBinaryWriteTranslation Instance = new AddonNodeBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IAddonNodeGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IAddonNodeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.NodeIndex,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Sound,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Light,
+                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                writer.Write(item.MasterParticleSystemCap);
+                EnumBinaryTranslation<AddonNode.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 2);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IAddonNodeGetter item,
@@ -1167,13 +1809,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1231,6 +1875,69 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IAddonNodeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout4.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)AddonNode_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)AddonNode_FieldIndex.Model;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NodeIndex = frame.ReadInt32();
+                    return (int)AddonNode_FieldIndex.NodeIndex;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AddonNode_FieldIndex.Sound;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AddonNode_FieldIndex.Light;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.MasterParticleSystemCap = dataFrame.ReadUInt16();
+                    item.Flags = EnumBinaryTranslation<AddonNode.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    return (int)AddonNode_FieldIndex.Flags;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1263,6 +1970,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AddonNodeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AddonNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1277,6 +1985,36 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IAddonNode);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        #region NodeIndex
+        private int? _NodeIndexLocation;
+        public Int32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default;
+        #endregion
+        #region Sound
+        private int? _SoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region Light
+        private int? _LightLocation;
+        public IFormLinkNullableGetter<ILightGetter> Light => _LightLocation.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LightLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
+        #endregion
+        private RangeInt32? _DNAMLocation;
+        public AddonNode.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region MasterParticleSystemCap
+        private int _MasterParticleSystemCapLocation => _DNAMLocation!.Value.Min;
+        private bool _MasterParticleSystemCap_IsSet => _DNAMLocation.HasValue;
+        public UInt16 MasterParticleSystemCap => _MasterParticleSystemCap_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_MasterParticleSystemCapLocation, 2)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x2;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue;
+        public AddonNode.Flag Flags => _Flags_IsSet ? (AddonNode.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 0x2)) : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1331,6 +2069,61 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)AddonNode_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)AddonNode_FieldIndex.Model;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _NodeIndexLocation = (stream.Position - offset);
+                    return (int)AddonNode_FieldIndex.NodeIndex;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _SoundLocation = (stream.Position - offset);
+                    return (int)AddonNode_FieldIndex.Sound;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _LightLocation = (stream.Position - offset);
+                    return (int)AddonNode_FieldIndex.Light;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)AddonNode_FieldIndex.Flags;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

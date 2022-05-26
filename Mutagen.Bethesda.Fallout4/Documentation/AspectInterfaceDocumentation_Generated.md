@@ -51,6 +51,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### IModeled
 - Activator
+- AddonNode
 - Ammunition
 - AnimatedObject
 - ArmorModel
@@ -176,6 +177,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IObjectBounded
 - AcousticSpace
 - Activator
+- AddonNode
 - Ammunition
 - Armor
 - ArtObject
@@ -278,6 +280,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### AddonNode
+- IModeled
+- IObjectBounded
 ### Ammunition
 - IKeyworded
 - IModeled
