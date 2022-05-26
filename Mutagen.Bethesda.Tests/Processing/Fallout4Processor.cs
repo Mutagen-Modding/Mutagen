@@ -968,6 +968,46 @@ public class Fallout4Processor : Processor
         }
     }
 
+    public void PerkStringHandler(
+        IMutagenReadStream stream,
+        MajorRecordHeader major,
+        List<StringEntry> processedStrings,
+        IStringsLookup overlay)
+    {
+        var majorCompletePos = stream.Position + major.ContentLength;
+        long? lastepft = null;
+        while (stream.Position < majorCompletePos)
+        {
+            var sub = stream.GetSubrecordHeader();
+            switch (sub.RecordTypeInt)
+            {
+                case RecordTypeInts.FULL:
+                case RecordTypeInts.EPF2:
+                    AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
+                    break;
+                case RecordTypeInts.EPFT:
+                    lastepft = stream.Position;
+                    break;
+                case RecordTypeInts.EPFD:
+                    var pos = stream.Position;
+                    stream.Position = lastepft.Value;
+                    var epftFrame = stream.ReadSubrecord();
+                    if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
+                    {
+                        stream.Position = pos;
+                        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
+                    }
+
+                    stream.Position = pos;
+                    break;
+                default:
+                    break;
+            }
+
+            stream.Position += sub.TotalLength;
+        }
+    }
+
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
     {
         switch (source)
@@ -1018,6 +1058,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "WATR", "FULL" },
                     new RecordType[] { "EXPL", "FULL" },
                     new RecordType[] { "FLST", "FULL" },
+                    new StringsAlignmentCustom("PERK", PerkStringHandler),
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -1032,6 +1073,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "TERM", "WNAM", "NAM0", "ITXT", "RNAM", "UNAM", "BTXT" },
                     new RecordType[] { "QUST", "CNAM" },
                     new RecordType[] { "LSCR", "DESC" },
+                    new RecordType[] { "PERK", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]

@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, DialogResponsesAdapter, PackageAdapter, QuestAdapter, SceneAdapter]
+    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
     /// </summary>
     public abstract partial class AVirtualMachineAdapter :
         IAVirtualMachineAdapter,
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, DialogResponsesAdapter, PackageAdapter, QuestAdapter, SceneAdapter]
+    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
     /// </summary>
     public partial interface IAVirtualMachineAdapter :
         IAVirtualMachineAdapterGetter,
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, DialogResponsesAdapter, PackageAdapter, QuestAdapter, SceneAdapter]
+    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
     /// </summary>
     public partial interface IAVirtualMachineAdapterGetter :
         ILoquiObject,

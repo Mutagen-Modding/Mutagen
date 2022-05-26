@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -22,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -53,6 +56,133 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PerkAdapter? _VirtualMachineAdapter;
+        public PerkAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPerkAdapterGetter? IPerkGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IPerkGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Description
+        public TranslatedString Description { get; set; } = string.Empty;
+        ITranslatedStringGetter IPerkGetter.Description => this.Description;
+        #endregion
+        #region Icon
+        public String? Icon { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IPerkGetter.Icon => this.Icon;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IPerkGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region Trait
+        public Boolean Trait { get; set; } = default;
+        #endregion
+        #region Level
+        public Byte Level { get; set; } = default;
+        #endregion
+        #region NumRanks
+        public Byte NumRanks { get; set; } = default;
+        #endregion
+        #region Playable
+        public Boolean Playable { get; set; } = default;
+        #endregion
+        #region Hidden
+        public Boolean Hidden { get; set; } = default;
+        #endregion
+        #region Sound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IPerkGetter.Sound => this.Sound;
+        #endregion
+        #region NextPerk
+        private readonly IFormLinkNullable<IPerkGetter> _NextPerk = new FormLinkNullable<IPerkGetter>();
+        public IFormLinkNullable<IPerkGetter> NextPerk
+        {
+            get => _NextPerk;
+            set => _NextPerk.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPerkGetter> IPerkGetter.NextPerk => this.NextPerk;
+        #endregion
+        #region Swf
+        public String? Swf { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IPerkGetter.Swf => this.Swf;
+        #endregion
+        #region Effects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<APerkEffect> _Effects = new ExtendedList<APerkEffect>();
+        public ExtendedList<APerkEffect> Effects
+        {
+            get => this._Effects;
+            init => this._Effects = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAPerkEffectGetter> IPerkGetter.Effects => _Effects;
+        #endregion
+
+        #endregion
+        #region DATADataTypeState
+        public Perk.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +208,21 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, PerkAdapter.Mask<TItem>?>(initialValue, new PerkAdapter.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Description = initialValue;
+                this.Icon = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Trait = initialValue;
+                this.Level = initialValue;
+                this.NumRanks = initialValue;
+                this.Playable = initialValue;
+                this.Hidden = initialValue;
+                this.Sound = initialValue;
+                this.NextPerk = initialValue;
+                this.Swf = initialValue;
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +231,22 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem Name,
+                TItem Description,
+                TItem Icon,
+                TItem Conditions,
+                TItem Trait,
+                TItem Level,
+                TItem NumRanks,
+                TItem Playable,
+                TItem Hidden,
+                TItem Sound,
+                TItem NextPerk,
+                TItem Swf,
+                TItem Effects,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +255,21 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, PerkAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PerkAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Name = Name;
+                this.Description = Description;
+                this.Icon = Icon;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Trait = Trait;
+                this.Level = Level;
+                this.NumRanks = NumRanks;
+                this.Playable = Playable;
+                this.Hidden = Hidden;
+                this.Sound = Sound;
+                this.NextPerk = NextPerk;
+                this.Swf = Swf;
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +278,24 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, PerkAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem Name;
+            public TItem Description;
+            public TItem Icon;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem Trait;
+            public TItem Level;
+            public TItem NumRanks;
+            public TItem Playable;
+            public TItem Hidden;
+            public TItem Sound;
+            public TItem NextPerk;
+            public TItem Swf;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>? Effects;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +309,41 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.Trait, rhs.Trait)) return false;
+                if (!object.Equals(this.Level, rhs.Level)) return false;
+                if (!object.Equals(this.NumRanks, rhs.NumRanks)) return false;
+                if (!object.Equals(this.Playable, rhs.Playable)) return false;
+                if (!object.Equals(this.Hidden, rhs.Hidden)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.NextPerk, rhs.NextPerk)) return false;
+                if (!object.Equals(this.Swf, rhs.Swf)) return false;
+                if (!object.Equals(this.Effects, rhs.Effects)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Icon);
+                hash.Add(this.Conditions);
+                hash.Add(this.Trait);
+                hash.Add(this.Level);
+                hash.Add(this.NumRanks);
+                hash.Add(this.Playable);
+                hash.Add(this.Hidden);
+                hash.Add(this.Sound);
+                hash.Add(this.NextPerk);
+                hash.Add(this.Swf);
+                hash.Add(this.Effects);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +354,47 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Description)) return false;
+                if (!eval(this.Icon)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Trait)) return false;
+                if (!eval(this.Level)) return false;
+                if (!eval(this.NumRanks)) return false;
+                if (!eval(this.Playable)) return false;
+                if (!eval(this.Hidden)) return false;
+                if (!eval(this.Sound)) return false;
+                if (!eval(this.NextPerk)) return false;
+                if (!eval(this.Swf)) return false;
+                if (this.Effects != null)
+                {
+                    if (!eval(this.Effects.Overall)) return false;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +403,47 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Icon)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Trait)) return true;
+                if (eval(this.Level)) return true;
+                if (eval(this.NumRanks)) return true;
+                if (eval(this.Playable)) return true;
+                if (eval(this.Hidden)) return true;
+                if (eval(this.Sound)) return true;
+                if (eval(this.NextPerk)) return true;
+                if (eval(this.Swf)) return true;
+                if (this.Effects != null)
+                {
+                    if (eval(this.Effects.Overall)) return true;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +459,49 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, PerkAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Description = eval(this.Description);
+                obj.Icon = eval(this.Icon);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Trait = eval(this.Trait);
+                obj.Level = eval(this.Level);
+                obj.NumRanks = eval(this.NumRanks);
+                obj.Playable = eval(this.Playable);
+                obj.Hidden = eval(this.Hidden);
+                obj.Sound = eval(this.Sound);
+                obj.NextPerk = eval(this.NextPerk);
+                obj.Swf = eval(this.Swf);
+                if (Effects != null)
+                {
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, APerkEffect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, APerkEffect.Mask<R>?>>());
+                    if (Effects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, APerkEffect.Mask<R>?>>();
+                        obj.Effects.Specific = l;
+                        foreach (var item in Effects.Specific)
+                        {
+                            MaskItemIndexed<R, APerkEffect.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, APerkEffect.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -172,6 +520,96 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(Perk.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        sb.AppendItem(Icon, "Icon");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Trait ?? true)
+                    {
+                        sb.AppendItem(Trait, "Trait");
+                    }
+                    if (printMask?.Level ?? true)
+                    {
+                        sb.AppendItem(Level, "Level");
+                    }
+                    if (printMask?.NumRanks ?? true)
+                    {
+                        sb.AppendItem(NumRanks, "NumRanks");
+                    }
+                    if (printMask?.Playable ?? true)
+                    {
+                        sb.AppendItem(Playable, "Playable");
+                    }
+                    if (printMask?.Hidden ?? true)
+                    {
+                        sb.AppendItem(Hidden, "Hidden");
+                    }
+                    if (printMask?.Sound ?? true)
+                    {
+                        sb.AppendItem(Sound, "Sound");
+                    }
+                    if (printMask?.NextPerk ?? true)
+                    {
+                        sb.AppendItem(NextPerk, "NextPerk");
+                    }
+                    if (printMask?.Swf ?? true)
+                    {
+                        sb.AppendItem(Swf, "Swf");
+                    }
+                    if ((printMask?.Effects?.Overall ?? true)
+                        && Effects is {} EffectsItem)
+                    {
+                        sb.AppendLine("Effects =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(EffectsItem.Overall);
+                            if (EffectsItem.Specific != null)
+                            {
+                                foreach (var subItem in EffectsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +620,60 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, PerkAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? Name;
+            public Exception? Description;
+            public Exception? Icon;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? Trait;
+            public Exception? Level;
+            public Exception? NumRanks;
+            public Exception? Playable;
+            public Exception? Hidden;
+            public Exception? Sound;
+            public Exception? NextPerk;
+            public Exception? Swf;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>? Effects;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Perk_FieldIndex enu = (Perk_FieldIndex)index;
                 switch (enu)
                 {
+                    case Perk_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Perk_FieldIndex.Name:
+                        return Name;
+                    case Perk_FieldIndex.Description:
+                        return Description;
+                    case Perk_FieldIndex.Icon:
+                        return Icon;
+                    case Perk_FieldIndex.Conditions:
+                        return Conditions;
+                    case Perk_FieldIndex.Trait:
+                        return Trait;
+                    case Perk_FieldIndex.Level:
+                        return Level;
+                    case Perk_FieldIndex.NumRanks:
+                        return NumRanks;
+                    case Perk_FieldIndex.Playable:
+                        return Playable;
+                    case Perk_FieldIndex.Hidden:
+                        return Hidden;
+                    case Perk_FieldIndex.Sound:
+                        return Sound;
+                    case Perk_FieldIndex.NextPerk:
+                        return NextPerk;
+                    case Perk_FieldIndex.Swf:
+                        return Swf;
+                    case Perk_FieldIndex.Effects:
+                        return Effects;
+                    case Perk_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +684,51 @@ namespace Mutagen.Bethesda.Fallout4
                 Perk_FieldIndex enu = (Perk_FieldIndex)index;
                 switch (enu)
                 {
+                    case Perk_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, PerkAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Perk_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Perk_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Perk_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Perk_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Perk_FieldIndex.Trait:
+                        this.Trait = ex;
+                        break;
+                    case Perk_FieldIndex.Level:
+                        this.Level = ex;
+                        break;
+                    case Perk_FieldIndex.NumRanks:
+                        this.NumRanks = ex;
+                        break;
+                    case Perk_FieldIndex.Playable:
+                        this.Playable = ex;
+                        break;
+                    case Perk_FieldIndex.Hidden:
+                        this.Hidden = ex;
+                        break;
+                    case Perk_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    case Perk_FieldIndex.NextPerk:
+                        this.NextPerk = ex;
+                        break;
+                    case Perk_FieldIndex.Swf:
+                        this.Swf = ex;
+                        break;
+                    case Perk_FieldIndex.Effects:
+                        this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Perk_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +740,51 @@ namespace Mutagen.Bethesda.Fallout4
                 Perk_FieldIndex enu = (Perk_FieldIndex)index;
                 switch (enu)
                 {
+                    case Perk_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, PerkAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Perk_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Icon:
+                        this.Icon = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Perk_FieldIndex.Trait:
+                        this.Trait = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Level:
+                        this.Level = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.NumRanks:
+                        this.NumRanks = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Playable:
+                        this.Playable = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Hidden:
+                        this.Hidden = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Sound:
+                        this.Sound = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.NextPerk:
+                        this.NextPerk = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Swf:
+                        this.Swf = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Effects:
+                        this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>)obj;
+                        break;
+                    case Perk_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +794,21 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Name != null) return true;
+                if (Description != null) return true;
+                if (Icon != null) return true;
+                if (Conditions != null) return true;
+                if (Trait != null) return true;
+                if (Level != null) return true;
+                if (NumRanks != null) return true;
+                if (Playable != null) return true;
+                if (Hidden != null) return true;
+                if (Sound != null) return true;
+                if (NextPerk != null) return true;
+                if (Swf != null) return true;
+                if (Effects != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +835,79 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(Icon, "Icon");
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Trait, "Trait");
+                }
+                {
+                    sb.AppendItem(Level, "Level");
+                }
+                {
+                    sb.AppendItem(NumRanks, "NumRanks");
+                }
+                {
+                    sb.AppendItem(Playable, "Playable");
+                }
+                {
+                    sb.AppendItem(Hidden, "Hidden");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(NextPerk, "NextPerk");
+                }
+                {
+                    sb.AppendItem(Swf, "Swf");
+                }
+                if (Effects is {} EffectsItem)
+                {
+                    sb.AppendLine("Effects =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(EffectsItem.Overall);
+                        if (EffectsItem.Specific != null)
+                        {
+                            foreach (var subItem in EffectsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +916,21 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Trait = this.Trait.Combine(rhs.Trait);
+                ret.Level = this.Level.Combine(rhs.Level);
+                ret.NumRanks = this.NumRanks.Combine(rhs.NumRanks);
+                ret.Playable = this.Playable.Combine(rhs.Playable);
+                ret.Hidden = this.Hidden.Combine(rhs.Hidden);
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.NextPerk = this.NextPerk.Combine(rhs.NextPerk);
+                ret.Swf = this.Swf.Combine(rhs.Swf);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +952,65 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public PerkAdapter.TranslationMask? VirtualMachineAdapter;
+            public bool Name;
+            public bool Description;
+            public bool Icon;
+            public Condition.TranslationMask? Conditions;
+            public bool Trait;
+            public bool Level;
+            public bool NumRanks;
+            public bool Playable;
+            public bool Hidden;
+            public bool Sound;
+            public bool NextPerk;
+            public bool Swf;
+            public APerkEffect.TranslationMask? Effects;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Description = defaultOn;
+                this.Icon = defaultOn;
+                this.Trait = defaultOn;
+                this.Level = defaultOn;
+                this.NumRanks = defaultOn;
+                this.Playable = defaultOn;
+                this.Hidden = defaultOn;
+                this.Sound = defaultOn;
+                this.NextPerk = defaultOn;
+                this.Swf = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Description, null));
+                ret.Add((Icon, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((Trait, null));
+                ret.Add((Level, null));
+                ret.Add((NumRanks, null));
+                ret.Add((Playable, null));
+                ret.Add((Hidden, null));
+                ret.Add((Sound, null));
+                ret.Add((NextPerk, null));
+                ret.Add((Swf, null));
+                ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
+                ret.Add((DATADataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +1022,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Perk_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkSetterCommon.Instance.RemapLinks(this, mapping);
         public Perk(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -335,6 +1066,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IPerk);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -415,10 +1155,37 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IPerk :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         IFurnitureAssociation,
         ILoquiObjectSetter<IPerkInternal>,
-        IPerkGetter
+        INamed,
+        INamedRequired,
+        IPerkGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        new PerkAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new TranslatedString Description { get; set; }
+        new String? Icon { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new Boolean Trait { get; set; }
+        new Byte Level { get; set; }
+        new Byte NumRanks { get; set; }
+        new Boolean Playable { get; set; }
+        new Boolean Hidden { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
+        new IFormLinkNullable<IPerkGetter> NextPerk { get; set; }
+        new String? Swf { get; set; }
+        new ExtendedList<APerkEffect> Effects { get; }
+        new Perk.DATADataType DATADataTypeState { get; set; }
+        #region Mutagen
+        new Perk.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IPerkInternal :
@@ -432,11 +1199,40 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPerkGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         IFurnitureAssociationGetter,
         ILoquiObject<IPerkGetter>,
-        IMapsToGetter<IPerkGetter>
+        IMapsToGetter<IPerkGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Perk_Registration.Instance;
+        IPerkAdapterGetter? VirtualMachineAdapter { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        ITranslatedStringGetter Description { get; }
+        String? Icon { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        Boolean Trait { get; }
+        Byte Level { get; }
+        Byte NumRanks { get; }
+        Boolean Playable { get; }
+        Boolean Hidden { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
+        IFormLinkNullableGetter<IPerkGetter> NextPerk { get; }
+        String? Swf { get; }
+        IReadOnlyList<IAPerkEffectGetter> Effects { get; }
+        Perk.DATADataType DATADataTypeState { get; }
+
+        #region Mutagen
+        Perk.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -601,6 +1397,21 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        Name = 7,
+        Description = 8,
+        Icon = 9,
+        Conditions = 10,
+        Trait = 11,
+        Level = 12,
+        NumRanks = 13,
+        Playable = 14,
+        Hidden = 15,
+        Sound = 16,
+        NextPerk = 17,
+        Swf = 18,
+        Effects = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -618,9 +1429,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "137b6882-7400-436a-8cb1-aca1870f6bc4";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Perk.Mask<>);
 
@@ -650,8 +1461,24 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.PERK);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.PERK);
+            var all = RecordCollection.Factory(
+                RecordTypes.PERK,
+                RecordTypes.VMAD,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.ICON,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.DATA,
+                RecordTypes.SNAM,
+                RecordTypes.NNAM,
+                RecordTypes.FNAM,
+                RecordTypes.PRKE,
+                RecordTypes.PRKF,
+                RecordTypes.PRKC);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkBinaryWriteTranslation);
         #region Interface
@@ -695,6 +1522,21 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IPerkInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Name = default;
+            item.Description.Clear();
+            item.Icon = default;
+            item.Conditions.Clear();
+            item.Trait = default;
+            item.Level = default;
+            item.NumRanks = default;
+            item.Playable = default;
+            item.Hidden = default;
+            item.Sound.Clear();
+            item.NextPerk.Clear();
+            item.Swf = default;
+            item.Effects.Clear();
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -712,6 +1554,11 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IPerk obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.Sound.Relink(mapping);
+            obj.NextPerk.Relink(mapping);
+            obj.Effects.RemapLinks(mapping);
         }
         
         #endregion
@@ -780,6 +1627,31 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.Icon = string.Equals(item.Icon, rhs.Icon);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Trait = item.Trait == rhs.Trait;
+            ret.Level = item.Level == rhs.Level;
+            ret.NumRanks = item.NumRanks == rhs.NumRanks;
+            ret.Playable = item.Playable == rhs.Playable;
+            ret.Hidden = item.Hidden == rhs.Hidden;
+            ret.Sound = item.Sound.Equals(rhs.Sound);
+            ret.NextPerk = item.NextPerk.Equals(rhs.NextPerk);
+            ret.Swf = string.Equals(item.Swf, rhs.Swf);
+            ret.Effects = item.Effects.CollectionEqualsHelper(
+                rhs.Effects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +1701,90 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Description ?? true)
+            {
+                sb.AppendItem(item.Description, "Description");
+            }
+            if ((printMask?.Icon ?? true)
+                && item.Icon is {} IconItem)
+            {
+                sb.AppendItem(IconItem, "Icon");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Trait ?? true)
+            {
+                sb.AppendItem(item.Trait, "Trait");
+            }
+            if (printMask?.Level ?? true)
+            {
+                sb.AppendItem(item.Level, "Level");
+            }
+            if (printMask?.NumRanks ?? true)
+            {
+                sb.AppendItem(item.NumRanks, "NumRanks");
+            }
+            if (printMask?.Playable ?? true)
+            {
+                sb.AppendItem(item.Playable, "Playable");
+            }
+            if (printMask?.Hidden ?? true)
+            {
+                sb.AppendItem(item.Hidden, "Hidden");
+            }
+            if (printMask?.Sound ?? true)
+            {
+                sb.AppendItem(item.Sound.FormKeyNullable, "Sound");
+            }
+            if (printMask?.NextPerk ?? true)
+            {
+                sb.AppendItem(item.NextPerk.FormKeyNullable, "NextPerk");
+            }
+            if ((printMask?.Swf ?? true)
+                && item.Swf is {} SwfItem)
+            {
+                sb.AppendItem(SwfItem, "Swf");
+            }
+            if (printMask?.Effects?.Overall ?? true)
+            {
+                sb.AppendLine("Effects =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Effects)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public static Perk_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -877,6 +1833,70 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((PerkAdapterCommon)((IPerkAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Perk_FieldIndex.Conditions)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Trait) ?? true))
+            {
+                if (lhs.Trait != rhs.Trait) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Level) ?? true))
+            {
+                if (lhs.Level != rhs.Level) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.NumRanks) ?? true))
+            {
+                if (lhs.NumRanks != rhs.NumRanks) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Playable) ?? true))
+            {
+                if (lhs.Playable != rhs.Playable) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Hidden) ?? true))
+            {
+                if (lhs.Hidden != rhs.Hidden) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
+            {
+                if (!lhs.NextPerk.Equals(rhs.NextPerk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Swf) ?? true))
+            {
+                if (!string.Equals(lhs.Swf, rhs.Swf)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((APerkEffectCommon)((IAPerkEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Perk_FieldIndex.Effects)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
@@ -905,6 +1925,33 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IPerkGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Description);
+            if (item.Icon is {} Iconitem)
+            {
+                hash.Add(Iconitem);
+            }
+            hash.Add(item.Conditions);
+            hash.Add(item.Trait);
+            hash.Add(item.Level);
+            hash.Add(item.NumRanks);
+            hash.Add(item.Playable);
+            hash.Add(item.Hidden);
+            hash.Add(item.Sound);
+            hash.Add(item.NextPerk);
+            if (item.Swf is {} Swfitem)
+            {
+                hash.Add(Swfitem);
+            }
+            hash.Add(item.Effects);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,6 +1980,31 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
+            {
+                yield return SoundInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.NextPerk, out var NextPerkInfo))
+            {
+                yield return NextPerkInfo;
+            }
+            foreach (var item in obj.Effects.WhereCastable<IAPerkEffectGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1008,6 +2080,128 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Icon) ?? true))
+            {
+                item.Icon = rhs.Icon;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Trait) ?? true))
+            {
+                item.Trait = rhs.Trait;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Level) ?? true))
+            {
+                item.Level = rhs.Level;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.NumRanks) ?? true))
+            {
+                item.NumRanks = rhs.NumRanks;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Playable) ?? true))
+            {
+                item.Playable = rhs.Playable;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Hidden) ?? true))
+            {
+                item.Hidden = rhs.Hidden;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Sound) ?? true))
+            {
+                item.Sound.SetTo(rhs.Sound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
+            {
+                item.NextPerk.SetTo(rhs.NextPerk.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Swf) ?? true))
+            {
+                item.Swf = rhs.Swf;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.Effects);
+                try
+                {
+                    item.Effects.SetTo(
+                        rhs.Effects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1156,6 +2350,98 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static PerkBinaryWriteTranslation Instance = new PerkBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IPerkGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IPerkGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((PerkAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Icon,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                writer.Write(item.Trait);
+                writer.Write(item.Level);
+                writer.Write(item.NumRanks);
+                writer.Write(item.Playable);
+                writer.Write(item.Hidden);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Sound,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NextPerk,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Swf,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            PerkBinaryWriteTranslation.WriteBinaryEffects(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryEffectsCustom(
+            MutagenWriter writer,
+            IPerkGetter item);
+
+        public static void WriteBinaryEffects(
+            MutagenWriter writer,
+            IPerkGetter item)
+        {
+            WriteBinaryEffectsCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IPerkGetter item,
@@ -1167,13 +2453,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1231,6 +2519,112 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IPerkInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.PerkAdapter.CreateFromBinary(frame: frame);
+                    return (int)Perk_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Perk_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Perk_FieldIndex.Description;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Icon = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Perk_FieldIndex.Icon;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)Perk_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Trait = dataFrame.ReadBoolean();
+                    item.Level = dataFrame.ReadUInt8();
+                    item.NumRanks = dataFrame.ReadUInt8();
+                    item.Playable = dataFrame.ReadBoolean();
+                    item.Hidden = dataFrame.ReadBoolean();
+                    return (int)Perk_FieldIndex.Hidden;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Perk_FieldIndex.Sound;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NextPerk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Perk_FieldIndex.NextPerk;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Swf = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Perk_FieldIndex.Swf;
+                }
+                case RecordTypeInts.PRKE:
+                {
+                    PerkBinaryCreateTranslation.FillBinaryEffectsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)Perk_FieldIndex.Effects;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        public static partial void FillBinaryEffectsCustom(
+            MutagenFrame frame,
+            IPerkInternal item);
+
     }
 
 }
@@ -1263,6 +2657,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1276,7 +2671,80 @@ namespace Mutagen.Bethesda.Fallout4
         }
         protected override Type LinkType => typeof(IPerk);
 
+        public Perk.MajorFlag MajorFlags => (Perk.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IPerkAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PerkAdapterBinaryOverlay.PerkAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        #endregion
+        #region Icon
+        private int? _IconLocation;
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        private RangeInt32? _DATALocation;
+        public Perk.DATADataType DATADataTypeState { get; private set; }
+        #region Trait
+        private int _TraitLocation => _DATALocation!.Value.Min;
+        private bool _Trait_IsSet => _DATALocation.HasValue;
+        public Boolean Trait => _Trait_IsSet ? _data.Slice(_TraitLocation, 1)[0] >= 1 : default;
+        #endregion
+        #region Level
+        private int _LevelLocation => _DATALocation!.Value.Min + 0x1;
+        private bool _Level_IsSet => _DATALocation.HasValue;
+        public Byte Level => _Level_IsSet ? _data.Span[_LevelLocation] : default;
+        #endregion
+        #region NumRanks
+        private int _NumRanksLocation => _DATALocation!.Value.Min + 0x2;
+        private bool _NumRanks_IsSet => _DATALocation.HasValue;
+        public Byte NumRanks => _NumRanks_IsSet ? _data.Span[_NumRanksLocation] : default;
+        #endregion
+        #region Playable
+        private int _PlayableLocation => _DATALocation!.Value.Min + 0x3;
+        private bool _Playable_IsSet => _DATALocation.HasValue;
+        public Boolean Playable => _Playable_IsSet ? _data.Slice(_PlayableLocation, 1)[0] >= 1 : default;
+        #endregion
+        #region Hidden
+        private int _HiddenLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Hidden_IsSet => _DATALocation.HasValue;
+        public Boolean Hidden => _Hidden_IsSet ? _data.Slice(_HiddenLocation, 1)[0] >= 1 : default;
+        #endregion
+        #region Sound
+        private int? _SoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region NextPerk
+        private int? _NextPerkLocation;
+        public IFormLinkNullableGetter<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        #endregion
+        #region Swf
+        private int? _SwfLocation;
+        public String? Swf => _SwfLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SwfLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Effects
+        partial void EffectsCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1331,6 +2799,93 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Perk_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.Description;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    _IconLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.Icon;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)Perk_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Perk_FieldIndex.Hidden;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _SoundLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.Sound;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _NextPerkLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.NextPerk;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _SwfLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.Swf;
+                }
+                case RecordTypeInts.PRKE:
+                {
+                    EffectsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return (int)Perk_FieldIndex.Effects;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

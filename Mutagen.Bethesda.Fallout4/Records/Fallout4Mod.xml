@@ -76,6 +76,7 @@
       <Group name="ImageSpaces" refName="ImageSpace" />
       <Group name="ImageSpaceAdapters" refName="ImageSpaceAdapter" />
       <Group name="FormLists" refName="FormList" />
+      <Group name="Perks" refName="Perk" />
     </Fields>
   </Object>
 </Loqui>

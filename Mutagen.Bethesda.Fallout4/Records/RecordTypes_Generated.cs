@@ -170,6 +170,11 @@ public partial class RecordTypes
     public static readonly RecordType ENAM = new(0x4D414E45);
     public static readonly RecordType ENCH = new(0x48434E45);
     public static readonly RecordType ENIT = new(0x54494E45);
+    public static readonly RecordType EPF2 = new(0x32465045);
+    public static readonly RecordType EPF3 = new(0x33465045);
+    public static readonly RecordType EPFB = new(0x42465045);
+    public static readonly RecordType EPFD = new(0x44465045);
+    public static readonly RecordType EPFT = new(0x54465045);
     public static readonly RecordType EQUP = new(0x50555145);
     public static readonly RecordType ESCE = new(0x45435345);
     public static readonly RecordType ETYP = new(0x50595445);
@@ -427,6 +432,9 @@ public partial class RecordTypes
     public static readonly RecordType POCA = new(0x41434F50);
     public static readonly RecordType POEA = new(0x41454F50);
     public static readonly RecordType PRCB = new(0x42435250);
+    public static readonly RecordType PRKC = new(0x434B5250);
+    public static readonly RecordType PRKE = new(0x454B5250);
+    public static readonly RecordType PRKF = new(0x464B5250);
     public static readonly RecordType PRKR = new(0x524B5250);
     public static readonly RecordType PRKZ = new(0x5A4B5250);
     public static readonly RecordType PROJ = new(0x4A4F5250);

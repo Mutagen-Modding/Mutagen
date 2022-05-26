@@ -131,6 +131,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PackageDataObjectList
 - PackageDataTarget
 - PackageDataTopic
+- Perk
 - Phoneme
 - PlacedObjectMapMarker
 - Projectile
@@ -476,6 +477,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### PackageDataTarget
 - INamed
 ### PackageDataTopic
+- INamed
+### Perk
 - INamed
 ### Phoneme
 - INamed

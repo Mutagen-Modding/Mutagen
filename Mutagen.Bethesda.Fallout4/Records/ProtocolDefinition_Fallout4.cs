@@ -468,7 +468,24 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             AnimatedObject_Registration.Instance,
             WaterNoiseProperties_Registration.Instance,
             AddonNode_Registration.Instance,
-            DebrisModel_Registration.Instance
+            DebrisModel_Registration.Instance,
+            PerkAdapter_Registration.Instance,
+            PerkScriptFragments_Registration.Instance,
+            PerkScriptFragment_Registration.Instance,
+            APerkEffect_Registration.Instance,
+            PerkQuestEffect_Registration.Instance,
+            PerkAbilityEffect_Registration.Instance,
+            APerkEntryPointEffect_Registration.Instance,
+            PerkEntryPointModifyValue_Registration.Instance,
+            PerkEntryPointAddRangeToValue_Registration.Instance,
+            PerkEntryPointModifyActorValue_Registration.Instance,
+            PerkEntryPointAbsoluteValue_Registration.Instance,
+            PerkEntryPointAddLeveledItem_Registration.Instance,
+            PerkEntryPointAddActivateChoice_Registration.Instance,
+            PerkEntryPointSelectSpell_Registration.Instance,
+            PerkEntryPointSelectText_Registration.Instance,
+            PerkEntryPointSetText_Registration.Instance,
+            PerkCondition_Registration.Instance
         );
     }
 }
