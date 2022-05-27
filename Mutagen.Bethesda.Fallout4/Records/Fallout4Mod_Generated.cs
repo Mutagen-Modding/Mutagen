@@ -132,6 +132,8 @@ namespace Mutagen.Bethesda.Fallout4
             _ActorValueInformation_Object = new Fallout4Group<ActorValueInformation>(this);
             _CameraShots_Object = new Fallout4Group<CameraShot>(this);
             _CameraPaths_Object = new Fallout4Group<CameraPath>(this);
+            _VoiceTypes_Object = new Fallout4Group<VoiceType>(this);
+            _MaterialTypes_Object = new Fallout4Group<MaterialType>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -669,6 +671,20 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<ICameraPathGetter> IFallout4ModGetter.CameraPaths => _CameraPaths_Object;
         #endregion
+        #region VoiceTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<VoiceType> _VoiceTypes_Object;
+        public Fallout4Group<VoiceType> VoiceTypes => _VoiceTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IVoiceTypeGetter> IFallout4ModGetter.VoiceTypes => _VoiceTypes_Object;
+        #endregion
+        #region MaterialTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<MaterialType> _MaterialTypes_Object;
+        public Fallout4Group<MaterialType> MaterialTypes => _MaterialTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IMaterialTypeGetter> IFallout4ModGetter.MaterialTypes => _MaterialTypes_Object;
+        #endregion
 
         #region To String
 
@@ -784,6 +800,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ActorValueInformation = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.CameraShots = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.CameraPaths = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.VoiceTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.MaterialTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -862,7 +880,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem AddonNodes,
                 TItem ActorValueInformation,
                 TItem CameraShots,
-                TItem CameraPaths)
+                TItem CameraPaths,
+                TItem VoiceTypes,
+                TItem MaterialTypes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -940,6 +960,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ActorValueInformation = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ActorValueInformation, new Fallout4Group.Mask<TItem>(ActorValueInformation));
                 this.CameraShots = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CameraShots, new Fallout4Group.Mask<TItem>(CameraShots));
                 this.CameraPaths = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CameraPaths, new Fallout4Group.Mask<TItem>(CameraPaths));
+                this.VoiceTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(VoiceTypes, new Fallout4Group.Mask<TItem>(VoiceTypes));
+                this.MaterialTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MaterialTypes, new Fallout4Group.Mask<TItem>(MaterialTypes));
             }
 
             #pragma warning disable CS8618
@@ -1027,6 +1049,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ActorValueInformation { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CameraShots { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CameraPaths { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? VoiceTypes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MaterialTypes { get; set; }
             #endregion
 
             #region Equals
@@ -1115,6 +1139,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ActorValueInformation, rhs.ActorValueInformation)) return false;
                 if (!object.Equals(this.CameraShots, rhs.CameraShots)) return false;
                 if (!object.Equals(this.CameraPaths, rhs.CameraPaths)) return false;
+                if (!object.Equals(this.VoiceTypes, rhs.VoiceTypes)) return false;
+                if (!object.Equals(this.MaterialTypes, rhs.MaterialTypes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1196,6 +1222,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ActorValueInformation);
                 hash.Add(this.CameraShots);
                 hash.Add(this.CameraPaths);
+                hash.Add(this.VoiceTypes);
+                hash.Add(this.MaterialTypes);
                 return hash.ToHashCode();
             }
 
@@ -1584,6 +1612,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.CameraPaths.Overall)) return false;
                     if (this.CameraPaths.Specific != null && !this.CameraPaths.Specific.All(eval)) return false;
                 }
+                if (VoiceTypes != null)
+                {
+                    if (!eval(this.VoiceTypes.Overall)) return false;
+                    if (this.VoiceTypes.Specific != null && !this.VoiceTypes.Specific.All(eval)) return false;
+                }
+                if (MaterialTypes != null)
+                {
+                    if (!eval(this.MaterialTypes.Overall)) return false;
+                    if (this.MaterialTypes.Specific != null && !this.MaterialTypes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1971,6 +2009,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.CameraPaths.Overall)) return true;
                     if (this.CameraPaths.Specific != null && this.CameraPaths.Specific.Any(eval)) return true;
                 }
+                if (VoiceTypes != null)
+                {
+                    if (eval(this.VoiceTypes.Overall)) return true;
+                    if (this.VoiceTypes.Specific != null && this.VoiceTypes.Specific.Any(eval)) return true;
+                }
+                if (MaterialTypes != null)
+                {
+                    if (eval(this.MaterialTypes.Overall)) return true;
+                    if (this.MaterialTypes.Specific != null && this.MaterialTypes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2061,6 +2109,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ActorValueInformation = this.ActorValueInformation == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ActorValueInformation.Overall), this.ActorValueInformation.Specific?.Translate(eval));
                 obj.CameraShots = this.CameraShots == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CameraShots.Overall), this.CameraShots.Specific?.Translate(eval));
                 obj.CameraPaths = this.CameraPaths == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CameraPaths.Overall), this.CameraPaths.Specific?.Translate(eval));
+                obj.VoiceTypes = this.VoiceTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.VoiceTypes.Overall), this.VoiceTypes.Specific?.Translate(eval));
+                obj.MaterialTypes = this.MaterialTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MaterialTypes.Overall), this.MaterialTypes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2383,6 +2433,14 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         CameraPaths?.Print(sb);
                     }
+                    if (printMask?.VoiceTypes?.Overall ?? true)
+                    {
+                        VoiceTypes?.Print(sb);
+                    }
+                    if (printMask?.MaterialTypes?.Overall ?? true)
+                    {
+                        MaterialTypes?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2483,6 +2541,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ActorValueInformation.ErrorMask>?>? ActorValueInformation;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<CameraShot.ErrorMask>?>? CameraShots;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<CameraPath.ErrorMask>?>? CameraPaths;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<VoiceType.ErrorMask>?>? VoiceTypes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>? MaterialTypes;
             #endregion
 
             #region IErrorMask
@@ -2643,6 +2703,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return CameraShots;
                     case Fallout4Mod_FieldIndex.CameraPaths:
                         return CameraPaths;
+                    case Fallout4Mod_FieldIndex.VoiceTypes:
+                        return VoiceTypes;
+                    case Fallout4Mod_FieldIndex.MaterialTypes:
+                        return MaterialTypes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2880,6 +2944,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.CameraPaths:
                         this.CameraPaths = new MaskItem<Exception?, Fallout4Group.ErrorMask<CameraPath.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.VoiceTypes:
+                        this.VoiceTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<VoiceType.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.MaterialTypes:
+                        this.MaterialTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3119,6 +3189,12 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.CameraPaths:
                         this.CameraPaths = (MaskItem<Exception?, Fallout4Group.ErrorMask<CameraPath.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.VoiceTypes:
+                        this.VoiceTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<VoiceType.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.MaterialTypes:
+                        this.MaterialTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3203,6 +3279,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ActorValueInformation != null) return true;
                 if (CameraShots != null) return true;
                 if (CameraPaths != null) return true;
+                if (VoiceTypes != null) return true;
+                if (MaterialTypes != null) return true;
                 return false;
             }
             #endregion
@@ -3304,6 +3382,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ActorValueInformation?.Print(sb);
                 CameraShots?.Print(sb);
                 CameraPaths?.Print(sb);
+                VoiceTypes?.Print(sb);
+                MaterialTypes?.Print(sb);
             }
             #endregion
 
@@ -3388,6 +3468,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ActorValueInformation = this.ActorValueInformation.Combine(rhs.ActorValueInformation, (l, r) => l.Combine(r));
                 ret.CameraShots = this.CameraShots.Combine(rhs.CameraShots, (l, r) => l.Combine(r));
                 ret.CameraPaths = this.CameraPaths.Combine(rhs.CameraPaths, (l, r) => l.Combine(r));
+                ret.VoiceTypes = this.VoiceTypes.Combine(rhs.VoiceTypes, (l, r) => l.Combine(r));
+                ret.MaterialTypes = this.MaterialTypes.Combine(rhs.MaterialTypes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3487,6 +3569,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<ActorValueInformation.TranslationMask>? ActorValueInformation;
             public Fallout4Group.TranslationMask<CameraShot.TranslationMask>? CameraShots;
             public Fallout4Group.TranslationMask<CameraPath.TranslationMask>? CameraPaths;
+            public Fallout4Group.TranslationMask<VoiceType.TranslationMask>? VoiceTypes;
+            public Fallout4Group.TranslationMask<MaterialType.TranslationMask>? MaterialTypes;
             #endregion
 
             #region Ctors
@@ -3587,6 +3671,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ActorValueInformation != null ? ActorValueInformation.OnOverall : DefaultOn, ActorValueInformation?.GetCrystal()));
                 ret.Add((CameraShots != null ? CameraShots.OnOverall : DefaultOn, CameraShots?.GetCrystal()));
                 ret.Add((CameraPaths != null ? CameraPaths.OnOverall : DefaultOn, CameraPaths?.GetCrystal()));
+                ret.Add((VoiceTypes != null ? VoiceTypes.OnOverall : DefaultOn, VoiceTypes?.GetCrystal()));
+                ret.Add((MaterialTypes != null ? MaterialTypes.OnOverall : DefaultOn, MaterialTypes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3702,6 +3788,8 @@ namespace Mutagen.Bethesda.Fallout4
             _ActorValueInformation_Object = new Fallout4Group<ActorValueInformation>(this);
             _CameraShots_Object = new Fallout4Group<CameraShot>(this);
             _CameraPaths_Object = new Fallout4Group<CameraPath>(this);
+            _VoiceTypes_Object = new Fallout4Group<VoiceType>(this);
+            _MaterialTypes_Object = new Fallout4Group<MaterialType>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4011,6 +4099,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.CameraPaths.RecordCache.Set(rhsMod.CameraPaths.RecordCache.Items);
             }
+            if (mask?.VoiceTypes ?? true)
+            {
+                this.VoiceTypes.RecordCache.Set(rhsMod.VoiceTypes.RecordCache.Items);
+            }
+            if (mask?.MaterialTypes ?? true)
+            {
+                this.MaterialTypes.RecordCache.Set(rhsMod.MaterialTypes.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -4096,6 +4192,8 @@ namespace Mutagen.Bethesda.Fallout4
             count += ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
             count += CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
             count += CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
+            count += VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4422,6 +4520,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<ActorValueInformation> ActorValueInformation { get; }
         new Fallout4Group<CameraShot> CameraShots { get; }
         new Fallout4Group<CameraPath> CameraPaths { get; }
+        new Fallout4Group<VoiceType> VoiceTypes { get; }
+        new Fallout4Group<MaterialType> MaterialTypes { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -4516,6 +4616,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IActorValueInformationGetter> ActorValueInformation { get; }
         IFallout4GroupGetter<ICameraShotGetter> CameraShots { get; }
         IFallout4GroupGetter<ICameraPathGetter> CameraPaths { get; }
+        IFallout4GroupGetter<IVoiceTypeGetter> VoiceTypes { get; }
+        IFallout4GroupGetter<IMaterialTypeGetter> MaterialTypes { get; }
 
     }
 
@@ -5162,6 +5264,8 @@ namespace Mutagen.Bethesda.Fallout4
         ActorValueInformation = 73,
         CameraShots = 74,
         CameraPaths = 75,
+        VoiceTypes = 76,
+        MaterialTypes = 77,
     }
     #endregion
 
@@ -5179,9 +5283,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 76;
+        public const ushort AdditionalFieldCount = 78;
 
-        public const ushort FieldCount = 76;
+        public const ushort FieldCount = 78;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -5324,6 +5428,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.ActorValueInformation.Clear();
             item.CameraShots.Clear();
             item.CameraPaths.Clear();
+            item.VoiceTypes.Clear();
+            item.MaterialTypes.Clear();
         }
         
         #region Mutagen
@@ -5394,6 +5500,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.AddonNodes.RemapLinks(mapping);
             obj.CameraShots.RemapLinks(mapping);
             obj.CameraPaths.RemapLinks(mapping);
+            obj.MaterialTypes.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -5503,6 +5610,8 @@ namespace Mutagen.Bethesda.Fallout4
             obj.ActorValueInformation.Remove(keys);
             obj.CameraShots.Remove(keys);
             obj.CameraPaths.Remove(keys);
+            obj.VoiceTypes.Remove(keys);
+            obj.MaterialTypes.Remove(keys);
         }
         
         public void Remove(
@@ -6158,6 +6267,22 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    obj.VoiceTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    obj.MaterialTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -6476,6 +6601,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAliasVoiceTypeGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IVoiceTypeGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IRegionTarget":
                 case "IRegionTargetGetter":
@@ -6712,6 +6838,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ActorValueInformation = MaskItemExt.Factory(item.ActorValueInformation.GetEqualsMask(rhs.ActorValueInformation, include), include);
             ret.CameraShots = MaskItemExt.Factory(item.CameraShots.GetEqualsMask(rhs.CameraShots, include), include);
             ret.CameraPaths = MaskItemExt.Factory(item.CameraPaths.GetEqualsMask(rhs.CameraPaths, include), include);
+            ret.VoiceTypes = MaskItemExt.Factory(item.VoiceTypes.GetEqualsMask(rhs.VoiceTypes, include), include);
+            ret.MaterialTypes = MaskItemExt.Factory(item.MaterialTypes.GetEqualsMask(rhs.MaterialTypes, include), include);
         }
         
         public string Print(
@@ -7059,6 +7187,14 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.CameraPaths?.Overall ?? true)
             {
                 item.CameraPaths?.Print(sb, "CameraPaths");
+            }
+            if (printMask?.VoiceTypes?.Overall ?? true)
+            {
+                item.VoiceTypes?.Print(sb, "VoiceTypes");
+            }
+            if (printMask?.MaterialTypes?.Overall ?? true)
+            {
+                item.MaterialTypes?.Print(sb, "MaterialTypes");
             }
         }
         
@@ -7677,6 +7813,22 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isCameraPathsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.VoiceTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VoiceTypes, rhs.VoiceTypes, out var lhsVoiceTypes, out var rhsVoiceTypes, out var isVoiceTypesEqual))
+                {
+                    if (!object.Equals(lhsVoiceTypes, rhsVoiceTypes)) return false;
+                }
+                else if (!isVoiceTypesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MaterialTypes, rhs.MaterialTypes, out var lhsMaterialTypes, out var rhsMaterialTypes, out var isMaterialTypesEqual))
+                {
+                    if (!object.Equals(lhsMaterialTypes, rhsMaterialTypes)) return false;
+                }
+                else if (!isMaterialTypesEqual) return false;
+            }
             return true;
         }
         
@@ -7759,6 +7911,8 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.ActorValueInformation);
             hash.Add(item.CameraShots);
             hash.Add(item.CameraPaths);
+            hash.Add(item.VoiceTypes);
+            hash.Add(item.MaterialTypes);
             return hash.ToHashCode();
         }
         
@@ -8151,6 +8305,16 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ICameraPath":
                 case "ICameraPathInternal":
                     return obj.CameraPaths;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    return obj.VoiceTypes;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    return obj.MaterialTypes;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -8175,7 +8339,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[75];
+            Stream[] outputStreams = new Stream[77];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -8252,6 +8416,8 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, 72, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.CameraShots, 73, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.CameraPaths, 74, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, 75, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, 76, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8559,6 +8725,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.MaterialTypes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -8861,6 +9031,14 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.CameraPaths.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.VoiceTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialTypes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -9561,6 +9739,24 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ICameraPath":
                 case "ICameraPathInternal":
                     foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10399,6 +10595,24 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.CameraPaths,
                 groupGetter: (m) => m.CameraPaths))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, VoiceType, IVoiceTypeGetter>(
+                srcGroup: obj.VoiceTypes,
+                type: typeof(IVoiceTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.VoiceTypes,
+                groupGetter: (m) => m.VoiceTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MaterialType, IMaterialTypeGetter>(
+                srcGroup: obj.MaterialTypes,
+                type: typeof(IMaterialTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MaterialTypes,
+                groupGetter: (m) => m.MaterialTypes))
             {
                 yield return item;
             }
@@ -11465,6 +11679,34 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.CameraPaths,
                         groupGetter: (m) => m.CameraPaths))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, VoiceType, IVoiceTypeGetter>(
+                        srcGroup: obj.VoiceTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.VoiceTypes,
+                        groupGetter: (m) => m.VoiceTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MaterialType, IMaterialTypeGetter>(
+                        srcGroup: obj.MaterialTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MaterialTypes,
+                        groupGetter: (m) => m.MaterialTypes))
                     {
                         yield return item;
                     }
@@ -13283,6 +13525,46 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.VoiceTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.VoiceTypes);
+                try
+                {
+                    item.VoiceTypes.DeepCopyIn(
+                        rhs: rhs.VoiceTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.VoiceTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.MaterialTypes);
+                try
+                {
+                    item.MaterialTypes.DeepCopyIn(
+                        rhs: rhs.MaterialTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.MaterialTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -13448,6 +13730,8 @@ namespace Mutagen.Bethesda.Fallout4
         public bool ActorValueInformation;
         public bool CameraShots;
         public bool CameraPaths;
+        public bool VoiceTypes;
+        public bool MaterialTypes;
         public GroupMask()
         {
         }
@@ -13528,6 +13812,8 @@ namespace Mutagen.Bethesda.Fallout4
             ActorValueInformation = defaultValue;
             CameraShots = defaultValue;
             CameraPaths = defaultValue;
+            VoiceTypes = defaultValue;
+            MaterialTypes = defaultValue;
         }
     }
 
@@ -14380,6 +14666,28 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)CameraPathsItem).BinaryWriteTranslator).Write<ICameraPathGetter>(
                         item: CameraPathsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.VoiceTypes ?? true)
+            {
+                var VoiceTypesItem = item.VoiceTypes;
+                if (VoiceTypesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)VoiceTypesItem).BinaryWriteTranslator).Write<IVoiceTypeGetter>(
+                        item: VoiceTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MaterialTypes ?? true)
+            {
+                var MaterialTypesItem = item.MaterialTypes;
+                if (MaterialTypesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MaterialTypesItem).BinaryWriteTranslator).Write<IMaterialTypeGetter>(
+                        item: MaterialTypesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -15500,6 +15808,34 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.CameraPaths;
                 }
+                case RecordTypeInts.VTYP:
+                {
+                    if (importMask?.VoiceTypes ?? true)
+                    {
+                        item.VoiceTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.VoiceTypes;
+                }
+                case RecordTypeInts.MATT:
+                {
+                    if (importMask?.MaterialTypes ?? true)
+                    {
+                        item.MaterialTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.MaterialTypes;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -16038,6 +16374,16 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? Fallout4GroupBinaryOverlay<ICameraPathGetter>.Fallout4GroupFactory(_data, _CameraPathsLocations, _package) : default;
         public IFallout4GroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new Fallout4Group<CameraPath>(this);
         #endregion
+        #region VoiceTypes
+        private List<RangeInt64>? _VoiceTypesLocations;
+        private IFallout4GroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? Fallout4GroupBinaryOverlay<IVoiceTypeGetter>.Fallout4GroupFactory(_data, _VoiceTypesLocations, _package) : default;
+        public IFallout4GroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new Fallout4Group<VoiceType>(this);
+        #endregion
+        #region MaterialTypes
+        private List<RangeInt64>? _MaterialTypesLocations;
+        private IFallout4GroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? Fallout4GroupBinaryOverlay<IMaterialTypeGetter>.Fallout4GroupFactory(_data, _MaterialTypesLocations, _package) : default;
+        public IFallout4GroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new Fallout4Group<MaterialType>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -16574,6 +16920,18 @@ namespace Mutagen.Bethesda.Fallout4
                     _CameraPathsLocations ??= new();
                     _CameraPathsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.CameraPaths;
+                }
+                case RecordTypeInts.VTYP:
+                {
+                    _VoiceTypesLocations ??= new();
+                    _VoiceTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.VoiceTypes;
+                }
+                case RecordTypeInts.MATT:
+                {
+                    _MaterialTypesLocations ??= new();
+                    _MaterialTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.MaterialTypes;
                 }
                 default:
                     return default(int?);

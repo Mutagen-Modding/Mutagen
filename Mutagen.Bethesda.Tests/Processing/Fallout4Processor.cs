@@ -57,6 +57,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.IMGS, ProcessImageSpace);
         AddDynamicProcessing(RecordTypes.IMAD, ProcessImageSpaceAdapters);
         AddDynamicProcessing(RecordTypes.FLST, ProcessFormLists);
+        AddDynamicProcessing(RecordTypes.MATT, ProcessMaterialTypes);
     }
 
     private void ProcessGameSettings(
@@ -552,6 +553,16 @@ public class Fallout4Processor : Processor
         foreach (var rec in majorFrame.FindEnumerateSubrecords(RecordTypes.LNAM))
         {
             ProcessFormIDOverflow(rec, fileOffset);
+        }
+    }
+    private void ProcessMaterialTypes(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.CNAM, out var cnam))
+        {
+            ProcessColorFloat(cnam, fileOffset, alpha: false);
         }
     }
 

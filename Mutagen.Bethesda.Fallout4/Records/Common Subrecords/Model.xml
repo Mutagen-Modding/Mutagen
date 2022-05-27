@@ -4,8 +4,8 @@
     <Fields>
       <String name="File" recordType="MODL" nullable="False" />
       <Float name="ColorRemappingIndex" recordType="MODC" />
-	    <ByteArray name="Data" recordType="MODT" />
-	    <FormLink name="MaterialSwap" recordType="MODS" refName="MaterialSwap" />
+      <ByteArray name="Data" recordType="MODT" />
+      <FormLink name="MaterialSwap" recordType="MODS" refName="MaterialSwap" />
     </Fields>
   </Object>
   <Object name="Model" objType="Subrecord" baseClass="SimpleModel" GUID="c791d9f6-adea-4c99-b582-43b365850cf8" ID="84">

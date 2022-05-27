@@ -82,6 +82,8 @@
       <Group name="ActorValueInformation" refName="ActorValueInformation" />
       <Group name="CameraShots" refName="CameraShot" />
       <Group name="CameraPaths" refName="CameraPath" />
+      <Group name="VoiceTypes" refName="VoiceType" />
+      <Group name="MaterialTypes" refName="MaterialType" />
     </Fields>
   </Object>
 </Loqui>

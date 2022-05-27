@@ -8,7 +8,8 @@
       <Float name="Buoyancy" recordType="BNAM" />
       <Enum name="Flags" enumName="MaterialType.Flag" recordType="FNAM" />
       <FormLink name="HavokImpactDataSet" recordType="HNAM" refName="ImpactDataSet" />
-      <String name="BreakableFX" recordType="ANAM" nullable="False" />
+      <String name="BreakableFX" recordType="ANAM" />
+      <ByteArray name="ModelData" recordType="MODT" />
     </Fields>
   </Object>
 </Loqui>
