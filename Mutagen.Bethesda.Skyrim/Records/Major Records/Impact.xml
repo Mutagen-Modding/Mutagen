@@ -10,7 +10,7 @@
           <Float name="AngleThreshold" />
           <Float name="PlacementRadius" />
           <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
-          <Enum name="Flags" enumName="Impact.Flag" byteLength="1" />
+          <Bool name="NoDecalData" byteLength="1" />
           <Enum name="Result" enumName="Impact.ResultType" byteLength="1" />
           <Int16 name="Unknown" />
         </Fields>

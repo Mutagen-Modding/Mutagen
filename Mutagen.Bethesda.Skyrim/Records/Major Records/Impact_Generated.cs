@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region SoundLevel
         public SoundLevel SoundLevel { get; set; } = default;
         #endregion
-        #region Flags
-        public Impact.Flag Flags { get; set; } = default;
+        #region NoDecalData
+        public Boolean NoDecalData { get; set; } = default;
         #endregion
         #region Result
         public Impact.ResultType Result { get; set; } = default;
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AngleThreshold = initialValue;
                 this.PlacementRadius = initialValue;
                 this.SoundLevel = initialValue;
-                this.Flags = initialValue;
+                this.NoDecalData = initialValue;
                 this.Result = initialValue;
                 this.Unknown = initialValue;
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(initialValue, new Decal.Mask<TItem>(initialValue));
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem AngleThreshold,
                 TItem PlacementRadius,
                 TItem SoundLevel,
-                TItem Flags,
+                TItem NoDecalData,
                 TItem Result,
                 TItem Unknown,
                 TItem Decal,
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AngleThreshold = AngleThreshold;
                 this.PlacementRadius = PlacementRadius;
                 this.SoundLevel = SoundLevel;
-                this.Flags = Flags;
+                this.NoDecalData = NoDecalData;
                 this.Result = Result;
                 this.Unknown = Unknown;
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(Decal, new Decal.Mask<TItem>(Decal));
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem AngleThreshold;
             public TItem PlacementRadius;
             public TItem SoundLevel;
-            public TItem Flags;
+            public TItem NoDecalData;
             public TItem Result;
             public TItem Unknown;
             public MaskItem<TItem, Decal.Mask<TItem>?>? Decal { get; set; }
@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.AngleThreshold, rhs.AngleThreshold)) return false;
                 if (!object.Equals(this.PlacementRadius, rhs.PlacementRadius)) return false;
                 if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.NoDecalData, rhs.NoDecalData)) return false;
                 if (!object.Equals(this.Result, rhs.Result)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Decal, rhs.Decal)) return false;
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.AngleThreshold);
                 hash.Add(this.PlacementRadius);
                 hash.Add(this.SoundLevel);
-                hash.Add(this.Flags);
+                hash.Add(this.NoDecalData);
                 hash.Add(this.Result);
                 hash.Add(this.Unknown);
                 hash.Add(this.Decal);
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.AngleThreshold)) return false;
                 if (!eval(this.PlacementRadius)) return false;
                 if (!eval(this.SoundLevel)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.NoDecalData)) return false;
                 if (!eval(this.Result)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (Decal != null)
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.AngleThreshold)) return true;
                 if (eval(this.PlacementRadius)) return true;
                 if (eval(this.SoundLevel)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.NoDecalData)) return true;
                 if (eval(this.Result)) return true;
                 if (eval(this.Unknown)) return true;
                 if (Decal != null)
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AngleThreshold = eval(this.AngleThreshold);
                 obj.PlacementRadius = eval(this.PlacementRadius);
                 obj.SoundLevel = eval(this.SoundLevel);
-                obj.Flags = eval(this.Flags);
+                obj.NoDecalData = eval(this.NoDecalData);
                 obj.Result = eval(this.Result);
                 obj.Unknown = eval(this.Unknown);
                 obj.Decal = this.Decal == null ? null : new MaskItem<R, Decal.Mask<R>?>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
@@ -467,9 +467,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(SoundLevel, "SoundLevel");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.NoDecalData ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(NoDecalData, "NoDecalData");
                     }
                     if (printMask?.Result ?? true)
                     {
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? AngleThreshold;
             public Exception? PlacementRadius;
             public Exception? SoundLevel;
-            public Exception? Flags;
+            public Exception? NoDecalData;
             public Exception? Result;
             public Exception? Unknown;
             public MaskItem<Exception?, Decal.ErrorMask?>? Decal;
@@ -554,8 +554,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return PlacementRadius;
                     case Impact_FieldIndex.SoundLevel:
                         return SoundLevel;
-                    case Impact_FieldIndex.Flags:
-                        return Flags;
+                    case Impact_FieldIndex.NoDecalData:
+                        return NoDecalData;
                     case Impact_FieldIndex.Result:
                         return Result;
                     case Impact_FieldIndex.Unknown:
@@ -602,8 +602,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Impact_FieldIndex.SoundLevel:
                         this.SoundLevel = ex;
                         break;
-                    case Impact_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case Impact_FieldIndex.NoDecalData:
+                        this.NoDecalData = ex;
                         break;
                     case Impact_FieldIndex.Result:
                         this.Result = ex;
@@ -661,8 +661,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Impact_FieldIndex.SoundLevel:
                         this.SoundLevel = (Exception?)obj;
                         break;
-                    case Impact_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case Impact_FieldIndex.NoDecalData:
+                        this.NoDecalData = (Exception?)obj;
                         break;
                     case Impact_FieldIndex.Result:
                         this.Result = (Exception?)obj;
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (AngleThreshold != null) return true;
                 if (PlacementRadius != null) return true;
                 if (SoundLevel != null) return true;
-                if (Flags != null) return true;
+                if (NoDecalData != null) return true;
                 if (Result != null) return true;
                 if (Unknown != null) return true;
                 if (Decal != null) return true;
@@ -759,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(SoundLevel, "SoundLevel");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(NoDecalData, "NoDecalData");
                 }
                 {
                     sb.AppendItem(Result, "Result");
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.AngleThreshold = this.AngleThreshold.Combine(rhs.AngleThreshold);
                 ret.PlacementRadius = this.PlacementRadius.Combine(rhs.PlacementRadius);
                 ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.NoDecalData = this.NoDecalData.Combine(rhs.NoDecalData);
                 ret.Result = this.Result.Combine(rhs.Result);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Decal = this.Decal.Combine(rhs.Decal, (l, r) => l.Combine(r));
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool AngleThreshold;
             public bool PlacementRadius;
             public bool SoundLevel;
-            public bool Flags;
+            public bool NoDecalData;
             public bool Result;
             public bool Unknown;
             public Decal.TranslationMask? Decal;
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AngleThreshold = defaultOn;
                 this.PlacementRadius = defaultOn;
                 this.SoundLevel = defaultOn;
-                this.Flags = defaultOn;
+                this.NoDecalData = defaultOn;
                 this.Result = defaultOn;
                 this.Unknown = defaultOn;
                 this.TextureSet = defaultOn;
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((AngleThreshold, null));
                 ret.Add((PlacementRadius, null));
                 ret.Add((SoundLevel, null));
-                ret.Add((Flags, null));
+                ret.Add((NoDecalData, null));
                 ret.Add((Result, null));
                 ret.Add((Unknown, null));
                 ret.Add((Decal != null ? Decal.OnOverall : DefaultOn, Decal?.GetCrystal()));
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AngleThreshold { get; set; }
         new Single PlacementRadius { get; set; }
         new SoundLevel SoundLevel { get; set; }
-        new Impact.Flag Flags { get; set; }
+        new Boolean NoDecalData { get; set; }
         new Impact.ResultType Result { get; set; }
         new Int16 Unknown { get; set; }
         new Decal? Decal { get; set; }
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single AngleThreshold { get; }
         Single PlacementRadius { get; }
         SoundLevel SoundLevel { get; }
-        Impact.Flag Flags { get; }
+        Boolean NoDecalData { get; }
         Impact.ResultType Result { get; }
         Int16 Unknown { get; }
         IDecalGetter? Decal { get; }
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim
         AngleThreshold = 9,
         PlacementRadius = 10,
         SoundLevel = 11,
-        Flags = 12,
+        NoDecalData = 12,
         Result = 13,
         Unknown = 14,
         Decal = 15,
@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.AngleThreshold = default;
             item.PlacementRadius = default;
             item.SoundLevel = default;
-            item.Flags = default;
+            item.NoDecalData = default;
             item.Result = default;
             item.Unknown = default;
             item.Decal = null;
@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.AngleThreshold = item.AngleThreshold.EqualsWithin(rhs.AngleThreshold);
             ret.PlacementRadius = item.PlacementRadius.EqualsWithin(rhs.PlacementRadius);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.NoDecalData = item.NoDecalData == rhs.NoDecalData;
             ret.Result = item.Result == rhs.Result;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Decal = EqualsMaskHelper.EqualsHelper(
@@ -1593,9 +1593,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.NoDecalData ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.NoDecalData, "NoDecalData");
             }
             if (printMask?.Result ?? true)
             {
@@ -1710,9 +1710,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Flags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.NoDecalData != rhs.NoDecalData) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
             {
@@ -1791,7 +1791,7 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.AngleThreshold);
             hash.Add(item.PlacementRadius);
             hash.Add(item.SoundLevel);
-            hash.Add(item.Flags);
+            hash.Add(item.NoDecalData);
             hash.Add(item.Result);
             hash.Add(item.Unknown);
             if (item.Decal is {} Decalitem)
@@ -1980,9 +1980,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SoundLevel = rhs.SoundLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.NoDecalData = rhs.NoDecalData;
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
             {
@@ -2234,10 +2234,7 @@ namespace Mutagen.Bethesda.Skyrim
                     writer,
                     item.SoundLevel,
                     length: 4);
-                EnumBinaryTranslation<Impact.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 1);
+                writer.Write(item.NoDecalData);
                 EnumBinaryTranslation<Impact.ResultType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Result,
@@ -2382,9 +2379,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.SoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.Flags = EnumBinaryTranslation<Impact.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
+                    item.NoDecalData = dataFrame.ReadBoolean();
                     item.Result = EnumBinaryTranslation<Impact.ResultType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
@@ -2512,10 +2507,10 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _SoundLevel_IsSet => _DATALocation.HasValue;
         public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SoundLevelLocation, 0x4)) : default;
         #endregion
-        #region Flags
-        private int _FlagsLocation => _DATALocation!.Value.Min + 0x14;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Impact.Flag Flags => _Flags_IsSet ? (Impact.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #region NoDecalData
+        private int _NoDecalDataLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _NoDecalData_IsSet => _DATALocation.HasValue;
+        public Boolean NoDecalData => _NoDecalData_IsSet ? _data.Slice(_NoDecalDataLocation, 1)[0] >= 1 : default;
         #endregion
         #region Result
         private int _ResultLocation => _DATALocation!.Value.Min + 0x15;
