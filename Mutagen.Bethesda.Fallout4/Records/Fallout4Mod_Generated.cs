@@ -131,6 +131,7 @@ namespace Mutagen.Bethesda.Fallout4
             _AddonNodes_Object = new Fallout4Group<AddonNode>(this);
             _ActorValueInformation_Object = new Fallout4Group<ActorValueInformation>(this);
             _CameraShots_Object = new Fallout4Group<CameraShot>(this);
+            _CameraPaths_Object = new Fallout4Group<CameraPath>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -661,6 +662,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<ICameraShotGetter> IFallout4ModGetter.CameraShots => _CameraShots_Object;
         #endregion
+        #region CameraPaths
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<CameraPath> _CameraPaths_Object;
+        public Fallout4Group<CameraPath> CameraPaths => _CameraPaths_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ICameraPathGetter> IFallout4ModGetter.CameraPaths => _CameraPaths_Object;
+        #endregion
 
         #region To String
 
@@ -775,6 +783,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AddonNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.ActorValueInformation = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.CameraShots = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.CameraPaths = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -852,7 +861,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem BodyParts,
                 TItem AddonNodes,
                 TItem ActorValueInformation,
-                TItem CameraShots)
+                TItem CameraShots,
+                TItem CameraPaths)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -929,6 +939,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AddonNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(AddonNodes, new Fallout4Group.Mask<TItem>(AddonNodes));
                 this.ActorValueInformation = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ActorValueInformation, new Fallout4Group.Mask<TItem>(ActorValueInformation));
                 this.CameraShots = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CameraShots, new Fallout4Group.Mask<TItem>(CameraShots));
+                this.CameraPaths = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CameraPaths, new Fallout4Group.Mask<TItem>(CameraPaths));
             }
 
             #pragma warning disable CS8618
@@ -1015,6 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? AddonNodes { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ActorValueInformation { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CameraShots { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CameraPaths { get; set; }
             #endregion
 
             #region Equals
@@ -1102,6 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.AddonNodes, rhs.AddonNodes)) return false;
                 if (!object.Equals(this.ActorValueInformation, rhs.ActorValueInformation)) return false;
                 if (!object.Equals(this.CameraShots, rhs.CameraShots)) return false;
+                if (!object.Equals(this.CameraPaths, rhs.CameraPaths)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1182,6 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.AddonNodes);
                 hash.Add(this.ActorValueInformation);
                 hash.Add(this.CameraShots);
+                hash.Add(this.CameraPaths);
                 return hash.ToHashCode();
             }
 
@@ -1565,6 +1579,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.CameraShots.Overall)) return false;
                     if (this.CameraShots.Specific != null && !this.CameraShots.Specific.All(eval)) return false;
                 }
+                if (CameraPaths != null)
+                {
+                    if (!eval(this.CameraPaths.Overall)) return false;
+                    if (this.CameraPaths.Specific != null && !this.CameraPaths.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1947,6 +1966,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.CameraShots.Overall)) return true;
                     if (this.CameraShots.Specific != null && this.CameraShots.Specific.Any(eval)) return true;
                 }
+                if (CameraPaths != null)
+                {
+                    if (eval(this.CameraPaths.Overall)) return true;
+                    if (this.CameraPaths.Specific != null && this.CameraPaths.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2036,6 +2060,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AddonNodes = this.AddonNodes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.AddonNodes.Overall), this.AddonNodes.Specific?.Translate(eval));
                 obj.ActorValueInformation = this.ActorValueInformation == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ActorValueInformation.Overall), this.ActorValueInformation.Specific?.Translate(eval));
                 obj.CameraShots = this.CameraShots == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CameraShots.Overall), this.CameraShots.Specific?.Translate(eval));
+                obj.CameraPaths = this.CameraPaths == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CameraPaths.Overall), this.CameraPaths.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2354,6 +2379,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         CameraShots?.Print(sb);
                     }
+                    if (printMask?.CameraPaths?.Overall ?? true)
+                    {
+                        CameraPaths?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2453,6 +2482,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<AddonNode.ErrorMask>?>? AddonNodes;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ActorValueInformation.ErrorMask>?>? ActorValueInformation;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<CameraShot.ErrorMask>?>? CameraShots;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<CameraPath.ErrorMask>?>? CameraPaths;
             #endregion
 
             #region IErrorMask
@@ -2611,6 +2641,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return ActorValueInformation;
                     case Fallout4Mod_FieldIndex.CameraShots:
                         return CameraShots;
+                    case Fallout4Mod_FieldIndex.CameraPaths:
+                        return CameraPaths;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2845,6 +2877,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.CameraShots:
                         this.CameraShots = new MaskItem<Exception?, Fallout4Group.ErrorMask<CameraShot.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.CameraPaths:
+                        this.CameraPaths = new MaskItem<Exception?, Fallout4Group.ErrorMask<CameraPath.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3081,6 +3116,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.CameraShots:
                         this.CameraShots = (MaskItem<Exception?, Fallout4Group.ErrorMask<CameraShot.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.CameraPaths:
+                        this.CameraPaths = (MaskItem<Exception?, Fallout4Group.ErrorMask<CameraPath.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3164,6 +3202,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (AddonNodes != null) return true;
                 if (ActorValueInformation != null) return true;
                 if (CameraShots != null) return true;
+                if (CameraPaths != null) return true;
                 return false;
             }
             #endregion
@@ -3264,6 +3303,7 @@ namespace Mutagen.Bethesda.Fallout4
                 AddonNodes?.Print(sb);
                 ActorValueInformation?.Print(sb);
                 CameraShots?.Print(sb);
+                CameraPaths?.Print(sb);
             }
             #endregion
 
@@ -3347,6 +3387,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AddonNodes = this.AddonNodes.Combine(rhs.AddonNodes, (l, r) => l.Combine(r));
                 ret.ActorValueInformation = this.ActorValueInformation.Combine(rhs.ActorValueInformation, (l, r) => l.Combine(r));
                 ret.CameraShots = this.CameraShots.Combine(rhs.CameraShots, (l, r) => l.Combine(r));
+                ret.CameraPaths = this.CameraPaths.Combine(rhs.CameraPaths, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3445,6 +3486,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<AddonNode.TranslationMask>? AddonNodes;
             public Fallout4Group.TranslationMask<ActorValueInformation.TranslationMask>? ActorValueInformation;
             public Fallout4Group.TranslationMask<CameraShot.TranslationMask>? CameraShots;
+            public Fallout4Group.TranslationMask<CameraPath.TranslationMask>? CameraPaths;
             #endregion
 
             #region Ctors
@@ -3544,6 +3586,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((AddonNodes != null ? AddonNodes.OnOverall : DefaultOn, AddonNodes?.GetCrystal()));
                 ret.Add((ActorValueInformation != null ? ActorValueInformation.OnOverall : DefaultOn, ActorValueInformation?.GetCrystal()));
                 ret.Add((CameraShots != null ? CameraShots.OnOverall : DefaultOn, CameraShots?.GetCrystal()));
+                ret.Add((CameraPaths != null ? CameraPaths.OnOverall : DefaultOn, CameraPaths?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3658,6 +3701,7 @@ namespace Mutagen.Bethesda.Fallout4
             _AddonNodes_Object = new Fallout4Group<AddonNode>(this);
             _ActorValueInformation_Object = new Fallout4Group<ActorValueInformation>(this);
             _CameraShots_Object = new Fallout4Group<CameraShot>(this);
+            _CameraPaths_Object = new Fallout4Group<CameraPath>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -3963,6 +4007,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.CameraShots.RecordCache.Set(rhsMod.CameraShots.RecordCache.Items);
             }
+            if (mask?.CameraPaths ?? true)
+            {
+                this.CameraPaths.RecordCache.Set(rhsMod.CameraPaths.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -4047,6 +4095,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
             count += CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
+            count += CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4372,6 +4421,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<AddonNode> AddonNodes { get; }
         new Fallout4Group<ActorValueInformation> ActorValueInformation { get; }
         new Fallout4Group<CameraShot> CameraShots { get; }
+        new Fallout4Group<CameraPath> CameraPaths { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -4465,6 +4515,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IAddonNodeGetter> AddonNodes { get; }
         IFallout4GroupGetter<IActorValueInformationGetter> ActorValueInformation { get; }
         IFallout4GroupGetter<ICameraShotGetter> CameraShots { get; }
+        IFallout4GroupGetter<ICameraPathGetter> CameraPaths { get; }
 
     }
 
@@ -5110,6 +5161,7 @@ namespace Mutagen.Bethesda.Fallout4
         AddonNodes = 72,
         ActorValueInformation = 73,
         CameraShots = 74,
+        CameraPaths = 75,
     }
     #endregion
 
@@ -5127,9 +5179,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 75;
+        public const ushort AdditionalFieldCount = 76;
 
-        public const ushort FieldCount = 75;
+        public const ushort FieldCount = 76;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -5271,6 +5323,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.AddonNodes.Clear();
             item.ActorValueInformation.Clear();
             item.CameraShots.Clear();
+            item.CameraPaths.Clear();
         }
         
         #region Mutagen
@@ -5340,6 +5393,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.BodyParts.RemapLinks(mapping);
             obj.AddonNodes.RemapLinks(mapping);
             obj.CameraShots.RemapLinks(mapping);
+            obj.CameraPaths.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -5448,6 +5502,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.AddonNodes.Remove(keys);
             obj.ActorValueInformation.Remove(keys);
             obj.CameraShots.Remove(keys);
+            obj.CameraPaths.Remove(keys);
         }
         
         public void Remove(
@@ -6095,6 +6150,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    obj.CameraPaths.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -6648,6 +6711,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AddonNodes = MaskItemExt.Factory(item.AddonNodes.GetEqualsMask(rhs.AddonNodes, include), include);
             ret.ActorValueInformation = MaskItemExt.Factory(item.ActorValueInformation.GetEqualsMask(rhs.ActorValueInformation, include), include);
             ret.CameraShots = MaskItemExt.Factory(item.CameraShots.GetEqualsMask(rhs.CameraShots, include), include);
+            ret.CameraPaths = MaskItemExt.Factory(item.CameraPaths.GetEqualsMask(rhs.CameraPaths, include), include);
         }
         
         public string Print(
@@ -6991,6 +7055,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.CameraShots?.Overall ?? true)
             {
                 item.CameraShots?.Print(sb, "CameraShots");
+            }
+            if (printMask?.CameraPaths?.Overall ?? true)
+            {
+                item.CameraPaths?.Print(sb, "CameraPaths");
             }
         }
         
@@ -7601,6 +7669,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isCameraShotsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CameraPaths) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CameraPaths, rhs.CameraPaths, out var lhsCameraPaths, out var rhsCameraPaths, out var isCameraPathsEqual))
+                {
+                    if (!object.Equals(lhsCameraPaths, rhsCameraPaths)) return false;
+                }
+                else if (!isCameraPathsEqual) return false;
+            }
             return true;
         }
         
@@ -7682,6 +7758,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.AddonNodes);
             hash.Add(item.ActorValueInformation);
             hash.Add(item.CameraShots);
+            hash.Add(item.CameraPaths);
             return hash.ToHashCode();
         }
         
@@ -8069,6 +8146,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ICameraShot":
                 case "ICameraShotInternal":
                     return obj.CameraShots;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    return obj.CameraPaths;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -8093,7 +8175,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[74];
+            Stream[] outputStreams = new Stream[75];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -8169,6 +8251,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.AddonNodes, 71, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, 72, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.CameraShots, 73, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, 74, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8472,6 +8555,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.CameraPaths.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -8770,6 +8857,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.CameraShots.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraPaths.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -9461,6 +9552,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "ICameraShot":
                 case "ICameraShotInternal":
                     foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10290,6 +10390,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.CameraShots,
                 groupGetter: (m) => m.CameraShots))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, CameraPath, ICameraPathGetter>(
+                srcGroup: obj.CameraPaths,
+                type: typeof(ICameraPathGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CameraPaths,
+                groupGetter: (m) => m.CameraPaths))
             {
                 yield return item;
             }
@@ -11342,6 +11451,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.CameraShots,
                         groupGetter: (m) => m.CameraShots))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, CameraPath, ICameraPathGetter>(
+                        srcGroup: obj.CameraPaths,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CameraPaths,
+                        groupGetter: (m) => m.CameraPaths))
                     {
                         yield return item;
                     }
@@ -13140,6 +13263,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CameraPaths) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.CameraPaths);
+                try
+                {
+                    item.CameraPaths.DeepCopyIn(
+                        rhs: rhs.CameraPaths,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.CameraPaths));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -13304,6 +13447,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool AddonNodes;
         public bool ActorValueInformation;
         public bool CameraShots;
+        public bool CameraPaths;
         public GroupMask()
         {
         }
@@ -13383,6 +13527,7 @@ namespace Mutagen.Bethesda.Fallout4
             AddonNodes = defaultValue;
             ActorValueInformation = defaultValue;
             CameraShots = defaultValue;
+            CameraPaths = defaultValue;
         }
     }
 
@@ -14224,6 +14369,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)CameraShotsItem).BinaryWriteTranslator).Write<ICameraShotGetter>(
                         item: CameraShotsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CameraPaths ?? true)
+            {
+                var CameraPathsItem = item.CameraPaths;
+                if (CameraPathsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)CameraPathsItem).BinaryWriteTranslator).Write<ICameraPathGetter>(
+                        item: CameraPathsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -15330,6 +15486,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.CameraShots;
                 }
+                case RecordTypeInts.CPTH:
+                {
+                    if (importMask?.CameraPaths ?? true)
+                    {
+                        item.CameraPaths.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.CameraPaths;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -15863,6 +16033,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? Fallout4GroupBinaryOverlay<ICameraShotGetter>.Fallout4GroupFactory(_data, _CameraShotsLocations, _package) : default;
         public IFallout4GroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new Fallout4Group<CameraShot>(this);
         #endregion
+        #region CameraPaths
+        private List<RangeInt64>? _CameraPathsLocations;
+        private IFallout4GroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? Fallout4GroupBinaryOverlay<ICameraPathGetter>.Fallout4GroupFactory(_data, _CameraPathsLocations, _package) : default;
+        public IFallout4GroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new Fallout4Group<CameraPath>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -16393,6 +16568,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _CameraShotsLocations ??= new();
                     _CameraShotsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.CameraShots;
+                }
+                case RecordTypeInts.CPTH:
+                {
+                    _CameraPathsLocations ??= new();
+                    _CameraPathsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.CameraPaths;
                 }
                 default:
                     return default(int?);

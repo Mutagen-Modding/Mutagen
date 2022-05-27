@@ -81,6 +81,7 @@
       <Group name="AddonNodes" refName="AddonNode" />
       <Group name="ActorValueInformation" refName="ActorValueInformation" />
       <Group name="CameraShots" refName="CameraShot" />
+      <Group name="CameraPaths" refName="CameraPath" />
     </Fields>
   </Object>
 </Loqui>

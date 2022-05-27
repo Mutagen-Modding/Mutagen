@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +54,51 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> ICameraPathGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region RelatedPaths
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ICameraPathGetter>> _RelatedPaths = new ExtendedList<IFormLinkGetter<ICameraPathGetter>>();
+        public ExtendedList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths
+        {
+            get => this._RelatedPaths;
+            init => this._RelatedPaths = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> ICameraPathGetter.RelatedPaths => _RelatedPaths;
+        #endregion
+
+        #endregion
+        #region Zoom
+        public CameraPath.Flags Zoom { get; set; } = default;
+        #endregion
+        #region Shots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ICameraShotGetter>> _Shots = new ExtendedList<IFormLinkGetter<ICameraShotGetter>>();
+        public ExtendedList<IFormLinkGetter<ICameraShotGetter>> Shots
+        {
+            get => this._Shots;
+            init => this._Shots = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> ICameraPathGetter.Shots => _Shots;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +124,10 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.RelatedPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Zoom = initialValue;
+                this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -86,7 +136,11 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Conditions,
+                TItem RelatedPaths,
+                TItem Zoom,
+                TItem Shots)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +149,10 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.RelatedPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedPaths, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Zoom = Zoom;
+                this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Shots, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -103,6 +161,13 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RelatedPaths;
+            public TItem Zoom;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Shots;
             #endregion
 
             #region Equals
@@ -116,11 +181,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.RelatedPaths, rhs.RelatedPaths)) return false;
+                if (!object.Equals(this.Zoom, rhs.Zoom)) return false;
+                if (!object.Equals(this.Shots, rhs.Shots)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Conditions);
+                hash.Add(this.RelatedPaths);
+                hash.Add(this.Zoom);
+                hash.Add(this.Shots);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +204,41 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RelatedPaths != null)
+                {
+                    if (!eval(this.RelatedPaths.Overall)) return false;
+                    if (this.RelatedPaths.Specific != null)
+                    {
+                        foreach (var item in this.RelatedPaths.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Zoom)) return false;
+                if (this.Shots != null)
+                {
+                    if (!eval(this.Shots.Overall)) return false;
+                    if (this.Shots.Specific != null)
+                    {
+                        foreach (var item in this.Shots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -139,6 +247,41 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RelatedPaths != null)
+                {
+                    if (eval(this.RelatedPaths.Overall)) return true;
+                    if (this.RelatedPaths.Specific != null)
+                    {
+                        foreach (var item in this.RelatedPaths.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Zoom)) return true;
+                if (this.Shots != null)
+                {
+                    if (eval(this.Shots.Overall)) return true;
+                    if (this.Shots.Specific != null)
+                    {
+                        foreach (var item in this.Shots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -154,6 +297,50 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (RelatedPaths != null)
+                {
+                    obj.RelatedPaths = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RelatedPaths.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RelatedPaths.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.RelatedPaths.Specific = l;
+                        foreach (var item in RelatedPaths.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Zoom = eval(this.Zoom);
+                if (Shots != null)
+                {
+                    obj.Shots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Shots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Shots.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Shots.Specific = l;
+                        foreach (var item in Shots.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -172,6 +359,71 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(CameraPath.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.RelatedPaths?.Overall ?? true)
+                        && RelatedPaths is {} RelatedPathsItem)
+                    {
+                        sb.AppendLine("RelatedPaths =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RelatedPathsItem.Overall);
+                            if (RelatedPathsItem.Specific != null)
+                            {
+                                foreach (var subItem in RelatedPathsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Zoom ?? true)
+                    {
+                        sb.AppendItem(Zoom, "Zoom");
+                    }
+                    if ((printMask?.Shots?.Overall ?? true)
+                        && Shots is {} ShotsItem)
+                    {
+                        sb.AppendLine("Shots =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ShotsItem.Overall);
+                            if (ShotsItem.Specific != null)
+                            {
+                                foreach (var subItem in ShotsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -182,12 +434,27 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RelatedPaths;
+            public Exception? Zoom;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Shots;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
                 switch (enu)
                 {
+                    case CameraPath_FieldIndex.Conditions:
+                        return Conditions;
+                    case CameraPath_FieldIndex.RelatedPaths:
+                        return RelatedPaths;
+                    case CameraPath_FieldIndex.Zoom:
+                        return Zoom;
+                    case CameraPath_FieldIndex.Shots:
+                        return Shots;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +465,18 @@ namespace Mutagen.Bethesda.Fallout4
                 CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
                 switch (enu)
                 {
+                    case CameraPath_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case CameraPath_FieldIndex.RelatedPaths:
+                        this.RelatedPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case CameraPath_FieldIndex.Zoom:
+                        this.Zoom = ex;
+                        break;
+                    case CameraPath_FieldIndex.Shots:
+                        this.Shots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +488,18 @@ namespace Mutagen.Bethesda.Fallout4
                 CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
                 switch (enu)
                 {
+                    case CameraPath_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case CameraPath_FieldIndex.RelatedPaths:
+                        this.RelatedPaths = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case CameraPath_FieldIndex.Zoom:
+                        this.Zoom = (Exception?)obj;
+                        break;
+                    case CameraPath_FieldIndex.Shots:
+                        this.Shots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +509,10 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Conditions != null) return true;
+                if (RelatedPaths != null) return true;
+                if (Zoom != null) return true;
+                if (Shots != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +539,67 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (RelatedPaths is {} RelatedPathsItem)
+                {
+                    sb.AppendLine("RelatedPaths =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RelatedPathsItem.Overall);
+                        if (RelatedPathsItem.Specific != null)
+                        {
+                            foreach (var subItem in RelatedPathsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Zoom, "Zoom");
+                }
+                if (Shots is {} ShotsItem)
+                {
+                    sb.AppendLine("Shots =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ShotsItem.Overall);
+                        if (ShotsItem.Specific != null)
+                        {
+                            foreach (var subItem in ShotsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -252,6 +608,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.RelatedPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RelatedPaths?.Overall, rhs.RelatedPaths?.Overall), ExceptionExt.Combine(this.RelatedPaths?.Specific, rhs.RelatedPaths?.Specific));
+                ret.Zoom = this.Zoom.Combine(rhs.Zoom);
+                ret.Shots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Shots?.Overall, rhs.Shots?.Overall), ExceptionExt.Combine(this.Shots?.Specific, rhs.Shots?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +633,34 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public Condition.TranslationMask? Conditions;
+            public bool RelatedPaths;
+            public bool Zoom;
+            public bool Shots;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.RelatedPaths = defaultOn;
+                this.Zoom = defaultOn;
+                this.Shots = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((RelatedPaths, null));
+                ret.Add((Zoom, null));
+                ret.Add((Shots, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +672,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CameraPath_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CameraPathCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraPathSetterCommon.Instance.RemapLinks(this, mapping);
         public CameraPath(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -416,8 +797,13 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ICameraPath :
         ICameraPathGetter,
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICameraPathInternal>
     {
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; }
+        new CameraPath.Flags Zoom { get; set; }
+        new ExtendedList<IFormLinkGetter<ICameraShotGetter>> Shots { get; }
     }
 
     public partial interface ICameraPathInternal :
@@ -431,10 +817,15 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ICameraPathGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ICameraPathGetter>,
         IMapsToGetter<ICameraPathGetter>
     {
         static new ILoquiRegistration StaticRegistration => CameraPath_Registration.Instance;
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; }
+        CameraPath.Flags Zoom { get; }
+        IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; }
 
     }
 
@@ -599,6 +990,10 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Conditions = 6,
+        RelatedPaths = 7,
+        Zoom = 8,
+        Shots = 9,
     }
     #endregion
 
@@ -616,9 +1011,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "7e480dcf-619a-4555-bec0-65ff8c010caf";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(CameraPath.Mask<>);
 
@@ -648,8 +1043,16 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.CPTH);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.CPTH);
+            var all = RecordCollection.Factory(
+                RecordTypes.CPTH,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.ANAM,
+                RecordTypes.DATA,
+                RecordTypes.SNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CameraPathBinaryWriteTranslation);
         #region Interface
@@ -693,6 +1096,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ICameraPathInternal item)
         {
             ClearPartial();
+            item.Conditions.Clear();
+            item.RelatedPaths.Clear();
+            item.Zoom = default;
+            item.Shots.Clear();
             base.Clear(item);
         }
         
@@ -710,6 +1117,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(ICameraPath obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.RelatedPaths.RemapLinks(mapping);
+            obj.Shots.RemapLinks(mapping);
         }
         
         #endregion
@@ -778,6 +1188,19 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RelatedPaths = item.RelatedPaths.CollectionEqualsHelper(
+                rhs.RelatedPaths,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Zoom = item.Zoom == rhs.Zoom;
+            ret.Shots = item.Shots.CollectionEqualsHelper(
+                rhs.Shots,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1250,52 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.RelatedPaths?.Overall ?? true)
+            {
+                sb.AppendLine("RelatedPaths =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.RelatedPaths)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.Zoom ?? true)
+            {
+                sb.AppendItem(item.Zoom, "Zoom");
+            }
+            if (printMask?.Shots?.Overall ?? true)
+            {
+                sb.AppendLine("Shots =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Shots)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static CameraPath_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1344,22 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)CameraPath_FieldIndex.Conditions)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.RelatedPaths) ?? true))
+            {
+                if (!lhs.RelatedPaths.SequenceEqualNullable(rhs.RelatedPaths)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.Zoom) ?? true))
+            {
+                if (lhs.Zoom != rhs.Zoom) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.Shots) ?? true))
+            {
+                if (!lhs.Shots.SequenceEqualNullable(rhs.Shots)) return false;
+            }
             return true;
         }
         
@@ -903,6 +1388,10 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(ICameraPathGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Conditions);
+            hash.Add(item.RelatedPaths);
+            hash.Add(item.Zoom);
+            hash.Add(item.Shots);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -931,6 +1420,19 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.RelatedPaths)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Shots)
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1006,6 +1508,72 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)CameraPath_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.RelatedPaths) ?? true))
+            {
+                errorMask?.PushIndex((int)CameraPath_FieldIndex.RelatedPaths);
+                try
+                {
+                    item.RelatedPaths.SetTo(
+                        rhs.RelatedPaths
+                        .Select(r => (IFormLinkGetter<ICameraPathGetter>)new FormLink<ICameraPathGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Zoom) ?? true))
+            {
+                item.Zoom = rhs.Zoom;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Shots) ?? true))
+            {
+                errorMask?.PushIndex((int)CameraPath_FieldIndex.Shots);
+                try
+                {
+                    item.Shots.SetTo(
+                        rhs.Shots
+                        .Select(r => (IFormLinkGetter<ICameraShotGetter>)new FormLink<ICameraShotGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1722,53 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static CameraPathBinaryWriteTranslation Instance = new CameraPathBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            ICameraPathGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICameraPathGetter>>.Instance.Write(
+                writer: writer,
+                items: item.RelatedPaths,
+                recordType: translationParams.ConvertToCustom(RecordTypes.ANAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ICameraPathGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            EnumBinaryTranslation<CameraPath.Flags, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Zoom,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICameraShotGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Shots,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ICameraShotGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ICameraPathGetter item,
@@ -1168,10 +1783,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +1846,65 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            ICameraPathInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)CameraPath_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RelatedPaths.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICameraPathGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)CameraPath_FieldIndex.RelatedPaths;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Zoom = EnumBinaryTranslation<CameraPath.Flags, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)CameraPath_FieldIndex.Zoom;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    item.Shots.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICameraShotGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.SNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)CameraPath_FieldIndex.Shots;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1261,6 +1937,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CameraPathCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CameraPathBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +1952,13 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(ICameraPath);
 
 
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = Array.Empty<IFormLinkGetter<ICameraPathGetter>>();
+        #region Zoom
+        private int? _ZoomLocation;
+        public CameraPath.Flags Zoom => _ZoomLocation.HasValue ? (CameraPath.Flags)HeaderTranslation.ExtractSubrecordMemory(_data, _ZoomLocation!.Value, _package.MetaData.Constants)[0] : default(CameraPath.Flags);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = Array.Empty<IFormLinkGetter<ICameraShotGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +2013,74 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)CameraPath_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ICameraPathGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<ICameraPathGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)CameraPath_FieldIndex.RelatedPaths;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _ZoomLocation = (stream.Position - offset);
+                    return (int)CameraPath_FieldIndex.Zoom;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    this.Shots = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ICameraShotGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<ICameraShotGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            parseParams: parseParams));
+                    return (int)CameraPath_FieldIndex.Shots;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

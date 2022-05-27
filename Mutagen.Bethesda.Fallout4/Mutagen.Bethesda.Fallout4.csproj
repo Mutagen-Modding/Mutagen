@@ -221,6 +221,9 @@
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\CameraPath.cs">
+      <DependentUpon>CameraPath.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\CameraShot.cs">
       <DependentUpon>CameraShot.xml</DependentUpon>
     </Compile>
