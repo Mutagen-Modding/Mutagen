@@ -73,6 +73,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - Holotape
 - IdleMarker
+- Impact
 - Ingestible
 - Ingredient
 - Key
@@ -405,6 +406,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IKeyworded
 - IModeled
 - IObjectBounded
+### Impact
+- IModeled
 ### Ingestible
 - IHasIcons
 - IKeyworded

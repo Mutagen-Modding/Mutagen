@@ -134,6 +134,8 @@ namespace Mutagen.Bethesda.Fallout4
             _CameraPaths_Object = new Fallout4Group<CameraPath>(this);
             _VoiceTypes_Object = new Fallout4Group<VoiceType>(this);
             _MaterialTypes_Object = new Fallout4Group<MaterialType>(this);
+            _Impacts_Object = new Fallout4Group<Impact>(this);
+            _ImpactDataSets_Object = new Fallout4Group<ImpactDataSet>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -685,6 +687,20 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IMaterialTypeGetter> IFallout4ModGetter.MaterialTypes => _MaterialTypes_Object;
         #endregion
+        #region Impacts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Impact> _Impacts_Object;
+        public Fallout4Group<Impact> Impacts => _Impacts_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IImpactGetter> IFallout4ModGetter.Impacts => _Impacts_Object;
+        #endregion
+        #region ImpactDataSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<ImpactDataSet> _ImpactDataSets_Object;
+        public Fallout4Group<ImpactDataSet> ImpactDataSets => _ImpactDataSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IImpactDataSetGetter> IFallout4ModGetter.ImpactDataSets => _ImpactDataSets_Object;
+        #endregion
 
         #region To String
 
@@ -802,6 +818,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CameraPaths = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.VoiceTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.MaterialTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Impacts = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.ImpactDataSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -882,7 +900,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem CameraShots,
                 TItem CameraPaths,
                 TItem VoiceTypes,
-                TItem MaterialTypes)
+                TItem MaterialTypes,
+                TItem Impacts,
+                TItem ImpactDataSets)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -962,6 +982,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CameraPaths = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(CameraPaths, new Fallout4Group.Mask<TItem>(CameraPaths));
                 this.VoiceTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(VoiceTypes, new Fallout4Group.Mask<TItem>(VoiceTypes));
                 this.MaterialTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MaterialTypes, new Fallout4Group.Mask<TItem>(MaterialTypes));
+                this.Impacts = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Impacts, new Fallout4Group.Mask<TItem>(Impacts));
+                this.ImpactDataSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ImpactDataSets, new Fallout4Group.Mask<TItem>(ImpactDataSets));
             }
 
             #pragma warning disable CS8618
@@ -1051,6 +1073,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? CameraPaths { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? VoiceTypes { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MaterialTypes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Impacts { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ImpactDataSets { get; set; }
             #endregion
 
             #region Equals
@@ -1141,6 +1165,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.CameraPaths, rhs.CameraPaths)) return false;
                 if (!object.Equals(this.VoiceTypes, rhs.VoiceTypes)) return false;
                 if (!object.Equals(this.MaterialTypes, rhs.MaterialTypes)) return false;
+                if (!object.Equals(this.Impacts, rhs.Impacts)) return false;
+                if (!object.Equals(this.ImpactDataSets, rhs.ImpactDataSets)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1224,6 +1250,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.CameraPaths);
                 hash.Add(this.VoiceTypes);
                 hash.Add(this.MaterialTypes);
+                hash.Add(this.Impacts);
+                hash.Add(this.ImpactDataSets);
                 return hash.ToHashCode();
             }
 
@@ -1622,6 +1650,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.MaterialTypes.Overall)) return false;
                     if (this.MaterialTypes.Specific != null && !this.MaterialTypes.Specific.All(eval)) return false;
                 }
+                if (Impacts != null)
+                {
+                    if (!eval(this.Impacts.Overall)) return false;
+                    if (this.Impacts.Specific != null && !this.Impacts.Specific.All(eval)) return false;
+                }
+                if (ImpactDataSets != null)
+                {
+                    if (!eval(this.ImpactDataSets.Overall)) return false;
+                    if (this.ImpactDataSets.Specific != null && !this.ImpactDataSets.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2019,6 +2057,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.MaterialTypes.Overall)) return true;
                     if (this.MaterialTypes.Specific != null && this.MaterialTypes.Specific.Any(eval)) return true;
                 }
+                if (Impacts != null)
+                {
+                    if (eval(this.Impacts.Overall)) return true;
+                    if (this.Impacts.Specific != null && this.Impacts.Specific.Any(eval)) return true;
+                }
+                if (ImpactDataSets != null)
+                {
+                    if (eval(this.ImpactDataSets.Overall)) return true;
+                    if (this.ImpactDataSets.Specific != null && this.ImpactDataSets.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2111,6 +2159,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.CameraPaths = this.CameraPaths == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.CameraPaths.Overall), this.CameraPaths.Specific?.Translate(eval));
                 obj.VoiceTypes = this.VoiceTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.VoiceTypes.Overall), this.VoiceTypes.Specific?.Translate(eval));
                 obj.MaterialTypes = this.MaterialTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MaterialTypes.Overall), this.MaterialTypes.Specific?.Translate(eval));
+                obj.Impacts = this.Impacts == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Impacts.Overall), this.Impacts.Specific?.Translate(eval));
+                obj.ImpactDataSets = this.ImpactDataSets == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ImpactDataSets.Overall), this.ImpactDataSets.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2441,6 +2491,14 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         MaterialTypes?.Print(sb);
                     }
+                    if (printMask?.Impacts?.Overall ?? true)
+                    {
+                        Impacts?.Print(sb);
+                    }
+                    if (printMask?.ImpactDataSets?.Overall ?? true)
+                    {
+                        ImpactDataSets?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2543,6 +2601,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<CameraPath.ErrorMask>?>? CameraPaths;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<VoiceType.ErrorMask>?>? VoiceTypes;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>? MaterialTypes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Impact.ErrorMask>?>? Impacts;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ImpactDataSet.ErrorMask>?>? ImpactDataSets;
             #endregion
 
             #region IErrorMask
@@ -2707,6 +2767,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return VoiceTypes;
                     case Fallout4Mod_FieldIndex.MaterialTypes:
                         return MaterialTypes;
+                    case Fallout4Mod_FieldIndex.Impacts:
+                        return Impacts;
+                    case Fallout4Mod_FieldIndex.ImpactDataSets:
+                        return ImpactDataSets;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2950,6 +3014,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.MaterialTypes:
                         this.MaterialTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Impacts:
+                        this.Impacts = new MaskItem<Exception?, Fallout4Group.ErrorMask<Impact.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.ImpactDataSets:
+                        this.ImpactDataSets = new MaskItem<Exception?, Fallout4Group.ErrorMask<ImpactDataSet.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3195,6 +3265,12 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.MaterialTypes:
                         this.MaterialTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Impacts:
+                        this.Impacts = (MaskItem<Exception?, Fallout4Group.ErrorMask<Impact.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.ImpactDataSets:
+                        this.ImpactDataSets = (MaskItem<Exception?, Fallout4Group.ErrorMask<ImpactDataSet.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3281,6 +3357,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (CameraPaths != null) return true;
                 if (VoiceTypes != null) return true;
                 if (MaterialTypes != null) return true;
+                if (Impacts != null) return true;
+                if (ImpactDataSets != null) return true;
                 return false;
             }
             #endregion
@@ -3384,6 +3462,8 @@ namespace Mutagen.Bethesda.Fallout4
                 CameraPaths?.Print(sb);
                 VoiceTypes?.Print(sb);
                 MaterialTypes?.Print(sb);
+                Impacts?.Print(sb);
+                ImpactDataSets?.Print(sb);
             }
             #endregion
 
@@ -3470,6 +3550,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.CameraPaths = this.CameraPaths.Combine(rhs.CameraPaths, (l, r) => l.Combine(r));
                 ret.VoiceTypes = this.VoiceTypes.Combine(rhs.VoiceTypes, (l, r) => l.Combine(r));
                 ret.MaterialTypes = this.MaterialTypes.Combine(rhs.MaterialTypes, (l, r) => l.Combine(r));
+                ret.Impacts = this.Impacts.Combine(rhs.Impacts, (l, r) => l.Combine(r));
+                ret.ImpactDataSets = this.ImpactDataSets.Combine(rhs.ImpactDataSets, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3571,6 +3653,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<CameraPath.TranslationMask>? CameraPaths;
             public Fallout4Group.TranslationMask<VoiceType.TranslationMask>? VoiceTypes;
             public Fallout4Group.TranslationMask<MaterialType.TranslationMask>? MaterialTypes;
+            public Fallout4Group.TranslationMask<Impact.TranslationMask>? Impacts;
+            public Fallout4Group.TranslationMask<ImpactDataSet.TranslationMask>? ImpactDataSets;
             #endregion
 
             #region Ctors
@@ -3673,6 +3757,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((CameraPaths != null ? CameraPaths.OnOverall : DefaultOn, CameraPaths?.GetCrystal()));
                 ret.Add((VoiceTypes != null ? VoiceTypes.OnOverall : DefaultOn, VoiceTypes?.GetCrystal()));
                 ret.Add((MaterialTypes != null ? MaterialTypes.OnOverall : DefaultOn, MaterialTypes?.GetCrystal()));
+                ret.Add((Impacts != null ? Impacts.OnOverall : DefaultOn, Impacts?.GetCrystal()));
+                ret.Add((ImpactDataSets != null ? ImpactDataSets.OnOverall : DefaultOn, ImpactDataSets?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3790,6 +3876,8 @@ namespace Mutagen.Bethesda.Fallout4
             _CameraPaths_Object = new Fallout4Group<CameraPath>(this);
             _VoiceTypes_Object = new Fallout4Group<VoiceType>(this);
             _MaterialTypes_Object = new Fallout4Group<MaterialType>(this);
+            _Impacts_Object = new Fallout4Group<Impact>(this);
+            _ImpactDataSets_Object = new Fallout4Group<ImpactDataSet>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4107,6 +4195,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.MaterialTypes.RecordCache.Set(rhsMod.MaterialTypes.RecordCache.Items);
             }
+            if (mask?.Impacts ?? true)
+            {
+                this.Impacts.RecordCache.Set(rhsMod.Impacts.RecordCache.Items);
+            }
+            if (mask?.ImpactDataSets ?? true)
+            {
+                this.ImpactDataSets.RecordCache.Set(rhsMod.ImpactDataSets.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -4194,6 +4290,8 @@ namespace Mutagen.Bethesda.Fallout4
             count += CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
             count += VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Impacts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4522,6 +4620,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<CameraPath> CameraPaths { get; }
         new Fallout4Group<VoiceType> VoiceTypes { get; }
         new Fallout4Group<MaterialType> MaterialTypes { get; }
+        new Fallout4Group<Impact> Impacts { get; }
+        new Fallout4Group<ImpactDataSet> ImpactDataSets { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -4618,6 +4718,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<ICameraPathGetter> CameraPaths { get; }
         IFallout4GroupGetter<IVoiceTypeGetter> VoiceTypes { get; }
         IFallout4GroupGetter<IMaterialTypeGetter> MaterialTypes { get; }
+        IFallout4GroupGetter<IImpactGetter> Impacts { get; }
+        IFallout4GroupGetter<IImpactDataSetGetter> ImpactDataSets { get; }
 
     }
 
@@ -5266,6 +5368,8 @@ namespace Mutagen.Bethesda.Fallout4
         CameraPaths = 75,
         VoiceTypes = 76,
         MaterialTypes = 77,
+        Impacts = 78,
+        ImpactDataSets = 79,
     }
     #endregion
 
@@ -5283,9 +5387,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 78;
+        public const ushort AdditionalFieldCount = 80;
 
-        public const ushort FieldCount = 78;
+        public const ushort FieldCount = 80;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -5430,6 +5534,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.CameraPaths.Clear();
             item.VoiceTypes.Clear();
             item.MaterialTypes.Clear();
+            item.Impacts.Clear();
+            item.ImpactDataSets.Clear();
         }
         
         #region Mutagen
@@ -5501,6 +5607,8 @@ namespace Mutagen.Bethesda.Fallout4
             obj.CameraShots.RemapLinks(mapping);
             obj.CameraPaths.RemapLinks(mapping);
             obj.MaterialTypes.RemapLinks(mapping);
+            obj.Impacts.RemapLinks(mapping);
+            obj.ImpactDataSets.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -5612,6 +5720,8 @@ namespace Mutagen.Bethesda.Fallout4
             obj.CameraPaths.Remove(keys);
             obj.VoiceTypes.Remove(keys);
             obj.MaterialTypes.Remove(keys);
+            obj.Impacts.Remove(keys);
+            obj.ImpactDataSets.Remove(keys);
         }
         
         public void Remove(
@@ -6283,6 +6393,22 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    obj.Impacts.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    obj.ImpactDataSets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -6840,6 +6966,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.CameraPaths = MaskItemExt.Factory(item.CameraPaths.GetEqualsMask(rhs.CameraPaths, include), include);
             ret.VoiceTypes = MaskItemExt.Factory(item.VoiceTypes.GetEqualsMask(rhs.VoiceTypes, include), include);
             ret.MaterialTypes = MaskItemExt.Factory(item.MaterialTypes.GetEqualsMask(rhs.MaterialTypes, include), include);
+            ret.Impacts = MaskItemExt.Factory(item.Impacts.GetEqualsMask(rhs.Impacts, include), include);
+            ret.ImpactDataSets = MaskItemExt.Factory(item.ImpactDataSets.GetEqualsMask(rhs.ImpactDataSets, include), include);
         }
         
         public string Print(
@@ -7195,6 +7323,14 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.MaterialTypes?.Overall ?? true)
             {
                 item.MaterialTypes?.Print(sb, "MaterialTypes");
+            }
+            if (printMask?.Impacts?.Overall ?? true)
+            {
+                item.Impacts?.Print(sb, "Impacts");
+            }
+            if (printMask?.ImpactDataSets?.Overall ?? true)
+            {
+                item.ImpactDataSets?.Print(sb, "ImpactDataSets");
             }
         }
         
@@ -7829,6 +7965,22 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMaterialTypesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Impacts) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Impacts, rhs.Impacts, out var lhsImpacts, out var rhsImpacts, out var isImpactsEqual))
+                {
+                    if (!object.Equals(lhsImpacts, rhsImpacts)) return false;
+                }
+                else if (!isImpactsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImpactDataSets) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ImpactDataSets, rhs.ImpactDataSets, out var lhsImpactDataSets, out var rhsImpactDataSets, out var isImpactDataSetsEqual))
+                {
+                    if (!object.Equals(lhsImpactDataSets, rhsImpactDataSets)) return false;
+                }
+                else if (!isImpactDataSetsEqual) return false;
+            }
             return true;
         }
         
@@ -7913,6 +8065,8 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.CameraPaths);
             hash.Add(item.VoiceTypes);
             hash.Add(item.MaterialTypes);
+            hash.Add(item.Impacts);
+            hash.Add(item.ImpactDataSets);
             return hash.ToHashCode();
         }
         
@@ -8315,6 +8469,16 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IMaterialType":
                 case "IMaterialTypeInternal":
                     return obj.MaterialTypes;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    return obj.Impacts;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    return obj.ImpactDataSets;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -8339,7 +8503,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[77];
+            Stream[] outputStreams = new Stream[79];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -8418,6 +8582,8 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.CameraPaths, 74, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.VoiceTypes, 75, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MaterialTypes, 76, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Impacts, 77, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, 78, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8726,6 +8892,14 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.MaterialTypes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Impacts.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImpactDataSets.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -9039,6 +9213,14 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.MaterialTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Impacts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -9757,6 +9939,24 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IMaterialType":
                 case "IMaterialTypeInternal":
                     foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    foreach (var item in obj.Impacts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10613,6 +10813,24 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.MaterialTypes,
                 groupGetter: (m) => m.MaterialTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Impact, IImpactGetter>(
+                srcGroup: obj.Impacts,
+                type: typeof(IImpactGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Impacts,
+                groupGetter: (m) => m.Impacts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ImpactDataSet, IImpactDataSetGetter>(
+                srcGroup: obj.ImpactDataSets,
+                type: typeof(IImpactDataSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImpactDataSets,
+                groupGetter: (m) => m.ImpactDataSets))
             {
                 yield return item;
             }
@@ -11707,6 +11925,34 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.MaterialTypes,
                         groupGetter: (m) => m.MaterialTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Impact, IImpactGetter>(
+                        srcGroup: obj.Impacts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Impacts,
+                        groupGetter: (m) => m.Impacts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ImpactDataSet, IImpactDataSetGetter>(
+                        srcGroup: obj.ImpactDataSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImpactDataSets,
+                        groupGetter: (m) => m.ImpactDataSets))
                     {
                         yield return item;
                     }
@@ -13565,6 +13811,46 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Impacts) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Impacts);
+                try
+                {
+                    item.Impacts.DeepCopyIn(
+                        rhs: rhs.Impacts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Impacts));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImpactDataSets) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ImpactDataSets);
+                try
+                {
+                    item.ImpactDataSets.DeepCopyIn(
+                        rhs: rhs.ImpactDataSets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ImpactDataSets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -13732,6 +14018,8 @@ namespace Mutagen.Bethesda.Fallout4
         public bool CameraPaths;
         public bool VoiceTypes;
         public bool MaterialTypes;
+        public bool Impacts;
+        public bool ImpactDataSets;
         public GroupMask()
         {
         }
@@ -13814,6 +14102,8 @@ namespace Mutagen.Bethesda.Fallout4
             CameraPaths = defaultValue;
             VoiceTypes = defaultValue;
             MaterialTypes = defaultValue;
+            Impacts = defaultValue;
+            ImpactDataSets = defaultValue;
         }
     }
 
@@ -14688,6 +14978,28 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MaterialTypesItem).BinaryWriteTranslator).Write<IMaterialTypeGetter>(
                         item: MaterialTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Impacts ?? true)
+            {
+                var ImpactsItem = item.Impacts;
+                if (ImpactsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ImpactsItem).BinaryWriteTranslator).Write<IImpactGetter>(
+                        item: ImpactsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ImpactDataSets ?? true)
+            {
+                var ImpactDataSetsItem = item.ImpactDataSets;
+                if (ImpactDataSetsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ImpactDataSetsItem).BinaryWriteTranslator).Write<IImpactDataSetGetter>(
+                        item: ImpactDataSetsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -15836,6 +16148,34 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.MaterialTypes;
                 }
+                case RecordTypeInts.IPCT:
+                {
+                    if (importMask?.Impacts ?? true)
+                    {
+                        item.Impacts.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Impacts;
+                }
+                case RecordTypeInts.IPDS:
+                {
+                    if (importMask?.ImpactDataSets ?? true)
+                    {
+                        item.ImpactDataSets.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.ImpactDataSets;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -16383,6 +16723,16 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _MaterialTypesLocations;
         private IFallout4GroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? Fallout4GroupBinaryOverlay<IMaterialTypeGetter>.Fallout4GroupFactory(_data, _MaterialTypesLocations, _package) : default;
         public IFallout4GroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new Fallout4Group<MaterialType>(this);
+        #endregion
+        #region Impacts
+        private List<RangeInt64>? _ImpactsLocations;
+        private IFallout4GroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? Fallout4GroupBinaryOverlay<IImpactGetter>.Fallout4GroupFactory(_data, _ImpactsLocations, _package) : default;
+        public IFallout4GroupGetter<IImpactGetter> Impacts => _Impacts ?? new Fallout4Group<Impact>(this);
+        #endregion
+        #region ImpactDataSets
+        private List<RangeInt64>? _ImpactDataSetsLocations;
+        private IFallout4GroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? Fallout4GroupBinaryOverlay<IImpactDataSetGetter>.Fallout4GroupFactory(_data, _ImpactDataSetsLocations, _package) : default;
+        public IFallout4GroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new Fallout4Group<ImpactDataSet>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -16932,6 +17282,18 @@ namespace Mutagen.Bethesda.Fallout4
                     _MaterialTypesLocations ??= new();
                     _MaterialTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.MaterialTypes;
+                }
+                case RecordTypeInts.IPCT:
+                {
+                    _ImpactsLocations ??= new();
+                    _ImpactsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Impacts;
+                }
+                case RecordTypeInts.IPDS:
+                {
+                    _ImpactDataSetsLocations ??= new();
+                    _ImpactDataSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.ImpactDataSets;
                 }
                 default:
                     return default(int?);

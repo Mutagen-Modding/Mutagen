@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +54,20 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Impacts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ImpactData> _Impacts = new ExtendedList<ImpactData>();
+        public ExtendedList<ImpactData> Impacts
+        {
+            get => this._Impacts;
+            init => this._Impacts = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IImpactDataGetter> IImpactDataSetGetter.Impacts => _Impacts;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +93,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -86,7 +102,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Impacts)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +112,7 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(Impacts, Enumerable.Empty<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -103,6 +121,10 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>? Impacts;
             #endregion
 
             #region Equals
@@ -116,11 +138,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Impacts, rhs.Impacts)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Impacts);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +155,18 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Impacts != null)
+                {
+                    if (!eval(this.Impacts.Overall)) return false;
+                    if (this.Impacts.Specific != null)
+                    {
+                        foreach (var item in this.Impacts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -139,6 +175,18 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Impacts != null)
+                {
+                    if (eval(this.Impacts.Overall)) return true;
+                    if (this.Impacts.Specific != null)
+                    {
+                        foreach (var item in this.Impacts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -154,6 +202,21 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Impacts != null)
+                {
+                    obj.Impacts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ImpactData.Mask<R>?>>?>(eval(this.Impacts.Overall), Enumerable.Empty<MaskItemIndexed<R, ImpactData.Mask<R>?>>());
+                    if (Impacts.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ImpactData.Mask<R>?>>();
+                        obj.Impacts.Specific = l;
+                        foreach (var item in Impacts.Specific)
+                        {
+                            MaskItemIndexed<R, ImpactData.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ImpactData.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -172,6 +235,25 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(ImpactDataSet.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Impacts?.Overall ?? true)
+                        && Impacts is {} ImpactsItem)
+                    {
+                        sb.AppendLine("Impacts =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ImpactsItem.Overall);
+                            if (ImpactsItem.Specific != null)
+                            {
+                                foreach (var subItem in ImpactsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -182,12 +264,18 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>? Impacts;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImpactDataSet_FieldIndex.Impacts:
+                        return Impacts;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +286,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImpactDataSet_FieldIndex.Impacts:
+                        this.Impacts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +300,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImpactDataSet_FieldIndex.Impacts:
+                        this.Impacts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +312,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Impacts != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +339,24 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Impacts is {} ImpactsItem)
+                {
+                    sb.AppendLine("Impacts =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ImpactsItem.Overall);
+                        if (ImpactsItem.Specific != null)
+                        {
+                            foreach (var subItem in ImpactsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -252,6 +365,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Impacts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>(ExceptionExt.Combine(this.Impacts?.Overall, rhs.Impacts?.Overall), ExceptionExt.Combine(this.Impacts?.Specific, rhs.Impacts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,6 +387,10 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ImpactData.TranslationMask? Impacts;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -282,6 +400,12 @@ namespace Mutagen.Bethesda.Fallout4
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Impacts == null ? DefaultOn : !Impacts.GetCrystal().CopyNothing, Impacts?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +417,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ImpactDataSet_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ImpactDataSetCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetSetterCommon.Instance.RemapLinks(this, mapping);
         public ImpactDataSet(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -415,9 +541,11 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IImpactDataSet :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         IImpactDataSetGetter,
         ILoquiObjectSetter<IImpactDataSetInternal>
     {
+        new ExtendedList<ImpactData> Impacts { get; }
     }
 
     public partial interface IImpactDataSetInternal :
@@ -431,10 +559,12 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IImpactDataSetGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IImpactDataSetGetter>,
         IMapsToGetter<IImpactDataSetGetter>
     {
         static new ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
+        IReadOnlyList<IImpactDataGetter> Impacts { get; }
 
     }
 
@@ -599,6 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Impacts = 6,
     }
     #endregion
 
@@ -611,14 +742,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 91,
+            msgID: 615,
             version: 0);
 
-        public const string GUID = "e668bafe-1e46-49ba-96e2-3417369f5dd2";
+        public const string GUID = "4b59c619-ab19-4dd5-a1d9-3cdd472926a9";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(ImpactDataSet.Mask<>);
 
@@ -648,8 +779,11 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.IPDS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.IPDS);
+            var all = RecordCollection.Factory(
+                RecordTypes.IPDS,
+                RecordTypes.PNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ImpactDataSetBinaryWriteTranslation);
         #region Interface
@@ -693,6 +827,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IImpactDataSetInternal item)
         {
             ClearPartial();
+            item.Impacts.Clear();
             base.Clear(item);
         }
         
@@ -710,6 +845,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IImpactDataSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Impacts.RemapLinks(mapping);
         }
         
         #endregion
@@ -778,6 +914,10 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Impacts = item.Impacts.CollectionEqualsHelper(
+                rhs.Impacts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +967,20 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Impacts?.Overall ?? true)
+            {
+                sb.AppendLine("Impacts =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Impacts)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static ImpactDataSet_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1029,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Impacts) ?? true))
+            {
+                if (!lhs.Impacts.SequenceEqual(rhs.Impacts, (l, r) => ((ImpactDataCommon)((IImpactDataGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImpactDataSet_FieldIndex.Impacts)))) return false;
+            }
             return true;
         }
         
@@ -903,6 +1061,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IImpactDataSetGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Impacts);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -931,6 +1090,10 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Impacts.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1006,6 +1169,30 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Impacts) ?? true))
+            {
+                errorMask?.PushIndex((int)ImpactDataSet_FieldIndex.Impacts);
+                try
+                {
+                    item.Impacts.SetTo(
+                        rhs.Impacts
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1341,28 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static ImpactDataSetBinaryWriteTranslation Instance = new ImpactDataSetBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IImpactDataSetGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IImpactDataGetter>.Instance.Write(
+                writer: writer,
+                items: item.Impacts,
+                transl: (MutagenWriter subWriter, IImpactDataGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ImpactDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IImpactDataSetGetter item,
@@ -1168,10 +1377,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +1440,39 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IImpactDataSetInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    item.Impacts.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ImpactData>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: ImpactData_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: ImpactData.TryCreateFromBinary));
+                    return (int)ImpactDataSet_FieldIndex.Impacts;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1261,6 +1505,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ImpactDataSetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImpactDataSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IImpactDataSet);
 
 
+        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = Array.Empty<IImpactDataGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +1575,43 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    this.Impacts = BinaryOverlayList.FactoryByArray<IImpactDataGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ImpactDataBinaryOverlay.ImpactDataFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: ImpactData_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)ImpactDataSet_FieldIndex.Impacts;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

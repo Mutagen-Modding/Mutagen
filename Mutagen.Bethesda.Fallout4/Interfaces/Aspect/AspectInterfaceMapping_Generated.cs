@@ -105,6 +105,7 @@ namespace Mutagen.Bethesda.Fallout4
                 HeadPart_Registration.Instance,
                 Holotape_Registration.Instance,
                 IdleMarker_Registration.Instance,
+                Impact_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Ingredient_Registration.Instance,
                 Key_Registration.Instance,

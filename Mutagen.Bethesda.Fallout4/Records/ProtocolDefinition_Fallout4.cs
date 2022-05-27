@@ -69,7 +69,6 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             AnimationSoundTagSet_Registration.Instance,
             Debris_Registration.Instance,
             Explosion_Registration.Instance,
-            ImpactDataSet_Registration.Instance,
             LeveledSpell_Registration.Instance,
             SoundMarker_Registration.Instance,
             SoundRepeat_Registration.Instance,
@@ -487,7 +486,10 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             PerkEntryPointSetText_Registration.Instance,
             PerkCondition_Registration.Instance,
             BodyPart_Registration.Instance,
-            CameraShot_Registration.Instance
+            CameraShot_Registration.Instance,
+            Impact_Registration.Instance,
+            ImpactDataSet_Registration.Instance,
+            ImpactData_Registration.Instance
         );
     }
 }

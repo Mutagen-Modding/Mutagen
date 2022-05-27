@@ -362,6 +362,9 @@
     <Compile Include="Records\Major Records\ImageSpaceAdapter.cs">
       <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Impact.cs">
+      <DependentUpon>Impact.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Ingestible.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
@@ -2192,6 +2195,12 @@
     </Compile>
     <Compile Include="Records\Major Records\CameraShot_Generated.cs">
       <DependentUpon>CameraShot.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Impact_Generated.cs">
+      <DependentUpon>Impact.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ImpactData_Generated.cs">
+      <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -84,6 +84,8 @@
       <Group name="CameraPaths" refName="CameraPath" />
       <Group name="VoiceTypes" refName="VoiceType" />
       <Group name="MaterialTypes" refName="MaterialType" />
+      <Group name="Impacts" refName="Impact" />
+      <Group name="ImpactDataSets" refName="ImpactDataSet" />
     </Fields>
   </Object>
 </Loqui>

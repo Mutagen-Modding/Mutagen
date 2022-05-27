@@ -263,6 +263,7 @@ public partial class RecordTypeInts
     public const int INTT = 0x54544E49;
     public const int INTV = 0x56544E49;
     public const int IOVR = 0x52564F49;
+    public const int IPCT = 0x54435049;
     public const int IPDS = 0x53445049;
     public const int ISIZ = 0x5A495349;
     public const int ITID = 0x44495449;
