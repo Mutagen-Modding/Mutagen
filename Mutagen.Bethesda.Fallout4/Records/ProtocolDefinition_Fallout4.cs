@@ -486,7 +486,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             PerkEntryPointSelectText_Registration.Instance,
             PerkEntryPointSetText_Registration.Instance,
             PerkCondition_Registration.Instance,
-            BodyPart_Registration.Instance
+            BodyPart_Registration.Instance,
+            CameraShot_Registration.Instance
         );
     }
 }

@@ -91,6 +91,7 @@ namespace Mutagen.Bethesda.Fallout4
                 BodyData_Registration.Instance,
                 BodyPartData_Registration.Instance,
                 Book_Registration.Instance,
+                CameraShot_Registration.Instance,
                 Climate_Registration.Instance,
                 Container_Registration.Instance,
                 DestructionStage_Registration.Instance,

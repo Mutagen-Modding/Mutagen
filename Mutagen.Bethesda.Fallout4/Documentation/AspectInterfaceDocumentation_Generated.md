@@ -59,6 +59,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BodyData
 - BodyPartData
 - Book
+- CameraShot
 - Climate
 - Container
 - DestructionStage
@@ -330,6 +331,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 - IWeightValue
+### CameraShot
+- IModeled
 ### Cell
 - INamed
 ### Class

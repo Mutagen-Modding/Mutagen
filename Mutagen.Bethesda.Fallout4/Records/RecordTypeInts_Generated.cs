@@ -88,6 +88,7 @@ public partial class RecordTypeInts
     public const int BSMP = 0x504D5342;
     public const int BSMS = 0x534D5342;
     public const int BTXT = 0x54585442;
+    public const int CAMS = 0x534D4143;
     public const int CDIX = 0x58494443;
     public const int CELL = 0x4C4C4543;
     public const int CIAD = 0x44414943;

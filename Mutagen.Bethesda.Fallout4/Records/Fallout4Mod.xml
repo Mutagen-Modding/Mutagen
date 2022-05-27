@@ -80,6 +80,7 @@
       <Group name="BodyParts" refName="BodyPartData" />
       <Group name="AddonNodes" refName="AddonNode" />
       <Group name="ActorValueInformation" refName="ActorValueInformation" />
+      <Group name="CameraShots" refName="CameraShot" />
     </Fields>
   </Object>
 </Loqui>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CameraShot" objType="Record" recordType="CAMS" baseClass="Fallout4MajorRecord" GUID="04392897-34ef-4ee9-abf5-18b0b3ba0e41" ID="613">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Conditions" refName="Condition" />
+      <Data>
+        <Fields>
+          <Enum name="Action" enumName="CameraShot.ActionType" byteLength="4" />
+          <Enum name="Location" enumName="CameraShot.LocationType" byteLength="4" />
+          <Enum name="Target" enumName="CameraShot.LocationType" byteLength="4" />
+          <Enum name="Flags" enumName="CameraShot.Flag" byteLength="4" />
+          <Float name="TimeMultiplierPlayer" />
+          <Float name="TimeMultiplierTarget" />
+          <Float name="TimeMultiplierGlobal" />
+          <Float name="MaxTime" />
+          <Float name="MinTime" />
+          <Float name="TargetPercentBetweenActors" />
+          <Float name="NearTargetDistance" />
+          <Break />
+          <Float name="LocationSpring" />
+          <Float name="TargetSpring" />
+          <Break />
+          <P3Float name="RotationOffset" />
+        </Fields>
+      </Data>
+      <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
+    </Fields>
+  </Object>
+</Loqui>

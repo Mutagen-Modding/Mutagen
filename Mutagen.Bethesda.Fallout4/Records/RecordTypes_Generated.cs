@@ -90,6 +90,7 @@ public partial class RecordTypes
     public static readonly RecordType BSMP = new(0x504D5342);
     public static readonly RecordType BSMS = new(0x534D5342);
     public static readonly RecordType BTXT = new(0x54585442);
+    public static readonly RecordType CAMS = new(0x534D4143);
     public static readonly RecordType CDIX = new(0x58494443);
     public static readonly RecordType CELL = new(0x4C4C4543);
     public static readonly RecordType CIAD = new(0x44414943);

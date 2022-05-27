@@ -221,6 +221,9 @@
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\CameraShot.cs">
+      <DependentUpon>CameraShot.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Cell.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
@@ -2183,6 +2186,9 @@
     </Compile>
     <Compile Include="Records\Major Records\BodyPart_Generated.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CameraShot_Generated.cs">
+      <DependentUpon>CameraShot.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
