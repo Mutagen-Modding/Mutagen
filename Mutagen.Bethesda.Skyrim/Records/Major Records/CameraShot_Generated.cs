@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
         public CameraShot.LocationType Location { get; set; } = default;
         #endregion
         #region Target
-        public CameraShot.TargetType Target { get; set; } = default;
+        public CameraShot.LocationType Target { get; set; } = default;
         #endregion
         #region Flags
         public CameraShot.Flag Flags { get; set; } = default;
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new CameraShot.ActionType Action { get; set; }
         new CameraShot.LocationType Location { get; set; }
-        new CameraShot.TargetType Target { get; set; }
+        new CameraShot.LocationType Target { get; set; }
         new CameraShot.Flag Flags { get; set; }
         new Single TimeMultiplierPlayer { get; set; }
         new Single TimeMultiplierTarget { get; set; }
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         CameraShot.ActionType Action { get; }
         CameraShot.LocationType Location { get; }
-        CameraShot.TargetType Target { get; }
+        CameraShot.LocationType Target { get; }
         CameraShot.Flag Flags { get; }
         Single TimeMultiplierPlayer { get; }
         Single TimeMultiplierTarget { get; }
@@ -2034,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim
                     writer,
                     item.Location,
                     length: 4);
-                EnumBinaryTranslation<CameraShot.TargetType, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Target,
                     length: 4);
@@ -2179,7 +2179,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Location = EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.Target = EnumBinaryTranslation<CameraShot.TargetType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Target = EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     item.Flags = EnumBinaryTranslation<CameraShot.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -2279,7 +2279,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Target
         private int _TargetLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Target_IsSet => _DATALocation.HasValue;
-        public CameraShot.TargetType Target => _Target_IsSet ? (CameraShot.TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)) : default;
+        public CameraShot.LocationType Target => _Target_IsSet ? (CameraShot.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)) : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xC;

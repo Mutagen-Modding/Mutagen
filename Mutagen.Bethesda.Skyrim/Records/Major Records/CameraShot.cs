@@ -18,14 +18,6 @@ public partial class CameraShot
         LeadActor,
     }
 
-    public enum TargetType
-    { 
-        Attacker,
-        Projectile,
-        Target,
-        LeadActor,
-    }
-
     [Flags]
     public enum Flag
     {
