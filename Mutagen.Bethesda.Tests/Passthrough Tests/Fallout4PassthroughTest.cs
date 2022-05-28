@@ -370,6 +370,29 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.DLBR,
             RecordTypes.DIAL,
             RecordTypes.SCEN);
+        ret.AddAlignments(
+            RecordTypes.ARMA,
+            RecordTypes.MOD2,
+            RecordTypes.MO2C,
+            RecordTypes.MO2T,
+            RecordTypes.MO2S,
+            RecordTypes.MO2F,
+            RecordTypes.MOD3,
+            RecordTypes.MO3C,
+            RecordTypes.MO3T,
+            RecordTypes.MO3S,
+            RecordTypes.MO3F,
+            RecordTypes.MOD4,
+            RecordTypes.MO4C,
+            RecordTypes.MO4T,
+            RecordTypes.MO4S,
+            RecordTypes.MO4F,
+            RecordTypes.MOD5,
+            RecordTypes.MO5C,
+            RecordTypes.MO5T,
+            RecordTypes.MO5S,
+            RecordTypes.MO5F
+        );
         return ret;
     }
 

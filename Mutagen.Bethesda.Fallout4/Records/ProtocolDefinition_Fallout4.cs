@@ -489,7 +489,15 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             CameraShot_Registration.Instance,
             Impact_Registration.Instance,
             ImpactDataSet_Registration.Instance,
-            ImpactData_Registration.Instance
+            ImpactData_Registration.Instance,
+            LocationReference_Registration.Instance,
+            LocationCellUnique_Registration.Instance,
+            LocationCellStaticReference_Registration.Instance,
+            LocationCoordinate_Registration.Instance,
+            LocationCellEnablePoint_Registration.Instance,
+            DefaultObjectManager_Registration.Instance,
+            DefaultObjectUse_Registration.Instance,
+            DefaultObject_Registration.Instance
         );
     }
 }

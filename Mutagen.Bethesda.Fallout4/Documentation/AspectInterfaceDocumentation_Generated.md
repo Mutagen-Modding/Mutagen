@@ -36,6 +36,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ingredient
 - Key
 - Light
+- Location
 - MagicEffect
 - MiscItem
 - MovableStatic
@@ -120,6 +121,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Key
 - Keyword
 - Light
+- Location
 - MagicEffect
 - MaterialType
 - Message
@@ -446,6 +448,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 - IWeightValue
+### Location
+- IKeyworded
+- INamed
 ### MagicEffect
 - IKeyworded
 - INamed

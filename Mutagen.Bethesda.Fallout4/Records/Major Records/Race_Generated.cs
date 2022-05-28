@@ -5232,6 +5232,7 @@ namespace Mutagen.Bethesda.Fallout4
             var triggers = RecordCollection.Factory(RecordTypes.RACE);
             var all = RecordCollection.Factory(
                 RecordTypes.RACE,
+                RecordTypes.NAM2,
                 RecordTypes.STCP,
                 RecordTypes.FULL,
                 RecordTypes.DESC,
@@ -5266,7 +5267,6 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.NAM5,
                 RecordTypes.NAM7,
                 RecordTypes.CNAM,
-                RecordTypes.NAM2,
                 RecordTypes.ONAM,
                 RecordTypes.LNAM,
                 RecordTypes.NAME,

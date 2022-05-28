@@ -188,6 +188,7 @@
       </Gendered>
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
+    <AdditionalContainedRecordType>NAM2</AdditionalContainedRecordType>
   </Object>
   <Object name="RaceWeight" objType="Subrecord" GUID="81e4197a-7adb-4406-a15e-02095555c257" ID="245">
     <Fields>

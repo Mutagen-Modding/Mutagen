@@ -136,6 +136,13 @@ namespace Mutagen.Bethesda.Fallout4
             _MaterialTypes_Object = new Fallout4Group<MaterialType>(this);
             _Impacts_Object = new Fallout4Group<Impact>(this);
             _ImpactDataSets_Object = new Fallout4Group<ImpactDataSet>(this);
+            _ArmorAddons_Object = new Fallout4Group<ArmorAddon>(this);
+            _EncounterZones_Object = new Fallout4Group<EncounterZone>(this);
+            _Locations_Object = new Fallout4Group<Location>(this);
+            _Messages_Object = new Fallout4Group<Message>(this);
+            _DefaultObjectManagers_Object = new Fallout4Group<DefaultObjectManager>(this);
+            _DefaultObjects_Object = new Fallout4Group<DefaultObject>(this);
+            _LightingTemplates_Object = new Fallout4Group<LightingTemplate>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -701,6 +708,55 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IImpactDataSetGetter> IFallout4ModGetter.ImpactDataSets => _ImpactDataSets_Object;
         #endregion
+        #region ArmorAddons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<ArmorAddon> _ArmorAddons_Object;
+        public Fallout4Group<ArmorAddon> ArmorAddons => _ArmorAddons_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IArmorAddonGetter> IFallout4ModGetter.ArmorAddons => _ArmorAddons_Object;
+        #endregion
+        #region EncounterZones
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<EncounterZone> _EncounterZones_Object;
+        public Fallout4Group<EncounterZone> EncounterZones => _EncounterZones_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IEncounterZoneGetter> IFallout4ModGetter.EncounterZones => _EncounterZones_Object;
+        #endregion
+        #region Locations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Location> _Locations_Object;
+        public Fallout4Group<Location> Locations => _Locations_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ILocationGetter> IFallout4ModGetter.Locations => _Locations_Object;
+        #endregion
+        #region Messages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Message> _Messages_Object;
+        public Fallout4Group<Message> Messages => _Messages_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IMessageGetter> IFallout4ModGetter.Messages => _Messages_Object;
+        #endregion
+        #region DefaultObjectManagers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<DefaultObjectManager> _DefaultObjectManagers_Object;
+        public Fallout4Group<DefaultObjectManager> DefaultObjectManagers => _DefaultObjectManagers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IDefaultObjectManagerGetter> IFallout4ModGetter.DefaultObjectManagers => _DefaultObjectManagers_Object;
+        #endregion
+        #region DefaultObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<DefaultObject> _DefaultObjects_Object;
+        public Fallout4Group<DefaultObject> DefaultObjects => _DefaultObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IDefaultObjectGetter> IFallout4ModGetter.DefaultObjects => _DefaultObjects_Object;
+        #endregion
+        #region LightingTemplates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<LightingTemplate> _LightingTemplates_Object;
+        public Fallout4Group<LightingTemplate> LightingTemplates => _LightingTemplates_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ILightingTemplateGetter> IFallout4ModGetter.LightingTemplates => _LightingTemplates_Object;
+        #endregion
 
         #region To String
 
@@ -820,6 +876,13 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaterialTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Impacts = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.ImpactDataSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.ArmorAddons = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.EncounterZones = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Locations = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Messages = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.DefaultObjectManagers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.DefaultObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.LightingTemplates = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -902,7 +965,14 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VoiceTypes,
                 TItem MaterialTypes,
                 TItem Impacts,
-                TItem ImpactDataSets)
+                TItem ImpactDataSets,
+                TItem ArmorAddons,
+                TItem EncounterZones,
+                TItem Locations,
+                TItem Messages,
+                TItem DefaultObjectManagers,
+                TItem DefaultObjects,
+                TItem LightingTemplates)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -984,6 +1054,13 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaterialTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MaterialTypes, new Fallout4Group.Mask<TItem>(MaterialTypes));
                 this.Impacts = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Impacts, new Fallout4Group.Mask<TItem>(Impacts));
                 this.ImpactDataSets = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ImpactDataSets, new Fallout4Group.Mask<TItem>(ImpactDataSets));
+                this.ArmorAddons = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ArmorAddons, new Fallout4Group.Mask<TItem>(ArmorAddons));
+                this.EncounterZones = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(EncounterZones, new Fallout4Group.Mask<TItem>(EncounterZones));
+                this.Locations = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Locations, new Fallout4Group.Mask<TItem>(Locations));
+                this.Messages = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Messages, new Fallout4Group.Mask<TItem>(Messages));
+                this.DefaultObjectManagers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(DefaultObjectManagers, new Fallout4Group.Mask<TItem>(DefaultObjectManagers));
+                this.DefaultObjects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(DefaultObjects, new Fallout4Group.Mask<TItem>(DefaultObjects));
+                this.LightingTemplates = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LightingTemplates, new Fallout4Group.Mask<TItem>(LightingTemplates));
             }
 
             #pragma warning disable CS8618
@@ -1075,6 +1152,13 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MaterialTypes { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Impacts { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ImpactDataSets { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ArmorAddons { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? EncounterZones { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Locations { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Messages { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? DefaultObjectManagers { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? DefaultObjects { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LightingTemplates { get; set; }
             #endregion
 
             #region Equals
@@ -1167,6 +1251,13 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.MaterialTypes, rhs.MaterialTypes)) return false;
                 if (!object.Equals(this.Impacts, rhs.Impacts)) return false;
                 if (!object.Equals(this.ImpactDataSets, rhs.ImpactDataSets)) return false;
+                if (!object.Equals(this.ArmorAddons, rhs.ArmorAddons)) return false;
+                if (!object.Equals(this.EncounterZones, rhs.EncounterZones)) return false;
+                if (!object.Equals(this.Locations, rhs.Locations)) return false;
+                if (!object.Equals(this.Messages, rhs.Messages)) return false;
+                if (!object.Equals(this.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
+                if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
+                if (!object.Equals(this.LightingTemplates, rhs.LightingTemplates)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1252,6 +1343,13 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.MaterialTypes);
                 hash.Add(this.Impacts);
                 hash.Add(this.ImpactDataSets);
+                hash.Add(this.ArmorAddons);
+                hash.Add(this.EncounterZones);
+                hash.Add(this.Locations);
+                hash.Add(this.Messages);
+                hash.Add(this.DefaultObjectManagers);
+                hash.Add(this.DefaultObjects);
+                hash.Add(this.LightingTemplates);
                 return hash.ToHashCode();
             }
 
@@ -1660,6 +1758,41 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.ImpactDataSets.Overall)) return false;
                     if (this.ImpactDataSets.Specific != null && !this.ImpactDataSets.Specific.All(eval)) return false;
                 }
+                if (ArmorAddons != null)
+                {
+                    if (!eval(this.ArmorAddons.Overall)) return false;
+                    if (this.ArmorAddons.Specific != null && !this.ArmorAddons.Specific.All(eval)) return false;
+                }
+                if (EncounterZones != null)
+                {
+                    if (!eval(this.EncounterZones.Overall)) return false;
+                    if (this.EncounterZones.Specific != null && !this.EncounterZones.Specific.All(eval)) return false;
+                }
+                if (Locations != null)
+                {
+                    if (!eval(this.Locations.Overall)) return false;
+                    if (this.Locations.Specific != null && !this.Locations.Specific.All(eval)) return false;
+                }
+                if (Messages != null)
+                {
+                    if (!eval(this.Messages.Overall)) return false;
+                    if (this.Messages.Specific != null && !this.Messages.Specific.All(eval)) return false;
+                }
+                if (DefaultObjectManagers != null)
+                {
+                    if (!eval(this.DefaultObjectManagers.Overall)) return false;
+                    if (this.DefaultObjectManagers.Specific != null && !this.DefaultObjectManagers.Specific.All(eval)) return false;
+                }
+                if (DefaultObjects != null)
+                {
+                    if (!eval(this.DefaultObjects.Overall)) return false;
+                    if (this.DefaultObjects.Specific != null && !this.DefaultObjects.Specific.All(eval)) return false;
+                }
+                if (LightingTemplates != null)
+                {
+                    if (!eval(this.LightingTemplates.Overall)) return false;
+                    if (this.LightingTemplates.Specific != null && !this.LightingTemplates.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2067,6 +2200,41 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.ImpactDataSets.Overall)) return true;
                     if (this.ImpactDataSets.Specific != null && this.ImpactDataSets.Specific.Any(eval)) return true;
                 }
+                if (ArmorAddons != null)
+                {
+                    if (eval(this.ArmorAddons.Overall)) return true;
+                    if (this.ArmorAddons.Specific != null && this.ArmorAddons.Specific.Any(eval)) return true;
+                }
+                if (EncounterZones != null)
+                {
+                    if (eval(this.EncounterZones.Overall)) return true;
+                    if (this.EncounterZones.Specific != null && this.EncounterZones.Specific.Any(eval)) return true;
+                }
+                if (Locations != null)
+                {
+                    if (eval(this.Locations.Overall)) return true;
+                    if (this.Locations.Specific != null && this.Locations.Specific.Any(eval)) return true;
+                }
+                if (Messages != null)
+                {
+                    if (eval(this.Messages.Overall)) return true;
+                    if (this.Messages.Specific != null && this.Messages.Specific.Any(eval)) return true;
+                }
+                if (DefaultObjectManagers != null)
+                {
+                    if (eval(this.DefaultObjectManagers.Overall)) return true;
+                    if (this.DefaultObjectManagers.Specific != null && this.DefaultObjectManagers.Specific.Any(eval)) return true;
+                }
+                if (DefaultObjects != null)
+                {
+                    if (eval(this.DefaultObjects.Overall)) return true;
+                    if (this.DefaultObjects.Specific != null && this.DefaultObjects.Specific.Any(eval)) return true;
+                }
+                if (LightingTemplates != null)
+                {
+                    if (eval(this.LightingTemplates.Overall)) return true;
+                    if (this.LightingTemplates.Specific != null && this.LightingTemplates.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2161,6 +2329,13 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MaterialTypes = this.MaterialTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MaterialTypes.Overall), this.MaterialTypes.Specific?.Translate(eval));
                 obj.Impacts = this.Impacts == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Impacts.Overall), this.Impacts.Specific?.Translate(eval));
                 obj.ImpactDataSets = this.ImpactDataSets == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ImpactDataSets.Overall), this.ImpactDataSets.Specific?.Translate(eval));
+                obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
+                obj.EncounterZones = this.EncounterZones == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.EncounterZones.Overall), this.EncounterZones.Specific?.Translate(eval));
+                obj.Locations = this.Locations == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Locations.Overall), this.Locations.Specific?.Translate(eval));
+                obj.Messages = this.Messages == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Messages.Overall), this.Messages.Specific?.Translate(eval));
+                obj.DefaultObjectManagers = this.DefaultObjectManagers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.DefaultObjectManagers.Overall), this.DefaultObjectManagers.Specific?.Translate(eval));
+                obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
+                obj.LightingTemplates = this.LightingTemplates == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LightingTemplates.Overall), this.LightingTemplates.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2499,6 +2674,34 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         ImpactDataSets?.Print(sb);
                     }
+                    if (printMask?.ArmorAddons?.Overall ?? true)
+                    {
+                        ArmorAddons?.Print(sb);
+                    }
+                    if (printMask?.EncounterZones?.Overall ?? true)
+                    {
+                        EncounterZones?.Print(sb);
+                    }
+                    if (printMask?.Locations?.Overall ?? true)
+                    {
+                        Locations?.Print(sb);
+                    }
+                    if (printMask?.Messages?.Overall ?? true)
+                    {
+                        Messages?.Print(sb);
+                    }
+                    if (printMask?.DefaultObjectManagers?.Overall ?? true)
+                    {
+                        DefaultObjectManagers?.Print(sb);
+                    }
+                    if (printMask?.DefaultObjects?.Overall ?? true)
+                    {
+                        DefaultObjects?.Print(sb);
+                    }
+                    if (printMask?.LightingTemplates?.Overall ?? true)
+                    {
+                        LightingTemplates?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2603,6 +2806,13 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<MaterialType.ErrorMask>?>? MaterialTypes;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Impact.ErrorMask>?>? Impacts;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ImpactDataSet.ErrorMask>?>? ImpactDataSets;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<EncounterZone.ErrorMask>?>? EncounterZones;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Location.ErrorMask>?>? Locations;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Message.ErrorMask>?>? Messages;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<DefaultObjectManager.ErrorMask>?>? DefaultObjectManagers;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<LightingTemplate.ErrorMask>?>? LightingTemplates;
             #endregion
 
             #region IErrorMask
@@ -2771,6 +2981,20 @@ namespace Mutagen.Bethesda.Fallout4
                         return Impacts;
                     case Fallout4Mod_FieldIndex.ImpactDataSets:
                         return ImpactDataSets;
+                    case Fallout4Mod_FieldIndex.ArmorAddons:
+                        return ArmorAddons;
+                    case Fallout4Mod_FieldIndex.EncounterZones:
+                        return EncounterZones;
+                    case Fallout4Mod_FieldIndex.Locations:
+                        return Locations;
+                    case Fallout4Mod_FieldIndex.Messages:
+                        return Messages;
+                    case Fallout4Mod_FieldIndex.DefaultObjectManagers:
+                        return DefaultObjectManagers;
+                    case Fallout4Mod_FieldIndex.DefaultObjects:
+                        return DefaultObjects;
+                    case Fallout4Mod_FieldIndex.LightingTemplates:
+                        return LightingTemplates;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3020,6 +3244,27 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.ImpactDataSets:
                         this.ImpactDataSets = new MaskItem<Exception?, Fallout4Group.ErrorMask<ImpactDataSet.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.ArmorAddons:
+                        this.ArmorAddons = new MaskItem<Exception?, Fallout4Group.ErrorMask<ArmorAddon.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.EncounterZones:
+                        this.EncounterZones = new MaskItem<Exception?, Fallout4Group.ErrorMask<EncounterZone.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Locations:
+                        this.Locations = new MaskItem<Exception?, Fallout4Group.ErrorMask<Location.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Messages:
+                        this.Messages = new MaskItem<Exception?, Fallout4Group.ErrorMask<Message.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.DefaultObjectManagers:
+                        this.DefaultObjectManagers = new MaskItem<Exception?, Fallout4Group.ErrorMask<DefaultObjectManager.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.DefaultObjects:
+                        this.DefaultObjects = new MaskItem<Exception?, Fallout4Group.ErrorMask<DefaultObject.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.LightingTemplates:
+                        this.LightingTemplates = new MaskItem<Exception?, Fallout4Group.ErrorMask<LightingTemplate.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3271,6 +3516,27 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.ImpactDataSets:
                         this.ImpactDataSets = (MaskItem<Exception?, Fallout4Group.ErrorMask<ImpactDataSet.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.ArmorAddons:
+                        this.ArmorAddons = (MaskItem<Exception?, Fallout4Group.ErrorMask<ArmorAddon.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.EncounterZones:
+                        this.EncounterZones = (MaskItem<Exception?, Fallout4Group.ErrorMask<EncounterZone.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.Locations:
+                        this.Locations = (MaskItem<Exception?, Fallout4Group.ErrorMask<Location.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.Messages:
+                        this.Messages = (MaskItem<Exception?, Fallout4Group.ErrorMask<Message.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.DefaultObjectManagers:
+                        this.DefaultObjectManagers = (MaskItem<Exception?, Fallout4Group.ErrorMask<DefaultObjectManager.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.DefaultObjects:
+                        this.DefaultObjects = (MaskItem<Exception?, Fallout4Group.ErrorMask<DefaultObject.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.LightingTemplates:
+                        this.LightingTemplates = (MaskItem<Exception?, Fallout4Group.ErrorMask<LightingTemplate.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3359,6 +3625,13 @@ namespace Mutagen.Bethesda.Fallout4
                 if (MaterialTypes != null) return true;
                 if (Impacts != null) return true;
                 if (ImpactDataSets != null) return true;
+                if (ArmorAddons != null) return true;
+                if (EncounterZones != null) return true;
+                if (Locations != null) return true;
+                if (Messages != null) return true;
+                if (DefaultObjectManagers != null) return true;
+                if (DefaultObjects != null) return true;
+                if (LightingTemplates != null) return true;
                 return false;
             }
             #endregion
@@ -3464,6 +3737,13 @@ namespace Mutagen.Bethesda.Fallout4
                 MaterialTypes?.Print(sb);
                 Impacts?.Print(sb);
                 ImpactDataSets?.Print(sb);
+                ArmorAddons?.Print(sb);
+                EncounterZones?.Print(sb);
+                Locations?.Print(sb);
+                Messages?.Print(sb);
+                DefaultObjectManagers?.Print(sb);
+                DefaultObjects?.Print(sb);
+                LightingTemplates?.Print(sb);
             }
             #endregion
 
@@ -3552,6 +3832,13 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MaterialTypes = this.MaterialTypes.Combine(rhs.MaterialTypes, (l, r) => l.Combine(r));
                 ret.Impacts = this.Impacts.Combine(rhs.Impacts, (l, r) => l.Combine(r));
                 ret.ImpactDataSets = this.ImpactDataSets.Combine(rhs.ImpactDataSets, (l, r) => l.Combine(r));
+                ret.ArmorAddons = this.ArmorAddons.Combine(rhs.ArmorAddons, (l, r) => l.Combine(r));
+                ret.EncounterZones = this.EncounterZones.Combine(rhs.EncounterZones, (l, r) => l.Combine(r));
+                ret.Locations = this.Locations.Combine(rhs.Locations, (l, r) => l.Combine(r));
+                ret.Messages = this.Messages.Combine(rhs.Messages, (l, r) => l.Combine(r));
+                ret.DefaultObjectManagers = this.DefaultObjectManagers.Combine(rhs.DefaultObjectManagers, (l, r) => l.Combine(r));
+                ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
+                ret.LightingTemplates = this.LightingTemplates.Combine(rhs.LightingTemplates, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3655,6 +3942,13 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<MaterialType.TranslationMask>? MaterialTypes;
             public Fallout4Group.TranslationMask<Impact.TranslationMask>? Impacts;
             public Fallout4Group.TranslationMask<ImpactDataSet.TranslationMask>? ImpactDataSets;
+            public Fallout4Group.TranslationMask<ArmorAddon.TranslationMask>? ArmorAddons;
+            public Fallout4Group.TranslationMask<EncounterZone.TranslationMask>? EncounterZones;
+            public Fallout4Group.TranslationMask<Location.TranslationMask>? Locations;
+            public Fallout4Group.TranslationMask<Message.TranslationMask>? Messages;
+            public Fallout4Group.TranslationMask<DefaultObjectManager.TranslationMask>? DefaultObjectManagers;
+            public Fallout4Group.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
+            public Fallout4Group.TranslationMask<LightingTemplate.TranslationMask>? LightingTemplates;
             #endregion
 
             #region Ctors
@@ -3759,6 +4053,13 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((MaterialTypes != null ? MaterialTypes.OnOverall : DefaultOn, MaterialTypes?.GetCrystal()));
                 ret.Add((Impacts != null ? Impacts.OnOverall : DefaultOn, Impacts?.GetCrystal()));
                 ret.Add((ImpactDataSets != null ? ImpactDataSets.OnOverall : DefaultOn, ImpactDataSets?.GetCrystal()));
+                ret.Add((ArmorAddons != null ? ArmorAddons.OnOverall : DefaultOn, ArmorAddons?.GetCrystal()));
+                ret.Add((EncounterZones != null ? EncounterZones.OnOverall : DefaultOn, EncounterZones?.GetCrystal()));
+                ret.Add((Locations != null ? Locations.OnOverall : DefaultOn, Locations?.GetCrystal()));
+                ret.Add((Messages != null ? Messages.OnOverall : DefaultOn, Messages?.GetCrystal()));
+                ret.Add((DefaultObjectManagers != null ? DefaultObjectManagers.OnOverall : DefaultOn, DefaultObjectManagers?.GetCrystal()));
+                ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
+                ret.Add((LightingTemplates != null ? LightingTemplates.OnOverall : DefaultOn, LightingTemplates?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3878,6 +4179,13 @@ namespace Mutagen.Bethesda.Fallout4
             _MaterialTypes_Object = new Fallout4Group<MaterialType>(this);
             _Impacts_Object = new Fallout4Group<Impact>(this);
             _ImpactDataSets_Object = new Fallout4Group<ImpactDataSet>(this);
+            _ArmorAddons_Object = new Fallout4Group<ArmorAddon>(this);
+            _EncounterZones_Object = new Fallout4Group<EncounterZone>(this);
+            _Locations_Object = new Fallout4Group<Location>(this);
+            _Messages_Object = new Fallout4Group<Message>(this);
+            _DefaultObjectManagers_Object = new Fallout4Group<DefaultObjectManager>(this);
+            _DefaultObjects_Object = new Fallout4Group<DefaultObject>(this);
+            _LightingTemplates_Object = new Fallout4Group<LightingTemplate>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4203,6 +4511,34 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ImpactDataSets.RecordCache.Set(rhsMod.ImpactDataSets.RecordCache.Items);
             }
+            if (mask?.ArmorAddons ?? true)
+            {
+                this.ArmorAddons.RecordCache.Set(rhsMod.ArmorAddons.RecordCache.Items);
+            }
+            if (mask?.EncounterZones ?? true)
+            {
+                this.EncounterZones.RecordCache.Set(rhsMod.EncounterZones.RecordCache.Items);
+            }
+            if (mask?.Locations ?? true)
+            {
+                this.Locations.RecordCache.Set(rhsMod.Locations.RecordCache.Items);
+            }
+            if (mask?.Messages ?? true)
+            {
+                this.Messages.RecordCache.Set(rhsMod.Messages.RecordCache.Items);
+            }
+            if (mask?.DefaultObjectManagers ?? true)
+            {
+                this.DefaultObjectManagers.RecordCache.Set(rhsMod.DefaultObjectManagers.RecordCache.Items);
+            }
+            if (mask?.DefaultObjects ?? true)
+            {
+                this.DefaultObjects.RecordCache.Set(rhsMod.DefaultObjects.RecordCache.Items);
+            }
+            if (mask?.LightingTemplates ?? true)
+            {
+                this.LightingTemplates.RecordCache.Set(rhsMod.LightingTemplates.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -4292,6 +4628,13 @@ namespace Mutagen.Bethesda.Fallout4
             count += MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Impacts.RecordCache.Count > 0 ? 1 : default(uint);
             count += ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += EncounterZones.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Locations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Messages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4622,6 +4965,13 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<MaterialType> MaterialTypes { get; }
         new Fallout4Group<Impact> Impacts { get; }
         new Fallout4Group<ImpactDataSet> ImpactDataSets { get; }
+        new Fallout4Group<ArmorAddon> ArmorAddons { get; }
+        new Fallout4Group<EncounterZone> EncounterZones { get; }
+        new Fallout4Group<Location> Locations { get; }
+        new Fallout4Group<Message> Messages { get; }
+        new Fallout4Group<DefaultObjectManager> DefaultObjectManagers { get; }
+        new Fallout4Group<DefaultObject> DefaultObjects { get; }
+        new Fallout4Group<LightingTemplate> LightingTemplates { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -4720,6 +5070,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IMaterialTypeGetter> MaterialTypes { get; }
         IFallout4GroupGetter<IImpactGetter> Impacts { get; }
         IFallout4GroupGetter<IImpactDataSetGetter> ImpactDataSets { get; }
+        IFallout4GroupGetter<IArmorAddonGetter> ArmorAddons { get; }
+        IFallout4GroupGetter<IEncounterZoneGetter> EncounterZones { get; }
+        IFallout4GroupGetter<ILocationGetter> Locations { get; }
+        IFallout4GroupGetter<IMessageGetter> Messages { get; }
+        IFallout4GroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers { get; }
+        IFallout4GroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
+        IFallout4GroupGetter<ILightingTemplateGetter> LightingTemplates { get; }
 
     }
 
@@ -5370,6 +5727,13 @@ namespace Mutagen.Bethesda.Fallout4
         MaterialTypes = 77,
         Impacts = 78,
         ImpactDataSets = 79,
+        ArmorAddons = 80,
+        EncounterZones = 81,
+        Locations = 82,
+        Messages = 83,
+        DefaultObjectManagers = 84,
+        DefaultObjects = 85,
+        LightingTemplates = 86,
     }
     #endregion
 
@@ -5387,9 +5751,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 80;
+        public const ushort AdditionalFieldCount = 87;
 
-        public const ushort FieldCount = 80;
+        public const ushort FieldCount = 87;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -5536,6 +5900,13 @@ namespace Mutagen.Bethesda.Fallout4
             item.MaterialTypes.Clear();
             item.Impacts.Clear();
             item.ImpactDataSets.Clear();
+            item.ArmorAddons.Clear();
+            item.EncounterZones.Clear();
+            item.Locations.Clear();
+            item.Messages.Clear();
+            item.DefaultObjectManagers.Clear();
+            item.DefaultObjects.Clear();
+            item.LightingTemplates.Clear();
         }
         
         #region Mutagen
@@ -5609,6 +5980,13 @@ namespace Mutagen.Bethesda.Fallout4
             obj.MaterialTypes.RemapLinks(mapping);
             obj.Impacts.RemapLinks(mapping);
             obj.ImpactDataSets.RemapLinks(mapping);
+            obj.ArmorAddons.RemapLinks(mapping);
+            obj.EncounterZones.RemapLinks(mapping);
+            obj.Locations.RemapLinks(mapping);
+            obj.Messages.RemapLinks(mapping);
+            obj.DefaultObjectManagers.RemapLinks(mapping);
+            obj.DefaultObjects.RemapLinks(mapping);
+            obj.LightingTemplates.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -5722,6 +6100,13 @@ namespace Mutagen.Bethesda.Fallout4
             obj.MaterialTypes.Remove(keys);
             obj.Impacts.Remove(keys);
             obj.ImpactDataSets.Remove(keys);
+            obj.ArmorAddons.Remove(keys);
+            obj.EncounterZones.Remove(keys);
+            obj.Locations.Remove(keys);
+            obj.Messages.Remove(keys);
+            obj.DefaultObjectManagers.Remove(keys);
+            obj.DefaultObjects.Remove(keys);
+            obj.LightingTemplates.Remove(keys);
         }
         
         public void Remove(
@@ -6409,6 +6794,62 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    obj.ArmorAddons.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    obj.EncounterZones.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Location":
+                case "ILocationGetter":
+                case "ILocation":
+                case "ILocationInternal":
+                    obj.Locations.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    obj.Messages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    obj.DefaultObjectManagers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DefaultObject":
+                case "IDefaultObjectGetter":
+                case "IDefaultObject":
+                case "IDefaultObjectInternal":
+                    obj.DefaultObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    obj.LightingTemplates.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -6572,6 +7013,7 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(IAddonNodeGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorAddonGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBendableSplineGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IComponentGetter), throwIfUnknown: throwIfUnknown);
@@ -6714,6 +7156,13 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "IComplexLocation":
+                case "IComplexLocationGetter":
+                    Remove(obj, keys, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown);
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IOwner":
                 case "IOwnerGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
@@ -6771,6 +7220,7 @@ namespace Mutagen.Bethesda.Fallout4
                     break;
                 case "ILocationRecord":
                 case "ILocationRecordGetter":
+                    Remove(obj, keys, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IEffectRecord":
@@ -6968,6 +7418,13 @@ namespace Mutagen.Bethesda.Fallout4
             ret.MaterialTypes = MaskItemExt.Factory(item.MaterialTypes.GetEqualsMask(rhs.MaterialTypes, include), include);
             ret.Impacts = MaskItemExt.Factory(item.Impacts.GetEqualsMask(rhs.Impacts, include), include);
             ret.ImpactDataSets = MaskItemExt.Factory(item.ImpactDataSets.GetEqualsMask(rhs.ImpactDataSets, include), include);
+            ret.ArmorAddons = MaskItemExt.Factory(item.ArmorAddons.GetEqualsMask(rhs.ArmorAddons, include), include);
+            ret.EncounterZones = MaskItemExt.Factory(item.EncounterZones.GetEqualsMask(rhs.EncounterZones, include), include);
+            ret.Locations = MaskItemExt.Factory(item.Locations.GetEqualsMask(rhs.Locations, include), include);
+            ret.Messages = MaskItemExt.Factory(item.Messages.GetEqualsMask(rhs.Messages, include), include);
+            ret.DefaultObjectManagers = MaskItemExt.Factory(item.DefaultObjectManagers.GetEqualsMask(rhs.DefaultObjectManagers, include), include);
+            ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
+            ret.LightingTemplates = MaskItemExt.Factory(item.LightingTemplates.GetEqualsMask(rhs.LightingTemplates, include), include);
         }
         
         public string Print(
@@ -7331,6 +7788,34 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.ImpactDataSets?.Overall ?? true)
             {
                 item.ImpactDataSets?.Print(sb, "ImpactDataSets");
+            }
+            if (printMask?.ArmorAddons?.Overall ?? true)
+            {
+                item.ArmorAddons?.Print(sb, "ArmorAddons");
+            }
+            if (printMask?.EncounterZones?.Overall ?? true)
+            {
+                item.EncounterZones?.Print(sb, "EncounterZones");
+            }
+            if (printMask?.Locations?.Overall ?? true)
+            {
+                item.Locations?.Print(sb, "Locations");
+            }
+            if (printMask?.Messages?.Overall ?? true)
+            {
+                item.Messages?.Print(sb, "Messages");
+            }
+            if (printMask?.DefaultObjectManagers?.Overall ?? true)
+            {
+                item.DefaultObjectManagers?.Print(sb, "DefaultObjectManagers");
+            }
+            if (printMask?.DefaultObjects?.Overall ?? true)
+            {
+                item.DefaultObjects?.Print(sb, "DefaultObjects");
+            }
+            if (printMask?.LightingTemplates?.Overall ?? true)
+            {
+                item.LightingTemplates?.Print(sb, "LightingTemplates");
             }
         }
         
@@ -7981,6 +8466,62 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isImpactDataSetsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ArmorAddons) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ArmorAddons, rhs.ArmorAddons, out var lhsArmorAddons, out var rhsArmorAddons, out var isArmorAddonsEqual))
+                {
+                    if (!object.Equals(lhsArmorAddons, rhsArmorAddons)) return false;
+                }
+                else if (!isArmorAddonsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EncounterZones) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.EncounterZones, rhs.EncounterZones, out var lhsEncounterZones, out var rhsEncounterZones, out var isEncounterZonesEqual))
+                {
+                    if (!object.Equals(lhsEncounterZones, rhsEncounterZones)) return false;
+                }
+                else if (!isEncounterZonesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Locations) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Locations, rhs.Locations, out var lhsLocations, out var rhsLocations, out var isLocationsEqual))
+                {
+                    if (!object.Equals(lhsLocations, rhsLocations)) return false;
+                }
+                else if (!isLocationsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Messages) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Messages, rhs.Messages, out var lhsMessages, out var rhsMessages, out var isMessagesEqual))
+                {
+                    if (!object.Equals(lhsMessages, rhsMessages)) return false;
+                }
+                else if (!isMessagesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DefaultObjectManagers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DefaultObjectManagers, rhs.DefaultObjectManagers, out var lhsDefaultObjectManagers, out var rhsDefaultObjectManagers, out var isDefaultObjectManagersEqual))
+                {
+                    if (!object.Equals(lhsDefaultObjectManagers, rhsDefaultObjectManagers)) return false;
+                }
+                else if (!isDefaultObjectManagersEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DefaultObjects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DefaultObjects, rhs.DefaultObjects, out var lhsDefaultObjects, out var rhsDefaultObjects, out var isDefaultObjectsEqual))
+                {
+                    if (!object.Equals(lhsDefaultObjects, rhsDefaultObjects)) return false;
+                }
+                else if (!isDefaultObjectsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LightingTemplates) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LightingTemplates, rhs.LightingTemplates, out var lhsLightingTemplates, out var rhsLightingTemplates, out var isLightingTemplatesEqual))
+                {
+                    if (!object.Equals(lhsLightingTemplates, rhsLightingTemplates)) return false;
+                }
+                else if (!isLightingTemplatesEqual) return false;
+            }
             return true;
         }
         
@@ -8067,6 +8608,13 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.MaterialTypes);
             hash.Add(item.Impacts);
             hash.Add(item.ImpactDataSets);
+            hash.Add(item.ArmorAddons);
+            hash.Add(item.EncounterZones);
+            hash.Add(item.Locations);
+            hash.Add(item.Messages);
+            hash.Add(item.DefaultObjectManagers);
+            hash.Add(item.DefaultObjects);
+            hash.Add(item.LightingTemplates);
             return hash.ToHashCode();
         }
         
@@ -8479,6 +9027,41 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IImpactDataSet":
                 case "IImpactDataSetInternal":
                     return obj.ImpactDataSets;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    return obj.ArmorAddons;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    return obj.EncounterZones;
+                case "Location":
+                case "ILocationGetter":
+                case "ILocation":
+                case "ILocationInternal":
+                    return obj.Locations;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    return obj.Messages;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    return obj.DefaultObjectManagers;
+                case "DefaultObject":
+                case "IDefaultObjectGetter":
+                case "IDefaultObject":
+                case "IDefaultObjectInternal":
+                    return obj.DefaultObjects;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    return obj.LightingTemplates;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -8503,7 +9086,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[79];
+            Stream[] outputStreams = new Stream[86];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -8584,6 +9167,13 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.MaterialTypes, 76, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Impacts, 77, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, 78, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 79, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.EncounterZones, 80, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 81, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Messages, 82, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, 83, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 84, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, 85, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8900,6 +9490,34 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.ImpactDataSets.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArmorAddons.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EncounterZones.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Locations.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Messages.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DefaultObjectManagers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DefaultObjects.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LightingTemplates.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -9221,6 +9839,34 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArmorAddons.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EncounterZones.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Locations.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Messages.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DefaultObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LightingTemplates.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -9957,6 +10603,69 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IImpactDataSet":
                 case "IImpactDataSetInternal":
                     foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Location":
+                case "ILocationGetter":
+                case "ILocation":
+                case "ILocationInternal":
+                    foreach (var item in obj.Locations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    foreach (var item in obj.Messages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DefaultObject":
+                case "IDefaultObjectGetter":
+                case "IDefaultObject":
+                case "IDefaultObjectInternal":
+                    foreach (var item in obj.DefaultObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10831,6 +11540,69 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.ImpactDataSets,
                 groupGetter: (m) => m.ImpactDataSets))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ArmorAddon, IArmorAddonGetter>(
+                srcGroup: obj.ArmorAddons,
+                type: typeof(IArmorAddonGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ArmorAddons,
+                groupGetter: (m) => m.ArmorAddons))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, EncounterZone, IEncounterZoneGetter>(
+                srcGroup: obj.EncounterZones,
+                type: typeof(IEncounterZoneGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EncounterZones,
+                groupGetter: (m) => m.EncounterZones))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Location, ILocationGetter>(
+                srcGroup: obj.Locations,
+                type: typeof(ILocationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Locations,
+                groupGetter: (m) => m.Locations))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Message, IMessageGetter>(
+                srcGroup: obj.Messages,
+                type: typeof(IMessageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Messages,
+                groupGetter: (m) => m.Messages))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
+                srcGroup: obj.DefaultObjectManagers,
+                type: typeof(IDefaultObjectManagerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DefaultObjectManagers,
+                groupGetter: (m) => m.DefaultObjectManagers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, DefaultObject, IDefaultObjectGetter>(
+                srcGroup: obj.DefaultObjects,
+                type: typeof(IDefaultObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DefaultObjects,
+                groupGetter: (m) => m.DefaultObjects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LightingTemplate, ILightingTemplateGetter>(
+                srcGroup: obj.LightingTemplates,
+                type: typeof(ILightingTemplateGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LightingTemplates,
+                groupGetter: (m) => m.LightingTemplates))
             {
                 yield return item;
             }
@@ -11953,6 +12725,104 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.ImpactDataSets,
                         groupGetter: (m) => m.ImpactDataSets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ArmorAddon, IArmorAddonGetter>(
+                        srcGroup: obj.ArmorAddons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ArmorAddons,
+                        groupGetter: (m) => m.ArmorAddons))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, EncounterZone, IEncounterZoneGetter>(
+                        srcGroup: obj.EncounterZones,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EncounterZones,
+                        groupGetter: (m) => m.EncounterZones))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Location":
+                case "ILocationGetter":
+                case "ILocation":
+                case "ILocationInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Location, ILocationGetter>(
+                        srcGroup: obj.Locations,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Locations,
+                        groupGetter: (m) => m.Locations))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Message, IMessageGetter>(
+                        srcGroup: obj.Messages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Messages,
+                        groupGetter: (m) => m.Messages))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
+                        srcGroup: obj.DefaultObjectManagers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DefaultObjectManagers,
+                        groupGetter: (m) => m.DefaultObjectManagers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DefaultObject":
+                case "IDefaultObjectGetter":
+                case "IDefaultObject":
+                case "IDefaultObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, DefaultObject, IDefaultObjectGetter>(
+                        srcGroup: obj.DefaultObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DefaultObjects,
+                        groupGetter: (m) => m.DefaultObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LightingTemplate, ILightingTemplateGetter>(
+                        srcGroup: obj.LightingTemplates,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LightingTemplates,
+                        groupGetter: (m) => m.LightingTemplates))
                     {
                         yield return item;
                     }
@@ -13851,6 +14721,146 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ArmorAddons) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ArmorAddons);
+                try
+                {
+                    item.ArmorAddons.DeepCopyIn(
+                        rhs: rhs.ArmorAddons,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ArmorAddons));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EncounterZones) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.EncounterZones);
+                try
+                {
+                    item.EncounterZones.DeepCopyIn(
+                        rhs: rhs.EncounterZones,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.EncounterZones));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Locations) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Locations);
+                try
+                {
+                    item.Locations.DeepCopyIn(
+                        rhs: rhs.Locations,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Locations));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Messages) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Messages);
+                try
+                {
+                    item.Messages.DeepCopyIn(
+                        rhs: rhs.Messages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Messages));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DefaultObjectManagers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.DefaultObjectManagers);
+                try
+                {
+                    item.DefaultObjectManagers.DeepCopyIn(
+                        rhs: rhs.DefaultObjectManagers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.DefaultObjectManagers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DefaultObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.DefaultObjects);
+                try
+                {
+                    item.DefaultObjects.DeepCopyIn(
+                        rhs: rhs.DefaultObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.DefaultObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LightingTemplates) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.LightingTemplates);
+                try
+                {
+                    item.LightingTemplates.DeepCopyIn(
+                        rhs: rhs.LightingTemplates,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.LightingTemplates));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -14020,6 +15030,13 @@ namespace Mutagen.Bethesda.Fallout4
         public bool MaterialTypes;
         public bool Impacts;
         public bool ImpactDataSets;
+        public bool ArmorAddons;
+        public bool EncounterZones;
+        public bool Locations;
+        public bool Messages;
+        public bool DefaultObjectManagers;
+        public bool DefaultObjects;
+        public bool LightingTemplates;
         public GroupMask()
         {
         }
@@ -14104,6 +15121,13 @@ namespace Mutagen.Bethesda.Fallout4
             MaterialTypes = defaultValue;
             Impacts = defaultValue;
             ImpactDataSets = defaultValue;
+            ArmorAddons = defaultValue;
+            EncounterZones = defaultValue;
+            Locations = defaultValue;
+            Messages = defaultValue;
+            DefaultObjectManagers = defaultValue;
+            DefaultObjects = defaultValue;
+            LightingTemplates = defaultValue;
         }
     }
 
@@ -15000,6 +16024,83 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ImpactDataSetsItem).BinaryWriteTranslator).Write<IImpactDataSetGetter>(
                         item: ImpactDataSetsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ArmorAddons ?? true)
+            {
+                var ArmorAddonsItem = item.ArmorAddons;
+                if (ArmorAddonsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ArmorAddonsItem).BinaryWriteTranslator).Write<IArmorAddonGetter>(
+                        item: ArmorAddonsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.EncounterZones ?? true)
+            {
+                var EncounterZonesItem = item.EncounterZones;
+                if (EncounterZonesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)EncounterZonesItem).BinaryWriteTranslator).Write<IEncounterZoneGetter>(
+                        item: EncounterZonesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Locations ?? true)
+            {
+                var LocationsItem = item.Locations;
+                if (LocationsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LocationsItem).BinaryWriteTranslator).Write<ILocationGetter>(
+                        item: LocationsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Messages ?? true)
+            {
+                var MessagesItem = item.Messages;
+                if (MessagesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MessagesItem).BinaryWriteTranslator).Write<IMessageGetter>(
+                        item: MessagesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.DefaultObjectManagers ?? true)
+            {
+                var DefaultObjectManagersItem = item.DefaultObjectManagers;
+                if (DefaultObjectManagersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)DefaultObjectManagersItem).BinaryWriteTranslator).Write<IDefaultObjectManagerGetter>(
+                        item: DefaultObjectManagersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.DefaultObjects ?? true)
+            {
+                var DefaultObjectsItem = item.DefaultObjects;
+                if (DefaultObjectsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)DefaultObjectsItem).BinaryWriteTranslator).Write<IDefaultObjectGetter>(
+                        item: DefaultObjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LightingTemplates ?? true)
+            {
+                var LightingTemplatesItem = item.LightingTemplates;
+                if (LightingTemplatesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LightingTemplatesItem).BinaryWriteTranslator).Write<ILightingTemplateGetter>(
+                        item: LightingTemplatesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -16176,6 +17277,104 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.ImpactDataSets;
                 }
+                case RecordTypeInts.ARMA:
+                {
+                    if (importMask?.ArmorAddons ?? true)
+                    {
+                        item.ArmorAddons.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.ArmorAddons;
+                }
+                case RecordTypeInts.ECZN:
+                {
+                    if (importMask?.EncounterZones ?? true)
+                    {
+                        item.EncounterZones.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.EncounterZones;
+                }
+                case RecordTypeInts.LCTN:
+                {
+                    if (importMask?.Locations ?? true)
+                    {
+                        item.Locations.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Locations;
+                }
+                case RecordTypeInts.MESG:
+                {
+                    if (importMask?.Messages ?? true)
+                    {
+                        item.Messages.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Messages;
+                }
+                case RecordTypeInts.DOBJ:
+                {
+                    if (importMask?.DefaultObjectManagers ?? true)
+                    {
+                        item.DefaultObjectManagers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.DefaultObjectManagers;
+                }
+                case RecordTypeInts.DFOB:
+                {
+                    if (importMask?.DefaultObjects ?? true)
+                    {
+                        item.DefaultObjects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.DefaultObjects;
+                }
+                case RecordTypeInts.LGTM:
+                {
+                    if (importMask?.LightingTemplates ?? true)
+                    {
+                        item.LightingTemplates.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.LightingTemplates;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -16733,6 +17932,41 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _ImpactDataSetsLocations;
         private IFallout4GroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? Fallout4GroupBinaryOverlay<IImpactDataSetGetter>.Fallout4GroupFactory(_data, _ImpactDataSetsLocations, _package) : default;
         public IFallout4GroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new Fallout4Group<ImpactDataSet>(this);
+        #endregion
+        #region ArmorAddons
+        private List<RangeInt64>? _ArmorAddonsLocations;
+        private IFallout4GroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? Fallout4GroupBinaryOverlay<IArmorAddonGetter>.Fallout4GroupFactory(_data, _ArmorAddonsLocations, _package) : default;
+        public IFallout4GroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new Fallout4Group<ArmorAddon>(this);
+        #endregion
+        #region EncounterZones
+        private List<RangeInt64>? _EncounterZonesLocations;
+        private IFallout4GroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? Fallout4GroupBinaryOverlay<IEncounterZoneGetter>.Fallout4GroupFactory(_data, _EncounterZonesLocations, _package) : default;
+        public IFallout4GroupGetter<IEncounterZoneGetter> EncounterZones => _EncounterZones ?? new Fallout4Group<EncounterZone>(this);
+        #endregion
+        #region Locations
+        private List<RangeInt64>? _LocationsLocations;
+        private IFallout4GroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? Fallout4GroupBinaryOverlay<ILocationGetter>.Fallout4GroupFactory(_data, _LocationsLocations, _package) : default;
+        public IFallout4GroupGetter<ILocationGetter> Locations => _Locations ?? new Fallout4Group<Location>(this);
+        #endregion
+        #region Messages
+        private List<RangeInt64>? _MessagesLocations;
+        private IFallout4GroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? Fallout4GroupBinaryOverlay<IMessageGetter>.Fallout4GroupFactory(_data, _MessagesLocations, _package) : default;
+        public IFallout4GroupGetter<IMessageGetter> Messages => _Messages ?? new Fallout4Group<Message>(this);
+        #endregion
+        #region DefaultObjectManagers
+        private List<RangeInt64>? _DefaultObjectManagersLocations;
+        private IFallout4GroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? Fallout4GroupBinaryOverlay<IDefaultObjectManagerGetter>.Fallout4GroupFactory(_data, _DefaultObjectManagersLocations, _package) : default;
+        public IFallout4GroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new Fallout4Group<DefaultObjectManager>(this);
+        #endregion
+        #region DefaultObjects
+        private List<RangeInt64>? _DefaultObjectsLocations;
+        private IFallout4GroupGetter<IDefaultObjectGetter>? _DefaultObjects => _DefaultObjectsLocations != null ? Fallout4GroupBinaryOverlay<IDefaultObjectGetter>.Fallout4GroupFactory(_data, _DefaultObjectsLocations, _package) : default;
+        public IFallout4GroupGetter<IDefaultObjectGetter> DefaultObjects => _DefaultObjects ?? new Fallout4Group<DefaultObject>(this);
+        #endregion
+        #region LightingTemplates
+        private List<RangeInt64>? _LightingTemplatesLocations;
+        private IFallout4GroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? Fallout4GroupBinaryOverlay<ILightingTemplateGetter>.Fallout4GroupFactory(_data, _LightingTemplatesLocations, _package) : default;
+        public IFallout4GroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new Fallout4Group<LightingTemplate>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -17294,6 +18528,48 @@ namespace Mutagen.Bethesda.Fallout4
                     _ImpactDataSetsLocations ??= new();
                     _ImpactDataSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.ImpactDataSets;
+                }
+                case RecordTypeInts.ARMA:
+                {
+                    _ArmorAddonsLocations ??= new();
+                    _ArmorAddonsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.ArmorAddons;
+                }
+                case RecordTypeInts.ECZN:
+                {
+                    _EncounterZonesLocations ??= new();
+                    _EncounterZonesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.EncounterZones;
+                }
+                case RecordTypeInts.LCTN:
+                {
+                    _LocationsLocations ??= new();
+                    _LocationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Locations;
+                }
+                case RecordTypeInts.MESG:
+                {
+                    _MessagesLocations ??= new();
+                    _MessagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Messages;
+                }
+                case RecordTypeInts.DOBJ:
+                {
+                    _DefaultObjectManagersLocations ??= new();
+                    _DefaultObjectManagersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.DefaultObjectManagers;
+                }
+                case RecordTypeInts.DFOB:
+                {
+                    _DefaultObjectsLocations ??= new();
+                    _DefaultObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.DefaultObjects;
+                }
+                case RecordTypeInts.LGTM:
+                {
+                    _LightingTemplatesLocations ??= new();
+                    _LightingTemplatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.LightingTemplates;
                 }
                 default:
                     return default(int?);

@@ -11,6 +11,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - VoiceType
 ### IBindableEquipment
 - Armor
+### IComplexLocation
+- Cell
+- Worldspace
 ### IConstructible
 - Armor
 - Book
@@ -268,6 +271,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 - IStaticTarget
+### Cell
+- IComplexLocation
 ### Component
 - IExplodeSpawn
 ### ConstructibleObject
@@ -457,3 +462,5 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 - IStaticTarget
+### Worldspace
+- IComplexLocation

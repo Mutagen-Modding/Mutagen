@@ -58,6 +58,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.IMAD, ProcessImageSpaceAdapters);
         AddDynamicProcessing(RecordTypes.FLST, ProcessFormLists);
         AddDynamicProcessing(RecordTypes.MATT, ProcessMaterialTypes);
+        AddDynamicProcessing(RecordTypes.DFOB, ProcessDefaultObjects);
     }
 
     private void ProcessGameSettings(
@@ -563,6 +564,16 @@ public class Fallout4Processor : Processor
         if (majorFrame.TryFindSubrecord(RecordTypes.CNAM, out var cnam))
         {
             ProcessColorFloat(cnam, fileOffset, alpha: false);
+        }
+    }
+    private void ProcessDefaultObjects(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var data))
+        {
+            ProcessFormIDOverflow(data, fileOffset);
         }
     }
 
@@ -1072,6 +1083,8 @@ public class Fallout4Processor : Processor
                     new StringsAlignmentCustom("PERK", PerkStringHandler),
                     new RecordType[] { "BPTD", "BPTN" },
                     new RecordType[] { "AVIF", "FULL" },
+                    new RecordType[] { "LCTN", "FULL" },
+                    new RecordType[] { "MESG", "FULL", "NNAM", "ITXT" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -1088,6 +1101,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "LSCR", "DESC" },
                     new RecordType[] { "PERK", "DESC" },
                     new RecordType[] { "AVIF", "DESC" },
+                    new RecordType[] { "MESG", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]

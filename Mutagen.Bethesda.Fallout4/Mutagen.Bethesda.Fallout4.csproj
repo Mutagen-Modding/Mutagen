@@ -281,6 +281,9 @@
     <Compile Include="Records\Major Records\EffectShader.cs">
       <DependentUpon>EffectShader.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\EncounterZone.cs">
+      <DependentUpon>EncounterZone.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Explosion.cs">
       <DependentUpon>Explosion.xml</DependentUpon>
     </Compile>
@@ -391,6 +394,9 @@
     </Compile>
     <Compile Include="Records\Major Records\LoadScreen.cs">
       <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Location.cs">
+      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LockData.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
@@ -2201,6 +2207,31 @@
     </Compile>
     <Compile Include="Records\Major Records\ImpactData_Generated.cs">
       <DependentUpon>ImpactDataSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellUnique_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellStaticReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCoordinate_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellEnablePoint_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IComplexLocation_Generated.cs" />
+    <Compile Include="Records\Major Records\DefaultObjectManager_Generated.cs">
+      <DependentUpon>DefaultObjectManager.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DefaultObject_Generated.cs">
+      <DependentUpon>DefaultObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DefaultObjectUse_Generated.cs">
+      <DependentUpon>DefaultObjectManager.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -49,6 +49,7 @@
       <Int32 name="SubCellsUnknown" binary="NoGeneration" />
       <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
     </Fields>
+    <LinkInterface>IComplexLocation</LinkInterface>
   </Object>
   <Object name="WorldspaceGridReference" objType="Subrecord" recordType="RNAM" GUID="accb0377-93f7-403f-827d-8a17f65be51b" ID="515">
     <Fields>

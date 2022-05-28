@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +54,41 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Owner
+        private readonly IFormLink<IOwnerGetter> _Owner = new FormLink<IOwnerGetter>();
+        public IFormLink<IOwnerGetter> Owner
+        {
+            get => _Owner;
+            set => _Owner.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IOwnerGetter> IEncounterZoneGetter.Owner => this.Owner;
+        #endregion
+        #region Location
+        private readonly IFormLink<ILocationGetter> _Location = new FormLink<ILocationGetter>();
+        public IFormLink<ILocationGetter> Location
+        {
+            get => _Location;
+            set => _Location.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILocationGetter> IEncounterZoneGetter.Location => this.Location;
+        #endregion
+        #region Rank
+        public SByte Rank { get; set; } = default;
+        #endregion
+        #region MinLevel
+        public SByte MinLevel { get; set; } = default;
+        #endregion
+        #region Flags
+        public EncounterZone.Flag Flags { get; set; } = default;
+        #endregion
+        #region MaxLevel
+        public SByte MaxLevel { get; set; } = default;
+        #endregion
+        #region DATADataTypeState
+        public EncounterZone.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +114,13 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Owner = initialValue;
+                this.Location = initialValue;
+                this.Rank = initialValue;
+                this.MinLevel = initialValue;
+                this.Flags = initialValue;
+                this.MaxLevel = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +129,14 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Owner,
+                TItem Location,
+                TItem Rank,
+                TItem MinLevel,
+                TItem Flags,
+                TItem MaxLevel,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +145,13 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Owner = Owner;
+                this.Location = Location;
+                this.Rank = Rank;
+                this.MinLevel = MinLevel;
+                this.Flags = Flags;
+                this.MaxLevel = MaxLevel;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +160,16 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Owner;
+            public TItem Location;
+            public TItem Rank;
+            public TItem MinLevel;
+            public TItem Flags;
+            public TItem MaxLevel;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +183,25 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Rank, rhs.Rank)) return false;
+                if (!object.Equals(this.MinLevel, rhs.MinLevel)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.MaxLevel, rhs.MaxLevel)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Owner);
+                hash.Add(this.Location);
+                hash.Add(this.Rank);
+                hash.Add(this.MinLevel);
+                hash.Add(this.Flags);
+                hash.Add(this.MaxLevel);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +212,13 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.Location)) return false;
+                if (!eval(this.Rank)) return false;
+                if (!eval(this.MinLevel)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.MaxLevel)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +227,13 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Owner)) return true;
+                if (eval(this.Location)) return true;
+                if (eval(this.Rank)) return true;
+                if (eval(this.MinLevel)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.MaxLevel)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +249,13 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Owner = eval(this.Owner);
+                obj.Location = eval(this.Location);
+                obj.Rank = eval(this.Rank);
+                obj.MinLevel = eval(this.MinLevel);
+                obj.Flags = eval(this.Flags);
+                obj.MaxLevel = eval(this.MaxLevel);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -172,6 +274,34 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(EncounterZone.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Owner ?? true)
+                    {
+                        sb.AppendItem(Owner, "Owner");
+                    }
+                    if (printMask?.Location ?? true)
+                    {
+                        sb.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.Rank ?? true)
+                    {
+                        sb.AppendItem(Rank, "Rank");
+                    }
+                    if (printMask?.MinLevel ?? true)
+                    {
+                        sb.AppendItem(MinLevel, "MinLevel");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.MaxLevel ?? true)
+                    {
+                        sb.AppendItem(MaxLevel, "MaxLevel");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +312,36 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Owner;
+            public Exception? Location;
+            public Exception? Rank;
+            public Exception? MinLevel;
+            public Exception? Flags;
+            public Exception? MaxLevel;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
                 switch (enu)
                 {
+                    case EncounterZone_FieldIndex.Owner:
+                        return Owner;
+                    case EncounterZone_FieldIndex.Location:
+                        return Location;
+                    case EncounterZone_FieldIndex.Rank:
+                        return Rank;
+                    case EncounterZone_FieldIndex.MinLevel:
+                        return MinLevel;
+                    case EncounterZone_FieldIndex.Flags:
+                        return Flags;
+                    case EncounterZone_FieldIndex.MaxLevel:
+                        return MaxLevel;
+                    case EncounterZone_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +352,27 @@ namespace Mutagen.Bethesda.Fallout4
                 EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
                 switch (enu)
                 {
+                    case EncounterZone_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case EncounterZone_FieldIndex.Location:
+                        this.Location = ex;
+                        break;
+                    case EncounterZone_FieldIndex.Rank:
+                        this.Rank = ex;
+                        break;
+                    case EncounterZone_FieldIndex.MinLevel:
+                        this.MinLevel = ex;
+                        break;
+                    case EncounterZone_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case EncounterZone_FieldIndex.MaxLevel:
+                        this.MaxLevel = ex;
+                        break;
+                    case EncounterZone_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +384,27 @@ namespace Mutagen.Bethesda.Fallout4
                 EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
                 switch (enu)
                 {
+                    case EncounterZone_FieldIndex.Owner:
+                        this.Owner = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.Rank:
+                        this.Rank = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.MinLevel:
+                        this.MinLevel = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.MaxLevel:
+                        this.MaxLevel = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +414,13 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Owner != null) return true;
+                if (Location != null) return true;
+                if (Rank != null) return true;
+                if (MinLevel != null) return true;
+                if (Flags != null) return true;
+                if (MaxLevel != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +447,27 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(Rank, "Rank");
+                }
+                {
+                    sb.AppendItem(MinLevel, "MinLevel");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(MaxLevel, "MaxLevel");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +476,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.Location = this.Location.Combine(rhs.Location);
+                ret.Rank = this.Rank.Combine(rhs.Rank);
+                ret.MinLevel = this.MinLevel.Combine(rhs.MinLevel);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.MaxLevel = this.MaxLevel.Combine(rhs.MaxLevel);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +504,44 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Owner;
+            public bool Location;
+            public bool Rank;
+            public bool MinLevel;
+            public bool Flags;
+            public bool MaxLevel;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Owner = defaultOn;
+                this.Location = defaultOn;
+                this.Rank = defaultOn;
+                this.MinLevel = defaultOn;
+                this.Flags = defaultOn;
+                this.MaxLevel = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Owner, null));
+                ret.Add((Location, null));
+                ret.Add((Rank, null));
+                ret.Add((MinLevel, null));
+                ret.Add((Flags, null));
+                ret.Add((MaxLevel, null));
+                ret.Add((DATADataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +553,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = EncounterZone_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EncounterZoneCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneSetterCommon.Instance.RemapLinks(this, mapping);
         public EncounterZone(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -335,6 +597,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IEncounterZone);
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -416,8 +682,16 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IEncounterZone :
         IEncounterZoneGetter,
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IEncounterZoneInternal>
     {
+        new IFormLink<IOwnerGetter> Owner { get; set; }
+        new IFormLink<ILocationGetter> Location { get; set; }
+        new SByte Rank { get; set; }
+        new SByte MinLevel { get; set; }
+        new EncounterZone.Flag Flags { get; set; }
+        new SByte MaxLevel { get; set; }
+        new EncounterZone.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IEncounterZoneInternal :
@@ -431,10 +705,18 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IEncounterZoneGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IEncounterZoneGetter>,
         IMapsToGetter<IEncounterZoneGetter>
     {
         static new ILoquiRegistration StaticRegistration => EncounterZone_Registration.Instance;
+        IFormLinkGetter<IOwnerGetter> Owner { get; }
+        IFormLinkGetter<ILocationGetter> Location { get; }
+        SByte Rank { get; }
+        SByte MinLevel { get; }
+        EncounterZone.Flag Flags { get; }
+        SByte MaxLevel { get; }
+        EncounterZone.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -599,6 +881,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Owner = 6,
+        Location = 7,
+        Rank = 8,
+        MinLevel = 9,
+        Flags = 10,
+        MaxLevel = 11,
+        DATADataTypeState = 12,
     }
     #endregion
 
@@ -616,9 +905,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "c458c51c-ed0d-4453-b148-737ce5c34e4d";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(EncounterZone.Mask<>);
 
@@ -648,8 +937,11 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.ECZN);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.ECZN);
+            var all = RecordCollection.Factory(
+                RecordTypes.ECZN,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(EncounterZoneBinaryWriteTranslation);
         #region Interface
@@ -693,6 +985,13 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IEncounterZoneInternal item)
         {
             ClearPartial();
+            item.Owner.Clear();
+            item.Location.Clear();
+            item.Rank = default;
+            item.MinLevel = default;
+            item.Flags = default;
+            item.MaxLevel = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -710,6 +1009,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IEncounterZone obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Owner.Relink(mapping);
+            obj.Location.Relink(mapping);
         }
         
         #endregion
@@ -778,6 +1079,13 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.Location = item.Location.Equals(rhs.Location);
+            ret.Rank = item.Rank == rhs.Rank;
+            ret.MinLevel = item.MinLevel == rhs.MinLevel;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.MaxLevel = item.MaxLevel == rhs.MaxLevel;
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1135,34 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Owner ?? true)
+            {
+                sb.AppendItem(item.Owner.FormKey, "Owner");
+            }
+            if (printMask?.Location ?? true)
+            {
+                sb.AppendItem(item.Location.FormKey, "Location");
+            }
+            if (printMask?.Rank ?? true)
+            {
+                sb.AppendItem(item.Rank, "Rank");
+            }
+            if (printMask?.MinLevel ?? true)
+            {
+                sb.AppendItem(item.MinLevel, "MinLevel");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.MaxLevel ?? true)
+            {
+                sb.AppendItem(item.MaxLevel, "MaxLevel");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public static EncounterZone_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1211,34 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
+            {
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
+            {
+                if (lhs.Rank != rhs.Rank) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.MinLevel) ?? true))
+            {
+                if (lhs.MinLevel != rhs.MinLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
+            {
+                if (lhs.MaxLevel != rhs.MaxLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
@@ -903,6 +1267,13 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IEncounterZoneGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Owner);
+            hash.Add(item.Location);
+            hash.Add(item.Rank);
+            hash.Add(item.MinLevel);
+            hash.Add(item.Flags);
+            hash.Add(item.MaxLevel);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -932,6 +1303,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            yield return FormLinkInformation.Factory(obj.Owner);
+            yield return FormLinkInformation.Factory(obj.Location);
             yield break;
         }
         
@@ -1006,6 +1379,34 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
+            {
+                item.Owner.SetTo(rhs.Owner.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
+            {
+                item.Location.SetTo(rhs.Location.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
+            {
+                item.Rank = rhs.Rank;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MinLevel) ?? true))
+            {
+                item.MinLevel = rhs.MinLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
+            {
+                item.MaxLevel = rhs.MaxLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1555,42 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static EncounterZoneBinaryWriteTranslation Instance = new EncounterZoneBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IEncounterZoneGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IEncounterZoneGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Owner);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Location);
+                writer.Write(item.Rank);
+                writer.Write(item.MinLevel);
+                EnumBinaryTranslation<EncounterZone.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1);
+                writer.Write(item.MaxLevel);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IEncounterZoneGetter item,
@@ -1165,13 +1602,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +1668,43 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IEncounterZoneInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Rank = dataFrame.ReadInt8();
+                    item.MinLevel = dataFrame.ReadInt8();
+                    item.Flags = EnumBinaryTranslation<EncounterZone.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.MaxLevel = dataFrame.ReadInt8();
+                    return (int)EncounterZone_FieldIndex.MaxLevel;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1261,6 +1737,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EncounterZoneCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EncounterZoneBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +1752,38 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IEncounterZone);
 
 
+        private RangeInt32? _DATALocation;
+        public EncounterZone.DATADataType DATADataTypeState { get; private set; }
+        #region Owner
+        private int _OwnerLocation => _DATALocation!.Value.Min;
+        private bool _Owner_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
+        #endregion
+        #region Location
+        private int _LocationLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Location_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
+        #endregion
+        #region Rank
+        private int _RankLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Rank_IsSet => _DATALocation.HasValue;
+        public SByte Rank => _Rank_IsSet ? (sbyte)_data.Slice(_RankLocation, 1)[0] : default;
+        #endregion
+        #region MinLevel
+        private int _MinLevelLocation => _DATALocation!.Value.Min + 0x9;
+        private bool _MinLevel_IsSet => _DATALocation.HasValue;
+        public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_data.Slice(_MinLevelLocation, 1)[0] : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xA;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #endregion
+        #region MaxLevel
+        private int _MaxLevelLocation => _DATALocation!.Value.Min + 0xB;
+        private bool _MaxLevel_IsSet => _DATALocation.HasValue;
+        public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_data.Slice(_MaxLevelLocation, 1)[0] : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +1838,33 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)EncounterZone_FieldIndex.MaxLevel;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

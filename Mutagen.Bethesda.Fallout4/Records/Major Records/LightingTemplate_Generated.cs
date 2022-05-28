@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -31,6 +32,7 @@ using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -53,6 +55,231 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region AmbientColor
+        public Color AmbientColor { get; set; } = default;
+        #endregion
+        #region DirectionalColor
+        public Color DirectionalColor { get; set; } = default;
+        #endregion
+        #region FogNearColor
+        public Color FogNearColor { get; set; } = default;
+        #endregion
+        #region FogNear
+        public Single FogNear { get; set; } = default;
+        #endregion
+        #region FogFar
+        public Single FogFar { get; set; } = default;
+        #endregion
+        #region DirectionalRotationXY
+        public Int32 DirectionalRotationXY { get; set; } = default;
+        #endregion
+        #region DirectionalRotationZ
+        public Int32 DirectionalRotationZ { get; set; } = default;
+        #endregion
+        #region DirectionalFade
+        public Single DirectionalFade { get; set; } = default;
+        #endregion
+        #region FogClipDistance
+        public Single FogClipDistance { get; set; } = default;
+        #endregion
+        #region FogPower
+        public Single FogPower { get; set; } = default;
+        #endregion
+        #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused = new byte[32];
+        public MemorySlice<Byte> Unused
+        {
+            get => _Unused;
+            set => this._Unused = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> ILightingTemplateGetter.Unused => this.Unused;
+        #endregion
+        #region FogFarColor
+        public Color FogFarColor { get; set; } = default;
+        #endregion
+        #region FogMax
+        public Single FogMax { get; set; } = default;
+        #endregion
+        #region LightFadeStartDistance
+        public Single LightFadeStartDistance { get; set; } = default;
+        #endregion
+        #region LightFadeEndDistance
+        public Single LightFadeEndDistance { get; set; } = default;
+        #endregion
+        #region Unknown
+        public Int32 Unknown { get; set; } = default;
+        #endregion
+        #region NearHeightMid
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _NearHeightMid;
+        public Single NearHeightMid
+        {
+            get => this._NearHeightMid;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._NearHeightMid = value;
+            }
+        }
+        #endregion
+        #region NearHeightRange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _NearHeightRange;
+        public Single NearHeightRange
+        {
+            get => this._NearHeightRange;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._NearHeightRange = value;
+            }
+        }
+        #endregion
+        #region FogColorHighNear
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _FogColorHighNear;
+        public Color FogColorHighNear
+        {
+            get => this._FogColorHighNear;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._FogColorHighNear = value;
+            }
+        }
+        #endregion
+        #region FogColorHighFar
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _FogColorHighFar;
+        public Color FogColorHighFar
+        {
+            get => this._FogColorHighFar;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._FogColorHighFar = value;
+            }
+        }
+        #endregion
+        #region HighDensityScale
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _HighDensityScale;
+        public Single HighDensityScale
+        {
+            get => this._HighDensityScale;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._HighDensityScale = value;
+            }
+        }
+        #endregion
+        #region FogNearScale
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FogNearScale;
+        public Single FogNearScale
+        {
+            get => this._FogNearScale;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._FogNearScale = value;
+            }
+        }
+        #endregion
+        #region FogFarScale
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FogFarScale;
+        public Single FogFarScale
+        {
+            get => this._FogFarScale;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._FogFarScale = value;
+            }
+        }
+        #endregion
+        #region FogHighNearScale
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FogHighNearScale;
+        public Single FogHighNearScale
+        {
+            get => this._FogHighNearScale;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._FogHighNearScale = value;
+            }
+        }
+        #endregion
+        #region FogHighFarScale
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FogHighFarScale;
+        public Single FogHighFarScale
+        {
+            get => this._FogHighFarScale;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._FogHighFarScale = value;
+            }
+        }
+        #endregion
+        #region FogHeightMid
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FogHeightMid;
+        public Single FogHeightMid
+        {
+            get => this._FogHeightMid;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this._FogHeightMid = value;
+            }
+        }
+        #endregion
+        #region FogHeightRange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FogHeightRange;
+        public Single FogHeightRange
+        {
+            get => this._FogHeightRange;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this._FogHeightRange = value;
+            }
+        }
+        #endregion
+        #region DirectionalAmbientColors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AmbientColors? _DirectionalAmbientColors;
+        public AmbientColors? DirectionalAmbientColors
+        {
+            get => _DirectionalAmbientColors;
+            set => _DirectionalAmbientColors = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IAmbientColorsGetter? ILightingTemplateGetter.DirectionalAmbientColors => this.DirectionalAmbientColors;
+        #endregion
+        #region GodRays
+        private readonly IFormLinkNullable<IGodRayGetter> _GodRays = new FormLinkNullable<IGodRayGetter>();
+        public IFormLinkNullable<IGodRayGetter> GodRays
+        {
+            get => _GodRays;
+            set => _GodRays.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGodRayGetter> ILightingTemplateGetter.GodRays => this.GodRays;
+        #endregion
+        #region DATADataTypeState
+        public LightingTemplate.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +305,36 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.AmbientColor = initialValue;
+                this.DirectionalColor = initialValue;
+                this.FogNearColor = initialValue;
+                this.FogNear = initialValue;
+                this.FogFar = initialValue;
+                this.DirectionalRotationXY = initialValue;
+                this.DirectionalRotationZ = initialValue;
+                this.DirectionalFade = initialValue;
+                this.FogClipDistance = initialValue;
+                this.FogPower = initialValue;
+                this.Unused = initialValue;
+                this.FogFarColor = initialValue;
+                this.FogMax = initialValue;
+                this.LightFadeStartDistance = initialValue;
+                this.LightFadeEndDistance = initialValue;
+                this.Unknown = initialValue;
+                this.NearHeightMid = initialValue;
+                this.NearHeightRange = initialValue;
+                this.FogColorHighNear = initialValue;
+                this.FogColorHighFar = initialValue;
+                this.HighDensityScale = initialValue;
+                this.FogNearScale = initialValue;
+                this.FogFarScale = initialValue;
+                this.FogHighNearScale = initialValue;
+                this.FogHighFarScale = initialValue;
+                this.FogHeightMid = initialValue;
+                this.FogHeightRange = initialValue;
+                this.DirectionalAmbientColors = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
+                this.GodRays = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -86,7 +343,37 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem AmbientColor,
+                TItem DirectionalColor,
+                TItem FogNearColor,
+                TItem FogNear,
+                TItem FogFar,
+                TItem DirectionalRotationXY,
+                TItem DirectionalRotationZ,
+                TItem DirectionalFade,
+                TItem FogClipDistance,
+                TItem FogPower,
+                TItem Unused,
+                TItem FogFarColor,
+                TItem FogMax,
+                TItem LightFadeStartDistance,
+                TItem LightFadeEndDistance,
+                TItem Unknown,
+                TItem NearHeightMid,
+                TItem NearHeightRange,
+                TItem FogColorHighNear,
+                TItem FogColorHighFar,
+                TItem HighDensityScale,
+                TItem FogNearScale,
+                TItem FogFarScale,
+                TItem FogHighNearScale,
+                TItem FogHighFarScale,
+                TItem FogHeightMid,
+                TItem FogHeightRange,
+                TItem DirectionalAmbientColors,
+                TItem GodRays,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +382,36 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.AmbientColor = AmbientColor;
+                this.DirectionalColor = DirectionalColor;
+                this.FogNearColor = FogNearColor;
+                this.FogNear = FogNear;
+                this.FogFar = FogFar;
+                this.DirectionalRotationXY = DirectionalRotationXY;
+                this.DirectionalRotationZ = DirectionalRotationZ;
+                this.DirectionalFade = DirectionalFade;
+                this.FogClipDistance = FogClipDistance;
+                this.FogPower = FogPower;
+                this.Unused = Unused;
+                this.FogFarColor = FogFarColor;
+                this.FogMax = FogMax;
+                this.LightFadeStartDistance = LightFadeStartDistance;
+                this.LightFadeEndDistance = LightFadeEndDistance;
+                this.Unknown = Unknown;
+                this.NearHeightMid = NearHeightMid;
+                this.NearHeightRange = NearHeightRange;
+                this.FogColorHighNear = FogColorHighNear;
+                this.FogColorHighFar = FogColorHighFar;
+                this.HighDensityScale = HighDensityScale;
+                this.FogNearScale = FogNearScale;
+                this.FogFarScale = FogFarScale;
+                this.FogHighNearScale = FogHighNearScale;
+                this.FogHighFarScale = FogHighFarScale;
+                this.FogHeightMid = FogHeightMid;
+                this.FogHeightRange = FogHeightRange;
+                this.DirectionalAmbientColors = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(DirectionalAmbientColors, new AmbientColors.Mask<TItem>(DirectionalAmbientColors));
+                this.GodRays = GodRays;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +420,39 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem AmbientColor;
+            public TItem DirectionalColor;
+            public TItem FogNearColor;
+            public TItem FogNear;
+            public TItem FogFar;
+            public TItem DirectionalRotationXY;
+            public TItem DirectionalRotationZ;
+            public TItem DirectionalFade;
+            public TItem FogClipDistance;
+            public TItem FogPower;
+            public TItem Unused;
+            public TItem FogFarColor;
+            public TItem FogMax;
+            public TItem LightFadeStartDistance;
+            public TItem LightFadeEndDistance;
+            public TItem Unknown;
+            public TItem NearHeightMid;
+            public TItem NearHeightRange;
+            public TItem FogColorHighNear;
+            public TItem FogColorHighFar;
+            public TItem HighDensityScale;
+            public TItem FogNearScale;
+            public TItem FogFarScale;
+            public TItem FogHighNearScale;
+            public TItem FogHighFarScale;
+            public TItem FogHeightMid;
+            public TItem FogHeightRange;
+            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? DirectionalAmbientColors { get; set; }
+            public TItem GodRays;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -116,11 +466,71 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.AmbientColor, rhs.AmbientColor)) return false;
+                if (!object.Equals(this.DirectionalColor, rhs.DirectionalColor)) return false;
+                if (!object.Equals(this.FogNearColor, rhs.FogNearColor)) return false;
+                if (!object.Equals(this.FogNear, rhs.FogNear)) return false;
+                if (!object.Equals(this.FogFar, rhs.FogFar)) return false;
+                if (!object.Equals(this.DirectionalRotationXY, rhs.DirectionalRotationXY)) return false;
+                if (!object.Equals(this.DirectionalRotationZ, rhs.DirectionalRotationZ)) return false;
+                if (!object.Equals(this.DirectionalFade, rhs.DirectionalFade)) return false;
+                if (!object.Equals(this.FogClipDistance, rhs.FogClipDistance)) return false;
+                if (!object.Equals(this.FogPower, rhs.FogPower)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.FogFarColor, rhs.FogFarColor)) return false;
+                if (!object.Equals(this.FogMax, rhs.FogMax)) return false;
+                if (!object.Equals(this.LightFadeStartDistance, rhs.LightFadeStartDistance)) return false;
+                if (!object.Equals(this.LightFadeEndDistance, rhs.LightFadeEndDistance)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.NearHeightMid, rhs.NearHeightMid)) return false;
+                if (!object.Equals(this.NearHeightRange, rhs.NearHeightRange)) return false;
+                if (!object.Equals(this.FogColorHighNear, rhs.FogColorHighNear)) return false;
+                if (!object.Equals(this.FogColorHighFar, rhs.FogColorHighFar)) return false;
+                if (!object.Equals(this.HighDensityScale, rhs.HighDensityScale)) return false;
+                if (!object.Equals(this.FogNearScale, rhs.FogNearScale)) return false;
+                if (!object.Equals(this.FogFarScale, rhs.FogFarScale)) return false;
+                if (!object.Equals(this.FogHighNearScale, rhs.FogHighNearScale)) return false;
+                if (!object.Equals(this.FogHighFarScale, rhs.FogHighFarScale)) return false;
+                if (!object.Equals(this.FogHeightMid, rhs.FogHeightMid)) return false;
+                if (!object.Equals(this.FogHeightRange, rhs.FogHeightRange)) return false;
+                if (!object.Equals(this.DirectionalAmbientColors, rhs.DirectionalAmbientColors)) return false;
+                if (!object.Equals(this.GodRays, rhs.GodRays)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.AmbientColor);
+                hash.Add(this.DirectionalColor);
+                hash.Add(this.FogNearColor);
+                hash.Add(this.FogNear);
+                hash.Add(this.FogFar);
+                hash.Add(this.DirectionalRotationXY);
+                hash.Add(this.DirectionalRotationZ);
+                hash.Add(this.DirectionalFade);
+                hash.Add(this.FogClipDistance);
+                hash.Add(this.FogPower);
+                hash.Add(this.Unused);
+                hash.Add(this.FogFarColor);
+                hash.Add(this.FogMax);
+                hash.Add(this.LightFadeStartDistance);
+                hash.Add(this.LightFadeEndDistance);
+                hash.Add(this.Unknown);
+                hash.Add(this.NearHeightMid);
+                hash.Add(this.NearHeightRange);
+                hash.Add(this.FogColorHighNear);
+                hash.Add(this.FogColorHighFar);
+                hash.Add(this.HighDensityScale);
+                hash.Add(this.FogNearScale);
+                hash.Add(this.FogFarScale);
+                hash.Add(this.FogHighNearScale);
+                hash.Add(this.FogHighFarScale);
+                hash.Add(this.FogHeightMid);
+                hash.Add(this.FogHeightRange);
+                hash.Add(this.DirectionalAmbientColors);
+                hash.Add(this.GodRays);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +541,40 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.AmbientColor)) return false;
+                if (!eval(this.DirectionalColor)) return false;
+                if (!eval(this.FogNearColor)) return false;
+                if (!eval(this.FogNear)) return false;
+                if (!eval(this.FogFar)) return false;
+                if (!eval(this.DirectionalRotationXY)) return false;
+                if (!eval(this.DirectionalRotationZ)) return false;
+                if (!eval(this.DirectionalFade)) return false;
+                if (!eval(this.FogClipDistance)) return false;
+                if (!eval(this.FogPower)) return false;
+                if (!eval(this.Unused)) return false;
+                if (!eval(this.FogFarColor)) return false;
+                if (!eval(this.FogMax)) return false;
+                if (!eval(this.LightFadeStartDistance)) return false;
+                if (!eval(this.LightFadeEndDistance)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.NearHeightMid)) return false;
+                if (!eval(this.NearHeightRange)) return false;
+                if (!eval(this.FogColorHighNear)) return false;
+                if (!eval(this.FogColorHighFar)) return false;
+                if (!eval(this.HighDensityScale)) return false;
+                if (!eval(this.FogNearScale)) return false;
+                if (!eval(this.FogFarScale)) return false;
+                if (!eval(this.FogHighNearScale)) return false;
+                if (!eval(this.FogHighFarScale)) return false;
+                if (!eval(this.FogHeightMid)) return false;
+                if (!eval(this.FogHeightRange)) return false;
+                if (DirectionalAmbientColors != null)
+                {
+                    if (!eval(this.DirectionalAmbientColors.Overall)) return false;
+                    if (this.DirectionalAmbientColors.Specific != null && !this.DirectionalAmbientColors.Specific.All(eval)) return false;
+                }
+                if (!eval(this.GodRays)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +583,40 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.AmbientColor)) return true;
+                if (eval(this.DirectionalColor)) return true;
+                if (eval(this.FogNearColor)) return true;
+                if (eval(this.FogNear)) return true;
+                if (eval(this.FogFar)) return true;
+                if (eval(this.DirectionalRotationXY)) return true;
+                if (eval(this.DirectionalRotationZ)) return true;
+                if (eval(this.DirectionalFade)) return true;
+                if (eval(this.FogClipDistance)) return true;
+                if (eval(this.FogPower)) return true;
+                if (eval(this.Unused)) return true;
+                if (eval(this.FogFarColor)) return true;
+                if (eval(this.FogMax)) return true;
+                if (eval(this.LightFadeStartDistance)) return true;
+                if (eval(this.LightFadeEndDistance)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.NearHeightMid)) return true;
+                if (eval(this.NearHeightRange)) return true;
+                if (eval(this.FogColorHighNear)) return true;
+                if (eval(this.FogColorHighFar)) return true;
+                if (eval(this.HighDensityScale)) return true;
+                if (eval(this.FogNearScale)) return true;
+                if (eval(this.FogFarScale)) return true;
+                if (eval(this.FogHighNearScale)) return true;
+                if (eval(this.FogHighFarScale)) return true;
+                if (eval(this.FogHeightMid)) return true;
+                if (eval(this.FogHeightRange)) return true;
+                if (DirectionalAmbientColors != null)
+                {
+                    if (eval(this.DirectionalAmbientColors.Overall)) return true;
+                    if (this.DirectionalAmbientColors.Specific != null && this.DirectionalAmbientColors.Specific.Any(eval)) return true;
+                }
+                if (eval(this.GodRays)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +632,36 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.AmbientColor = eval(this.AmbientColor);
+                obj.DirectionalColor = eval(this.DirectionalColor);
+                obj.FogNearColor = eval(this.FogNearColor);
+                obj.FogNear = eval(this.FogNear);
+                obj.FogFar = eval(this.FogFar);
+                obj.DirectionalRotationXY = eval(this.DirectionalRotationXY);
+                obj.DirectionalRotationZ = eval(this.DirectionalRotationZ);
+                obj.DirectionalFade = eval(this.DirectionalFade);
+                obj.FogClipDistance = eval(this.FogClipDistance);
+                obj.FogPower = eval(this.FogPower);
+                obj.Unused = eval(this.Unused);
+                obj.FogFarColor = eval(this.FogFarColor);
+                obj.FogMax = eval(this.FogMax);
+                obj.LightFadeStartDistance = eval(this.LightFadeStartDistance);
+                obj.LightFadeEndDistance = eval(this.LightFadeEndDistance);
+                obj.Unknown = eval(this.Unknown);
+                obj.NearHeightMid = eval(this.NearHeightMid);
+                obj.NearHeightRange = eval(this.NearHeightRange);
+                obj.FogColorHighNear = eval(this.FogColorHighNear);
+                obj.FogColorHighFar = eval(this.FogColorHighFar);
+                obj.HighDensityScale = eval(this.HighDensityScale);
+                obj.FogNearScale = eval(this.FogNearScale);
+                obj.FogFarScale = eval(this.FogFarScale);
+                obj.FogHighNearScale = eval(this.FogHighNearScale);
+                obj.FogHighFarScale = eval(this.FogHighFarScale);
+                obj.FogHeightMid = eval(this.FogHeightMid);
+                obj.FogHeightRange = eval(this.FogHeightRange);
+                obj.DirectionalAmbientColors = this.DirectionalAmbientColors == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.DirectionalAmbientColors.Overall), this.DirectionalAmbientColors.Specific?.Translate(eval));
+                obj.GodRays = eval(this.GodRays);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -172,6 +680,126 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(LightingTemplate.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.AmbientColor ?? true)
+                    {
+                        sb.AppendItem(AmbientColor, "AmbientColor");
+                    }
+                    if (printMask?.DirectionalColor ?? true)
+                    {
+                        sb.AppendItem(DirectionalColor, "DirectionalColor");
+                    }
+                    if (printMask?.FogNearColor ?? true)
+                    {
+                        sb.AppendItem(FogNearColor, "FogNearColor");
+                    }
+                    if (printMask?.FogNear ?? true)
+                    {
+                        sb.AppendItem(FogNear, "FogNear");
+                    }
+                    if (printMask?.FogFar ?? true)
+                    {
+                        sb.AppendItem(FogFar, "FogFar");
+                    }
+                    if (printMask?.DirectionalRotationXY ?? true)
+                    {
+                        sb.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
+                    }
+                    if (printMask?.DirectionalRotationZ ?? true)
+                    {
+                        sb.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
+                    }
+                    if (printMask?.DirectionalFade ?? true)
+                    {
+                        sb.AppendItem(DirectionalFade, "DirectionalFade");
+                    }
+                    if (printMask?.FogClipDistance ?? true)
+                    {
+                        sb.AppendItem(FogClipDistance, "FogClipDistance");
+                    }
+                    if (printMask?.FogPower ?? true)
+                    {
+                        sb.AppendItem(FogPower, "FogPower");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        sb.AppendItem(Unused, "Unused");
+                    }
+                    if (printMask?.FogFarColor ?? true)
+                    {
+                        sb.AppendItem(FogFarColor, "FogFarColor");
+                    }
+                    if (printMask?.FogMax ?? true)
+                    {
+                        sb.AppendItem(FogMax, "FogMax");
+                    }
+                    if (printMask?.LightFadeStartDistance ?? true)
+                    {
+                        sb.AppendItem(LightFadeStartDistance, "LightFadeStartDistance");
+                    }
+                    if (printMask?.LightFadeEndDistance ?? true)
+                    {
+                        sb.AppendItem(LightFadeEndDistance, "LightFadeEndDistance");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.NearHeightMid ?? true)
+                    {
+                        sb.AppendItem(NearHeightMid, "NearHeightMid");
+                    }
+                    if (printMask?.NearHeightRange ?? true)
+                    {
+                        sb.AppendItem(NearHeightRange, "NearHeightRange");
+                    }
+                    if (printMask?.FogColorHighNear ?? true)
+                    {
+                        sb.AppendItem(FogColorHighNear, "FogColorHighNear");
+                    }
+                    if (printMask?.FogColorHighFar ?? true)
+                    {
+                        sb.AppendItem(FogColorHighFar, "FogColorHighFar");
+                    }
+                    if (printMask?.HighDensityScale ?? true)
+                    {
+                        sb.AppendItem(HighDensityScale, "HighDensityScale");
+                    }
+                    if (printMask?.FogNearScale ?? true)
+                    {
+                        sb.AppendItem(FogNearScale, "FogNearScale");
+                    }
+                    if (printMask?.FogFarScale ?? true)
+                    {
+                        sb.AppendItem(FogFarScale, "FogFarScale");
+                    }
+                    if (printMask?.FogHighNearScale ?? true)
+                    {
+                        sb.AppendItem(FogHighNearScale, "FogHighNearScale");
+                    }
+                    if (printMask?.FogHighFarScale ?? true)
+                    {
+                        sb.AppendItem(FogHighFarScale, "FogHighFarScale");
+                    }
+                    if (printMask?.FogHeightMid ?? true)
+                    {
+                        sb.AppendItem(FogHeightMid, "FogHeightMid");
+                    }
+                    if (printMask?.FogHeightRange ?? true)
+                    {
+                        sb.AppendItem(FogHeightRange, "FogHeightRange");
+                    }
+                    if (printMask?.DirectionalAmbientColors?.Overall ?? true)
+                    {
+                        DirectionalAmbientColors?.Print(sb);
+                    }
+                    if (printMask?.GodRays ?? true)
+                    {
+                        sb.AppendItem(GodRays, "GodRays");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
             }
             #endregion
@@ -182,12 +810,105 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? AmbientColor;
+            public Exception? DirectionalColor;
+            public Exception? FogNearColor;
+            public Exception? FogNear;
+            public Exception? FogFar;
+            public Exception? DirectionalRotationXY;
+            public Exception? DirectionalRotationZ;
+            public Exception? DirectionalFade;
+            public Exception? FogClipDistance;
+            public Exception? FogPower;
+            public Exception? Unused;
+            public Exception? FogFarColor;
+            public Exception? FogMax;
+            public Exception? LightFadeStartDistance;
+            public Exception? LightFadeEndDistance;
+            public Exception? Unknown;
+            public Exception? NearHeightMid;
+            public Exception? NearHeightRange;
+            public Exception? FogColorHighNear;
+            public Exception? FogColorHighFar;
+            public Exception? HighDensityScale;
+            public Exception? FogNearScale;
+            public Exception? FogFarScale;
+            public Exception? FogHighNearScale;
+            public Exception? FogHighFarScale;
+            public Exception? FogHeightMid;
+            public Exception? FogHeightRange;
+            public MaskItem<Exception?, AmbientColors.ErrorMask?>? DirectionalAmbientColors;
+            public Exception? GodRays;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case LightingTemplate_FieldIndex.AmbientColor:
+                        return AmbientColor;
+                    case LightingTemplate_FieldIndex.DirectionalColor:
+                        return DirectionalColor;
+                    case LightingTemplate_FieldIndex.FogNearColor:
+                        return FogNearColor;
+                    case LightingTemplate_FieldIndex.FogNear:
+                        return FogNear;
+                    case LightingTemplate_FieldIndex.FogFar:
+                        return FogFar;
+                    case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                        return DirectionalRotationXY;
+                    case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                        return DirectionalRotationZ;
+                    case LightingTemplate_FieldIndex.DirectionalFade:
+                        return DirectionalFade;
+                    case LightingTemplate_FieldIndex.FogClipDistance:
+                        return FogClipDistance;
+                    case LightingTemplate_FieldIndex.FogPower:
+                        return FogPower;
+                    case LightingTemplate_FieldIndex.Unused:
+                        return Unused;
+                    case LightingTemplate_FieldIndex.FogFarColor:
+                        return FogFarColor;
+                    case LightingTemplate_FieldIndex.FogMax:
+                        return FogMax;
+                    case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                        return LightFadeStartDistance;
+                    case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                        return LightFadeEndDistance;
+                    case LightingTemplate_FieldIndex.Unknown:
+                        return Unknown;
+                    case LightingTemplate_FieldIndex.NearHeightMid:
+                        return NearHeightMid;
+                    case LightingTemplate_FieldIndex.NearHeightRange:
+                        return NearHeightRange;
+                    case LightingTemplate_FieldIndex.FogColorHighNear:
+                        return FogColorHighNear;
+                    case LightingTemplate_FieldIndex.FogColorHighFar:
+                        return FogColorHighFar;
+                    case LightingTemplate_FieldIndex.HighDensityScale:
+                        return HighDensityScale;
+                    case LightingTemplate_FieldIndex.FogNearScale:
+                        return FogNearScale;
+                    case LightingTemplate_FieldIndex.FogFarScale:
+                        return FogFarScale;
+                    case LightingTemplate_FieldIndex.FogHighNearScale:
+                        return FogHighNearScale;
+                    case LightingTemplate_FieldIndex.FogHighFarScale:
+                        return FogHighFarScale;
+                    case LightingTemplate_FieldIndex.FogHeightMid:
+                        return FogHeightMid;
+                    case LightingTemplate_FieldIndex.FogHeightRange:
+                        return FogHeightRange;
+                    case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                        return DirectionalAmbientColors;
+                    case LightingTemplate_FieldIndex.GodRays:
+                        return GodRays;
+                    case LightingTemplate_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +919,96 @@ namespace Mutagen.Bethesda.Fallout4
                 LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case LightingTemplate_FieldIndex.AmbientColor:
+                        this.AmbientColor = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalColor:
+                        this.DirectionalColor = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNearColor:
+                        this.FogNearColor = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNear:
+                        this.FogNear = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFar:
+                        this.FogFar = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                        this.DirectionalRotationXY = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                        this.DirectionalRotationZ = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalFade:
+                        this.DirectionalFade = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogClipDistance:
+                        this.FogClipDistance = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogPower:
+                        this.FogPower = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFarColor:
+                        this.FogFarColor = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogMax:
+                        this.FogMax = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                        this.LightFadeStartDistance = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                        this.LightFadeEndDistance = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.NearHeightMid:
+                        this.NearHeightMid = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.NearHeightRange:
+                        this.NearHeightRange = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogColorHighNear:
+                        this.FogColorHighNear = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogColorHighFar:
+                        this.FogColorHighFar = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.HighDensityScale:
+                        this.HighDensityScale = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNearScale:
+                        this.FogNearScale = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFarScale:
+                        this.FogFarScale = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogHighNearScale:
+                        this.FogHighNearScale = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogHighFarScale:
+                        this.FogHighFarScale = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogHeightMid:
+                        this.FogHeightMid = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogHeightRange:
+                        this.FogHeightRange = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                        this.DirectionalAmbientColors = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
+                        break;
+                    case LightingTemplate_FieldIndex.GodRays:
+                        this.GodRays = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +1020,96 @@ namespace Mutagen.Bethesda.Fallout4
                 LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case LightingTemplate_FieldIndex.AmbientColor:
+                        this.AmbientColor = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalColor:
+                        this.DirectionalColor = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNearColor:
+                        this.FogNearColor = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNear:
+                        this.FogNear = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFar:
+                        this.FogFar = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                        this.DirectionalRotationXY = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                        this.DirectionalRotationZ = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalFade:
+                        this.DirectionalFade = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogClipDistance:
+                        this.FogClipDistance = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogPower:
+                        this.FogPower = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFarColor:
+                        this.FogFarColor = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogMax:
+                        this.FogMax = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                        this.LightFadeStartDistance = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                        this.LightFadeEndDistance = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.NearHeightMid:
+                        this.NearHeightMid = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.NearHeightRange:
+                        this.NearHeightRange = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogColorHighNear:
+                        this.FogColorHighNear = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogColorHighFar:
+                        this.FogColorHighFar = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.HighDensityScale:
+                        this.HighDensityScale = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNearScale:
+                        this.FogNearScale = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFarScale:
+                        this.FogFarScale = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogHighNearScale:
+                        this.FogHighNearScale = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogHighFarScale:
+                        this.FogHighFarScale = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogHeightMid:
+                        this.FogHeightMid = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogHeightRange:
+                        this.FogHeightRange = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                        this.DirectionalAmbientColors = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.GodRays:
+                        this.GodRays = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +1119,36 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (AmbientColor != null) return true;
+                if (DirectionalColor != null) return true;
+                if (FogNearColor != null) return true;
+                if (FogNear != null) return true;
+                if (FogFar != null) return true;
+                if (DirectionalRotationXY != null) return true;
+                if (DirectionalRotationZ != null) return true;
+                if (DirectionalFade != null) return true;
+                if (FogClipDistance != null) return true;
+                if (FogPower != null) return true;
+                if (Unused != null) return true;
+                if (FogFarColor != null) return true;
+                if (FogMax != null) return true;
+                if (LightFadeStartDistance != null) return true;
+                if (LightFadeEndDistance != null) return true;
+                if (Unknown != null) return true;
+                if (NearHeightMid != null) return true;
+                if (NearHeightRange != null) return true;
+                if (FogColorHighNear != null) return true;
+                if (FogColorHighFar != null) return true;
+                if (HighDensityScale != null) return true;
+                if (FogNearScale != null) return true;
+                if (FogFarScale != null) return true;
+                if (FogHighNearScale != null) return true;
+                if (FogHighFarScale != null) return true;
+                if (FogHeightMid != null) return true;
+                if (FogHeightRange != null) return true;
+                if (DirectionalAmbientColors != null) return true;
+                if (GodRays != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +1175,94 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(AmbientColor, "AmbientColor");
+                }
+                {
+                    sb.AppendItem(DirectionalColor, "DirectionalColor");
+                }
+                {
+                    sb.AppendItem(FogNearColor, "FogNearColor");
+                }
+                {
+                    sb.AppendItem(FogNear, "FogNear");
+                }
+                {
+                    sb.AppendItem(FogFar, "FogFar");
+                }
+                {
+                    sb.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
+                }
+                {
+                    sb.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
+                }
+                {
+                    sb.AppendItem(DirectionalFade, "DirectionalFade");
+                }
+                {
+                    sb.AppendItem(FogClipDistance, "FogClipDistance");
+                }
+                {
+                    sb.AppendItem(FogPower, "FogPower");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(FogFarColor, "FogFarColor");
+                }
+                {
+                    sb.AppendItem(FogMax, "FogMax");
+                }
+                {
+                    sb.AppendItem(LightFadeStartDistance, "LightFadeStartDistance");
+                }
+                {
+                    sb.AppendItem(LightFadeEndDistance, "LightFadeEndDistance");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(NearHeightMid, "NearHeightMid");
+                }
+                {
+                    sb.AppendItem(NearHeightRange, "NearHeightRange");
+                }
+                {
+                    sb.AppendItem(FogColorHighNear, "FogColorHighNear");
+                }
+                {
+                    sb.AppendItem(FogColorHighFar, "FogColorHighFar");
+                }
+                {
+                    sb.AppendItem(HighDensityScale, "HighDensityScale");
+                }
+                {
+                    sb.AppendItem(FogNearScale, "FogNearScale");
+                }
+                {
+                    sb.AppendItem(FogFarScale, "FogFarScale");
+                }
+                {
+                    sb.AppendItem(FogHighNearScale, "FogHighNearScale");
+                }
+                {
+                    sb.AppendItem(FogHighFarScale, "FogHighFarScale");
+                }
+                {
+                    sb.AppendItem(FogHeightMid, "FogHeightMid");
+                }
+                {
+                    sb.AppendItem(FogHeightRange, "FogHeightRange");
+                }
+                DirectionalAmbientColors?.Print(sb);
+                {
+                    sb.AppendItem(GodRays, "GodRays");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -252,6 +1271,36 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.AmbientColor = this.AmbientColor.Combine(rhs.AmbientColor);
+                ret.DirectionalColor = this.DirectionalColor.Combine(rhs.DirectionalColor);
+                ret.FogNearColor = this.FogNearColor.Combine(rhs.FogNearColor);
+                ret.FogNear = this.FogNear.Combine(rhs.FogNear);
+                ret.FogFar = this.FogFar.Combine(rhs.FogFar);
+                ret.DirectionalRotationXY = this.DirectionalRotationXY.Combine(rhs.DirectionalRotationXY);
+                ret.DirectionalRotationZ = this.DirectionalRotationZ.Combine(rhs.DirectionalRotationZ);
+                ret.DirectionalFade = this.DirectionalFade.Combine(rhs.DirectionalFade);
+                ret.FogClipDistance = this.FogClipDistance.Combine(rhs.FogClipDistance);
+                ret.FogPower = this.FogPower.Combine(rhs.FogPower);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.FogFarColor = this.FogFarColor.Combine(rhs.FogFarColor);
+                ret.FogMax = this.FogMax.Combine(rhs.FogMax);
+                ret.LightFadeStartDistance = this.LightFadeStartDistance.Combine(rhs.LightFadeStartDistance);
+                ret.LightFadeEndDistance = this.LightFadeEndDistance.Combine(rhs.LightFadeEndDistance);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.NearHeightMid = this.NearHeightMid.Combine(rhs.NearHeightMid);
+                ret.NearHeightRange = this.NearHeightRange.Combine(rhs.NearHeightRange);
+                ret.FogColorHighNear = this.FogColorHighNear.Combine(rhs.FogColorHighNear);
+                ret.FogColorHighFar = this.FogColorHighFar.Combine(rhs.FogColorHighFar);
+                ret.HighDensityScale = this.HighDensityScale.Combine(rhs.HighDensityScale);
+                ret.FogNearScale = this.FogNearScale.Combine(rhs.FogNearScale);
+                ret.FogFarScale = this.FogFarScale.Combine(rhs.FogFarScale);
+                ret.FogHighNearScale = this.FogHighNearScale.Combine(rhs.FogHighNearScale);
+                ret.FogHighFarScale = this.FogHighFarScale.Combine(rhs.FogHighFarScale);
+                ret.FogHeightMid = this.FogHeightMid.Combine(rhs.FogHeightMid);
+                ret.FogHeightRange = this.FogHeightRange.Combine(rhs.FogHeightRange);
+                ret.DirectionalAmbientColors = this.DirectionalAmbientColors.Combine(rhs.DirectionalAmbientColors, (l, r) => l.Combine(r));
+                ret.GodRays = this.GodRays.Combine(rhs.GodRays);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +1322,112 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool AmbientColor;
+            public bool DirectionalColor;
+            public bool FogNearColor;
+            public bool FogNear;
+            public bool FogFar;
+            public bool DirectionalRotationXY;
+            public bool DirectionalRotationZ;
+            public bool DirectionalFade;
+            public bool FogClipDistance;
+            public bool FogPower;
+            public bool Unused;
+            public bool FogFarColor;
+            public bool FogMax;
+            public bool LightFadeStartDistance;
+            public bool LightFadeEndDistance;
+            public bool Unknown;
+            public bool NearHeightMid;
+            public bool NearHeightRange;
+            public bool FogColorHighNear;
+            public bool FogColorHighFar;
+            public bool HighDensityScale;
+            public bool FogNearScale;
+            public bool FogFarScale;
+            public bool FogHighNearScale;
+            public bool FogHighFarScale;
+            public bool FogHeightMid;
+            public bool FogHeightRange;
+            public AmbientColors.TranslationMask? DirectionalAmbientColors;
+            public bool GodRays;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.AmbientColor = defaultOn;
+                this.DirectionalColor = defaultOn;
+                this.FogNearColor = defaultOn;
+                this.FogNear = defaultOn;
+                this.FogFar = defaultOn;
+                this.DirectionalRotationXY = defaultOn;
+                this.DirectionalRotationZ = defaultOn;
+                this.DirectionalFade = defaultOn;
+                this.FogClipDistance = defaultOn;
+                this.FogPower = defaultOn;
+                this.Unused = defaultOn;
+                this.FogFarColor = defaultOn;
+                this.FogMax = defaultOn;
+                this.LightFadeStartDistance = defaultOn;
+                this.LightFadeEndDistance = defaultOn;
+                this.Unknown = defaultOn;
+                this.NearHeightMid = defaultOn;
+                this.NearHeightRange = defaultOn;
+                this.FogColorHighNear = defaultOn;
+                this.FogColorHighFar = defaultOn;
+                this.HighDensityScale = defaultOn;
+                this.FogNearScale = defaultOn;
+                this.FogFarScale = defaultOn;
+                this.FogHighNearScale = defaultOn;
+                this.FogHighFarScale = defaultOn;
+                this.FogHeightMid = defaultOn;
+                this.FogHeightRange = defaultOn;
+                this.GodRays = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((AmbientColor, null));
+                ret.Add((DirectionalColor, null));
+                ret.Add((FogNearColor, null));
+                ret.Add((FogNear, null));
+                ret.Add((FogFar, null));
+                ret.Add((DirectionalRotationXY, null));
+                ret.Add((DirectionalRotationZ, null));
+                ret.Add((DirectionalFade, null));
+                ret.Add((FogClipDistance, null));
+                ret.Add((FogPower, null));
+                ret.Add((Unused, null));
+                ret.Add((FogFarColor, null));
+                ret.Add((FogMax, null));
+                ret.Add((LightFadeStartDistance, null));
+                ret.Add((LightFadeEndDistance, null));
+                ret.Add((Unknown, null));
+                ret.Add((NearHeightMid, null));
+                ret.Add((NearHeightRange, null));
+                ret.Add((FogColorHighNear, null));
+                ret.Add((FogColorHighFar, null));
+                ret.Add((HighDensityScale, null));
+                ret.Add((FogNearScale, null));
+                ret.Add((FogFarScale, null));
+                ret.Add((FogHighNearScale, null));
+                ret.Add((FogHighFarScale, null));
+                ret.Add((FogHeightMid, null));
+                ret.Add((FogHeightRange, null));
+                ret.Add((DirectionalAmbientColors != null ? DirectionalAmbientColors.OnOverall : DefaultOn, DirectionalAmbientColors?.GetCrystal()));
+                ret.Add((GodRays, null));
+                ret.Add((DATADataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +1439,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LightingTemplate_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LightingTemplateCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LightingTemplateSetterCommon.Instance.RemapLinks(this, mapping);
         public LightingTemplate(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -335,6 +1483,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(ILightingTemplate);
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1,
+            Break1 = 2
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -415,9 +1569,40 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface ILightingTemplate :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILightingTemplateGetter,
         ILoquiObjectSetter<ILightingTemplateInternal>
     {
+        new Color AmbientColor { get; set; }
+        new Color DirectionalColor { get; set; }
+        new Color FogNearColor { get; set; }
+        new Single FogNear { get; set; }
+        new Single FogFar { get; set; }
+        new Int32 DirectionalRotationXY { get; set; }
+        new Int32 DirectionalRotationZ { get; set; }
+        new Single DirectionalFade { get; set; }
+        new Single FogClipDistance { get; set; }
+        new Single FogPower { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
+        new Color FogFarColor { get; set; }
+        new Single FogMax { get; set; }
+        new Single LightFadeStartDistance { get; set; }
+        new Single LightFadeEndDistance { get; set; }
+        new Int32 Unknown { get; set; }
+        new Single NearHeightMid { get; set; }
+        new Single NearHeightRange { get; set; }
+        new Color FogColorHighNear { get; set; }
+        new Color FogColorHighFar { get; set; }
+        new Single HighDensityScale { get; set; }
+        new Single FogNearScale { get; set; }
+        new Single FogFarScale { get; set; }
+        new Single FogHighNearScale { get; set; }
+        new Single FogHighFarScale { get; set; }
+        new Single FogHeightMid { get; set; }
+        new Single FogHeightRange { get; set; }
+        new AmbientColors? DirectionalAmbientColors { get; set; }
+        new IFormLinkNullable<IGodRayGetter> GodRays { get; set; }
+        new LightingTemplate.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface ILightingTemplateInternal :
@@ -431,10 +1616,41 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ILightingTemplateGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ILightingTemplateGetter>,
         IMapsToGetter<ILightingTemplateGetter>
     {
         static new ILoquiRegistration StaticRegistration => LightingTemplate_Registration.Instance;
+        Color AmbientColor { get; }
+        Color DirectionalColor { get; }
+        Color FogNearColor { get; }
+        Single FogNear { get; }
+        Single FogFar { get; }
+        Int32 DirectionalRotationXY { get; }
+        Int32 DirectionalRotationZ { get; }
+        Single DirectionalFade { get; }
+        Single FogClipDistance { get; }
+        Single FogPower { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
+        Color FogFarColor { get; }
+        Single FogMax { get; }
+        Single LightFadeStartDistance { get; }
+        Single LightFadeEndDistance { get; }
+        Int32 Unknown { get; }
+        Single NearHeightMid { get; }
+        Single NearHeightRange { get; }
+        Color FogColorHighNear { get; }
+        Color FogColorHighFar { get; }
+        Single HighDensityScale { get; }
+        Single FogNearScale { get; }
+        Single FogFarScale { get; }
+        Single FogHighNearScale { get; }
+        Single FogHighFarScale { get; }
+        Single FogHeightMid { get; }
+        Single FogHeightRange { get; }
+        IAmbientColorsGetter? DirectionalAmbientColors { get; }
+        IFormLinkNullableGetter<IGodRayGetter> GodRays { get; }
+        LightingTemplate.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -599,6 +1815,36 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        AmbientColor = 6,
+        DirectionalColor = 7,
+        FogNearColor = 8,
+        FogNear = 9,
+        FogFar = 10,
+        DirectionalRotationXY = 11,
+        DirectionalRotationZ = 12,
+        DirectionalFade = 13,
+        FogClipDistance = 14,
+        FogPower = 15,
+        Unused = 16,
+        FogFarColor = 17,
+        FogMax = 18,
+        LightFadeStartDistance = 19,
+        LightFadeEndDistance = 20,
+        Unknown = 21,
+        NearHeightMid = 22,
+        NearHeightRange = 23,
+        FogColorHighNear = 24,
+        FogColorHighFar = 25,
+        HighDensityScale = 26,
+        FogNearScale = 27,
+        FogFarScale = 28,
+        FogHighNearScale = 29,
+        FogHighFarScale = 30,
+        FogHeightMid = 31,
+        FogHeightRange = 32,
+        DirectionalAmbientColors = 33,
+        GodRays = 34,
+        DATADataTypeState = 35,
     }
     #endregion
 
@@ -616,9 +1862,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "e3ab581e-42ce-4c15-9c2d-28956462d5ef";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 30;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(LightingTemplate.Mask<>);
 
@@ -648,8 +1894,13 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LGTM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.LGTM);
+            var all = RecordCollection.Factory(
+                RecordTypes.LGTM,
+                RecordTypes.DATA,
+                RecordTypes.DALC,
+                RecordTypes.WGDR);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LightingTemplateBinaryWriteTranslation);
         #region Interface
@@ -693,6 +1944,36 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILightingTemplateInternal item)
         {
             ClearPartial();
+            item.AmbientColor = default;
+            item.DirectionalColor = default;
+            item.FogNearColor = default;
+            item.FogNear = default;
+            item.FogFar = default;
+            item.DirectionalRotationXY = default;
+            item.DirectionalRotationZ = default;
+            item.DirectionalFade = default;
+            item.FogClipDistance = default;
+            item.FogPower = default;
+            item.Unused = new byte[32];
+            item.FogFarColor = default;
+            item.FogMax = default;
+            item.LightFadeStartDistance = default;
+            item.LightFadeEndDistance = default;
+            item.Unknown = default;
+            item.NearHeightMid = default;
+            item.NearHeightRange = default;
+            item.FogColorHighNear = default;
+            item.FogColorHighFar = default;
+            item.HighDensityScale = default;
+            item.FogNearScale = default;
+            item.FogFarScale = default;
+            item.FogHighNearScale = default;
+            item.FogHighFarScale = default;
+            item.FogHeightMid = default;
+            item.FogHeightRange = default;
+            item.DirectionalAmbientColors = null;
+            item.GodRays.Clear();
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -710,6 +1991,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(ILightingTemplate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.GodRays.Relink(mapping);
         }
         
         #endregion
@@ -778,6 +2060,40 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.AmbientColor = item.AmbientColor.ColorOnlyEquals(rhs.AmbientColor);
+            ret.DirectionalColor = item.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor);
+            ret.FogNearColor = item.FogNearColor.ColorOnlyEquals(rhs.FogNearColor);
+            ret.FogNear = item.FogNear.EqualsWithin(rhs.FogNear);
+            ret.FogFar = item.FogFar.EqualsWithin(rhs.FogFar);
+            ret.DirectionalRotationXY = item.DirectionalRotationXY == rhs.DirectionalRotationXY;
+            ret.DirectionalRotationZ = item.DirectionalRotationZ == rhs.DirectionalRotationZ;
+            ret.DirectionalFade = item.DirectionalFade.EqualsWithin(rhs.DirectionalFade);
+            ret.FogClipDistance = item.FogClipDistance.EqualsWithin(rhs.FogClipDistance);
+            ret.FogPower = item.FogPower.EqualsWithin(rhs.FogPower);
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
+            ret.FogFarColor = item.FogFarColor.ColorOnlyEquals(rhs.FogFarColor);
+            ret.FogMax = item.FogMax.EqualsWithin(rhs.FogMax);
+            ret.LightFadeStartDistance = item.LightFadeStartDistance.EqualsWithin(rhs.LightFadeStartDistance);
+            ret.LightFadeEndDistance = item.LightFadeEndDistance.EqualsWithin(rhs.LightFadeEndDistance);
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.NearHeightMid = item.NearHeightMid.EqualsWithin(rhs.NearHeightMid);
+            ret.NearHeightRange = item.NearHeightRange.EqualsWithin(rhs.NearHeightRange);
+            ret.FogColorHighNear = item.FogColorHighNear.ColorOnlyEquals(rhs.FogColorHighNear);
+            ret.FogColorHighFar = item.FogColorHighFar.ColorOnlyEquals(rhs.FogColorHighFar);
+            ret.HighDensityScale = item.HighDensityScale.EqualsWithin(rhs.HighDensityScale);
+            ret.FogNearScale = item.FogNearScale.EqualsWithin(rhs.FogNearScale);
+            ret.FogFarScale = item.FogFarScale.EqualsWithin(rhs.FogFarScale);
+            ret.FogHighNearScale = item.FogHighNearScale.EqualsWithin(rhs.FogHighNearScale);
+            ret.FogHighFarScale = item.FogHighFarScale.EqualsWithin(rhs.FogHighFarScale);
+            ret.FogHeightMid = item.FogHeightMid.EqualsWithin(rhs.FogHeightMid);
+            ret.FogHeightRange = item.FogHeightRange.EqualsWithin(rhs.FogHeightRange);
+            ret.DirectionalAmbientColors = EqualsMaskHelper.EqualsHelper(
+                item.DirectionalAmbientColors,
+                rhs.DirectionalAmbientColors,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.GodRays = item.GodRays.Equals(rhs.GodRays);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +2143,127 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.AmbientColor ?? true)
+            {
+                sb.AppendItem(item.AmbientColor, "AmbientColor");
+            }
+            if (printMask?.DirectionalColor ?? true)
+            {
+                sb.AppendItem(item.DirectionalColor, "DirectionalColor");
+            }
+            if (printMask?.FogNearColor ?? true)
+            {
+                sb.AppendItem(item.FogNearColor, "FogNearColor");
+            }
+            if (printMask?.FogNear ?? true)
+            {
+                sb.AppendItem(item.FogNear, "FogNear");
+            }
+            if (printMask?.FogFar ?? true)
+            {
+                sb.AppendItem(item.FogFar, "FogFar");
+            }
+            if (printMask?.DirectionalRotationXY ?? true)
+            {
+                sb.AppendItem(item.DirectionalRotationXY, "DirectionalRotationXY");
+            }
+            if (printMask?.DirectionalRotationZ ?? true)
+            {
+                sb.AppendItem(item.DirectionalRotationZ, "DirectionalRotationZ");
+            }
+            if (printMask?.DirectionalFade ?? true)
+            {
+                sb.AppendItem(item.DirectionalFade, "DirectionalFade");
+            }
+            if (printMask?.FogClipDistance ?? true)
+            {
+                sb.AppendItem(item.FogClipDistance, "FogClipDistance");
+            }
+            if (printMask?.FogPower ?? true)
+            {
+                sb.AppendItem(item.FogPower, "FogPower");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+            }
+            if (printMask?.FogFarColor ?? true)
+            {
+                sb.AppendItem(item.FogFarColor, "FogFarColor");
+            }
+            if (printMask?.FogMax ?? true)
+            {
+                sb.AppendItem(item.FogMax, "FogMax");
+            }
+            if (printMask?.LightFadeStartDistance ?? true)
+            {
+                sb.AppendItem(item.LightFadeStartDistance, "LightFadeStartDistance");
+            }
+            if (printMask?.LightFadeEndDistance ?? true)
+            {
+                sb.AppendItem(item.LightFadeEndDistance, "LightFadeEndDistance");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.NearHeightMid ?? true)
+            {
+                sb.AppendItem(item.NearHeightMid, "NearHeightMid");
+            }
+            if (printMask?.NearHeightRange ?? true)
+            {
+                sb.AppendItem(item.NearHeightRange, "NearHeightRange");
+            }
+            if (printMask?.FogColorHighNear ?? true)
+            {
+                sb.AppendItem(item.FogColorHighNear, "FogColorHighNear");
+            }
+            if (printMask?.FogColorHighFar ?? true)
+            {
+                sb.AppendItem(item.FogColorHighFar, "FogColorHighFar");
+            }
+            if (printMask?.HighDensityScale ?? true)
+            {
+                sb.AppendItem(item.HighDensityScale, "HighDensityScale");
+            }
+            if (printMask?.FogNearScale ?? true)
+            {
+                sb.AppendItem(item.FogNearScale, "FogNearScale");
+            }
+            if (printMask?.FogFarScale ?? true)
+            {
+                sb.AppendItem(item.FogFarScale, "FogFarScale");
+            }
+            if (printMask?.FogHighNearScale ?? true)
+            {
+                sb.AppendItem(item.FogHighNearScale, "FogHighNearScale");
+            }
+            if (printMask?.FogHighFarScale ?? true)
+            {
+                sb.AppendItem(item.FogHighFarScale, "FogHighFarScale");
+            }
+            if (printMask?.FogHeightMid ?? true)
+            {
+                sb.AppendItem(item.FogHeightMid, "FogHeightMid");
+            }
+            if (printMask?.FogHeightRange ?? true)
+            {
+                sb.AppendItem(item.FogHeightRange, "FogHeightRange");
+            }
+            if ((printMask?.DirectionalAmbientColors?.Overall ?? true)
+                && item.DirectionalAmbientColors is {} DirectionalAmbientColorsItem)
+            {
+                DirectionalAmbientColorsItem?.Print(sb, "DirectionalAmbientColors");
+            }
+            if (printMask?.GodRays ?? true)
+            {
+                sb.AppendItem(item.GodRays.FormKeyNullable, "GodRays");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public static LightingTemplate_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +2312,130 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientColor) ?? true))
+            {
+                if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalColor) ?? true))
+            {
+                if (!lhs.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNearColor) ?? true))
+            {
+                if (!lhs.FogNearColor.ColorOnlyEquals(rhs.FogNearColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNear) ?? true))
+            {
+                if (!lhs.FogNear.EqualsWithin(rhs.FogNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFar) ?? true))
+            {
+                if (!lhs.FogFar.EqualsWithin(rhs.FogFar)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationXY) ?? true))
+            {
+                if (lhs.DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationZ) ?? true))
+            {
+                if (lhs.DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalFade) ?? true))
+            {
+                if (!lhs.DirectionalFade.EqualsWithin(rhs.DirectionalFade)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogClipDistance) ?? true))
+            {
+                if (!lhs.FogClipDistance.EqualsWithin(rhs.FogClipDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogPower) ?? true))
+            {
+                if (!lhs.FogPower.EqualsWithin(rhs.FogPower)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.Unused) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFarColor) ?? true))
+            {
+                if (!lhs.FogFarColor.ColorOnlyEquals(rhs.FogFarColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogMax) ?? true))
+            {
+                if (!lhs.FogMax.EqualsWithin(rhs.FogMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeStartDistance) ?? true))
+            {
+                if (!lhs.LightFadeStartDistance.EqualsWithin(rhs.LightFadeStartDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeEndDistance) ?? true))
+            {
+                if (!lhs.LightFadeEndDistance.EqualsWithin(rhs.LightFadeEndDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.NearHeightMid) ?? true))
+            {
+                if (!lhs.NearHeightMid.EqualsWithin(rhs.NearHeightMid)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.NearHeightRange) ?? true))
+            {
+                if (!lhs.NearHeightRange.EqualsWithin(rhs.NearHeightRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogColorHighNear) ?? true))
+            {
+                if (!lhs.FogColorHighNear.ColorOnlyEquals(rhs.FogColorHighNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogColorHighFar) ?? true))
+            {
+                if (!lhs.FogColorHighFar.ColorOnlyEquals(rhs.FogColorHighFar)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.HighDensityScale) ?? true))
+            {
+                if (!lhs.HighDensityScale.EqualsWithin(rhs.HighDensityScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNearScale) ?? true))
+            {
+                if (!lhs.FogNearScale.EqualsWithin(rhs.FogNearScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFarScale) ?? true))
+            {
+                if (!lhs.FogFarScale.EqualsWithin(rhs.FogFarScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogHighNearScale) ?? true))
+            {
+                if (!lhs.FogHighNearScale.EqualsWithin(rhs.FogHighNearScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogHighFarScale) ?? true))
+            {
+                if (!lhs.FogHighFarScale.EqualsWithin(rhs.FogHighFarScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogHeightMid) ?? true))
+            {
+                if (!lhs.FogHeightMid.EqualsWithin(rhs.FogHeightMid)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogHeightRange) ?? true))
+            {
+                if (!lhs.FogHeightRange.EqualsWithin(rhs.FogHeightRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalAmbientColors) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DirectionalAmbientColors, rhs.DirectionalAmbientColors, out var lhsDirectionalAmbientColors, out var rhsDirectionalAmbientColors, out var isDirectionalAmbientColorsEqual))
+                {
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsDirectionalAmbientColors).CommonInstance()!).Equals(lhsDirectionalAmbientColors, rhsDirectionalAmbientColors, crystal?.GetSubCrystal((int)LightingTemplate_FieldIndex.DirectionalAmbientColors))) return false;
+                }
+                else if (!isDirectionalAmbientColorsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.GodRays) ?? true))
+            {
+                if (!lhs.GodRays.Equals(rhs.GodRays)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
@@ -903,6 +2464,39 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(ILightingTemplateGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.AmbientColor);
+            hash.Add(item.DirectionalColor);
+            hash.Add(item.FogNearColor);
+            hash.Add(item.FogNear);
+            hash.Add(item.FogFar);
+            hash.Add(item.DirectionalRotationXY);
+            hash.Add(item.DirectionalRotationZ);
+            hash.Add(item.DirectionalFade);
+            hash.Add(item.FogClipDistance);
+            hash.Add(item.FogPower);
+            hash.Add(item.Unused);
+            hash.Add(item.FogFarColor);
+            hash.Add(item.FogMax);
+            hash.Add(item.LightFadeStartDistance);
+            hash.Add(item.LightFadeEndDistance);
+            hash.Add(item.Unknown);
+            hash.Add(item.NearHeightMid);
+            hash.Add(item.NearHeightRange);
+            hash.Add(item.FogColorHighNear);
+            hash.Add(item.FogColorHighFar);
+            hash.Add(item.HighDensityScale);
+            hash.Add(item.FogNearScale);
+            hash.Add(item.FogFarScale);
+            hash.Add(item.FogHighNearScale);
+            hash.Add(item.FogHighFarScale);
+            hash.Add(item.FogHeightMid);
+            hash.Add(item.FogHeightRange);
+            if (item.DirectionalAmbientColors is {} DirectionalAmbientColorsitem)
+            {
+                hash.Add(DirectionalAmbientColorsitem);
+            }
+            hash.Add(item.GodRays);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -931,6 +2525,10 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.GodRays, out var GodRaysInfo))
+            {
+                yield return GodRaysInfo;
             }
             yield break;
         }
@@ -1006,6 +2604,148 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientColor) ?? true))
+            {
+                item.AmbientColor = rhs.AmbientColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalColor) ?? true))
+            {
+                item.DirectionalColor = rhs.DirectionalColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNearColor) ?? true))
+            {
+                item.FogNearColor = rhs.FogNearColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNear) ?? true))
+            {
+                item.FogNear = rhs.FogNear;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFar) ?? true))
+            {
+                item.FogFar = rhs.FogFar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationXY) ?? true))
+            {
+                item.DirectionalRotationXY = rhs.DirectionalRotationXY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationZ) ?? true))
+            {
+                item.DirectionalRotationZ = rhs.DirectionalRotationZ;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalFade) ?? true))
+            {
+                item.DirectionalFade = rhs.DirectionalFade;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogClipDistance) ?? true))
+            {
+                item.FogClipDistance = rhs.FogClipDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogPower) ?? true))
+            {
+                item.FogPower = rhs.FogPower;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFarColor) ?? true))
+            {
+                item.FogFarColor = rhs.FogFarColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogMax) ?? true))
+            {
+                item.FogMax = rhs.FogMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeStartDistance) ?? true))
+            {
+                item.LightFadeStartDistance = rhs.LightFadeStartDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeEndDistance) ?? true))
+            {
+                item.LightFadeEndDistance = rhs.LightFadeEndDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.NearHeightMid) ?? true))
+            {
+                item.NearHeightMid = rhs.NearHeightMid;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.NearHeightRange) ?? true))
+            {
+                item.NearHeightRange = rhs.NearHeightRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogColorHighNear) ?? true))
+            {
+                item.FogColorHighNear = rhs.FogColorHighNear;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogColorHighFar) ?? true))
+            {
+                item.FogColorHighFar = rhs.FogColorHighFar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.HighDensityScale) ?? true))
+            {
+                item.HighDensityScale = rhs.HighDensityScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNearScale) ?? true))
+            {
+                item.FogNearScale = rhs.FogNearScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFarScale) ?? true))
+            {
+                item.FogFarScale = rhs.FogFarScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogHighNearScale) ?? true))
+            {
+                item.FogHighNearScale = rhs.FogHighNearScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogHighFarScale) ?? true))
+            {
+                item.FogHighFarScale = rhs.FogHighFarScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogHeightMid) ?? true))
+            {
+                item.FogHeightMid = rhs.FogHeightMid;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogHeightRange) ?? true))
+            {
+                item.FogHeightRange = rhs.FogHeightRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalAmbientColors) ?? true))
+            {
+                errorMask?.PushIndex((int)LightingTemplate_FieldIndex.DirectionalAmbientColors);
+                try
+                {
+                    if(rhs.DirectionalAmbientColors is {} rhsDirectionalAmbientColors)
+                    {
+                        item.DirectionalAmbientColors = rhsDirectionalAmbientColors.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LightingTemplate_FieldIndex.DirectionalAmbientColors));
+                    }
+                    else
+                    {
+                        item.DirectionalAmbientColors = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.GodRays) ?? true))
+            {
+                item.GodRays.SetTo(rhs.GodRays.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +2894,124 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static LightingTemplateBinaryWriteTranslation Instance = new LightingTemplateBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ILightingTemplateGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            ILightingTemplateGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmbientColor);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DirectionalColor);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogNearColor);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogNear);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogFar);
+                writer.Write(item.DirectionalRotationXY);
+                writer.Write(item.DirectionalRotationZ);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DirectionalFade);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogClipDistance);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogPower);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogFarColor);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogMax);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.LightFadeStartDistance);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.LightFadeEndDistance);
+                writer.Write(item.Unknown);
+                if (!item.DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.NearHeightMid);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.NearHeightRange);
+                    ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogColorHighNear);
+                    ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FogColorHighFar);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.HighDensityScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.FogNearScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.FogFarScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.FogHighNearScale);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.FogHighFarScale);
+                    if (!item.DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1))
+                    {
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.FogHeightMid);
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.FogHeightRange);
+                    }
+                }
+            }
+            if (item.DirectionalAmbientColors is {} DirectionalAmbientColorsItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.DALC))
+                {
+                    ((AmbientColorsBinaryWriteTranslation)((IBinaryItem)DirectionalAmbientColorsItem).BinaryWriteTranslator).Write(
+                        item: DirectionalAmbientColorsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.GodRays,
+                header: translationParams.ConvertToCustom(RecordTypes.WGDR));
+        }
+
         public void Write(
             MutagenWriter writer,
             ILightingTemplateGetter item,
@@ -1165,13 +3023,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +3089,84 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            ILightingTemplateInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.AmbientColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.DirectionalColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogNearColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DirectionalRotationXY = dataFrame.ReadInt32();
+                    item.DirectionalRotationZ = dataFrame.ReadInt32();
+                    item.DirectionalFade = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogClipDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(32));
+                    item.FogFarColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LightFadeStartDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LightFadeEndDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Unknown = dataFrame.ReadInt32();
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= LightingTemplate.DATADataType.Break0;
+                        return (int)LightingTemplate_FieldIndex.Unknown;
+                    }
+                    item.NearHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.NearHeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogColorHighNear = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogColorHighFar = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.HighDensityScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogNearScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogFarScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogHighNearScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogHighFarScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
+                        return (int)LightingTemplate_FieldIndex.FogHighFarScale;
+                    }
+                    item.FogHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FogHeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)LightingTemplate_FieldIndex.FogHeightRange;
+                }
+                case RecordTypeInts.DALC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.DirectionalAmbientColors = Mutagen.Bethesda.Fallout4.AmbientColors.CreateFromBinary(frame: frame);
+                    return (int)LightingTemplate_FieldIndex.DirectionalAmbientColors;
+                }
+                case RecordTypeInts.WGDR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GodRays.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LightingTemplate_FieldIndex.GodRays;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1261,6 +3199,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LightingTemplateCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LightingTemplateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +3214,148 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(ILightingTemplate);
 
 
+        private RangeInt32? _DATALocation;
+        public LightingTemplate.DATADataType DATADataTypeState { get; private set; }
+        #region AmbientColor
+        private int _AmbientColorLocation => _DATALocation!.Value.Min;
+        private bool _AmbientColor_IsSet => _DATALocation.HasValue;
+        public Color AmbientColor => _AmbientColor_IsSet ? _data.Slice(_AmbientColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region DirectionalColor
+        private int _DirectionalColorLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _DirectionalColor_IsSet => _DATALocation.HasValue;
+        public Color DirectionalColor => _DirectionalColor_IsSet ? _data.Slice(_DirectionalColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogNearColor
+        private int _FogNearColorLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _FogNearColor_IsSet => _DATALocation.HasValue;
+        public Color FogNearColor => _FogNearColor_IsSet ? _data.Slice(_FogNearColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogNear
+        private int _FogNearLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _FogNear_IsSet => _DATALocation.HasValue;
+        public Single FogNear => _FogNear_IsSet ? _data.Slice(_FogNearLocation, 4).Float() : default;
+        #endregion
+        #region FogFar
+        private int _FogFarLocation => _DATALocation!.Value.Min + 0x10;
+        private bool _FogFar_IsSet => _DATALocation.HasValue;
+        public Single FogFar => _FogFar_IsSet ? _data.Slice(_FogFarLocation, 4).Float() : default;
+        #endregion
+        #region DirectionalRotationXY
+        private int _DirectionalRotationXYLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _DirectionalRotationXY_IsSet => _DATALocation.HasValue;
+        public Int32 DirectionalRotationXY => _DirectionalRotationXY_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_DirectionalRotationXYLocation, 4)) : default;
+        #endregion
+        #region DirectionalRotationZ
+        private int _DirectionalRotationZLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _DirectionalRotationZ_IsSet => _DATALocation.HasValue;
+        public Int32 DirectionalRotationZ => _DirectionalRotationZ_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_DirectionalRotationZLocation, 4)) : default;
+        #endregion
+        #region DirectionalFade
+        private int _DirectionalFadeLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _DirectionalFade_IsSet => _DATALocation.HasValue;
+        public Single DirectionalFade => _DirectionalFade_IsSet ? _data.Slice(_DirectionalFadeLocation, 4).Float() : default;
+        #endregion
+        #region FogClipDistance
+        private int _FogClipDistanceLocation => _DATALocation!.Value.Min + 0x20;
+        private bool _FogClipDistance_IsSet => _DATALocation.HasValue;
+        public Single FogClipDistance => _FogClipDistance_IsSet ? _data.Slice(_FogClipDistanceLocation, 4).Float() : default;
+        #endregion
+        #region FogPower
+        private int _FogPowerLocation => _DATALocation!.Value.Min + 0x24;
+        private bool _FogPower_IsSet => _DATALocation.HasValue;
+        public Single FogPower => _FogPower_IsSet ? _data.Slice(_FogPowerLocation, 4).Float() : default;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _DATALocation!.Value.Min + 0x28;
+        private bool _Unused_IsSet => _DATALocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 32).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        #endregion
+        #region FogFarColor
+        private int _FogFarColorLocation => _DATALocation!.Value.Min + 0x48;
+        private bool _FogFarColor_IsSet => _DATALocation.HasValue;
+        public Color FogFarColor => _FogFarColor_IsSet ? _data.Slice(_FogFarColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogMax
+        private int _FogMaxLocation => _DATALocation!.Value.Min + 0x4C;
+        private bool _FogMax_IsSet => _DATALocation.HasValue;
+        public Single FogMax => _FogMax_IsSet ? _data.Slice(_FogMaxLocation, 4).Float() : default;
+        #endregion
+        #region LightFadeStartDistance
+        private int _LightFadeStartDistanceLocation => _DATALocation!.Value.Min + 0x50;
+        private bool _LightFadeStartDistance_IsSet => _DATALocation.HasValue;
+        public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? _data.Slice(_LightFadeStartDistanceLocation, 4).Float() : default;
+        #endregion
+        #region LightFadeEndDistance
+        private int _LightFadeEndDistanceLocation => _DATALocation!.Value.Min + 0x54;
+        private bool _LightFadeEndDistance_IsSet => _DATALocation.HasValue;
+        public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? _data.Slice(_LightFadeEndDistanceLocation, 4).Float() : default;
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0x58;
+        private bool _Unknown_IsSet => _DATALocation.HasValue;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
+        #endregion
+        #region NearHeightMid
+        private int _NearHeightMidLocation => _DATALocation!.Value.Min + 0x5C;
+        private bool _NearHeightMid_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Single NearHeightMid => _NearHeightMid_IsSet ? _data.Slice(_NearHeightMidLocation, 4).Float() : default;
+        #endregion
+        #region NearHeightRange
+        private int _NearHeightRangeLocation => _DATALocation!.Value.Min + 0x60;
+        private bool _NearHeightRange_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Single NearHeightRange => _NearHeightRange_IsSet ? _data.Slice(_NearHeightRangeLocation, 4).Float() : default;
+        #endregion
+        #region FogColorHighNear
+        private int _FogColorHighNearLocation => _DATALocation!.Value.Min + 0x64;
+        private bool _FogColorHighNear_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Color FogColorHighNear => _FogColorHighNear_IsSet ? _data.Slice(_FogColorHighNearLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogColorHighFar
+        private int _FogColorHighFarLocation => _DATALocation!.Value.Min + 0x68;
+        private bool _FogColorHighFar_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Color FogColorHighFar => _FogColorHighFar_IsSet ? _data.Slice(_FogColorHighFarLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region HighDensityScale
+        private int _HighDensityScaleLocation => _DATALocation!.Value.Min + 0x6C;
+        private bool _HighDensityScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Single HighDensityScale => _HighDensityScale_IsSet ? _data.Slice(_HighDensityScaleLocation, 4).Float() : default;
+        #endregion
+        #region FogNearScale
+        private int _FogNearScaleLocation => _DATALocation!.Value.Min + 0x70;
+        private bool _FogNearScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Single FogNearScale => _FogNearScale_IsSet ? _data.Slice(_FogNearScaleLocation, 4).Float() : default;
+        #endregion
+        #region FogFarScale
+        private int _FogFarScaleLocation => _DATALocation!.Value.Min + 0x74;
+        private bool _FogFarScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Single FogFarScale => _FogFarScale_IsSet ? _data.Slice(_FogFarScaleLocation, 4).Float() : default;
+        #endregion
+        #region FogHighNearScale
+        private int _FogHighNearScaleLocation => _DATALocation!.Value.Min + 0x78;
+        private bool _FogHighNearScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Single FogHighNearScale => _FogHighNearScale_IsSet ? _data.Slice(_FogHighNearScaleLocation, 4).Float() : default;
+        #endregion
+        #region FogHighFarScale
+        private int _FogHighFarScaleLocation => _DATALocation!.Value.Min + 0x7C;
+        private bool _FogHighFarScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Single FogHighFarScale => _FogHighFarScale_IsSet ? _data.Slice(_FogHighFarScaleLocation, 4).Float() : default;
+        #endregion
+        #region FogHeightMid
+        private int _FogHeightMidLocation => _DATALocation!.Value.Min + 0x80;
+        private bool _FogHeightMid_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        public Single FogHeightMid => _FogHeightMid_IsSet ? _data.Slice(_FogHeightMidLocation, 4).Float() : default;
+        #endregion
+        #region FogHeightRange
+        private int _FogHeightRangeLocation => _DATALocation!.Value.Min + 0x84;
+        private bool _FogHeightRange_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        public Single FogHeightRange => _FogHeightRange_IsSet ? _data.Slice(_FogHeightRangeLocation, 4).Float() : default;
+        #endregion
+        public IAmbientColorsGetter? DirectionalAmbientColors { get; private set; }
+        #region GodRays
+        private int? _GodRaysLocation;
+        public IFormLinkNullableGetter<IGodRayGetter> GodRays => _GodRaysLocation.HasValue ? new FormLinkNullable<IGodRayGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GodRaysLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGodRayGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +3410,56 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x5C)
+                    {
+                        this.DATADataTypeState |= LightingTemplate.DATADataType.Break0;
+                    }
+                    if (subLen <= 0x80)
+                    {
+                        this.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
+                    }
+                    return (int)LightingTemplate_FieldIndex.FogHeightRange;
+                }
+                case RecordTypeInts.DALC:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.DirectionalAmbientColors = AmbientColorsBinaryOverlay.AmbientColorsFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)LightingTemplate_FieldIndex.DirectionalAmbientColors;
+                }
+                case RecordTypeInts.WGDR:
+                {
+                    _GodRaysLocation = (stream.Position - offset);
+                    return (int)LightingTemplate_FieldIndex.GodRays;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

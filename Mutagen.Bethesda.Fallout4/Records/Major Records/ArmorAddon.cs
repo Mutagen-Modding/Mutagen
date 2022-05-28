@@ -1,10 +1,12 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Collections;
 using Noggog.StructuredStrings;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -14,7 +16,7 @@ public partial class ArmorAddon
     public enum MajorFlag
     {
         NoUnderarmorScaling = 0x0000_0040,
-        HiResFirstPersonOnly = 0x40000000
+        HiResFirstPersonOnly = 0x4000_0000
     }
 
     public IGenderedItem<Boolean> WeightSliderEnabled { get; set; } = new GenderedItem<Boolean>(default, default);
@@ -66,9 +68,23 @@ partial class ArmorAddonBinaryCreateTranslation
         item.WeightSliderEnabled = new ArmorAddonWeightSliderContainer(frame.ReadUInt8(), frame.ReadUInt8());
     }
 
-    public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IArmorAddonInternal item)
+    public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IArmorAddonInternal item)
     {
-        item.BodyTemplate = BodyTemplateBinaryCreateTranslation.Parse(frame);
+        var genderFrame = frame.ReadSubrecord(RecordTypes.BSMP);
+
+        ExtendedList<Bone> list = Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Bone>.Instance.Parse(
+            reader: frame.SpawnAll(),
+            triggeringRecord: Bone_Registration.TriggerSpecs,
+            transl: Bone.TryCreateFromBinary);
+        if (genderFrame.AsInt32() == 0)
+        {
+            item.BoneData.Male = list;
+        }
+        else
+        {
+            item.BoneData.Female = list;
+        }
+        return null;
     }
 }
 
@@ -89,27 +105,58 @@ partial class ArmorAddonBinaryWriteTranslation
         }
     }
 
-    public static partial void WriteBinaryBodyTemplateCustom(MutagenWriter writer, IArmorAddonGetter item)
+    public static partial void WriteBinaryBoneDataParseCustom(MutagenWriter writer, IArmorAddonGetter item)
     {
-        if (item.BodyTemplate is { } templ)
+        var bones = item.BoneData;
+        WriteBinaryBoneDataParseCustom(writer, bones.Male, 0);
+        WriteBinaryBoneDataParseCustom(writer, bones.Female, 1);
+    }
+
+    private static void WriteBinaryBoneDataParseCustom(MutagenWriter writer, IReadOnlyList<IBoneGetter>? bones, int genderInt)
+    {
+        if (bones == null) return;
+        using (HeaderExport.Subrecord(writer, RecordTypes.BSMP))
         {
-            BodyTemplateBinaryWriteTranslation.Write(writer, templ);
+            writer.Write(genderInt);
         }
+        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBoneGetter>.Instance.Write(writer, bones,
+            transl: (MutagenWriter subWriter, IBoneGetter subItem, TypedWriteParams? conv) =>
+            {
+                var Item = subItem;
+                ((BoneBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    item: Item,
+                    writer: subWriter,
+                    translationParams: conv);
+            });
     }
 }
 
 internal partial class ArmorAddonBinaryOverlay
 {
-    public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom() => new GenderedItem<bool>(
-        ArmorAddonBinaryCreateTranslation.IsEnabled(_data.Slice(_DNAMLocation!.Value.Min + 2)[0]),
-        ArmorAddonBinaryCreateTranslation.IsEnabled(_data.Slice(_DNAMLocation!.Value.Min + 3)[0]));
+    public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom() => new ArmorAddonWeightSliderContainer(
+        _data.Slice(_DNAMLocation!.Value.Min + 2)[0],
+        _data.Slice(_DNAMLocation!.Value.Min + 3)[0]);
 
-    private int? _BodyTemplateLocation;
-    public partial IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
-    public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
+    private GenderedItem<IReadOnlyList<IBoneGetter>?>? _boneData;
+    public IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData => _boneData ?? new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
 
-    partial void BodyTemplateCustomParse(OverlayStream stream, long finalPos, int offset)
+    public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset)
     {
-        _BodyTemplateLocation = (stream.Position - offset);
+        var genderFrame = stream.ReadSubrecord(RecordTypes.BSMP);
+        _boneData ??= new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
+        IReadOnlyList<IBoneGetter> list = this.ParseRepeatedTypelessSubrecord(
+            stream: stream,
+            parseParams: null,
+            trigger: Bone_Registration.TriggerSpecs,
+            factory: BoneBinaryOverlay.BoneFactory);
+        if (genderFrame.AsInt32() == 0)
+        {
+            _boneData.Male = list;
+        }
+        else
+        {
+            _boneData.Female = list;
+        }
+        return null;
     }
 }

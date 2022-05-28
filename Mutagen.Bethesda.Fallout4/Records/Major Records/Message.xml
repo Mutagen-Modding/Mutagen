@@ -4,11 +4,11 @@
     <Fields>
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <ByteArray name="INAM" recordType="INAM" nullable="False" />
+      <Int32 name="INAM" recordType="INAM" nullable="False" />
       <FormLink name="OwnerQuest" recordType="QNAM" refName="Quest" />
       <Enum name="Flags" enumName="Message.Flag" byteLength="4" recordType="DNAM" nullable="False" />
       <UInt32 name="DisplayTime" recordType="TNAM" />
-      <String name="SWF" recordType="SNAM" />
+      <String name="Swf" recordType="SNAM" />
       <String name="ShortTitle" recordType="NNAM" translated="DL" />
       <RefList name="MenuButtons" refName="MessageButton" />
     </Fields>

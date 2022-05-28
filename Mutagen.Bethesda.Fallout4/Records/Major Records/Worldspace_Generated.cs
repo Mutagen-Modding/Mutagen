@@ -2062,6 +2062,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IWorldspace :
+        IComplexLocation,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceInternal>,
@@ -2129,6 +2130,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IWorldspaceGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IComplexLocationGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IWorldspaceGetter>,
         IMajorRecordGetterEnumerable,
@@ -3044,6 +3046,13 @@ namespace Mutagen.Bethesda.Fallout4
                             TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
                     }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IComplexLocation":
+                case "IComplexLocationGetter":
                     foreach (var subItem in obj.SubCells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);

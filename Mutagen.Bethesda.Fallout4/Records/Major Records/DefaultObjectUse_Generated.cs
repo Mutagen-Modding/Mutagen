@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -36,21 +37,31 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class BodyTemplate :
-        IBodyTemplate,
-        IEquatable<IBodyTemplateGetter>,
-        ILoquiObjectSetter<BodyTemplate>
+    public partial class DefaultObjectUse :
+        IDefaultObjectUse,
+        IEquatable<IDefaultObjectUseGetter>,
+        ILoquiObjectSetter<DefaultObjectUse>
     {
         #region Ctor
-        public BodyTemplate()
+        public DefaultObjectUse()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FirstPersonFlags
-        public BipedObjectFlag FirstPersonFlags { get; set; } = default;
+        #region Use
+        public RecordType Use { get; set; } = RecordType.Null;
+        #endregion
+        #region Object
+        private readonly IFormLink<IFallout4MajorRecordGetter> _Object = new FormLink<IFallout4MajorRecordGetter>();
+        public IFormLink<IFallout4MajorRecordGetter> Object
+        {
+            get => _Object;
+            set => _Object.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFallout4MajorRecordGetter> IDefaultObjectUseGetter.Object => this.Object;
         #endregion
 
         #region To String
@@ -59,7 +70,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyTemplateMixIn.Print(
+            DefaultObjectUseMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -70,16 +81,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBodyTemplateGetter rhs) return false;
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IDefaultObjectUseGetter rhs) return false;
+            return ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IBodyTemplateGetter? obj)
+        public bool Equals(IDefaultObjectUseGetter? obj)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -89,9 +100,18 @@ namespace Mutagen.Bethesda.Fallout4
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem FirstPersonFlags)
+            public Mask(TItem initialValue)
             {
-                this.FirstPersonFlags = FirstPersonFlags;
+                this.Use = initialValue;
+                this.Object = initialValue;
+            }
+
+            public Mask(
+                TItem Use,
+                TItem Object)
+            {
+                this.Use = Use;
+                this.Object = Object;
             }
 
             #pragma warning disable CS8618
@@ -103,7 +123,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem FirstPersonFlags;
+            public TItem Use;
+            public TItem Object;
             #endregion
 
             #region Equals
@@ -116,13 +137,15 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.FirstPersonFlags, rhs.FirstPersonFlags)) return false;
+                if (!object.Equals(this.Use, rhs.Use)) return false;
+                if (!object.Equals(this.Object, rhs.Object)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstPersonFlags);
+                hash.Add(this.Use);
+                hash.Add(this.Object);
                 return hash.ToHashCode();
             }
 
@@ -131,7 +154,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.FirstPersonFlags)) return false;
+                if (!eval(this.Use)) return false;
+                if (!eval(this.Object)) return false;
                 return true;
             }
             #endregion
@@ -139,7 +163,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.FirstPersonFlags)) return true;
+                if (eval(this.Use)) return true;
+                if (eval(this.Object)) return true;
                 return false;
             }
             #endregion
@@ -147,35 +172,40 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BodyTemplate.Mask<R>();
+                var ret = new DefaultObjectUse.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.FirstPersonFlags = eval(this.FirstPersonFlags);
+                obj.Use = eval(this.Use);
+                obj.Object = eval(this.Object);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BodyTemplate.Mask<bool>? printMask = null)
+            public string Print(DefaultObjectUse.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BodyTemplate.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DefaultObjectUse.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BodyTemplate.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(DefaultObjectUse.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FirstPersonFlags ?? true)
+                    if (printMask?.Use ?? true)
                     {
-                        sb.AppendItem(FirstPersonFlags, "FirstPersonFlags");
+                        sb.AppendItem(Use, "Use");
+                    }
+                    if (printMask?.Object ?? true)
+                    {
+                        sb.AppendItem(Object, "Object");
                     }
                 }
             }
@@ -201,17 +231,20 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public Exception? FirstPersonFlags;
+            public Exception? Use;
+            public Exception? Object;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+                DefaultObjectUse_FieldIndex enu = (DefaultObjectUse_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.FirstPersonFlags:
-                        return FirstPersonFlags;
+                    case DefaultObjectUse_FieldIndex.Use:
+                        return Use;
+                    case DefaultObjectUse_FieldIndex.Object:
+                        return Object;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -219,11 +252,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+                DefaultObjectUse_FieldIndex enu = (DefaultObjectUse_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.FirstPersonFlags:
-                        this.FirstPersonFlags = ex;
+                    case DefaultObjectUse_FieldIndex.Use:
+                        this.Use = ex;
+                        break;
+                    case DefaultObjectUse_FieldIndex.Object:
+                        this.Object = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -232,11 +268,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+                DefaultObjectUse_FieldIndex enu = (DefaultObjectUse_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.FirstPersonFlags:
-                        this.FirstPersonFlags = (Exception?)obj;
+                    case DefaultObjectUse_FieldIndex.Use:
+                        this.Use = (Exception?)obj;
+                        break;
+                    case DefaultObjectUse_FieldIndex.Object:
+                        this.Object = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -246,7 +285,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstPersonFlags != null) return true;
+                if (Use != null) return true;
+                if (Object != null) return true;
                 return false;
             }
             #endregion
@@ -273,7 +313,10 @@ namespace Mutagen.Bethesda.Fallout4
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(FirstPersonFlags, "FirstPersonFlags");
+                    sb.AppendItem(Use, "Use");
+                }
+                {
+                    sb.AppendItem(Object, "Object");
                 }
             }
             #endregion
@@ -283,7 +326,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstPersonFlags = this.FirstPersonFlags.Combine(rhs.FirstPersonFlags);
+                ret.Use = this.Use.Combine(rhs.Use);
+                ret.Object = this.Object.Combine(rhs.Object);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -307,7 +351,8 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool FirstPersonFlags;
+            public bool Use;
+            public bool Object;
             #endregion
 
             #region Ctors
@@ -317,7 +362,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.FirstPersonFlags = defaultOn;
+                this.Use = defaultOn;
+                this.Object = defaultOn;
             }
 
             #endregion
@@ -333,7 +379,8 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((FirstPersonFlags, null));
+                ret.Add((Use, null));
+                ret.Add((Object, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -344,27 +391,32 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DefaultObjectUseCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectUseSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BodyTemplateBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => DefaultObjectUseBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DefaultObjectUseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static BodyTemplate CreateFromBinary(
+        public static DefaultObjectUse CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new BodyTemplate();
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new DefaultObjectUse();
+            ((DefaultObjectUseSetterCommon)((IDefaultObjectUseGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -375,7 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BodyTemplate item,
+            out DefaultObjectUse item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -390,29 +442,32 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)this).CommonSetterInstance()!).Clear(this);
+            ((DefaultObjectUseSetterCommon)((IDefaultObjectUseGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BodyTemplate GetNew()
+        internal static DefaultObjectUse GetNew()
         {
-            return new BodyTemplate();
+            return new DefaultObjectUse();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBodyTemplate :
-        IBodyTemplateGetter,
-        ILoquiObjectSetter<IBodyTemplate>
+    public partial interface IDefaultObjectUse :
+        IDefaultObjectUseGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IDefaultObjectUse>
     {
-        new BipedObjectFlag FirstPersonFlags { get; set; }
+        new RecordType Use { get; set; }
+        new IFormLink<IFallout4MajorRecordGetter> Object { get; set; }
     }
 
-    public partial interface IBodyTemplateGetter :
+    public partial interface IDefaultObjectUseGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IBodyTemplateGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IDefaultObjectUseGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -420,50 +475,51 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => BodyTemplate_Registration.Instance;
-        BipedObjectFlag FirstPersonFlags { get; }
+        static ILoquiRegistration StaticRegistration => DefaultObjectUse_Registration.Instance;
+        RecordType Use { get; }
+        IFormLinkGetter<IFallout4MajorRecordGetter> Object { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class BodyTemplateMixIn
+    public static partial class DefaultObjectUseMixIn
     {
-        public static void Clear(this IBodyTemplate item)
+        public static void Clear(this IDefaultObjectUse item)
         {
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((DefaultObjectUseSetterCommon)((IDefaultObjectUseGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BodyTemplate.Mask<bool> GetEqualsMask(
-            this IBodyTemplateGetter item,
-            IBodyTemplateGetter rhs,
+        public static DefaultObjectUse.Mask<bool> GetEqualsMask(
+            this IDefaultObjectUseGetter item,
+            IDefaultObjectUseGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBodyTemplateGetter item,
+            this IDefaultObjectUseGetter item,
             string? name = null,
-            BodyTemplate.Mask<bool>? printMask = null)
+            DefaultObjectUse.Mask<bool>? printMask = null)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).Print(
+            return ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBodyTemplateGetter item,
+            this IDefaultObjectUseGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BodyTemplate.Mask<bool>? printMask = null)
+            DefaultObjectUse.Mask<bool>? printMask = null)
         {
-            ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).Print(
+            ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -471,21 +527,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IBodyTemplateGetter item,
-            IBodyTemplateGetter rhs,
-            BodyTemplate.TranslationMask? equalsMask = null)
+            this IDefaultObjectUseGetter item,
+            IDefaultObjectUseGetter rhs,
+            DefaultObjectUse.TranslationMask? equalsMask = null)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).Equals(
+            return ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBodyTemplate lhs,
-            IBodyTemplateGetter rhs)
+            this IDefaultObjectUse lhs,
+            IDefaultObjectUseGetter rhs)
         {
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -494,11 +550,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IBodyTemplate lhs,
-            IBodyTemplateGetter rhs,
-            BodyTemplate.TranslationMask? copyMask = null)
+            this IDefaultObjectUse lhs,
+            IDefaultObjectUseGetter rhs,
+            DefaultObjectUse.TranslationMask? copyMask = null)
         {
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -507,28 +563,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IBodyTemplate lhs,
-            IBodyTemplateGetter rhs,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? copyMask = null)
+            this IDefaultObjectUse lhs,
+            IDefaultObjectUseGetter rhs,
+            out DefaultObjectUse.ErrorMask errorMask,
+            DefaultObjectUse.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BodyTemplate.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DefaultObjectUse.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBodyTemplate lhs,
-            IBodyTemplateGetter rhs,
+            this IDefaultObjectUse lhs,
+            IDefaultObjectUseGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -536,32 +592,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static BodyTemplate DeepCopy(
-            this IBodyTemplateGetter item,
-            BodyTemplate.TranslationMask? copyMask = null)
+        public static DefaultObjectUse DeepCopy(
+            this IDefaultObjectUseGetter item,
+            DefaultObjectUse.TranslationMask? copyMask = null)
         {
-            return ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BodyTemplate DeepCopy(
-            this IBodyTemplateGetter item,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? copyMask = null)
+        public static DefaultObjectUse DeepCopy(
+            this IDefaultObjectUseGetter item,
+            out DefaultObjectUse.ErrorMask errorMask,
+            DefaultObjectUse.TranslationMask? copyMask = null)
         {
-            return ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BodyTemplate DeepCopy(
-            this IBodyTemplateGetter item,
+        public static DefaultObjectUse DeepCopy(
+            this IDefaultObjectUseGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -569,11 +625,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBodyTemplate item,
+            this IDefaultObjectUse item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((DefaultObjectUseSetterCommon)((IDefaultObjectUseGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -589,47 +645,48 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum BodyTemplate_FieldIndex
+    internal enum DefaultObjectUse_FieldIndex
     {
-        FirstPersonFlags = 0,
+        Use = 0,
+        Object = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class BodyTemplate_Registration : ILoquiRegistration
+    internal partial class DefaultObjectUse_Registration : ILoquiRegistration
     {
-        public static readonly BodyTemplate_Registration Instance = new BodyTemplate_Registration();
+        public static readonly DefaultObjectUse_Registration Instance = new DefaultObjectUse_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 134,
+            msgID: 623,
             version: 0);
 
-        public const string GUID = "ab1ebc3d-5b10-40d1-91d9-66100bd50769";
+        public const string GUID = "f8aa3e4d-e8da-4ef0-a43c-eed6663eb32d";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(BodyTemplate.Mask<>);
+        public static readonly Type MaskType = typeof(DefaultObjectUse.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BodyTemplate.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(DefaultObjectUse.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BodyTemplate);
+        public static readonly Type ClassType = typeof(DefaultObjectUse);
 
-        public static readonly Type GetterType = typeof(IBodyTemplateGetter);
+        public static readonly Type GetterType = typeof(IDefaultObjectUseGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBodyTemplate);
+        public static readonly Type SetterType = typeof(IDefaultObjectUse);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.BodyTemplate";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.DefaultObjectUse";
 
-        public const string Name = "BodyTemplate";
+        public const string Name = "DefaultObjectUse";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -637,14 +694,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BOD2;
-        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
-        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
-        {
-            var all = RecordCollection.Factory(RecordTypes.BOD2);
-            return new RecordTriggerSpecs(allRecordTypes: all);
-        });
-        public static readonly Type BinaryWriteTranslation = typeof(BodyTemplateBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(DefaultObjectUseBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -677,56 +727,54 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class BodyTemplateSetterCommon
+    internal partial class DefaultObjectUseSetterCommon
     {
-        public static readonly BodyTemplateSetterCommon Instance = new BodyTemplateSetterCommon();
+        public static readonly DefaultObjectUseSetterCommon Instance = new DefaultObjectUseSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBodyTemplate item)
+        public void Clear(IDefaultObjectUse item)
         {
             ClearPartial();
-            item.FirstPersonFlags = default;
+            item.Use = RecordType.Null;
+            item.Object.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IBodyTemplate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IDefaultObjectUse obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Object.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBodyTemplate item,
+            IDefaultObjectUse item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.BOD2),
-                translationParams?.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BodyTemplateBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: DefaultObjectUseBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class BodyTemplateCommon
+    internal partial class DefaultObjectUseCommon
     {
-        public static readonly BodyTemplateCommon Instance = new BodyTemplateCommon();
+        public static readonly DefaultObjectUseCommon Instance = new DefaultObjectUseCommon();
 
-        public BodyTemplate.Mask<bool> GetEqualsMask(
-            IBodyTemplateGetter item,
-            IBodyTemplateGetter rhs,
+        public DefaultObjectUse.Mask<bool> GetEqualsMask(
+            IDefaultObjectUseGetter item,
+            IDefaultObjectUseGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BodyTemplate.Mask<bool>(false);
-            ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new DefaultObjectUse.Mask<bool>(false);
+            ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -735,19 +783,20 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IBodyTemplateGetter item,
-            IBodyTemplateGetter rhs,
-            BodyTemplate.Mask<bool> ret,
+            IDefaultObjectUseGetter item,
+            IDefaultObjectUseGetter rhs,
+            DefaultObjectUse.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.FirstPersonFlags = item.FirstPersonFlags == rhs.FirstPersonFlags;
+            ret.Use = item.Use == rhs.Use;
+            ret.Object = item.Object.Equals(rhs.Object);
         }
         
         public string Print(
-            IBodyTemplateGetter item,
+            IDefaultObjectUseGetter item,
             string? name = null,
-            BodyTemplate.Mask<bool>? printMask = null)
+            DefaultObjectUse.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -759,18 +808,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IBodyTemplateGetter item,
+            IDefaultObjectUseGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BodyTemplate.Mask<bool>? printMask = null)
+            DefaultObjectUse.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BodyTemplate =>");
+                sb.AppendLine($"DefaultObjectUse =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BodyTemplate) =>");
+                sb.AppendLine($"{name} (DefaultObjectUse) =>");
             }
             using (sb.Brace())
             {
@@ -782,34 +831,43 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IBodyTemplateGetter item,
+            IDefaultObjectUseGetter item,
             StructuredStringBuilder sb,
-            BodyTemplate.Mask<bool>? printMask = null)
+            DefaultObjectUse.Mask<bool>? printMask = null)
         {
-            if (printMask?.FirstPersonFlags ?? true)
+            if (printMask?.Use ?? true)
             {
-                sb.AppendItem(item.FirstPersonFlags, "FirstPersonFlags");
+                sb.AppendItem(item.Use, "Use");
+            }
+            if (printMask?.Object ?? true)
+            {
+                sb.AppendItem(item.Object.FormKey, "Object");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBodyTemplateGetter? lhs,
-            IBodyTemplateGetter? rhs,
+            IDefaultObjectUseGetter? lhs,
+            IDefaultObjectUseGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)BodyTemplate_FieldIndex.FirstPersonFlags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)DefaultObjectUse_FieldIndex.Use) ?? true))
             {
-                if (lhs.FirstPersonFlags != rhs.FirstPersonFlags) return false;
+                if (lhs.Use != rhs.Use) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DefaultObjectUse_FieldIndex.Object) ?? true))
+            {
+                if (!lhs.Object.Equals(rhs.Object)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IBodyTemplateGetter item)
+        public virtual int GetHashCode(IDefaultObjectUseGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstPersonFlags);
+            hash.Add(item.Use);
+            hash.Add(item.Object);
             return hash.ToHashCode();
         }
         
@@ -818,44 +876,49 @@ namespace Mutagen.Bethesda.Fallout4
         
         public object GetNew()
         {
-            return BodyTemplate.GetNew();
+            return DefaultObjectUse.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyTemplateGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDefaultObjectUseGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.Object);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class BodyTemplateSetterTranslationCommon
+    internal partial class DefaultObjectUseSetterTranslationCommon
     {
-        public static readonly BodyTemplateSetterTranslationCommon Instance = new BodyTemplateSetterTranslationCommon();
+        public static readonly DefaultObjectUseSetterTranslationCommon Instance = new DefaultObjectUseSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBodyTemplate item,
-            IBodyTemplateGetter rhs,
+            IDefaultObjectUse item,
+            IDefaultObjectUseGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.FirstPersonFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DefaultObjectUse_FieldIndex.Use) ?? true))
             {
-                item.FirstPersonFlags = rhs.FirstPersonFlags;
+                item.Use = rhs.Use;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DefaultObjectUse_FieldIndex.Object) ?? true))
+            {
+                item.Object.SetTo(rhs.Object.FormKey);
             }
         }
         
         #endregion
         
-        public BodyTemplate DeepCopy(
-            IBodyTemplateGetter item,
-            BodyTemplate.TranslationMask? copyMask = null)
+        public DefaultObjectUse DeepCopy(
+            IDefaultObjectUseGetter item,
+            DefaultObjectUse.TranslationMask? copyMask = null)
         {
-            BodyTemplate ret = (BodyTemplate)((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).GetNew();
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            DefaultObjectUse ret = (DefaultObjectUse)((DefaultObjectUseCommon)((IDefaultObjectUseGetter)item).CommonInstance()!).GetNew();
+            ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -864,30 +927,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public BodyTemplate DeepCopy(
-            IBodyTemplateGetter item,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? copyMask = null)
+        public DefaultObjectUse DeepCopy(
+            IDefaultObjectUseGetter item,
+            out DefaultObjectUse.ErrorMask errorMask,
+            DefaultObjectUse.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BodyTemplate ret = (BodyTemplate)((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).GetNew();
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            DefaultObjectUse ret = (DefaultObjectUse)((DefaultObjectUseCommon)((IDefaultObjectUseGetter)item).CommonInstance()!).GetNew();
+            ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BodyTemplate.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DefaultObjectUse.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BodyTemplate DeepCopy(
-            IBodyTemplateGetter item,
+        public DefaultObjectUse DeepCopy(
+            IDefaultObjectUseGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BodyTemplate ret = (BodyTemplate)((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).GetNew();
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            DefaultObjectUse ret = (DefaultObjectUse)((DefaultObjectUseCommon)((IDefaultObjectUseGetter)item).CommonInstance()!).GetNew();
+            ((DefaultObjectUseSetterTranslationCommon)((IDefaultObjectUseGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -903,27 +966,27 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class BodyTemplate
+    public partial class DefaultObjectUse
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BodyTemplate_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BodyTemplate_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => DefaultObjectUse_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DefaultObjectUse_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BodyTemplateCommon.Instance;
+        protected object CommonInstance() => DefaultObjectUseCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return BodyTemplateSetterCommon.Instance;
+            return DefaultObjectUseSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BodyTemplateSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DefaultObjectUseSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonInstance() => this.CommonInstance();
+        object IDefaultObjectUseGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IDefaultObjectUseGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IDefaultObjectUseGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -934,35 +997,30 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class BodyTemplateBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class DefaultObjectUseBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BodyTemplateBinaryWriteTranslation Instance = new BodyTemplateBinaryWriteTranslation();
+        public readonly static DefaultObjectUseBinaryWriteTranslation Instance = new DefaultObjectUseBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IBodyTemplateGetter item,
+            IDefaultObjectUseGetter item,
             MutagenWriter writer)
         {
-            EnumBinaryTranslation<BipedObjectFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.FirstPersonFlags,
-                length: 4);
+            RecordTypeBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Use);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Object);
         }
 
         public void Write(
             MutagenWriter writer,
-            IBodyTemplateGetter item,
+            IDefaultObjectUseGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Subrecord(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.BOD2),
-                overflowRecord: translationParams?.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writerToUse);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -971,24 +1029,23 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IBodyTemplateGetter)item,
+                item: (IDefaultObjectUseGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BodyTemplateBinaryCreateTranslation
+    internal partial class DefaultObjectUseBinaryCreateTranslation
     {
-        public readonly static BodyTemplateBinaryCreateTranslation Instance = new BodyTemplateBinaryCreateTranslation();
+        public readonly static DefaultObjectUseBinaryCreateTranslation Instance = new DefaultObjectUseBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IBodyTemplate item,
+            IDefaultObjectUse item,
             MutagenFrame frame)
         {
-            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                reader: frame,
-                length: 4);
+            item.Use = RecordTypeBinaryTranslation.Instance.Parse(reader: frame);
+            item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -997,14 +1054,14 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class BodyTemplateBinaryTranslationMixIn
+    public static class DefaultObjectUseBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBodyTemplateGetter item,
+            this IDefaultObjectUseGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((BodyTemplateBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((DefaultObjectUseBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1017,51 +1074,53 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class BodyTemplateBinaryOverlay :
+    internal partial class DefaultObjectUseBinaryOverlay :
         PluginBinaryOverlay,
-        IBodyTemplateGetter
+        IDefaultObjectUseGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BodyTemplate_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BodyTemplate_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => DefaultObjectUse_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DefaultObjectUse_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BodyTemplateCommon.Instance;
+        protected object CommonInstance() => DefaultObjectUseCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BodyTemplateSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DefaultObjectUseSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonInstance() => this.CommonInstance();
+        object IDefaultObjectUseGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBodyTemplateGetter.CommonSetterInstance() => null;
+        object? IDefaultObjectUseGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IDefaultObjectUseGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DefaultObjectUseCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BodyTemplateBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => DefaultObjectUseBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DefaultObjectUseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public RecordType Use => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4)));
+        public IFormLinkGetter<IFallout4MajorRecordGetter> Object => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected BodyTemplateBinaryOverlay(
+        protected DefaultObjectUseBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1071,17 +1130,16 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IBodyTemplateGetter BodyTemplateFactory(
+        public static IDefaultObjectUseGetter DefaultObjectUseFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new BodyTemplateBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+            var ret = new DefaultObjectUseBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 0x8),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x4 + package.MetaData.Constants.SubConstants.HeaderLength;
+            int offset = stream.Position;
+            stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1089,12 +1147,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IBodyTemplateGetter BodyTemplateFactory(
+        public static IDefaultObjectUseGetter DefaultObjectUseFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return BodyTemplateFactory(
+            return DefaultObjectUseFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1106,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyTemplateMixIn.Print(
+            DefaultObjectUseMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1117,16 +1175,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBodyTemplateGetter rhs) return false;
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IDefaultObjectUseGetter rhs) return false;
+            return ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IBodyTemplateGetter? obj)
+        public bool Equals(IDefaultObjectUseGetter? obj)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DefaultObjectUseCommon)((IDefaultObjectUseGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

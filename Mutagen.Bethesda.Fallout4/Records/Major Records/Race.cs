@@ -12,7 +12,6 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Race
 {
-    internal static readonly RecordType NAM2 = new("NAM2");
     public bool ExportingExtraNam2 { get; set; }
 
     [Flags]
@@ -93,7 +92,7 @@ partial class RaceBinaryCreateTranslation
     public static partial void FillBinaryExtraNAM2Custom(MutagenFrame frame, IRaceInternal item)
     {
         if (frame.Complete) return;
-        if (frame.TryGetSubrecordHeader(Race.NAM2, out var subHeader))
+        if (frame.TryGetSubrecordHeader(RecordTypes.NAM2, out var subHeader))
         {
             item.ExportingExtraNam2 = true;
             frame.Position += subHeader.TotalLength;
@@ -300,7 +299,7 @@ partial class RaceBinaryWriteTranslation
     {
         if (item.ExportingExtraNam2)
         {
-            using var header = HeaderExport.Subrecord(writer, Race.NAM2);
+            using var header = HeaderExport.Subrecord(writer, RecordTypes.NAM2);
         }
     }
 

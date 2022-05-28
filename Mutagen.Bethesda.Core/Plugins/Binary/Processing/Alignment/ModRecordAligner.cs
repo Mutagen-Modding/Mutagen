@@ -156,8 +156,9 @@ public static class ModRecordAligner
             inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength); 
             var writerEndPos = writer.Position + len; 
             var endPos = inputStream.Position + len; 
-            var dataDict = new Dictionary<RecordType, ReadOnlyMemorySlice<byte>>(); 
-            ReadOnlyMemorySlice<byte>? rest = null; 
+            var dataDict = new Dictionary<RecordType, List<ReadOnlyMemorySlice<byte>>>(); 
+            ReadOnlyMemorySlice<byte>? rest = null;
+            RecordType? last = null;
             while (inputStream.Position < endPos) 
             { 
                 var subType = inputStream.GetSubrecord(); 
@@ -178,19 +179,33 @@ public static class ModRecordAligner
                     continue; 
                 } 
                      
-                if (!alignments.TryGetValue(subType.RecordType, out var rule)) 
-                { 
-                    throw new ArgumentException($"Encountered an unknown record: {subType}"); 
+                if (alignments.TryGetValue(subType.RecordType, out var rule))
+                {
+                    dataDict.GetOrAdd(subType.RecordType).Add(rule.GetBytes(inputStream));
+                    last = subType.RecordType;
                 } 
-                dataDict.Add(subType.RecordType, rule.GetBytes(inputStream)); 
+                else
+                {
+                    if (last != null)
+                    {
+                        dataDict.GetOrAdd(last.Value).Add(inputStream.ReadSubrecord().HeaderAndContentData);
+                    }
+                    else
+                    {
+                        inputStream.WriteTo(writer.BaseStream, subType.TotalLength);
+                    }
+                }
             } 
             foreach (var alignment in alignmentRules.Alignments[recType]) 
             { 
                 if (dataDict.TryGetValue( 
                         alignment.Key, 
                         out var data)) 
-                { 
-                    writer.Write(data); 
+                {
+                    foreach (var item in data)
+                    {
+                        writer.Write(item);
+                    }
                     dataDict.Remove(alignment.Key); 
                 } 
             } 

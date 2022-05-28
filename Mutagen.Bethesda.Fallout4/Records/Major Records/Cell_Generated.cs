@@ -2632,6 +2632,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface ICell :
         ICellGetter,
+        IComplexLocation,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<ICellInternal>,
@@ -2703,6 +2704,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ICellGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IComplexLocationGetter,
         IFormLinkContainerGetter,
         ILoquiObject<ICellGetter>,
         IMajorRecordGetterEnumerable,

@@ -141,6 +141,10 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArtObjectGetter> IArmorAddonGetter.ArtObject => this.ArtObject;
         #endregion
+        #region BoneData
+        public IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; } = new GenderedItem<ExtendedList<Bone>?>(default, default);
+        IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> IArmorAddonGetter.BoneData => this.BoneData;
+        #endregion
         #region DNAMDataTypeState
         public ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; } = default;
         #endregion
@@ -184,6 +188,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FootstepSound = initialValue;
                 this.ArtObject = initialValue;
+                this.BoneData = new GenderedItem<TItem>(initialValue, initialValue);
                 this.DNAMDataTypeState = initialValue;
             }
 
@@ -209,6 +214,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem AdditionalRaces,
                 TItem FootstepSound,
                 TItem ArtObject,
+                TItem BoneData,
                 TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -233,6 +239,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdditionalRaces, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FootstepSound = FootstepSound;
                 this.ArtObject = ArtObject;
+                this.BoneData = new GenderedItem<TItem>(BoneData, BoneData);
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
@@ -260,6 +267,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AdditionalRaces;
             public TItem FootstepSound;
             public TItem ArtObject;
+            public GenderedItem<TItem> BoneData;
             public TItem DNAMDataTypeState;
             #endregion
 
@@ -289,6 +297,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.AdditionalRaces, rhs.AdditionalRaces)) return false;
                 if (!object.Equals(this.FootstepSound, rhs.FootstepSound)) return false;
                 if (!object.Equals(this.ArtObject, rhs.ArtObject)) return false;
+                if (!object.Equals(this.BoneData, rhs.BoneData)) return false;
                 if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -310,6 +319,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.AdditionalRaces);
                 hash.Add(this.FootstepSound);
                 hash.Add(this.ArtObject);
+                hash.Add(this.BoneData);
                 hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -358,6 +368,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (!eval(this.FootstepSound)) return false;
                 if (!eval(this.ArtObject)) return false;
+                if (!eval(this.BoneData.Male) || !eval(this.BoneData.Female)) return false;
                 if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -404,6 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (eval(this.FootstepSound)) return true;
                 if (eval(this.ArtObject)) return true;
+                if (eval(this.BoneData.Male) || eval(this.BoneData.Female)) return true;
                 if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
@@ -462,6 +474,9 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 obj.FootstepSound = eval(this.FootstepSound);
                 obj.ArtObject = eval(this.ArtObject);
+                obj.BoneData = new GenderedItem<R>(
+                    eval(this.BoneData.Male),
+                    eval(this.BoneData.Female));
                 obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
@@ -562,6 +577,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(ArtObject, "ArtObject");
                     }
+                    if ((true))
+                    {
+                        sb.AppendLine($"BoneData => {BoneData}");
+                    }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
                         sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
@@ -592,6 +611,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AdditionalRaces;
             public Exception? FootstepSound;
             public Exception? ArtObject;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? BoneData;
             public Exception? DNAMDataTypeState;
             #endregion
 
@@ -631,6 +651,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return FootstepSound;
                     case ArmorAddon_FieldIndex.ArtObject:
                         return ArtObject;
+                    case ArmorAddon_FieldIndex.BoneData:
+                        return BoneData;
                     case ArmorAddon_FieldIndex.DNAMDataTypeState:
                         return DNAMDataTypeState;
                     default:
@@ -687,6 +709,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case ArmorAddon_FieldIndex.ArtObject:
                         this.ArtObject = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.BoneData:
+                        this.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case ArmorAddon_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = ex;
@@ -747,6 +772,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case ArmorAddon_FieldIndex.ArtObject:
                         this.ArtObject = (Exception?)obj;
                         break;
+                    case ArmorAddon_FieldIndex.BoneData:
+                        this.BoneData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
                     case ArmorAddon_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = (Exception?)obj;
                         break;
@@ -774,6 +802,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (AdditionalRaces != null) return true;
                 if (FootstepSound != null) return true;
                 if (ArtObject != null) return true;
+                if (BoneData != null) return true;
                 if (DNAMDataTypeState != null) return true;
                 return false;
             }
@@ -866,6 +895,9 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(ArtObject, "ArtObject");
                 }
                 {
+                    sb.AppendLine($"BoneData => {BoneData}");
+                }
+                {
                     sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                 }
             }
@@ -891,6 +923,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
                 ret.FootstepSound = this.FootstepSound.Combine(rhs.FootstepSound);
                 ret.ArtObject = this.ArtObject.Combine(rhs.ArtObject);
+                ret.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BoneData?.Overall, rhs.BoneData?.Overall), GenderedItem.Combine(this.BoneData?.Specific, rhs.BoneData?.Specific));
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
@@ -929,6 +962,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool AdditionalRaces;
             public bool FootstepSound;
             public bool ArtObject;
+            public GenderedItem<bool>? BoneData;
             public bool DNAMDataTypeState;
             #endregion
 
@@ -969,6 +1003,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((AdditionalRaces, null));
                 ret.Add((FootstepSound, null));
                 ret.Add((ArtObject, null));
+                ret.Add((BoneData != null || DefaultOn, null));
                 ret.Add((DNAMDataTypeState, null));
             }
 
@@ -1135,6 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
         new IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
         new IFormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
+        new IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; }
         new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
         new ArmorAddon.MajorFlag MajorFlags { get; set; }
@@ -1153,6 +1189,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IGenderedItem<Model?>? FirstPersonModel { get; set; }
         new IGenderedItem<IFormLinkNullableGetter<ITextureSetGetter>>? SkinTexture { get; set; }
         new IGenderedItem<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList { get; set; }
+        new IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; }
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.ARMA)]
@@ -1180,6 +1217,7 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
         IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound { get; }
         IFormLinkNullableGetter<IArtObjectGetter> ArtObject { get; }
+        IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData { get; }
         ArmorAddon.DNAMDataType DNAMDataTypeState { get; }
 
         #region Mutagen
@@ -1364,7 +1402,8 @@ namespace Mutagen.Bethesda.Fallout4
         AdditionalRaces = 18,
         FootstepSound = 19,
         ArtObject = 20,
-        DNAMDataTypeState = 21,
+        BoneData = 21,
+        DNAMDataTypeState = 22,
     }
     #endregion
 
@@ -1382,9 +1421,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "591e9041-abf3-4466-82af-d6ef0d1db771";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(ArmorAddon.Mask<>);
 
@@ -1417,29 +1456,37 @@ namespace Mutagen.Bethesda.Fallout4
             var triggers = RecordCollection.Factory(RecordTypes.ARMA);
             var all = RecordCollection.Factory(
                 RecordTypes.ARMA,
-                RecordTypes.BODT,
                 RecordTypes.BOD2,
                 RecordTypes.RNAM,
                 RecordTypes.DNAM,
                 RecordTypes.MOD2,
                 RecordTypes.MOD3,
+                RecordTypes.MO2C,
                 RecordTypes.MO2T,
                 RecordTypes.MO2S,
+                RecordTypes.MO2F,
+                RecordTypes.MO3C,
                 RecordTypes.MO3T,
                 RecordTypes.MO3S,
+                RecordTypes.MO3F,
                 RecordTypes.MOD4,
                 RecordTypes.MOD5,
+                RecordTypes.MO4C,
                 RecordTypes.MO4T,
                 RecordTypes.MO4S,
+                RecordTypes.MO4F,
+                RecordTypes.MO5C,
                 RecordTypes.MO5T,
                 RecordTypes.MO5S,
+                RecordTypes.MO5F,
                 RecordTypes.NAM0,
                 RecordTypes.NAM1,
                 RecordTypes.NAM2,
                 RecordTypes.NAM3,
                 RecordTypes.MODL,
                 RecordTypes.SNDD,
-                RecordTypes.ONAM);
+                RecordTypes.ONAM,
+                RecordTypes.BSMP);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
@@ -1448,41 +1495,65 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MODL,
                 RecordTypes.MOD3),
             new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODC,
+                RecordTypes.MO3C),
+            new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODT,
                 RecordTypes.MO3T),
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODS,
-                RecordTypes.MO3S));
+                RecordTypes.MO3S),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODF,
+                RecordTypes.MO3F));
         public static RecordTypeConverter WorldModelMaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,
                 RecordTypes.MOD2),
             new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODC,
+                RecordTypes.MO2C),
+            new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODT,
                 RecordTypes.MO2T),
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODS,
-                RecordTypes.MO2S));
+                RecordTypes.MO2S),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODF,
+                RecordTypes.MO2F));
         public static RecordTypeConverter FirstPersonModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,
                 RecordTypes.MOD5),
             new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODC,
+                RecordTypes.MO5C),
+            new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODT,
                 RecordTypes.MO5T),
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODS,
-                RecordTypes.MO5S));
+                RecordTypes.MO5S),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODF,
+                RecordTypes.MO5F));
         public static RecordTypeConverter FirstPersonModelMaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,
                 RecordTypes.MOD4),
             new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODC,
+                RecordTypes.MO4C),
+            new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODT,
                 RecordTypes.MO4T),
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODS,
-                RecordTypes.MO4S));
+                RecordTypes.MO4S),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODF,
+                RecordTypes.MO4F));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1541,6 +1612,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.AdditionalRaces.Clear();
             item.FootstepSound.Clear();
             item.ArtObject.Clear();
+            item.BoneData.Male = null;
+            item.BoneData.Female = null;
             item.DNAMDataTypeState = default;
             base.Clear(item);
         }
@@ -1677,6 +1750,9 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.FootstepSound = item.FootstepSound.Equals(rhs.FootstepSound);
             ret.ArtObject = item.ArtObject.Equals(rhs.ArtObject);
+            ret.BoneData = new GenderedItem<bool>(
+                male: item.BoneData.Male.SequenceEqualNullable(rhs.BoneData.Male),
+                female: item.BoneData.Female.SequenceEqualNullable(rhs.BoneData.Female));
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1802,6 +1878,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.ArtObject.FormKeyNullable, "ArtObject");
             }
+            if (true)
+            {
+                item.BoneData.Print(sb, "BoneData");
+            }
             if (printMask?.DNAMDataTypeState ?? true)
             {
                 sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
@@ -1918,6 +1998,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.ArtObject.Equals(rhs.ArtObject)) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BoneData) ?? true))
+            {
+                if (!Equals(lhs.BoneData, rhs.BoneData)) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
@@ -1980,6 +2064,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.AdditionalRaces);
             hash.Add(item.FootstepSound);
             hash.Add(item.ArtObject);
+            hash.Add(HashCode.Combine(item.BoneData.Male, item.BoneData.Female));
             hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2255,6 +2340,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.ArtObject.SetTo(rhs.ArtObject.FormKeyNullable);
             }
+            item.BoneData = new GenderedItem<ExtendedList<Bone>?>(
+                male: rhs.BoneData.Male?.Select(x => x.DeepCopy()).ToExtendedList(),
+                female: rhs.BoneData.Female?.Select(x => x.DeepCopy()).ToExtendedList());
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 item.DNAMDataTypeState = rhs.DNAMDataTypeState;
@@ -2425,9 +2513,13 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ArmorAddonBinaryWriteTranslation.WriteBinaryBodyTemplate(
-                writer: writer,
-                item: item);
+            if (item.BodyTemplate is {} BodyTemplateItem)
+            {
+                ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)BodyTemplateItem).BinaryWriteTranslator).Write(
+                    item: BodyTemplateItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Race,
@@ -2518,17 +2610,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.ArtObject,
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM));
-        }
-
-        public static partial void WriteBinaryBodyTemplateCustom(
-            MutagenWriter writer,
-            IArmorAddonGetter item);
-
-        public static void WriteBinaryBodyTemplate(
-            MutagenWriter writer,
-            IArmorAddonGetter item)
-        {
-            WriteBinaryBodyTemplateCustom(
+            ArmorAddonBinaryWriteTranslation.WriteBinaryBoneDataParse(
                 writer: writer,
                 item: item);
         }
@@ -2542,6 +2624,19 @@ namespace Mutagen.Bethesda.Fallout4
             IArmorAddonGetter item)
         {
             WriteBinaryWeightSliderEnabledCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryBoneDataParseCustom(
+            MutagenWriter writer,
+            IArmorAddonGetter item);
+
+        public static void WriteBinaryBoneDataParse(
+            MutagenWriter writer,
+            IArmorAddonGetter item)
+        {
+            WriteBinaryBoneDataParseCustom(
                 writer: writer,
                 item: item);
         }
@@ -2635,12 +2730,9 @@ namespace Mutagen.Bethesda.Fallout4
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.BODT:
                 case RecordTypeInts.BOD2:
                 {
-                    ArmorAddonBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.BodyTemplate = Mutagen.Bethesda.Fallout4.BodyTemplate.CreateFromBinary(frame: frame);
                     return (int)ArmorAddon_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.RNAM:
@@ -2730,6 +2822,12 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ArmorAddon_FieldIndex.ArtObject;
                 }
+                case RecordTypeInts.BSMP:
+                {
+                    return ArmorAddonBinaryCreateTranslation.FillBinaryBoneDataParseCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -2741,11 +2839,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
 
-        public static partial void FillBinaryBodyTemplateCustom(
+        public static partial void FillBinaryWeightSliderEnabledCustom(
             MutagenFrame frame,
             IArmorAddonInternal item);
 
-        public static partial void FillBinaryWeightSliderEnabledCustom(
+        public static partial ParseResult FillBinaryBoneDataParseCustom(
             MutagenFrame frame,
             IArmorAddonInternal item);
 
@@ -2798,12 +2896,8 @@ namespace Mutagen.Bethesda.Fallout4
         public ArmorAddon.MajorFlag MajorFlags => (ArmorAddon.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region BodyTemplate
-        partial void BodyTemplateCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset);
-        public partial IBodyTemplateGetter? GetBodyTemplateCustom();
-        public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
+        private RangeInt32? _BodyTemplateLocation;
+        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value.Min), _package), _package) : default;
         #endregion
         #region Race
         private int? _RaceLocation;
@@ -2876,6 +2970,11 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _ArtObjectLocation;
         public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
         #endregion
+        #region BoneDataParse
+        public partial ParseResult BoneDataParseCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2942,13 +3041,9 @@ namespace Mutagen.Bethesda.Fallout4
             type = parseParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.BODT:
                 case RecordTypeInts.BOD2:
                 {
-                    BodyTemplateCustomParse(
-                        stream,
-                        finalPos,
-                        offset);
+                    _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ArmorAddon_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.RNAM:
@@ -3030,6 +3125,12 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     _ArtObjectLocation = (stream.Position - offset);
                     return (int)ArmorAddon_FieldIndex.ArtObject;
+                }
+                case RecordTypeInts.BSMP:
+                {
+                    return BoneDataParseCustomParse(
+                        stream,
+                        offset);
                 }
                 default:
                     return base.FillRecordType(

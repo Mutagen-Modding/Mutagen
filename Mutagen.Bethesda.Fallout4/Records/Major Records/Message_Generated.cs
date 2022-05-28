@@ -97,15 +97,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region INAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _INAM = new byte[0];
-        public MemorySlice<Byte> INAM
-        {
-            get => _INAM;
-            set => this._INAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IMessageGetter.INAM => this.INAM;
+        public Int32 INAM { get; set; } = default;
         #endregion
         #region OwnerQuest
         private readonly IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
@@ -125,10 +117,10 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt32? IMessageGetter.DisplayTime => this.DisplayTime;
         #endregion
-        #region SWF
-        public String? SWF { get; set; }
+        #region Swf
+        public String? Swf { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMessageGetter.SWF => this.SWF;
+        String? IMessageGetter.Swf => this.Swf;
         #endregion
         #region ShortTitle
         public TranslatedString? ShortTitle { get; set; }
@@ -180,7 +172,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OwnerQuest = initialValue;
                 this.Flags = initialValue;
                 this.DisplayTime = initialValue;
-                this.SWF = initialValue;
+                this.Swf = initialValue;
                 this.ShortTitle = initialValue;
                 this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
             }
@@ -198,7 +190,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem OwnerQuest,
                 TItem Flags,
                 TItem DisplayTime,
-                TItem SWF,
+                TItem Swf,
                 TItem ShortTitle,
                 TItem MenuButtons)
             : base(
@@ -215,7 +207,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OwnerQuest = OwnerQuest;
                 this.Flags = Flags;
                 this.DisplayTime = DisplayTime;
-                this.SWF = SWF;
+                this.Swf = Swf;
                 this.ShortTitle = ShortTitle;
                 this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(MenuButtons, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
             }
@@ -235,7 +227,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem OwnerQuest;
             public TItem Flags;
             public TItem DisplayTime;
-            public TItem SWF;
+            public TItem Swf;
             public TItem ShortTitle;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>? MenuButtons;
             #endregion
@@ -257,7 +249,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.OwnerQuest, rhs.OwnerQuest)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.DisplayTime, rhs.DisplayTime)) return false;
-                if (!object.Equals(this.SWF, rhs.SWF)) return false;
+                if (!object.Equals(this.Swf, rhs.Swf)) return false;
                 if (!object.Equals(this.ShortTitle, rhs.ShortTitle)) return false;
                 if (!object.Equals(this.MenuButtons, rhs.MenuButtons)) return false;
                 return true;
@@ -271,7 +263,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.OwnerQuest);
                 hash.Add(this.Flags);
                 hash.Add(this.DisplayTime);
-                hash.Add(this.SWF);
+                hash.Add(this.Swf);
                 hash.Add(this.ShortTitle);
                 hash.Add(this.MenuButtons);
                 hash.Add(base.GetHashCode());
@@ -290,7 +282,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.OwnerQuest)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.DisplayTime)) return false;
-                if (!eval(this.SWF)) return false;
+                if (!eval(this.Swf)) return false;
                 if (!eval(this.ShortTitle)) return false;
                 if (this.MenuButtons != null)
                 {
@@ -318,7 +310,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.OwnerQuest)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.DisplayTime)) return true;
-                if (eval(this.SWF)) return true;
+                if (eval(this.Swf)) return true;
                 if (eval(this.ShortTitle)) return true;
                 if (this.MenuButtons != null)
                 {
@@ -353,7 +345,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.OwnerQuest = eval(this.OwnerQuest);
                 obj.Flags = eval(this.Flags);
                 obj.DisplayTime = eval(this.DisplayTime);
-                obj.SWF = eval(this.SWF);
+                obj.Swf = eval(this.Swf);
                 obj.ShortTitle = eval(this.ShortTitle);
                 if (MenuButtons != null)
                 {
@@ -412,9 +404,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(DisplayTime, "DisplayTime");
                     }
-                    if (printMask?.SWF ?? true)
+                    if (printMask?.Swf ?? true)
                     {
-                        sb.AppendItem(SWF, "SWF");
+                        sb.AppendItem(Swf, "Swf");
                     }
                     if (printMask?.ShortTitle ?? true)
                     {
@@ -456,7 +448,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? OwnerQuest;
             public Exception? Flags;
             public Exception? DisplayTime;
-            public Exception? SWF;
+            public Exception? Swf;
             public Exception? ShortTitle;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>? MenuButtons;
             #endregion
@@ -479,8 +471,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Flags;
                     case Message_FieldIndex.DisplayTime:
                         return DisplayTime;
-                    case Message_FieldIndex.SWF:
-                        return SWF;
+                    case Message_FieldIndex.Swf:
+                        return Swf;
                     case Message_FieldIndex.ShortTitle:
                         return ShortTitle;
                     case Message_FieldIndex.MenuButtons:
@@ -513,8 +505,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Message_FieldIndex.DisplayTime:
                         this.DisplayTime = ex;
                         break;
-                    case Message_FieldIndex.SWF:
-                        this.SWF = ex;
+                    case Message_FieldIndex.Swf:
+                        this.Swf = ex;
                         break;
                     case Message_FieldIndex.ShortTitle:
                         this.ShortTitle = ex;
@@ -551,8 +543,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Message_FieldIndex.DisplayTime:
                         this.DisplayTime = (Exception?)obj;
                         break;
-                    case Message_FieldIndex.SWF:
-                        this.SWF = (Exception?)obj;
+                    case Message_FieldIndex.Swf:
+                        this.Swf = (Exception?)obj;
                         break;
                     case Message_FieldIndex.ShortTitle:
                         this.ShortTitle = (Exception?)obj;
@@ -575,7 +567,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (OwnerQuest != null) return true;
                 if (Flags != null) return true;
                 if (DisplayTime != null) return true;
-                if (SWF != null) return true;
+                if (Swf != null) return true;
                 if (ShortTitle != null) return true;
                 if (MenuButtons != null) return true;
                 return false;
@@ -623,7 +615,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(DisplayTime, "DisplayTime");
                 }
                 {
-                    sb.AppendItem(SWF, "SWF");
+                    sb.AppendItem(Swf, "Swf");
                 }
                 {
                     sb.AppendItem(ShortTitle, "ShortTitle");
@@ -660,7 +652,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.OwnerQuest = this.OwnerQuest.Combine(rhs.OwnerQuest);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.DisplayTime = this.DisplayTime.Combine(rhs.DisplayTime);
-                ret.SWF = this.SWF.Combine(rhs.SWF);
+                ret.Swf = this.Swf.Combine(rhs.Swf);
                 ret.ShortTitle = this.ShortTitle.Combine(rhs.ShortTitle);
                 ret.MenuButtons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>(ExceptionExt.Combine(this.MenuButtons?.Overall, rhs.MenuButtons?.Overall), ExceptionExt.Combine(this.MenuButtons?.Specific, rhs.MenuButtons?.Specific));
                 return ret;
@@ -691,7 +683,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool OwnerQuest;
             public bool Flags;
             public bool DisplayTime;
-            public bool SWF;
+            public bool Swf;
             public bool ShortTitle;
             public MessageButton.TranslationMask? MenuButtons;
             #endregion
@@ -708,7 +700,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OwnerQuest = defaultOn;
                 this.Flags = defaultOn;
                 this.DisplayTime = defaultOn;
-                this.SWF = defaultOn;
+                this.Swf = defaultOn;
                 this.ShortTitle = defaultOn;
             }
 
@@ -723,7 +715,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((OwnerQuest, null));
                 ret.Add((Flags, null));
                 ret.Add((DisplayTime, null));
-                ret.Add((SWF, null));
+                ret.Add((Swf, null));
                 ret.Add((ShortTitle, null));
                 ret.Add((MenuButtons == null ? DefaultOn : !MenuButtons.GetCrystal().CopyNothing, MenuButtons?.GetCrystal()));
             }
@@ -875,11 +867,11 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new MemorySlice<Byte> INAM { get; set; }
+        new Int32 INAM { get; set; }
         new IFormLinkNullable<IQuestGetter> OwnerQuest { get; set; }
         new Message.Flag Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
-        new String? SWF { get; set; }
+        new String? Swf { get; set; }
         new TranslatedString? ShortTitle { get; set; }
         new ExtendedList<MessageButton> MenuButtons { get; }
     }
@@ -911,11 +903,11 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        ReadOnlyMemorySlice<Byte> INAM { get; }
+        Int32 INAM { get; }
         IFormLinkNullableGetter<IQuestGetter> OwnerQuest { get; }
         Message.Flag Flags { get; }
         UInt32? DisplayTime { get; }
-        String? SWF { get; }
+        String? Swf { get; }
         ITranslatedStringGetter? ShortTitle { get; }
         IReadOnlyList<IMessageButtonGetter> MenuButtons { get; }
 
@@ -1088,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
         OwnerQuest = 9,
         Flags = 10,
         DisplayTime = 11,
-        SWF = 12,
+        Swf = 12,
         ShortTitle = 13,
         MenuButtons = 14,
     }
@@ -1201,11 +1193,11 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Description.Clear();
             item.Name = default;
-            item.INAM = new byte[0];
+            item.INAM = default;
             item.OwnerQuest.Clear();
             item.Flags = default;
             item.DisplayTime = default;
-            item.SWF = default;
+            item.Swf = default;
             item.ShortTitle = default;
             item.MenuButtons.Clear();
             base.Clear(item);
@@ -1297,11 +1289,11 @@ namespace Mutagen.Bethesda.Fallout4
             if (rhs == null) return;
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.INAM = MemoryExtensions.SequenceEqual(item.INAM.Span, rhs.INAM.Span);
+            ret.INAM = item.INAM == rhs.INAM;
             ret.OwnerQuest = item.OwnerQuest.Equals(rhs.OwnerQuest);
             ret.Flags = item.Flags == rhs.Flags;
             ret.DisplayTime = item.DisplayTime == rhs.DisplayTime;
-            ret.SWF = string.Equals(item.SWF, rhs.SWF);
+            ret.Swf = string.Equals(item.Swf, rhs.Swf);
             ret.ShortTitle = object.Equals(item.ShortTitle, rhs.ShortTitle);
             ret.MenuButtons = item.MenuButtons.CollectionEqualsHelper(
                 rhs.MenuButtons,
@@ -1367,7 +1359,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (printMask?.INAM ?? true)
             {
-                sb.AppendLine($"INAM => {SpanExt.ToHexString(item.INAM)}");
+                sb.AppendItem(item.INAM, "INAM");
             }
             if (printMask?.OwnerQuest ?? true)
             {
@@ -1382,10 +1374,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(DisplayTimeItem, "DisplayTime");
             }
-            if ((printMask?.SWF ?? true)
-                && item.SWF is {} SWFItem)
+            if ((printMask?.Swf ?? true)
+                && item.Swf is {} SwfItem)
             {
-                sb.AppendItem(SWFItem, "SWF");
+                sb.AppendItem(SwfItem, "Swf");
             }
             if ((printMask?.ShortTitle ?? true)
                 && item.ShortTitle is {} ShortTitleItem)
@@ -1464,7 +1456,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.INAM.Span, rhs.INAM.Span)) return false;
+                if (lhs.INAM != rhs.INAM) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.OwnerQuest) ?? true))
             {
@@ -1478,9 +1470,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.DisplayTime != rhs.DisplayTime) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.SWF) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.Swf) ?? true))
             {
-                if (!string.Equals(lhs.SWF, rhs.SWF)) return false;
+                if (!string.Equals(lhs.Swf, rhs.Swf)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.ShortTitle) ?? true))
             {
@@ -1530,9 +1522,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(DisplayTimeitem);
             }
-            if (item.SWF is {} SWFitem)
+            if (item.Swf is {} Swfitem)
             {
-                hash.Add(SWFitem);
+                hash.Add(Swfitem);
             }
             if (item.ShortTitle is {} ShortTitleitem)
             {
@@ -1661,7 +1653,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
             {
-                item.INAM = rhs.INAM.ToArray();
+                item.INAM = rhs.INAM;
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.OwnerQuest) ?? true))
             {
@@ -1675,9 +1667,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.DisplayTime = rhs.DisplayTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.SWF) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Swf) ?? true))
             {
-                item.SWF = rhs.SWF;
+                item.Swf = rhs.Swf;
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.ShortTitle) ?? true))
             {
@@ -1876,7 +1868,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.INAM,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
@@ -1895,7 +1887,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SWF,
+                item: item.Swf,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
@@ -2027,7 +2019,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.INAM = frame.ReadInt32();
                     return (int)Message_FieldIndex.INAM;
                 }
                 case RecordTypeInts.QNAM:
@@ -2053,10 +2045,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SWF = StringBinaryTranslation.Instance.Parse(
+                    item.Swf = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Message_FieldIndex.SWF;
+                    return (int)Message_FieldIndex.Swf;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -2154,7 +2146,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region INAM
         private int? _INAMLocation;
-        public ReadOnlyMemorySlice<Byte> INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _INAMLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
+        public Int32 INAM => _INAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _INAMLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;
@@ -2168,9 +2160,9 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _DisplayTimeLocation;
         public UInt32? DisplayTime => _DisplayTimeLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayTimeLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        #region SWF
-        private int? _SWFLocation;
-        public String? SWF => _SWFLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SWFLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Swf
+        private int? _SwfLocation;
+        public String? Swf => _SwfLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SwfLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ShortTitle
         private int? _ShortTitleLocation;
@@ -2275,8 +2267,8 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SWFLocation = (stream.Position - offset);
-                    return (int)Message_FieldIndex.SWF;
+                    _SwfLocation = (stream.Position - offset);
+                    return (int)Message_FieldIndex.Swf;
                 }
                 case RecordTypeInts.NNAM:
                 {

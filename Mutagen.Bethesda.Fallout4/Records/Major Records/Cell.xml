@@ -78,6 +78,7 @@
         <Interface>IPlaced</Interface>
       </RefList>
     </Fields>
+    <LinkInterface>IComplexLocation</LinkInterface>
   </Object>
   <Object name="CellGrid" objType="Subrecord" recordType="XCLC" GUID="ee91638d-08b7-4a2c-af21-048de576e461" ID="456">
     <Fields>

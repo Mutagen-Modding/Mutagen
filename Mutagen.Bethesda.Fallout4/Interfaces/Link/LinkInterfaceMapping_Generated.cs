@@ -207,6 +207,12 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IFurnitureAssociationGetter)] = dict[typeof(IFurnitureAssociation)] with { Setter = false };
+        dict[typeof(IComplexLocation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Cell_Registration.Instance,
+            Worldspace_Registration.Instance,
+        });
+        dict[typeof(IComplexLocationGetter)] = dict[typeof(IComplexLocation)] with { Setter = false };
         dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Faction_Registration.Instance,
