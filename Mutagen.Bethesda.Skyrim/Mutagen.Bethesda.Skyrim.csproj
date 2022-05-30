@@ -214,9 +214,6 @@
     <Compile Include="Records\Major Records\ArtObject.cs">
       <DependentUpon>ArtObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AssociationType.cs">
-      <DependentUpon>AssociationType.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AStoryManagerNode.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>

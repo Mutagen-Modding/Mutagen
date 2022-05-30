@@ -61,8 +61,10 @@ namespace Mutagen.Bethesda.Skyrim
         public IGenderedItem<String?>? Title { get; set; }
         IGenderedItemGetter<String?>? IAssociationTypeGetter.Title => this.Title;
         #endregion
-        #region Flags
-        public AssociationType.Flag Flags { get; set; } = default;
+        #region IsFamily
+        public Boolean? IsFamily { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? IAssociationTypeGetter.IsFamily => this.IsFamily;
         #endregion
 
         #region To String
@@ -91,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
-                this.Flags = initialValue;
+                this.IsFamily = initialValue;
             }
 
             public Mask(
@@ -103,7 +105,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem ParentTitle,
                 TItem Title,
-                TItem Flags)
+                TItem IsFamily)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -114,7 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(ParentTitle, default);
                 this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(Title, default);
-                this.Flags = Flags;
+                this.IsFamily = IsFamily;
             }
 
             #pragma warning disable CS8618
@@ -128,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<TItem, GenderedItem<TItem>?>? ParentTitle;
             public MaskItem<TItem, GenderedItem<TItem>?>? Title;
-            public TItem Flags;
+            public TItem IsFamily;
             #endregion
 
             #region Equals
@@ -144,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ParentTitle, rhs.ParentTitle)) return false;
                 if (!object.Equals(this.Title, rhs.Title)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.IsFamily, rhs.IsFamily)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -152,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.ParentTitle);
                 hash.Add(this.Title);
-                hash.Add(this.Flags);
+                hash.Add(this.IsFamily);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -169,7 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!GenderedItem.All(
                     this.Title,
                     eval: eval)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.IsFamily)) return false;
                 return true;
             }
             #endregion
@@ -184,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (GenderedItem.Any(
                     this.Title,
                     eval: eval)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.IsFamily)) return true;
                 return false;
             }
             #endregion
@@ -206,7 +208,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Title = GenderedItem.TranslateHelper(
                     this.Title,
                     eval);
-                obj.Flags = eval(this.Flags);
+                obj.IsFamily = eval(this.IsFamily);
             }
             #endregion
 
@@ -235,9 +237,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendLine($"Title => {Title}");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.IsFamily ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(IsFamily, "IsFamily");
                     }
                 }
             }
@@ -252,7 +254,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<Exception?, GenderedItem<Exception?>?>? ParentTitle;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Title;
-            public Exception? Flags;
+            public Exception? IsFamily;
             #endregion
 
             #region IErrorMask
@@ -265,8 +267,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return ParentTitle;
                     case AssociationType_FieldIndex.Title:
                         return Title;
-                    case AssociationType_FieldIndex.Flags:
-                        return Flags;
+                    case AssociationType_FieldIndex.IsFamily:
+                        return IsFamily;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -283,8 +285,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case AssociationType_FieldIndex.Title:
                         this.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
-                    case AssociationType_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case AssociationType_FieldIndex.IsFamily:
+                        this.IsFamily = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -303,8 +305,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case AssociationType_FieldIndex.Title:
                         this.Title = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case AssociationType_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case AssociationType_FieldIndex.IsFamily:
+                        this.IsFamily = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -317,7 +319,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (ParentTitle != null) return true;
                 if (Title != null) return true;
-                if (Flags != null) return true;
+                if (IsFamily != null) return true;
                 return false;
             }
             #endregion
@@ -353,7 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendLine($"Title => {Title}");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(IsFamily, "IsFamily");
                 }
             }
             #endregion
@@ -365,7 +367,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.ParentTitle = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.ParentTitle?.Overall, rhs.ParentTitle?.Overall), GenderedItem.Combine(this.ParentTitle?.Specific, rhs.ParentTitle?.Specific));
                 ret.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Title?.Overall, rhs.Title?.Overall), GenderedItem.Combine(this.Title?.Specific, rhs.Title?.Specific));
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.IsFamily = this.IsFamily.Combine(rhs.IsFamily);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -390,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public GenderedItem<bool>? ParentTitle;
             public GenderedItem<bool>? Title;
-            public bool Flags;
+            public bool IsFamily;
             #endregion
 
             #region Ctors
@@ -399,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Flags = defaultOn;
+                this.IsFamily = defaultOn;
             }
 
             #endregion
@@ -409,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((ParentTitle != null || DefaultOn, null));
                 ret.Add((Title != null || DefaultOn, null));
-                ret.Add((Flags, null));
+                ret.Add((IsFamily, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -556,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new IGenderedItem<String?>? ParentTitle { get; set; }
         new IGenderedItem<String?>? Title { get; set; }
-        new AssociationType.Flag Flags { get; set; }
+        new Boolean? IsFamily { get; set; }
     }
 
     public partial interface IAssociationTypeInternal :
@@ -578,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => AssociationType_Registration.Instance;
         IGenderedItemGetter<String?>? ParentTitle { get; }
         IGenderedItemGetter<String?>? Title { get; }
-        AssociationType.Flag Flags { get; }
+        Boolean? IsFamily { get; }
 
     }
 
@@ -745,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
         Version2 = 5,
         ParentTitle = 6,
         Title = 7,
-        Flags = 8,
+        IsFamily = 8,
     }
     #endregion
 
@@ -849,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.ParentTitle = null;
             item.Title = null;
-            item.Flags = default;
+            item.IsFamily = default;
             base.Clear(item);
         }
         
@@ -945,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs.Title,
                 maskGetter: (l, r, i) => EqualityComparer<String?>.Default.Equals(l, r),
                 include: include);
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.IsFamily = item.IsFamily == rhs.IsFamily;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1005,9 +1007,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 TitleItem?.Print(sb, "Title");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.IsFamily ?? true)
+                && item.IsFamily is {} IsFamilyItem)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(IsFamilyItem, "IsFamily");
             }
         }
         
@@ -1065,9 +1068,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!Equals(lhs.Title, rhs.Title)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.Flags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.IsFamily != rhs.IsFamily) return false;
             }
             return true;
         }
@@ -1105,7 +1108,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
             }
-            hash.Add(item.Flags);
+            if (item.IsFamily is {} IsFamilyitem)
+            {
+                hash.Add(IsFamilyitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1229,9 +1235,9 @@ namespace Mutagen.Bethesda.Skyrim
                     male: rhsTitleitem.Male,
                     female: rhsTitleitem.Female);
             }
-            if ((copyMask?.GetShouldTranslate((int)AssociationType_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.IsFamily = rhs.IsFamily;
             }
         }
         
@@ -1402,11 +1408,11 @@ namespace Mutagen.Bethesda.Skyrim
                 maleMarker: RecordTypes.MCHT,
                 femaleMarker: RecordTypes.FCHT,
                 transl: StringBinaryTranslation.Instance.WriteNullable);
-            EnumBinaryTranslation<AssociationType.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 4,
-                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.IsFamily,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA),
+                byteLength: 4);
         }
 
         public void Write(
@@ -1523,10 +1529,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<AssociationType.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        length: contentLength);
-                    return (int)AssociationType_FieldIndex.Flags;
+                    item.IsFamily = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        byteLength: 4);
+                    return (int)AssociationType_FieldIndex.IsFamily;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1593,9 +1599,9 @@ namespace Mutagen.Bethesda.Skyrim
         private IGenderedItemGetter<String?>? _TitleOverlay;
         public IGenderedItemGetter<String?>? Title => _TitleOverlay;
         #endregion
-        #region Flags
-        private int? _FlagsLocation;
-        public AssociationType.Flag Flags => _FlagsLocation.HasValue ? (AssociationType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AssociationType.Flag);
+        #region IsFamily
+        private int? _IsFamilyLocation;
+        public Boolean? IsFamily => _IsFamilyLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IsFamilyLocation.Value, _package.MetaData.Constants)) >= 1 : default(Boolean?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1687,8 +1693,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _FlagsLocation = (stream.Position - offset);
-                    return (int)AssociationType_FieldIndex.Flags;
+                    _IsFamilyLocation = (stream.Position - offset);
+                    return (int)AssociationType_FieldIndex.IsFamily;
                 }
                 default:
                     return base.FillRecordType(
