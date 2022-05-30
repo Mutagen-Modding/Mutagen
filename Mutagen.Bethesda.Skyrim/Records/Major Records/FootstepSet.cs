@@ -61,14 +61,18 @@ partial class FootstepSetBinaryWriteTranslation
     public static partial void WriteBinaryCountCustom(MutagenWriter writer, IFootstepSetGetter item)
     {
         var walkForwardFootsteps = item.WalkForwardFootsteps;
+        var runForwardFootsteps = item.RunForwardFootsteps;
+        var walkAlternateFootsteps = item.WalkForwardAlternateFootsteps;
+        var runAlternateFootsteps = item.RunForwardAlternateFootsteps;
+        var walkAlternateFootsteps2 = item.WalkForwardAlternateFootsteps2;
 
         using (HeaderExport.Subrecord(writer, RecordTypes.XCNT))
         {
             writer.Write(walkForwardFootsteps.Count);
-            writer.Write(item.RunForwardFootsteps.Count);
-            writer.Write(item.WalkForwardAlternateFootsteps.Count);
-            writer.Write(item.RunForwardAlternateFootsteps.Count);
-            writer.Write(item.WalkForwardAlternateFootsteps2.Count);
+            writer.Write(runForwardFootsteps.Count);
+            writer.Write(walkAlternateFootsteps.Count);
+            writer.Write(runAlternateFootsteps.Count);
+            writer.Write(walkAlternateFootsteps2.Count);
         }
 
         void WriteListOfFormKeys(IReadOnlyList<IFormLinkGetter<IFootstepGetter>> formKeys)
@@ -82,10 +86,10 @@ partial class FootstepSetBinaryWriteTranslation
         using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
         {
             WriteListOfFormKeys(walkForwardFootsteps);
-            WriteListOfFormKeys(item.RunForwardFootsteps);
-            WriteListOfFormKeys(item.WalkForwardAlternateFootsteps);
-            WriteListOfFormKeys(item.RunForwardAlternateFootsteps);
-            WriteListOfFormKeys(item.WalkForwardAlternateFootsteps2);
+            WriteListOfFormKeys(runForwardFootsteps);
+            WriteListOfFormKeys(walkAlternateFootsteps);
+            WriteListOfFormKeys(runAlternateFootsteps);
+            WriteListOfFormKeys(walkAlternateFootsteps2);
         }
     }
 }
