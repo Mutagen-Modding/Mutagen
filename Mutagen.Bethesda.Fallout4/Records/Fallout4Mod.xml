@@ -99,6 +99,7 @@
       <Group name="StoryManagerBranchNodes" refName="StoryManagerBranchNode" />
       <Group name="StoryManagerQuestNodes" refName="StoryManagerQuestNode" />
       <Group name="StoryManagerEventNodes" refName="StoryManagerEventNode" />
+      <Group name="MusicTracks" refName="MusicTrack" />
     </Fields>
   </Object>
 </Loqui>

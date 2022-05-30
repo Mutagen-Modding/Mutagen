@@ -149,6 +149,7 @@ namespace Mutagen.Bethesda.Fallout4
             _StoryManagerBranchNodes_Object = new Fallout4Group<StoryManagerBranchNode>(this);
             _StoryManagerQuestNodes_Object = new Fallout4Group<StoryManagerQuestNode>(this);
             _StoryManagerEventNodes_Object = new Fallout4Group<StoryManagerEventNode>(this);
+            _MusicTracks_Object = new Fallout4Group<MusicTrack>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -805,6 +806,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IStoryManagerEventNodeGetter> IFallout4ModGetter.StoryManagerEventNodes => _StoryManagerEventNodes_Object;
         #endregion
+        #region MusicTracks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<MusicTrack> _MusicTracks_Object;
+        public Fallout4Group<MusicTrack> MusicTracks => _MusicTracks_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IMusicTrackGetter> IFallout4ModGetter.MusicTracks => _MusicTracks_Object;
+        #endregion
 
         #region To String
 
@@ -937,6 +945,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.StoryManagerBranchNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.StoryManagerQuestNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.StoryManagerEventNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.MusicTracks = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1032,7 +1041,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem FootstepSets,
                 TItem StoryManagerBranchNodes,
                 TItem StoryManagerQuestNodes,
-                TItem StoryManagerEventNodes)
+                TItem StoryManagerEventNodes,
+                TItem MusicTracks)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1127,6 +1137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.StoryManagerBranchNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(StoryManagerBranchNodes, new Fallout4Group.Mask<TItem>(StoryManagerBranchNodes));
                 this.StoryManagerQuestNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(StoryManagerQuestNodes, new Fallout4Group.Mask<TItem>(StoryManagerQuestNodes));
                 this.StoryManagerEventNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(StoryManagerEventNodes, new Fallout4Group.Mask<TItem>(StoryManagerEventNodes));
+                this.MusicTracks = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MusicTracks, new Fallout4Group.Mask<TItem>(MusicTracks));
             }
 
             #pragma warning disable CS8618
@@ -1231,6 +1242,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? StoryManagerBranchNodes { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? StoryManagerQuestNodes { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? StoryManagerEventNodes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MusicTracks { get; set; }
             #endregion
 
             #region Equals
@@ -1336,6 +1348,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes)) return false;
                 if (!object.Equals(this.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes)) return false;
                 if (!object.Equals(this.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
+                if (!object.Equals(this.MusicTracks, rhs.MusicTracks)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1434,6 +1447,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.StoryManagerBranchNodes);
                 hash.Add(this.StoryManagerQuestNodes);
                 hash.Add(this.StoryManagerEventNodes);
+                hash.Add(this.MusicTracks);
                 return hash.ToHashCode();
             }
 
@@ -1907,6 +1921,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.StoryManagerEventNodes.Overall)) return false;
                     if (this.StoryManagerEventNodes.Specific != null && !this.StoryManagerEventNodes.Specific.All(eval)) return false;
                 }
+                if (MusicTracks != null)
+                {
+                    if (!eval(this.MusicTracks.Overall)) return false;
+                    if (this.MusicTracks.Specific != null && !this.MusicTracks.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2379,6 +2398,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.StoryManagerEventNodes.Overall)) return true;
                     if (this.StoryManagerEventNodes.Specific != null && this.StoryManagerEventNodes.Specific.Any(eval)) return true;
                 }
+                if (MusicTracks != null)
+                {
+                    if (eval(this.MusicTracks.Overall)) return true;
+                    if (this.MusicTracks.Specific != null && this.MusicTracks.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2486,6 +2510,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.StoryManagerBranchNodes = this.StoryManagerBranchNodes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.StoryManagerBranchNodes.Overall), this.StoryManagerBranchNodes.Specific?.Translate(eval));
                 obj.StoryManagerQuestNodes = this.StoryManagerQuestNodes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.StoryManagerQuestNodes.Overall), this.StoryManagerQuestNodes.Specific?.Translate(eval));
                 obj.StoryManagerEventNodes = this.StoryManagerEventNodes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.StoryManagerEventNodes.Overall), this.StoryManagerEventNodes.Specific?.Translate(eval));
+                obj.MusicTracks = this.MusicTracks == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MusicTracks.Overall), this.MusicTracks.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2876,6 +2901,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         StoryManagerEventNodes?.Print(sb);
                     }
+                    if (printMask?.MusicTracks?.Overall ?? true)
+                    {
+                        MusicTracks?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2993,6 +3022,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>? StoryManagerBranchNodes;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>? StoryManagerQuestNodes;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>? StoryManagerEventNodes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<MusicTrack.ErrorMask>?>? MusicTracks;
             #endregion
 
             #region IErrorMask
@@ -3187,6 +3217,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return StoryManagerQuestNodes;
                     case Fallout4Mod_FieldIndex.StoryManagerEventNodes:
                         return StoryManagerEventNodes;
+                    case Fallout4Mod_FieldIndex.MusicTracks:
+                        return MusicTracks;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3475,6 +3507,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.StoryManagerEventNodes:
                         this.StoryManagerEventNodes = new MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.MusicTracks:
+                        this.MusicTracks = new MaskItem<Exception?, Fallout4Group.ErrorMask<MusicTrack.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3765,6 +3800,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.StoryManagerEventNodes:
                         this.StoryManagerEventNodes = (MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.MusicTracks:
+                        this.MusicTracks = (MaskItem<Exception?, Fallout4Group.ErrorMask<MusicTrack.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3866,6 +3904,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (StoryManagerBranchNodes != null) return true;
                 if (StoryManagerQuestNodes != null) return true;
                 if (StoryManagerEventNodes != null) return true;
+                if (MusicTracks != null) return true;
                 return false;
             }
             #endregion
@@ -3984,6 +4023,7 @@ namespace Mutagen.Bethesda.Fallout4
                 StoryManagerBranchNodes?.Print(sb);
                 StoryManagerQuestNodes?.Print(sb);
                 StoryManagerEventNodes?.Print(sb);
+                MusicTracks?.Print(sb);
             }
             #endregion
 
@@ -4085,6 +4125,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.StoryManagerBranchNodes = this.StoryManagerBranchNodes.Combine(rhs.StoryManagerBranchNodes, (l, r) => l.Combine(r));
                 ret.StoryManagerQuestNodes = this.StoryManagerQuestNodes.Combine(rhs.StoryManagerQuestNodes, (l, r) => l.Combine(r));
                 ret.StoryManagerEventNodes = this.StoryManagerEventNodes.Combine(rhs.StoryManagerEventNodes, (l, r) => l.Combine(r));
+                ret.MusicTracks = this.MusicTracks.Combine(rhs.MusicTracks, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4201,6 +4242,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<StoryManagerBranchNode.TranslationMask>? StoryManagerBranchNodes;
             public Fallout4Group.TranslationMask<StoryManagerQuestNode.TranslationMask>? StoryManagerQuestNodes;
             public Fallout4Group.TranslationMask<StoryManagerEventNode.TranslationMask>? StoryManagerEventNodes;
+            public Fallout4Group.TranslationMask<MusicTrack.TranslationMask>? MusicTracks;
             #endregion
 
             #region Ctors
@@ -4318,6 +4360,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((StoryManagerBranchNodes != null ? StoryManagerBranchNodes.OnOverall : DefaultOn, StoryManagerBranchNodes?.GetCrystal()));
                 ret.Add((StoryManagerQuestNodes != null ? StoryManagerQuestNodes.OnOverall : DefaultOn, StoryManagerQuestNodes?.GetCrystal()));
                 ret.Add((StoryManagerEventNodes != null ? StoryManagerEventNodes.OnOverall : DefaultOn, StoryManagerEventNodes?.GetCrystal()));
+                ret.Add((MusicTracks != null ? MusicTracks.OnOverall : DefaultOn, MusicTracks?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4450,6 +4493,7 @@ namespace Mutagen.Bethesda.Fallout4
             _StoryManagerBranchNodes_Object = new Fallout4Group<StoryManagerBranchNode>(this);
             _StoryManagerQuestNodes_Object = new Fallout4Group<StoryManagerQuestNode>(this);
             _StoryManagerEventNodes_Object = new Fallout4Group<StoryManagerEventNode>(this);
+            _MusicTracks_Object = new Fallout4Group<MusicTrack>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4827,6 +4871,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.StoryManagerEventNodes.RecordCache.Set(rhsMod.StoryManagerEventNodes.RecordCache.Items);
             }
+            if (mask?.MusicTracks ?? true)
+            {
+                this.MusicTracks.RecordCache.Set(rhsMod.MusicTracks.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -4929,6 +4977,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5272,6 +5321,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<StoryManagerBranchNode> StoryManagerBranchNodes { get; }
         new Fallout4Group<StoryManagerQuestNode> StoryManagerQuestNodes { get; }
         new Fallout4Group<StoryManagerEventNode> StoryManagerEventNodes { get; }
+        new Fallout4Group<MusicTrack> MusicTracks { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -5383,6 +5433,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes { get; }
         IFallout4GroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes { get; }
         IFallout4GroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes { get; }
+        IFallout4GroupGetter<IMusicTrackGetter> MusicTracks { get; }
 
     }
 
@@ -6046,6 +6097,7 @@ namespace Mutagen.Bethesda.Fallout4
         StoryManagerBranchNodes = 90,
         StoryManagerQuestNodes = 91,
         StoryManagerEventNodes = 92,
+        MusicTracks = 93,
     }
     #endregion
 
@@ -6063,9 +6115,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 93;
+        public const ushort AdditionalFieldCount = 94;
 
-        public const ushort FieldCount = 93;
+        public const ushort FieldCount = 94;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -6225,6 +6277,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.StoryManagerBranchNodes.Clear();
             item.StoryManagerQuestNodes.Clear();
             item.StoryManagerEventNodes.Clear();
+            item.MusicTracks.Clear();
         }
         
         #region Mutagen
@@ -6311,6 +6364,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.StoryManagerBranchNodes.RemapLinks(mapping);
             obj.StoryManagerQuestNodes.RemapLinks(mapping);
             obj.StoryManagerEventNodes.RemapLinks(mapping);
+            obj.MusicTracks.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -6437,6 +6491,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.StoryManagerBranchNodes.Remove(keys);
             obj.StoryManagerQuestNodes.Remove(keys);
             obj.StoryManagerEventNodes.Remove(keys);
+            obj.MusicTracks.Remove(keys);
         }
         
         public void Remove(
@@ -7228,6 +7283,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "MusicTrack":
+                case "IMusicTrackGetter":
+                case "IMusicTrack":
+                case "IMusicTrackInternal":
+                    obj.MusicTracks.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -7809,6 +7872,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.StoryManagerBranchNodes = MaskItemExt.Factory(item.StoryManagerBranchNodes.GetEqualsMask(rhs.StoryManagerBranchNodes, include), include);
             ret.StoryManagerQuestNodes = MaskItemExt.Factory(item.StoryManagerQuestNodes.GetEqualsMask(rhs.StoryManagerQuestNodes, include), include);
             ret.StoryManagerEventNodes = MaskItemExt.Factory(item.StoryManagerEventNodes.GetEqualsMask(rhs.StoryManagerEventNodes, include), include);
+            ret.MusicTracks = MaskItemExt.Factory(item.MusicTracks.GetEqualsMask(rhs.MusicTracks, include), include);
         }
         
         public string Print(
@@ -8224,6 +8288,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.StoryManagerEventNodes?.Overall ?? true)
             {
                 item.StoryManagerEventNodes?.Print(sb, "StoryManagerEventNodes");
+            }
+            if (printMask?.MusicTracks?.Overall ?? true)
+            {
+                item.MusicTracks?.Print(sb, "MusicTracks");
             }
         }
         
@@ -8978,6 +9046,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isStoryManagerEventNodesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MusicTracks) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MusicTracks, rhs.MusicTracks, out var lhsMusicTracks, out var rhsMusicTracks, out var isMusicTracksEqual))
+                {
+                    if (!object.Equals(lhsMusicTracks, rhsMusicTracks)) return false;
+                }
+                else if (!isMusicTracksEqual) return false;
+            }
             return true;
         }
         
@@ -9077,6 +9153,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.StoryManagerBranchNodes);
             hash.Add(item.StoryManagerQuestNodes);
             hash.Add(item.StoryManagerEventNodes);
+            hash.Add(item.MusicTracks);
             return hash.ToHashCode();
         }
         
@@ -9554,6 +9631,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IStoryManagerEventNode":
                 case "IStoryManagerEventNodeInternal":
                     return obj.StoryManagerEventNodes;
+                case "MusicTrack":
+                case "IMusicTrackGetter":
+                case "IMusicTrack":
+                case "IMusicTrackInternal":
+                    return obj.MusicTracks;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -9578,7 +9660,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[92];
+            Stream[] outputStreams = new Stream[93];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -9672,6 +9754,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, 89, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, 90, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, 91, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MusicTracks, 92, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10040,6 +10123,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.StoryManagerEventNodes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MusicTracks.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -10413,6 +10500,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MusicTracks.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -11266,6 +11357,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IStoryManagerEventNode":
                 case "IStoryManagerEventNodeInternal":
                     foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicTrack":
+                case "IMusicTrackGetter":
+                case "IMusicTrack":
+                case "IMusicTrackInternal":
+                    foreach (var item in obj.MusicTracks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12257,6 +12357,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.StoryManagerEventNodes,
                 groupGetter: (m) => m.StoryManagerEventNodes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MusicTrack, IMusicTrackGetter>(
+                srcGroup: obj.MusicTracks,
+                type: typeof(IMusicTrackGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MusicTracks,
+                groupGetter: (m) => m.MusicTracks))
             {
                 yield return item;
             }
@@ -13561,6 +13670,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.StoryManagerEventNodes,
                         groupGetter: (m) => m.StoryManagerEventNodes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicTrack":
+                case "IMusicTrackGetter":
+                case "IMusicTrack":
+                case "IMusicTrackInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, MusicTrack, IMusicTrackGetter>(
+                        srcGroup: obj.MusicTracks,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MusicTracks,
+                        groupGetter: (m) => m.MusicTracks))
                     {
                         yield return item;
                     }
@@ -15719,6 +15842,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MusicTracks) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.MusicTracks);
+                try
+                {
+                    item.MusicTracks.DeepCopyIn(
+                        rhs: rhs.MusicTracks,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.MusicTracks));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -15901,6 +16044,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool StoryManagerBranchNodes;
         public bool StoryManagerQuestNodes;
         public bool StoryManagerEventNodes;
+        public bool MusicTracks;
         public GroupMask()
         {
         }
@@ -15998,6 +16142,7 @@ namespace Mutagen.Bethesda.Fallout4
             StoryManagerBranchNodes = defaultValue;
             StoryManagerQuestNodes = defaultValue;
             StoryManagerEventNodes = defaultValue;
+            MusicTracks = defaultValue;
         }
     }
 
@@ -17037,6 +17182,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerEventNodesItem).BinaryWriteTranslator).Write<IStoryManagerEventNodeGetter>(
                         item: StoryManagerEventNodesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MusicTracks ?? true)
+            {
+                var MusicTracksItem = item.MusicTracks;
+                if (MusicTracksItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)MusicTracksItem).BinaryWriteTranslator).Write<IMusicTrackGetter>(
+                        item: MusicTracksItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -18395,6 +18551,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.StoryManagerEventNodes;
                 }
+                case RecordTypeInts.MUST:
+                {
+                    if (importMask?.MusicTracks ?? true)
+                    {
+                        item.MusicTracks.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.MusicTracks;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -19017,6 +19187,11 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _StoryManagerEventNodesLocations;
         private IFallout4GroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? Fallout4GroupBinaryOverlay<IStoryManagerEventNodeGetter>.Fallout4GroupFactory(_data, _StoryManagerEventNodesLocations, _package) : default;
         public IFallout4GroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new Fallout4Group<StoryManagerEventNode>(this);
+        #endregion
+        #region MusicTracks
+        private List<RangeInt64>? _MusicTracksLocations;
+        private IFallout4GroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? Fallout4GroupBinaryOverlay<IMusicTrackGetter>.Fallout4GroupFactory(_data, _MusicTracksLocations, _package) : default;
+        public IFallout4GroupGetter<IMusicTrackGetter> MusicTracks => _MusicTracks ?? new Fallout4Group<MusicTrack>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -19656,6 +19831,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _StoryManagerEventNodesLocations ??= new();
                     _StoryManagerEventNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.StoryManagerEventNodes;
+                }
+                case RecordTypeInts.MUST:
+                {
+                    _MusicTracksLocations ??= new();
+                    _MusicTracksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.MusicTracks;
                 }
                 default:
                     return default(int?);
