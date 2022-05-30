@@ -2258,6 +2258,9 @@
     <Compile Include="Records\Major Records\StoryManagerEventNode_Generated.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DialogView_Generated.cs">
+      <DependentUpon>DialogView.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

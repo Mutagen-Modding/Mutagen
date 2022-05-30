@@ -502,7 +502,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             StoryManagerBranchNode_Registration.Instance,
             StoryManagerQuestNode_Registration.Instance,
             StoryManagerQuest_Registration.Instance,
-            StoryManagerEventNode_Registration.Instance
+            StoryManagerEventNode_Registration.Instance,
+            DialogView_Registration.Instance
         );
     }
 }

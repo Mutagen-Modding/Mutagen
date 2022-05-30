@@ -170,6 +170,7 @@ public partial class RecordTypes
     public static readonly RecordType DIAD = new(0x44414944);
     public static readonly RecordType DIAL = new(0x4C414944);
     public static readonly RecordType DLBR = new(0x52424C44);
+    public static readonly RecordType DLVW = new(0x57564C44);
     public static readonly RecordType DMAX = new(0x58414D44);
     public static readonly RecordType DMDL = new(0x4C444D44);
     public static readonly RecordType DMDS = new(0x53444D44);
