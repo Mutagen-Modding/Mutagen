@@ -15,6 +15,8 @@ public class FormLinkType : ClassType
         EDIDChars
     }
 
+    public bool NegativeOneIsNull { get; private set; }
+
     public override string ProtectedName => base.ProtectedName;
     private FormIDType _rawFormID;
     public MutagenLoquiType LoquiType { get; private set; }
@@ -69,6 +71,7 @@ public class FormLinkType : ClassType
         this.NullableProperty.Subscribe(i => LoquiType.NullableProperty.OnNext(i));
         this.NullableProperty.Subscribe(i => _rawFormID.NullableProperty.OnNext(i));
         this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
+        NegativeOneIsNull = node.GetAttribute("negOneIsNull", false);
         this.Singleton = true;
         this.SetPermission = AccessModifier.Private;
     }

@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +54,35 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region SlotParents
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IEquipTypeGetter>>? _SlotParents;
+        public ExtendedList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents
+        {
+            get => this._SlotParents;
+            set => this._SlotParents = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? IEquipTypeGetter.SlotParents => _SlotParents;
+        #endregion
+
+        #endregion
+        #region Flag
+        public EquipType.Flags? Flag { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        EquipType.Flags? IEquipTypeGetter.Flag => this.Flag;
+        #endregion
+        #region ConditionActorValue
+        private readonly IFormLinkNullable<IActorValueInformationGetter> _ConditionActorValue = new FormLinkNullable<IActorValueInformationGetter>();
+        public IFormLinkNullable<IActorValueInformationGetter> ConditionActorValue
+        {
+            get => _ConditionActorValue;
+            set => _ConditionActorValue.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IActorValueInformationGetter> IEquipTypeGetter.ConditionActorValue => this.ConditionActorValue;
+        #endregion
 
         #region To String
 
@@ -78,6 +108,9 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Flag = initialValue;
+                this.ConditionActorValue = initialValue;
             }
 
             public Mask(
@@ -86,7 +119,10 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem SlotParents,
+                TItem Flag,
+                TItem ConditionActorValue)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -95,6 +131,9 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotParents, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Flag = Flag;
+                this.ConditionActorValue = ConditionActorValue;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +142,12 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SlotParents;
+            public TItem Flag;
+            public TItem ConditionActorValue;
             #endregion
 
             #region Equals
@@ -116,11 +161,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.SlotParents, rhs.SlotParents)) return false;
+                if (!object.Equals(this.Flag, rhs.Flag)) return false;
+                if (!object.Equals(this.ConditionActorValue, rhs.ConditionActorValue)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.SlotParents);
+                hash.Add(this.Flag);
+                hash.Add(this.ConditionActorValue);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +182,19 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.SlotParents != null)
+                {
+                    if (!eval(this.SlotParents.Overall)) return false;
+                    if (this.SlotParents.Specific != null)
+                    {
+                        foreach (var item in this.SlotParents.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Flag)) return false;
+                if (!eval(this.ConditionActorValue)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +203,19 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.SlotParents != null)
+                {
+                    if (eval(this.SlotParents.Overall)) return true;
+                    if (this.SlotParents.Specific != null)
+                    {
+                        foreach (var item in this.SlotParents.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Flag)) return true;
+                if (eval(this.ConditionActorValue)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +231,22 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (SlotParents != null)
+                {
+                    obj.SlotParents = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SlotParents.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SlotParents.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SlotParents.Specific = l;
+                        foreach (var item in SlotParents.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Flag = eval(this.Flag);
+                obj.ConditionActorValue = eval(this.ConditionActorValue);
             }
             #endregion
 
@@ -172,6 +265,35 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(EquipType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.SlotParents?.Overall ?? true)
+                        && SlotParents is {} SlotParentsItem)
+                    {
+                        sb.AppendLine("SlotParents =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SlotParentsItem.Overall);
+                            if (SlotParentsItem.Specific != null)
+                            {
+                                foreach (var subItem in SlotParentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Flag ?? true)
+                    {
+                        sb.AppendItem(Flag, "Flag");
+                    }
+                    if (printMask?.ConditionActorValue ?? true)
+                    {
+                        sb.AppendItem(ConditionActorValue, "ConditionActorValue");
+                    }
                 }
             }
             #endregion
@@ -182,12 +304,24 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SlotParents;
+            public Exception? Flag;
+            public Exception? ConditionActorValue;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
                 switch (enu)
                 {
+                    case EquipType_FieldIndex.SlotParents:
+                        return SlotParents;
+                    case EquipType_FieldIndex.Flag:
+                        return Flag;
+                    case EquipType_FieldIndex.ConditionActorValue:
+                        return ConditionActorValue;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +332,15 @@ namespace Mutagen.Bethesda.Fallout4
                 EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
                 switch (enu)
                 {
+                    case EquipType_FieldIndex.SlotParents:
+                        this.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case EquipType_FieldIndex.Flag:
+                        this.Flag = ex;
+                        break;
+                    case EquipType_FieldIndex.ConditionActorValue:
+                        this.ConditionActorValue = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +352,15 @@ namespace Mutagen.Bethesda.Fallout4
                 EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
                 switch (enu)
                 {
+                    case EquipType_FieldIndex.SlotParents:
+                        this.SlotParents = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case EquipType_FieldIndex.Flag:
+                        this.Flag = (Exception?)obj;
+                        break;
+                    case EquipType_FieldIndex.ConditionActorValue:
+                        this.ConditionActorValue = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +370,9 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (SlotParents != null) return true;
+                if (Flag != null) return true;
+                if (ConditionActorValue != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +399,32 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (SlotParents is {} SlotParentsItem)
+                {
+                    sb.AppendLine("SlotParents =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SlotParentsItem.Overall);
+                        if (SlotParentsItem.Specific != null)
+                        {
+                            foreach (var subItem in SlotParentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Flag, "Flag");
+                }
+                {
+                    sb.AppendItem(ConditionActorValue, "ConditionActorValue");
+                }
             }
             #endregion
 
@@ -252,6 +433,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SlotParents?.Overall, rhs.SlotParents?.Overall), ExceptionExt.Combine(this.SlotParents?.Specific, rhs.SlotParents?.Specific));
+                ret.Flag = this.Flag.Combine(rhs.Flag);
+                ret.ConditionActorValue = this.ConditionActorValue.Combine(rhs.ConditionActorValue);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -273,15 +457,32 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool SlotParents;
+            public bool Flag;
+            public bool ConditionActorValue;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.SlotParents = defaultOn;
+                this.Flag = defaultOn;
+                this.ConditionActorValue = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((SlotParents, null));
+                ret.Add((Flag, null));
+                ret.Add((ConditionActorValue, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,6 +494,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = EquipType_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EquipTypeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public EquipType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -416,8 +619,12 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IEquipType :
         IEquipTypeGetter,
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IEquipTypeInternal>
     {
+        new ExtendedList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; set; }
+        new EquipType.Flags? Flag { get; set; }
+        new IFormLinkNullable<IActorValueInformationGetter> ConditionActorValue { get; set; }
     }
 
     public partial interface IEquipTypeInternal :
@@ -431,10 +638,14 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IEquipTypeGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IEquipTypeGetter>,
         IMapsToGetter<IEquipTypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => EquipType_Registration.Instance;
+        IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; }
+        EquipType.Flags? Flag { get; }
+        IFormLinkNullableGetter<IActorValueInformationGetter> ConditionActorValue { get; }
 
     }
 
@@ -599,6 +810,9 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        SlotParents = 6,
+        Flag = 7,
+        ConditionActorValue = 8,
     }
     #endregion
 
@@ -616,9 +830,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "8d8999ed-b23f-413a-b269-b48591627e1d";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(EquipType.Mask<>);
 
@@ -648,8 +862,13 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.EQUP);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.EQUP);
+            var all = RecordCollection.Factory(
+                RecordTypes.EQUP,
+                RecordTypes.PNAM,
+                RecordTypes.DATA,
+                RecordTypes.ANAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(EquipTypeBinaryWriteTranslation);
         #region Interface
@@ -693,6 +912,9 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IEquipTypeInternal item)
         {
             ClearPartial();
+            item.SlotParents = null;
+            item.Flag = default;
+            item.ConditionActorValue.Clear();
             base.Clear(item);
         }
         
@@ -710,6 +932,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IEquipType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.SlotParents?.RemapLinks(mapping);
+            obj.ConditionActorValue.Relink(mapping);
         }
         
         #endregion
@@ -778,6 +1002,12 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.SlotParents = item.SlotParents.CollectionEqualsHelper(
+                rhs.SlotParents,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Flag = item.Flag == rhs.Flag;
+            ret.ConditionActorValue = item.ConditionActorValue.Equals(rhs.ConditionActorValue);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1057,30 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.SlotParents?.Overall ?? true)
+                && item.SlotParents is {} SlotParentsItem)
+            {
+                sb.AppendLine("SlotParents =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in SlotParentsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Flag ?? true)
+                && item.Flag is {} FlagItem)
+            {
+                sb.AppendItem(FlagItem, "Flag");
+            }
+            if (printMask?.ConditionActorValue ?? true)
+            {
+                sb.AppendItem(item.ConditionActorValue.FormKeyNullable, "ConditionActorValue");
+            }
         }
         
         public static EquipType_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -875,6 +1129,18 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)EquipType_FieldIndex.SlotParents) ?? true))
+            {
+                if (!lhs.SlotParents.SequenceEqualNullable(rhs.SlotParents)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EquipType_FieldIndex.Flag) ?? true))
+            {
+                if (lhs.Flag != rhs.Flag) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EquipType_FieldIndex.ConditionActorValue) ?? true))
+            {
+                if (!lhs.ConditionActorValue.Equals(rhs.ConditionActorValue)) return false;
+            }
             return true;
         }
         
@@ -903,6 +1169,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IEquipTypeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.SlotParents);
+            if (item.Flag is {} Flagitem)
+            {
+                hash.Add(Flagitem);
+            }
+            hash.Add(item.ConditionActorValue);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -931,6 +1203,17 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.SlotParents is {} SlotParentsItem)
+            {
+                foreach (var item in SlotParentsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.ConditionActorValue, out var ConditionActorValueInfo))
+            {
+                yield return ConditionActorValueInfo;
             }
             yield break;
         }
@@ -1006,6 +1289,41 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)EquipType_FieldIndex.SlotParents) ?? true))
+            {
+                errorMask?.PushIndex((int)EquipType_FieldIndex.SlotParents);
+                try
+                {
+                    if ((rhs.SlotParents != null))
+                    {
+                        item.SlotParents = 
+                            rhs.SlotParents
+                            .Select(r => (IFormLinkGetter<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IEquipTypeGetter>>();
+                    }
+                    else
+                    {
+                        item.SlotParents = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)EquipType_FieldIndex.Flag) ?? true))
+            {
+                item.Flag = rhs.Flag;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EquipType_FieldIndex.ConditionActorValue) ?? true))
+            {
+                item.ConditionActorValue.SetTo(rhs.ConditionActorValue.FormKeyNullable);
+            }
         }
         
         public override void DeepCopyIn(
@@ -1154,6 +1472,36 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static EquipTypeBinaryWriteTranslation Instance = new EquipTypeBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IEquipTypeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Write(
+                writer: writer,
+                items: item.SlotParents,
+                recordType: translationParams.ConvertToCustom(RecordTypes.PNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEquipTypeGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            EnumBinaryTranslation<EquipType.Flags, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flag,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ConditionActorValue,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IEquipTypeGetter item,
@@ -1168,10 +1516,12 @@ namespace Mutagen.Bethesda.Fallout4
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1229,6 +1579,56 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IEquipTypeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SlotParents = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IEquipTypeGetter>>();
+                    return (int)EquipType_FieldIndex.SlotParents;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flag = EnumBinaryTranslation<EquipType.Flags, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)EquipType_FieldIndex.Flag;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ConditionActorValue.SetTo(
+                        FormLinkBinaryTranslation.Instance.Parse(
+                            reader: frame,
+                            negativeOneIsNull : true));
+                    return (int)EquipType_FieldIndex.ConditionActorValue;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1261,6 +1661,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EquipTypeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EquipTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1275,6 +1676,15 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IEquipType);
 
 
+        public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; private set; }
+        #region Flag
+        private int? _FlagLocation;
+        public EquipType.Flags? Flag => _FlagLocation.HasValue ? (EquipType.Flags)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagLocation!.Value, _package.MetaData.Constants)) : default(EquipType.Flags?);
+        #endregion
+        #region ConditionActorValue
+        private int? _ConditionActorValueLocation;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ConditionActorValue => _ConditionActorValueLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ConditionActorValueLocation.Value, _package.MetaData.Constants)), maxIsNull: true)) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +1739,50 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.SlotParents = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEquipTypeGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IEquipTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)EquipType_FieldIndex.SlotParents;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _FlagLocation = (stream.Position - offset);
+                    return (int)EquipType_FieldIndex.Flag;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _ConditionActorValueLocation = (stream.Position - offset);
+                    return (int)EquipType_FieldIndex.ConditionActorValue;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void Print(

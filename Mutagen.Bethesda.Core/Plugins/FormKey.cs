@@ -87,6 +87,22 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     }
 
     /// <summary>
+    /// Constructs a FormKey from a list of masters and the raw uint
+    /// </summary>
+    /// <param name="masterReferences">Master reference list to refer to</param>
+    /// <param name="idWithModID">Mod index and Record ID to use</param>
+    /// <param name="maxIsNull">Whether a maximum value should be considered null</param>
+    /// <returns>Converted FormID</returns>
+    public static FormKey Factory(IMasterReferenceReader masterReferences, uint idWithModID, bool maxIsNull)
+    {
+        if (maxIsNull && idWithModID == uint.MaxValue)
+        {
+            return FormKey.Null;
+        }
+        return Factory(masterReferences, idWithModID);
+    }
+
+    /// <summary>
     /// Attempts to construct a FormKey from a string:
     ///   012ABC:ModName.esp
     /// </summary>

@@ -11,10 +11,11 @@ public class FormLinkBinaryTranslation
 
     public bool Parse<TReader>(
         TReader reader,
-        out FormKey item)
+        out FormKey item,
+        bool negativeOneIsNull = false)
         where TReader : IMutagenReadStream
     {
-        if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
+        if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id, negativeOneIsNull: negativeOneIsNull))
         {
             item = id;
             return true;
@@ -23,9 +24,9 @@ public class FormLinkBinaryTranslation
         return false;
     }
 
-    public FormKey Parse(MutagenFrame reader)
+    public FormKey Parse(MutagenFrame reader, bool negativeOneIsNull = false)
     {
-        if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
+        if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id, negativeOneIsNull: negativeOneIsNull))
         {
             return id;
         }

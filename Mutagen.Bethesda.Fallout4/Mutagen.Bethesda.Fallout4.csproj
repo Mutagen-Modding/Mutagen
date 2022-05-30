@@ -287,6 +287,9 @@
     <Compile Include="Records\Major Records\EncounterZone.cs">
       <DependentUpon>EncounterZone.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\EquipType.cs">
+      <DependentUpon>EquipType.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Explosion.cs">
       <DependentUpon>Explosion.xml</DependentUpon>
     </Compile>

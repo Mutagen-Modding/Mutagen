@@ -126,6 +126,10 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
                            $"{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                 {
                     args2.Add("reader: frame");
+                    if (linkType.NegativeOneIsNull)
+                    {
+                        args2.Add("negativeOneIsNull : true");
+                    }
                 }
             });
         }
@@ -211,7 +215,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         switch (linkType.FormIDType)
         {
             case FormLinkType.FormIDTypeEnum.Normal:
-                return $"new {linkType.DirectTypeName(getter: true, internalInterface: true)}(FormKey.Factory({packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
+                return $"new {linkType.DirectTypeName(getter: true, internalInterface: true)}(FormKey.Factory({packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor}){(linkType.NegativeOneIsNull ? ", maxIsNull: true" : null)}))";
             case FormLinkType.FormIDTypeEnum.EDIDChars:
                 return $"new EDIDLink<{linkType.LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})))";
             default:

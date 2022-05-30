@@ -151,6 +151,7 @@ namespace Mutagen.Bethesda.Fallout4
             _StoryManagerEventNodes_Object = new Fallout4Group<StoryManagerEventNode>(this);
             _MusicTracks_Object = new Fallout4Group<MusicTrack>(this);
             _DialogViews_Object = new Fallout4Group<DialogView>(this);
+            _EquipTypes_Object = new Fallout4Group<EquipType>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -821,6 +822,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IDialogViewGetter> IFallout4ModGetter.DialogViews => _DialogViews_Object;
         #endregion
+        #region EquipTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<EquipType> _EquipTypes_Object;
+        public Fallout4Group<EquipType> EquipTypes => _EquipTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IEquipTypeGetter> IFallout4ModGetter.EquipTypes => _EquipTypes_Object;
+        #endregion
 
         #region To String
 
@@ -955,6 +963,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.StoryManagerEventNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.MusicTracks = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.DialogViews = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.EquipTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1052,7 +1061,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem StoryManagerQuestNodes,
                 TItem StoryManagerEventNodes,
                 TItem MusicTracks,
-                TItem DialogViews)
+                TItem DialogViews,
+                TItem EquipTypes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -1149,6 +1159,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.StoryManagerEventNodes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(StoryManagerEventNodes, new Fallout4Group.Mask<TItem>(StoryManagerEventNodes));
                 this.MusicTracks = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MusicTracks, new Fallout4Group.Mask<TItem>(MusicTracks));
                 this.DialogViews = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(DialogViews, new Fallout4Group.Mask<TItem>(DialogViews));
+                this.EquipTypes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(EquipTypes, new Fallout4Group.Mask<TItem>(EquipTypes));
             }
 
             #pragma warning disable CS8618
@@ -1255,6 +1266,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? StoryManagerEventNodes { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MusicTracks { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? DialogViews { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? EquipTypes { get; set; }
             #endregion
 
             #region Equals
@@ -1362,6 +1374,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
                 if (!object.Equals(this.MusicTracks, rhs.MusicTracks)) return false;
                 if (!object.Equals(this.DialogViews, rhs.DialogViews)) return false;
+                if (!object.Equals(this.EquipTypes, rhs.EquipTypes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1462,6 +1475,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.StoryManagerEventNodes);
                 hash.Add(this.MusicTracks);
                 hash.Add(this.DialogViews);
+                hash.Add(this.EquipTypes);
                 return hash.ToHashCode();
             }
 
@@ -1945,6 +1959,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.DialogViews.Overall)) return false;
                     if (this.DialogViews.Specific != null && !this.DialogViews.Specific.All(eval)) return false;
                 }
+                if (EquipTypes != null)
+                {
+                    if (!eval(this.EquipTypes.Overall)) return false;
+                    if (this.EquipTypes.Specific != null && !this.EquipTypes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2427,6 +2446,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.DialogViews.Overall)) return true;
                     if (this.DialogViews.Specific != null && this.DialogViews.Specific.Any(eval)) return true;
                 }
+                if (EquipTypes != null)
+                {
+                    if (eval(this.EquipTypes.Overall)) return true;
+                    if (this.EquipTypes.Specific != null && this.EquipTypes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2536,6 +2560,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.StoryManagerEventNodes = this.StoryManagerEventNodes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.StoryManagerEventNodes.Overall), this.StoryManagerEventNodes.Specific?.Translate(eval));
                 obj.MusicTracks = this.MusicTracks == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MusicTracks.Overall), this.MusicTracks.Specific?.Translate(eval));
                 obj.DialogViews = this.DialogViews == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.DialogViews.Overall), this.DialogViews.Specific?.Translate(eval));
+                obj.EquipTypes = this.EquipTypes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.EquipTypes.Overall), this.EquipTypes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2934,6 +2959,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         DialogViews?.Print(sb);
                     }
+                    if (printMask?.EquipTypes?.Overall ?? true)
+                    {
+                        EquipTypes?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3053,6 +3082,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>? StoryManagerEventNodes;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<MusicTrack.ErrorMask>?>? MusicTracks;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<DialogView.ErrorMask>?>? DialogViews;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<EquipType.ErrorMask>?>? EquipTypes;
             #endregion
 
             #region IErrorMask
@@ -3251,6 +3281,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return MusicTracks;
                     case Fallout4Mod_FieldIndex.DialogViews:
                         return DialogViews;
+                    case Fallout4Mod_FieldIndex.EquipTypes:
+                        return EquipTypes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3545,6 +3577,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.DialogViews:
                         this.DialogViews = new MaskItem<Exception?, Fallout4Group.ErrorMask<DialogView.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.EquipTypes:
+                        this.EquipTypes = new MaskItem<Exception?, Fallout4Group.ErrorMask<EquipType.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3841,6 +3876,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.DialogViews:
                         this.DialogViews = (MaskItem<Exception?, Fallout4Group.ErrorMask<DialogView.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.EquipTypes:
+                        this.EquipTypes = (MaskItem<Exception?, Fallout4Group.ErrorMask<EquipType.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3944,6 +3982,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (StoryManagerEventNodes != null) return true;
                 if (MusicTracks != null) return true;
                 if (DialogViews != null) return true;
+                if (EquipTypes != null) return true;
                 return false;
             }
             #endregion
@@ -4064,6 +4103,7 @@ namespace Mutagen.Bethesda.Fallout4
                 StoryManagerEventNodes?.Print(sb);
                 MusicTracks?.Print(sb);
                 DialogViews?.Print(sb);
+                EquipTypes?.Print(sb);
             }
             #endregion
 
@@ -4167,6 +4207,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.StoryManagerEventNodes = this.StoryManagerEventNodes.Combine(rhs.StoryManagerEventNodes, (l, r) => l.Combine(r));
                 ret.MusicTracks = this.MusicTracks.Combine(rhs.MusicTracks, (l, r) => l.Combine(r));
                 ret.DialogViews = this.DialogViews.Combine(rhs.DialogViews, (l, r) => l.Combine(r));
+                ret.EquipTypes = this.EquipTypes.Combine(rhs.EquipTypes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4285,6 +4326,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<StoryManagerEventNode.TranslationMask>? StoryManagerEventNodes;
             public Fallout4Group.TranslationMask<MusicTrack.TranslationMask>? MusicTracks;
             public Fallout4Group.TranslationMask<DialogView.TranslationMask>? DialogViews;
+            public Fallout4Group.TranslationMask<EquipType.TranslationMask>? EquipTypes;
             #endregion
 
             #region Ctors
@@ -4404,6 +4446,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((StoryManagerEventNodes != null ? StoryManagerEventNodes.OnOverall : DefaultOn, StoryManagerEventNodes?.GetCrystal()));
                 ret.Add((MusicTracks != null ? MusicTracks.OnOverall : DefaultOn, MusicTracks?.GetCrystal()));
                 ret.Add((DialogViews != null ? DialogViews.OnOverall : DefaultOn, DialogViews?.GetCrystal()));
+                ret.Add((EquipTypes != null ? EquipTypes.OnOverall : DefaultOn, EquipTypes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4538,6 +4581,7 @@ namespace Mutagen.Bethesda.Fallout4
             _StoryManagerEventNodes_Object = new Fallout4Group<StoryManagerEventNode>(this);
             _MusicTracks_Object = new Fallout4Group<MusicTrack>(this);
             _DialogViews_Object = new Fallout4Group<DialogView>(this);
+            _EquipTypes_Object = new Fallout4Group<EquipType>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4923,6 +4967,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DialogViews.RecordCache.Set(rhsMod.DialogViews.RecordCache.Items);
             }
+            if (mask?.EquipTypes ?? true)
+            {
+                this.EquipTypes.RecordCache.Set(rhsMod.EquipTypes.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5027,6 +5075,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
             count += MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
             count += DialogViews.RecordCache.Count > 0 ? 1 : default(uint);
+            count += EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5372,6 +5421,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<StoryManagerEventNode> StoryManagerEventNodes { get; }
         new Fallout4Group<MusicTrack> MusicTracks { get; }
         new Fallout4Group<DialogView> DialogViews { get; }
+        new Fallout4Group<EquipType> EquipTypes { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -5485,6 +5535,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes { get; }
         IFallout4GroupGetter<IMusicTrackGetter> MusicTracks { get; }
         IFallout4GroupGetter<IDialogViewGetter> DialogViews { get; }
+        IFallout4GroupGetter<IEquipTypeGetter> EquipTypes { get; }
 
     }
 
@@ -6150,6 +6201,7 @@ namespace Mutagen.Bethesda.Fallout4
         StoryManagerEventNodes = 92,
         MusicTracks = 93,
         DialogViews = 94,
+        EquipTypes = 95,
     }
     #endregion
 
@@ -6167,9 +6219,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 95;
+        public const ushort AdditionalFieldCount = 96;
 
-        public const ushort FieldCount = 95;
+        public const ushort FieldCount = 96;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -6331,6 +6383,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.StoryManagerEventNodes.Clear();
             item.MusicTracks.Clear();
             item.DialogViews.Clear();
+            item.EquipTypes.Clear();
         }
         
         #region Mutagen
@@ -6419,6 +6472,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.StoryManagerEventNodes.RemapLinks(mapping);
             obj.MusicTracks.RemapLinks(mapping);
             obj.DialogViews.RemapLinks(mapping);
+            obj.EquipTypes.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -6547,6 +6601,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.StoryManagerEventNodes.Remove(keys);
             obj.MusicTracks.Remove(keys);
             obj.DialogViews.Remove(keys);
+            obj.EquipTypes.Remove(keys);
         }
         
         public void Remove(
@@ -7354,6 +7409,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    obj.EquipTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -7937,6 +8000,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.StoryManagerEventNodes = MaskItemExt.Factory(item.StoryManagerEventNodes.GetEqualsMask(rhs.StoryManagerEventNodes, include), include);
             ret.MusicTracks = MaskItemExt.Factory(item.MusicTracks.GetEqualsMask(rhs.MusicTracks, include), include);
             ret.DialogViews = MaskItemExt.Factory(item.DialogViews.GetEqualsMask(rhs.DialogViews, include), include);
+            ret.EquipTypes = MaskItemExt.Factory(item.EquipTypes.GetEqualsMask(rhs.EquipTypes, include), include);
         }
         
         public string Print(
@@ -8360,6 +8424,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.DialogViews?.Overall ?? true)
             {
                 item.DialogViews?.Print(sb, "DialogViews");
+            }
+            if (printMask?.EquipTypes?.Overall ?? true)
+            {
+                item.EquipTypes?.Print(sb, "EquipTypes");
             }
         }
         
@@ -9130,6 +9198,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isDialogViewsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EquipTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.EquipTypes, rhs.EquipTypes, out var lhsEquipTypes, out var rhsEquipTypes, out var isEquipTypesEqual))
+                {
+                    if (!object.Equals(lhsEquipTypes, rhsEquipTypes)) return false;
+                }
+                else if (!isEquipTypesEqual) return false;
+            }
             return true;
         }
         
@@ -9231,6 +9307,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.StoryManagerEventNodes);
             hash.Add(item.MusicTracks);
             hash.Add(item.DialogViews);
+            hash.Add(item.EquipTypes);
             return hash.ToHashCode();
         }
         
@@ -9718,6 +9795,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IDialogView":
                 case "IDialogViewInternal":
                     return obj.DialogViews;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    return obj.EquipTypes;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -9742,7 +9824,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[94];
+            Stream[] outputStreams = new Stream[95];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -9838,6 +9920,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, 91, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MusicTracks, 92, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.DialogViews, 93, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.EquipTypes, 94, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10214,6 +10297,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.DialogViews.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EquipTypes.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -10595,6 +10682,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.DialogViews.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EquipTypes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -11466,6 +11557,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IDialogView":
                 case "IDialogViewInternal":
                     foreach (var item in obj.DialogViews.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    foreach (var item in obj.EquipTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12475,6 +12575,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.DialogViews,
                 groupGetter: (m) => m.DialogViews))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, EquipType, IEquipTypeGetter>(
+                srcGroup: obj.EquipTypes,
+                type: typeof(IEquipTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EquipTypes,
+                groupGetter: (m) => m.EquipTypes))
             {
                 yield return item;
             }
@@ -13807,6 +13916,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.DialogViews,
                         groupGetter: (m) => m.DialogViews))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, EquipType, IEquipTypeGetter>(
+                        srcGroup: obj.EquipTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EquipTypes,
+                        groupGetter: (m) => m.EquipTypes))
                     {
                         yield return item;
                     }
@@ -16005,6 +16128,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EquipTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.EquipTypes);
+                try
+                {
+                    item.EquipTypes.DeepCopyIn(
+                        rhs: rhs.EquipTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.EquipTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -16189,6 +16332,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool StoryManagerEventNodes;
         public bool MusicTracks;
         public bool DialogViews;
+        public bool EquipTypes;
         public GroupMask()
         {
         }
@@ -16288,6 +16432,7 @@ namespace Mutagen.Bethesda.Fallout4
             StoryManagerEventNodes = defaultValue;
             MusicTracks = defaultValue;
             DialogViews = defaultValue;
+            EquipTypes = defaultValue;
         }
     }
 
@@ -17349,6 +17494,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)DialogViewsItem).BinaryWriteTranslator).Write<IDialogViewGetter>(
                         item: DialogViewsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.EquipTypes ?? true)
+            {
+                var EquipTypesItem = item.EquipTypes;
+                if (EquipTypesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)EquipTypesItem).BinaryWriteTranslator).Write<IEquipTypeGetter>(
+                        item: EquipTypesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -18735,6 +18891,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.DialogViews;
                 }
+                case RecordTypeInts.EQUP:
+                {
+                    if (importMask?.EquipTypes ?? true)
+                    {
+                        item.EquipTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.EquipTypes;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -19367,6 +19537,11 @@ namespace Mutagen.Bethesda.Fallout4
         private List<RangeInt64>? _DialogViewsLocations;
         private IFallout4GroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocations != null ? Fallout4GroupBinaryOverlay<IDialogViewGetter>.Fallout4GroupFactory(_data, _DialogViewsLocations, _package) : default;
         public IFallout4GroupGetter<IDialogViewGetter> DialogViews => _DialogViews ?? new Fallout4Group<DialogView>(this);
+        #endregion
+        #region EquipTypes
+        private List<RangeInt64>? _EquipTypesLocations;
+        private IFallout4GroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? Fallout4GroupBinaryOverlay<IEquipTypeGetter>.Fallout4GroupFactory(_data, _EquipTypesLocations, _package) : default;
+        public IFallout4GroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new Fallout4Group<EquipType>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -20018,6 +20193,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _DialogViewsLocations ??= new();
                     _DialogViewsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.DialogViews;
+                }
+                case RecordTypeInts.EQUP:
+                {
+                    _EquipTypesLocations ??= new();
+                    _EquipTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.EquipTypes;
                 }
                 default:
                     return default(int?);

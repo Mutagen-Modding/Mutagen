@@ -13,20 +13,27 @@ public class FormKeyBinaryTranslation
 
     public FormKey Parse(
         ReadOnlySpan<byte> span,
-        IMasterReferenceReader masterReferences)
+        IMasterReferenceReader masterReferences,
+        bool negativeOneIsNull = false)
     {
         var id = BinaryPrimitives.ReadUInt32LittleEndian(span);
+        if (negativeOneIsNull && id == uint.MaxValue)
+        {
+            id = 0;
+        }
         return FormKey.Factory(masterReferences, id);
     }
 
     public bool Parse<TReader>(
         TReader reader,
-        out FormKey item)
+        out FormKey item,
+        bool negativeOneIsNull = false)
         where TReader : IMutagenReadStream
     {
         item = Parse(
             reader.ReadSpan(4),
-            reader.MetaData.MasterReferences!);
+            reader.MetaData.MasterReferences!,
+            negativeOneIsNull: negativeOneIsNull);
         return true;
     }
 

@@ -60,6 +60,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.MATT, ProcessMaterialTypes);
         AddDynamicProcessing(RecordTypes.DFOB, ProcessDefaultObjects);
         AddDynamicProcessing(RecordTypes.SMQN, ProcessStoryManagerQuestNodes);
+        AddDynamicProcessing(RecordTypes.EQUP, ProcessEquipTypes);
     }
 
     private void ProcessGameSettings(
@@ -592,6 +593,20 @@ public class Fallout4Processor : Processor
             if (i == 0x0100080E)
             {
                 _instructions.SetSubstitution(fileOffset + ctda.Location + ctda.HeaderLength + 15, 0);
+            }
+        }
+    }
+
+    private void ProcessEquipTypes(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.ANAM))
+        {
+            int i = BinaryPrimitives.ReadInt32LittleEndian(subRec.Content);
+            if (i == -1)
+            {
+                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, new byte[4]);
             }
         }
     }
